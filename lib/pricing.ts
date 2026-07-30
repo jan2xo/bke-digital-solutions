@@ -42,17 +42,20 @@ export function calculateAnnualPricing(monthlyAmountMinor: number, discountBps: 
 
 export type ResolvablePlan = {
   id: string;
+  editionId?: string;
   type: "PERPETUAL" | "MONTHLY" | "ANNUAL";
   currency: string;
   amountMinor: number | null;
   annualDiscountBps: number | null;
   renewalBehavior: "NONE" | "CUSTOMER_AUTHORIZED";
-  monthlySource?: { amountMinor: number | null; active: boolean } | null;
+  monthlySource?: { amountMinor: number | null; active: boolean; type?: "PERPETUAL" | "MONTHLY" | "ANNUAL"; editionId?: string } | null;
 };
 
 export function resolvePurchasePlan(plan: ResolvablePlan) {
   if (plan.type === "ANNUAL") {
-    if (!plan.monthlySource?.active || plan.monthlySource.amountMinor === null) throw new Error("ANNUAL_MONTHLY_PLAN_REQUIRED");
+    if (!plan.monthlySource?.active || plan.monthlySource.amountMinor === null || plan.monthlySource.type !== "MONTHLY" || (plan.editionId && plan.monthlySource.editionId !== plan.editionId)) {
+      throw new Error("ANNUAL_MONTHLY_PLAN_REQUIRED");
+    }
     const pricing = calculateAnnualPricing(plan.monthlySource.amountMinor, plan.annualDiscountBps ?? 0);
     return { ...pricing, amountMinor: pricing.annualAmountMinor, intervalUnit: "YEAR" as const, intervalCount: 1, billingType: "SUBSCRIPTION" as const };
   }

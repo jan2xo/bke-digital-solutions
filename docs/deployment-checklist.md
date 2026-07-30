@@ -4,6 +4,9 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 
 ## PostgreSQL
 
+- [ ] Review and deploy `20260730174924_product_editions_multi_plan`, `20260731103000_pending_order_resume`, and `20260731113000_product_trials` in order; compare legacy order/invoice/payment amounts before and after and confirm every active annual plan has an active monthly source.
+- [ ] Back up before migration. Treat the migrations as forward-only once editions, checkout URLs, or trial history exist; do not drop them as a production rollback.
+
 - [ ] Use a supported managed PostgreSQL release in a private network with TLS required.
 - [ ] Create separate least-privilege runtime and migration users; deny public ingress.
 - [ ] Run `npm run db:generate`, review migration SQL, back up, then run `npm run db:deploy` once per release.
@@ -43,6 +46,7 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Verify artifact SHA-256, size, content type, and malware/signing pipeline before catalog activation.
 - [ ] Confirm downloads are streamed only after entitlement checks and one-time grants reject reuse and forgery.
 - [ ] Monitor download errors, unusual grant creation, object deletion, and access-policy changes.
+- [ ] Confirm redemption re-checks license status/expiration and consumes grants rejected after revocation or expiration.
 - [ ] Alert on `PRODUCT_DELETE_STORAGE_CLEANUP_FAILED`; verify S3 delete permission and retry the archived product deletion after restoring storage health. Never log the affected object key.
 
 ## Domain and HTTPS
@@ -77,6 +81,14 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Require a PayMongo sandbox checkout/webhook/reconciliation pass and an independent security review before launch.
 
 ## Platform administration
+
+- [ ] Obtain documented legal, tax, accounting, and privacy approval before enabling permanent customer deletion in production; it intentionally destroys orders, payments, invoices, entitlements, and personal data.
+- [ ] Restrict permanent customer deletion to named administrators, enforce recent login and distributed rate limiting, monitor `CUSTOMER_PERMANENTLY_DELETED`, and test backup/restore implications.
+- [ ] Decide whether backups must retain deleted customer data and document how retention, erasure requests, and restoration interact. Restoring an old backup can reintroduce erased personal data.
+- [ ] Review every published edition's capabilities, user/device limits, update policy, and enabled plans; confirm annual discounts are 0–10% and totals match the server calculation.
+- [ ] Review the seven-day trial policy, confirm the UTC calendar-year reset is acceptable, and restrict administrator trial grants and 0–14 day grace changes to authorized support staff.
+- [ ] Monitor trial grant, grace-change, revoke, expiration, activation, and download audit events; test expiration processing before launch.
+- [ ] Alert on repeated pending-checkout replacement attempts and reconcile provider captures received after local order cancellation.
 
 - [ ] Require MFA and recent authentication for administrator key disclosure and destructive entitlement changes.
 - [ ] Restrict administrator accounts to named staff; review access and audit exports monthly.

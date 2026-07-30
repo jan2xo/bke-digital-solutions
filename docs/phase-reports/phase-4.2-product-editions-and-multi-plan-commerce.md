@@ -37,7 +37,7 @@ The earlier 36-test Vitest run and focused 2-test Playwright run are retained as
 - TypeScript, ESLint, production build, `git diff --check`, Prisma drift check, tracked-artifact checks, and sensitive-log scan passed.
 - Runtime critical dependency audit: zero vulnerabilities.
 
-Review corrections included repeatable authenticated/audited license reveal by owner direction, explicit account selection for self-service trials, fresh entitlement checks when redeeming download grants, documentation of late payment after local cancellation, row-locked replacement reservation with controlled in-progress/stale behavior, replacement-checkout mock IDs derived from attempt idempotency keys, and focused regression coverage. No commit was created.
+Review corrections included repeatable authenticated/audited license reveal by owner direction, explicit account selection for self-service trials, fresh entitlement checks when redeeming download grants, documentation of late payment after local cancellation, row-locked replacement reservation with controlled in-progress/stale behavior, replacement-checkout mock IDs derived from attempt idempotency keys, and focused regression coverage. No commit had been created at the time of that review; Phase 4.2 was subsequently committed as `25c6b41`.
 
 ## Failures and corrections
 

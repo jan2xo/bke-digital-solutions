@@ -1,10 +1,27 @@
 @import "tailwindcss";
 
-:root { --ink: #10212b; --navy: #092f47; --blue: #0b7197; --cyan: #42d4c8; --sand: #f4f1e9; }
+:root {
+  --background: #14202b;
+  --surface: #10161e;
+  --primary: #3d75a7;
+  --primary-hover: #2d5579;
+  --secondary: #213a53;
+  --border: #2d5579;
+  --text: #f5f7fa;
+  --text-muted: #a8b5c4;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --ink: #14202b;
+  --navy: #14202b;
+  --blue: #3d75a7;
+}
 * { box-sizing: border-box; }
 body { margin: 0; color: var(--ink); background: #fbfcfc; font-family: Arial, Helvetica, sans-serif; }
 .shell { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
 .card { border: 1px solid #dce5e8; border-radius: 1.1rem; background: white; box-shadow: 0 12px 35px rgb(9 47 71 / .06); }
+.hero-portal-card { border: 1px solid rgb(61 117 167 / .75); border-radius: 1.25rem; background: linear-gradient(145deg, #213a53, #10161e); box-shadow: 0 24px 65px rgb(16 22 30 / .42), inset 0 1px rgb(245 247 250 / .08); }
+.hero-portal-row { border: 1px solid rgb(61 117 167 / .45); border-radius: .85rem; background: rgb(20 32 43 / .72); }
 .button { display: inline-flex; align-items: center; justify-content: center; border-radius: .7rem; padding: .72rem 1rem; font-weight: 700; background: var(--navy); color: white; transition: .2s; }
 .button:hover { background: var(--blue); }
 .button.secondary { color: var(--navy); background: white; border: 1px solid #bdd0d8; }

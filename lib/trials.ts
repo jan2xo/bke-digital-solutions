@@ -48,14 +48,16 @@ export async function changeTrial(input: { trialId: string; actorId: string; act
     const trial = await tx.trialGrant.findUnique({ where: { id: input.trialId } });
     if (!trial) throw new Error("NOT_FOUND");
     if (input.action === "REVOKE") {
+      if (trial.revokedAt) return trial;
       const now = new Date();
       await tx.trialGrant.update({ where: { id: trial.id }, data: { revokedAt: now } });
-      await tx.license.update({ where: { id: trial.licenseId }, data: { status: "REVOKED" } });
+      await tx.deviceActivation.updateMany({ where: { licenseId: trial.licenseId, active: true }, data: { active: false, deactivatedAt: now } });
+      await tx.license.update({ where: { id: trial.licenseId }, data: { status: "REVOKED", events: { create: { type: "TRIAL_REVOKED", metadata: { actorId: input.actorId } } } } });
     } else {
-      if (trial.revokedAt) throw new Error("INVALID_STATE");
+      if (trial.revokedAt) throw new Error("TRIAL_REVOKED");
       const graceEndsAt = addDays(trial.trialEndsAt, input.graceDays!);
       await tx.trialGrant.update({ where: { id: trial.id }, data: { graceEndsAt } });
-      await tx.license.update({ where: { id: trial.licenseId }, data: { expiresAt: graceEndsAt, status: graceEndsAt > new Date() ? "ACTIVE" : "EXPIRED" } });
+      await tx.license.update({ where: { id: trial.licenseId }, data: { expiresAt: graceEndsAt, status: graceEndsAt > new Date() ? "ACTIVE" : "EXPIRED", events: { create: { type: "TRIAL_GRACE_CHANGED", metadata: { actorId: input.actorId, graceDays: input.graceDays } } } } });
     }
     await tx.auditLog.create({ data: { actorId: input.actorId, accountId: trial.accountId, action: input.action === "REVOKE" ? "TRIAL_REVOKED" : "TRIAL_GRACE_CHANGED", targetType: "TrialGrant", targetId: trial.id, metadata: input.action === "SET_GRACE" ? { graceDays: input.graceDays } : {} } });
     return tx.trialGrant.findUniqueOrThrow({ where: { id: trial.id } });

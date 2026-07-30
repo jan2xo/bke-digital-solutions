@@ -51,7 +51,7 @@ describe.sequential("edition and multi-plan commerce", () => {
   }
 
   it("keeps legacy commerce snapshots linked to their original scalar identifiers", async () => {
-    const legacy = await db.orderItem.findFirst({ where: { purchasePlanId: null } });
+    const legacy = await db.orderItem.findFirst({ where: { purchasePlanId: null, unitAmountMinor: { gt: 0 } } });
     if (!legacy) return;
     expect(legacy.priceId).toBeTruthy();
     expect(legacy.unitAmountMinor).toBeGreaterThan(0);

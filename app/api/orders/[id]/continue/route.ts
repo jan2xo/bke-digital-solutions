@@ -41,6 +41,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         items: order.items.map((item) => ({ name: `${item.productName}${item.editionName ? ` — ${item.editionName}` : ""}`, description: item.planName ?? item.priceName, amountMinor: item.unitAmountMinor, quantity: item.quantity })),
       });
       const attempt = await db.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${order.id} FOR UPDATE`;
         const current = await tx.order.findUniqueOrThrow({ where: { id: order.id }, select: { status: true } });
         return tx.paymentAttempt.update({ where: { idempotencyKey }, data: { status: current.status === "PENDING" ? "PENDING" : "CANCELLED", externalCheckoutId: checkout.externalId, checkoutUrl: checkout.checkoutUrl } });
       });

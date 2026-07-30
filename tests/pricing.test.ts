@@ -17,6 +17,8 @@ describe("purchase plan pricing", () => {
   });
   it("requires an active monthly source for annual plans", () => {
     expect(() => resolvePurchasePlan({ id: "annual", type: "ANNUAL", currency: "PHP", amountMinor: null, annualDiscountBps: 500, renewalBehavior: "CUSTOMER_AUTHORIZED", monthlySource: null })).toThrow("ANNUAL_MONTHLY_PLAN_REQUIRED");
+    expect(() => resolvePurchasePlan({ id: "annual", editionId: "edition-a", type: "ANNUAL", currency: "PHP", amountMinor: null, annualDiscountBps: 500, renewalBehavior: "CUSTOMER_AUTHORIZED", monthlySource: { type: "PERPETUAL", editionId: "edition-a", amountMinor: 1000, active: true } })).toThrow("ANNUAL_MONTHLY_PLAN_REQUIRED");
+    expect(() => resolvePurchasePlan({ id: "annual", editionId: "edition-a", type: "ANNUAL", currency: "PHP", amountMinor: null, annualDiscountBps: 500, renewalBehavior: "CUSTOMER_AUTHORIZED", monthlySource: { type: "MONTHLY", editionId: "edition-b", amountMinor: 1000, active: true } })).toThrow("ANNUAL_MONTHLY_PLAN_REQUIRED");
   });
   it("normalizes perpetual and subscription terms without browser-provided totals", () => {
     expect(resolvePurchasePlan({ id: "p", type: "PERPETUAL", currency: "PHP", amountMinor: 9_999, annualDiscountBps: null, renewalBehavior: "NONE" })).toMatchObject({ amountMinor: 9_999, billingType: "ONE_TIME", intervalUnit: null });

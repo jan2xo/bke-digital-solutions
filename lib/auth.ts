@@ -43,3 +43,13 @@ export async function requireAdmin() {
   if (user.role !== "ADMIN") throw new Error("FORBIDDEN");
   return user;
 }
+
+export async function requireRecentAdmin(maxAgeMinutes = 15) {
+  const token = (await cookies()).get(COOKIE)?.value;
+  if (!token) throw new Error("UNAUTHENTICATED");
+  const session = await db.session.findUnique({ where: { tokenHash: hashToken(token) }, include: { user: true } });
+  if (!session || session.expiresAt <= new Date() || session.user.suspendedAt) throw new Error("UNAUTHENTICATED");
+  if (session.user.role !== "ADMIN") throw new Error("FORBIDDEN");
+  if (session.lastAuthenticatedAt < new Date(Date.now() - maxAgeMinutes * 60_000)) throw new Error("RECENT_AUTH_REQUIRED");
+  return session.user;
+}

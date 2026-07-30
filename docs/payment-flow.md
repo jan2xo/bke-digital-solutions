@@ -16,4 +16,6 @@ Customer request
        audit/license event appended
 ```
 
-Invalid events receive a client error. Transient processing failures receive a server error so the provider can retry. Unknown but correctly signed event types are recorded and acknowledged. Duplicate event IDs are acknowledged without repeating side effects.
+Invalid events receive a client error. Transient processing failures receive a server error so the provider can retry. A stored failed event can be processed again only when its signed payload hash is unchanged. Unknown but correctly signed event types are recorded and acknowledged. Completed duplicate event IDs are acknowledged without repeating side effects.
+
+Pending cancellation, replacement-checkout finalization, and verified settlement serialize on the order. A late provider-confirmed capture may move a locally cancelled order to paid; a later failure event cannot downgrade paid or refunded commerce.
