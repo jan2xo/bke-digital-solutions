@@ -1,0 +1,2 @@
+import{describe,expect,it}from"vitest";import{redact}from"@/lib/redaction";
+describe("platform administration security",()=>{it("redacts nested administration secrets",()=>{expect(redact({email:"allowed",password:"no",nested:{licenseKey:"no",status:"ACTIVE"}})).toEqual({email:"allowed",password:"[REDACTED]",nested:{licenseKey:"[REDACTED]",status:"ACTIVE"}})});it("does not redact ordinary operational metadata",()=>{expect(redact({action:"SUSPEND",targetId:"abc",count:2})).toEqual({action:"SUSPEND",targetId:"abc",count:2})})});

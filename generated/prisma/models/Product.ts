@@ -31,6 +31,10 @@ export type ProductMinAggregateOutputType = {
   summary: string | null
   description: string | null
   type: $Enums.ProductType | null
+  category: string | null
+  licenseType: string | null
+  featured: boolean | null
+  imageKey: string | null
   active: boolean | null
   publishedAt: Date | null
   archivedAt: Date | null
@@ -45,6 +49,10 @@ export type ProductMaxAggregateOutputType = {
   summary: string | null
   description: string | null
   type: $Enums.ProductType | null
+  category: string | null
+  licenseType: string | null
+  featured: boolean | null
+  imageKey: string | null
   active: boolean | null
   publishedAt: Date | null
   archivedAt: Date | null
@@ -59,6 +67,11 @@ export type ProductCountAggregateOutputType = {
   summary: number
   description: number
   type: number
+  category: number
+  licenseType: number
+  featured: number
+  imageKey: number
+  tags: number
   active: number
   publishedAt: number
   archivedAt: number
@@ -75,6 +88,10 @@ export type ProductMinAggregateInputType = {
   summary?: true
   description?: true
   type?: true
+  category?: true
+  licenseType?: true
+  featured?: true
+  imageKey?: true
   active?: true
   publishedAt?: true
   archivedAt?: true
@@ -89,6 +106,10 @@ export type ProductMaxAggregateInputType = {
   summary?: true
   description?: true
   type?: true
+  category?: true
+  licenseType?: true
+  featured?: true
+  imageKey?: true
   active?: true
   publishedAt?: true
   archivedAt?: true
@@ -103,6 +124,11 @@ export type ProductCountAggregateInputType = {
   summary?: true
   description?: true
   type?: true
+  category?: true
+  licenseType?: true
+  featured?: true
+  imageKey?: true
+  tags?: true
   active?: true
   publishedAt?: true
   archivedAt?: true
@@ -190,6 +216,11 @@ export type ProductGroupByOutputType = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category: string
+  licenseType: string
+  featured: boolean
+  imageKey: string | null
+  tags: string[]
   active: boolean
   publishedAt: Date | null
   archivedAt: Date | null
@@ -225,6 +256,11 @@ export type ProductWhereInput = {
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   type?: Prisma.EnumProductTypeFilter<"Product"> | $Enums.ProductType
+  category?: Prisma.StringFilter<"Product"> | string
+  licenseType?: Prisma.StringFilter<"Product"> | string
+  featured?: Prisma.BoolFilter<"Product"> | boolean
+  imageKey?: Prisma.StringNullableFilter<"Product"> | string | null
+  tags?: Prisma.StringNullableListFilter<"Product">
   active?: Prisma.BoolFilter<"Product"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   archivedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
@@ -245,6 +281,11 @@ export type ProductOrderByWithRelationInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  licenseType?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  tags?: Prisma.SortOrder
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -268,6 +309,11 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   type?: Prisma.EnumProductTypeFilter<"Product"> | $Enums.ProductType
+  category?: Prisma.StringFilter<"Product"> | string
+  licenseType?: Prisma.StringFilter<"Product"> | string
+  featured?: Prisma.BoolFilter<"Product"> | boolean
+  imageKey?: Prisma.StringNullableFilter<"Product"> | string | null
+  tags?: Prisma.StringNullableListFilter<"Product">
   active?: Prisma.BoolFilter<"Product"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   archivedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
@@ -288,6 +334,11 @@ export type ProductOrderByWithAggregationInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  licenseType?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  tags?: Prisma.SortOrder
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -308,6 +359,11 @@ export type ProductScalarWhereWithAggregatesInput = {
   summary?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
   type?: Prisma.EnumProductTypeWithAggregatesFilter<"Product"> | $Enums.ProductType
+  category?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  licenseType?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  featured?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
+  imageKey?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  tags?: Prisma.StringNullableListFilter<"Product">
   active?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
@@ -322,6 +378,11 @@ export type ProductCreateInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -342,6 +403,11 @@ export type ProductUncheckedCreateInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -362,6 +428,11 @@ export type ProductUpdateInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -382,6 +453,11 @@ export type ProductUncheckedUpdateInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -402,6 +478,11 @@ export type ProductCreateManyInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -416,6 +497,11 @@ export type ProductUpdateManyMutationInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -430,11 +516,24 @@ export type ProductUncheckedUpdateManyInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type ProductCountOrderByAggregateInput = {
@@ -444,6 +543,11 @@ export type ProductCountOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  licenseType?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
@@ -458,6 +562,10 @@ export type ProductMaxOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  licenseType?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
@@ -472,6 +580,10 @@ export type ProductMinOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  licenseType?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
@@ -484,12 +596,21 @@ export type ProductScalarRelationFilter = {
   isNot?: Prisma.ProductWhereInput
 }
 
+export type ProductCreatetagsInput = {
+  set: string[]
+}
+
 export type EnumProductTypeFieldUpdateOperationsInput = {
   set?: $Enums.ProductType
 }
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type ProductUpdatetagsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type ProductCreateNestedOneWithoutVersionsInput = {
@@ -583,6 +704,11 @@ export type ProductCreateWithoutVersionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -602,6 +728,11 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -637,6 +768,11 @@ export type ProductUpdateWithoutVersionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -656,6 +792,11 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -675,6 +816,11 @@ export type ProductCreateWithoutPoliciesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -694,6 +840,11 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -729,6 +880,11 @@ export type ProductUpdateWithoutPoliciesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -748,6 +904,11 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -767,6 +928,11 @@ export type ProductCreateWithoutPricesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -786,6 +952,11 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -821,6 +992,11 @@ export type ProductUpdateWithoutPricesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -840,6 +1016,11 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -859,6 +1040,11 @@ export type ProductCreateWithoutArtifactsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -878,6 +1064,11 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -913,6 +1104,11 @@ export type ProductUpdateWithoutArtifactsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -932,6 +1128,11 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -951,6 +1152,11 @@ export type ProductCreateWithoutSubscriptionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -970,6 +1176,11 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -1005,6 +1216,11 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1024,6 +1240,11 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1043,6 +1264,11 @@ export type ProductCreateWithoutLicensesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -1062,6 +1288,11 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
@@ -1097,6 +1328,11 @@ export type ProductUpdateWithoutLicensesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1116,6 +1352,11 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1211,6 +1452,11 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   summary?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
+  licenseType?: boolean
+  featured?: boolean
+  imageKey?: boolean
+  tags?: boolean
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
@@ -1232,6 +1478,11 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   summary?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
+  licenseType?: boolean
+  featured?: boolean
+  imageKey?: boolean
+  tags?: boolean
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
@@ -1246,6 +1497,11 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   summary?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
+  licenseType?: boolean
+  featured?: boolean
+  imageKey?: boolean
+  tags?: boolean
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
@@ -1260,6 +1516,11 @@ export type ProductSelectScalar = {
   summary?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
+  licenseType?: boolean
+  featured?: boolean
+  imageKey?: boolean
+  tags?: boolean
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
@@ -1267,7 +1528,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "summary" | "description" | "type" | "active" | "publishedAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
   prices?: boolean | Prisma.Product$pricesArgs<ExtArgs>
@@ -1297,6 +1558,11 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     summary: string
     description: string
     type: $Enums.ProductType
+    category: string
+    licenseType: string
+    featured: boolean
+    imageKey: string | null
+    tags: string[]
     active: boolean
     publishedAt: Date | null
     archivedAt: Date | null
@@ -1737,6 +2003,11 @@ export interface ProductFieldRefs {
   readonly summary: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
   readonly type: Prisma.FieldRef<"Product", 'ProductType'>
+  readonly category: Prisma.FieldRef<"Product", 'String'>
+  readonly licenseType: Prisma.FieldRef<"Product", 'String'>
+  readonly featured: Prisma.FieldRef<"Product", 'Boolean'>
+  readonly imageKey: Prisma.FieldRef<"Product", 'String'>
+  readonly tags: Prisma.FieldRef<"Product", 'String[]'>
   readonly active: Prisma.FieldRef<"Product", 'Boolean'>
   readonly publishedAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly archivedAt: Prisma.FieldRef<"Product", 'DateTime'>

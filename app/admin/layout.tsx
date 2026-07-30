@@ -1,0 +1,1 @@
+import{redirect}from"next/navigation";import{requireAdmin}from"@/lib/auth";import{AdminNav}from"@/components/admin-nav";export default async function AdminLayout({children}:{children:React.ReactNode}){await requireAdmin().catch(()=>redirect("/login"));return <><AdminNav/>{children}</>}

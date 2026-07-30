@@ -29,6 +29,10 @@ export type DeviceActivationMinAggregateOutputType = {
   licenseId: string | null
   deviceHash: string | null
   label: string | null
+  machineIdHint: string | null
+  operatingSystem: string | null
+  architecture: string | null
+  lastSeenAt: Date | null
   active: boolean | null
   activatedAt: Date | null
   deactivatedAt: Date | null
@@ -39,6 +43,10 @@ export type DeviceActivationMaxAggregateOutputType = {
   licenseId: string | null
   deviceHash: string | null
   label: string | null
+  machineIdHint: string | null
+  operatingSystem: string | null
+  architecture: string | null
+  lastSeenAt: Date | null
   active: boolean | null
   activatedAt: Date | null
   deactivatedAt: Date | null
@@ -49,6 +57,10 @@ export type DeviceActivationCountAggregateOutputType = {
   licenseId: number
   deviceHash: number
   label: number
+  machineIdHint: number
+  operatingSystem: number
+  architecture: number
+  lastSeenAt: number
   active: number
   activatedAt: number
   deactivatedAt: number
@@ -61,6 +73,10 @@ export type DeviceActivationMinAggregateInputType = {
   licenseId?: true
   deviceHash?: true
   label?: true
+  machineIdHint?: true
+  operatingSystem?: true
+  architecture?: true
+  lastSeenAt?: true
   active?: true
   activatedAt?: true
   deactivatedAt?: true
@@ -71,6 +87,10 @@ export type DeviceActivationMaxAggregateInputType = {
   licenseId?: true
   deviceHash?: true
   label?: true
+  machineIdHint?: true
+  operatingSystem?: true
+  architecture?: true
+  lastSeenAt?: true
   active?: true
   activatedAt?: true
   deactivatedAt?: true
@@ -81,6 +101,10 @@ export type DeviceActivationCountAggregateInputType = {
   licenseId?: true
   deviceHash?: true
   label?: true
+  machineIdHint?: true
+  operatingSystem?: true
+  architecture?: true
+  lastSeenAt?: true
   active?: true
   activatedAt?: true
   deactivatedAt?: true
@@ -164,6 +188,10 @@ export type DeviceActivationGroupByOutputType = {
   licenseId: string
   deviceHash: string
   label: string | null
+  machineIdHint: string | null
+  operatingSystem: string | null
+  architecture: string | null
+  lastSeenAt: Date
   active: boolean
   activatedAt: Date
   deactivatedAt: Date | null
@@ -195,6 +223,10 @@ export type DeviceActivationWhereInput = {
   licenseId?: Prisma.StringFilter<"DeviceActivation"> | string
   deviceHash?: Prisma.StringFilter<"DeviceActivation"> | string
   label?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  machineIdHint?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  operatingSystem?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  architecture?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  lastSeenAt?: Prisma.DateTimeFilter<"DeviceActivation"> | Date | string
   active?: Prisma.BoolFilter<"DeviceActivation"> | boolean
   activatedAt?: Prisma.DateTimeFilter<"DeviceActivation"> | Date | string
   deactivatedAt?: Prisma.DateTimeNullableFilter<"DeviceActivation"> | Date | string | null
@@ -206,6 +238,10 @@ export type DeviceActivationOrderByWithRelationInput = {
   licenseId?: Prisma.SortOrder
   deviceHash?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
+  machineIdHint?: Prisma.SortOrderInput | Prisma.SortOrder
+  operatingSystem?: Prisma.SortOrderInput | Prisma.SortOrder
+  architecture?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   deactivatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -221,6 +257,10 @@ export type DeviceActivationWhereUniqueInput = Prisma.AtLeast<{
   licenseId?: Prisma.StringFilter<"DeviceActivation"> | string
   deviceHash?: Prisma.StringFilter<"DeviceActivation"> | string
   label?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  machineIdHint?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  operatingSystem?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  architecture?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  lastSeenAt?: Prisma.DateTimeFilter<"DeviceActivation"> | Date | string
   active?: Prisma.BoolFilter<"DeviceActivation"> | boolean
   activatedAt?: Prisma.DateTimeFilter<"DeviceActivation"> | Date | string
   deactivatedAt?: Prisma.DateTimeNullableFilter<"DeviceActivation"> | Date | string | null
@@ -232,6 +272,10 @@ export type DeviceActivationOrderByWithAggregationInput = {
   licenseId?: Prisma.SortOrder
   deviceHash?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
+  machineIdHint?: Prisma.SortOrderInput | Prisma.SortOrder
+  operatingSystem?: Prisma.SortOrderInput | Prisma.SortOrder
+  architecture?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   deactivatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -248,6 +292,10 @@ export type DeviceActivationScalarWhereWithAggregatesInput = {
   licenseId?: Prisma.StringWithAggregatesFilter<"DeviceActivation"> | string
   deviceHash?: Prisma.StringWithAggregatesFilter<"DeviceActivation"> | string
   label?: Prisma.StringNullableWithAggregatesFilter<"DeviceActivation"> | string | null
+  machineIdHint?: Prisma.StringNullableWithAggregatesFilter<"DeviceActivation"> | string | null
+  operatingSystem?: Prisma.StringNullableWithAggregatesFilter<"DeviceActivation"> | string | null
+  architecture?: Prisma.StringNullableWithAggregatesFilter<"DeviceActivation"> | string | null
+  lastSeenAt?: Prisma.DateTimeWithAggregatesFilter<"DeviceActivation"> | Date | string
   active?: Prisma.BoolWithAggregatesFilter<"DeviceActivation"> | boolean
   activatedAt?: Prisma.DateTimeWithAggregatesFilter<"DeviceActivation"> | Date | string
   deactivatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DeviceActivation"> | Date | string | null
@@ -257,6 +305,10 @@ export type DeviceActivationCreateInput = {
   id?: string
   deviceHash: string
   label?: string | null
+  machineIdHint?: string | null
+  operatingSystem?: string | null
+  architecture?: string | null
+  lastSeenAt?: Date | string
   active?: boolean
   activatedAt?: Date | string
   deactivatedAt?: Date | string | null
@@ -268,6 +320,10 @@ export type DeviceActivationUncheckedCreateInput = {
   licenseId: string
   deviceHash: string
   label?: string | null
+  machineIdHint?: string | null
+  operatingSystem?: string | null
+  architecture?: string | null
+  lastSeenAt?: Date | string
   active?: boolean
   activatedAt?: Date | string
   deactivatedAt?: Date | string | null
@@ -277,6 +333,10 @@ export type DeviceActivationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -288,6 +348,10 @@ export type DeviceActivationUncheckedUpdateInput = {
   licenseId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -298,6 +362,10 @@ export type DeviceActivationCreateManyInput = {
   licenseId: string
   deviceHash: string
   label?: string | null
+  machineIdHint?: string | null
+  operatingSystem?: string | null
+  architecture?: string | null
+  lastSeenAt?: Date | string
   active?: boolean
   activatedAt?: Date | string
   deactivatedAt?: Date | string | null
@@ -307,6 +375,10 @@ export type DeviceActivationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -317,6 +389,10 @@ export type DeviceActivationUncheckedUpdateManyInput = {
   licenseId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -342,6 +418,10 @@ export type DeviceActivationCountOrderByAggregateInput = {
   licenseId?: Prisma.SortOrder
   deviceHash?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  machineIdHint?: Prisma.SortOrder
+  operatingSystem?: Prisma.SortOrder
+  architecture?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   deactivatedAt?: Prisma.SortOrder
@@ -352,6 +432,10 @@ export type DeviceActivationMaxOrderByAggregateInput = {
   licenseId?: Prisma.SortOrder
   deviceHash?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  machineIdHint?: Prisma.SortOrder
+  operatingSystem?: Prisma.SortOrder
+  architecture?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   deactivatedAt?: Prisma.SortOrder
@@ -362,6 +446,10 @@ export type DeviceActivationMinOrderByAggregateInput = {
   licenseId?: Prisma.SortOrder
   deviceHash?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  machineIdHint?: Prisma.SortOrder
+  operatingSystem?: Prisma.SortOrder
+  architecture?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
   deactivatedAt?: Prisma.SortOrder
@@ -413,6 +501,10 @@ export type DeviceActivationCreateWithoutLicenseInput = {
   id?: string
   deviceHash: string
   label?: string | null
+  machineIdHint?: string | null
+  operatingSystem?: string | null
+  architecture?: string | null
+  lastSeenAt?: Date | string
   active?: boolean
   activatedAt?: Date | string
   deactivatedAt?: Date | string | null
@@ -422,6 +514,10 @@ export type DeviceActivationUncheckedCreateWithoutLicenseInput = {
   id?: string
   deviceHash: string
   label?: string | null
+  machineIdHint?: string | null
+  operatingSystem?: string | null
+  architecture?: string | null
+  lastSeenAt?: Date | string
   active?: boolean
   activatedAt?: Date | string
   deactivatedAt?: Date | string | null
@@ -461,6 +557,10 @@ export type DeviceActivationScalarWhereInput = {
   licenseId?: Prisma.StringFilter<"DeviceActivation"> | string
   deviceHash?: Prisma.StringFilter<"DeviceActivation"> | string
   label?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  machineIdHint?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  operatingSystem?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  architecture?: Prisma.StringNullableFilter<"DeviceActivation"> | string | null
+  lastSeenAt?: Prisma.DateTimeFilter<"DeviceActivation"> | Date | string
   active?: Prisma.BoolFilter<"DeviceActivation"> | boolean
   activatedAt?: Prisma.DateTimeFilter<"DeviceActivation"> | Date | string
   deactivatedAt?: Prisma.DateTimeNullableFilter<"DeviceActivation"> | Date | string | null
@@ -470,6 +570,10 @@ export type DeviceActivationCreateManyLicenseInput = {
   id?: string
   deviceHash: string
   label?: string | null
+  machineIdHint?: string | null
+  operatingSystem?: string | null
+  architecture?: string | null
+  lastSeenAt?: Date | string
   active?: boolean
   activatedAt?: Date | string
   deactivatedAt?: Date | string | null
@@ -479,6 +583,10 @@ export type DeviceActivationUpdateWithoutLicenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -488,6 +596,10 @@ export type DeviceActivationUncheckedUpdateWithoutLicenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -497,6 +609,10 @@ export type DeviceActivationUncheckedUpdateManyWithoutLicenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceHash?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  machineIdHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operatingSystem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  architecture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   activatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -509,6 +625,10 @@ export type DeviceActivationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   licenseId?: boolean
   deviceHash?: boolean
   label?: boolean
+  machineIdHint?: boolean
+  operatingSystem?: boolean
+  architecture?: boolean
+  lastSeenAt?: boolean
   active?: boolean
   activatedAt?: boolean
   deactivatedAt?: boolean
@@ -520,6 +640,10 @@ export type DeviceActivationSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   licenseId?: boolean
   deviceHash?: boolean
   label?: boolean
+  machineIdHint?: boolean
+  operatingSystem?: boolean
+  architecture?: boolean
+  lastSeenAt?: boolean
   active?: boolean
   activatedAt?: boolean
   deactivatedAt?: boolean
@@ -531,6 +655,10 @@ export type DeviceActivationSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   licenseId?: boolean
   deviceHash?: boolean
   label?: boolean
+  machineIdHint?: boolean
+  operatingSystem?: boolean
+  architecture?: boolean
+  lastSeenAt?: boolean
   active?: boolean
   activatedAt?: boolean
   deactivatedAt?: boolean
@@ -542,12 +670,16 @@ export type DeviceActivationSelectScalar = {
   licenseId?: boolean
   deviceHash?: boolean
   label?: boolean
+  machineIdHint?: boolean
+  operatingSystem?: boolean
+  architecture?: boolean
+  lastSeenAt?: boolean
   active?: boolean
   activatedAt?: boolean
   deactivatedAt?: boolean
 }
 
-export type DeviceActivationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "licenseId" | "deviceHash" | "label" | "active" | "activatedAt" | "deactivatedAt", ExtArgs["result"]["deviceActivation"]>
+export type DeviceActivationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "licenseId" | "deviceHash" | "label" | "machineIdHint" | "operatingSystem" | "architecture" | "lastSeenAt" | "active" | "activatedAt" | "deactivatedAt", ExtArgs["result"]["deviceActivation"]>
 export type DeviceActivationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
 }
@@ -568,6 +700,10 @@ export type $DeviceActivationPayload<ExtArgs extends runtime.Types.Extensions.In
     licenseId: string
     deviceHash: string
     label: string | null
+    machineIdHint: string | null
+    operatingSystem: string | null
+    architecture: string | null
+    lastSeenAt: Date
     active: boolean
     activatedAt: Date
     deactivatedAt: Date | null
@@ -999,6 +1135,10 @@ export interface DeviceActivationFieldRefs {
   readonly licenseId: Prisma.FieldRef<"DeviceActivation", 'String'>
   readonly deviceHash: Prisma.FieldRef<"DeviceActivation", 'String'>
   readonly label: Prisma.FieldRef<"DeviceActivation", 'String'>
+  readonly machineIdHint: Prisma.FieldRef<"DeviceActivation", 'String'>
+  readonly operatingSystem: Prisma.FieldRef<"DeviceActivation", 'String'>
+  readonly architecture: Prisma.FieldRef<"DeviceActivation", 'String'>
+  readonly lastSeenAt: Prisma.FieldRef<"DeviceActivation", 'DateTime'>
   readonly active: Prisma.FieldRef<"DeviceActivation", 'Boolean'>
   readonly activatedAt: Prisma.FieldRef<"DeviceActivation", 'DateTime'>
   readonly deactivatedAt: Prisma.FieldRef<"DeviceActivation", 'DateTime'>

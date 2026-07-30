@@ -43,6 +43,7 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Verify artifact SHA-256, size, content type, and malware/signing pipeline before catalog activation.
 - [ ] Confirm downloads are streamed only after entitlement checks and one-time grants reject reuse and forgery.
 - [ ] Monitor download errors, unusual grant creation, object deletion, and access-policy changes.
+- [ ] Alert on `PRODUCT_DELETE_STORAGE_CLEANUP_FAILED`; verify S3 delete permission and retry the archived product deletion after restoring storage health. Never log the affected object key.
 
 ## Domain and HTTPS
 
@@ -74,3 +75,12 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Run migrations, seed safely, bootstrap administrators through controlled access, and remove temporary credentials.
 - [ ] Require clean lint, typecheck, unit, database integration, Playwright, production build, and dependency audit results.
 - [ ] Require a PayMongo sandbox checkout/webhook/reconciliation pass and an independent security review before launch.
+
+## Platform administration
+
+- [ ] Require MFA and recent authentication for administrator key disclosure and destructive entitlement changes.
+- [ ] Restrict administrator accounts to named staff; review access and audit exports monthly.
+- [ ] Configure artifact malware scanning, code signing, checksum verification, orphan-object cleanup, and retention.
+- [ ] Alert on customer suspension, device resets, license transfer/reveal/revoke, release rollback, artifact replacement/removal, and invoice resend spikes.
+- [ ] Alert on blocked and successful permanent-product-deletion audit actions; periodically verify that only archived products with zero preserved dependencies can be deleted.
+- [ ] Validate audit export retention, access controls, CSV handling, and scale limits.

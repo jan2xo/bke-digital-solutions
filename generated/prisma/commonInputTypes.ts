@@ -233,6 +233,23 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
+export type EnumReleaseChannelFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseChannel | Prisma.EnumReleaseChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel> | $Enums.ReleaseChannel
+}
+
+export type EnumReleaseChannelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseChannel | Prisma.EnumReleaseChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseChannelWithAggregatesFilter<$PrismaModel> | $Enums.ReleaseChannel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
+}
+
 export type IntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -714,6 +731,23 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumReleaseChannelFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseChannel | Prisma.EnumReleaseChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel> | $Enums.ReleaseChannel
+}
+
+export type NestedEnumReleaseChannelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseChannel | Prisma.EnumReleaseChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseChannelWithAggregatesFilter<$PrismaModel> | $Enums.ReleaseChannel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
 }
 
 export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {

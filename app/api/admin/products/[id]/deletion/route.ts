@@ -1,0 +1,66 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { requireAdmin } from "@/lib/auth";
+import { audit } from "@/lib/audit";
+import { evaluateProductDeletionEligibility, permanentlyDeleteProduct, ProductDeletionError } from "@/lib/product-deletion";
+import { assertSameOrigin } from "@/lib/security/request";
+import { apiError } from "@/lib/http";
+
+const idSchema = z.string().cuid();
+const bodySchema = z.object({ confirmationName: z.string().min(1).max(120) }).strict();
+const noStore = { "cache-control": "no-store" };
+
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    await requireAdmin();
+    const { id } = await params;
+    const eligibility = await evaluateProductDeletionEligibility(idSchema.parse(id));
+    if (!eligibility.productExists) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404, headers: noStore });
+    return NextResponse.json(eligibility, { headers: noStore });
+  } catch (error) {
+    return apiError(error);
+  }
+}
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let admin: Awaited<ReturnType<typeof requireAdmin>> | undefined;
+  let productId: string | undefined;
+  try {
+    assertSameOrigin(request);
+    admin = await requireAdmin();
+    productId = idSchema.parse((await params).id);
+    const input = bodySchema.parse(await request.json());
+    await permanentlyDeleteProduct({ productId, actorId: admin.id, confirmationName: input.confirmationName });
+    return new NextResponse(null, { status: 204, headers: noStore });
+  } catch (error) {
+    if (error instanceof ProductDeletionError) {
+      if (admin && productId && error.code !== "NOT_FOUND") {
+        await audit({
+          actorId: admin.id,
+          action: error.code === "PRODUCT_STORAGE_CLEANUP_FAILED" ? "PRODUCT_DELETE_STORAGE_CLEANUP_FAILED" : "PRODUCT_DELETE_BLOCKED",
+          targetType: "Product",
+          targetId: productId,
+          metadata: {
+            reason: error.eligibility?.reason,
+            dependencies: error.eligibility?.blockingDependencies,
+          },
+        });
+      }
+      if (error.code === "NOT_FOUND") return NextResponse.json({ error: "NOT_FOUND" }, { status: 404, headers: noStore });
+      if (error.code === "PRODUCT_STORAGE_CLEANUP_FAILED") {
+        return NextResponse.json({ error: error.code, message: "Private storage cleanup failed. The product remains archived and the operation can be retried." }, { status: 503, headers: noStore });
+      }
+      return NextResponse.json({
+        error: "PRODUCT_DELETE_BLOCKED",
+        message: error.eligibility?.reason === "PRODUCT_NOT_ARCHIVED"
+          ? "Only archived products can be permanently deleted."
+          : error.eligibility?.productName
+            ? "This product cannot be permanently deleted because the confirmation or preserved dependencies do not allow it."
+            : "This product cannot be permanently deleted.",
+        reason: error.eligibility?.reason,
+        dependencies: error.eligibility?.blockingDependencies,
+      }, { status: 409, headers: noStore });
+    }
+    return apiError(error);
+  }
+}

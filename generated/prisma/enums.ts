@@ -44,6 +44,14 @@ export const ProductType = {
 export type ProductType = (typeof ProductType)[keyof typeof ProductType]
 
 
+export const ReleaseChannel = {
+  STABLE: 'STABLE',
+  BETA: 'BETA'
+} as const
+
+export type ReleaseChannel = (typeof ReleaseChannel)[keyof typeof ReleaseChannel]
+
+
 export const BillingType = {
   ONE_TIME: 'ONE_TIME',
   SUBSCRIPTION: 'SUBSCRIPTION'

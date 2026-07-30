@@ -4,6 +4,20 @@ Date: 2026-07-30 (Asia/Manila)
 
 Status: **Not production ready.** Local database, Valkey, MinIO, mock-payment, integration, browser, and build checks passed. A real PayMongo sandbox flow and production external-service configuration have not been completed.
 
+## Phase 4.1 product lifecycle update — 2026-07-31
+
+Archived disposable products now have a guarded permanent-delete workflow with server-side dependency evaluation, typed-name confirmation, same-origin and administrator enforcement, serializable transactional cleanup, durable redacted audit records, and retry-safe private-object deletion. Customer carts, order/payment/invoice history, subscriptions, licenses, assignments, activations, grants/download counters, and license events block deletion. No migration was required and no force-delete path exists.
+
+Phase 4.1 verification passed: TypeScript, ESLint, 26 Vitest tests with five credential-gated skips, five Playwright tests, the production build, four-migration database status, `git diff --check`, tracked-source secret/sensitive-log scans, and a runtime critical audit with zero vulnerabilities. One Playwright run initially had 4/5 passing because the new non-admin assertion raced session-cookie creation and received 401; waiting for dashboard navigation corrected the test, after which the focused 2/2 and full 5/5 runs passed. The first database test attempt was sandbox-denied and passed 5/5 when local PostgreSQL access was allowed. This feature does not clear the existing production blockers.
+
+## Phase 4 administration update
+
+The administration layer now replaces routine direct-database operations for products, releases, artifacts, customers, licenses, devices, orders, invoices, audits, and dashboard reporting. Migration `20260730161141_platform_administration` is additive. Privileged mutations reuse server-side admin RBAC, same-origin checks, validation, transactions, private storage, and redacted audit logging.
+
+This does not remove existing production blockers. Administrator MFA/recent-auth, artifact malware scanning/code signing, queued large exports, external provider certification, infrastructure, backups, monitoring, legal/privacy/tax review, and an independent security assessment remain required.
+
+Phase 4 final verification: database migration status passed; TypeScript passed; ESLint passed; Vitest passed 21 tests with five credential-gated external-provider skips; Playwright passed four tests; the production build passed; runtime critical audit reported zero vulnerabilities. Real PayMongo and unrestricted Resend delivery remain unverified and block production readiness.
+
 ## Two-day MVP implementation update
 
 The repository now adds the administrator product/release portal, private installer upload with SHA-256 metadata, product/version publish controls, commerce email outbox and Resend provider abstraction, password-reset flow, customer purchase button, invoice view, license/device/download dashboard, and customer-owned device deactivation. Migration `20260730085606_admin_product_email_mvp` was applied and the idempotent catalog seed now includes a published latest version.

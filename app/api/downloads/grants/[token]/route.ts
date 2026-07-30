@@ -12,7 +12,9 @@ export async function GET(_: Request, { params }: { params: Promise<{ token: str
       data: { usedAt: new Date() },
     });
     if (claimed.count !== 1) return null;
-    return tx.downloadGrant.findUnique({ where: { tokenHash }, include: { artifact: true } });
+    const row=await tx.downloadGrant.findUnique({ where: { tokenHash }, include: { artifact: true } });
+    if(row)await tx.productArtifact.update({where:{id:row.artifactId},data:{downloadCount:{increment:1}}});
+    return row;
   });
   if (!grant) return NextResponse.json({ error: "INVALID_OR_USED_GRANT" }, { status: 404 });
   const bytes = await downloadObject(grant.artifact.objectKey);

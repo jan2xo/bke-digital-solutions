@@ -30,7 +30,7 @@ export async function currentUser() {
   const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
   const session = await db.session.findUnique({ where: { tokenHash: hashToken(token) }, include: { user: true } });
-  if (!session || session.expiresAt <= new Date()) return null;
+  if (!session || session.expiresAt <= new Date() || session.user.suspendedAt) return null;
   return session.user;
 }
 export async function requireUser() {

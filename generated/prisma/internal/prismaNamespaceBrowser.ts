@@ -108,7 +108,8 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  suspendedAt: 'suspendedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -216,6 +217,11 @@ export const ProductScalarFieldEnum = {
   summary: 'summary',
   description: 'description',
   type: 'type',
+  category: 'category',
+  licenseType: 'licenseType',
+  featured: 'featured',
+  imageKey: 'imageKey',
+  tags: 'tags',
   active: 'active',
   publishedAt: 'publishedAt',
   archivedAt: 'archivedAt',
@@ -231,6 +237,9 @@ export const ProductVersionScalarFieldEnum = {
   productId: 'productId',
   version: 'version',
   releaseNotes: 'releaseNotes',
+  changelog: 'changelog',
+  channel: 'channel',
+  deprecatedAt: 'deprecatedAt',
   active: 'active',
   operatingSystem: 'operatingSystem',
   architecture: 'architecture',
@@ -281,7 +290,9 @@ export const ProductArtifactScalarFieldEnum = {
   sha256: 'sha256',
   sizeBytes: 'sizeBytes',
   contentType: 'contentType',
-  active: 'active'
+  active: 'active',
+  downloadCount: 'downloadCount',
+  removedAt: 'removedAt'
 } as const
 
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
@@ -470,6 +481,10 @@ export const DeviceActivationScalarFieldEnum = {
   licenseId: 'licenseId',
   deviceHash: 'deviceHash',
   label: 'label',
+  machineIdHint: 'machineIdHint',
+  operatingSystem: 'operatingSystem',
+  architecture: 'architecture',
+  lastSeenAt: 'lastSeenAt',
   active: 'active',
   activatedAt: 'activatedAt',
   deactivatedAt: 'deactivatedAt'

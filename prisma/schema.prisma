@@ -26,6 +26,10 @@ enum ProductType {
   SAAS
   HYBRID
 }
+enum ReleaseChannel {
+  STABLE
+  BETA
+}
 enum BillingType {
   ONE_TIME
   SUBSCRIPTION
@@ -81,6 +85,7 @@ model User {
   role GlobalRole @default(CUSTOMER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  suspendedAt DateTime?
   credential PasswordCredential?
   sessions Session[]
   ownedAccounts CustomerAccount[] @relation("AccountOwner")
@@ -189,6 +194,11 @@ model Product {
   summary String
   description String
   type ProductType
+  category String @default("General")
+  licenseType String @default("Commercial")
+  featured Boolean @default(false)
+  imageKey String?
+  tags String[] @default([])
   active Boolean @default(true)
   publishedAt DateTime?
   archivedAt DateTime?
@@ -207,6 +217,9 @@ model ProductVersion {
   productId String
   version String
   releaseNotes String?
+  changelog String?
+  channel ReleaseChannel @default(STABLE)
+  deprecatedAt DateTime?
   active Boolean @default(true)
   operatingSystem String
   architecture String
@@ -258,6 +271,8 @@ model ProductArtifact {
   sizeBytes BigInt
   contentType String
   active Boolean @default(true)
+  downloadCount Int @default(0)
+  removedAt DateTime?
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   version ProductVersion? @relation(fields: [versionId], references: [id])
   grants DownloadGrant[]
@@ -450,6 +465,10 @@ model DeviceActivation {
   licenseId String
   deviceHash String
   label String?
+  machineIdHint String?
+  operatingSystem String?
+  architecture String?
+  lastSeenAt DateTime @default(now())
   active Boolean @default(true)
   activatedAt DateTime @default(now())
   deactivatedAt DateTime?
