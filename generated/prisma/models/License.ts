@@ -41,6 +41,8 @@ export type LicenseMinAggregateOutputType = {
   publicId: string | null
   keyHash: string | null
   keyLastFour: string | null
+  keyCiphertext: string | null
+  keyRevealedAt: Date | null
   accountId: string | null
   orderId: string | null
   orderItemId: string | null
@@ -58,6 +60,8 @@ export type LicenseMaxAggregateOutputType = {
   publicId: string | null
   keyHash: string | null
   keyLastFour: string | null
+  keyCiphertext: string | null
+  keyRevealedAt: Date | null
   accountId: string | null
   orderId: string | null
   orderItemId: string | null
@@ -75,6 +79,8 @@ export type LicenseCountAggregateOutputType = {
   publicId: number
   keyHash: number
   keyLastFour: number
+  keyCiphertext: number
+  keyRevealedAt: number
   accountId: number
   orderId: number
   orderItemId: number
@@ -104,6 +110,8 @@ export type LicenseMinAggregateInputType = {
   publicId?: true
   keyHash?: true
   keyLastFour?: true
+  keyCiphertext?: true
+  keyRevealedAt?: true
   accountId?: true
   orderId?: true
   orderItemId?: true
@@ -121,6 +129,8 @@ export type LicenseMaxAggregateInputType = {
   publicId?: true
   keyHash?: true
   keyLastFour?: true
+  keyCiphertext?: true
+  keyRevealedAt?: true
   accountId?: true
   orderId?: true
   orderItemId?: true
@@ -138,6 +148,8 @@ export type LicenseCountAggregateInputType = {
   publicId?: true
   keyHash?: true
   keyLastFour?: true
+  keyCiphertext?: true
+  keyRevealedAt?: true
   accountId?: true
   orderId?: true
   orderItemId?: true
@@ -242,6 +254,8 @@ export type LicenseGroupByOutputType = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext: string | null
+  keyRevealedAt: Date | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -282,6 +296,8 @@ export type LicenseWhereInput = {
   publicId?: Prisma.StringFilter<"License"> | string
   keyHash?: Prisma.StringFilter<"License"> | string
   keyLastFour?: Prisma.StringFilter<"License"> | string
+  keyCiphertext?: Prisma.StringNullableFilter<"License"> | string | null
+  keyRevealedAt?: Prisma.DateTimeNullableFilter<"License"> | Date | string | null
   accountId?: Prisma.StringFilter<"License"> | string
   orderId?: Prisma.StringFilter<"License"> | string
   orderItemId?: Prisma.StringFilter<"License"> | string
@@ -307,6 +323,8 @@ export type LicenseOrderByWithRelationInput = {
   publicId?: Prisma.SortOrder
   keyHash?: Prisma.SortOrder
   keyLastFour?: Prisma.SortOrder
+  keyCiphertext?: Prisma.SortOrderInput | Prisma.SortOrder
+  keyRevealedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   accountId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -336,6 +354,8 @@ export type LicenseWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LicenseWhereInput[]
   NOT?: Prisma.LicenseWhereInput | Prisma.LicenseWhereInput[]
   keyLastFour?: Prisma.StringFilter<"License"> | string
+  keyCiphertext?: Prisma.StringNullableFilter<"License"> | string | null
+  keyRevealedAt?: Prisma.DateTimeNullableFilter<"License"> | Date | string | null
   accountId?: Prisma.StringFilter<"License"> | string
   orderId?: Prisma.StringFilter<"License"> | string
   productId?: Prisma.StringFilter<"License"> | string
@@ -360,6 +380,8 @@ export type LicenseOrderByWithAggregationInput = {
   publicId?: Prisma.SortOrder
   keyHash?: Prisma.SortOrder
   keyLastFour?: Prisma.SortOrder
+  keyCiphertext?: Prisma.SortOrderInput | Prisma.SortOrder
+  keyRevealedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   accountId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -385,6 +407,8 @@ export type LicenseScalarWhereWithAggregatesInput = {
   publicId?: Prisma.StringWithAggregatesFilter<"License"> | string
   keyHash?: Prisma.StringWithAggregatesFilter<"License"> | string
   keyLastFour?: Prisma.StringWithAggregatesFilter<"License"> | string
+  keyCiphertext?: Prisma.StringNullableWithAggregatesFilter<"License"> | string | null
+  keyRevealedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"License"> | Date | string | null
   accountId?: Prisma.StringWithAggregatesFilter<"License"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"License"> | string
   orderItemId?: Prisma.StringWithAggregatesFilter<"License"> | string
@@ -402,6 +426,8 @@ export type LicenseCreateInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -423,6 +449,8 @@ export type LicenseUncheckedCreateInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -444,6 +472,8 @@ export type LicenseUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -465,6 +495,8 @@ export type LicenseUncheckedUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -486,6 +518,8 @@ export type LicenseCreateManyInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -503,6 +537,8 @@ export type LicenseUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -516,6 +552,8 @@ export type LicenseUncheckedUpdateManyInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -543,6 +581,8 @@ export type LicenseCountOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   keyHash?: Prisma.SortOrder
   keyLastFour?: Prisma.SortOrder
+  keyCiphertext?: Prisma.SortOrder
+  keyRevealedAt?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -565,6 +605,8 @@ export type LicenseMaxOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   keyHash?: Prisma.SortOrder
   keyLastFour?: Prisma.SortOrder
+  keyCiphertext?: Prisma.SortOrder
+  keyRevealedAt?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -582,6 +624,8 @@ export type LicenseMinOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   keyHash?: Prisma.SortOrder
   keyLastFour?: Prisma.SortOrder
+  keyCiphertext?: Prisma.SortOrder
+  keyRevealedAt?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -837,6 +881,8 @@ export type LicenseCreateWithoutAccountInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -857,6 +903,8 @@ export type LicenseUncheckedCreateWithoutAccountInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderId: string
   orderItemId: string
   productId: string
@@ -906,6 +954,8 @@ export type LicenseScalarWhereInput = {
   publicId?: Prisma.StringFilter<"License"> | string
   keyHash?: Prisma.StringFilter<"License"> | string
   keyLastFour?: Prisma.StringFilter<"License"> | string
+  keyCiphertext?: Prisma.StringNullableFilter<"License"> | string | null
+  keyRevealedAt?: Prisma.DateTimeNullableFilter<"License"> | Date | string | null
   accountId?: Prisma.StringFilter<"License"> | string
   orderId?: Prisma.StringFilter<"License"> | string
   orderItemId?: Prisma.StringFilter<"License"> | string
@@ -923,6 +973,8 @@ export type LicenseCreateWithoutProductInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -943,6 +995,8 @@ export type LicenseUncheckedCreateWithoutProductInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -989,6 +1043,8 @@ export type LicenseCreateWithoutOrderInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1009,6 +1065,8 @@ export type LicenseUncheckedCreateWithoutOrderInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderItemId: string
   productId: string
@@ -1055,6 +1113,8 @@ export type LicenseCreateWithoutSubscriptionInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1075,6 +1135,8 @@ export type LicenseUncheckedCreateWithoutSubscriptionInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1121,6 +1183,8 @@ export type LicenseCreateWithoutAssignmentsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1141,6 +1205,8 @@ export type LicenseUncheckedCreateWithoutAssignmentsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1177,6 +1243,8 @@ export type LicenseUpdateWithoutAssignmentsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1197,6 +1265,8 @@ export type LicenseUncheckedUpdateWithoutAssignmentsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1217,6 +1287,8 @@ export type LicenseCreateWithoutActivationsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1237,6 +1309,8 @@ export type LicenseUncheckedCreateWithoutActivationsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1273,6 +1347,8 @@ export type LicenseUpdateWithoutActivationsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1293,6 +1369,8 @@ export type LicenseUncheckedUpdateWithoutActivationsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1313,6 +1391,8 @@ export type LicenseCreateWithoutGrantsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1333,6 +1413,8 @@ export type LicenseUncheckedCreateWithoutGrantsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1369,6 +1451,8 @@ export type LicenseUpdateWithoutGrantsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1389,6 +1473,8 @@ export type LicenseUncheckedUpdateWithoutGrantsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1409,6 +1495,8 @@ export type LicenseCreateWithoutEventsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderItemId: string
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1429,6 +1517,8 @@ export type LicenseUncheckedCreateWithoutEventsInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1465,6 +1555,8 @@ export type LicenseUpdateWithoutEventsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1485,6 +1577,8 @@ export type LicenseUncheckedUpdateWithoutEventsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1505,6 +1599,8 @@ export type LicenseCreateManyAccountInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   orderId: string
   orderItemId: string
   productId: string
@@ -1521,6 +1617,8 @@ export type LicenseUpdateWithoutAccountInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1541,6 +1639,8 @@ export type LicenseUncheckedUpdateWithoutAccountInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1561,6 +1661,8 @@ export type LicenseUncheckedUpdateManyWithoutAccountInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1577,6 +1679,8 @@ export type LicenseCreateManyProductInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1593,6 +1697,8 @@ export type LicenseUpdateWithoutProductInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1613,6 +1719,8 @@ export type LicenseUncheckedUpdateWithoutProductInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1633,6 +1741,8 @@ export type LicenseUncheckedUpdateManyWithoutProductInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1649,6 +1759,8 @@ export type LicenseCreateManyOrderInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderItemId: string
   productId: string
@@ -1665,6 +1777,8 @@ export type LicenseUpdateWithoutOrderInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1685,6 +1799,8 @@ export type LicenseUncheckedUpdateWithoutOrderInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1705,6 +1821,8 @@ export type LicenseUncheckedUpdateManyWithoutOrderInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1721,6 +1839,8 @@ export type LicenseCreateManySubscriptionInput = {
   publicId: string
   keyHash: string
   keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
   accountId: string
   orderId: string
   orderItemId: string
@@ -1737,6 +1857,8 @@ export type LicenseUpdateWithoutSubscriptionInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1757,6 +1879,8 @@ export type LicenseUncheckedUpdateWithoutSubscriptionInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1777,6 +1901,8 @@ export type LicenseUncheckedUpdateManyWithoutSubscriptionInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   keyHash?: Prisma.StringFieldUpdateOperationsInput | string
   keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1851,6 +1977,8 @@ export type LicenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   publicId?: boolean
   keyHash?: boolean
   keyLastFour?: boolean
+  keyCiphertext?: boolean
+  keyRevealedAt?: boolean
   accountId?: boolean
   orderId?: boolean
   orderItemId?: boolean
@@ -1877,6 +2005,8 @@ export type LicenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   publicId?: boolean
   keyHash?: boolean
   keyLastFour?: boolean
+  keyCiphertext?: boolean
+  keyRevealedAt?: boolean
   accountId?: boolean
   orderId?: boolean
   orderItemId?: boolean
@@ -1898,6 +2028,8 @@ export type LicenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   publicId?: boolean
   keyHash?: boolean
   keyLastFour?: boolean
+  keyCiphertext?: boolean
+  keyRevealedAt?: boolean
   accountId?: boolean
   orderId?: boolean
   orderItemId?: boolean
@@ -1919,6 +2051,8 @@ export type LicenseSelectScalar = {
   publicId?: boolean
   keyHash?: boolean
   keyLastFour?: boolean
+  keyCiphertext?: boolean
+  keyRevealedAt?: boolean
   accountId?: boolean
   orderId?: boolean
   orderItemId?: boolean
@@ -1931,7 +2065,7 @@ export type LicenseSelectScalar = {
   createdAt?: boolean
 }
 
-export type LicenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "keyHash" | "keyLastFour" | "accountId" | "orderId" | "orderItemId" | "productId" | "subscriptionId" | "status" | "maxSeats" | "maxDevicesPerSeat" | "expiresAt" | "createdAt", ExtArgs["result"]["license"]>
+export type LicenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "keyHash" | "keyLastFour" | "keyCiphertext" | "keyRevealedAt" | "accountId" | "orderId" | "orderItemId" | "productId" | "subscriptionId" | "status" | "maxSeats" | "maxDevicesPerSeat" | "expiresAt" | "createdAt", ExtArgs["result"]["license"]>
 export type LicenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account?: boolean | Prisma.CustomerAccountDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -1973,6 +2107,8 @@ export type $LicensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     publicId: string
     keyHash: string
     keyLastFour: string
+    keyCiphertext: string | null
+    keyRevealedAt: Date | null
     accountId: string
     orderId: string
     orderItemId: string
@@ -2418,6 +2554,8 @@ export interface LicenseFieldRefs {
   readonly publicId: Prisma.FieldRef<"License", 'String'>
   readonly keyHash: Prisma.FieldRef<"License", 'String'>
   readonly keyLastFour: Prisma.FieldRef<"License", 'String'>
+  readonly keyCiphertext: Prisma.FieldRef<"License", 'String'>
+  readonly keyRevealedAt: Prisma.FieldRef<"License", 'DateTime'>
   readonly accountId: Prisma.FieldRef<"License", 'String'>
   readonly orderId: Prisma.FieldRef<"License", 'String'>
   readonly orderItemId: Prisma.FieldRef<"License", 'String'>

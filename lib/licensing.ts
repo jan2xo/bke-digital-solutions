@@ -1,6 +1,6 @@
 import "server-only";
 import { addDays, addMonths, addYears } from "@/lib/time";
-import { generateLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
+import { encryptLicenseKey, generateLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
 import type { Prisma } from "@/generated/prisma/client";
 
 export async function issueEntitlements(tx: Prisma.TransactionClient, orderId: string) {
@@ -18,7 +18,7 @@ export async function issueEntitlements(tx: Prisma.TransactionClient, orderId: s
     }
     const key = generateLicenseKey(); plaintextKeys.push(key);
     await tx.license.create({ data: {
-      publicId: crypto.randomUUID(), keyHash: hashLicenseKey(key), keyLastFour: key.slice(-4), accountId: order.accountId,
+      publicId: crypto.randomUUID(), keyHash: hashLicenseKey(key), keyLastFour: key.slice(-4), keyCiphertext: encryptLicenseKey(key), accountId: order.accountId,
       orderId, orderItemId: item.id, productId: item.productId, subscriptionId,
       maxSeats: item.quantity * policy.maxSeats, maxDevicesPerSeat: policy.maxDevicesPerSeat, expiresAt,
       events: { create: { type: "ISSUED", metadata: { orderId } } },

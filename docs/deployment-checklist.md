@@ -1,0 +1,73 @@
+# Production deployment checklist
+
+Do not mark a deployment ready until every applicable box has an owner, evidence, and completion date.
+
+## PostgreSQL
+
+- [ ] Use a supported managed PostgreSQL release in a private network with TLS required.
+- [ ] Create separate least-privilege runtime and migration users; deny public ingress.
+- [ ] Run `npm run db:generate`, review migration SQL, back up, then run `npm run db:deploy` once per release.
+- [ ] Enable point-in-time recovery, encrypted automated backups, retention policy, and quarterly restore drills.
+- [ ] Monitor connections, storage, replication lag, long queries, failed transactions, and migration status.
+
+## Redis or Valkey
+
+- [ ] Set `REDIS_URL` to a TLS-protected private endpoint or configure the Upstash REST variables.
+- [ ] Require authentication, encryption, memory limits, eviction policy, and network restrictions.
+- [ ] Confirm multiple app instances share rate-limit state and alert on connection failures or saturation.
+- [ ] Use a dedicated database/namespace and never run test `FLUSHDB` operations in production.
+
+## PayMongo
+
+- [ ] Activate and verify the merchant account; begin with test keys and `PAYMONGO_LIVEMODE=false`.
+- [ ] Compare the adapter against PayMongo's current checkout and signature documentation.
+- [ ] Register one HTTPS webhook at `/api/webhooks/payments`; store its signing secret only in the secret manager.
+- [ ] Test signed success, failure, refund, stale signature, wrong mode, wrong amount/currency, replay, delayed delivery, and provider outage scenarios.
+- [ ] Reconcile daily provider settlements against local payments, orders, invoices, refunds, and failed webhook records.
+- [ ] Switch to live keys and `PAYMONGO_LIVEMODE=true` only after sandbox evidence is approved.
+
+## Resend
+
+- [ ] Verify the sending domain and configure SPF, DKIM, and DMARC.
+- [ ] Set a production `EMAIL_FROM` and scoped `RESEND_API_KEY` in the secret manager.
+- [ ] Test verification, magic-link, password reset, receipt, invitation, and renewal delivery plus bounce/complaint handling.
+- [ ] Ensure emails never contain passwords, provider secrets, or reusable download grants.
+
+## S3-compatible private storage
+
+- [ ] Create a private bucket with public access blocked, encryption enabled, versioning, and retention rules.
+- [ ] Grant the application read access only to the required object prefix; separate upload/admin credentials.
+- [ ] Verify artifact SHA-256, size, content type, and malware/signing pipeline before catalog activation.
+- [ ] Confirm downloads are streamed only after entitlement checks and one-time grants reject reuse and forgery.
+- [ ] Monitor download errors, unusual grant creation, object deletion, and access-policy changes.
+
+## Domain and HTTPS
+
+- [ ] Configure the canonical HTTPS `APP_URL`, DNS, trusted proxy headers, and automatic certificate renewal.
+- [ ] Redirect HTTP to HTTPS and verify HSTS, CSP, frame denial, MIME, referrer, and permissions headers.
+- [ ] Confirm production cookies use `Secure`, `HttpOnly`, `SameSite=Lax`, path `/`, and the `__Host-` prefix.
+- [ ] Restrict allowed origins and run an external TLS and security-header scan.
+
+## Backups and disaster recovery
+
+- [ ] Encrypt database and object-storage backups with keys separated from application credentials.
+- [ ] Document RPO/RTO, restore order, reconciliation procedure, and responsible responders.
+- [ ] Perform and record end-to-end restoration into an isolated environment at least quarterly.
+- [ ] Preserve append-only audit and payment evidence according to legal retention requirements.
+
+## Monitoring and incident response
+
+- [ ] Add structured redacted logs, request IDs, error tracking, uptime checks, and paging ownership.
+- [ ] Alert on failed/retried webhooks, checkout failure spikes, license issuance mismatch, admin changes, authentication abuse, rate-limit service failure, and expiring subscriptions.
+- [ ] Monitor PostgreSQL, Redis/Valkey, PayMongo, Resend, S3, cron jobs, and Next.js health independently.
+- [ ] Maintain runbooks for payment reconciliation, credential exposure, unauthorized access, email abuse, storage compromise, and rollback.
+- [ ] Complete privacy, Philippine data-protection, license-terms, refund-policy, and tax/invoice review.
+
+## Secret rotation and release gate
+
+- [ ] Store all production secrets in the deployment platform's secret manager; no `.env` files on shared hosts.
+- [ ] Assign rotation intervals and owners for database, Redis, PayMongo, Resend, S3, cron, session, and license keys.
+- [ ] Rotate `SESSION_SECRET` with planned session revocation; rotate `LICENSE_PEPPER` only with a license-key migration plan.
+- [ ] Run migrations, seed safely, bootstrap administrators through controlled access, and remove temporary credentials.
+- [ ] Require clean lint, typecheck, unit, database integration, Playwright, production build, and dependency audit results.
+- [ ] Require a PayMongo sandbox checkout/webhook/reconciliation pass and an independent security review before launch.

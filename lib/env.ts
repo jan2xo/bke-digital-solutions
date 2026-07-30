@@ -14,6 +14,7 @@ const serverSchema = z.object({
   PAYMONGO_LIVEMODE: z.enum(["true", "false"]).default("false").transform((v) => v === "true"),
   RESEND_API_KEY: z.preprocess(blankToUndefined, z.string().optional()),
   EMAIL_FROM: z.string().min(3),
+  REDIS_URL: z.preprocess(blankToUndefined, z.url().optional()),
   UPSTASH_REDIS_REST_URL: z.preprocess(blankToUndefined, z.url().optional()),
   UPSTASH_REDIS_REST_TOKEN: z.preprocess(blankToUndefined, z.string().optional()),
   S3_ENDPOINT: z.preprocess(blankToUndefined, z.url().optional()),

@@ -12,7 +12,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
     if (!response.ok) return setError(body.error === "INVALID_CREDENTIALS" ? "The email or password is incorrect." : "Unable to continue. Please review your details.");
     router.push(mode === "login" ? "/dashboard" : "/verify-email"); router.refresh();
   }
-  return <form onSubmit={submit} className="card grid gap-5 p-8">
+  return <form method="post" onSubmit={submit} className="card grid gap-5 p-8">
     {mode === "register" && <label className="label">Full name<input className="input" name="name" required minLength={2} maxLength={100} autoComplete="name" /></label>}
     <label className="label">Email address<input className="input" type="email" name="email" required autoComplete="email" /></label>
     <label className="label">Password<input className="input" type="password" name="password" required minLength={mode === "register" ? 12 : 1} maxLength={128} autoComplete={mode === "register" ? "new-password" : "current-password"} /></label>

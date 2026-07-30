@@ -25,6 +25,15 @@ export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
         await tx.invoice.update({ where: { orderId: order.id }, data: { status: "FINAL", issuedAt: event.occurredAt } });
         await issueEntitlements(tx, order.id);
       }
+      if (event.type === "payment.failed") {
+        if (event.externalPaymentId) await tx.payment.upsert({ where: { provider_externalId: { provider: paymentProvider.name, externalId: event.externalPaymentId } }, create: { orderId: order.id, provider: paymentProvider.name, externalId: event.externalPaymentId, status: "FAILED", amountMinor: event.amountMinor!, currency: event.currency! }, update: { status: "FAILED" } });
+        if (attempt) await tx.paymentAttempt.update({ where: { id: attempt.id }, data: { status: "FAILED" } });
+      }
+      if (event.type === "payment.refunded" && order.status === "PAID") {
+        await tx.order.update({ where: { id: order.id }, data: { status: "REFUNDED" } });
+        await tx.invoice.update({ where: { orderId: order.id }, data: { status: "VOID" } });
+        await tx.license.updateMany({ where: { orderId: order.id }, data: { status: "REVOKED" } });
+      }
       await tx.webhookEvent.update({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, data: { status: "PROCESSED", processedAt: new Date() } });
     }, { isolationLevel: "Serializable" });
     return { processed: true };

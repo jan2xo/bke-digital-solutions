@@ -1,9 +1,13 @@
 import "server-only";
 import { Redis } from "@upstash/redis";
+import { createClient, type RedisClientType } from "redis";
 import { env } from "@/lib/env";
 
 const redis = env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
   ? new Redis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN }) : null;
+const globalRedis = globalThis as unknown as { bkeRedis?: RedisClientType };
+const localRedis = env.REDIS_URL ? (globalRedis.bkeRedis ?? createClient({ url: env.REDIS_URL })) : null;
+if (localRedis && env.NODE_ENV !== "production") globalRedis.bkeRedis = localRedis;
 const local = new Map<string, { count: number; reset: number }>();
 
 export async function rateLimit(key: string, limit: number, windowSeconds: number) {
@@ -11,6 +15,12 @@ export async function rateLimit(key: string, limit: number, windowSeconds: numbe
   if (redis) {
     const count = await redis.incr(bucket);
     if (count === 1) await redis.expire(bucket, windowSeconds + 1);
+    return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
+  }
+  if (localRedis) {
+    if (!localRedis.isOpen) await localRedis.connect();
+    const count = await localRedis.incr(bucket);
+    if (count === 1) await localRedis.expire(bucket, windowSeconds + 1);
     return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
   }
   if (env.NODE_ENV === "production") throw new Error("Distributed rate limiter is not configured");

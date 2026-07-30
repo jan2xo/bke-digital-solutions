@@ -431,6 +431,8 @@ export const LicenseScalarFieldEnum = {
   publicId: 'publicId',
   keyHash: 'keyHash',
   keyLastFour: 'keyLastFour',
+  keyCiphertext: 'keyCiphertext',
+  keyRevealedAt: 'keyRevealedAt',
   accountId: 'accountId',
   orderId: 'orderId',
   orderItemId: 'orderItemId',

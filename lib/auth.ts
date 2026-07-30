@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { hashToken, randomToken } from "@/lib/security/crypto";
 
-const COOKIE = "__Host-bke_session";
+const COOKIE = env.NODE_ENV === "production" ? "__Host-bke_session" : "bke_session";
 const SESSION_DAYS = 14;
 
 export async function hashPassword(password: string) {

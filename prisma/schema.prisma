@@ -403,6 +403,8 @@ model License {
   publicId String @unique
   keyHash String @unique
   keyLastFour String
+  keyCiphertext String?
+  keyRevealedAt DateTime?
   accountId String
   orderId String
   orderItemId String

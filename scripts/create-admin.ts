@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { PrismaPg } from "@prisma/adapter-pg";
