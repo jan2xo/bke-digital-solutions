@@ -427,7 +427,8 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
-  JobRun: 'JobRun'
+  JobRun: 'JobRun',
+  EmailOutbox: 'EmailOutbox'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -443,7 +444,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "license" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun"
+    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "license" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2741,6 +2742,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmailOutbox: {
+      payload: Prisma.$EmailOutboxPayload<ExtArgs>
+      fields: Prisma.EmailOutboxFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailOutboxFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailOutboxFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailOutboxFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailOutboxFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>
+        }
+        findMany: {
+          args: Prisma.EmailOutboxFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>[]
+        }
+        create: {
+          args: Prisma.EmailOutboxCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>
+        }
+        createMany: {
+          args: Prisma.EmailOutboxCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailOutboxCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailOutboxDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>
+        }
+        update: {
+          args: Prisma.EmailOutboxUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailOutboxDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailOutboxUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailOutboxUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailOutboxUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailOutboxPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailOutboxAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailOutbox>
+        }
+        groupBy: {
+          args: Prisma.EmailOutboxGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailOutboxGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailOutboxCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailOutboxCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2896,6 +2971,8 @@ export const ProductScalarFieldEnum = {
   description: 'description',
   type: 'type',
   active: 'active',
+  publishedAt: 'publishedAt',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2909,6 +2986,10 @@ export const ProductVersionScalarFieldEnum = {
   version: 'version',
   releaseNotes: 'releaseNotes',
   active: 'active',
+  operatingSystem: 'operatingSystem',
+  architecture: 'architecture',
+  isLatest: 'isLatest',
+  publishedAt: 'publishedAt',
   releasedAt: 'releasedAt'
 } as const
 
@@ -3199,6 +3280,22 @@ export const JobRunScalarFieldEnum = {
 } as const
 
 export type JobRunScalarFieldEnum = (typeof JobRunScalarFieldEnum)[keyof typeof JobRunScalarFieldEnum]
+
+
+export const EmailOutboxScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  recipient: 'recipient',
+  subject: 'subject',
+  payload: 'payload',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+} as const
+
+export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3687,6 +3784,7 @@ export type GlobalOmitConfig = {
   licenseEvent?: Prisma.LicenseEventOmit
   auditLog?: Prisma.AuditLogOmit
   jobRun?: Prisma.JobRunOmit
+  emailOutbox?: Prisma.EmailOutboxOmit
 }
 
 /* Types for Logging */

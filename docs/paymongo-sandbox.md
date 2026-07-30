@@ -1,0 +1,54 @@
+# PayMongo sandbox verification
+
+This procedure must use PayMongo test mode only. Never place keys in source code, shell history, test output, screenshots, or committed fixtures.
+
+## Configure
+
+Inject these values through a local ignored `.env` or the development server's secret manager:
+
+```dotenv
+PAYMENT_PROVIDER=paymongo
+PAYMONGO_SECRET_KEY=sk_test_...
+PAYMONGO_WEBHOOK_SECRET=...
+PAYMONGO_LIVEMODE=false
+```
+
+The sandbox suite refuses `sk_live_…`, missing webhook credentials, live mode, or the mock provider. Keep `PAYMENT_PROVIDER=mock` in normal local and CI jobs.
+
+For provider-event and reconciliation evidence, optionally set:
+
+```dotenv
+PAYMONGO_SANDBOX_WEBHOOK_PAYLOAD_FILE=/restricted/temporary/path/event-body.json
+PAYMONGO_SANDBOX_WEBHOOK_SIGNATURE_FILE=/restricted/temporary/path/signature.txt
+PAYMONGO_SANDBOX_PAYMENT_ID=pay_...
+PAYMONGO_SANDBOX_ORDER_ID=<local-order-id>
+```
+
+The payload must be the exact unmodified request bytes and the signature file must contain only the exact `Paymongo-Signature` header. Store these in a restricted temporary directory outside the repository, redact them from support material, and delete them after verification. The application itself stores only the provider event ID, event type, mode, processing state, and SHA-256 payload hash.
+
+## Execute
+
+1. Expose the HTTPS development webhook endpoint through an approved authenticated tunnel or development server.
+2. Register one PayMongo test webhook at `/api/webhooks/payments` for checkout/payment success, failure, and refund events available to the account.
+3. Run `npm run test:paymongo`. Confirm the real checkout test executes and returns a `cs_…` ID and HTTPS URL without logging either value or customer data.
+4. Complete PayMongo's test checkout using provider-supplied sandbox payment details; never use a real card or wallet.
+5. Confirm the received event has `livemode=false`, the order becomes paid only after the signed webhook, one invoice and one license are created, and identical delivery remains a no-op.
+6. Exercise a provider-declined test payment and confirm no entitlement is created.
+7. Exercise a test refund when the sandbox account supports it; confirm payment/order refund state, void invoice, revoked license, and cancelled subscription.
+8. Retry a previously created event after a delay. A fresh valid delivery signature may carry an old event creation time; a stale signature timestamp must still be rejected.
+9. Set the sandbox payment/order IDs and run `npm run payments:reconcile -- <order-id>`. Exit code 0 and `matched:true` are required.
+10. Restore `PAYMENT_PROVIDER=mock`, remove temporary event material, and retain only redacted test evidence.
+
+## Required pass evidence
+
+- Real checkout session created in test mode.
+- Real signed paid, failed, and refunded events processed.
+- Duplicate and delayed delivery behavior confirmed.
+- Amount, currency, reference, and mode mismatches rejected.
+- Exactly-once payment, invoice, subscription, and license effects confirmed in PostgreSQL.
+- Reconciliation matches the PayMongo payment resource.
+- Application/server/test logs contain no secret, Authorization header, raw payment payload, license key, or customer billing record.
+
+Until every item above executes without skips, PayMongo remains a production blocker.
+
+As of 2026-07-30, the local environment has no PayMongo test secret or webhook secret. The credential-gated cases therefore remain skipped and PayMongo sandbox readiness is not claimed.

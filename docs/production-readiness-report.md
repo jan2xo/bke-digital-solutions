@@ -4,6 +4,105 @@ Date: 2026-07-30 (Asia/Manila)
 
 Status: **Not production ready.** Local database, Valkey, MinIO, mock-payment, integration, browser, and build checks passed. A real PayMongo sandbox flow and production external-service configuration have not been completed.
 
+## Two-day MVP implementation update
+
+The repository now adds the administrator product/release portal, private installer upload with SHA-256 metadata, product/version publish controls, commerce email outbox and Resend provider abstraction, password-reset flow, customer purchase button, invoice view, license/device/download dashboard, and customer-owned device deactivation. Migration `20260730085606_admin_product_email_mvp` was applied and the idempotent catalog seed now includes a published latest version.
+
+New browser coverage creates an administrator, creates and edits a product, uploads a private installer, publishes version `1.2.3`, and verifies audit records. The customer suite continues to cover registration, verification, login, checkout, webhook confirmation, invoice/license issuance, one-time key disclosure, activation, one-time download, renewal, cancellation, and cross-account denial. A credential-gated Resend delivery test was added; it skips when `RESEND_API_KEY` or `RESEND_SANDBOX_TO` is absent.
+
+Final gate for this update: Prisma reported three migrations and an up-to-date database; TypeScript passed; ESLint passed; Vitest passed 19 tests with five credential-gated skips; Playwright passed all four tests; the production build emitted 42 application routes; and `npm audit --omit=dev --audit-level=critical` reported zero vulnerabilities. PayMongo executed one configuration-safety test and skipped four real-provider cases. Resend skipped its one real-delivery case. The application therefore remains **not production ready**.
+
+Failures encountered during this update included an initially missing npm script name, a missing email-module brace, missing Prisma relation/type declarations, sandbox-denied Docker/PostgreSQL access, an administrator test login race, CSRF rejection on direct test requests, non-unique retained-data locators, and a React synthetic-event `currentTarget` lifetime bug. Each code/test defect was corrected; restricted local-service operations were rerun with approved access.
+
+Commands executed in this update (inspection commands are grouped exactly by command family; repeated administrator Playwright retries occurred five times before the passing run):
+
+```text
+sed -n ... README, Prisma schema, auth, email, storage, payment, page, API, test, and documentation files
+rg ... schema relations, CSRF use, lifecycle coverage, logging, and secret-bearing patterns
+find tests -maxdepth 3 -type f -print | sort
+ls -la docs
+git status --short
+git diff --check
+git diff --name-only | sort
+git ls-files --others --exclude-standard | sort
+git grep -nE <PayMongo/Resend secret patterns>
+npm run prisma:generate                         # failed: script does not exist
+npm run
+npx prisma generate
+npm run typecheck                              # failed twice during implementation, then passed
+npm run db:generate
+docker compose ps                              # first sandbox attempt denied, approved retry passed
+npm run db:migrate -- --name admin_product_email_mvp # first sandbox attempt failed, approved retry passed
+npm run db:seed
+npm run lint
+npm test
+npm run test:e2e                               # initial 3-test baseline passed; expanded suite initially failed
+npx playwright test tests/e2e/admin-product.spec.ts # five corrective retries; final retry passed
+npm run db:generate
+npx prisma migrate status
+npm run typecheck
+npm run lint
+npm test
+npm run test:e2e
+npm run build
+npm audit --omit=dev --audit-level=critical
+npm run test:paymongo
+npm run test:resend
+```
+
+## PayMongo sandbox phase update
+
+Status remains **blocked and unverified**. On inspection, `PAYMONGO_SECRET_KEY` and `PAYMONGO_WEBHOOK_SECRET` were missing and no live or test provider request was attempted. The credential-gated suite ran its safety gate and skipped four provider-dependent checks, as designed.
+
+Scoped additions:
+
+- PayMongo checkout-session event normalization, including nested payment resources.
+- Provider payment retrieval and a reconciliation command that emits identifiers and difference names only.
+- Refund processing now updates payment/order/invoice/license/subscription state atomically.
+- Freshly signed delayed events are accepted while stale signature timestamps are rejected.
+- Sandbox-only checkout, real webhook fixture, payment retrieval, reconciliation, and log-safety tests.
+- Explicit refusal to treat `sk_live_…`, live mode, or the mock provider as sandbox configuration.
+
+Phase test result: TypeScript passed, ESLint passed, and the full suite passed 19 tests with four sandbox-provider tests skipped. The four skips are the unresolved PayMongo lifecycle blocker, not a readiness pass.
+
+Commands executed for this phase:
+
+```text
+git status --short --branch
+sed -n '1,260p' lib/payments/paymongo.ts
+sed -n '1,280p' lib/webhooks.ts
+sed -n '1,180p' lib/payments/types.ts
+sed -n '1,180p' .env.example
+awk <credential names only; values reported as SET or MISSING> .env
+rg -n 'console.|payload|PAYMONGO|paymentProvider|webhook' app lib tests docs README.md -g '!generated'
+npm run typecheck
+npm run lint
+npm test
+npm test
+npm run test:paymongo
+npm run typecheck
+npm run lint
+npm test
+npm run build
+git diff --check
+git grep <PayMongo secret patterns across tracked files>
+git grep <payment payload logging patterns across app, library, scripts, and tests>
+git status --short --branch
+git diff --name-only | sort
+```
+
+Official PayMongo documentation for checkout shapes, payment events, webhook retries, and refund events was reviewed during this phase. No secret-bearing request or raw payload was printed or persisted by the application.
+
+Files changed in this phase:
+
+- `.env.example`, `README.md`, `package.json`
+- `lib/payments/paymongo.ts`, `lib/payments/types.ts`, `lib/webhooks.ts`, `lib/reconciliation.ts`
+- `scripts/reconcile-payments.ts`
+- `tests/paymongo.test.ts`, `tests/sandbox/paymongo.sandbox.test.ts`, `tests/integration/lifecycle.test.ts`
+- `docs/paymongo-sandbox.md`, `docs/deployment-checklist.md`, `docs/production-readiness-report.md`
+
+Final tracked-file scans found no PayMongo-shaped secret values and no payment-payload logging statements. The production build passed after these changes.
+
 ## Final verified results
 
 - PostgreSQL 17 container: healthy; `pg_isready` accepted connections.

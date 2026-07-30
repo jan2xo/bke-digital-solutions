@@ -1,16 +1,22 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "@/lib/env";
-import type { CheckoutInput, PaymentEvent, PaymentProvider } from "./types";
+import type { CheckoutInput, PaymentEvent, PaymentProvider, ProviderPayment } from "./types";
 
 const API = "https://api.paymongo.com/v1";
-type PayMongoEvent = { data: { id: string; attributes: { type: string; livemode: boolean; created_at: number; data: { id: string; attributes: Record<string, unknown> } } } };
+type PayMongoResource = { id: string; type?: string; attributes: Record<string, unknown> };
+type PayMongoEvent = { data: { id: string; attributes: { type: string; livemode: boolean; created_at: number; data: PayMongoResource } } };
 
 export class PayMongoProvider implements PaymentProvider {
   readonly name = "paymongo";
+  constructor(private readonly config = { secretKey: env.PAYMONGO_SECRET_KEY, webhookSecret: env.PAYMONGO_WEBHOOK_SECRET, livemode: env.PAYMONGO_LIVEMODE }) {}
+  private authorization() {
+    if (!this.config.secretKey) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
+    return `Basic ${Buffer.from(`${this.config.secretKey}:`).toString("base64")}`;
+  }
   async createCheckout(input: CheckoutInput) {
     const response = await fetch(`${API}/checkout_sessions`, {
       method: "POST",
-      headers: { Authorization: `Basic ${Buffer.from(`${env.PAYMONGO_SECRET_KEY}:`).toString("base64")}`, "Content-Type": "application/json", "Idempotency-Key": input.idempotencyKey },
+      headers: { Authorization: this.authorization(), "Content-Type": "application/json", "Idempotency-Key": input.idempotencyKey },
       body: JSON.stringify({ data: { attributes: {
         billing: { name: input.customer.name, email: input.customer.email },
         line_items: input.items.map((i) => ({ name: i.name, description: i.description, amount: i.amountMinor, currency: input.currency, quantity: i.quantity })),
@@ -24,24 +30,44 @@ export class PayMongoProvider implements PaymentProvider {
     const body = await response.json() as { data: { id: string; attributes: { checkout_url: string } } };
     return { externalId: body.data.id, checkoutUrl: body.data.attributes.checkout_url };
   }
+  async retrievePayment(externalId: string): Promise<ProviderPayment> {
+    if (!/^pay_[A-Za-z0-9]+$/.test(externalId)) throw new Error("INVALID_PROVIDER_ID");
+    const response = await fetch(`${API}/payments/${externalId}`, {
+      headers: { Authorization: this.authorization() },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!response.ok) throw new Error("PAYMENT_PROVIDER_ERROR");
+    const body = await response.json() as { data: { id: string; attributes: { status: string; amount: number; currency: string; livemode: boolean; refunds?: unknown[] } } };
+    const attributes = body.data.attributes;
+    const status = attributes.refunds?.length ? "refunded" : attributes.status === "paid" ? "paid" : attributes.status === "failed" ? "failed" : "pending";
+    return { externalId: body.data.id, status, amountMinor: attributes.amount, currency: attributes.currency, livemode: attributes.livemode };
+  }
   async verifyAndParseWebhook(raw: Buffer, headers: Headers): Promise<PaymentEvent> {
     const header = headers.get("paymongo-signature") ?? "";
     const parts = Object.fromEntries(header.split(",").map((part) => part.split("=").map((v) => v.trim())));
     const timestamp = Number(parts.t);
-    const signature = env.PAYMONGO_LIVEMODE ? parts.li : parts.te;
+    const signature = this.config.livemode ? parts.li : parts.te;
     if (!timestamp || !signature || Math.abs(Date.now() / 1000 - timestamp) > 300) throw new Error("INVALID_SIGNATURE");
-    const expected = createHmac("sha256", env.PAYMONGO_WEBHOOK_SECRET!).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");
+    if (!this.config.webhookSecret) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
+    const expected = createHmac("sha256", this.config.webhookSecret).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");
     const a = Buffer.from(signature); const b = Buffer.from(expected);
     if (a.length !== b.length || !timingSafeEqual(a, b)) throw new Error("INVALID_SIGNATURE");
     const event = JSON.parse(raw.toString("utf8")) as PayMongoEvent;
     const resource = event.data.attributes.data;
     const attrs = resource.attributes;
-    const known = ["payment.paid", "payment.failed", "payment.refunded"].includes(event.data.attributes.type);
+    const rawType = event.data.attributes.type;
+    const normalizedType: PaymentEvent["type"] = rawType === "payment.paid" || rawType === "checkout_session.payment.paid" ? "payment.paid"
+      : rawType === "payment.failed" || rawType === "checkout_session.payment.failed" ? "payment.failed"
+      : rawType === "payment.refunded" ? "payment.refunded" : "unknown";
+    const payments = Array.isArray(attrs.payments) ? attrs.payments as PayMongoResource[] : [];
+    const nestedPayment = payments[0];
+    const paymentAttrs = nestedPayment?.attributes ?? attrs;
     return {
-      eventId: event.data.id, type: known ? event.data.attributes.type as PaymentEvent["type"] : "unknown",
-      externalPaymentId: resource.id, externalCheckoutId: attrs.checkout_session_id as string | undefined,
-      reference: (attrs.external_reference_number ?? attrs.reference_number) as string | undefined,
-      amountMinor: attrs.amount as number | undefined, currency: attrs.currency as string | undefined,
+      eventId: event.data.id, type: normalizedType,
+      externalPaymentId: nestedPayment?.id ?? (resource.type === "payment" ? resource.id : undefined),
+      externalCheckoutId: resource.type === "checkout_session" ? resource.id : attrs.checkout_session_id as string | undefined,
+      reference: (attrs.reference_number ?? paymentAttrs.external_reference_number) as string | undefined,
+      amountMinor: paymentAttrs.amount as number | undefined, currency: paymentAttrs.currency as string | undefined,
       livemode: event.data.attributes.livemode, occurredAt: new Date(event.data.attributes.created_at * 1000),
     };
   }

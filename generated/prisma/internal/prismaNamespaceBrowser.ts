@@ -81,7 +81,8 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
-  JobRun: 'JobRun'
+  JobRun: 'JobRun',
+  EmailOutbox: 'EmailOutbox'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -216,6 +217,8 @@ export const ProductScalarFieldEnum = {
   description: 'description',
   type: 'type',
   active: 'active',
+  publishedAt: 'publishedAt',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -229,6 +232,10 @@ export const ProductVersionScalarFieldEnum = {
   version: 'version',
   releaseNotes: 'releaseNotes',
   active: 'active',
+  operatingSystem: 'operatingSystem',
+  architecture: 'architecture',
+  isLatest: 'isLatest',
+  publishedAt: 'publishedAt',
   releasedAt: 'releasedAt'
 } as const
 
@@ -519,6 +526,22 @@ export const JobRunScalarFieldEnum = {
 } as const
 
 export type JobRunScalarFieldEnum = (typeof JobRunScalarFieldEnum)[keyof typeof JobRunScalarFieldEnum]
+
+
+export const EmailOutboxScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  recipient: 'recipient',
+  subject: 'subject',
+  payload: 'payload',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+} as const
+
+export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
 
 
 export const SortOrder = {

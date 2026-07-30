@@ -190,6 +190,8 @@ model Product {
   description String
   type ProductType
   active Boolean @default(true)
+  publishedAt DateTime?
+  archivedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   versions ProductVersion[]
@@ -197,6 +199,7 @@ model Product {
   policies LicensePolicy[]
   artifacts ProductArtifact[]
   licenses License[]
+  subscriptions Subscription[]
 }
 
 model ProductVersion {
@@ -205,6 +208,10 @@ model ProductVersion {
   version String
   releaseNotes String?
   active Boolean @default(true)
+  operatingSystem String
+  architecture String
+  isLatest Boolean @default(false)
+  publishedAt DateTime?
   releasedAt DateTime @default(now())
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   artifacts ProductArtifact[]
@@ -394,6 +401,7 @@ model Subscription {
   updatedAt DateTime @updatedAt
   account CustomerAccount @relation(fields: [accountId], references: [id])
   order Order @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
   licenses License[]
   @@index([accountId, status])
 }
@@ -493,4 +501,18 @@ model JobRun {
   jobType String
   completedAt DateTime?
   createdAt DateTime @default(now())
+}
+
+model EmailOutbox {
+  id String @id @default(cuid())
+  type String
+  recipient String
+  subject String
+  payload Json
+  status String @default("PENDING")
+  attempts Int @default(0)
+  lastError String?
+  createdAt DateTime @default(now())
+  sentAt DateTime?
+  @@index([status, createdAt])
 }
