@@ -1,0 +1,494 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum GlobalRole {
+  CUSTOMER
+  ADMIN
+}
+enum AccountType {
+  INDIVIDUAL
+  ORGANIZATION
+}
+enum MemberRole {
+  OWNER
+  BILLING
+  LICENSE_MANAGER
+  MEMBER
+}
+enum ProductType {
+  SOFTWARE
+  SAAS
+  HYBRID
+}
+enum BillingType {
+  ONE_TIME
+  SUBSCRIPTION
+}
+enum IntervalUnit {
+  MONTH
+  YEAR
+}
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+enum InvoiceStatus {
+  DRAFT
+  FINAL
+  VOID
+}
+enum LicenseStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  REVOKED
+}
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  PAST_DUE
+  EXPIRED
+  CANCELLED
+}
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  name String?
+  emailVerified DateTime?
+  role GlobalRole @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  credential PasswordCredential?
+  sessions Session[]
+  ownedAccounts CustomerAccount[] @relation("AccountOwner")
+  memberships Membership[]
+  assignments LicenseAssignment[]
+  auditLogs AuditLog[] @relation("AuditActor")
+}
+
+model PasswordCredential {
+  userId String @id
+  passwordHash String
+  changedAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id String @id @default(cuid())
+  tokenHash String @unique
+  userId String
+  expiresAt DateTime
+  lastAuthenticatedAt DateTime @default(now())
+  ipHash String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
+}
+
+model VerificationToken {
+  id String @id @default(cuid())
+  identifier String
+  purpose String
+  tokenHash String @unique
+  expiresAt DateTime
+  usedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([identifier, purpose])
+}
+
+model PasswordResetToken {
+  id String @id @default(cuid())
+  userId String
+  tokenHash String @unique
+  expiresAt DateTime
+  usedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId, expiresAt])
+}
+
+model CustomerAccount {
+  id String @id @default(cuid())
+  type AccountType
+  displayName String
+  ownerId String
+  billingEmail String
+  taxId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner User @relation("AccountOwner", fields: [ownerId], references: [id])
+  organization OrganizationProfile?
+  memberships Membership[]
+  invitations Invitation[]
+  carts Cart[]
+  orders Order[]
+  licenses License[]
+  subscriptions Subscription[]
+  auditLogs AuditLog[]
+  @@index([ownerId])
+}
+
+model OrganizationProfile {
+  accountId String @id
+  legalName String
+  registrationNumber String?
+  account CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model Membership {
+  accountId String
+  userId String
+  role MemberRole
+  createdAt DateTime @default(now())
+  account CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([accountId, userId])
+  @@index([userId])
+}
+
+model Invitation {
+  id String @id @default(cuid())
+  accountId String
+  email String
+  role MemberRole
+  tokenHash String @unique
+  status InvitationStatus @default(PENDING)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  account CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  @@index([accountId, email])
+}
+
+model Product {
+  id String @id @default(cuid())
+  slug String @unique
+  name String
+  summary String
+  description String
+  type ProductType
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  versions ProductVersion[]
+  prices Price[]
+  policies LicensePolicy[]
+  artifacts ProductArtifact[]
+  licenses License[]
+}
+
+model ProductVersion {
+  id String @id @default(cuid())
+  productId String
+  version String
+  releaseNotes String?
+  active Boolean @default(true)
+  releasedAt DateTime @default(now())
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  artifacts ProductArtifact[]
+  @@unique([productId, version])
+}
+
+model LicensePolicy {
+  id String @id @default(cuid())
+  productId String
+  name String
+  maxSeats Int @default(1)
+  maxDevicesPerSeat Int @default(1)
+  validityDays Int?
+  transferable Boolean @default(false)
+  rules Json @default("{}")
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  prices Price[]
+}
+
+model Price {
+  id String @id @default(cuid())
+  productId String
+  licensePolicyId String
+  name String
+  amountMinor Int
+  currency String @default("PHP")
+  billingType BillingType
+  intervalUnit IntervalUnit?
+  intervalCount Int?
+  active Boolean @default(true)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  licensePolicy LicensePolicy @relation(fields: [licensePolicyId], references: [id])
+  cartItems CartItem[]
+  @@index([productId, active])
+}
+
+model ProductArtifact {
+  id String @id @default(cuid())
+  productId String
+  versionId String?
+  name String
+  objectKey String @unique
+  sha256 String
+  sizeBytes BigInt
+  contentType String
+  active Boolean @default(true)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version ProductVersion? @relation(fields: [versionId], references: [id])
+  grants DownloadGrant[]
+}
+
+model Cart {
+  id String @id @default(cuid())
+  accountId String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  account CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  items CartItem[]
+}
+
+model CartItem {
+  cartId String
+  priceId String
+  quantity Int
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  price Price @relation(fields: [priceId], references: [id])
+  @@id([cartId, priceId])
+}
+
+model Order {
+  id String @id @default(cuid())
+  number String @unique
+  accountId String
+  status OrderStatus @default(PENDING)
+  currency String
+  subtotalMinor Int
+  taxMinor Int
+  totalMinor Int
+  billingSnapshot Json
+  createdAt DateTime @default(now())
+  paidAt DateTime?
+  account CustomerAccount @relation(fields: [accountId], references: [id])
+  items OrderItem[]
+  payments Payment[]
+  attempts PaymentAttempt[]
+  invoice Invoice?
+  licenses License[]
+  subscriptions Subscription[]
+  @@index([accountId, createdAt])
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  productId String
+  priceId String
+  policyId String
+  productName String
+  priceName String
+  quantity Int
+  unitAmountMinor Int
+  totalMinor Int
+  billingType BillingType
+  policySnapshot Json
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id String @id @default(cuid())
+  orderId String
+  provider String
+  externalId String
+  status PaymentStatus
+  amountMinor Int
+  currency String
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order Order @relation(fields: [orderId], references: [id])
+  @@unique([provider, externalId])
+  @@index([orderId])
+}
+
+model PaymentAttempt {
+  id String @id @default(cuid())
+  orderId String
+  provider String
+  idempotencyKey String @unique
+  externalCheckoutId String? @unique
+  status String
+  createdAt DateTime @default(now())
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model WebhookEvent {
+  id String @id @default(cuid())
+  provider String
+  externalEventId String
+  eventType String
+  livemode Boolean
+  payloadHash String
+  status String
+  error String?
+  receivedAt DateTime @default(now())
+  processedAt DateTime?
+  @@unique([provider, externalEventId])
+}
+
+model Invoice {
+  id String @id @default(cuid())
+  number String @unique
+  orderId String @unique
+  status InvoiceStatus @default(DRAFT)
+  customerSnapshot Json
+  currency String
+  subtotalMinor Int
+  taxMinor Int
+  totalMinor Int
+  issuedAt DateTime?
+  createdAt DateTime @default(now())
+  order Order @relation(fields: [orderId], references: [id])
+  lines InvoiceLine[]
+}
+
+model InvoiceLine {
+  id String @id @default(cuid())
+  invoiceId String
+  description String
+  quantity Int
+  unitAmountMinor Int
+  totalMinor Int
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id String @id @default(cuid())
+  accountId String
+  orderId String
+  productId String
+  status SubscriptionStatus @default(PENDING)
+  seats Int
+  currentPeriodStart DateTime
+  currentPeriodEnd DateTime
+  renewalReminderAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  account CustomerAccount @relation(fields: [accountId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+  licenses License[]
+  @@index([accountId, status])
+}
+
+model License {
+  id String @id @default(cuid())
+  publicId String @unique
+  keyHash String @unique
+  keyLastFour String
+  accountId String
+  orderId String
+  orderItemId String
+  productId String
+  subscriptionId String?
+  status LicenseStatus @default(ACTIVE)
+  maxSeats Int
+  maxDevicesPerSeat Int
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  account CustomerAccount @relation(fields: [accountId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  assignments LicenseAssignment[]
+  activations DeviceActivation[]
+  grants DownloadGrant[]
+  events LicenseEvent[]
+  @@unique([orderItemId])
+  @@index([accountId, status])
+}
+
+model LicenseAssignment {
+  id String @id @default(cuid())
+  licenseId String
+  userId String
+  createdAt DateTime @default(now())
+  license License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+  @@unique([licenseId, userId])
+}
+
+model DeviceActivation {
+  id String @id @default(cuid())
+  licenseId String
+  deviceHash String
+  label String?
+  active Boolean @default(true)
+  activatedAt DateTime @default(now())
+  deactivatedAt DateTime?
+  license License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  @@unique([licenseId, deviceHash])
+  @@index([licenseId, active])
+}
+
+model DownloadGrant {
+  id String @id @default(cuid())
+  licenseId String
+  artifactId String
+  tokenHash String @unique
+  expiresAt DateTime
+  usedAt DateTime?
+  license License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  artifact ProductArtifact @relation(fields: [artifactId], references: [id])
+}
+
+model LicenseEvent {
+  id String @id @default(cuid())
+  licenseId String
+  type String
+  metadata Json @default("{}")
+  createdAt DateTime @default(now())
+  license License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+  actorId String?
+  accountId String?
+  action String
+  targetType String
+  targetId String?
+  requestId String?
+  ipHash String?
+  metadata Json @default("{}")
+  createdAt DateTime @default(now())
+  actor User? @relation("AuditActor", fields: [actorId], references: [id])
+  account CustomerAccount? @relation(fields: [accountId], references: [id])
+  @@index([accountId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model JobRun {
+  id String @id @default(cuid())
+  key String @unique
+  jobType String
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+}

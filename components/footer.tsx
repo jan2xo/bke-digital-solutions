@@ -1,0 +1,1 @@
+export function Footer() { return <footer className="mt-24 border-t border-slate-200 py-10"><div className="shell flex flex-wrap justify-between gap-4 text-sm text-slate-600"><p>© {new Date().getFullYear()} BKE Digital Solutions.</p><p>Software, SaaS, and licensing for modern organizations.</p></div></footer>; }

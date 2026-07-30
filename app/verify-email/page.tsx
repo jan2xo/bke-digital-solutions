@@ -1,0 +1,1 @@
+export default function VerifyEmailPage() { return <section className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-4xl font-black">Check your email.</h1><p className="mt-4 text-slate-600">We sent a one-time verification link. It expires in 30 minutes and can only be used once.</p></section>; }

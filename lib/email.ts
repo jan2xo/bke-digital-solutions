@@ -1,0 +1,5 @@
+import "server-only";
+import { Resend } from "resend";
+import { env } from "@/lib/env";
+export async function sendVerificationEmail(email:string,token:string){const url=new URL("/api/auth/verify",env.APP_URL);url.searchParams.set("token",token);if(!env.RESEND_API_KEY){if(env.NODE_ENV==="production")throw new Error("EMAIL_NOT_CONFIGURED");console.info(`[development email] Verify ${email}: ${url}`);return}const resend=new Resend(env.RESEND_API_KEY);await resend.emails.send({from:env.EMAIL_FROM,to:email,subject:"Verify your BKE Digital Solutions account",text:`Verify your account using this one-time link: ${url}`})}
+export async function sendMagicLink(email:string,token:string){const url=new URL("/api/auth/magic/consume",env.APP_URL);url.searchParams.set("token",token);if(!env.RESEND_API_KEY){if(env.NODE_ENV==="production")throw new Error("EMAIL_NOT_CONFIGURED");console.info(`[development email] Sign in ${email}: ${url}`);return}const resend=new Resend(env.RESEND_API_KEY);await resend.emails.send({from:env.EMAIL_FROM,to:email,subject:"Your BKE Digital Solutions sign-in link",text:`Sign in using this one-time link (expires in 15 minutes): ${url}`})}

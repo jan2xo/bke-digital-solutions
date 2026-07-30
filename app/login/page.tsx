@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { AuthForm } from "@/components/auth-form";
+import { MagicLinkForm } from "@/components/magic-link-form";
+export default function LoginPage() { return <section className="mx-auto max-w-md px-4 py-16"><h1 className="text-4xl font-black">Welcome back.</h1><p className="mt-3 mb-8 text-slate-600">Sign in to manage purchases and licenses.</p><AuthForm mode="login"/><div className="my-6 flex items-center gap-3 text-xs text-slate-400"><span className="h-px flex-1 bg-slate-200"/>OR<span className="h-px flex-1 bg-slate-200"/></div><MagicLinkForm/><p className="mt-5 text-center text-sm">New here? <Link className="font-bold text-[#0b7197]" href="/register">Create an account</Link></p></section>; }
