@@ -22,9 +22,9 @@ export async function PATCH(request:Request,{params}:{params:Promise<{id:string}
     const current=await db.license.findUniqueOrThrow({where:{id}});let plaintext:string|undefined;
     const license=await db.$transaction(async tx=>{
       if(input.action==="REVEAL"){
-        if(current.keyRevealedAt||!current.keyCiphertext)throw new Error("KEY_ALREADY_REVEALED");
+        if(!current.keyCiphertext)throw new Error("LICENSE_KEY_UNAVAILABLE");
         plaintext=decryptLicenseKey(current.keyCiphertext);
-        return tx.license.update({where:{id},data:{keyRevealedAt:new Date(),events:{create:{type:"ADMIN_REVEALED",metadata:{actorId:admin.id}}}}});
+        return tx.license.update({where:{id},data:{keyRevealedAt:current.keyRevealedAt??new Date(),events:{create:{type:"ADMIN_REVEALED",metadata:{actorId:admin.id}}}}});
       }
       if(input.action==="TRANSFER"){
         await tx.customerAccount.findUniqueOrThrow({where:{id:input.accountId}});

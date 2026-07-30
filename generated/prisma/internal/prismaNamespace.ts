@@ -407,6 +407,8 @@ export const ModelName = {
   Membership: 'Membership',
   Invitation: 'Invitation',
   Product: 'Product',
+  Edition: 'Edition',
+  PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
@@ -422,6 +424,7 @@ export const ModelName = {
   InvoiceLine: 'InvoiceLine',
   Subscription: 'Subscription',
   License: 'License',
+  TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
   DownloadGrant: 'DownloadGrant',
@@ -444,7 +447,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "license" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
+    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1185,6 +1188,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductCountAggregateOutputType> | number
+        }
+      }
+    }
+    Edition: {
+      payload: Prisma.$EditionPayload<ExtArgs>
+      fields: Prisma.EditionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EditionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EditionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>
+        }
+        findFirst: {
+          args: Prisma.EditionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EditionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>
+        }
+        findMany: {
+          args: Prisma.EditionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>[]
+        }
+        create: {
+          args: Prisma.EditionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>
+        }
+        createMany: {
+          args: Prisma.EditionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EditionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>[]
+        }
+        delete: {
+          args: Prisma.EditionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>
+        }
+        update: {
+          args: Prisma.EditionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>
+        }
+        deleteMany: {
+          args: Prisma.EditionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EditionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EditionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>[]
+        }
+        upsert: {
+          args: Prisma.EditionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EditionPayload>
+        }
+        aggregate: {
+          args: Prisma.EditionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEdition>
+        }
+        groupBy: {
+          args: Prisma.EditionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EditionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EditionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EditionCountAggregateOutputType> | number
+        }
+      }
+    }
+    PurchasePlan: {
+      payload: Prisma.$PurchasePlanPayload<ExtArgs>
+      fields: Prisma.PurchasePlanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PurchasePlanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PurchasePlanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>
+        }
+        findFirst: {
+          args: Prisma.PurchasePlanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PurchasePlanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>
+        }
+        findMany: {
+          args: Prisma.PurchasePlanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>[]
+        }
+        create: {
+          args: Prisma.PurchasePlanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>
+        }
+        createMany: {
+          args: Prisma.PurchasePlanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PurchasePlanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>[]
+        }
+        delete: {
+          args: Prisma.PurchasePlanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>
+        }
+        update: {
+          args: Prisma.PurchasePlanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>
+        }
+        deleteMany: {
+          args: Prisma.PurchasePlanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PurchasePlanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PurchasePlanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>[]
+        }
+        upsert: {
+          args: Prisma.PurchasePlanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PurchasePlanPayload>
+        }
+        aggregate: {
+          args: Prisma.PurchasePlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePurchasePlan>
+        }
+        groupBy: {
+          args: Prisma.PurchasePlanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PurchasePlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PurchasePlanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PurchasePlanCountAggregateOutputType> | number
         }
       }
     }
@@ -2298,6 +2449,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TrialGrant: {
+      payload: Prisma.$TrialGrantPayload<ExtArgs>
+      fields: Prisma.TrialGrantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TrialGrantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TrialGrantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>
+        }
+        findFirst: {
+          args: Prisma.TrialGrantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TrialGrantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>
+        }
+        findMany: {
+          args: Prisma.TrialGrantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>[]
+        }
+        create: {
+          args: Prisma.TrialGrantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>
+        }
+        createMany: {
+          args: Prisma.TrialGrantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TrialGrantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>[]
+        }
+        delete: {
+          args: Prisma.TrialGrantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>
+        }
+        update: {
+          args: Prisma.TrialGrantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>
+        }
+        deleteMany: {
+          args: Prisma.TrialGrantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TrialGrantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TrialGrantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>[]
+        }
+        upsert: {
+          args: Prisma.TrialGrantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrialGrantPayload>
+        }
+        aggregate: {
+          args: Prisma.TrialGrantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrialGrant>
+        }
+        groupBy: {
+          args: Prisma.TrialGrantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrialGrantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TrialGrantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrialGrantCountAggregateOutputType> | number
+        }
+      }
+    }
     LicenseAssignment: {
       payload: Prisma.$LicenseAssignmentPayload<ExtArgs>
       fields: Prisma.LicenseAssignmentFieldRefs
@@ -2986,6 +3211,43 @@ export const ProductScalarFieldEnum = {
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
+export const EditionScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  features: 'features',
+  maxUsers: 'maxUsers',
+  maxDevicesPerUser: 'maxDevicesPerUser',
+  updatePolicy: 'updatePolicy',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EditionScalarFieldEnum = (typeof EditionScalarFieldEnum)[keyof typeof EditionScalarFieldEnum]
+
+
+export const PurchasePlanScalarFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  type: 'type',
+  currency: 'currency',
+  amountMinor: 'amountMinor',
+  annualDiscountBps: 'annualDiscountBps',
+  renewalBehavior: 'renewalBehavior',
+  active: 'active',
+  monthlySourcePlanId: 'monthlySourcePlanId',
+  legacyPriceId: 'legacyPriceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PurchasePlanScalarFieldEnum = (typeof PurchasePlanScalarFieldEnum)[keyof typeof PurchasePlanScalarFieldEnum]
+
+
 export const ProductVersionScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -3101,7 +3363,16 @@ export const OrderItemScalarFieldEnum = {
   unitAmountMinor: 'unitAmountMinor',
   totalMinor: 'totalMinor',
   billingType: 'billingType',
-  policySnapshot: 'policySnapshot'
+  policySnapshot: 'policySnapshot',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
+  editionName: 'editionName',
+  planName: 'planName',
+  planType: 'planType',
+  intervalUnit: 'intervalUnit',
+  intervalCount: 'intervalCount',
+  renewalBehavior: 'renewalBehavior',
+  entitlementSnapshot: 'entitlementSnapshot'
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
@@ -3129,6 +3400,7 @@ export const PaymentAttemptScalarFieldEnum = {
   provider: 'provider',
   idempotencyKey: 'idempotencyKey',
   externalCheckoutId: 'externalCheckoutId',
+  checkoutUrl: 'checkoutUrl',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -3186,6 +3458,8 @@ export const SubscriptionScalarFieldEnum = {
   accountId: 'accountId',
   orderId: 'orderId',
   productId: 'productId',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
   status: 'status',
   seats: 'seats',
   currentPeriodStart: 'currentPeriodStart',
@@ -3209,6 +3483,8 @@ export const LicenseScalarFieldEnum = {
   orderId: 'orderId',
   orderItemId: 'orderItemId',
   productId: 'productId',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
   subscriptionId: 'subscriptionId',
   status: 'status',
   maxSeats: 'maxSeats',
@@ -3218,6 +3494,25 @@ export const LicenseScalarFieldEnum = {
 } as const
 
 export type LicenseScalarFieldEnum = (typeof LicenseScalarFieldEnum)[keyof typeof LicenseScalarFieldEnum]
+
+
+export const TrialGrantScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  productId: 'productId',
+  editionId: 'editionId',
+  licenseId: 'licenseId',
+  source: 'source',
+  selfServiceYear: 'selfServiceYear',
+  trialStartsAt: 'trialStartsAt',
+  trialEndsAt: 'trialEndsAt',
+  graceEndsAt: 'graceEndsAt',
+  revokedAt: 'revokedAt',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type TrialGrantScalarFieldEnum = (typeof TrialGrantScalarFieldEnum)[keyof typeof TrialGrantScalarFieldEnum]
 
 
 export const LicenseAssignmentScalarFieldEnum = {
@@ -3326,6 +3621,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -3465,16 +3768,16 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'ReleaseChannel'
+ * Reference to a field of type 'Json'
  */
-export type EnumReleaseChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReleaseChannel'>
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
 
 
 
 /**
- * Reference to a field of type 'ReleaseChannel[]'
+ * Reference to a field of type 'QueryMode'
  */
-export type ListEnumReleaseChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReleaseChannel[]'>
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
 
 
 
@@ -3493,16 +3796,58 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'Json'
+ * Reference to a field of type 'UpdatePolicy'
  */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+export type EnumUpdatePolicyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UpdatePolicy'>
 
 
 
 /**
- * Reference to a field of type 'QueryMode'
+ * Reference to a field of type 'UpdatePolicy[]'
  */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+export type ListEnumUpdatePolicyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UpdatePolicy[]'>
+
+
+
+/**
+ * Reference to a field of type 'PurchasePlanType'
+ */
+export type EnumPurchasePlanTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PurchasePlanType'>
+
+
+
+/**
+ * Reference to a field of type 'PurchasePlanType[]'
+ */
+export type ListEnumPurchasePlanTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PurchasePlanType[]'>
+
+
+
+/**
+ * Reference to a field of type 'RenewalBehavior'
+ */
+export type EnumRenewalBehaviorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RenewalBehavior'>
+
+
+
+/**
+ * Reference to a field of type 'RenewalBehavior[]'
+ */
+export type ListEnumRenewalBehaviorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RenewalBehavior[]'>
+
+
+
+/**
+ * Reference to a field of type 'ReleaseChannel'
+ */
+export type EnumReleaseChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReleaseChannel'>
+
+
+
+/**
+ * Reference to a field of type 'ReleaseChannel[]'
+ */
+export type ListEnumReleaseChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReleaseChannel[]'>
 
 
 
@@ -3615,6 +3960,20 @@ export type EnumLicenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'LicenseStatus[]'
  */
 export type ListEnumLicenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LicenseStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'TrialSource'
+ */
+export type EnumTrialSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TrialSource'>
+
+
+
+/**
+ * Reference to a field of type 'TrialSource[]'
+ */
+export type ListEnumTrialSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TrialSource[]'>
 
 
 
@@ -3792,6 +4151,8 @@ export type GlobalOmitConfig = {
   membership?: Prisma.MembershipOmit
   invitation?: Prisma.InvitationOmit
   product?: Prisma.ProductOmit
+  edition?: Prisma.EditionOmit
+  purchasePlan?: Prisma.PurchasePlanOmit
   productVersion?: Prisma.ProductVersionOmit
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
@@ -3807,6 +4168,7 @@ export type GlobalOmitConfig = {
   invoiceLine?: Prisma.InvoiceLineOmit
   subscription?: Prisma.SubscriptionOmit
   license?: Prisma.LicenseOmit
+  trialGrant?: Prisma.TrialGrantOmit
   licenseAssignment?: Prisma.LicenseAssignmentOmit
   deviceActivation?: Prisma.DeviceActivationOmit
   downloadGrant?: Prisma.DownloadGrantOmit

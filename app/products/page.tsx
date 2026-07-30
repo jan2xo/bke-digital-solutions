@@ -1,4 +1,32 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
+import { resolvePurchasePlan } from "@/lib/pricing";
+
 export const metadata = { title: "Products" };
-export default async function ProductsPage() { const products = await db.product.findMany({ where: { active: true }, include: { prices: { where: { active: true } } } }); return <section className="shell py-16"><p className="font-bold text-[#0b7197]">Product catalog</p><h1 className="mt-2 text-5xl font-black">Software for work that matters.</h1><div className="mt-12 grid gap-6 md:grid-cols-2">{products.map(p=><article className="card p-8" key={p.id}><p className="text-xs font-bold tracking-widest text-[#0b7197]">{p.type}</p><h2 className="mt-3 text-3xl font-black">{p.name}</h2><p className="mt-3 text-slate-600">{p.summary}</p><div className="mt-7 flex flex-wrap gap-3">{p.prices.map(x=><span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold" key={x.id}>{x.name}: ₱{(x.amountMinor/100).toLocaleString("en-PH")}{x.billingType === "SUBSCRIPTION" ? "/term" : ""}</span>)}</div><Link className="button mt-8" href={`/products/${p.slug}`}>View product</Link></article>)}</div></section>; }
+
+export default async function ProductsPage() {
+  const products = await db.product.findMany({
+    where: { active: true },
+    include: { editions: { where: { active: true }, include: { purchasePlans: { where: { active: true }, include: { monthlySource: true } } } } },
+  });
+  return <section className="shell py-16">
+    <p className="font-bold text-[#0b7197]">Product catalog</p>
+    <h1 className="mt-2 text-5xl font-black">Software for work that matters.</h1>
+    <div className="mt-12 grid gap-6 md:grid-cols-2">{products.map((product) => {
+      const plans = product.editions.flatMap((edition) => edition.purchasePlans);
+      const starting = plans.map((plan) => resolvePurchasePlan(plan).amountMinor).sort((a, b) => a - b)[0];
+      return <article className="card p-8" key={product.id}>
+        <p className="text-xs font-bold tracking-widest text-[#0b7197]">{product.type}</p>
+        <h2 className="mt-3 text-3xl font-black">{product.name}</h2>
+        <p className="mt-3 text-slate-600">{product.summary}</p>
+        <p className="mt-6 font-semibold">{product.editions.length} edition(s) · {plans.length} purchase option(s)</p>
+        {starting !== undefined && <p className="mt-2 text-xl font-black">From {money(starting)}</p>}
+        <Link className="button mt-8" href={`/products/${product.slug}`}>Choose edition and plan</Link>
+      </article>;
+    })}</div>
+  </section>;
+}
+
+function money(minor: number) {
+  return new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(minor / 100);
+}

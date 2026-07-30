@@ -8,10 +8,18 @@ export async function GET(_: Request, { params }: { params: Promise<{ token: str
   const tokenHash = hashToken(token);
   const grant = await db.$transaction(async (tx) => {
     const claimed = await tx.downloadGrant.updateMany({
-      where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },
+      where: {
+        tokenHash,
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+        license: { status: "ACTIVE", OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
+      },
       data: { usedAt: new Date() },
     });
-    if (claimed.count !== 1) return null;
+    if (claimed.count !== 1) {
+      await tx.downloadGrant.updateMany({ where: { tokenHash, usedAt: null }, data: { usedAt: new Date() } });
+      return null;
+    }
     const row=await tx.downloadGrant.findUnique({ where: { tokenHash }, include: { artifact: true } });
     if(row)await tx.productArtifact.update({where:{id:row.artifactId},data:{downloadCount:{increment:1}}});
     return row;

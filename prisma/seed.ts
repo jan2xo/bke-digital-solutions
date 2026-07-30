@@ -4,9 +4,75 @@ import { PrismaClient } from "../generated/prisma/client";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const catalog = [
-  { slug:"bke-deskflow",name:"BKE DeskFlow",summary:"Focused desktop operations for small teams.",description:"A dependable desktop toolkit for structured workflows, local reporting, and secure exports.",type:"SOFTWARE" as const,policy:{name:"Single User",maxSeats:1,maxDevicesPerSeat:2,validityDays:null},price:{name:"Perpetual license",amountMinor:149900,billingType:"ONE_TIME" as const} },
-  { slug:"bke-cloudops",name:"BKE CloudOps",summary:"Shared SaaS operations with annual access.",description:"A secure hosted workspace for teams that need visibility, accountability, and reliable operational records.",type:"SAAS" as const,policy:{name:"Professional",maxSeats:5,maxDevicesPerSeat:3,validityDays:365},price:{name:"Annual team plan",amountMinor:299900,billingType:"SUBSCRIPTION" as const,intervalUnit:"YEAR" as const,intervalCount:1} },
-  { slug:"bke-institution-suite",name:"BKE Institution Suite",summary:"Flexible deployment for organizations and institutions.",description:"Organization licensing with authorized users, managed devices, and a central customer portal.",type:"HYBRID" as const,policy:{name:"Institution 25",maxSeats:25,maxDevicesPerSeat:2,validityDays:365},price:{name:"Annual organization license",amountMinor:1199900,billingType:"SUBSCRIPTION" as const,intervalUnit:"YEAR" as const,intervalCount:1} },
+  { slug: "bke-deskflow", name: "BKE DeskFlow", summary: "Focused desktop operations for small teams.", description: "A dependable desktop toolkit for structured workflows, local reporting, and secure exports.", type: "SOFTWARE" as const, policy: { name: "Single User", maxSeats: 1, maxDevicesPerSeat: 2, validityDays: null }, price: { name: "Perpetual license", amountMinor: 149900, billingType: "ONE_TIME" as const }, edition: { slug: "professional", name: "Professional", features: ["Structured workflows", "Local reporting", "Secure exports"], maxUsers: 1, maxDevicesPerUser: 2, updatePolicy: "LIFETIME" as const, perpetual: 149900, monthly: null, annualDiscountBps: null } },
+  { slug: "bke-cloudops", name: "BKE CloudOps", summary: "Shared SaaS operations with annual access.", description: "A secure hosted workspace for teams that need visibility, accountability, and reliable operational records.", type: "SAAS" as const, policy: { name: "Professional", maxSeats: 5, maxDevicesPerSeat: 3, validityDays: 365 }, price: { name: "Annual team plan", amountMinor: 299900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "team", name: "Team", features: ["Shared workspace", "Operational audit trail", "Team reporting"], maxUsers: 5, maxDevicesPerUser: 3, updatePolicy: "ACTIVE_TERM" as const, perpetual: null, monthly: 29900, annualDiscountBps: 1000 } },
+  { slug: "bke-institution-suite", name: "BKE Institution Suite", summary: "Flexible deployment for organizations and institutions.", description: "Organization licensing with authorized users, managed devices, and a central customer portal.", type: "HYBRID" as const, policy: { name: "Institution 25", maxSeats: 25, maxDevicesPerSeat: 2, validityDays: 365 }, price: { name: "Annual organization license", amountMinor: 1199900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "institution", name: "Institution", features: ["25 authorized users", "Managed devices", "Central license portal"], maxUsers: 25, maxDevicesPerUser: 2, updatePolicy: "ACTIVE_TERM" as const, perpetual: 1199900, monthly: 109900, annualDiscountBps: 900 } },
 ];
-async function main(){for(const item of catalog){const product=await db.product.upsert({where:{slug:item.slug},update:{name:item.name,summary:item.summary,description:item.description,type:item.type,active:true,publishedAt:new Date(),archivedAt:null},create:{slug:item.slug,name:item.name,summary:item.summary,description:item.description,type:item.type,active:true,publishedAt:new Date()}});let policy=await db.licensePolicy.findFirst({where:{productId:product.id,name:item.policy.name}});policy??=await db.licensePolicy.create({data:{productId:product.id,...item.policy}});const exists=await db.price.findFirst({where:{productId:product.id,name:item.price.name}});if(!exists)await db.price.create({data:{productId:product.id,licensePolicyId:policy.id,currency:"PHP",active:true,...item.price}});if(item.slug==="bke-cloudops"){const version=await db.productVersion.upsert({where:{productId_version:{productId:product.id,version:"1.0.0"}},update:{active:true,isLatest:true,publishedAt:new Date()},create:{productId:product.id,version:"1.0.0",releaseNotes:"Initial stable release.",operatingSystem:"Any",architecture:"universal",active:true,isLatest:true,publishedAt:new Date()}});await db.productArtifact.upsert({where:{objectKey:"installers/bke-installer.bin"},update:{active:true,versionId:version.id},create:{productId:product.id,versionId:version.id,name:"BKE CloudOps Installer.bin",objectKey:"installers/bke-installer.bin",sha256:"523b125a5fba47594385b3d41c1bc474c58d9e0161ce5e731be7db8c5da95fd5",sizeBytes:37,contentType:"application/octet-stream"}})}}console.info(`Seeded ${catalog.length} BKE Digital Solutions products.`)}
-main().finally(()=>db.$disconnect());
+
+async function main() {
+  for (const item of catalog) {
+    const product = await db.product.upsert({
+      where: { slug: item.slug },
+      update: { name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, publishedAt: new Date(), archivedAt: null },
+      create: { slug: item.slug, name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, publishedAt: new Date() },
+    });
+    let policy = await db.licensePolicy.findFirst({ where: { productId: product.id, name: item.policy.name } });
+    policy ??= await db.licensePolicy.create({ data: { productId: product.id, ...item.policy } });
+    const legacyPrice = await db.price.findFirst({ where: { productId: product.id, name: item.price.name } })
+      ?? await db.price.create({ data: { productId: product.id, licensePolicyId: policy.id, currency: "PHP", active: true, ...item.price } });
+
+    const migratedPlan = await db.purchasePlan.findUnique({ where: { legacyPriceId: legacyPrice.id }, include: { edition: true } });
+    const edition = migratedPlan
+      ? await db.edition.update({ where: { id: migratedPlan.editionId }, data: { name: item.edition.name, features: item.edition.features, maxUsers: item.edition.maxUsers, maxDevicesPerUser: item.edition.maxDevicesPerUser, updatePolicy: item.edition.updatePolicy, active: true } })
+      : await db.edition.upsert({
+          where: { productId_slug: { productId: product.id, slug: item.edition.slug } },
+          update: { name: item.edition.name, features: item.edition.features, maxUsers: item.edition.maxUsers, maxDevicesPerUser: item.edition.maxDevicesPerUser, updatePolicy: item.edition.updatePolicy, active: true },
+          create: { productId: product.id, slug: item.edition.slug, name: item.edition.name, features: item.edition.features, maxUsers: item.edition.maxUsers, maxDevicesPerUser: item.edition.maxDevicesPerUser, updatePolicy: item.edition.updatePolicy },
+        });
+    if (migratedPlan) {
+      await db.edition.updateMany({
+        where: { productId: product.id, slug: item.edition.slug, id: { not: edition.id } },
+        data: { active: false },
+      });
+      await db.edition.deleteMany({ where: { productId: product.id, slug: item.edition.slug, id: { not: edition.id }, purchasePlans: { none: {} }, licenses: { none: {} }, subscriptions: { none: {} }, trials: { none: {} } } });
+    }
+
+    const monthly = item.edition.monthly
+      ? await db.purchasePlan.upsert({
+          where: { editionId_type: { editionId: edition.id, type: "MONTHLY" } },
+          update: { amountMinor: item.edition.monthly, currency: "PHP", renewalBehavior: "CUSTOMER_AUTHORIZED", active: true },
+          create: { editionId: edition.id, type: "MONTHLY", amountMinor: item.edition.monthly, currency: "PHP", renewalBehavior: "CUSTOMER_AUTHORIZED", active: true },
+        })
+      : null;
+    if (item.edition.perpetual) {
+      await db.purchasePlan.upsert({
+        where: { editionId_type: { editionId: edition.id, type: "PERPETUAL" } },
+        update: { amountMinor: item.edition.perpetual, currency: "PHP", renewalBehavior: "NONE", active: true },
+        create: { editionId: edition.id, type: "PERPETUAL", amountMinor: item.edition.perpetual, currency: "PHP", renewalBehavior: "NONE", active: true, legacyPriceId: item.price.billingType === "ONE_TIME" ? legacyPrice.id : undefined },
+      });
+    }
+    if (monthly && item.edition.annualDiscountBps !== null) {
+      await db.purchasePlan.upsert({
+        where: { editionId_type: { editionId: edition.id, type: "ANNUAL" } },
+        update: { amountMinor: null, annualDiscountBps: item.edition.annualDiscountBps, monthlySourcePlanId: monthly.id, currency: "PHP", renewalBehavior: "CUSTOMER_AUTHORIZED", active: true },
+        create: { editionId: edition.id, type: "ANNUAL", amountMinor: null, annualDiscountBps: item.edition.annualDiscountBps, monthlySourcePlanId: monthly.id, currency: "PHP", renewalBehavior: "CUSTOMER_AUTHORIZED", active: true, legacyPriceId: item.price.billingType === "SUBSCRIPTION" ? legacyPrice.id : undefined },
+      });
+    }
+
+    if (item.slug === "bke-cloudops") {
+      const version = await db.productVersion.upsert({
+        where: { productId_version: { productId: product.id, version: "1.0.0" } },
+        update: { active: true, isLatest: true, publishedAt: new Date() },
+        create: { productId: product.id, version: "1.0.0", releaseNotes: "Initial stable release.", operatingSystem: "Any", architecture: "universal", active: true, isLatest: true, publishedAt: new Date() },
+      });
+      await db.productArtifact.upsert({
+        where: { objectKey: "installers/bke-installer.bin" },
+        update: { active: true, versionId: version.id },
+        create: { productId: product.id, versionId: version.id, name: "BKE CloudOps Installer.bin", objectKey: "installers/bke-installer.bin", sha256: "523b125a5fba47594385b3d41c1bc474c58d9e0161ce5e731be7db8c5da95fd5", sizeBytes: 37, contentType: "application/octet-stream" },
+      });
+    }
+  }
+  console.info(`Seeded ${catalog.length} BKE Digital Solutions products and editions.`);
+}
+
+main().finally(() => db.$disconnect());

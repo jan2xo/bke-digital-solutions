@@ -30,6 +30,7 @@ export type PaymentAttemptMinAggregateOutputType = {
   provider: string | null
   idempotencyKey: string | null
   externalCheckoutId: string | null
+  checkoutUrl: string | null
   status: string | null
   createdAt: Date | null
 }
@@ -40,6 +41,7 @@ export type PaymentAttemptMaxAggregateOutputType = {
   provider: string | null
   idempotencyKey: string | null
   externalCheckoutId: string | null
+  checkoutUrl: string | null
   status: string | null
   createdAt: Date | null
 }
@@ -50,6 +52,7 @@ export type PaymentAttemptCountAggregateOutputType = {
   provider: number
   idempotencyKey: number
   externalCheckoutId: number
+  checkoutUrl: number
   status: number
   createdAt: number
   _all: number
@@ -62,6 +65,7 @@ export type PaymentAttemptMinAggregateInputType = {
   provider?: true
   idempotencyKey?: true
   externalCheckoutId?: true
+  checkoutUrl?: true
   status?: true
   createdAt?: true
 }
@@ -72,6 +76,7 @@ export type PaymentAttemptMaxAggregateInputType = {
   provider?: true
   idempotencyKey?: true
   externalCheckoutId?: true
+  checkoutUrl?: true
   status?: true
   createdAt?: true
 }
@@ -82,6 +87,7 @@ export type PaymentAttemptCountAggregateInputType = {
   provider?: true
   idempotencyKey?: true
   externalCheckoutId?: true
+  checkoutUrl?: true
   status?: true
   createdAt?: true
   _all?: true
@@ -165,6 +171,7 @@ export type PaymentAttemptGroupByOutputType = {
   provider: string
   idempotencyKey: string
   externalCheckoutId: string | null
+  checkoutUrl: string | null
   status: string
   createdAt: Date
   _count: PaymentAttemptCountAggregateOutputType | null
@@ -196,6 +203,7 @@ export type PaymentAttemptWhereInput = {
   provider?: Prisma.StringFilter<"PaymentAttempt"> | string
   idempotencyKey?: Prisma.StringFilter<"PaymentAttempt"> | string
   externalCheckoutId?: Prisma.StringNullableFilter<"PaymentAttempt"> | string | null
+  checkoutUrl?: Prisma.StringNullableFilter<"PaymentAttempt"> | string | null
   status?: Prisma.StringFilter<"PaymentAttempt"> | string
   createdAt?: Prisma.DateTimeFilter<"PaymentAttempt"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
@@ -207,6 +215,7 @@ export type PaymentAttemptOrderByWithRelationInput = {
   provider?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   externalCheckoutId?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkoutUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
@@ -221,6 +230,7 @@ export type PaymentAttemptWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PaymentAttemptWhereInput | Prisma.PaymentAttemptWhereInput[]
   orderId?: Prisma.StringFilter<"PaymentAttempt"> | string
   provider?: Prisma.StringFilter<"PaymentAttempt"> | string
+  checkoutUrl?: Prisma.StringNullableFilter<"PaymentAttempt"> | string | null
   status?: Prisma.StringFilter<"PaymentAttempt"> | string
   createdAt?: Prisma.DateTimeFilter<"PaymentAttempt"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
@@ -232,6 +242,7 @@ export type PaymentAttemptOrderByWithAggregationInput = {
   provider?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   externalCheckoutId?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkoutUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PaymentAttemptCountOrderByAggregateInput
@@ -248,6 +259,7 @@ export type PaymentAttemptScalarWhereWithAggregatesInput = {
   provider?: Prisma.StringWithAggregatesFilter<"PaymentAttempt"> | string
   idempotencyKey?: Prisma.StringWithAggregatesFilter<"PaymentAttempt"> | string
   externalCheckoutId?: Prisma.StringNullableWithAggregatesFilter<"PaymentAttempt"> | string | null
+  checkoutUrl?: Prisma.StringNullableWithAggregatesFilter<"PaymentAttempt"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"PaymentAttempt"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentAttempt"> | Date | string
 }
@@ -257,6 +269,7 @@ export type PaymentAttemptCreateInput = {
   provider: string
   idempotencyKey: string
   externalCheckoutId?: string | null
+  checkoutUrl?: string | null
   status: string
   createdAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutAttemptsInput
@@ -268,6 +281,7 @@ export type PaymentAttemptUncheckedCreateInput = {
   provider: string
   idempotencyKey: string
   externalCheckoutId?: string | null
+  checkoutUrl?: string | null
   status: string
   createdAt?: Date | string
 }
@@ -277,6 +291,7 @@ export type PaymentAttemptUpdateInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutAttemptsNestedInput
@@ -288,6 +303,7 @@ export type PaymentAttemptUncheckedUpdateInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -298,6 +314,7 @@ export type PaymentAttemptCreateManyInput = {
   provider: string
   idempotencyKey: string
   externalCheckoutId?: string | null
+  checkoutUrl?: string | null
   status: string
   createdAt?: Date | string
 }
@@ -307,6 +324,7 @@ export type PaymentAttemptUpdateManyMutationInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -317,6 +335,7 @@ export type PaymentAttemptUncheckedUpdateManyInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -337,6 +356,7 @@ export type PaymentAttemptCountOrderByAggregateInput = {
   provider?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   externalCheckoutId?: Prisma.SortOrder
+  checkoutUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -347,6 +367,7 @@ export type PaymentAttemptMaxOrderByAggregateInput = {
   provider?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   externalCheckoutId?: Prisma.SortOrder
+  checkoutUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -357,6 +378,7 @@ export type PaymentAttemptMinOrderByAggregateInput = {
   provider?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   externalCheckoutId?: Prisma.SortOrder
+  checkoutUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -408,6 +430,7 @@ export type PaymentAttemptCreateWithoutOrderInput = {
   provider: string
   idempotencyKey: string
   externalCheckoutId?: string | null
+  checkoutUrl?: string | null
   status: string
   createdAt?: Date | string
 }
@@ -417,6 +440,7 @@ export type PaymentAttemptUncheckedCreateWithoutOrderInput = {
   provider: string
   idempotencyKey: string
   externalCheckoutId?: string | null
+  checkoutUrl?: string | null
   status: string
   createdAt?: Date | string
 }
@@ -456,6 +480,7 @@ export type PaymentAttemptScalarWhereInput = {
   provider?: Prisma.StringFilter<"PaymentAttempt"> | string
   idempotencyKey?: Prisma.StringFilter<"PaymentAttempt"> | string
   externalCheckoutId?: Prisma.StringNullableFilter<"PaymentAttempt"> | string | null
+  checkoutUrl?: Prisma.StringNullableFilter<"PaymentAttempt"> | string | null
   status?: Prisma.StringFilter<"PaymentAttempt"> | string
   createdAt?: Prisma.DateTimeFilter<"PaymentAttempt"> | Date | string
 }
@@ -465,6 +490,7 @@ export type PaymentAttemptCreateManyOrderInput = {
   provider: string
   idempotencyKey: string
   externalCheckoutId?: string | null
+  checkoutUrl?: string | null
   status: string
   createdAt?: Date | string
 }
@@ -474,6 +500,7 @@ export type PaymentAttemptUpdateWithoutOrderInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -483,6 +510,7 @@ export type PaymentAttemptUncheckedUpdateWithoutOrderInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -492,6 +520,7 @@ export type PaymentAttemptUncheckedUpdateManyWithoutOrderInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   externalCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkoutUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -504,6 +533,7 @@ export type PaymentAttemptSelect<ExtArgs extends runtime.Types.Extensions.Intern
   provider?: boolean
   idempotencyKey?: boolean
   externalCheckoutId?: boolean
+  checkoutUrl?: boolean
   status?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -515,6 +545,7 @@ export type PaymentAttemptSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   provider?: boolean
   idempotencyKey?: boolean
   externalCheckoutId?: boolean
+  checkoutUrl?: boolean
   status?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -526,6 +557,7 @@ export type PaymentAttemptSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   provider?: boolean
   idempotencyKey?: boolean
   externalCheckoutId?: boolean
+  checkoutUrl?: boolean
   status?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -537,11 +569,12 @@ export type PaymentAttemptSelectScalar = {
   provider?: boolean
   idempotencyKey?: boolean
   externalCheckoutId?: boolean
+  checkoutUrl?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type PaymentAttemptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "provider" | "idempotencyKey" | "externalCheckoutId" | "status" | "createdAt", ExtArgs["result"]["paymentAttempt"]>
+export type PaymentAttemptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "provider" | "idempotencyKey" | "externalCheckoutId" | "checkoutUrl" | "status" | "createdAt", ExtArgs["result"]["paymentAttempt"]>
 export type PaymentAttemptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
@@ -563,6 +596,7 @@ export type $PaymentAttemptPayload<ExtArgs extends runtime.Types.Extensions.Inte
     provider: string
     idempotencyKey: string
     externalCheckoutId: string | null
+    checkoutUrl: string | null
     status: string
     createdAt: Date
   }, ExtArgs["result"]["paymentAttempt"]>
@@ -994,6 +1028,7 @@ export interface PaymentAttemptFieldRefs {
   readonly provider: Prisma.FieldRef<"PaymentAttempt", 'String'>
   readonly idempotencyKey: Prisma.FieldRef<"PaymentAttempt", 'String'>
   readonly externalCheckoutId: Prisma.FieldRef<"PaymentAttempt", 'String'>
+  readonly checkoutUrl: Prisma.FieldRef<"PaymentAttempt", 'String'>
   readonly status: Prisma.FieldRef<"PaymentAttempt", 'String'>
   readonly createdAt: Prisma.FieldRef<"PaymentAttempt", 'DateTime'>
 }

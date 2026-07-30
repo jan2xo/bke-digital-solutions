@@ -2,7 +2,7 @@
 
 ## Current phase
 
-Phase 4.1 — Product Lifecycle Completion is complete and locally verified. Administrators can permanently delete only archived, disposable products after a server-side dependency check. Phase 5 has not started.
+Phase 4.2 — Product Editions and Multi-Plan Commerce is complete and locally verified. Phase 5 has not started.
 
 ## Milestones
 
@@ -11,13 +11,16 @@ Phase 4.1 — Product Lifecycle Completion is complete and locally verified. Adm
 - [x] PayMongo and Resend provider abstractions
 - [x] Platform administration centers and audited operations
 - [x] Guarded permanent deletion of disposable archived products
+- [x] Product editions with reusable capability entitlements
+- [x] Perpetual, monthly, and calculated annual purchase plans
+- [x] Multi-plan administration, storefront, checkout, and licensing migration
 - [ ] Real PayMongo sandbox lifecycle
 - [ ] Verified Resend delivery domain
 - [ ] Production infrastructure and operational readiness
 
 ## Completed in Phase 4
 
-Product metadata/edit/archive/restore/publish, release lifecycle and rollback, artifact upload/replace/remove/download counts, customer suspension/reactivation/device reset, license lifecycle/transfer/one-time reveal, device inventory/deactivation, order search/filter/cancellation, invoice history/re-email, searchable/exportable audit timeline, and dashboard widgets/recent activity.
+Product metadata/edit/archive/restore/publish, release lifecycle and rollback, artifact upload/replace/remove/download counts, customer suspension/reactivation/device reset, license lifecycle/transfer/audited authenticated reveal, device inventory/deactivation, order search/filter/cancellation, invoice history/re-email, searchable/exportable audit timeline, and dashboard widgets/recent activity.
 
 ## Phase 4.1 acceptance criteria
 
@@ -28,6 +31,17 @@ Product metadata/edit/archive/restore/publish, release lifecycle and rollback, a
 - Typed-name confirmation, structured conflict details, API authorization/origin checks, focused integration/browser coverage, and the full Phase 4 regression gate pass.
 
 Phase 4.1 is an additive completion of Phase 4 and is a prerequisite to, not part of, Phase 5 external-provider certification.
+
+## Phase 4.2 acceptance criteria
+
+- Product URLs remain stable while each product supports one or more editions and each edition supports any permitted purchase-plan combination.
+- Edition records own features, user/device limits, and update policy; purchase plans own payment model, interval, price, renewal, and duration only.
+- Annual price, savings, and effective monthly price are derived from the monthly price using a server-validated 0–10% discount; no annual total override exists.
+- Checkout accepts only a purchase-plan identifier from the browser and reloads every commercial value from PostgreSQL.
+- New order, invoice, subscription, and license state snapshots the selected edition and plan without rewriting historical records.
+- Pending customers can reuse or safely replace hosted checkout sessions, cancel only pending orders, and remain protected from duplicate or delayed webhook issuance.
+- Each authorized customer account can self-start one seven-day trial per product and UTC calendar year; administrator grants and 0–14 day grace periods are separate and audited.
+- ADMIN/origin/audit, customer isolation, webhook verification, safe deletion, credential-gated provider behavior, and the complete regression gate remain intact.
 
 ## Deferred and blockers
 

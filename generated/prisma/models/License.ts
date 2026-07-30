@@ -47,6 +47,8 @@ export type LicenseMinAggregateOutputType = {
   orderId: string | null
   orderItemId: string | null
   productId: string | null
+  editionId: string | null
+  purchasePlanId: string | null
   subscriptionId: string | null
   status: $Enums.LicenseStatus | null
   maxSeats: number | null
@@ -66,6 +68,8 @@ export type LicenseMaxAggregateOutputType = {
   orderId: string | null
   orderItemId: string | null
   productId: string | null
+  editionId: string | null
+  purchasePlanId: string | null
   subscriptionId: string | null
   status: $Enums.LicenseStatus | null
   maxSeats: number | null
@@ -85,6 +89,8 @@ export type LicenseCountAggregateOutputType = {
   orderId: number
   orderItemId: number
   productId: number
+  editionId: number
+  purchasePlanId: number
   subscriptionId: number
   status: number
   maxSeats: number
@@ -116,6 +122,8 @@ export type LicenseMinAggregateInputType = {
   orderId?: true
   orderItemId?: true
   productId?: true
+  editionId?: true
+  purchasePlanId?: true
   subscriptionId?: true
   status?: true
   maxSeats?: true
@@ -135,6 +143,8 @@ export type LicenseMaxAggregateInputType = {
   orderId?: true
   orderItemId?: true
   productId?: true
+  editionId?: true
+  purchasePlanId?: true
   subscriptionId?: true
   status?: true
   maxSeats?: true
@@ -154,6 +164,8 @@ export type LicenseCountAggregateInputType = {
   orderId?: true
   orderItemId?: true
   productId?: true
+  editionId?: true
+  purchasePlanId?: true
   subscriptionId?: true
   status?: true
   maxSeats?: true
@@ -260,6 +272,8 @@ export type LicenseGroupByOutputType = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId: string | null
+  purchasePlanId: string | null
   subscriptionId: string | null
   status: $Enums.LicenseStatus
   maxSeats: number
@@ -302,6 +316,8 @@ export type LicenseWhereInput = {
   orderId?: Prisma.StringFilter<"License"> | string
   orderItemId?: Prisma.StringFilter<"License"> | string
   productId?: Prisma.StringFilter<"License"> | string
+  editionId?: Prisma.StringNullableFilter<"License"> | string | null
+  purchasePlanId?: Prisma.StringNullableFilter<"License"> | string | null
   subscriptionId?: Prisma.StringNullableFilter<"License"> | string | null
   status?: Prisma.EnumLicenseStatusFilter<"License"> | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFilter<"License"> | number
@@ -312,10 +328,13 @@ export type LicenseWhereInput = {
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  edition?: Prisma.XOR<Prisma.EditionNullableScalarRelationFilter, Prisma.EditionWhereInput> | null
+  purchasePlan?: Prisma.XOR<Prisma.PurchasePlanNullableScalarRelationFilter, Prisma.PurchasePlanWhereInput> | null
   assignments?: Prisma.LicenseAssignmentListRelationFilter
   activations?: Prisma.DeviceActivationListRelationFilter
   grants?: Prisma.DownloadGrantListRelationFilter
   events?: Prisma.LicenseEventListRelationFilter
+  trialGrant?: Prisma.XOR<Prisma.TrialGrantNullableScalarRelationFilter, Prisma.TrialGrantWhereInput> | null
 }
 
 export type LicenseOrderByWithRelationInput = {
@@ -329,6 +348,8 @@ export type LicenseOrderByWithRelationInput = {
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  editionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   subscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   maxSeats?: Prisma.SortOrder
@@ -339,10 +360,13 @@ export type LicenseOrderByWithRelationInput = {
   order?: Prisma.OrderOrderByWithRelationInput
   subscription?: Prisma.SubscriptionOrderByWithRelationInput
   product?: Prisma.ProductOrderByWithRelationInput
+  edition?: Prisma.EditionOrderByWithRelationInput
+  purchasePlan?: Prisma.PurchasePlanOrderByWithRelationInput
   assignments?: Prisma.LicenseAssignmentOrderByRelationAggregateInput
   activations?: Prisma.DeviceActivationOrderByRelationAggregateInput
   grants?: Prisma.DownloadGrantOrderByRelationAggregateInput
   events?: Prisma.LicenseEventOrderByRelationAggregateInput
+  trialGrant?: Prisma.TrialGrantOrderByWithRelationInput
 }
 
 export type LicenseWhereUniqueInput = Prisma.AtLeast<{
@@ -359,6 +383,8 @@ export type LicenseWhereUniqueInput = Prisma.AtLeast<{
   accountId?: Prisma.StringFilter<"License"> | string
   orderId?: Prisma.StringFilter<"License"> | string
   productId?: Prisma.StringFilter<"License"> | string
+  editionId?: Prisma.StringNullableFilter<"License"> | string | null
+  purchasePlanId?: Prisma.StringNullableFilter<"License"> | string | null
   subscriptionId?: Prisma.StringNullableFilter<"License"> | string | null
   status?: Prisma.EnumLicenseStatusFilter<"License"> | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFilter<"License"> | number
@@ -369,10 +395,13 @@ export type LicenseWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  edition?: Prisma.XOR<Prisma.EditionNullableScalarRelationFilter, Prisma.EditionWhereInput> | null
+  purchasePlan?: Prisma.XOR<Prisma.PurchasePlanNullableScalarRelationFilter, Prisma.PurchasePlanWhereInput> | null
   assignments?: Prisma.LicenseAssignmentListRelationFilter
   activations?: Prisma.DeviceActivationListRelationFilter
   grants?: Prisma.DownloadGrantListRelationFilter
   events?: Prisma.LicenseEventListRelationFilter
+  trialGrant?: Prisma.XOR<Prisma.TrialGrantNullableScalarRelationFilter, Prisma.TrialGrantWhereInput> | null
 }, "id" | "publicId" | "keyHash" | "orderItemId">
 
 export type LicenseOrderByWithAggregationInput = {
@@ -386,6 +415,8 @@ export type LicenseOrderByWithAggregationInput = {
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  editionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   subscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   maxSeats?: Prisma.SortOrder
@@ -413,6 +444,8 @@ export type LicenseScalarWhereWithAggregatesInput = {
   orderId?: Prisma.StringWithAggregatesFilter<"License"> | string
   orderItemId?: Prisma.StringWithAggregatesFilter<"License"> | string
   productId?: Prisma.StringWithAggregatesFilter<"License"> | string
+  editionId?: Prisma.StringNullableWithAggregatesFilter<"License"> | string | null
+  purchasePlanId?: Prisma.StringNullableWithAggregatesFilter<"License"> | string | null
   subscriptionId?: Prisma.StringNullableWithAggregatesFilter<"License"> | string | null
   status?: Prisma.EnumLicenseStatusWithAggregatesFilter<"License"> | $Enums.LicenseStatus
   maxSeats?: Prisma.IntWithAggregatesFilter<"License"> | number
@@ -438,10 +471,13 @@ export type LicenseCreateInput = {
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateInput = {
@@ -455,6 +491,8 @@ export type LicenseUncheckedCreateInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -465,6 +503,7 @@ export type LicenseUncheckedCreateInput = {
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUpdateInput = {
@@ -484,10 +523,13 @@ export type LicenseUpdateInput = {
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateInput = {
@@ -501,6 +543,8 @@ export type LicenseUncheckedUpdateInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -511,6 +555,7 @@ export type LicenseUncheckedUpdateInput = {
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseCreateManyInput = {
@@ -524,6 +569,8 @@ export type LicenseCreateManyInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -558,6 +605,8 @@ export type LicenseUncheckedUpdateManyInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -587,6 +636,8 @@ export type LicenseCountOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  editionId?: Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   maxSeats?: Prisma.SortOrder
@@ -611,6 +662,8 @@ export type LicenseMaxOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  editionId?: Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   maxSeats?: Prisma.SortOrder
@@ -630,6 +683,8 @@ export type LicenseMinOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  editionId?: Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   maxSeats?: Prisma.SortOrder
@@ -732,6 +787,90 @@ export type LicenseUncheckedUpdateManyWithoutProductNestedInput = {
   deleteMany?: Prisma.LicenseScalarWhereInput | Prisma.LicenseScalarWhereInput[]
 }
 
+export type LicenseCreateNestedManyWithoutEditionInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutEditionInput, Prisma.LicenseUncheckedCreateWithoutEditionInput> | Prisma.LicenseCreateWithoutEditionInput[] | Prisma.LicenseUncheckedCreateWithoutEditionInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutEditionInput | Prisma.LicenseCreateOrConnectWithoutEditionInput[]
+  createMany?: Prisma.LicenseCreateManyEditionInputEnvelope
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+}
+
+export type LicenseUncheckedCreateNestedManyWithoutEditionInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutEditionInput, Prisma.LicenseUncheckedCreateWithoutEditionInput> | Prisma.LicenseCreateWithoutEditionInput[] | Prisma.LicenseUncheckedCreateWithoutEditionInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutEditionInput | Prisma.LicenseCreateOrConnectWithoutEditionInput[]
+  createMany?: Prisma.LicenseCreateManyEditionInputEnvelope
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+}
+
+export type LicenseUpdateManyWithoutEditionNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutEditionInput, Prisma.LicenseUncheckedCreateWithoutEditionInput> | Prisma.LicenseCreateWithoutEditionInput[] | Prisma.LicenseUncheckedCreateWithoutEditionInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutEditionInput | Prisma.LicenseCreateOrConnectWithoutEditionInput[]
+  upsert?: Prisma.LicenseUpsertWithWhereUniqueWithoutEditionInput | Prisma.LicenseUpsertWithWhereUniqueWithoutEditionInput[]
+  createMany?: Prisma.LicenseCreateManyEditionInputEnvelope
+  set?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  disconnect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  delete?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  update?: Prisma.LicenseUpdateWithWhereUniqueWithoutEditionInput | Prisma.LicenseUpdateWithWhereUniqueWithoutEditionInput[]
+  updateMany?: Prisma.LicenseUpdateManyWithWhereWithoutEditionInput | Prisma.LicenseUpdateManyWithWhereWithoutEditionInput[]
+  deleteMany?: Prisma.LicenseScalarWhereInput | Prisma.LicenseScalarWhereInput[]
+}
+
+export type LicenseUncheckedUpdateManyWithoutEditionNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutEditionInput, Prisma.LicenseUncheckedCreateWithoutEditionInput> | Prisma.LicenseCreateWithoutEditionInput[] | Prisma.LicenseUncheckedCreateWithoutEditionInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutEditionInput | Prisma.LicenseCreateOrConnectWithoutEditionInput[]
+  upsert?: Prisma.LicenseUpsertWithWhereUniqueWithoutEditionInput | Prisma.LicenseUpsertWithWhereUniqueWithoutEditionInput[]
+  createMany?: Prisma.LicenseCreateManyEditionInputEnvelope
+  set?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  disconnect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  delete?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  update?: Prisma.LicenseUpdateWithWhereUniqueWithoutEditionInput | Prisma.LicenseUpdateWithWhereUniqueWithoutEditionInput[]
+  updateMany?: Prisma.LicenseUpdateManyWithWhereWithoutEditionInput | Prisma.LicenseUpdateManyWithWhereWithoutEditionInput[]
+  deleteMany?: Prisma.LicenseScalarWhereInput | Prisma.LicenseScalarWhereInput[]
+}
+
+export type LicenseCreateNestedManyWithoutPurchasePlanInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutPurchasePlanInput, Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput> | Prisma.LicenseCreateWithoutPurchasePlanInput[] | Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput | Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput[]
+  createMany?: Prisma.LicenseCreateManyPurchasePlanInputEnvelope
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+}
+
+export type LicenseUncheckedCreateNestedManyWithoutPurchasePlanInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutPurchasePlanInput, Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput> | Prisma.LicenseCreateWithoutPurchasePlanInput[] | Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput | Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput[]
+  createMany?: Prisma.LicenseCreateManyPurchasePlanInputEnvelope
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+}
+
+export type LicenseUpdateManyWithoutPurchasePlanNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutPurchasePlanInput, Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput> | Prisma.LicenseCreateWithoutPurchasePlanInput[] | Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput | Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput[]
+  upsert?: Prisma.LicenseUpsertWithWhereUniqueWithoutPurchasePlanInput | Prisma.LicenseUpsertWithWhereUniqueWithoutPurchasePlanInput[]
+  createMany?: Prisma.LicenseCreateManyPurchasePlanInputEnvelope
+  set?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  disconnect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  delete?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  update?: Prisma.LicenseUpdateWithWhereUniqueWithoutPurchasePlanInput | Prisma.LicenseUpdateWithWhereUniqueWithoutPurchasePlanInput[]
+  updateMany?: Prisma.LicenseUpdateManyWithWhereWithoutPurchasePlanInput | Prisma.LicenseUpdateManyWithWhereWithoutPurchasePlanInput[]
+  deleteMany?: Prisma.LicenseScalarWhereInput | Prisma.LicenseScalarWhereInput[]
+}
+
+export type LicenseUncheckedUpdateManyWithoutPurchasePlanNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutPurchasePlanInput, Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput> | Prisma.LicenseCreateWithoutPurchasePlanInput[] | Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput[]
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput | Prisma.LicenseCreateOrConnectWithoutPurchasePlanInput[]
+  upsert?: Prisma.LicenseUpsertWithWhereUniqueWithoutPurchasePlanInput | Prisma.LicenseUpsertWithWhereUniqueWithoutPurchasePlanInput[]
+  createMany?: Prisma.LicenseCreateManyPurchasePlanInputEnvelope
+  set?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  disconnect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  delete?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  connect?: Prisma.LicenseWhereUniqueInput | Prisma.LicenseWhereUniqueInput[]
+  update?: Prisma.LicenseUpdateWithWhereUniqueWithoutPurchasePlanInput | Prisma.LicenseUpdateWithWhereUniqueWithoutPurchasePlanInput[]
+  updateMany?: Prisma.LicenseUpdateManyWithWhereWithoutPurchasePlanInput | Prisma.LicenseUpdateManyWithWhereWithoutPurchasePlanInput[]
+  deleteMany?: Prisma.LicenseScalarWhereInput | Prisma.LicenseScalarWhereInput[]
+}
+
 export type LicenseCreateNestedManyWithoutOrderInput = {
   create?: Prisma.XOR<Prisma.LicenseCreateWithoutOrderInput, Prisma.LicenseUncheckedCreateWithoutOrderInput> | Prisma.LicenseCreateWithoutOrderInput[] | Prisma.LicenseUncheckedCreateWithoutOrderInput[]
   connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutOrderInput | Prisma.LicenseCreateOrConnectWithoutOrderInput[]
@@ -820,6 +959,20 @@ export type EnumLicenseStatusFieldUpdateOperationsInput = {
   set?: $Enums.LicenseStatus
 }
 
+export type LicenseCreateNestedOneWithoutTrialGrantInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutTrialGrantInput, Prisma.LicenseUncheckedCreateWithoutTrialGrantInput>
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutTrialGrantInput
+  connect?: Prisma.LicenseWhereUniqueInput
+}
+
+export type LicenseUpdateOneRequiredWithoutTrialGrantNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseCreateWithoutTrialGrantInput, Prisma.LicenseUncheckedCreateWithoutTrialGrantInput>
+  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutTrialGrantInput
+  upsert?: Prisma.LicenseUpsertWithoutTrialGrantInput
+  connect?: Prisma.LicenseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LicenseUpdateToOneWithWhereWithoutTrialGrantInput, Prisma.LicenseUpdateWithoutTrialGrantInput>, Prisma.LicenseUncheckedUpdateWithoutTrialGrantInput>
+}
+
 export type LicenseCreateNestedOneWithoutAssignmentsInput = {
   create?: Prisma.XOR<Prisma.LicenseCreateWithoutAssignmentsInput, Prisma.LicenseUncheckedCreateWithoutAssignmentsInput>
   connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutAssignmentsInput
@@ -892,10 +1045,13 @@ export type LicenseCreateWithoutAccountInput = {
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutAccountInput = {
@@ -908,6 +1064,8 @@ export type LicenseUncheckedCreateWithoutAccountInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -918,6 +1076,7 @@ export type LicenseUncheckedCreateWithoutAccountInput = {
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutAccountInput = {
@@ -960,6 +1119,8 @@ export type LicenseScalarWhereInput = {
   orderId?: Prisma.StringFilter<"License"> | string
   orderItemId?: Prisma.StringFilter<"License"> | string
   productId?: Prisma.StringFilter<"License"> | string
+  editionId?: Prisma.StringNullableFilter<"License"> | string | null
+  purchasePlanId?: Prisma.StringNullableFilter<"License"> | string | null
   subscriptionId?: Prisma.StringNullableFilter<"License"> | string | null
   status?: Prisma.EnumLicenseStatusFilter<"License"> | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFilter<"License"> | number
@@ -984,10 +1145,13 @@ export type LicenseCreateWithoutProductInput = {
   account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutProductInput = {
@@ -1000,6 +1164,8 @@ export type LicenseUncheckedCreateWithoutProductInput = {
   accountId: string
   orderId: string
   orderItemId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1010,6 +1176,7 @@ export type LicenseUncheckedCreateWithoutProductInput = {
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutProductInput = {
@@ -1038,6 +1205,158 @@ export type LicenseUpdateManyWithWhereWithoutProductInput = {
   data: Prisma.XOR<Prisma.LicenseUpdateManyMutationInput, Prisma.LicenseUncheckedUpdateManyWithoutProductInput>
 }
 
+export type LicenseCreateWithoutEditionInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  orderItemId: string
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+  account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
+  order: Prisma.OrderCreateNestedOneWithoutLicensesInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
+  product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
+  activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
+  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
+  events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
+}
+
+export type LicenseUncheckedCreateWithoutEditionInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  accountId: string
+  orderId: string
+  orderItemId: string
+  productId: string
+  purchasePlanId?: string | null
+  subscriptionId?: string | null
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
+  activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
+  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
+  events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
+}
+
+export type LicenseCreateOrConnectWithoutEditionInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  create: Prisma.XOR<Prisma.LicenseCreateWithoutEditionInput, Prisma.LicenseUncheckedCreateWithoutEditionInput>
+}
+
+export type LicenseCreateManyEditionInputEnvelope = {
+  data: Prisma.LicenseCreateManyEditionInput | Prisma.LicenseCreateManyEditionInput[]
+  skipDuplicates?: boolean
+}
+
+export type LicenseUpsertWithWhereUniqueWithoutEditionInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  update: Prisma.XOR<Prisma.LicenseUpdateWithoutEditionInput, Prisma.LicenseUncheckedUpdateWithoutEditionInput>
+  create: Prisma.XOR<Prisma.LicenseCreateWithoutEditionInput, Prisma.LicenseUncheckedCreateWithoutEditionInput>
+}
+
+export type LicenseUpdateWithWhereUniqueWithoutEditionInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  data: Prisma.XOR<Prisma.LicenseUpdateWithoutEditionInput, Prisma.LicenseUncheckedUpdateWithoutEditionInput>
+}
+
+export type LicenseUpdateManyWithWhereWithoutEditionInput = {
+  where: Prisma.LicenseScalarWhereInput
+  data: Prisma.XOR<Prisma.LicenseUpdateManyMutationInput, Prisma.LicenseUncheckedUpdateManyWithoutEditionInput>
+}
+
+export type LicenseCreateWithoutPurchasePlanInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  orderItemId: string
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+  account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
+  order: Prisma.OrderCreateNestedOneWithoutLicensesInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
+  product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
+  activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
+  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
+  events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
+}
+
+export type LicenseUncheckedCreateWithoutPurchasePlanInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  accountId: string
+  orderId: string
+  orderItemId: string
+  productId: string
+  editionId?: string | null
+  subscriptionId?: string | null
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
+  activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
+  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
+  events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
+}
+
+export type LicenseCreateOrConnectWithoutPurchasePlanInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  create: Prisma.XOR<Prisma.LicenseCreateWithoutPurchasePlanInput, Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput>
+}
+
+export type LicenseCreateManyPurchasePlanInputEnvelope = {
+  data: Prisma.LicenseCreateManyPurchasePlanInput | Prisma.LicenseCreateManyPurchasePlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type LicenseUpsertWithWhereUniqueWithoutPurchasePlanInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  update: Prisma.XOR<Prisma.LicenseUpdateWithoutPurchasePlanInput, Prisma.LicenseUncheckedUpdateWithoutPurchasePlanInput>
+  create: Prisma.XOR<Prisma.LicenseCreateWithoutPurchasePlanInput, Prisma.LicenseUncheckedCreateWithoutPurchasePlanInput>
+}
+
+export type LicenseUpdateWithWhereUniqueWithoutPurchasePlanInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  data: Prisma.XOR<Prisma.LicenseUpdateWithoutPurchasePlanInput, Prisma.LicenseUncheckedUpdateWithoutPurchasePlanInput>
+}
+
+export type LicenseUpdateManyWithWhereWithoutPurchasePlanInput = {
+  where: Prisma.LicenseScalarWhereInput
+  data: Prisma.XOR<Prisma.LicenseUpdateManyMutationInput, Prisma.LicenseUncheckedUpdateManyWithoutPurchasePlanInput>
+}
+
 export type LicenseCreateWithoutOrderInput = {
   id?: string
   publicId: string
@@ -1054,10 +1373,13 @@ export type LicenseCreateWithoutOrderInput = {
   account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutOrderInput = {
@@ -1070,6 +1392,8 @@ export type LicenseUncheckedCreateWithoutOrderInput = {
   accountId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1080,6 +1404,7 @@ export type LicenseUncheckedCreateWithoutOrderInput = {
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutOrderInput = {
@@ -1124,10 +1449,13 @@ export type LicenseCreateWithoutSubscriptionInput = {
   account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutSubscriptionInput = {
@@ -1141,6 +1469,8 @@ export type LicenseUncheckedCreateWithoutSubscriptionInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
   maxDevicesPerSeat: number
@@ -1150,6 +1480,7 @@ export type LicenseUncheckedCreateWithoutSubscriptionInput = {
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutSubscriptionInput = {
@@ -1178,6 +1509,122 @@ export type LicenseUpdateManyWithWhereWithoutSubscriptionInput = {
   data: Prisma.XOR<Prisma.LicenseUpdateManyMutationInput, Prisma.LicenseUncheckedUpdateManyWithoutSubscriptionInput>
 }
 
+export type LicenseCreateWithoutTrialGrantInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  orderItemId: string
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+  account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
+  order: Prisma.OrderCreateNestedOneWithoutLicensesInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
+  product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
+  activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
+  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
+  events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+}
+
+export type LicenseUncheckedCreateWithoutTrialGrantInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  accountId: string
+  orderId: string
+  orderItemId: string
+  productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
+  subscriptionId?: string | null
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
+  activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
+  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
+  events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+}
+
+export type LicenseCreateOrConnectWithoutTrialGrantInput = {
+  where: Prisma.LicenseWhereUniqueInput
+  create: Prisma.XOR<Prisma.LicenseCreateWithoutTrialGrantInput, Prisma.LicenseUncheckedCreateWithoutTrialGrantInput>
+}
+
+export type LicenseUpsertWithoutTrialGrantInput = {
+  update: Prisma.XOR<Prisma.LicenseUpdateWithoutTrialGrantInput, Prisma.LicenseUncheckedUpdateWithoutTrialGrantInput>
+  create: Prisma.XOR<Prisma.LicenseCreateWithoutTrialGrantInput, Prisma.LicenseUncheckedCreateWithoutTrialGrantInput>
+  where?: Prisma.LicenseWhereInput
+}
+
+export type LicenseUpdateToOneWithWhereWithoutTrialGrantInput = {
+  where?: Prisma.LicenseWhereInput
+  data: Prisma.XOR<Prisma.LicenseUpdateWithoutTrialGrantInput, Prisma.LicenseUncheckedUpdateWithoutTrialGrantInput>
+}
+
+export type LicenseUpdateWithoutTrialGrantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
+  activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
+  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
+  events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+}
+
+export type LicenseUncheckedUpdateWithoutTrialGrantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
+  activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
+  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
+  events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+}
+
 export type LicenseCreateWithoutAssignmentsInput = {
   id?: string
   publicId: string
@@ -1195,9 +1642,12 @@ export type LicenseCreateWithoutAssignmentsInput = {
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutAssignmentsInput = {
@@ -1211,6 +1661,8 @@ export type LicenseUncheckedCreateWithoutAssignmentsInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1220,6 +1672,7 @@ export type LicenseUncheckedCreateWithoutAssignmentsInput = {
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutAssignmentsInput = {
@@ -1255,9 +1708,12 @@ export type LicenseUpdateWithoutAssignmentsInput = {
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutAssignmentsInput = {
@@ -1271,6 +1727,8 @@ export type LicenseUncheckedUpdateWithoutAssignmentsInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1280,6 +1738,7 @@ export type LicenseUncheckedUpdateWithoutAssignmentsInput = {
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseCreateWithoutActivationsInput = {
@@ -1299,9 +1758,12 @@ export type LicenseCreateWithoutActivationsInput = {
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutActivationsInput = {
@@ -1315,6 +1777,8 @@ export type LicenseUncheckedCreateWithoutActivationsInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1324,6 +1788,7 @@ export type LicenseUncheckedCreateWithoutActivationsInput = {
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutActivationsInput = {
@@ -1359,9 +1824,12 @@ export type LicenseUpdateWithoutActivationsInput = {
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutActivationsInput = {
@@ -1375,6 +1843,8 @@ export type LicenseUncheckedUpdateWithoutActivationsInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1384,6 +1854,7 @@ export type LicenseUncheckedUpdateWithoutActivationsInput = {
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseCreateWithoutGrantsInput = {
@@ -1403,9 +1874,12 @@ export type LicenseCreateWithoutGrantsInput = {
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutGrantsInput = {
@@ -1419,6 +1893,8 @@ export type LicenseUncheckedCreateWithoutGrantsInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1428,6 +1904,7 @@ export type LicenseUncheckedCreateWithoutGrantsInput = {
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutGrantsInput = {
@@ -1463,9 +1940,12 @@ export type LicenseUpdateWithoutGrantsInput = {
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutGrantsInput = {
@@ -1479,6 +1959,8 @@ export type LicenseUncheckedUpdateWithoutGrantsInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1488,6 +1970,7 @@ export type LicenseUncheckedUpdateWithoutGrantsInput = {
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseCreateWithoutEventsInput = {
@@ -1507,9 +1990,12 @@ export type LicenseCreateWithoutEventsInput = {
   order: Prisma.OrderCreateNestedOneWithoutLicensesInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
   product: Prisma.ProductCreateNestedOneWithoutLicensesInput
+  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseUncheckedCreateWithoutEventsInput = {
@@ -1523,6 +2009,8 @@ export type LicenseUncheckedCreateWithoutEventsInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1532,6 +2020,7 @@ export type LicenseUncheckedCreateWithoutEventsInput = {
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
+  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
 }
 
 export type LicenseCreateOrConnectWithoutEventsInput = {
@@ -1567,9 +2056,12 @@ export type LicenseUpdateWithoutEventsInput = {
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutEventsInput = {
@@ -1583,6 +2075,8 @@ export type LicenseUncheckedUpdateWithoutEventsInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1592,6 +2086,7 @@ export type LicenseUncheckedUpdateWithoutEventsInput = {
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseCreateManyAccountInput = {
@@ -1604,6 +2099,8 @@ export type LicenseCreateManyAccountInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1628,10 +2125,13 @@ export type LicenseUpdateWithoutAccountInput = {
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutAccountInput = {
@@ -1644,6 +2144,8 @@ export type LicenseUncheckedUpdateWithoutAccountInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1654,6 +2156,7 @@ export type LicenseUncheckedUpdateWithoutAccountInput = {
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateManyWithoutAccountInput = {
@@ -1666,6 +2169,8 @@ export type LicenseUncheckedUpdateManyWithoutAccountInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1684,6 +2189,8 @@ export type LicenseCreateManyProductInput = {
   accountId: string
   orderId: string
   orderItemId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1708,10 +2215,13 @@ export type LicenseUpdateWithoutProductInput = {
   account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutProductInput = {
@@ -1724,6 +2234,8 @@ export type LicenseUncheckedUpdateWithoutProductInput = {
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1734,6 +2246,7 @@ export type LicenseUncheckedUpdateWithoutProductInput = {
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateManyWithoutProductInput = {
@@ -1746,6 +2259,188 @@ export type LicenseUncheckedUpdateManyWithoutProductInput = {
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LicenseCreateManyEditionInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  accountId: string
+  orderId: string
+  orderItemId: string
+  productId: string
+  purchasePlanId?: string | null
+  subscriptionId?: string | null
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type LicenseUpdateWithoutEditionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
+  activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
+  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
+  events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
+}
+
+export type LicenseUncheckedUpdateWithoutEditionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
+  activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
+  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
+  events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
+}
+
+export type LicenseUncheckedUpdateManyWithoutEditionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LicenseCreateManyPurchasePlanInput = {
+  id?: string
+  publicId: string
+  keyHash: string
+  keyLastFour: string
+  keyCiphertext?: string | null
+  keyRevealedAt?: Date | string | null
+  accountId: string
+  orderId: string
+  orderItemId: string
+  productId: string
+  editionId?: string | null
+  subscriptionId?: string | null
+  status?: $Enums.LicenseStatus
+  maxSeats: number
+  maxDevicesPerSeat: number
+  expiresAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type LicenseUpdateWithoutPurchasePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
+  activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
+  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
+  events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
+}
+
+export type LicenseUncheckedUpdateWithoutPurchasePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
+  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
+  activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
+  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
+  events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
+}
+
+export type LicenseUncheckedUpdateManyWithoutPurchasePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
+  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
+  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1764,6 +2459,8 @@ export type LicenseCreateManyOrderInput = {
   accountId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   subscriptionId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
@@ -1788,10 +2485,13 @@ export type LicenseUpdateWithoutOrderInput = {
   account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutOrderInput = {
@@ -1804,6 +2504,8 @@ export type LicenseUncheckedUpdateWithoutOrderInput = {
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1814,6 +2516,7 @@ export type LicenseUncheckedUpdateWithoutOrderInput = {
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateManyWithoutOrderInput = {
@@ -1826,6 +2529,8 @@ export type LicenseUncheckedUpdateManyWithoutOrderInput = {
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1845,6 +2550,8 @@ export type LicenseCreateManySubscriptionInput = {
   orderId: string
   orderItemId: string
   productId: string
+  editionId?: string | null
+  purchasePlanId?: string | null
   status?: $Enums.LicenseStatus
   maxSeats: number
   maxDevicesPerSeat: number
@@ -1868,10 +2575,13 @@ export type LicenseUpdateWithoutSubscriptionInput = {
   account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
+  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateWithoutSubscriptionInput = {
@@ -1885,6 +2595,8 @@ export type LicenseUncheckedUpdateWithoutSubscriptionInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
   maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1894,6 +2606,7 @@ export type LicenseUncheckedUpdateWithoutSubscriptionInput = {
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
+  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
 }
 
 export type LicenseUncheckedUpdateManyWithoutSubscriptionInput = {
@@ -1907,6 +2620,8 @@ export type LicenseUncheckedUpdateManyWithoutSubscriptionInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
   maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
   maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1983,6 +2698,8 @@ export type LicenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   orderId?: boolean
   orderItemId?: boolean
   productId?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
   subscriptionId?: boolean
   status?: boolean
   maxSeats?: boolean
@@ -1993,10 +2710,13 @@ export type LicenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.License$subscriptionArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  edition?: boolean | Prisma.License$editionArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
   assignments?: boolean | Prisma.License$assignmentsArgs<ExtArgs>
   activations?: boolean | Prisma.License$activationsArgs<ExtArgs>
   grants?: boolean | Prisma.License$grantsArgs<ExtArgs>
   events?: boolean | Prisma.License$eventsArgs<ExtArgs>
+  trialGrant?: boolean | Prisma.License$trialGrantArgs<ExtArgs>
   _count?: boolean | Prisma.LicenseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["license"]>
 
@@ -2011,6 +2731,8 @@ export type LicenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   orderId?: boolean
   orderItemId?: boolean
   productId?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
   subscriptionId?: boolean
   status?: boolean
   maxSeats?: boolean
@@ -2021,6 +2743,8 @@ export type LicenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.License$subscriptionArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  edition?: boolean | Prisma.License$editionArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
 }, ExtArgs["result"]["license"]>
 
 export type LicenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2034,6 +2758,8 @@ export type LicenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   orderId?: boolean
   orderItemId?: boolean
   productId?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
   subscriptionId?: boolean
   status?: boolean
   maxSeats?: boolean
@@ -2044,6 +2770,8 @@ export type LicenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.License$subscriptionArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  edition?: boolean | Prisma.License$editionArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
 }, ExtArgs["result"]["license"]>
 
 export type LicenseSelectScalar = {
@@ -2057,6 +2785,8 @@ export type LicenseSelectScalar = {
   orderId?: boolean
   orderItemId?: boolean
   productId?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
   subscriptionId?: boolean
   status?: boolean
   maxSeats?: boolean
@@ -2065,16 +2795,19 @@ export type LicenseSelectScalar = {
   createdAt?: boolean
 }
 
-export type LicenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "keyHash" | "keyLastFour" | "keyCiphertext" | "keyRevealedAt" | "accountId" | "orderId" | "orderItemId" | "productId" | "subscriptionId" | "status" | "maxSeats" | "maxDevicesPerSeat" | "expiresAt" | "createdAt", ExtArgs["result"]["license"]>
+export type LicenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "keyHash" | "keyLastFour" | "keyCiphertext" | "keyRevealedAt" | "accountId" | "orderId" | "orderItemId" | "productId" | "editionId" | "purchasePlanId" | "subscriptionId" | "status" | "maxSeats" | "maxDevicesPerSeat" | "expiresAt" | "createdAt", ExtArgs["result"]["license"]>
 export type LicenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account?: boolean | Prisma.CustomerAccountDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.License$subscriptionArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  edition?: boolean | Prisma.License$editionArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
   assignments?: boolean | Prisma.License$assignmentsArgs<ExtArgs>
   activations?: boolean | Prisma.License$activationsArgs<ExtArgs>
   grants?: boolean | Prisma.License$grantsArgs<ExtArgs>
   events?: boolean | Prisma.License$eventsArgs<ExtArgs>
+  trialGrant?: boolean | Prisma.License$trialGrantArgs<ExtArgs>
   _count?: boolean | Prisma.LicenseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LicenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2082,12 +2815,16 @@ export type LicenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.License$subscriptionArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  edition?: boolean | Prisma.License$editionArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
 }
 export type LicenseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account?: boolean | Prisma.CustomerAccountDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.License$subscriptionArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  edition?: boolean | Prisma.License$editionArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
 }
 
 export type $LicensePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2097,10 +2834,13 @@ export type $LicensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     order: Prisma.$OrderPayload<ExtArgs>
     subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
     product: Prisma.$ProductPayload<ExtArgs>
+    edition: Prisma.$EditionPayload<ExtArgs> | null
+    purchasePlan: Prisma.$PurchasePlanPayload<ExtArgs> | null
     assignments: Prisma.$LicenseAssignmentPayload<ExtArgs>[]
     activations: Prisma.$DeviceActivationPayload<ExtArgs>[]
     grants: Prisma.$DownloadGrantPayload<ExtArgs>[]
     events: Prisma.$LicenseEventPayload<ExtArgs>[]
+    trialGrant: Prisma.$TrialGrantPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2113,6 +2853,8 @@ export type $LicensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     orderId: string
     orderItemId: string
     productId: string
+    editionId: string | null
+    purchasePlanId: string | null
     subscriptionId: string | null
     status: $Enums.LicenseStatus
     maxSeats: number
@@ -2517,10 +3259,13 @@ export interface Prisma__LicenseClient<T, Null = never, ExtArgs extends runtime.
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subscription<T extends Prisma.License$subscriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$subscriptionArgs<ExtArgs>>): Prisma.Prisma__SubscriptionClient<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  edition<T extends Prisma.License$editionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$editionArgs<ExtArgs>>): Prisma.Prisma__EditionClient<runtime.Types.Result.GetResult<Prisma.$EditionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  purchasePlan<T extends Prisma.License$purchasePlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$purchasePlanArgs<ExtArgs>>): Prisma.Prisma__PurchasePlanClient<runtime.Types.Result.GetResult<Prisma.$PurchasePlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignments<T extends Prisma.License$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activations<T extends Prisma.License$activationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$activationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceActivationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   grants<T extends Prisma.License$grantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$grantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DownloadGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.License$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trialGrant<T extends Prisma.License$trialGrantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$trialGrantArgs<ExtArgs>>): Prisma.Prisma__TrialGrantClient<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2560,6 +3305,8 @@ export interface LicenseFieldRefs {
   readonly orderId: Prisma.FieldRef<"License", 'String'>
   readonly orderItemId: Prisma.FieldRef<"License", 'String'>
   readonly productId: Prisma.FieldRef<"License", 'String'>
+  readonly editionId: Prisma.FieldRef<"License", 'String'>
+  readonly purchasePlanId: Prisma.FieldRef<"License", 'String'>
   readonly subscriptionId: Prisma.FieldRef<"License", 'String'>
   readonly status: Prisma.FieldRef<"License", 'LicenseStatus'>
   readonly maxSeats: Prisma.FieldRef<"License", 'Int'>
@@ -2986,6 +3733,44 @@ export type License$subscriptionArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
+ * License.edition
+ */
+export type License$editionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Edition
+   */
+  select?: Prisma.EditionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Edition
+   */
+  omit?: Prisma.EditionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EditionInclude<ExtArgs> | null
+  where?: Prisma.EditionWhereInput
+}
+
+/**
+ * License.purchasePlan
+ */
+export type License$purchasePlanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchasePlan
+   */
+  select?: Prisma.PurchasePlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchasePlan
+   */
+  omit?: Prisma.PurchasePlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchasePlanInclude<ExtArgs> | null
+  where?: Prisma.PurchasePlanWhereInput
+}
+
+/**
  * License.assignments
  */
 export type License$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3079,6 +3864,25 @@ export type License$eventsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.LicenseEventScalarFieldEnum | Prisma.LicenseEventScalarFieldEnum[]
+}
+
+/**
+ * License.trialGrant
+ */
+export type License$trialGrantArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TrialGrant
+   */
+  select?: Prisma.TrialGrantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TrialGrant
+   */
+  omit?: Prisma.TrialGrantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TrialGrantInclude<ExtArgs> | null
+  where?: Prisma.TrialGrantWhereInput
 }
 
 /**

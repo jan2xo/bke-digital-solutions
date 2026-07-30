@@ -68,6 +68,16 @@ export type Invitation = Prisma.InvitationModel
  */
 export type Product = Prisma.ProductModel
 /**
+ * Model Edition
+ *
+ */
+export type Edition = Prisma.EditionModel
+/**
+ * Model PurchasePlan
+ *
+ */
+export type PurchasePlan = Prisma.PurchasePlanModel
+/**
  * Model ProductVersion
  *
  */
@@ -142,6 +152,11 @@ export type Subscription = Prisma.SubscriptionModel
  *
  */
 export type License = Prisma.LicenseModel
+/**
+ * Model TrialGrant
+ *
+ */
+export type TrialGrant = Prisma.TrialGrantModel
 /**
  * Model LicenseAssignment
  *

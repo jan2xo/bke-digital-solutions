@@ -267,11 +267,13 @@ export type ProductWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   versions?: Prisma.ProductVersionListRelationFilter
+  editions?: Prisma.EditionListRelationFilter
   prices?: Prisma.PriceListRelationFilter
   policies?: Prisma.LicensePolicyListRelationFilter
   artifacts?: Prisma.ProductArtifactListRelationFilter
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
+  trials?: Prisma.TrialGrantListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -292,11 +294,13 @@ export type ProductOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   versions?: Prisma.ProductVersionOrderByRelationAggregateInput
+  editions?: Prisma.EditionOrderByRelationAggregateInput
   prices?: Prisma.PriceOrderByRelationAggregateInput
   policies?: Prisma.LicensePolicyOrderByRelationAggregateInput
   artifacts?: Prisma.ProductArtifactOrderByRelationAggregateInput
   licenses?: Prisma.LicenseOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
+  trials?: Prisma.TrialGrantOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -320,11 +324,13 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   versions?: Prisma.ProductVersionListRelationFilter
+  editions?: Prisma.EditionListRelationFilter
   prices?: Prisma.PriceListRelationFilter
   policies?: Prisma.LicensePolicyListRelationFilter
   artifacts?: Prisma.ProductArtifactListRelationFilter
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
+  trials?: Prisma.TrialGrantListRelationFilter
 }, "id" | "slug">
 
 export type ProductOrderByWithAggregationInput = {
@@ -389,11 +395,13 @@ export type ProductCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -414,11 +422,13 @@ export type ProductUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -439,11 +449,13 @@ export type ProductUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -464,11 +476,13 @@ export type ProductUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -613,6 +627,20 @@ export type ProductUpdatetagsInput = {
   push?: string | string[]
 }
 
+export type ProductCreateNestedOneWithoutEditionsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutEditionsInput, Prisma.ProductUncheckedCreateWithoutEditionsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutEditionsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutEditionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutEditionsInput, Prisma.ProductUncheckedCreateWithoutEditionsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutEditionsInput
+  upsert?: Prisma.ProductUpsertWithoutEditionsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutEditionsInput, Prisma.ProductUpdateWithoutEditionsInput>, Prisma.ProductUncheckedUpdateWithoutEditionsInput>
+}
+
 export type ProductCreateNestedOneWithoutVersionsInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutVersionsInput, Prisma.ProductUncheckedCreateWithoutVersionsInput>
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutVersionsInput
@@ -697,6 +725,140 @@ export type ProductUpdateOneRequiredWithoutLicensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutLicensesInput, Prisma.ProductUpdateWithoutLicensesInput>, Prisma.ProductUncheckedUpdateWithoutLicensesInput>
 }
 
+export type ProductCreateNestedOneWithoutTrialsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutTrialsInput, Prisma.ProductUncheckedCreateWithoutTrialsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutTrialsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutTrialsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutTrialsInput, Prisma.ProductUncheckedCreateWithoutTrialsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutTrialsInput
+  upsert?: Prisma.ProductUpsertWithoutTrialsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutTrialsInput, Prisma.ProductUpdateWithoutTrialsInput>, Prisma.ProductUncheckedUpdateWithoutTrialsInput>
+}
+
+export type ProductCreateWithoutEditionsInput = {
+  id?: string
+  slug: string
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutEditionsInput = {
+  id?: string
+  slug: string
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutEditionsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutEditionsInput, Prisma.ProductUncheckedCreateWithoutEditionsInput>
+}
+
+export type ProductUpsertWithoutEditionsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutEditionsInput, Prisma.ProductUncheckedUpdateWithoutEditionsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutEditionsInput, Prisma.ProductUncheckedCreateWithoutEditionsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutEditionsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutEditionsInput, Prisma.ProductUncheckedUpdateWithoutEditionsInput>
+}
+
+export type ProductUpdateWithoutEditionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutEditionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
+}
+
 export type ProductCreateWithoutVersionsInput = {
   id?: string
   slug: string
@@ -714,11 +876,13 @@ export type ProductCreateWithoutVersionsInput = {
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutVersionsInput = {
@@ -738,11 +902,13 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutVersionsInput = {
@@ -778,11 +944,13 @@ export type ProductUpdateWithoutVersionsInput = {
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutVersionsInput = {
@@ -802,11 +970,13 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPoliciesInput = {
@@ -827,10 +997,12 @@ export type ProductCreateWithoutPoliciesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPoliciesInput = {
@@ -851,10 +1023,12 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPoliciesInput = {
@@ -891,10 +1065,12 @@ export type ProductUpdateWithoutPoliciesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPoliciesInput = {
@@ -915,10 +1091,12 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPricesInput = {
@@ -939,10 +1117,12 @@ export type ProductCreateWithoutPricesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPricesInput = {
@@ -963,10 +1143,12 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPricesInput = {
@@ -1003,10 +1185,12 @@ export type ProductUpdateWithoutPricesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPricesInput = {
@@ -1027,10 +1211,12 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutArtifactsInput = {
@@ -1051,10 +1237,12 @@ export type ProductCreateWithoutArtifactsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutArtifactsInput = {
@@ -1075,10 +1263,12 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutArtifactsInput = {
@@ -1115,10 +1305,12 @@ export type ProductUpdateWithoutArtifactsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutArtifactsInput = {
@@ -1139,10 +1331,12 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutSubscriptionsInput = {
@@ -1163,10 +1357,12 @@ export type ProductCreateWithoutSubscriptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutSubscriptionsInput = {
@@ -1187,10 +1383,12 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutSubscriptionsInput = {
@@ -1227,10 +1425,12 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1251,10 +1451,12 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutLicensesInput = {
@@ -1275,10 +1477,12 @@ export type ProductCreateWithoutLicensesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutLicensesInput = {
@@ -1299,10 +1503,12 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutLicensesInput = {
@@ -1339,10 +1545,12 @@ export type ProductUpdateWithoutLicensesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutLicensesInput = {
@@ -1363,9 +1571,131 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutTrialsInput = {
+  id?: string
+  slug: string
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutTrialsInput = {
+  id?: string
+  slug: string
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutTrialsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutTrialsInput, Prisma.ProductUncheckedCreateWithoutTrialsInput>
+}
+
+export type ProductUpsertWithoutTrialsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutTrialsInput, Prisma.ProductUncheckedUpdateWithoutTrialsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutTrialsInput, Prisma.ProductUncheckedCreateWithoutTrialsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutTrialsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutTrialsInput, Prisma.ProductUncheckedUpdateWithoutTrialsInput>
+}
+
+export type ProductUpdateWithoutTrialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutTrialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
 }
 
@@ -1376,20 +1706,24 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
 
 export type ProductCountOutputType = {
   versions: number
+  editions: number
   prices: number
   policies: number
   artifacts: number
   licenses: number
   subscriptions: number
+  trials: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | ProductCountOutputTypeCountVersionsArgs
+  editions?: boolean | ProductCountOutputTypeCountEditionsArgs
   prices?: boolean | ProductCountOutputTypeCountPricesArgs
   policies?: boolean | ProductCountOutputTypeCountPoliciesArgs
   artifacts?: boolean | ProductCountOutputTypeCountArtifactsArgs
   licenses?: boolean | ProductCountOutputTypeCountLicensesArgs
   subscriptions?: boolean | ProductCountOutputTypeCountSubscriptionsArgs
+  trials?: boolean | ProductCountOutputTypeCountTrialsArgs
 }
 
 /**
@@ -1407,6 +1741,13 @@ export type ProductCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type ProductCountOutputTypeCountVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProductVersionWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountEditionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EditionWhereInput
 }
 
 /**
@@ -1444,6 +1785,13 @@ export type ProductCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime
   where?: Prisma.SubscriptionWhereInput
 }
 
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountTrialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TrialGrantWhereInput
+}
+
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1463,11 +1811,13 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
+  editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
   prices?: boolean | Prisma.Product$pricesArgs<ExtArgs>
   policies?: boolean | Prisma.Product$policiesArgs<ExtArgs>
   artifacts?: boolean | Prisma.Product$artifactsArgs<ExtArgs>
   licenses?: boolean | Prisma.Product$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Product$subscriptionsArgs<ExtArgs>
+  trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -1531,11 +1881,13 @@ export type ProductSelectScalar = {
 export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
+  editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
   prices?: boolean | Prisma.Product$pricesArgs<ExtArgs>
   policies?: boolean | Prisma.Product$policiesArgs<ExtArgs>
   artifacts?: boolean | Prisma.Product$artifactsArgs<ExtArgs>
   licenses?: boolean | Prisma.Product$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Product$subscriptionsArgs<ExtArgs>
+  trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1545,11 +1897,13 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Product"
   objects: {
     versions: Prisma.$ProductVersionPayload<ExtArgs>[]
+    editions: Prisma.$EditionPayload<ExtArgs>[]
     prices: Prisma.$PricePayload<ExtArgs>[]
     policies: Prisma.$LicensePolicyPayload<ExtArgs>[]
     artifacts: Prisma.$ProductArtifactPayload<ExtArgs>[]
     licenses: Prisma.$LicensePayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
+    trials: Prisma.$TrialGrantPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1963,11 +2317,13 @@ readonly fields: ProductFieldRefs;
 export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   versions<T extends Prisma.Product$versionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  editions<T extends Prisma.Product$editionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$editionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EditionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   prices<T extends Prisma.Product$pricesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$pricesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   policies<T extends Prisma.Product$policiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$policiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensePolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   artifacts<T extends Prisma.Product$artifactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$artifactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   licenses<T extends Prisma.Product$licensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$licensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.Product$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trials<T extends Prisma.Product$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2430,6 +2786,30 @@ export type Product$versionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Product.editions
+ */
+export type Product$editionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Edition
+   */
+  select?: Prisma.EditionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Edition
+   */
+  omit?: Prisma.EditionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EditionInclude<ExtArgs> | null
+  where?: Prisma.EditionWhereInput
+  orderBy?: Prisma.EditionOrderByWithRelationInput | Prisma.EditionOrderByWithRelationInput[]
+  cursor?: Prisma.EditionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EditionScalarFieldEnum | Prisma.EditionScalarFieldEnum[]
+}
+
+/**
  * Product.prices
  */
 export type Product$pricesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2547,6 +2927,30 @@ export type Product$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.SubscriptionScalarFieldEnum | Prisma.SubscriptionScalarFieldEnum[]
+}
+
+/**
+ * Product.trials
+ */
+export type Product$trialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TrialGrant
+   */
+  select?: Prisma.TrialGrantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TrialGrant
+   */
+  omit?: Prisma.TrialGrantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TrialGrantInclude<ExtArgs> | null
+  where?: Prisma.TrialGrantWhereInput
+  orderBy?: Prisma.TrialGrantOrderByWithRelationInput | Prisma.TrialGrantOrderByWithRelationInput[]
+  cursor?: Prisma.TrialGrantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TrialGrantScalarFieldEnum | Prisma.TrialGrantScalarFieldEnum[]
 }
 
 /**

@@ -12,6 +12,7 @@ export type ProductDeletionDependencies = {
   payments: number;
   paymentAttempts: number;
   subscriptions: number;
+  trials: number;
   licenses: number;
   assignments: number;
   activations: number;
@@ -21,6 +22,8 @@ export type ProductDeletionDependencies = {
 };
 
 export type ProductDeletionResources = {
+  editions: number;
+  purchasePlans: number;
   versions: number;
   artifacts: number;
   prices: number;
@@ -44,7 +47,7 @@ export type ProductDeletionEligibility = {
 
 type EligibilityClient = Pick<
   Prisma.TransactionClient,
-  "product" | "orderItem" | "order" | "payment" | "paymentAttempt" | "invoice" | "license" | "subscription" | "cartItem" | "productArtifact" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent"
+  "product" | "orderItem" | "order" | "payment" | "paymentAttempt" | "invoice" | "license" | "subscription" | "trialGrant" | "cartItem" | "productArtifact" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent"
 >;
 
 const emptyDependencies = (): ProductDeletionDependencies => ({
@@ -55,6 +58,7 @@ const emptyDependencies = (): ProductDeletionDependencies => ({
   payments: 0,
   paymentAttempts: 0,
   subscriptions: 0,
+  trials: 0,
   licenses: 0,
   assignments: 0,
   activations: 0,
@@ -64,6 +68,8 @@ const emptyDependencies = (): ProductDeletionDependencies => ({
 });
 
 const emptyResources = (): ProductDeletionResources => ({
+  editions: 0,
+  purchasePlans: 0,
   versions: 0,
   artifacts: 0,
   prices: 0,
@@ -83,7 +89,8 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
       archivedAt: true,
       imageKey: true,
       tags: true,
-      _count: { select: { versions: true, artifacts: true, prices: true, policies: true } },
+      editions: { select: { _count: { select: { purchasePlans: true } } } },
+      _count: { select: { editions: true, versions: true, artifacts: true, prices: true, policies: true } },
     },
   });
 
@@ -101,12 +108,13 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     };
   }
 
-  const [orderItemRows, licenseRows, artifacts, carts, subscriptions] = await Promise.all([
+  const [orderItemRows, licenseRows, artifacts, carts, subscriptions, trials] = await Promise.all([
     client.orderItem.findMany({ where: { productId }, select: { orderId: true } }),
     client.license.findMany({ where: { productId }, select: { id: true } }),
     client.productArtifact.findMany({ where: { productId }, select: { objectKey: true, downloadCount: true } }),
     client.cartItem.count({ where: { price: { productId } } }),
     client.subscription.count({ where: { productId } }),
+    client.trialGrant.count({ where: { productId } }),
   ]);
   const orderIds = [...new Set(orderItemRows.map((item) => item.orderId))];
   const licenseIds = licenseRows.map((license) => license.id);
@@ -129,6 +137,7 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     payments,
     paymentAttempts,
     subscriptions,
+    trials,
     licenses: licenseRows.length,
     assignments,
     activations,
@@ -137,6 +146,8 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     licenseEvents,
   };
   const removableResources: ProductDeletionResources = {
+    editions: product._count.editions,
+    purchasePlans: product.editions.reduce((sum, edition) => sum + edition._count.purchasePlans, 0),
     versions: product._count.versions,
     artifacts: product._count.artifacts,
     prices: product._count.prices,
@@ -202,6 +213,8 @@ export async function permanentlyDeleteProduct(input: {
 
       await tx.productArtifact.deleteMany({ where: { productId: input.productId } });
       await tx.productVersion.deleteMany({ where: { productId: input.productId } });
+      await tx.purchasePlan.deleteMany({ where: { edition: { productId: input.productId } } });
+      await tx.edition.deleteMany({ where: { productId: input.productId } });
       await tx.price.deleteMany({ where: { productId: input.productId } });
       await tx.licensePolicy.deleteMany({ where: { productId: input.productId } });
       await tx.product.delete({ where: { id: input.productId } });

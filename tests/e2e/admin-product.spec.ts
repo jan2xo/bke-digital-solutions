@@ -22,10 +22,10 @@ test("administrator creates, uploads, publishes, and edits a product", async ({ 
 
   const slug = `admin-mvp-${suffix}`;
   await page.getByLabel("Name", { exact: true }).first().fill("Admin MVP Product");
-  await page.getByLabel("Slug").fill(slug);
+  await page.getByLabel("Slug", { exact: true }).fill(slug);
   await page.getByLabel("Short description").fill("A secure browser-created MVP product.");
   await page.getByLabel("Long description").fill("A secure software product created through the administrator portal.");
-  await page.getByLabel("Price (PHP)").fill("499");
+  await page.getByLabel("Perpetual price (PHP)").first().fill("499");
   const createdResponse=page.waitForResponse(r=>r.url().endsWith("/api/admin/products")&&r.request().method()==="POST");
   await page.getByRole("button", { name: "Create draft product" }).click();
   expect((await createdResponse).status()).toBe(201);

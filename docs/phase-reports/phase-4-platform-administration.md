@@ -6,7 +6,7 @@ Deliver secure administrator tools for routine platform operations without redes
 
 ## Features implemented
 
-Product CRUD lifecycle and metadata; release publish/beta/deprecate/rollback timeline; private artifact upload/replace/remove and counts; customer profiles/suspension/reactivation/device reset; license status/renew/transfer/one-time reveal; device metadata/deactivation; order search/filter/cancellation; invoice views/re-email/refund context; searchable/exportable audit history; dashboard widgets and recent activity.
+Product CRUD lifecycle and metadata; release publish/beta/deprecate/rollback timeline; private artifact upload/replace/remove and counts; customer profiles/suspension/reactivation/device reset; license status/renew/transfer/audited authenticated reveal; device metadata/deactivation; order search/filter/cancellation; invoice views/re-email/refund context; searchable/exportable audit history; dashboard widgets and recent activity.
 
 Phase 4.1 adds dependency-previewed, archived-only permanent deletion for disposable products. Historical products retain archive/restore only; no force delete exists.
 
@@ -61,4 +61,4 @@ The prior admin MVP covered only product creation and record viewing. Additive d
 
 ## Remaining risks and recommendations
 
-Require MFA/recent-auth before production key reveal, queue large audit exports, add artifact malware scanning/code signing and orphan cleanup, certify external providers, and complete production infrastructure/monitoring/backups. Revenue remains a placeholder.
+Require MFA/recent-auth before production key reveal, queue large audit exports, add artifact malware scanning/code signing and orphan cleanup, certify external providers, and complete production infrastructure/monitoring/backups. Repeatable reveal retains encrypted license-key material and therefore increases the importance of application-key rotation and database-compromise response planning. Revenue remains a placeholder.

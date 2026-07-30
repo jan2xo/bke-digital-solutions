@@ -215,6 +215,7 @@ export type CustomerAccountWhereInput = {
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  trials?: Prisma.TrialGrantListRelationFilter
 }
 
 export type CustomerAccountOrderByWithRelationInput = {
@@ -235,6 +236,7 @@ export type CustomerAccountOrderByWithRelationInput = {
   licenses?: Prisma.LicenseOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  trials?: Prisma.TrialGrantOrderByRelationAggregateInput
 }
 
 export type CustomerAccountWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +260,7 @@ export type CustomerAccountWhereUniqueInput = Prisma.AtLeast<{
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  trials?: Prisma.TrialGrantListRelationFilter
 }, "id">
 
 export type CustomerAccountOrderByWithAggregationInput = {
@@ -305,6 +308,7 @@ export type CustomerAccountCreateInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateInput = {
@@ -324,6 +328,7 @@ export type CustomerAccountUncheckedCreateInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUpdateInput = {
@@ -343,6 +348,7 @@ export type CustomerAccountUpdateInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateInput = {
@@ -362,6 +368,7 @@ export type CustomerAccountUncheckedUpdateInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateManyInput = {
@@ -593,6 +600,20 @@ export type CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerAccountUpdateToOneWithWhereWithoutLicensesInput, Prisma.CustomerAccountUpdateWithoutLicensesInput>, Prisma.CustomerAccountUncheckedUpdateWithoutLicensesInput>
 }
 
+export type CustomerAccountCreateNestedOneWithoutTrialsInput = {
+  create?: Prisma.XOR<Prisma.CustomerAccountCreateWithoutTrialsInput, Prisma.CustomerAccountUncheckedCreateWithoutTrialsInput>
+  connectOrCreate?: Prisma.CustomerAccountCreateOrConnectWithoutTrialsInput
+  connect?: Prisma.CustomerAccountWhereUniqueInput
+}
+
+export type CustomerAccountUpdateOneRequiredWithoutTrialsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerAccountCreateWithoutTrialsInput, Prisma.CustomerAccountUncheckedCreateWithoutTrialsInput>
+  connectOrCreate?: Prisma.CustomerAccountCreateOrConnectWithoutTrialsInput
+  upsert?: Prisma.CustomerAccountUpsertWithoutTrialsInput
+  connect?: Prisma.CustomerAccountWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerAccountUpdateToOneWithWhereWithoutTrialsInput, Prisma.CustomerAccountUpdateWithoutTrialsInput>, Prisma.CustomerAccountUncheckedUpdateWithoutTrialsInput>
+}
+
 export type CustomerAccountCreateNestedOneWithoutAuditLogsInput = {
   create?: Prisma.XOR<Prisma.CustomerAccountCreateWithoutAuditLogsInput, Prisma.CustomerAccountUncheckedCreateWithoutAuditLogsInput>
   connectOrCreate?: Prisma.CustomerAccountCreateOrConnectWithoutAuditLogsInput
@@ -625,6 +646,7 @@ export type CustomerAccountCreateWithoutOwnerInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOwnerInput = {
@@ -643,6 +665,7 @@ export type CustomerAccountUncheckedCreateWithoutOwnerInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOwnerInput = {
@@ -701,6 +724,7 @@ export type CustomerAccountCreateWithoutOrganizationInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOrganizationInput = {
@@ -719,6 +743,7 @@ export type CustomerAccountUncheckedCreateWithoutOrganizationInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOrganizationInput = {
@@ -753,6 +778,7 @@ export type CustomerAccountUpdateWithoutOrganizationInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOrganizationInput = {
@@ -771,6 +797,7 @@ export type CustomerAccountUncheckedUpdateWithoutOrganizationInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutMembershipsInput = {
@@ -789,6 +816,7 @@ export type CustomerAccountCreateWithoutMembershipsInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutMembershipsInput = {
@@ -807,6 +835,7 @@ export type CustomerAccountUncheckedCreateWithoutMembershipsInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutMembershipsInput = {
@@ -841,6 +870,7 @@ export type CustomerAccountUpdateWithoutMembershipsInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutMembershipsInput = {
@@ -859,6 +889,7 @@ export type CustomerAccountUncheckedUpdateWithoutMembershipsInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutInvitationsInput = {
@@ -877,6 +908,7 @@ export type CustomerAccountCreateWithoutInvitationsInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutInvitationsInput = {
@@ -895,6 +927,7 @@ export type CustomerAccountUncheckedCreateWithoutInvitationsInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutInvitationsInput = {
@@ -929,6 +962,7 @@ export type CustomerAccountUpdateWithoutInvitationsInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutInvitationsInput = {
@@ -947,6 +981,7 @@ export type CustomerAccountUncheckedUpdateWithoutInvitationsInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutCartsInput = {
@@ -965,6 +1000,7 @@ export type CustomerAccountCreateWithoutCartsInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutCartsInput = {
@@ -983,6 +1019,7 @@ export type CustomerAccountUncheckedCreateWithoutCartsInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutCartsInput = {
@@ -1017,6 +1054,7 @@ export type CustomerAccountUpdateWithoutCartsInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutCartsInput = {
@@ -1035,6 +1073,7 @@ export type CustomerAccountUncheckedUpdateWithoutCartsInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutOrdersInput = {
@@ -1053,6 +1092,7 @@ export type CustomerAccountCreateWithoutOrdersInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOrdersInput = {
@@ -1071,6 +1111,7 @@ export type CustomerAccountUncheckedCreateWithoutOrdersInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOrdersInput = {
@@ -1105,6 +1146,7 @@ export type CustomerAccountUpdateWithoutOrdersInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOrdersInput = {
@@ -1123,6 +1165,7 @@ export type CustomerAccountUncheckedUpdateWithoutOrdersInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutSubscriptionsInput = {
@@ -1141,6 +1184,7 @@ export type CustomerAccountCreateWithoutSubscriptionsInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutAccountInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutSubscriptionsInput = {
@@ -1159,6 +1203,7 @@ export type CustomerAccountUncheckedCreateWithoutSubscriptionsInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutAccountInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutSubscriptionsInput = {
@@ -1193,6 +1238,7 @@ export type CustomerAccountUpdateWithoutSubscriptionsInput = {
   orders?: Prisma.OrderUpdateManyWithoutAccountNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1211,6 +1257,7 @@ export type CustomerAccountUncheckedUpdateWithoutSubscriptionsInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutAccountNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutLicensesInput = {
@@ -1229,6 +1276,7 @@ export type CustomerAccountCreateWithoutLicensesInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutLicensesInput = {
@@ -1247,6 +1295,7 @@ export type CustomerAccountUncheckedCreateWithoutLicensesInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutLicensesInput = {
@@ -1281,6 +1330,7 @@ export type CustomerAccountUpdateWithoutLicensesInput = {
   orders?: Prisma.OrderUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutLicensesInput = {
@@ -1297,6 +1347,99 @@ export type CustomerAccountUncheckedUpdateWithoutLicensesInput = {
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutAccountNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutAccountNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
+}
+
+export type CustomerAccountCreateWithoutTrialsInput = {
+  id?: string
+  type: $Enums.AccountType
+  displayName: string
+  billingEmail: string
+  taxId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
+  organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutAccountInput
+  carts?: Prisma.CartCreateNestedManyWithoutAccountInput
+  orders?: Prisma.OrderCreateNestedManyWithoutAccountInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+}
+
+export type CustomerAccountUncheckedCreateWithoutTrialsInput = {
+  id?: string
+  type: $Enums.AccountType
+  displayName: string
+  ownerId: string
+  billingEmail: string
+  taxId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutAccountInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutAccountInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+}
+
+export type CustomerAccountCreateOrConnectWithoutTrialsInput = {
+  where: Prisma.CustomerAccountWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerAccountCreateWithoutTrialsInput, Prisma.CustomerAccountUncheckedCreateWithoutTrialsInput>
+}
+
+export type CustomerAccountUpsertWithoutTrialsInput = {
+  update: Prisma.XOR<Prisma.CustomerAccountUpdateWithoutTrialsInput, Prisma.CustomerAccountUncheckedUpdateWithoutTrialsInput>
+  create: Prisma.XOR<Prisma.CustomerAccountCreateWithoutTrialsInput, Prisma.CustomerAccountUncheckedCreateWithoutTrialsInput>
+  where?: Prisma.CustomerAccountWhereInput
+}
+
+export type CustomerAccountUpdateToOneWithWhereWithoutTrialsInput = {
+  where?: Prisma.CustomerAccountWhereInput
+  data: Prisma.XOR<Prisma.CustomerAccountUpdateWithoutTrialsInput, Prisma.CustomerAccountUncheckedUpdateWithoutTrialsInput>
+}
+
+export type CustomerAccountUpdateWithoutTrialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
+  organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutAccountNestedInput
+  carts?: Prisma.CartUpdateManyWithoutAccountNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutAccountNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+}
+
+export type CustomerAccountUncheckedUpdateWithoutTrialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutAccountNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutAccountNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
 }
@@ -1317,6 +1460,7 @@ export type CustomerAccountCreateWithoutAuditLogsInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutAccountInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutAuditLogsInput = {
@@ -1335,6 +1479,7 @@ export type CustomerAccountUncheckedCreateWithoutAuditLogsInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutAccountInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutAuditLogsInput = {
@@ -1369,6 +1514,7 @@ export type CustomerAccountUpdateWithoutAuditLogsInput = {
   orders?: Prisma.OrderUpdateManyWithoutAccountNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -1387,6 +1533,7 @@ export type CustomerAccountUncheckedUpdateWithoutAuditLogsInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutAccountNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountCreateManyOwnerInput = {
@@ -1415,6 +1562,7 @@ export type CustomerAccountUpdateWithoutOwnerInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOwnerInput = {
@@ -1433,6 +1581,7 @@ export type CustomerAccountUncheckedUpdateWithoutOwnerInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateManyWithoutOwnerInput = {
@@ -1458,6 +1607,7 @@ export type CustomerAccountCountOutputType = {
   licenses: number
   subscriptions: number
   auditLogs: number
+  trials: number
 }
 
 export type CustomerAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1468,6 +1618,7 @@ export type CustomerAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.E
   licenses?: boolean | CustomerAccountCountOutputTypeCountLicensesArgs
   subscriptions?: boolean | CustomerAccountCountOutputTypeCountSubscriptionsArgs
   auditLogs?: boolean | CustomerAccountCountOutputTypeCountAuditLogsArgs
+  trials?: boolean | CustomerAccountCountOutputTypeCountTrialsArgs
 }
 
 /**
@@ -1529,6 +1680,13 @@ export type CustomerAccountCountOutputTypeCountAuditLogsArgs<ExtArgs extends run
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * CustomerAccountCountOutputType without action
+ */
+export type CustomerAccountCountOutputTypeCountTrialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TrialGrantWhereInput
+}
+
 
 export type CustomerAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1548,6 +1706,7 @@ export type CustomerAccountSelect<ExtArgs extends runtime.Types.Extensions.Inter
   licenses?: boolean | Prisma.CustomerAccount$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.CustomerAccount$subscriptionsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.CustomerAccount$auditLogsArgs<ExtArgs>
+  trials?: boolean | Prisma.CustomerAccount$trialsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerAccountCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customerAccount"]>
 
@@ -1597,6 +1756,7 @@ export type CustomerAccountInclude<ExtArgs extends runtime.Types.Extensions.Inte
   licenses?: boolean | Prisma.CustomerAccount$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.CustomerAccount$subscriptionsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.CustomerAccount$auditLogsArgs<ExtArgs>
+  trials?: boolean | Prisma.CustomerAccount$trialsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerAccountCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CustomerAccountIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1618,6 +1778,7 @@ export type $CustomerAccountPayload<ExtArgs extends runtime.Types.Extensions.Int
     licenses: Prisma.$LicensePayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    trials: Prisma.$TrialGrantPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2031,6 +2192,7 @@ export interface Prisma__CustomerAccountClient<T, Null = never, ExtArgs extends 
   licenses<T extends Prisma.CustomerAccount$licensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$licensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.CustomerAccount$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.CustomerAccount$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trials<T extends Prisma.CustomerAccount$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2653,6 +2815,30 @@ export type CustomerAccount$auditLogsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * CustomerAccount.trials
+ */
+export type CustomerAccount$trialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TrialGrant
+   */
+  select?: Prisma.TrialGrantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TrialGrant
+   */
+  omit?: Prisma.TrialGrantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TrialGrantInclude<ExtArgs> | null
+  where?: Prisma.TrialGrantWhereInput
+  orderBy?: Prisma.TrialGrantOrderByWithRelationInput | Prisma.TrialGrantOrderByWithRelationInput[]
+  cursor?: Prisma.TrialGrantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TrialGrantScalarFieldEnum | Prisma.TrialGrantScalarFieldEnum[]
 }
 
 /**

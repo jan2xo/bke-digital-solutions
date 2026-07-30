@@ -4,6 +4,10 @@ Date: 2026-07-30 (Asia/Manila)
 
 Status: **Not production ready.** Local database, Valkey, MinIO, mock-payment, integration, browser, and build checks passed. A real PayMongo sandbox flow and production external-service configuration have not been completed.
 
+## Phase 4.2 editions and multi-plan update — 2026-07-31
+
+Product editions and perpetual/monthly/derived-annual plans are implemented across administration, catalog, plan-ID-only checkout, immutable commerce snapshots, invoices, licensing, activation, renewal, customer history, seed data, and safe deletion. Pending-order recovery and product-specific annual trials were added in the two subsequent ordered migrations. Existing historical financial records are not rewritten. The final authoritative verification result is recorded in the dated Phase 4.2 review section below; the earlier 36-test and focused-browser runs are development history, not the final combined result. The application remains **not production ready** because PayMongo sandbox, Resend delivery, and production infrastructure controls are still unverified.
+
 ## Phase 4.1 product lifecycle update — 2026-07-31
 
 Archived disposable products now have a guarded permanent-delete workflow with server-side dependency evaluation, typed-name confirmation, same-origin and administrator enforcement, serializable transactional cleanup, durable redacted audit records, and retry-safe private-object deletion. Customer carts, order/payment/invoice history, subscriptions, licenses, assignments, activations, grants/download counters, and license events block deletion. No migration was required and no force-delete path exists.
@@ -22,7 +26,7 @@ Phase 4 final verification: database migration status passed; TypeScript passed;
 
 The repository now adds the administrator product/release portal, private installer upload with SHA-256 metadata, product/version publish controls, commerce email outbox and Resend provider abstraction, password-reset flow, customer purchase button, invoice view, license/device/download dashboard, and customer-owned device deactivation. Migration `20260730085606_admin_product_email_mvp` was applied and the idempotent catalog seed now includes a published latest version.
 
-New browser coverage creates an administrator, creates and edits a product, uploads a private installer, publishes version `1.2.3`, and verifies audit records. The customer suite continues to cover registration, verification, login, checkout, webhook confirmation, invoice/license issuance, one-time key disclosure, activation, one-time download, renewal, cancellation, and cross-account denial. A credential-gated Resend delivery test was added; it skips when `RESEND_API_KEY` or `RESEND_SANDBOX_TO` is absent.
+New browser coverage creates an administrator, creates and edits a product, uploads a private installer, publishes version `1.2.3`, and verifies audit records. The customer suite continues to cover registration, verification, login, checkout, webhook confirmation, invoice/license issuance, repeatable audited key disclosure, activation, one-time download, renewal, cancellation, and cross-account denial. A credential-gated Resend delivery test was added; it skips when `RESEND_API_KEY` or `RESEND_SANDBOX_TO` is absent.
 
 Final gate for this update: Prisma reported three migrations and an up-to-date database; TypeScript passed; ESLint passed; Vitest passed 19 tests with five credential-gated skips; Playwright passed all four tests; the production build emitted 42 application routes; and `npm audit --omit=dev --audit-level=critical` reported zero vulnerabilities. PayMongo executed one configuration-safety test and skipped four real-provider cases. Resend skipped its one real-delivery case. The application therefore remains **not production ready**.
 
@@ -137,7 +141,7 @@ Final tracked-file scans found no PayMongo-shaped secret values and no payment-p
 ## Covered flows
 
 - Registration, one-time email verification, logout, password login, server-priced checkout, signed mock payment success, final invoice, subscription and encrypted license issuance.
-- One-time license-key reveal, device activation, device-cap rejection, forged key rejection.
+- Repeatable authenticated license-key reveal, device activation, device-cap rejection, forged key rejection.
 - Private MinIO installer download after entitlement validation; consumed and forged grant URLs return 404.
 - Renewal checkout creation and pending-order cancellation.
 - Signed failed-payment event without license issuance.
@@ -277,3 +281,13 @@ The Browser plugin was also initialized and queried for a browser suitable for `
 - The full development dependency audit reports 9 high findings in the supported ESLint 9 toolchain. Runtime dependencies report zero; resolution requires compatible upstream Next.js lint plugins or a reviewed tooling change.
 - Renewal reminders currently select due records but do not yet send the reminder email; production job scheduling and delivery evidence are missing.
 - The local development administrator credential must never be promoted and should be removed or rotated before any shared environment is used.
+
+## Product trial verification — 2026-07-31
+
+The local PostgreSQL migration and seed passed for product-specific trials. Automated coverage verifies a seven-day self-service license, one grant per account/product/UTC year, an administrator grant with grace, later grace adjustment, revocation, license-state synchronization, audit creation, and preserved historical trial dependencies during product deletion. The complete Vitest result was 40 passed with five PayMongo/Resend credential-gated skips; Playwright passed 5/5; TypeScript, ESLint, and the production build passed. This does not remove the external PayMongo, Resend, production infrastructure, or security-review blockers listed above.
+
+## Final Phase 4.2 working-tree review — 2026-07-31
+
+Final authoritative results supersede the earlier 36- and 40-test development snapshots: focused pricing/pending/trial Vitest passed 12/12; full Vitest passed 45 with four PayMongo sandbox and one Resend delivery test credential-blocked; focused commerce Playwright passed 2/2; full Playwright passed 5/5; TypeScript, ESLint, production build, Prisma validation/status/drift, idempotent seed, runtime critical audit, whitespace scan, tracked-artifact scan, secret scan, and sensitive-log scan passed. PostgreSQL, Valkey, and MinIO were healthy, and exactly seven migrations were applied.
+
+Review corrections closed replacement-checkout ID collision in the mock provider, alternate-edition/concurrent trial coverage, revoked-license grant redemption, trial account selection, late-payment-after-cancellation documentation, and administrator-email logging. Owner direction intentionally changed license-key reveal from one-time to repeatable authenticated disclosure. Encrypted key material is therefore retained; recent authentication, administrator MFA, application-key rotation, and database-compromise response remain production blockers. Real PayMongo and Resend tests did not run and are not passed.

@@ -8,4 +8,4 @@ Operational centers cover products, releases, artifacts, customers, licenses, de
 
 Phase 4.1 completes the product lifecycle: archived products can be restored or, only when a server-side evaluator finds no customer or historical dependencies, permanently deleted using typed-name confirmation. Success and blocked attempts are audited, exclusive private objects/child rows are cleaned safely, and there is no force-delete path. See the dedicated Phase 4.1 report.
 
-Current security caveats: administrator MFA/recent-auth should precede production one-time license disclosure, and large audit exports should become background jobs. See the detailed report under `docs/phase-reports/`.
+Current security caveats: administrator MFA/recent-auth should precede production license disclosure, and large audit exports should become background jobs. See the detailed report under `docs/phase-reports/`.

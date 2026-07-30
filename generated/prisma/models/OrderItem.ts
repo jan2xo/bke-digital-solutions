@@ -30,12 +30,14 @@ export type OrderItemAvgAggregateOutputType = {
   quantity: number | null
   unitAmountMinor: number | null
   totalMinor: number | null
+  intervalCount: number | null
 }
 
 export type OrderItemSumAggregateOutputType = {
   quantity: number | null
   unitAmountMinor: number | null
   totalMinor: number | null
+  intervalCount: number | null
 }
 
 export type OrderItemMinAggregateOutputType = {
@@ -50,6 +52,14 @@ export type OrderItemMinAggregateOutputType = {
   unitAmountMinor: number | null
   totalMinor: number | null
   billingType: $Enums.BillingType | null
+  editionId: string | null
+  purchasePlanId: string | null
+  editionName: string | null
+  planName: string | null
+  planType: $Enums.PurchasePlanType | null
+  intervalUnit: $Enums.IntervalUnit | null
+  intervalCount: number | null
+  renewalBehavior: $Enums.RenewalBehavior | null
 }
 
 export type OrderItemMaxAggregateOutputType = {
@@ -64,6 +74,14 @@ export type OrderItemMaxAggregateOutputType = {
   unitAmountMinor: number | null
   totalMinor: number | null
   billingType: $Enums.BillingType | null
+  editionId: string | null
+  purchasePlanId: string | null
+  editionName: string | null
+  planName: string | null
+  planType: $Enums.PurchasePlanType | null
+  intervalUnit: $Enums.IntervalUnit | null
+  intervalCount: number | null
+  renewalBehavior: $Enums.RenewalBehavior | null
 }
 
 export type OrderItemCountAggregateOutputType = {
@@ -79,6 +97,15 @@ export type OrderItemCountAggregateOutputType = {
   totalMinor: number
   billingType: number
   policySnapshot: number
+  editionId: number
+  purchasePlanId: number
+  editionName: number
+  planName: number
+  planType: number
+  intervalUnit: number
+  intervalCount: number
+  renewalBehavior: number
+  entitlementSnapshot: number
   _all: number
 }
 
@@ -87,12 +114,14 @@ export type OrderItemAvgAggregateInputType = {
   quantity?: true
   unitAmountMinor?: true
   totalMinor?: true
+  intervalCount?: true
 }
 
 export type OrderItemSumAggregateInputType = {
   quantity?: true
   unitAmountMinor?: true
   totalMinor?: true
+  intervalCount?: true
 }
 
 export type OrderItemMinAggregateInputType = {
@@ -107,6 +136,14 @@ export type OrderItemMinAggregateInputType = {
   unitAmountMinor?: true
   totalMinor?: true
   billingType?: true
+  editionId?: true
+  purchasePlanId?: true
+  editionName?: true
+  planName?: true
+  planType?: true
+  intervalUnit?: true
+  intervalCount?: true
+  renewalBehavior?: true
 }
 
 export type OrderItemMaxAggregateInputType = {
@@ -121,6 +158,14 @@ export type OrderItemMaxAggregateInputType = {
   unitAmountMinor?: true
   totalMinor?: true
   billingType?: true
+  editionId?: true
+  purchasePlanId?: true
+  editionName?: true
+  planName?: true
+  planType?: true
+  intervalUnit?: true
+  intervalCount?: true
+  renewalBehavior?: true
 }
 
 export type OrderItemCountAggregateInputType = {
@@ -136,6 +181,15 @@ export type OrderItemCountAggregateInputType = {
   totalMinor?: true
   billingType?: true
   policySnapshot?: true
+  editionId?: true
+  purchasePlanId?: true
+  editionName?: true
+  planName?: true
+  planType?: true
+  intervalUnit?: true
+  intervalCount?: true
+  renewalBehavior?: true
+  entitlementSnapshot?: true
   _all?: true
 }
 
@@ -238,6 +292,15 @@ export type OrderItemGroupByOutputType = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: runtime.JsonValue
+  editionId: string | null
+  purchasePlanId: string | null
+  editionName: string | null
+  planName: string | null
+  planType: $Enums.PurchasePlanType | null
+  intervalUnit: $Enums.IntervalUnit | null
+  intervalCount: number | null
+  renewalBehavior: $Enums.RenewalBehavior | null
+  entitlementSnapshot: runtime.JsonValue | null
   _count: OrderItemCountAggregateOutputType | null
   _avg: OrderItemAvgAggregateOutputType | null
   _sum: OrderItemSumAggregateOutputType | null
@@ -276,6 +339,15 @@ export type OrderItemWhereInput = {
   totalMinor?: Prisma.IntFilter<"OrderItem"> | number
   billingType?: Prisma.EnumBillingTypeFilter<"OrderItem"> | $Enums.BillingType
   policySnapshot?: Prisma.JsonFilter<"OrderItem">
+  editionId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  purchasePlanId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  editionName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  planName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  planType?: Prisma.EnumPurchasePlanTypeNullableFilter<"OrderItem"> | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.EnumIntervalUnitNullableFilter<"OrderItem"> | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.IntNullableFilter<"OrderItem"> | number | null
+  renewalBehavior?: Prisma.EnumRenewalBehaviorNullableFilter<"OrderItem"> | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.JsonNullableFilter<"OrderItem">
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }
 
@@ -292,6 +364,15 @@ export type OrderItemOrderByWithRelationInput = {
   totalMinor?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   policySnapshot?: Prisma.SortOrder
+  editionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
+  editionName?: Prisma.SortOrderInput | Prisma.SortOrder
+  planName?: Prisma.SortOrderInput | Prisma.SortOrder
+  planType?: Prisma.SortOrderInput | Prisma.SortOrder
+  intervalUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  intervalCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  renewalBehavior?: Prisma.SortOrderInput | Prisma.SortOrder
+  entitlementSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
 }
 
@@ -311,6 +392,15 @@ export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   totalMinor?: Prisma.IntFilter<"OrderItem"> | number
   billingType?: Prisma.EnumBillingTypeFilter<"OrderItem"> | $Enums.BillingType
   policySnapshot?: Prisma.JsonFilter<"OrderItem">
+  editionId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  purchasePlanId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  editionName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  planName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  planType?: Prisma.EnumPurchasePlanTypeNullableFilter<"OrderItem"> | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.EnumIntervalUnitNullableFilter<"OrderItem"> | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.IntNullableFilter<"OrderItem"> | number | null
+  renewalBehavior?: Prisma.EnumRenewalBehaviorNullableFilter<"OrderItem"> | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.JsonNullableFilter<"OrderItem">
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }, "id">
 
@@ -327,6 +417,15 @@ export type OrderItemOrderByWithAggregationInput = {
   totalMinor?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   policySnapshot?: Prisma.SortOrder
+  editionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
+  editionName?: Prisma.SortOrderInput | Prisma.SortOrder
+  planName?: Prisma.SortOrderInput | Prisma.SortOrder
+  planType?: Prisma.SortOrderInput | Prisma.SortOrder
+  intervalUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  intervalCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  renewalBehavior?: Prisma.SortOrderInput | Prisma.SortOrder
+  entitlementSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OrderItemCountOrderByAggregateInput
   _avg?: Prisma.OrderItemAvgOrderByAggregateInput
   _max?: Prisma.OrderItemMaxOrderByAggregateInput
@@ -350,6 +449,15 @@ export type OrderItemScalarWhereWithAggregatesInput = {
   totalMinor?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
   billingType?: Prisma.EnumBillingTypeWithAggregatesFilter<"OrderItem"> | $Enums.BillingType
   policySnapshot?: Prisma.JsonWithAggregatesFilter<"OrderItem">
+  editionId?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  purchasePlanId?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  editionName?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  planName?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  planType?: Prisma.EnumPurchasePlanTypeNullableWithAggregatesFilter<"OrderItem"> | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.EnumIntervalUnitNullableWithAggregatesFilter<"OrderItem"> | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.IntNullableWithAggregatesFilter<"OrderItem"> | number | null
+  renewalBehavior?: Prisma.EnumRenewalBehaviorNullableWithAggregatesFilter<"OrderItem"> | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.JsonNullableWithAggregatesFilter<"OrderItem">
 }
 
 export type OrderItemCreateInput = {
@@ -364,6 +472,15 @@ export type OrderItemCreateInput = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: string | null
+  purchasePlanId?: string | null
+  editionName?: string | null
+  planName?: string | null
+  planType?: $Enums.PurchasePlanType | null
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  renewalBehavior?: $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   order: Prisma.OrderCreateNestedOneWithoutItemsInput
 }
 
@@ -380,6 +497,15 @@ export type OrderItemUncheckedCreateInput = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: string | null
+  purchasePlanId?: string | null
+  editionName?: string | null
+  planName?: string | null
+  planType?: $Enums.PurchasePlanType | null
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  renewalBehavior?: $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUpdateInput = {
@@ -394,6 +520,15 @@ export type OrderItemUpdateInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   order?: Prisma.OrderUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -410,6 +545,15 @@ export type OrderItemUncheckedUpdateInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemCreateManyInput = {
@@ -425,6 +569,15 @@ export type OrderItemCreateManyInput = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: string | null
+  purchasePlanId?: string | null
+  editionName?: string | null
+  planName?: string | null
+  planType?: $Enums.PurchasePlanType | null
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  renewalBehavior?: $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUpdateManyMutationInput = {
@@ -439,6 +592,15 @@ export type OrderItemUpdateManyMutationInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUncheckedUpdateManyInput = {
@@ -454,6 +616,15 @@ export type OrderItemUncheckedUpdateManyInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemListRelationFilter = {
@@ -479,12 +650,22 @@ export type OrderItemCountOrderByAggregateInput = {
   totalMinor?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   policySnapshot?: Prisma.SortOrder
+  editionId?: Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrder
+  editionName?: Prisma.SortOrder
+  planName?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  intervalUnit?: Prisma.SortOrder
+  intervalCount?: Prisma.SortOrder
+  renewalBehavior?: Prisma.SortOrder
+  entitlementSnapshot?: Prisma.SortOrder
 }
 
 export type OrderItemAvgOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unitAmountMinor?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  intervalCount?: Prisma.SortOrder
 }
 
 export type OrderItemMaxOrderByAggregateInput = {
@@ -499,6 +680,14 @@ export type OrderItemMaxOrderByAggregateInput = {
   unitAmountMinor?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
+  editionId?: Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrder
+  editionName?: Prisma.SortOrder
+  planName?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  intervalUnit?: Prisma.SortOrder
+  intervalCount?: Prisma.SortOrder
+  renewalBehavior?: Prisma.SortOrder
 }
 
 export type OrderItemMinOrderByAggregateInput = {
@@ -513,12 +702,21 @@ export type OrderItemMinOrderByAggregateInput = {
   unitAmountMinor?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
+  editionId?: Prisma.SortOrder
+  purchasePlanId?: Prisma.SortOrder
+  editionName?: Prisma.SortOrder
+  planName?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  intervalUnit?: Prisma.SortOrder
+  intervalCount?: Prisma.SortOrder
+  renewalBehavior?: Prisma.SortOrder
 }
 
 export type OrderItemSumOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unitAmountMinor?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  intervalCount?: Prisma.SortOrder
 }
 
 export type OrderItemCreateNestedManyWithoutOrderInput = {
@@ -563,6 +761,14 @@ export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
   deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
 }
 
+export type NullableEnumPurchasePlanTypeFieldUpdateOperationsInput = {
+  set?: $Enums.PurchasePlanType | null
+}
+
+export type NullableEnumRenewalBehaviorFieldUpdateOperationsInput = {
+  set?: $Enums.RenewalBehavior | null
+}
+
 export type OrderItemCreateWithoutOrderInput = {
   id?: string
   productId: string
@@ -575,6 +781,15 @@ export type OrderItemCreateWithoutOrderInput = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: string | null
+  purchasePlanId?: string | null
+  editionName?: string | null
+  planName?: string | null
+  planType?: $Enums.PurchasePlanType | null
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  renewalBehavior?: $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUncheckedCreateWithoutOrderInput = {
@@ -589,6 +804,15 @@ export type OrderItemUncheckedCreateWithoutOrderInput = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: string | null
+  purchasePlanId?: string | null
+  editionName?: string | null
+  planName?: string | null
+  planType?: $Enums.PurchasePlanType | null
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  renewalBehavior?: $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemCreateOrConnectWithoutOrderInput = {
@@ -633,6 +857,15 @@ export type OrderItemScalarWhereInput = {
   totalMinor?: Prisma.IntFilter<"OrderItem"> | number
   billingType?: Prisma.EnumBillingTypeFilter<"OrderItem"> | $Enums.BillingType
   policySnapshot?: Prisma.JsonFilter<"OrderItem">
+  editionId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  purchasePlanId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  editionName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  planName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  planType?: Prisma.EnumPurchasePlanTypeNullableFilter<"OrderItem"> | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.EnumIntervalUnitNullableFilter<"OrderItem"> | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.IntNullableFilter<"OrderItem"> | number | null
+  renewalBehavior?: Prisma.EnumRenewalBehaviorNullableFilter<"OrderItem"> | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.JsonNullableFilter<"OrderItem">
 }
 
 export type OrderItemCreateManyOrderInput = {
@@ -647,6 +880,15 @@ export type OrderItemCreateManyOrderInput = {
   totalMinor: number
   billingType: $Enums.BillingType
   policySnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: string | null
+  purchasePlanId?: string | null
+  editionName?: string | null
+  planName?: string | null
+  planType?: $Enums.PurchasePlanType | null
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  renewalBehavior?: $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUpdateWithoutOrderInput = {
@@ -661,6 +903,15 @@ export type OrderItemUpdateWithoutOrderInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUncheckedUpdateWithoutOrderInput = {
@@ -675,6 +926,15 @@ export type OrderItemUncheckedUpdateWithoutOrderInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
@@ -689,6 +949,15 @@ export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
   totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
   billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
   policySnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planType?: Prisma.NullableEnumPurchasePlanTypeFieldUpdateOperationsInput | $Enums.PurchasePlanType | null
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  renewalBehavior?: Prisma.NullableEnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior | null
+  entitlementSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -706,6 +975,15 @@ export type OrderItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   totalMinor?: boolean
   billingType?: boolean
   policySnapshot?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
+  editionName?: boolean
+  planName?: boolean
+  planType?: boolean
+  intervalUnit?: boolean
+  intervalCount?: boolean
+  renewalBehavior?: boolean
+  entitlementSnapshot?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
@@ -722,6 +1000,15 @@ export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   totalMinor?: boolean
   billingType?: boolean
   policySnapshot?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
+  editionName?: boolean
+  planName?: boolean
+  planType?: boolean
+  intervalUnit?: boolean
+  intervalCount?: boolean
+  renewalBehavior?: boolean
+  entitlementSnapshot?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
@@ -738,6 +1025,15 @@ export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   totalMinor?: boolean
   billingType?: boolean
   policySnapshot?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
+  editionName?: boolean
+  planName?: boolean
+  planType?: boolean
+  intervalUnit?: boolean
+  intervalCount?: boolean
+  renewalBehavior?: boolean
+  entitlementSnapshot?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
@@ -754,9 +1050,18 @@ export type OrderItemSelectScalar = {
   totalMinor?: boolean
   billingType?: boolean
   policySnapshot?: boolean
+  editionId?: boolean
+  purchasePlanId?: boolean
+  editionName?: boolean
+  planName?: boolean
+  planType?: boolean
+  intervalUnit?: boolean
+  intervalCount?: boolean
+  renewalBehavior?: boolean
+  entitlementSnapshot?: boolean
 }
 
-export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "productId" | "priceId" | "policyId" | "productName" | "priceName" | "quantity" | "unitAmountMinor" | "totalMinor" | "billingType" | "policySnapshot", ExtArgs["result"]["orderItem"]>
+export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "productId" | "priceId" | "policyId" | "productName" | "priceName" | "quantity" | "unitAmountMinor" | "totalMinor" | "billingType" | "policySnapshot" | "editionId" | "purchasePlanId" | "editionName" | "planName" | "planType" | "intervalUnit" | "intervalCount" | "renewalBehavior" | "entitlementSnapshot", ExtArgs["result"]["orderItem"]>
 export type OrderItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
@@ -785,6 +1090,15 @@ export type $OrderItemPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     totalMinor: number
     billingType: $Enums.BillingType
     policySnapshot: runtime.JsonValue
+    editionId: string | null
+    purchasePlanId: string | null
+    editionName: string | null
+    planName: string | null
+    planType: $Enums.PurchasePlanType | null
+    intervalUnit: $Enums.IntervalUnit | null
+    intervalCount: number | null
+    renewalBehavior: $Enums.RenewalBehavior | null
+    entitlementSnapshot: runtime.JsonValue | null
   }, ExtArgs["result"]["orderItem"]>
   composites: {}
 }
@@ -1221,6 +1535,15 @@ export interface OrderItemFieldRefs {
   readonly totalMinor: Prisma.FieldRef<"OrderItem", 'Int'>
   readonly billingType: Prisma.FieldRef<"OrderItem", 'BillingType'>
   readonly policySnapshot: Prisma.FieldRef<"OrderItem", 'Json'>
+  readonly editionId: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly purchasePlanId: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly editionName: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly planName: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly planType: Prisma.FieldRef<"OrderItem", 'PurchasePlanType'>
+  readonly intervalUnit: Prisma.FieldRef<"OrderItem", 'IntervalUnit'>
+  readonly intervalCount: Prisma.FieldRef<"OrderItem", 'Int'>
+  readonly renewalBehavior: Prisma.FieldRef<"OrderItem", 'RenewalBehavior'>
+  readonly entitlementSnapshot: Prisma.FieldRef<"OrderItem", 'Json'>
 }
     
 

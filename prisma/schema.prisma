@@ -38,6 +38,24 @@ enum IntervalUnit {
   MONTH
   YEAR
 }
+enum PurchasePlanType {
+  PERPETUAL
+  MONTHLY
+  ANNUAL
+}
+enum RenewalBehavior {
+  NONE
+  CUSTOMER_AUTHORIZED
+}
+enum UpdatePolicy {
+  LIFETIME
+  ACTIVE_TERM
+  MAJOR_VERSION
+}
+enum TrialSource {
+  SELF_SERVICE
+  ADMIN
+}
 enum OrderStatus {
   PENDING
   PAID
@@ -153,6 +171,7 @@ model CustomerAccount {
   licenses License[]
   subscriptions Subscription[]
   auditLogs AuditLog[]
+  trials TrialGrant[]
   @@index([ownerId])
 }
 
@@ -205,11 +224,59 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   versions ProductVersion[]
+  editions Edition[]
   prices Price[]
   policies LicensePolicy[]
   artifacts ProductArtifact[]
   licenses License[]
   subscriptions Subscription[]
+  trials TrialGrant[]
+}
+
+model Edition {
+  id String @id @default(cuid())
+  productId String
+  slug String
+  name String
+  description String?
+  features Json @default("[]")
+  maxUsers Int @default(1)
+  maxDevicesPerUser Int @default(1)
+  updatePolicy UpdatePolicy @default(LIFETIME)
+  active Boolean @default(true)
+  sortOrder Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  purchasePlans PurchasePlan[]
+  licenses License[]
+  subscriptions Subscription[]
+  trials TrialGrant[]
+  @@unique([productId, slug])
+  @@index([productId, active, sortOrder])
+}
+
+model PurchasePlan {
+  id String @id @default(cuid())
+  editionId String
+  type PurchasePlanType
+  currency String @default("PHP")
+  amountMinor Int?
+  annualDiscountBps Int?
+  renewalBehavior RenewalBehavior @default(NONE)
+  active Boolean @default(true)
+  monthlySourcePlanId String?
+  legacyPriceId String? @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  edition Edition @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  monthlySource PurchasePlan? @relation("AnnualMonthlySource", fields: [monthlySourcePlanId], references: [id], onDelete: Cascade)
+  annualPlans PurchasePlan[] @relation("AnnualMonthlySource")
+  legacyPrice Price? @relation(fields: [legacyPriceId], references: [id], onDelete: SetNull)
+  licenses License[]
+  subscriptions Subscription[]
+  @@unique([editionId, type])
+  @@index([editionId, active])
 }
 
 model ProductVersion {
@@ -258,6 +325,7 @@ model Price {
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   licensePolicy LicensePolicy @relation(fields: [licensePolicyId], references: [id])
   cartItems CartItem[]
+  purchasePlan PurchasePlan?
   @@index([productId, active])
 }
 
@@ -332,6 +400,15 @@ model OrderItem {
   totalMinor Int
   billingType BillingType
   policySnapshot Json
+  editionId String?
+  purchasePlanId String?
+  editionName String?
+  planName String?
+  planType PurchasePlanType?
+  intervalUnit IntervalUnit?
+  intervalCount Int?
+  renewalBehavior RenewalBehavior?
+  entitlementSnapshot Json?
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
@@ -357,6 +434,7 @@ model PaymentAttempt {
   provider String
   idempotencyKey String @unique
   externalCheckoutId String? @unique
+  checkoutUrl String?
   status String
   createdAt DateTime @default(now())
   order Order @relation(fields: [orderId], references: [id])
@@ -407,6 +485,8 @@ model Subscription {
   accountId String
   orderId String
   productId String
+  editionId String?
+  purchasePlanId String?
   status SubscriptionStatus @default(PENDING)
   seats Int
   currentPeriodStart DateTime
@@ -417,6 +497,8 @@ model Subscription {
   account CustomerAccount @relation(fields: [accountId], references: [id])
   order Order @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
+  edition Edition? @relation(fields: [editionId], references: [id])
+  purchasePlan PurchasePlan? @relation(fields: [purchasePlanId], references: [id])
   licenses License[]
   @@index([accountId, status])
 }
@@ -432,6 +514,8 @@ model License {
   orderId String
   orderItemId String
   productId String
+  editionId String?
+  purchasePlanId String?
   subscriptionId String?
   status LicenseStatus @default(ACTIVE)
   maxSeats Int
@@ -442,12 +526,38 @@ model License {
   order Order @relation(fields: [orderId], references: [id])
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
   product Product @relation(fields: [productId], references: [id])
+  edition Edition? @relation(fields: [editionId], references: [id])
+  purchasePlan PurchasePlan? @relation(fields: [purchasePlanId], references: [id])
   assignments LicenseAssignment[]
   activations DeviceActivation[]
   grants DownloadGrant[]
   events LicenseEvent[]
+  trialGrant TrialGrant?
   @@unique([orderItemId])
   @@index([accountId, status])
+}
+
+model TrialGrant {
+  id String @id @default(cuid())
+  accountId String
+  productId String
+  editionId String
+  licenseId String @unique
+  source TrialSource
+  selfServiceYear Int?
+  trialStartsAt DateTime
+  trialEndsAt DateTime
+  graceEndsAt DateTime
+  revokedAt DateTime?
+  createdById String?
+  createdAt DateTime @default(now())
+  account CustomerAccount @relation(fields: [accountId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  edition Edition @relation(fields: [editionId], references: [id])
+  license License @relation(fields: [licenseId], references: [id])
+  @@unique([accountId, productId, selfServiceYear])
+  @@index([accountId, graceEndsAt])
+  @@index([productId, createdAt])
 }
 
 model LicenseAssignment {

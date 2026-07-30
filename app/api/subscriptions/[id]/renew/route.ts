@@ -1,2 +1,29 @@
-import { NextResponse } from "next/server";import { requireUser } from "@/lib/auth";import { db } from "@/lib/db";import { createCheckout } from "@/lib/checkout";import { assertSameOrigin } from "@/lib/security/request";import { apiError } from "@/lib/http";
-export async function POST(request:Request,{params}:{params:Promise<{id:string}>}){try{assertSameOrigin(request);const user=await requireUser();if(!user.emailVerified)throw new Error("FORBIDDEN");const{id}=await params;const subscription=await db.subscription.findFirst({where:{id,account:{OR:[{ownerId:user.id},{memberships:{some:{userId:user.id,role:{in:["OWNER","BILLING"]}}}}]}},include:{licenses:{take:1}}});if(!subscription)throw new Error("NOT_FOUND");const price=await db.price.findFirst({where:{productId:subscription.productId,billingType:"SUBSCRIPTION",active:true},include:{licensePolicy:true}});if(!price)throw new Error("NOT_FOUND");const quantity=Math.max(1,Math.ceil(subscription.seats/price.licensePolicy.maxSeats));return NextResponse.json(await createCheckout(user.id,subscription.accountId,[{priceId:price.id,quantity}]),{status:201})}catch(e){return apiError(e)}}
+import { NextResponse } from "next/server";
+import { requireUser } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { createCheckout } from "@/lib/checkout";
+import { assertSameOrigin } from "@/lib/security/request";
+import { apiError } from "@/lib/http";
+
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    assertSameOrigin(request);
+    const user = await requireUser();
+    if (!user.emailVerified) throw new Error("FORBIDDEN");
+    const { id } = await params;
+    const subscription = await db.subscription.findFirst({
+      where: { id, account: { OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
+    });
+    if (!subscription) throw new Error("NOT_FOUND");
+    let planId = subscription.purchasePlanId;
+    if (!planId) {
+      const legacyItem = await db.orderItem.findFirst({ where: { orderId: subscription.orderId, productId: subscription.productId } });
+      const mapped = legacyItem ? await db.purchasePlan.findFirst({ where: { legacyPriceId: legacyItem.priceId, active: true } }) : null;
+      planId = mapped?.id ?? null;
+    }
+    if (!planId) throw new Error("NOT_FOUND");
+    return NextResponse.json(await createCheckout(user.id, planId, subscription.accountId), { status: 201 });
+  } catch (error) {
+    return apiError(error);
+  }
+}

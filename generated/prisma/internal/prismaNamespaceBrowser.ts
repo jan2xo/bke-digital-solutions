@@ -61,6 +61,8 @@ export const ModelName = {
   Membership: 'Membership',
   Invitation: 'Invitation',
   Product: 'Product',
+  Edition: 'Edition',
+  PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
@@ -76,6 +78,7 @@ export const ModelName = {
   InvoiceLine: 'InvoiceLine',
   Subscription: 'Subscription',
   License: 'License',
+  TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
   DownloadGrant: 'DownloadGrant',
@@ -232,6 +235,43 @@ export const ProductScalarFieldEnum = {
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
+export const EditionScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  features: 'features',
+  maxUsers: 'maxUsers',
+  maxDevicesPerUser: 'maxDevicesPerUser',
+  updatePolicy: 'updatePolicy',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EditionScalarFieldEnum = (typeof EditionScalarFieldEnum)[keyof typeof EditionScalarFieldEnum]
+
+
+export const PurchasePlanScalarFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  type: 'type',
+  currency: 'currency',
+  amountMinor: 'amountMinor',
+  annualDiscountBps: 'annualDiscountBps',
+  renewalBehavior: 'renewalBehavior',
+  active: 'active',
+  monthlySourcePlanId: 'monthlySourcePlanId',
+  legacyPriceId: 'legacyPriceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PurchasePlanScalarFieldEnum = (typeof PurchasePlanScalarFieldEnum)[keyof typeof PurchasePlanScalarFieldEnum]
+
+
 export const ProductVersionScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -347,7 +387,16 @@ export const OrderItemScalarFieldEnum = {
   unitAmountMinor: 'unitAmountMinor',
   totalMinor: 'totalMinor',
   billingType: 'billingType',
-  policySnapshot: 'policySnapshot'
+  policySnapshot: 'policySnapshot',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
+  editionName: 'editionName',
+  planName: 'planName',
+  planType: 'planType',
+  intervalUnit: 'intervalUnit',
+  intervalCount: 'intervalCount',
+  renewalBehavior: 'renewalBehavior',
+  entitlementSnapshot: 'entitlementSnapshot'
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
@@ -375,6 +424,7 @@ export const PaymentAttemptScalarFieldEnum = {
   provider: 'provider',
   idempotencyKey: 'idempotencyKey',
   externalCheckoutId: 'externalCheckoutId',
+  checkoutUrl: 'checkoutUrl',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -432,6 +482,8 @@ export const SubscriptionScalarFieldEnum = {
   accountId: 'accountId',
   orderId: 'orderId',
   productId: 'productId',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
   status: 'status',
   seats: 'seats',
   currentPeriodStart: 'currentPeriodStart',
@@ -455,6 +507,8 @@ export const LicenseScalarFieldEnum = {
   orderId: 'orderId',
   orderItemId: 'orderItemId',
   productId: 'productId',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
   subscriptionId: 'subscriptionId',
   status: 'status',
   maxSeats: 'maxSeats',
@@ -464,6 +518,25 @@ export const LicenseScalarFieldEnum = {
 } as const
 
 export type LicenseScalarFieldEnum = (typeof LicenseScalarFieldEnum)[keyof typeof LicenseScalarFieldEnum]
+
+
+export const TrialGrantScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  productId: 'productId',
+  editionId: 'editionId',
+  licenseId: 'licenseId',
+  source: 'source',
+  selfServiceYear: 'selfServiceYear',
+  trialStartsAt: 'trialStartsAt',
+  trialEndsAt: 'trialEndsAt',
+  graceEndsAt: 'graceEndsAt',
+  revokedAt: 'revokedAt',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type TrialGrantScalarFieldEnum = (typeof TrialGrantScalarFieldEnum)[keyof typeof TrialGrantScalarFieldEnum]
 
 
 export const LicenseAssignmentScalarFieldEnum = {
@@ -572,6 +645,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {

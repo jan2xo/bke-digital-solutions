@@ -23,9 +23,10 @@ async function createProduct(options: { archived?: boolean; artifact?: boolean; 
   });
   const policy = await db.licensePolicy.create({ data: { productId: product.id, name: "Test policy", maxSeats: 1, maxDevicesPerSeat: 1 } });
   const price = await db.price.create({ data: { productId: product.id, licensePolicyId: policy.id, name: "Test price", amountMinor: 10000, billingType: "ONE_TIME" } });
+  const edition = await db.edition.create({ data: { productId: product.id, slug: "test", name: "Test", maxUsers: 1, maxDevicesPerUser: 1, purchasePlans: { create: { type: "PERPETUAL", amountMinor: 10000, renewalBehavior: "NONE" } } } });
   const version = await db.productVersion.create({ data: { productId: product.id, version: "0.0.1", operatingSystem: "Test", architecture: "test", active: false } });
   if (options.artifact) await db.productArtifact.create({ data: { productId: product.id, versionId: version.id, name: "test.zip", objectKey: `tests/${suffix}/${product.id}.zip`, sha256: "a".repeat(64), sizeBytes: 4, contentType: "application/zip", active: false } });
-  return { product, policy, price, version };
+  return { product, policy, price, edition, version };
 }
 
 async function createCustomerOrder(productId: string, priceId: string, policyId: string) {
@@ -50,12 +51,13 @@ describe.sequential("archived product permanent deletion", () => {
     const deletedObjects: string[] = [];
     const before = await evaluateProductDeletionEligibility(product.id);
     expect(before.canDelete).toBe(true);
-    expect(before.removableResources).toMatchObject({ versions: 1, artifacts: 1, prices: 1, policies: 1, images: 1, storageObjects: 2 });
+    expect(before.removableResources).toMatchObject({ editions: 1, purchasePlans: 1, versions: 1, artifacts: 1, prices: 1, policies: 1, images: 1, storageObjects: 2 });
     await permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async (key) => { deletedObjects.push(key); } });
     expect(deletedObjects).toHaveLength(2);
     expect(await db.product.findUnique({ where: { id: product.id } })).toBeNull();
     expect(await db.productVersion.count({ where: { productId: product.id } })).toBe(0);
     expect(await db.productArtifact.count({ where: { productId: product.id } })).toBe(0);
+    expect(await db.edition.count({ where: { productId: product.id } })).toBe(0);
     const log = await db.auditLog.findFirstOrThrow({ where: { targetId: product.id, action: "PRODUCT_PERMANENTLY_DELETED" } });
     expect(JSON.stringify(log.metadata)).not.toContain("tests/");
   });

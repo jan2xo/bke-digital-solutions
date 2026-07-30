@@ -12,6 +12,7 @@ const labels: Record<keyof ProductDeletionDependencies, string> = {
   payments: "Payments",
   paymentAttempts: "Payment attempts",
   subscriptions: "Subscriptions",
+  trials: "Product trials",
   licenses: "Licenses",
   assignments: "License assignments",
   activations: "Device activations",

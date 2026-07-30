@@ -68,6 +68,40 @@ export const IntervalUnit = {
 export type IntervalUnit = (typeof IntervalUnit)[keyof typeof IntervalUnit]
 
 
+export const PurchasePlanType = {
+  PERPETUAL: 'PERPETUAL',
+  MONTHLY: 'MONTHLY',
+  ANNUAL: 'ANNUAL'
+} as const
+
+export type PurchasePlanType = (typeof PurchasePlanType)[keyof typeof PurchasePlanType]
+
+
+export const RenewalBehavior = {
+  NONE: 'NONE',
+  CUSTOMER_AUTHORIZED: 'CUSTOMER_AUTHORIZED'
+} as const
+
+export type RenewalBehavior = (typeof RenewalBehavior)[keyof typeof RenewalBehavior]
+
+
+export const UpdatePolicy = {
+  LIFETIME: 'LIFETIME',
+  ACTIVE_TERM: 'ACTIVE_TERM',
+  MAJOR_VERSION: 'MAJOR_VERSION'
+} as const
+
+export type UpdatePolicy = (typeof UpdatePolicy)[keyof typeof UpdatePolicy]
+
+
+export const TrialSource = {
+  SELF_SERVICE: 'SELF_SERVICE',
+  ADMIN: 'ADMIN'
+} as const
+
+export type TrialSource = (typeof TrialSource)[keyof typeof TrialSource]
+
+
 export const OrderStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',

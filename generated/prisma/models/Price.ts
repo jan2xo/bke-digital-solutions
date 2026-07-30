@@ -263,6 +263,7 @@ export type PriceWhereInput = {
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   licensePolicy?: Prisma.XOR<Prisma.LicensePolicyScalarRelationFilter, Prisma.LicensePolicyWhereInput>
   cartItems?: Prisma.CartItemListRelationFilter
+  purchasePlan?: Prisma.XOR<Prisma.PurchasePlanNullableScalarRelationFilter, Prisma.PurchasePlanWhereInput> | null
 }
 
 export type PriceOrderByWithRelationInput = {
@@ -279,6 +280,7 @@ export type PriceOrderByWithRelationInput = {
   product?: Prisma.ProductOrderByWithRelationInput
   licensePolicy?: Prisma.LicensePolicyOrderByWithRelationInput
   cartItems?: Prisma.CartItemOrderByRelationAggregateInput
+  purchasePlan?: Prisma.PurchasePlanOrderByWithRelationInput
 }
 
 export type PriceWhereUniqueInput = Prisma.AtLeast<{
@@ -298,6 +300,7 @@ export type PriceWhereUniqueInput = Prisma.AtLeast<{
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   licensePolicy?: Prisma.XOR<Prisma.LicensePolicyScalarRelationFilter, Prisma.LicensePolicyWhereInput>
   cartItems?: Prisma.CartItemListRelationFilter
+  purchasePlan?: Prisma.XOR<Prisma.PurchasePlanNullableScalarRelationFilter, Prisma.PurchasePlanWhereInput> | null
 }, "id">
 
 export type PriceOrderByWithAggregationInput = {
@@ -346,6 +349,7 @@ export type PriceCreateInput = {
   product: Prisma.ProductCreateNestedOneWithoutPricesInput
   licensePolicy: Prisma.LicensePolicyCreateNestedOneWithoutPricesInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutPriceInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceUncheckedCreateInput = {
@@ -360,6 +364,7 @@ export type PriceUncheckedCreateInput = {
   intervalCount?: number | null
   active?: boolean
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutPriceInput
+  purchasePlan?: Prisma.PurchasePlanUncheckedCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceUpdateInput = {
@@ -374,6 +379,7 @@ export type PriceUpdateInput = {
   product?: Prisma.ProductUpdateOneRequiredWithoutPricesNestedInput
   licensePolicy?: Prisma.LicensePolicyUpdateOneRequiredWithoutPricesNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutPriceNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceUncheckedUpdateInput = {
@@ -388,6 +394,7 @@ export type PriceUncheckedUpdateInput = {
   intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutPriceNestedInput
+  purchasePlan?: Prisma.PurchasePlanUncheckedUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceCreateManyInput = {
@@ -435,6 +442,11 @@ export type PriceListRelationFilter = {
 
 export type PriceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PriceNullableScalarRelationFilter = {
+  is?: Prisma.PriceWhereInput | null
+  isNot?: Prisma.PriceWhereInput | null
 }
 
 export type PriceCountOrderByAggregateInput = {
@@ -533,6 +545,22 @@ export type PriceUncheckedUpdateManyWithoutProductNestedInput = {
   deleteMany?: Prisma.PriceScalarWhereInput | Prisma.PriceScalarWhereInput[]
 }
 
+export type PriceCreateNestedOneWithoutPurchasePlanInput = {
+  create?: Prisma.XOR<Prisma.PriceCreateWithoutPurchasePlanInput, Prisma.PriceUncheckedCreateWithoutPurchasePlanInput>
+  connectOrCreate?: Prisma.PriceCreateOrConnectWithoutPurchasePlanInput
+  connect?: Prisma.PriceWhereUniqueInput
+}
+
+export type PriceUpdateOneWithoutPurchasePlanNestedInput = {
+  create?: Prisma.XOR<Prisma.PriceCreateWithoutPurchasePlanInput, Prisma.PriceUncheckedCreateWithoutPurchasePlanInput>
+  connectOrCreate?: Prisma.PriceCreateOrConnectWithoutPurchasePlanInput
+  upsert?: Prisma.PriceUpsertWithoutPurchasePlanInput
+  disconnect?: Prisma.PriceWhereInput | boolean
+  delete?: Prisma.PriceWhereInput | boolean
+  connect?: Prisma.PriceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PriceUpdateToOneWithWhereWithoutPurchasePlanInput, Prisma.PriceUpdateWithoutPurchasePlanInput>, Prisma.PriceUncheckedUpdateWithoutPurchasePlanInput>
+}
+
 export type PriceCreateNestedManyWithoutLicensePolicyInput = {
   create?: Prisma.XOR<Prisma.PriceCreateWithoutLicensePolicyInput, Prisma.PriceUncheckedCreateWithoutLicensePolicyInput> | Prisma.PriceCreateWithoutLicensePolicyInput[] | Prisma.PriceUncheckedCreateWithoutLicensePolicyInput[]
   connectOrCreate?: Prisma.PriceCreateOrConnectWithoutLicensePolicyInput | Prisma.PriceCreateOrConnectWithoutLicensePolicyInput[]
@@ -608,6 +636,7 @@ export type PriceCreateWithoutProductInput = {
   active?: boolean
   licensePolicy: Prisma.LicensePolicyCreateNestedOneWithoutPricesInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutPriceInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceUncheckedCreateWithoutProductInput = {
@@ -621,6 +650,7 @@ export type PriceUncheckedCreateWithoutProductInput = {
   intervalCount?: number | null
   active?: boolean
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutPriceInput
+  purchasePlan?: Prisma.PurchasePlanUncheckedCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceCreateOrConnectWithoutProductInput = {
@@ -665,6 +695,78 @@ export type PriceScalarWhereInput = {
   active?: Prisma.BoolFilter<"Price"> | boolean
 }
 
+export type PriceCreateWithoutPurchasePlanInput = {
+  id?: string
+  name: string
+  amountMinor: number
+  currency?: string
+  billingType: $Enums.BillingType
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  active?: boolean
+  product: Prisma.ProductCreateNestedOneWithoutPricesInput
+  licensePolicy: Prisma.LicensePolicyCreateNestedOneWithoutPricesInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutPriceInput
+}
+
+export type PriceUncheckedCreateWithoutPurchasePlanInput = {
+  id?: string
+  productId: string
+  licensePolicyId: string
+  name: string
+  amountMinor: number
+  currency?: string
+  billingType: $Enums.BillingType
+  intervalUnit?: $Enums.IntervalUnit | null
+  intervalCount?: number | null
+  active?: boolean
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutPriceInput
+}
+
+export type PriceCreateOrConnectWithoutPurchasePlanInput = {
+  where: Prisma.PriceWhereUniqueInput
+  create: Prisma.XOR<Prisma.PriceCreateWithoutPurchasePlanInput, Prisma.PriceUncheckedCreateWithoutPurchasePlanInput>
+}
+
+export type PriceUpsertWithoutPurchasePlanInput = {
+  update: Prisma.XOR<Prisma.PriceUpdateWithoutPurchasePlanInput, Prisma.PriceUncheckedUpdateWithoutPurchasePlanInput>
+  create: Prisma.XOR<Prisma.PriceCreateWithoutPurchasePlanInput, Prisma.PriceUncheckedCreateWithoutPurchasePlanInput>
+  where?: Prisma.PriceWhereInput
+}
+
+export type PriceUpdateToOneWithWhereWithoutPurchasePlanInput = {
+  where?: Prisma.PriceWhereInput
+  data: Prisma.XOR<Prisma.PriceUpdateWithoutPurchasePlanInput, Prisma.PriceUncheckedUpdateWithoutPurchasePlanInput>
+}
+
+export type PriceUpdateWithoutPurchasePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  product?: Prisma.ProductUpdateOneRequiredWithoutPricesNestedInput
+  licensePolicy?: Prisma.LicensePolicyUpdateOneRequiredWithoutPricesNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutPriceNestedInput
+}
+
+export type PriceUncheckedUpdateWithoutPurchasePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  licensePolicyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  amountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  billingType?: Prisma.EnumBillingTypeFieldUpdateOperationsInput | $Enums.BillingType
+  intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
+  intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutPriceNestedInput
+}
+
 export type PriceCreateWithoutLicensePolicyInput = {
   id?: string
   name: string
@@ -676,6 +778,7 @@ export type PriceCreateWithoutLicensePolicyInput = {
   active?: boolean
   product: Prisma.ProductCreateNestedOneWithoutPricesInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutPriceInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceUncheckedCreateWithoutLicensePolicyInput = {
@@ -689,6 +792,7 @@ export type PriceUncheckedCreateWithoutLicensePolicyInput = {
   intervalCount?: number | null
   active?: boolean
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutPriceInput
+  purchasePlan?: Prisma.PurchasePlanUncheckedCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceCreateOrConnectWithoutLicensePolicyInput = {
@@ -728,6 +832,7 @@ export type PriceCreateWithoutCartItemsInput = {
   active?: boolean
   product: Prisma.ProductCreateNestedOneWithoutPricesInput
   licensePolicy: Prisma.LicensePolicyCreateNestedOneWithoutPricesInput
+  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceUncheckedCreateWithoutCartItemsInput = {
@@ -741,6 +846,7 @@ export type PriceUncheckedCreateWithoutCartItemsInput = {
   intervalUnit?: $Enums.IntervalUnit | null
   intervalCount?: number | null
   active?: boolean
+  purchasePlan?: Prisma.PurchasePlanUncheckedCreateNestedOneWithoutLegacyPriceInput
 }
 
 export type PriceCreateOrConnectWithoutCartItemsInput = {
@@ -770,6 +876,7 @@ export type PriceUpdateWithoutCartItemsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   product?: Prisma.ProductUpdateOneRequiredWithoutPricesNestedInput
   licensePolicy?: Prisma.LicensePolicyUpdateOneRequiredWithoutPricesNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceUncheckedUpdateWithoutCartItemsInput = {
@@ -783,6 +890,7 @@ export type PriceUncheckedUpdateWithoutCartItemsInput = {
   intervalUnit?: Prisma.NullableEnumIntervalUnitFieldUpdateOperationsInput | $Enums.IntervalUnit | null
   intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  purchasePlan?: Prisma.PurchasePlanUncheckedUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceCreateManyProductInput = {
@@ -808,6 +916,7 @@ export type PriceUpdateWithoutProductInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   licensePolicy?: Prisma.LicensePolicyUpdateOneRequiredWithoutPricesNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutPriceNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceUncheckedUpdateWithoutProductInput = {
@@ -821,6 +930,7 @@ export type PriceUncheckedUpdateWithoutProductInput = {
   intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutPriceNestedInput
+  purchasePlan?: Prisma.PurchasePlanUncheckedUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceUncheckedUpdateManyWithoutProductInput = {
@@ -858,6 +968,7 @@ export type PriceUpdateWithoutLicensePolicyInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   product?: Prisma.ProductUpdateOneRequiredWithoutPricesNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutPriceNestedInput
+  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceUncheckedUpdateWithoutLicensePolicyInput = {
@@ -871,6 +982,7 @@ export type PriceUncheckedUpdateWithoutLicensePolicyInput = {
   intervalCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutPriceNestedInput
+  purchasePlan?: Prisma.PurchasePlanUncheckedUpdateOneWithoutLegacyPriceNestedInput
 }
 
 export type PriceUncheckedUpdateManyWithoutLicensePolicyInput = {
@@ -930,6 +1042,7 @@ export type PriceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   licensePolicy?: boolean | Prisma.LicensePolicyDefaultArgs<ExtArgs>
   cartItems?: boolean | Prisma.Price$cartItemsArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.Price$purchasePlanArgs<ExtArgs>
   _count?: boolean | Prisma.PriceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["price"]>
 
@@ -981,6 +1094,7 @@ export type PriceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   licensePolicy?: boolean | Prisma.LicensePolicyDefaultArgs<ExtArgs>
   cartItems?: boolean | Prisma.Price$cartItemsArgs<ExtArgs>
+  purchasePlan?: boolean | Prisma.Price$purchasePlanArgs<ExtArgs>
   _count?: boolean | Prisma.PriceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PriceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -998,6 +1112,7 @@ export type $PricePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     product: Prisma.$ProductPayload<ExtArgs>
     licensePolicy: Prisma.$LicensePolicyPayload<ExtArgs>
     cartItems: Prisma.$CartItemPayload<ExtArgs>[]
+    purchasePlan: Prisma.$PurchasePlanPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1407,6 +1522,7 @@ export interface Prisma__PriceClient<T, Null = never, ExtArgs extends runtime.Ty
   product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   licensePolicy<T extends Prisma.LicensePolicyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LicensePolicyDefaultArgs<ExtArgs>>): Prisma.Prisma__LicensePolicyClient<runtime.Types.Result.GetResult<Prisma.$LicensePolicyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   cartItems<T extends Prisma.Price$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Price$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchasePlan<T extends Prisma.Price$purchasePlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Price$purchasePlanArgs<ExtArgs>>): Prisma.Prisma__PurchasePlanClient<runtime.Types.Result.GetResult<Prisma.$PurchasePlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1868,6 +1984,25 @@ export type Price$cartItemsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.CartItemScalarFieldEnum | Prisma.CartItemScalarFieldEnum[]
+}
+
+/**
+ * Price.purchasePlan
+ */
+export type Price$purchasePlanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchasePlan
+   */
+  select?: Prisma.PurchasePlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchasePlan
+   */
+  omit?: Prisma.PurchasePlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchasePlanInclude<ExtArgs> | null
+  where?: Prisma.PurchasePlanWhereInput
 }
 
 /**
