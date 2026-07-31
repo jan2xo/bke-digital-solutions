@@ -2,7 +2,7 @@
 
 ## Current phase
 
-Phase 4.2 — Product Editions and Multi-Plan Commerce is complete and locally verified. Phase 5 has not started.
+Phase 5.0 — Production Baseline and Deployment Foundation is implemented and under owner review. Phase 5.1 has not started.
 
 ## Milestones
 
@@ -14,6 +14,8 @@ Phase 4.2 — Product Editions and Multi-Plan Commerce is complete and locally v
 - [x] Product editions with reusable capability entitlements
 - [x] Perpetual, monthly, and calculated annual purchase plans
 - [x] Multi-plan administration, storefront, checkout, and licensing migration
+- [x] Reproducible production image, isolated service topology, configuration validation, and operational health foundation
+- [x] Flexible general and customer-specific offers with immutable pricing and finite monthly promotional cycles
 - [ ] Real PayMongo sandbox lifecycle
 - [ ] Verified Resend delivery domain
 - [ ] Production infrastructure and operational readiness
@@ -50,7 +52,8 @@ Phase 4.1 is an additive completion of Phase 4 and is a prerequisite to, not par
 - Automated refund initiation remains provider-dependent; confirmed refund records continue through webhooks.
 - PayMongo sandbox and Resend verified delivery are blocked by owner-supplied credentials/domain setup.
 - Production database, Redis, storage, backups, monitoring, malware scanning, code signing, legal, privacy, and tax review remain incomplete.
+- Provider-aware expiry of abandoned offer reservations is deferred; reservations remain consumed until settlement can be ruled out safely.
 
 ## Next phase
 
-Phase 5 — External provider certification and production operations. Estimated remaining work: 5–8 focused engineering days plus external merchant/domain/DNS approval time.
+Phase 5.1 — Authentication and Administrative Security, after Phase 5.0 is reviewed and committed independently. External provider certification remains in Phase 5.2 and Phase 5.3.

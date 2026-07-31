@@ -289,6 +289,7 @@ export type EditionWhereInput = {
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   trials?: Prisma.TrialGrantListRelationFilter
+  offers?: Prisma.DiscountOfferListRelationFilter
 }
 
 export type EditionOrderByWithRelationInput = {
@@ -310,6 +311,7 @@ export type EditionOrderByWithRelationInput = {
   licenses?: Prisma.LicenseOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
   trials?: Prisma.TrialGrantOrderByRelationAggregateInput
+  offers?: Prisma.DiscountOfferOrderByRelationAggregateInput
 }
 
 export type EditionWhereUniqueInput = Prisma.AtLeast<{
@@ -335,6 +337,7 @@ export type EditionWhereUniqueInput = Prisma.AtLeast<{
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   trials?: Prisma.TrialGrantListRelationFilter
+  offers?: Prisma.DiscountOfferListRelationFilter
 }, "id" | "productId_slug">
 
 export type EditionOrderByWithAggregationInput = {
@@ -395,6 +398,7 @@ export type EditionCreateInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateInput = {
@@ -415,6 +419,7 @@ export type EditionUncheckedCreateInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUpdateInput = {
@@ -435,6 +440,7 @@ export type EditionUpdateInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateInput = {
@@ -455,6 +461,7 @@ export type EditionUncheckedUpdateInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateManyInput = {
@@ -671,6 +678,22 @@ export type EditionUpdateOneWithoutSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EditionUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.EditionUpdateWithoutSubscriptionsInput>, Prisma.EditionUncheckedUpdateWithoutSubscriptionsInput>
 }
 
+export type EditionCreateNestedOneWithoutOffersInput = {
+  create?: Prisma.XOR<Prisma.EditionCreateWithoutOffersInput, Prisma.EditionUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.EditionCreateOrConnectWithoutOffersInput
+  connect?: Prisma.EditionWhereUniqueInput
+}
+
+export type EditionUpdateOneWithoutOffersNestedInput = {
+  create?: Prisma.XOR<Prisma.EditionCreateWithoutOffersInput, Prisma.EditionUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.EditionCreateOrConnectWithoutOffersInput
+  upsert?: Prisma.EditionUpsertWithoutOffersInput
+  disconnect?: Prisma.EditionWhereInput | boolean
+  delete?: Prisma.EditionWhereInput | boolean
+  connect?: Prisma.EditionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EditionUpdateToOneWithWhereWithoutOffersInput, Prisma.EditionUpdateWithoutOffersInput>, Prisma.EditionUncheckedUpdateWithoutOffersInput>
+}
+
 export type EditionCreateNestedOneWithoutLicensesInput = {
   create?: Prisma.XOR<Prisma.EditionCreateWithoutLicensesInput, Prisma.EditionUncheckedCreateWithoutLicensesInput>
   connectOrCreate?: Prisma.EditionCreateOrConnectWithoutLicensesInput
@@ -718,6 +741,7 @@ export type EditionCreateWithoutProductInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutProductInput = {
@@ -737,6 +761,7 @@ export type EditionUncheckedCreateWithoutProductInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutProductInput = {
@@ -801,6 +826,7 @@ export type EditionCreateWithoutPurchasePlansInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutPurchasePlansInput = {
@@ -820,6 +846,7 @@ export type EditionUncheckedCreateWithoutPurchasePlansInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutPurchasePlansInput = {
@@ -855,6 +882,7 @@ export type EditionUpdateWithoutPurchasePlansInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutPurchasePlansInput = {
@@ -874,6 +902,7 @@ export type EditionUncheckedUpdateWithoutPurchasePlansInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutSubscriptionsInput = {
@@ -893,6 +922,7 @@ export type EditionCreateWithoutSubscriptionsInput = {
   purchasePlans?: Prisma.PurchasePlanCreateNestedManyWithoutEditionInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutSubscriptionsInput = {
@@ -912,6 +942,7 @@ export type EditionUncheckedCreateWithoutSubscriptionsInput = {
   purchasePlans?: Prisma.PurchasePlanUncheckedCreateNestedManyWithoutEditionInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutSubscriptionsInput = {
@@ -947,6 +978,7 @@ export type EditionUpdateWithoutSubscriptionsInput = {
   purchasePlans?: Prisma.PurchasePlanUpdateManyWithoutEditionNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutSubscriptionsInput = {
@@ -965,6 +997,103 @@ export type EditionUncheckedUpdateWithoutSubscriptionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   purchasePlans?: Prisma.PurchasePlanUncheckedUpdateManyWithoutEditionNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutEditionNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutEditionNestedInput
+}
+
+export type EditionCreateWithoutOffersInput = {
+  id?: string
+  slug: string
+  name: string
+  description?: string | null
+  features?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  maxUsers?: number
+  maxDevicesPerUser?: number
+  updatePolicy?: $Enums.UpdatePolicy
+  active?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  product: Prisma.ProductCreateNestedOneWithoutEditionsInput
+  purchasePlans?: Prisma.PurchasePlanCreateNestedManyWithoutEditionInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutEditionInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutEditionInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutEditionInput
+}
+
+export type EditionUncheckedCreateWithoutOffersInput = {
+  id?: string
+  productId: string
+  slug: string
+  name: string
+  description?: string | null
+  features?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  maxUsers?: number
+  maxDevicesPerUser?: number
+  updatePolicy?: $Enums.UpdatePolicy
+  active?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchasePlans?: Prisma.PurchasePlanUncheckedCreateNestedManyWithoutEditionInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutEditionInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutEditionInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutEditionInput
+}
+
+export type EditionCreateOrConnectWithoutOffersInput = {
+  where: Prisma.EditionWhereUniqueInput
+  create: Prisma.XOR<Prisma.EditionCreateWithoutOffersInput, Prisma.EditionUncheckedCreateWithoutOffersInput>
+}
+
+export type EditionUpsertWithoutOffersInput = {
+  update: Prisma.XOR<Prisma.EditionUpdateWithoutOffersInput, Prisma.EditionUncheckedUpdateWithoutOffersInput>
+  create: Prisma.XOR<Prisma.EditionCreateWithoutOffersInput, Prisma.EditionUncheckedCreateWithoutOffersInput>
+  where?: Prisma.EditionWhereInput
+}
+
+export type EditionUpdateToOneWithWhereWithoutOffersInput = {
+  where?: Prisma.EditionWhereInput
+  data: Prisma.XOR<Prisma.EditionUpdateWithoutOffersInput, Prisma.EditionUncheckedUpdateWithoutOffersInput>
+}
+
+export type EditionUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerUser?: Prisma.IntFieldUpdateOperationsInput | number
+  updatePolicy?: Prisma.EnumUpdatePolicyFieldUpdateOperationsInput | $Enums.UpdatePolicy
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  product?: Prisma.ProductUpdateOneRequiredWithoutEditionsNestedInput
+  purchasePlans?: Prisma.PurchasePlanUpdateManyWithoutEditionNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutEditionNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutEditionNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutEditionNestedInput
+}
+
+export type EditionUncheckedUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDevicesPerUser?: Prisma.IntFieldUpdateOperationsInput | number
+  updatePolicy?: Prisma.EnumUpdatePolicyFieldUpdateOperationsInput | $Enums.UpdatePolicy
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchasePlans?: Prisma.PurchasePlanUncheckedUpdateManyWithoutEditionNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutEditionNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutEditionNestedInput
 }
 
@@ -985,6 +1114,7 @@ export type EditionCreateWithoutLicensesInput = {
   purchasePlans?: Prisma.PurchasePlanCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutLicensesInput = {
@@ -1004,6 +1134,7 @@ export type EditionUncheckedCreateWithoutLicensesInput = {
   purchasePlans?: Prisma.PurchasePlanUncheckedCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutEditionInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutLicensesInput = {
@@ -1039,6 +1170,7 @@ export type EditionUpdateWithoutLicensesInput = {
   purchasePlans?: Prisma.PurchasePlanUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutLicensesInput = {
@@ -1058,6 +1190,7 @@ export type EditionUncheckedUpdateWithoutLicensesInput = {
   purchasePlans?: Prisma.PurchasePlanUncheckedUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutTrialsInput = {
@@ -1077,6 +1210,7 @@ export type EditionCreateWithoutTrialsInput = {
   purchasePlans?: Prisma.PurchasePlanCreateNestedManyWithoutEditionInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutTrialsInput = {
@@ -1096,6 +1230,7 @@ export type EditionUncheckedCreateWithoutTrialsInput = {
   purchasePlans?: Prisma.PurchasePlanUncheckedCreateNestedManyWithoutEditionInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutEditionInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutEditionInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutTrialsInput = {
@@ -1131,6 +1266,7 @@ export type EditionUpdateWithoutTrialsInput = {
   purchasePlans?: Prisma.PurchasePlanUpdateManyWithoutEditionNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutTrialsInput = {
@@ -1150,6 +1286,7 @@ export type EditionUncheckedUpdateWithoutTrialsInput = {
   purchasePlans?: Prisma.PurchasePlanUncheckedUpdateManyWithoutEditionNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateManyProductInput = {
@@ -1184,6 +1321,7 @@ export type EditionUpdateWithoutProductInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutProductInput = {
@@ -1203,6 +1341,7 @@ export type EditionUncheckedUpdateWithoutProductInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutEditionNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutEditionNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutEditionNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateManyWithoutProductInput = {
@@ -1230,6 +1369,7 @@ export type EditionCountOutputType = {
   licenses: number
   subscriptions: number
   trials: number
+  offers: number
 }
 
 export type EditionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1237,6 +1377,7 @@ export type EditionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   licenses?: boolean | EditionCountOutputTypeCountLicensesArgs
   subscriptions?: boolean | EditionCountOutputTypeCountSubscriptionsArgs
   trials?: boolean | EditionCountOutputTypeCountTrialsArgs
+  offers?: boolean | EditionCountOutputTypeCountOffersArgs
 }
 
 /**
@@ -1277,6 +1418,13 @@ export type EditionCountOutputTypeCountTrialsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.TrialGrantWhereInput
 }
 
+/**
+ * EditionCountOutputType without action
+ */
+export type EditionCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DiscountOfferWhereInput
+}
+
 
 export type EditionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1297,6 +1445,7 @@ export type EditionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   licenses?: boolean | Prisma.Edition$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Edition$subscriptionsArgs<ExtArgs>
   trials?: boolean | Prisma.Edition$trialsArgs<ExtArgs>
+  offers?: boolean | Prisma.Edition$offersArgs<ExtArgs>
   _count?: boolean | Prisma.EditionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["edition"]>
 
@@ -1357,6 +1506,7 @@ export type EditionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   licenses?: boolean | Prisma.Edition$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Edition$subscriptionsArgs<ExtArgs>
   trials?: boolean | Prisma.Edition$trialsArgs<ExtArgs>
+  offers?: boolean | Prisma.Edition$offersArgs<ExtArgs>
   _count?: boolean | Prisma.EditionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EditionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1374,6 +1524,7 @@ export type $EditionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     licenses: Prisma.$LicensePayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
     trials: Prisma.$TrialGrantPayload<ExtArgs>[]
+    offers: Prisma.$DiscountOfferPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1788,6 +1939,7 @@ export interface Prisma__EditionClient<T, Null = never, ExtArgs extends runtime.
   licenses<T extends Prisma.Edition$licensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$licensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.Edition$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   trials<T extends Prisma.Edition$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  offers<T extends Prisma.Edition$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiscountOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2324,6 +2476,30 @@ export type Edition$trialsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.TrialGrantScalarFieldEnum | Prisma.TrialGrantScalarFieldEnum[]
+}
+
+/**
+ * Edition.offers
+ */
+export type Edition$offersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DiscountOffer
+   */
+  select?: Prisma.DiscountOfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DiscountOffer
+   */
+  omit?: Prisma.DiscountOfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DiscountOfferInclude<ExtArgs> | null
+  where?: Prisma.DiscountOfferWhereInput
+  orderBy?: Prisma.DiscountOfferOrderByWithRelationInput | Prisma.DiscountOfferOrderByWithRelationInput[]
+  cursor?: Prisma.DiscountOfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DiscountOfferScalarFieldEnum | Prisma.DiscountOfferScalarFieldEnum[]
 }
 
 /**

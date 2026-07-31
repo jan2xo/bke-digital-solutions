@@ -31,7 +31,12 @@ export async function permanentlyDeleteCustomer(input: { customerId: string; act
     ] } });
     await tx.licenseAssignment.deleteMany({ where: { OR: [{ userId: customer.id }, ...(licenseIds.length ? [{ licenseId: { in: licenseIds } }] : [])] } });
     if (accountIds.length) await tx.trialGrant.deleteMany({ where: { accountId: { in: accountIds } } });
+    if (orderIds.length) await tx.offerRedemption.deleteMany({ where: { orderId: { in: orderIds } } });
+    if (accountIds.length) await tx.discountOffer.deleteMany({ where: { customerAccountId: { in: accountIds } } });
     if (licenseIds.length) await tx.license.deleteMany({ where: { id: { in: licenseIds } } });
+    if (orderIds.length) {
+      await tx.order.updateMany({ where: { id: { in: orderIds } }, data: { renewalSubscriptionId: null } });
+    }
     if (accountIds.length) await tx.subscription.deleteMany({ where: { accountId: { in: accountIds } } });
     if (orderIds.length) {
       await tx.invoice.deleteMany({ where: { orderId: { in: orderIds } } });

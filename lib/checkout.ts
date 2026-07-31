@@ -1,98 +1,43 @@
 import "server-only";
 import { db } from "@/lib/db";
 import { paymentProvider } from "@/lib/payments";
-import { purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { applyOfferDiscount, PRICING_VERSION, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { offerSnapshot, resolveAndReserveOffer } from "@/lib/offers";
 import { randomToken } from "@/lib/security/crypto";
+import { issueEntitlements } from "@/lib/licensing";
+import { queueCommerceEmail } from "@/lib/email";
+import type { Prisma } from "@/generated/prisma/client";
 
-export async function createCheckout(userId: string, purchasePlanId: string, accountId?: string) {
-  const access = { OR: [{ ownerId: userId }, { memberships: { some: { userId, role: { in: ["OWNER" as const, "BILLING" as const] } } } }] };
-  const account = accountId
-    ? await db.customerAccount.findFirstOrThrow({ where: { id: accountId, ...access } })
-    : await db.customerAccount.findFirstOrThrow({ where: access, orderBy: { createdAt: "asc" } });
-  const plan = await db.purchasePlan.findFirst({
-    where: { id: purchasePlanId, active: true, edition: { active: true, product: { active: true, archivedAt: null } } },
-    include: { monthlySource: true, edition: { include: { product: true } } },
-  });
-  if (!plan) throw new Error("INVALID_PURCHASE_PLAN");
-  const terms = resolvePurchasePlan(plan);
-  const quantity = 1;
-  const subtotal = terms.amountMinor;
-  const tax = 0;
-  const total = subtotal + tax;
-  const idempotencyKey = randomToken();
-  const planName = purchasePlanLabel(plan.type);
-  const entitlementSnapshot = {
-    editionName: plan.edition.name,
-    features: plan.edition.features,
-    maxUsers: plan.edition.maxUsers,
-    maxDevicesPerUser: plan.edition.maxDevicesPerUser,
-    updatePolicy: plan.edition.updatePolicy,
-    planType: plan.type,
-    renewalBehavior: plan.renewalBehavior,
-    intervalUnit: terms.intervalUnit,
-    intervalCount: terms.intervalCount,
-    annualDiscountBps: plan.annualDiscountBps,
-  };
-  const order = await db.$transaction(async (tx) => {
-    const suffix = `${Date.now().toString(36).toUpperCase()}${randomToken(4).toUpperCase()}`;
-    return tx.order.create({
-      data: {
-        number: `BKE-${new Date().getUTCFullYear()}-${suffix}`,
-        accountId: account.id,
-        currency: plan.currency,
-        subtotalMinor: subtotal,
-        taxMinor: tax,
-        totalMinor: total,
-        billingSnapshot: { name: account.displayName, email: account.billingEmail },
-        items: { create: {
-          productId: plan.edition.productId,
-          priceId: plan.id,
-          policyId: plan.editionId,
-          productName: plan.edition.product.name,
-          priceName: `${plan.edition.name} — ${planName}`,
-          quantity,
-          unitAmountMinor: terms.amountMinor,
-          totalMinor: total,
-          billingType: terms.billingType,
-          policySnapshot: { maxSeats: plan.edition.maxUsers, maxDevicesPerSeat: plan.edition.maxDevicesPerUser },
-          editionId: plan.editionId,
-          purchasePlanId: plan.id,
-          editionName: plan.edition.name,
-          planName,
-          planType: plan.type,
-          intervalUnit: terms.intervalUnit,
-          intervalCount: terms.intervalCount,
-          renewalBehavior: plan.renewalBehavior,
-          entitlementSnapshot,
-        } },
-        attempts: { create: { provider: paymentProvider.name, idempotencyKey, status: "CREATING" } },
-        invoice: { create: {
-          number: `INV-${new Date().getUTCFullYear()}-${suffix}`,
-          customerSnapshot: { name: account.displayName, email: account.billingEmail },
-          currency: plan.currency,
-          subtotalMinor: subtotal,
-          taxMinor: tax,
-          totalMinor: total,
-          lines: { create: { description: `${plan.edition.product.name} — ${plan.edition.name} — ${planName}`, quantity, unitAmountMinor: terms.amountMinor, totalMinor: total } },
-        } },
-      },
-      include: { items: true },
-    });
-  });
-  try {
-    const checkout = await paymentProvider.createCheckout({
-      orderId: order.id,
-      reference: order.number,
-      amountMinor: total,
-      currency: plan.currency,
-      customer: { name: account.displayName, email: account.billingEmail },
-      idempotencyKey,
-      items: order.items.map((item) => ({ name: `${item.productName} — ${item.editionName}`, description: `${item.planName}; ${plan.renewalBehavior === "NONE" ? "no renewal" : "customer-authorized renewal"}`, amountMinor: item.unitAmountMinor, quantity: item.quantity })),
-    });
-    await db.paymentAttempt.update({ where: { idempotencyKey }, data: { status: "PENDING", externalCheckoutId: checkout.externalId, checkoutUrl: checkout.checkoutUrl } });
-    return { orderId: order.id, checkoutUrl: checkout.checkoutUrl };
-  } catch (error) {
-    await db.paymentAttempt.update({ where: { idempotencyKey }, data: { status: "FAILED" } });
-    throw error;
-  }
+export async function createCheckout(userId:string,purchasePlanId:string,accountId?:string,offerIdentifier?:string,renewalSubscriptionId?:string){
+  const idempotencyKey=randomToken();
+  const result=await db.$transaction(async tx=>{
+    const access={OR:[{ownerId:userId},{memberships:{some:{userId,role:{in:["OWNER" as const,"BILLING" as const]}}}}]};
+    const account=accountId?await tx.customerAccount.findFirstOrThrow({where:{id:accountId,...access}}):await tx.customerAccount.findFirstOrThrow({where:access,orderBy:{createdAt:"asc"}});
+    const plan=await tx.purchasePlan.findFirst({where:{id:purchasePlanId,active:true,edition:{active:true,product:{active:true,archivedAt:null}}},include:{monthlySource:true,edition:{include:{product:true}}}});
+    if(!plan)throw new Error("INVALID_PURCHASE_PLAN");
+    const terms=resolvePurchasePlan(plan);const planName=purchasePlanLabel(plan.type);let catalogAmountMinor=terms.amountMinor;
+    const renewal=renewalSubscriptionId?await tx.subscription.findFirst({where:{id:renewalSubscriptionId,accountId:account.id,purchasePlanId:plan.id}}):null;
+    if(renewalSubscriptionId&&!renewal)throw new Error("INVALID_RENEWAL");
+    if(renewal?.normalRecurringAmountMinor)catalogAmountMinor=renewal.normalRecurringAmountMinor;
+    const suffix=`${Date.now().toString(36).toUpperCase()}${randomToken(4).toUpperCase()}`;
+    const entitlementSnapshot={editionName:plan.edition.name,features:plan.edition.features,maxUsers:plan.edition.maxUsers,maxDevicesPerUser:plan.edition.maxDevicesPerUser,updatePolicy:plan.edition.updatePolicy,planType:plan.type,renewalBehavior:plan.renewalBehavior,intervalUnit:terms.intervalUnit,intervalCount:terms.intervalCount,annualDiscountBps:plan.annualDiscountBps};
+    const annual=plan.type==="ANNUAL"?{monthlyBaseAmountMinor:terms.monthlyAmountMinor,grossAnnualAmountMinor:terms.grossAnnualMinor,annualCatalogDiscountBps:terms.discountBps,annualCatalogDiscountMinor:terms.savingsMinor}:{};
+    const order=await tx.order.create({data:{number:`BKE-${new Date().getUTCFullYear()}-${suffix}`,accountId:account.id,renewalSubscriptionId:renewal?.id,currency:plan.currency,subtotalMinor:catalogAmountMinor,taxMinor:0,totalMinor:catalogAmountMinor,billingSnapshot:{name:account.displayName,email:account.billingEmail},items:{create:{productId:plan.edition.productId,priceId:plan.id,policyId:plan.editionId,productName:plan.edition.product.name,priceName:`${plan.edition.name} — ${planName}`,quantity:1,unitAmountMinor:catalogAmountMinor,totalMinor:catalogAmountMinor,billingType:terms.billingType,policySnapshot:{maxSeats:plan.edition.maxUsers,maxDevicesPerSeat:plan.edition.maxDevicesPerUser},editionId:plan.editionId,purchasePlanId:plan.id,editionName:plan.edition.name,planName,planType:plan.type,intervalUnit:terms.intervalUnit,intervalCount:terms.intervalCount,renewalBehavior:plan.renewalBehavior,entitlementSnapshot,catalogAmountMinor,pricingVersion:PRICING_VERSION,pricingSnapshot:{pricingVersion:PRICING_VERSION,currency:plan.currency,planType:plan.type,purchasePlanAmountMinor:plan.amountMinor,catalogAmountMinor,finalAmountMinor:catalogAmountMinor,...annual}}},invoice:{create:{number:`INV-${new Date().getUTCFullYear()}-${suffix}`,customerSnapshot:{name:account.displayName,email:account.billingEmail},currency:plan.currency,subtotalMinor:catalogAmountMinor,taxMinor:0,totalMinor:catalogAmountMinor,lines:{create:{description:`${plan.edition.product.name} — ${plan.edition.name} — ${planName}`,quantity:1,unitAmountMinor:catalogAmountMinor,totalMinor:catalogAmountMinor}}}}},include:{items:true}});
+    let finalAmountMinor=catalogAmountMinor;let appliedOffer:null|{id:string;discountBps:number;discountAmountMinor:number;snapshot:Record<string,unknown>;cycles:number|null}=null;
+    const scheduled=renewal?.offerId&&renewal.discountedCyclesTotal&&renewal.discountedCyclesConsumed<renewal.discountedCyclesTotal;
+    if(scheduled){const discounted=applyOfferDiscount(catalogAmountMinor,renewal.promotionalDiscountBps??0);const snapshot=(renewal.offerSnapshot??{}) as Record<string,unknown>;appliedOffer={id:renewal.offerId!,discountBps:renewal.promotionalDiscountBps??0,discountAmountMinor:discounted.discountAmountMinor,snapshot,cycles:renewal.discountedCyclesTotal};finalAmountMinor=discounted.finalAmountMinor}
+    else if(offerIdentifier){const reserved=await resolveAndReserveOffer(tx,{identifier:offerIdentifier,accountId:account.id,orderId:order.id,plan:{id:plan.id,type:plan.type,editionId:plan.editionId,productId:plan.edition.productId,currency:plan.currency},catalogAmountMinor});const snapshot=offerSnapshot(reserved.offer,reserved.discountAmountMinor);appliedOffer={id:reserved.offer.id,discountBps:reserved.offer.discountBps,discountAmountMinor:reserved.discountAmountMinor,snapshot,cycles:reserved.offer.discountedBillingCycles};finalAmountMinor=reserved.finalAmountMinor}
+    const pricingSnapshot={pricingVersion:PRICING_VERSION,currency:plan.currency,planType:plan.type,purchasePlanAmountMinor:plan.amountMinor,catalogAmountMinor,finalAmountMinor,...annual,...appliedOffer?{offer:appliedOffer.snapshot}:{}};
+    const invoiceSubtotalMinor=plan.type==="ANNUAL"?terms.grossAnnualMinor!:catalogAmountMinor;
+    const invoiceLines=[{description:`${plan.edition.product.name} — ${plan.edition.name} — ${planName}`,quantity:1,unitAmountMinor:invoiceSubtotalMinor,totalMinor:invoiceSubtotalMinor}];
+    if(plan.type==="ANNUAL"&&terms.savingsMinor>0)invoiceLines.push({description:`Annual catalog discount (${(terms.discountBps/100).toFixed(2)}%)`,quantity:1,unitAmountMinor:-terms.savingsMinor,totalMinor:-terms.savingsMinor});
+    if(appliedOffer&&appliedOffer.discountAmountMinor>0){const name=String(appliedOffer.snapshot.name??"Promotional offer");const code=appliedOffer.snapshot.code?` — code ${String(appliedOffer.snapshot.code)}`:"";invoiceLines.push({description:`Promotional discount — ${name}${code} (${(appliedOffer.discountBps/100).toFixed(2)}%)`,quantity:1,unitAmountMinor:-appliedOffer.discountAmountMinor,totalMinor:-appliedOffer.discountAmountMinor})}
+    await tx.order.update({where:{id:order.id},data:{subtotalMinor:finalAmountMinor,totalMinor:finalAmountMinor,items:{update:{where:{id:order.items[0]!.id},data:{unitAmountMinor:finalAmountMinor,totalMinor:finalAmountMinor,offerId:appliedOffer?.id,offerDiscountBps:appliedOffer?.discountBps,offerDiscountMinor:appliedOffer?.discountAmountMinor,pricingSnapshot:pricingSnapshot as Prisma.InputJsonValue}}},invoice:{update:{subtotalMinor:invoiceSubtotalMinor,totalMinor:finalAmountMinor,lines:{deleteMany:{},create:invoiceLines}}}}});
+    if(finalAmountMinor===0){const now=new Date();await tx.order.update({where:{id:order.id},data:{status:"PAID",paidAt:now}});await tx.invoice.update({where:{orderId:order.id},data:{status:"FINAL",issuedAt:now}});await tx.payment.create({data:{orderId:order.id,provider:"internal",externalId:`complimentary:${order.id}`,status:"PAID",amountMinor:0,currency:plan.currency,paidAt:now}});if(appliedOffer)await tx.offerRedemption.update({where:{orderId:order.id},data:{status:"APPLIED",appliedAt:now}});await issueEntitlements(tx,order.id);await tx.auditLog.create({data:{actorId:userId,accountId:account.id,action:"COMPLIMENTARY_ORDER_ISSUED",targetType:"Order",targetId:order.id,metadata:{offerId:appliedOffer?.id,pricingVersion:PRICING_VERSION}}});await queueCommerceEmail(tx,{type:"INVOICE_ISSUED",recipient:account.billingEmail,subject:"Your BKE Digital Solutions invoice",payload:{orderNumber:order.number,invoiceNumber:`INV-${new Date().getUTCFullYear()}-${suffix}`}});await queueCommerceEmail(tx,{type:"PAYMENT_RECEIPT",recipient:account.billingEmail,subject:"BKE Digital Solutions payment receipt",payload:{orderNumber:order.number}});await queueCommerceEmail(tx,{type:"LICENSE_ISSUED",recipient:account.billingEmail,subject:"Your BKE Digital Solutions license is ready",payload:{orderNumber:order.number}});return{orderId:order.id,checkoutUrl:`/checkout/success?orderId=${encodeURIComponent(order.id)}`,complimentary:true}}
+    await tx.paymentAttempt.create({data:{orderId:order.id,provider:paymentProvider.name,idempotencyKey,status:"CREATING"}});
+    return{orderId:order.id,account,plan,planName,idempotencyKey,total:finalAmountMinor,items:[{name:`${plan.edition.product.name} — ${plan.edition.name}`,description:`${planName}; ${plan.renewalBehavior==="NONE"?"no renewal":"customer-authorized renewal"}`,amountMinor:finalAmountMinor,quantity:1}]};
+  },{isolationLevel:"Serializable"});
+  if("complimentary" in result)return result;
+  try{const checkout=await paymentProvider.createCheckout({orderId:result.orderId,reference:(await db.order.findUniqueOrThrow({where:{id:result.orderId},select:{number:true}})).number,amountMinor:result.total,currency:result.plan.currency,customer:{name:result.account.displayName,email:result.account.billingEmail},idempotencyKey:result.idempotencyKey,items:result.items});await db.paymentAttempt.update({where:{idempotencyKey:result.idempotencyKey},data:{status:"PENDING",externalCheckoutId:checkout.externalId,checkoutUrl:checkout.checkoutUrl}});return{orderId:result.orderId,checkoutUrl:checkout.checkoutUrl}}
+  catch(error){await db.paymentAttempt.update({where:{idempotencyKey:result.idempotencyKey},data:{status:"FAILED"}});throw error}
 }

@@ -24,10 +24,21 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - run: npm run config:validate
+        env:
+          DEPLOYMENT_ENV: test
       - run: npm run db:generate
+      - run: git diff --exit-code -- generated/prisma
+      - run: npx prisma validate
       - run: npm run db:deploy
+      - run: npm run db:status
+      - run: npm run db:smoke
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - run: npm audit --audit-level=high
+      - run: git diff --check
+      - run: npm run security:hygiene
+      - run: npm audit --omit=dev --audit-level=critical
+      - run: docker compose --env-file .env.production.example -f docker-compose.production.yml config --quiet
+      - run: docker build --target runner -t bke-digital-solutions:ci .

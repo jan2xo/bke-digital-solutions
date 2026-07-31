@@ -37,3 +37,8 @@
 ## Future improvements
 
 Admin MFA, approval workflows, queued exports, malware scanning/code signing, object-retention jobs, accounting integration, and richer organization administration.
+# Flexible discount and customer-offer status
+
+Implemented locally: general promotions, account-specific offers, administrative adjustments, exact integer pricing, annual-catalog separation, immutable order/subscription snapshots, finite monthly promotional cycles, serialized redemption limits, explicitly authorized zero totals, admin controls, checkout selection, audit records, and integration coverage. Migration `20260731025700_flexible_discount_offers` has been applied to the local development PostgreSQL database. See `discount-offers.md`.
+
+Credential-gated PayMongo sandbox and Resend delivery certification remain external blockers. Abandoned offer reservations remain consumed until a future provider-aware finality/release job is designed and verified.

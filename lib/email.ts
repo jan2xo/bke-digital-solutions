@@ -8,7 +8,7 @@ type Message={to:string;subject:string;text:string};
 export interface EmailProvider{send(message:Message):Promise<void>}
 class ResendProvider implements EmailProvider{private client=new Resend(env.RESEND_API_KEY);async send(message:Message){const result=await this.client.emails.send({from:env.EMAIL_FROM,...message});if(result.error)throw new Error("EMAIL_DELIVERY_FAILED")}}
 class DevelopmentProvider implements EmailProvider{async send(message:Message){console.info(`[development email] queued: ${message.subject}`)}}
-export const emailProvider:EmailProvider=env.RESEND_API_KEY&&process.env.BKE_DISABLE_EXTERNAL_EMAIL!=="true"&&(env.NODE_ENV!=="test"||Boolean(process.env.RESEND_SANDBOX_TO))?new ResendProvider():new DevelopmentProvider();
+export const emailProvider:EmailProvider=(env.EMAIL_PROVIDER==="resend"||Boolean(process.env.RESEND_SANDBOX_TO))&&process.env.BKE_DISABLE_EXTERNAL_EMAIL!=="true"&&(env.NODE_ENV!=="test"||Boolean(process.env.RESEND_SANDBOX_TO))?new ResendProvider():new DevelopmentProvider();
 
 export async function sendVerificationEmail(email:string,token:string){const url=new URL("/api/auth/verify",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Verify your BKE Digital Solutions account",text:`Verify your account using this one-time link: ${url}`})}
 export async function sendMagicLink(email:string,token:string){const url=new URL("/api/auth/magic/consume",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Your BKE Digital Solutions sign-in link",text:`Sign in using this one-time link (expires in 15 minutes): ${url}`})}

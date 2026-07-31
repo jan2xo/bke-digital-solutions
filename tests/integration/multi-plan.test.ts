@@ -19,8 +19,8 @@ describe.sequential("edition and multi-plan commerce", () => {
   afterAll(() => db.$disconnect());
 
   it("accepts only a purchase plan identifier at the browser boundary", () => {
-    expect(checkoutSchema.parse({ purchasePlanId: "cm00000000000000000000000" })).toEqual({ purchasePlanId: "cm00000000000000000000000" });
-    expect(() => checkoutSchema.parse({ purchasePlanId: "cm00000000000000000000000", amountMinor: 1 })).toThrow();
+    expect(checkoutSchema.parse({ purchasePlanId: "cm00000000000000000000000", customerAccountId: "cm00000000000000000000001" })).toEqual({ purchasePlanId: "cm00000000000000000000000", customerAccountId: "cm00000000000000000000001" });
+    expect(() => checkoutSchema.parse({ purchasePlanId: "cm00000000000000000000000", customerAccountId: "cm00000000000000000000001", amountMinor: 1 })).toThrow();
     expect(() => checkoutSchema.parse({ priceId: "cm00000000000000000000000", quantity: 99 })).toThrow();
   });
 

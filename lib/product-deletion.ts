@@ -19,6 +19,8 @@ export type ProductDeletionDependencies = {
   downloadGrants: number;
   downloads: number;
   licenseEvents: number;
+  offers: number;
+  offerRedemptions: number;
 };
 
 export type ProductDeletionResources = {
@@ -47,7 +49,7 @@ export type ProductDeletionEligibility = {
 
 type EligibilityClient = Pick<
   Prisma.TransactionClient,
-  "product" | "orderItem" | "order" | "payment" | "paymentAttempt" | "invoice" | "license" | "subscription" | "trialGrant" | "cartItem" | "productArtifact" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent"
+  "product" | "orderItem" | "order" | "payment" | "paymentAttempt" | "invoice" | "license" | "subscription" | "trialGrant" | "cartItem" | "productArtifact" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "discountOffer" | "offerRedemption"
 >;
 
 const emptyDependencies = (): ProductDeletionDependencies => ({
@@ -65,6 +67,8 @@ const emptyDependencies = (): ProductDeletionDependencies => ({
   downloadGrants: 0,
   downloads: 0,
   licenseEvents: 0,
+  offers: 0,
+  offerRedemptions: 0,
 });
 
 const emptyResources = (): ProductDeletionResources => ({
@@ -108,17 +112,18 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     };
   }
 
-  const [orderItemRows, licenseRows, artifacts, carts, subscriptions, trials] = await Promise.all([
+  const [orderItemRows, licenseRows, artifacts, carts, subscriptions, trials, offers] = await Promise.all([
     client.orderItem.findMany({ where: { productId }, select: { orderId: true } }),
     client.license.findMany({ where: { productId }, select: { id: true } }),
     client.productArtifact.findMany({ where: { productId }, select: { objectKey: true, downloadCount: true } }),
     client.cartItem.count({ where: { price: { productId } } }),
     client.subscription.count({ where: { productId } }),
     client.trialGrant.count({ where: { productId } }),
+    client.discountOffer.findMany({ where: { OR: [{ productId }, { edition: { productId } }, { purchasePlan: { edition: { productId } } }] }, select: { id: true } }),
   ]);
   const orderIds = [...new Set(orderItemRows.map((item) => item.orderId))];
   const licenseIds = licenseRows.map((license) => license.id);
-  const [orders, invoices, payments, paymentAttempts, assignments, activations, grants, licenseEvents] = await Promise.all([
+  const [orders, invoices, payments, paymentAttempts, assignments, activations, grants, licenseEvents, offerRedemptions] = await Promise.all([
     orderIds.length ? client.order.count({ where: { id: { in: orderIds } } }) : 0,
     orderIds.length ? client.invoice.count({ where: { orderId: { in: orderIds } } }) : 0,
     orderIds.length ? client.payment.count({ where: { orderId: { in: orderIds } } }) : 0,
@@ -127,6 +132,7 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     licenseIds.length ? client.deviceActivation.count({ where: { licenseId: { in: licenseIds } } }) : 0,
     client.downloadGrant.count({ where: { OR: [{ artifact: { productId } }, ...(licenseIds.length ? [{ licenseId: { in: licenseIds } }] : [])] } }),
     licenseIds.length ? client.licenseEvent.count({ where: { licenseId: { in: licenseIds } } }) : 0,
+    offers.length ? client.offerRedemption.count({ where: { offerId: { in: offers.map((offer) => offer.id) } } }) : 0,
   ]);
   const recordedDownloads = artifacts.reduce((sum, artifact) => sum + artifact.downloadCount, 0);
   const blockingDependencies: ProductDeletionDependencies = {
@@ -144,6 +150,8 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     downloadGrants: grants,
     downloads: recordedDownloads,
     licenseEvents,
+    offers: offers.length,
+    offerRedemptions,
   };
   const removableResources: ProductDeletionResources = {
     editions: product._count.editions,

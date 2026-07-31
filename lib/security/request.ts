@@ -3,7 +3,8 @@ import { env } from "@/lib/env";
 
 export function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  if (!origin || new URL(origin).origin !== new URL(env.APP_URL).origin) throw new Error("INVALID_ORIGIN");
+  const trusted = new Set([new URL(env.APP_URL).origin, ...(env.TRUSTED_ORIGINS?.split(",").map((value) => new URL(value.trim()).origin) ?? [])]);
+  if (!origin || !trusted.has(new URL(origin).origin)) throw new Error("INVALID_ORIGIN");
 }
 
 export async function readLimitedBody(request: Request, maxBytes = 256_000) {
@@ -15,5 +16,6 @@ export async function readLimitedBody(request: Request, maxBytes = 256_000) {
 }
 
 export function clientIp(request: Request) {
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",").map((value) => value.trim()).filter(Boolean) ?? [];
+  return forwarded.at(-Math.max(1, env.TRUST_PROXY_HOPS)) || "unknown";
 }

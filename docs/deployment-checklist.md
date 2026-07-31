@@ -96,3 +96,12 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Alert on customer suspension, device resets, license transfer/reveal/revoke, release rollback, artifact replacement/removal, and invoice resend spikes.
 - [ ] Alert on blocked and successful permanent-product-deletion audit actions; periodically verify that only archived products with zero preserved dependencies can be deleted.
 - [ ] Validate audit export retention, access controls, CSV handling, and scale limits.
+# Flexible offers deployment addition
+
+- [ ] Back up PostgreSQL and verify restore before deploying the additive offer migration.
+- [ ] Run `npm run db:deploy` before starting application instances that query offer fields.
+- [ ] Verify migration `20260731025700_flexible_discount_offers` and its check constraints are present.
+- [ ] Smoke-test normal, discounted, and explicitly authorized zero-total checkout using test accounts.
+- [ ] Verify duplicate/delayed webhook application issues one entitlement and one redemption application.
+- [ ] Monitor `RESERVED` offer usage; do not manually release a reservation unless provider reconciliation proves it cannot settle.
+- [ ] Verify customer-specific codes cannot be used or enumerated by another billing account.

@@ -32,6 +32,7 @@ export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
           if (attempt) await tx.paymentAttempt.update({ where: { id: attempt.id }, data: { status: "COMPLETED" } });
           const invoice=await tx.invoice.update({ where: { orderId: order.id }, data: { status: "FINAL", issuedAt: event.occurredAt } });
           await issueEntitlements(tx, order.id);
+          const redemption=await tx.offerRedemption.findUnique({where:{orderId:order.id}});if(redemption){await tx.offerRedemption.update({where:{id:redemption.id},data:{status:"APPLIED",appliedAt:event.occurredAt}});await tx.auditLog.create({data:{accountId:order.accountId,action:"OFFER_APPLIED",targetType:"DiscountOffer",targetId:redemption.offerId,metadata:{orderId:order.id,discountBps:redemption.discountBps,discountMinor:redemption.discountMinor,pricingVersion:redemption.pricingVersion}}})}
           const account=await tx.customerAccount.findUniqueOrThrow({where:{id:order.accountId}});
           await queueCommerceEmail(tx,{type:"PAYMENT_RECEIPT",recipient:account.billingEmail,subject:"BKE Digital Solutions payment receipt",payload:{orderNumber:order.number}});
           await queueCommerceEmail(tx,{type:"INVOICE_ISSUED",recipient:account.billingEmail,subject:"Your BKE Digital Solutions invoice",payload:{orderNumber:order.number,invoiceNumber:invoice.number}});
@@ -52,6 +53,8 @@ export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
           await tx.invoice.update({ where: { orderId: order.id }, data: { status: "VOID" } });
           await tx.license.updateMany({ where: { orderId: order.id }, data: { status: "REVOKED" } });
           await tx.subscription.updateMany({ where: { orderId: order.id }, data: { status: "CANCELLED" } });
+          if(order.renewalSubscriptionId){await tx.subscription.update({where:{id:order.renewalSubscriptionId},data:{status:"CANCELLED"}});await tx.license.updateMany({where:{subscriptionId:order.renewalSubscriptionId},data:{status:"REVOKED"}})}
+          await tx.offerRedemption.updateMany({where:{orderId:order.id},data:{status:"REFUNDED"}});
           const account=await tx.customerAccount.findUniqueOrThrow({where:{id:order.accountId}});await queueCommerceEmail(tx,{type:"REFUND_CONFIRMED",recipient:account.billingEmail,subject:"BKE Digital Solutions refund confirmed",payload:{orderNumber:order.number}});
         } else if (order.status !== "REFUNDED") {
           throw new Error("INVALID_PAYMENT_TRANSITION");

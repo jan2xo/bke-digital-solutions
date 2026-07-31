@@ -12,14 +12,19 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "db:generate": "prisma generate",
+    "db:generate": "prisma generate && node scripts/normalize-generated.mjs",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
+    "db:status": "prisma migrate status",
+    "db:smoke": "tsx scripts/post-migration-smoke.ts",
     "db:seed": "tsx prisma/seed.ts",
     "admin:create": "tsx scripts/create-admin.ts",
     "payments:reconcile": "tsx scripts/reconcile-payments.ts",
-    "test:paymongo": "vitest run tests/sandbox/paymongo.sandbox.test.ts"
-    ,"test:resend": "vitest run tests/sandbox/resend.sandbox.test.ts"
+    "test:paymongo": "vitest run tests/sandbox/paymongo.sandbox.test.ts",
+    "test:resend": "vitest run tests/sandbox/resend.sandbox.test.ts",
+    "config:validate": "tsx scripts/validate-environment.ts",
+    "health:check": "tsx scripts/health-check.ts",
+    "security:hygiene": "node scripts/repository-hygiene.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",

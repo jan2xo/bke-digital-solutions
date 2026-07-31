@@ -172,6 +172,16 @@ export type InvoiceLine = Prisma.InvoiceLineModel
  */
 export type Subscription = Prisma.SubscriptionModel
 /**
+ * Model DiscountOffer
+ *
+ */
+export type DiscountOffer = Prisma.DiscountOfferModel
+/**
+ * Model OfferRedemption
+ *
+ */
+export type OfferRedemption = Prisma.OfferRedemptionModel
+/**
  * Model License
  *
  */

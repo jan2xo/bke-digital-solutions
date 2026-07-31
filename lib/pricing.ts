@@ -1,5 +1,8 @@
 export const ANNUAL_DISCOUNT_MIN_BPS = 0;
 export const ANNUAL_DISCOUNT_MAX_BPS = 1_000;
+export const OFFER_DISCOUNT_MIN_BPS = 0;
+export const OFFER_DISCOUNT_MAX_BPS = 10_000;
+export const PRICING_VERSION = "OFFER_V1";
 
 export type AnnualPricing = {
   monthlyAmountMinor: number;
@@ -38,6 +41,14 @@ export function calculateAnnualPricing(monthlyAmountMinor: number, discountBps: 
     savingsMinor: grossAnnualMinor - annualAmountMinor,
     effectiveMonthlyMinor: roundRatioHalfUp(BigInt(annualAmountMinor), 12n),
   };
+}
+
+export function applyOfferDiscount(catalogAmountMinor: number, discountBps: number) {
+  assertMinorUnits(catalogAmountMinor, "CATALOG_AMOUNT");
+  if (!Number.isInteger(discountBps) || discountBps < OFFER_DISCOUNT_MIN_BPS || discountBps > OFFER_DISCOUNT_MAX_BPS) throw new Error("INVALID_OFFER_DISCOUNT");
+  const finalAmountMinor = roundRatioHalfUp(BigInt(catalogAmountMinor) * BigInt(10_000 - discountBps), 10_000n);
+  if (finalAmountMinor < 0 || finalAmountMinor > catalogAmountMinor) throw new Error("INVALID_DISCOUNTED_AMOUNT");
+  return { catalogAmountMinor, discountBps, discountAmountMinor: catalogAmountMinor - finalAmountMinor, finalAmountMinor };
 }
 
 export type ResolvablePlan = {

@@ -11,7 +11,7 @@ if (localRedis && env.NODE_ENV !== "production") globalRedis.bkeRedis = localRed
 const local = new Map<string, { count: number; reset: number }>();
 
 export async function rateLimit(key: string, limit: number, windowSeconds: number) {
-  const bucket = `rl:${key}:${Math.floor(Date.now() / (windowSeconds * 1000))}`;
+  const bucket = `${env.REDIS_KEY_PREFIX}:rl:${key}:${Math.floor(Date.now() / (windowSeconds * 1000))}`;
   if (redis) {
     const count = await redis.incr(bucket);
     if (count === 1) await redis.expire(bucket, windowSeconds + 1);

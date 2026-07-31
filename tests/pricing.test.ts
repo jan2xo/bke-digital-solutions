@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateAnnualPricing, resolvePurchasePlan, roundRatioHalfUp } from "@/lib/pricing";
+import { applyOfferDiscount, calculateAnnualPricing, resolvePurchasePlan, roundRatioHalfUp } from "@/lib/pricing";
 
 describe("purchase plan pricing", () => {
   it("calculates the documented ten-percent annual price in minor units", () => {
@@ -23,5 +23,13 @@ describe("purchase plan pricing", () => {
   it("normalizes perpetual and subscription terms without browser-provided totals", () => {
     expect(resolvePurchasePlan({ id: "p", type: "PERPETUAL", currency: "PHP", amountMinor: 9_999, annualDiscountBps: null, renewalBehavior: "NONE" })).toMatchObject({ amountMinor: 9_999, billingType: "ONE_TIME", intervalUnit: null });
     expect(resolvePurchasePlan({ id: "m", type: "MONTHLY", currency: "PHP", amountMinor: 499, annualDiscountBps: null, renewalBehavior: "CUSTOMER_AUTHORIZED" })).toMatchObject({ amountMinor: 499, billingType: "SUBSCRIPTION", intervalUnit: "MONTH" });
+  });
+  it("applies promotional discounts independently of annual catalog pricing", () => {
+    expect(applyOfferDiscount(10_001, 0)).toMatchObject({ discountAmountMinor: 0, finalAmountMinor: 10_001 });
+    expect(applyOfferDiscount(10_001, 5_000)).toMatchObject({ discountAmountMinor: 5_000, finalAmountMinor: 5_001 });
+    expect(applyOfferDiscount(10_001, 10_000)).toMatchObject({ discountAmountMinor: 10_001, finalAmountMinor: 0 });
+    const annual = calculateAnnualPricing(10_000, 1_000);
+    expect(applyOfferDiscount(annual.annualAmountMinor, 2_500).finalAmountMinor).toBe(81_000);
+    expect(() => applyOfferDiscount(10_000, 10_001)).toThrow("INVALID_OFFER_DISCOUNT");
   });
 });

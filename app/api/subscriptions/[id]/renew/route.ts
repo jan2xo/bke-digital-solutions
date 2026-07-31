@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       planId = mapped?.id ?? null;
     }
     if (!planId) throw new Error("NOT_FOUND");
-    return NextResponse.json(await createCheckout(user.id, planId, subscription.accountId), { status: 201 });
+    return NextResponse.json(await createCheckout(user.id, planId, subscription.accountId, undefined, subscription.id), { status: 201 });
   } catch (error) {
     return apiError(error);
   }

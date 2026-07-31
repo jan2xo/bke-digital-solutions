@@ -19,6 +19,8 @@ const labels: Record<keyof ProductDeletionDependencies, string> = {
   downloadGrants: "Download grants",
   downloads: "Downloads",
   licenseEvents: "License events",
+  offers: "Discount offers",
+  offerRedemptions: "Offer redemptions",
 };
 
 export function AdminProductDelete({ productId, productName }: { productId: string; productName: string }) {

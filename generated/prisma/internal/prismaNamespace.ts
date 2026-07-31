@@ -423,6 +423,8 @@ export const ModelName = {
   Invoice: 'Invoice',
   InvoiceLine: 'InvoiceLine',
   Subscription: 'Subscription',
+  DiscountOffer: 'DiscountOffer',
+  OfferRedemption: 'OfferRedemption',
   License: 'License',
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
@@ -447,7 +449,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
+    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2375,6 +2377,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DiscountOffer: {
+      payload: Prisma.$DiscountOfferPayload<ExtArgs>
+      fields: Prisma.DiscountOfferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DiscountOfferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DiscountOfferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>
+        }
+        findFirst: {
+          args: Prisma.DiscountOfferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DiscountOfferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>
+        }
+        findMany: {
+          args: Prisma.DiscountOfferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>[]
+        }
+        create: {
+          args: Prisma.DiscountOfferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>
+        }
+        createMany: {
+          args: Prisma.DiscountOfferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DiscountOfferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>[]
+        }
+        delete: {
+          args: Prisma.DiscountOfferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>
+        }
+        update: {
+          args: Prisma.DiscountOfferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>
+        }
+        deleteMany: {
+          args: Prisma.DiscountOfferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DiscountOfferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DiscountOfferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>[]
+        }
+        upsert: {
+          args: Prisma.DiscountOfferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiscountOfferPayload>
+        }
+        aggregate: {
+          args: Prisma.DiscountOfferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDiscountOffer>
+        }
+        groupBy: {
+          args: Prisma.DiscountOfferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DiscountOfferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DiscountOfferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DiscountOfferCountAggregateOutputType> | number
+        }
+      }
+    }
+    OfferRedemption: {
+      payload: Prisma.$OfferRedemptionPayload<ExtArgs>
+      fields: Prisma.OfferRedemptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfferRedemptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfferRedemptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>
+        }
+        findFirst: {
+          args: Prisma.OfferRedemptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfferRedemptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>
+        }
+        findMany: {
+          args: Prisma.OfferRedemptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>[]
+        }
+        create: {
+          args: Prisma.OfferRedemptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>
+        }
+        createMany: {
+          args: Prisma.OfferRedemptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfferRedemptionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>[]
+        }
+        delete: {
+          args: Prisma.OfferRedemptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>
+        }
+        update: {
+          args: Prisma.OfferRedemptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.OfferRedemptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfferRedemptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfferRedemptionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>[]
+        }
+        upsert: {
+          args: Prisma.OfferRedemptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferRedemptionPayload>
+        }
+        aggregate: {
+          args: Prisma.OfferRedemptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOfferRedemption>
+        }
+        groupBy: {
+          args: Prisma.OfferRedemptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfferRedemptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfferRedemptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfferRedemptionCountAggregateOutputType> | number
+        }
+      }
+    }
     License: {
       payload: Prisma.$LicensePayload<ExtArgs>
       fields: Prisma.LicenseFieldRefs
@@ -3345,7 +3495,8 @@ export const OrderScalarFieldEnum = {
   totalMinor: 'totalMinor',
   billingSnapshot: 'billingSnapshot',
   createdAt: 'createdAt',
-  paidAt: 'paidAt'
+  paidAt: 'paidAt',
+  renewalSubscriptionId: 'renewalSubscriptionId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -3372,7 +3523,13 @@ export const OrderItemScalarFieldEnum = {
   intervalUnit: 'intervalUnit',
   intervalCount: 'intervalCount',
   renewalBehavior: 'renewalBehavior',
-  entitlementSnapshot: 'entitlementSnapshot'
+  entitlementSnapshot: 'entitlementSnapshot',
+  pricingSnapshot: 'pricingSnapshot',
+  catalogAmountMinor: 'catalogAmountMinor',
+  offerId: 'offerId',
+  offerDiscountBps: 'offerDiscountBps',
+  offerDiscountMinor: 'offerDiscountMinor',
+  pricingVersion: 'pricingVersion'
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
@@ -3465,11 +3622,67 @@ export const SubscriptionScalarFieldEnum = {
   currentPeriodStart: 'currentPeriodStart',
   currentPeriodEnd: 'currentPeriodEnd',
   renewalReminderAt: 'renewalReminderAt',
+  currency: 'currency',
+  normalRecurringAmountMinor: 'normalRecurringAmountMinor',
+  discountedRecurringAmountMinor: 'discountedRecurringAmountMinor',
+  promotionalDiscountBps: 'promotionalDiscountBps',
+  discountedCyclesTotal: 'discountedCyclesTotal',
+  discountedCyclesConsumed: 'discountedCyclesConsumed',
+  offerId: 'offerId',
+  offerSnapshot: 'offerSnapshot',
+  pricingVersion: 'pricingVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const DiscountOfferScalarFieldEnum = {
+  id: 'id',
+  codeNormalized: 'codeNormalized',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  discountBps: 'discountBps',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  productId: 'productId',
+  editionId: 'editionId',
+  purchasePlanId: 'purchasePlanId',
+  customerAccountId: 'customerAccountId',
+  maximumRedemptions: 'maximumRedemptions',
+  perAccountRedemptionLimit: 'perAccountRedemptionLimit',
+  discountedBillingCycles: 'discountedBillingCycles',
+  allowZeroTotal: 'allowZeroTotal',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type DiscountOfferScalarFieldEnum = (typeof DiscountOfferScalarFieldEnum)[keyof typeof DiscountOfferScalarFieldEnum]
+
+
+export const OfferRedemptionScalarFieldEnum = {
+  id: 'id',
+  offerId: 'offerId',
+  accountId: 'accountId',
+  orderId: 'orderId',
+  status: 'status',
+  discountBps: 'discountBps',
+  baseMinor: 'baseMinor',
+  discountMinor: 'discountMinor',
+  finalMinor: 'finalMinor',
+  currency: 'currency',
+  pricingVersion: 'pricingVersion',
+  reservedAt: 'reservedAt',
+  appliedAt: 'appliedAt',
+  releasedAt: 'releasedAt'
+} as const
+
+export type OfferRedemptionScalarFieldEnum = (typeof OfferRedemptionScalarFieldEnum)[keyof typeof OfferRedemptionScalarFieldEnum]
 
 
 export const LicenseScalarFieldEnum = {
@@ -3950,6 +4163,48 @@ export type ListEnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
+ * Reference to a field of type 'DiscountType'
+ */
+export type EnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType'>
+
+
+
+/**
+ * Reference to a field of type 'DiscountType[]'
+ */
+export type ListEnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType[]'>
+
+
+
+/**
+ * Reference to a field of type 'DiscountStatus'
+ */
+export type EnumDiscountStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountStatus'>
+
+
+
+/**
+ * Reference to a field of type 'DiscountStatus[]'
+ */
+export type ListEnumDiscountStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'OfferRedemptionStatus'
+ */
+export type EnumOfferRedemptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferRedemptionStatus'>
+
+
+
+/**
+ * Reference to a field of type 'OfferRedemptionStatus[]'
+ */
+export type ListEnumOfferRedemptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferRedemptionStatus[]'>
+
+
+
+/**
  * Reference to a field of type 'LicenseStatus'
  */
 export type EnumLicenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LicenseStatus'>
@@ -4167,6 +4422,8 @@ export type GlobalOmitConfig = {
   invoice?: Prisma.InvoiceOmit
   invoiceLine?: Prisma.InvoiceLineOmit
   subscription?: Prisma.SubscriptionOmit
+  discountOffer?: Prisma.DiscountOfferOmit
+  offerRedemption?: Prisma.OfferRedemptionOmit
   license?: Prisma.LicenseOmit
   trialGrant?: Prisma.TrialGrantOmit
   licenseAssignment?: Prisma.LicenseAssignmentOmit

@@ -159,3 +159,10 @@ Migration `20260731113000_product_trials` was applied locally and the idempotent
 Audited domain boundaries, business-rule duplication, transactions, state machines, schema constraints, errors, security, providers, tests, documentation and generated Prisma policy. Applied narrow fixes for cancellation/settlement serialization, failed-webhook retry with payload integrity, completed attempt status, non-downgrading failure events, early-refund retry, and same-edition monthly annual sources. Corrected duplicate/legacy test fixtures. Final verification passed 48 Vitest tests with five external credential-blocked skips, focused commerce Playwright 2/2, full Playwright 5/5, Prisma validation/status/no drift/seed, TypeScript, ESLint, build, runtime audit and source scans.
 
 The audit recommends continuing to version generated Prisma output and adding a CI drift check. Phase 5 remains blocked. The separate uncommitted permanent-customer-deletion implementation conflicts with the core immutable-history rule and requires an explicit retention-policy decision before commit or production enablement. No commit was created.
+# 2026-07-31 — Flexible discounts and customer offers
+
+- Preserved annual pricing as a separate catalog calculation and added exact 0–100% promotional basis-point arithmetic.
+- Added offer/redemption schema, immutable pricing snapshots, finite monthly discount schedules, renewal linkage, admin controls, and customer checkout selection.
+- Fixed the initial Prisma runtime mismatch by reviewing and applying migration `20260731025700_flexible_discount_offers` to local PostgreSQL.
+- Added database checks and a post-lock eligibility reload, then verified customer isolation, idempotent webhook application, zero totals, renewals, and concurrent maximum redemption.
+- Updated product/customer deletion services for new restrictive relationships. Abandoned reservations remain conservative pending a provider-aware settlement-finality policy.

@@ -56,6 +56,24 @@ enum TrialSource {
   SELF_SERVICE
   ADMIN
 }
+enum DiscountType {
+  GENERAL_PROMOTION
+  CUSTOMER_ACCOUNT_OFFER
+  ADMINISTRATIVE_ADJUSTMENT
+}
+enum DiscountStatus {
+  DRAFT
+  ACTIVE
+  DISABLED
+  REVOKED
+  EXPIRED
+}
+enum OfferRedemptionStatus {
+  RESERVED
+  APPLIED
+  RELEASED
+  REFUNDED
+}
 enum OrderStatus {
   PENDING
   PAID
@@ -110,6 +128,7 @@ model User {
   memberships Membership[]
   assignments LicenseAssignment[]
   auditLogs AuditLog[] @relation("AuditActor")
+  createdOffers DiscountOffer[] @relation("OfferCreator")
 }
 
 model PasswordCredential {
@@ -172,6 +191,8 @@ model CustomerAccount {
   subscriptions Subscription[]
   auditLogs AuditLog[]
   trials TrialGrant[]
+  offers DiscountOffer[]
+  offerRedemptions OfferRedemption[]
   @@index([ownerId])
 }
 
@@ -231,6 +252,7 @@ model Product {
   licenses License[]
   subscriptions Subscription[]
   trials TrialGrant[]
+  offers DiscountOffer[]
 }
 
 model Edition {
@@ -252,6 +274,7 @@ model Edition {
   licenses License[]
   subscriptions Subscription[]
   trials TrialGrant[]
+  offers DiscountOffer[]
   @@unique([productId, slug])
   @@index([productId, active, sortOrder])
 }
@@ -275,6 +298,7 @@ model PurchasePlan {
   legacyPrice Price? @relation(fields: [legacyPriceId], references: [id], onDelete: SetNull)
   licenses License[]
   subscriptions Subscription[]
+  offers DiscountOffer[]
   @@unique([editionId, type])
   @@index([editionId, active])
 }
@@ -377,6 +401,7 @@ model Order {
   billingSnapshot Json
   createdAt DateTime @default(now())
   paidAt DateTime?
+  renewalSubscriptionId String?
   account CustomerAccount @relation(fields: [accountId], references: [id])
   items OrderItem[]
   payments Payment[]
@@ -384,7 +409,10 @@ model Order {
   invoice Invoice?
   licenses License[]
   subscriptions Subscription[]
+  renewalSubscription Subscription? @relation("SubscriptionRenewalOrders", fields:[renewalSubscriptionId], references:[id], onDelete:Restrict)
+  offerRedemption OfferRedemption?
   @@index([accountId, createdAt])
+  @@index([renewalSubscriptionId])
 }
 
 model OrderItem {
@@ -409,6 +437,12 @@ model OrderItem {
   intervalCount Int?
   renewalBehavior RenewalBehavior?
   entitlementSnapshot Json?
+  pricingSnapshot Json?
+  catalogAmountMinor Int?
+  offerId String?
+  offerDiscountBps Int?
+  offerDiscountMinor Int?
+  pricingVersion String?
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
@@ -492,6 +526,15 @@ model Subscription {
   currentPeriodStart DateTime
   currentPeriodEnd DateTime
   renewalReminderAt DateTime
+  currency String?
+  normalRecurringAmountMinor Int?
+  discountedRecurringAmountMinor Int?
+  promotionalDiscountBps Int?
+  discountedCyclesTotal Int?
+  discountedCyclesConsumed Int @default(0)
+  offerId String?
+  offerSnapshot Json?
+  pricingVersion String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   account CustomerAccount @relation(fields: [accountId], references: [id])
@@ -499,8 +542,64 @@ model Subscription {
   product Product @relation(fields: [productId], references: [id])
   edition Edition? @relation(fields: [editionId], references: [id])
   purchasePlan PurchasePlan? @relation(fields: [purchasePlanId], references: [id])
+  renewalOrders Order[] @relation("SubscriptionRenewalOrders")
   licenses License[]
   @@index([accountId, status])
+}
+
+model DiscountOffer {
+  id String @id @default(cuid())
+  codeNormalized String? @unique
+  name String
+  description String?
+  type DiscountType
+  status DiscountStatus @default(DRAFT)
+  discountBps Int
+  startsAt DateTime
+  endsAt DateTime?
+  productId String?
+  editionId String?
+  purchasePlanId String?
+  customerAccountId String?
+  maximumRedemptions Int?
+  perAccountRedemptionLimit Int?
+  discountedBillingCycles Int?
+  allowZeroTotal Boolean @default(false)
+  createdById String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  revokedAt DateTime?
+  product Product? @relation(fields:[productId],references:[id],onDelete:Restrict)
+  edition Edition? @relation(fields:[editionId],references:[id],onDelete:Restrict)
+  purchasePlan PurchasePlan? @relation(fields:[purchasePlanId],references:[id],onDelete:Restrict)
+  customerAccount CustomerAccount? @relation(fields:[customerAccountId],references:[id],onDelete:Restrict)
+  createdBy User @relation("OfferCreator",fields:[createdById],references:[id],onDelete:Restrict)
+  redemptions OfferRedemption[]
+  @@index([status,startsAt,endsAt])
+  @@index([customerAccountId,status])
+  @@index([purchasePlanId,status])
+}
+
+model OfferRedemption {
+  id String @id @default(cuid())
+  offerId String
+  accountId String
+  orderId String @unique
+  status OfferRedemptionStatus @default(RESERVED)
+  discountBps Int
+  baseMinor Int
+  discountMinor Int
+  finalMinor Int
+  currency String
+  pricingVersion String
+  reservedAt DateTime @default(now())
+  appliedAt DateTime?
+  releasedAt DateTime?
+  offer DiscountOffer @relation(fields:[offerId],references:[id],onDelete:Restrict)
+  account CustomerAccount @relation(fields:[accountId],references:[id],onDelete:Restrict)
+  order Order @relation(fields:[orderId],references:[id],onDelete:Restrict)
+  @@index([offerId,status])
+  @@index([offerId,accountId,status])
 }
 
 model License {
