@@ -10,7 +10,7 @@ export function AuthForm({ mode, returnTo }: { mode: "login" | "register"; retur
     const response = await fetch(`/api/auth/${mode}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) });
     const body = await response.json(); setBusy(false);
     if (!response.ok) return setError(body.error === "INVALID_CREDENTIALS" ? "The email or password is incorrect." : body.error === "ACCOUNT_EXISTS" ? "An account already exists for this email. Please sign in instead." : body.error === "RATE_LIMITED" ? "Too many attempts. Please wait before trying again." : mode === "register" ? "Check your name, email, and every password requirement below." : "Unable to continue. Please review your details.");
-    router.push(mode === "login" ? (returnTo ?? "/dashboard") : body.emailSent?"/verify-email":"/verify-email?delivery=failed"); router.refresh();
+    router.push(mode === "login" ? body.mfaRequired ? "/login/mfa" : body.mfaEnrollmentRequired ? "/security/mfa" : (returnTo ?? "/dashboard") : body.emailSent?"/verify-email":"/verify-email?delivery=failed"); router.refresh();
   }
   return <form method="post" onSubmit={submit} className="card grid gap-5 p-8">
     {mode === "register" && <label className="label">Full name<input className="input" name="name" required minLength={2} maxLength={100} autoComplete="name" /></label>}

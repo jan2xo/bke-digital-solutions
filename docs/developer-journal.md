@@ -166,3 +166,10 @@ The audit recommends continuing to version generated Prisma output and adding a 
 - Fixed the initial Prisma runtime mismatch by reviewing and applying migration `20260731025700_flexible_discount_offers` to local PostgreSQL.
 - Added database checks and a post-lock eligibility reload, then verified customer isolation, idempotent webhook application, zero totals, renewals, and concurrent maximum redemption.
 - Updated product/customer deletion services for new restrictive relationships. Abandoned reservations remain conservative pending a provider-aware settlement-finality policy.
+# 2026-08-02 — Phase 5.1 administrator MFA foundation
+
+- Added versioned AES-256-GCM TOTP secret encryption, bounded RFC 6238 verification, QR enrollment, and keyed one-time recovery-code hashes.
+- Split administrator login into password and short-lived database-backed MFA challenge stages; blocked administrator magic-link login.
+- Added restricted mandatory enrollment, MFA-aware admin authorization, 15-minute password-plus-TOTP recent authentication, 60-minute idle/14-day absolute session limits, and redacted security event hints.
+- Hardened administrator bootstrap against silent additional admins and protected-environment execution.
+- Applied both migrations. TypeScript, ESLint, production build, 72 Vitest tests, and all five Playwright scenarios passed; five external-credential sandbox tests remained correctly skipped.

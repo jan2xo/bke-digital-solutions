@@ -3,20 +3,43 @@ import argon2 from "argon2";
 import { test, expect } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client";
+import { enrollAndLoginAdmin, totpCode } from "./mfa-helper";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
+
+test("administrator MFA recovery is single-use and recent authentication is enforced", async ({ page }) => {
+  const suffix = Date.now().toString(36);
+  await page.setExtraHTTPHeaders({ "x-forwarded-for": `10.42.${Math.floor(Math.random() * 200) + 1}.${Math.floor(Math.random() * 200) + 1}` });
+  const email = `mfa-admin-${suffix}@bke.test`;
+  const password = "Admin-MFA-2026!";
+  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
+  const { secret, recoveryCodes } = await enrollAndLoginAdmin(page, email, password);
+  await page.getByRole("button", { name: "Log out" }).click();
+  await page.getByLabel("Email address").first().fill(email); await page.getByLabel("Password").fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
+  await page.getByLabel("Authenticator or recovery code").fill(recoveryCodes[0]!); await page.getByRole("button", { name: "Verify and sign in" }).click();
+  await expect(page).toHaveURL(/admin/);
+  await page.getByRole("button", { name: "Log out" }).click();
+  await page.getByLabel("Email address").first().fill(email); await page.getByLabel("Password").fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
+  await page.getByLabel("Authenticator or recovery code").fill(recoveryCodes[0]!); await page.getByRole("button", { name: "Verify and sign in" }).click();
+  await expect(page.getByText("That code is invalid, expired, or has already been used.")).toBeVisible();
+  await page.getByLabel("Authenticator or recovery code").fill(totpCode(secret)); await page.getByRole("button", { name: "Verify and sign in" }).click();
+  await expect(page).toHaveURL(/admin/);
+  await db.session.updateMany({ where: { userId: admin.id }, data: { recentAuthenticatedAt: new Date(Date.now() - 16 * 60_000) } });
+  const denied = await page.request.get("/api/admin/audit/export");
+  expect(denied.status()).toBe(403);
+  await page.goto("/security/recent?returnTo=/admin/security");
+  await page.getByLabel("Password").fill(password); await page.getByLabel("Authenticator or recovery code").fill(totpCode(secret)); const recentResponse = page.waitForResponse((response) => response.url().endsWith("/api/auth/recent") && response.request().method() === "POST"); await page.getByRole("button", { name: "Confirm identity" }).click(); expect((await recentResponse).status()).toBe(200);
+  await expect(page).toHaveURL(/\/admin\/security$/);
+  expect((await page.request.get("/api/admin/audit/export")).status()).toBe(200);
+});
 
 test("administrator creates, uploads, publishes, and edits a product", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `admin-${suffix}@bke.test`;
   const password = "Admin-Browser-2026!";
   await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await page.goto("/login");
-  await page.getByLabel("Email address").first().fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page).toHaveURL(/dashboard/);
+  await enrollAndLoginAdmin(page,email,password);
   await page.goto("/admin/products");
   await expect(page).toHaveURL(/admin\/products/);
 
@@ -57,11 +80,7 @@ test("administrator permanently deletes only disposable archived products", asyn
   const email = `delete-admin-${suffix}@bke.test`;
   const password = "Admin-Delete-2026!";
   const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await page.goto("/login");
-  await page.getByLabel("Email address").first().fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page).toHaveURL(/dashboard/);
+  await enrollAndLoginAdmin(page,email,password);
 
   const disposable = await db.product.create({ data: { slug: `disposable-${suffix}`, name: `Disposable ${suffix}`, summary: "A disposable browser test product.", description: "A disposable browser test product with no customer history.", type: "SOFTWARE", active: false } });
   const disposablePolicy = await db.licensePolicy.create({ data: { productId: disposable.id, name: "Disposable", maxSeats: 1, maxDevicesPerSeat: 1 } });

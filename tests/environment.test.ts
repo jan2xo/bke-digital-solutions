@@ -8,6 +8,7 @@ const base = {
   APP_URL: "https://commerce.bke.example",
   DATABASE_URL: "postgresql://application:password@database:5432/bke",
   SESSION_SECRET: "s".repeat(64),
+  MFA_ENCRYPTION_KEY: "m".repeat(64),
   LICENSE_PEPPER: "l".repeat(64),
   CRON_SECRET: "c".repeat(64),
   REDIS_URL: "redis://valkey:6379",

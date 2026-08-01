@@ -45,9 +45,10 @@ describe.sequential("discount offers and immutable pricing", () => {
     const outsider = await db.user.create({ data: { email: `offer-outsider-${suffix}@bke.test`, name: "Offer Outsider", emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Offer Outsider", billingEmail: `offer-outsider-${suffix}@bke.test` } } }, include: { ownedAccounts: true } });
     outsiderAccountId = outsider.ownedAccounts[0]!.id;
     outsiderUserId = outsider.id;
-    perpetualPlanId = (await db.purchasePlan.findFirstOrThrow({ where: { type: "PERPETUAL", active: true } })).id;
-    monthlyPlanId = (await db.purchasePlan.findFirstOrThrow({ where: { type: "MONTHLY", active: true } })).id;
-    annualPlanId = (await db.purchasePlan.findFirstOrThrow({ where: { type: "ANNUAL", active: true, annualDiscountBps: { gt: 0 } } })).id;
+    const sellable = { active: true, product: { active: true, archivedAt: null } } as const;
+    perpetualPlanId = (await db.purchasePlan.findFirstOrThrow({ where: { type: "PERPETUAL", active: true, edition: sellable } })).id;
+    monthlyPlanId = (await db.purchasePlan.findFirstOrThrow({ where: { type: "MONTHLY", active: true, edition: sellable } })).id;
+    annualPlanId = (await db.purchasePlan.findFirstOrThrow({ where: { type: "ANNUAL", active: true, annualDiscountBps: { gt: 0 }, edition: sellable } })).id;
   });
   afterAll(() => db.$disconnect());
 

@@ -15,6 +15,7 @@ export const environmentSchema = z.object({
   DATABASE_URL: z.string().min(1),
   DIRECT_DATABASE_URL: z.preprocess(optional, z.string().min(1).optional()),
   SESSION_SECRET: secret,
+  MFA_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_PEPPER: secret,
   CRON_SECRET: secret,
   REDIS_URL: z.preprocess(optional, z.url().optional()),
@@ -59,8 +60,13 @@ export const environmentSchema = z.object({
   if (value.DEPLOYMENT_ENV === "production" && value.EMAIL_PROVIDER === "log") context.addIssue({ code: "custom", path: ["EMAIL_PROVIDER"], message: "log email transport is forbidden in production" });
   if (protectedEnvironment && value.SUPPORT_EMAIL.endsWith("@example.com")) context.addIssue({ code: "custom", path: ["SUPPORT_EMAIL"], message: "must be an operational address outside development" });
   if (protectedEnvironment) {
-    for (const key of ["SESSION_SECRET", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
-      if (value[key].length < 48 || placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
+    for (const key of ["SESSION_SECRET", "MFA_ENCRYPTION_KEY", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
+      if (key === "MFA_ENCRYPTION_KEY" && !value[key]) {
+        context.addIssue({ code: "custom", path: [key], message: "is required in staging and production" });
+        continue;
+      }
+      const configured = value[key];
+      if (!configured || configured.length < 48 || placeholder.test(configured)) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
     }
     for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"] as const) {
       if (value[key] && placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must not be a placeholder" });

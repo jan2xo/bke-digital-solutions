@@ -75,3 +75,6 @@ The serializable transaction locks the user and removes owned accounts plus thei
 # Discount and negotiated-offer architecture
 
 `DiscountOffer` is the mutable administrative definition; `OfferRedemption`, `OrderItem.pricingSnapshot`, and subscription offer fields are transaction history. Checkout evaluates catalog pricing first (including the independently constrained annual catalog calculation), then applies at most one eligible offer. A serializable transaction and row lock protect redemption limits. Customer-account eligibility is evaluated inside the billing-account authorization boundary. See `discount-offers.md` for lifecycle and deployment details.
+# Phase 5.1 security boundary
+
+Administrator authentication is password then TOTP. Password-only login for an enrolled administrator creates a database challenge, not an application session. Unenrolled administrators receive a restricted enrollment session that cannot pass `requireAdmin`. Session privilege, MFA verification, recent authentication, idle expiry, and absolute expiry are server-owned database state. See [Phase 5 enterprise security](./phase-5-enterprise-security.md).

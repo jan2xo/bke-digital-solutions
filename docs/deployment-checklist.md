@@ -105,3 +105,13 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Verify duplicate/delayed webhook application issues one entitlement and one redemption application.
 - [ ] Monitor `RESERVED` offer usage; do not manually release a reservation unless provider reconciliation proves it cannot settle.
 - [ ] Verify customer-specific codes cannot be used or enumerated by another billing account.
+# Phase 5.1 administrator security
+
+- [ ] Generate and store an independent 48+ character `MFA_ENCRYPTION_KEY`.
+- [ ] Apply `20260802090000_enterprise_admin_mfa` before the application rollout.
+- [ ] Back up the MFA key separately and restrict read access to deployment operators.
+- [ ] Bootstrap administrators only with the documented protected-environment acknowledgement.
+- [ ] Complete TOTP enrollment and store recovery codes offline before enabling administrator traffic.
+- [ ] Confirm Valkey is available for distributed login, MFA, and recent-auth throttling.
+- [ ] Exercise password → TOTP, one recovery code, expiry, replay rejection, idle expiry, and recent-auth denial in staging.
+- [ ] Record the manual account-takeover recovery approvers and identity-verification process.

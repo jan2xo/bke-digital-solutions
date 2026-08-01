@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/auth";
+import { requireRecentAdmin } from "@/lib/auth";
 import { assertSameOrigin } from "@/lib/security/request";
 import { db } from "@/lib/db";
 import { apiError } from "@/lib/http";
@@ -10,7 +10,7 @@ const schema = z.object({ action: z.enum(["ENABLE", "DISABLE", "REVOKE"]) }).str
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     assertSameOrigin(request);
-    const admin = await requireAdmin();
+    const admin = await requireRecentAdmin();
     const { id } = await params;
     const input = schema.parse(await request.json());
     const current = await db.discountOffer.findUniqueOrThrow({ where: { id } });

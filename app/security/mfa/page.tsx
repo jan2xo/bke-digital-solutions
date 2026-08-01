@@ -1,0 +1,4 @@
+import { redirect } from "next/navigation";
+import { requireAdminEnrollmentSession } from "@/lib/auth";
+import { MfaEnrollmentForm } from "@/components/mfa-enrollment-form";
+export default async function MfaEnrollmentPage(){const session=await requireAdminEnrollmentSession().catch(()=>redirect("/login"));if(session.user.administratorMfa?.enabledAt)redirect("/admin");return <section className="mx-auto max-w-xl px-4 py-16"><h1 className="text-4xl font-black">Secure your administrator account</h1><p className="my-4 text-slate-600">BKE Digital Solutions requires authenticator-based MFA for every administrator.</p><MfaEnrollmentForm/></section>}

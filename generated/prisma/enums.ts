@@ -192,3 +192,29 @@ export const InvitationStatus = {
 } as const
 
 export type InvitationStatus = (typeof InvitationStatus)[keyof typeof InvitationStatus]
+
+
+export const MfaChallengePurpose = {
+  LOGIN: 'LOGIN'
+} as const
+
+export type MfaChallengePurpose = (typeof MfaChallengePurpose)[keyof typeof MfaChallengePurpose]
+
+
+export const SecurityEventType = {
+  ADMIN_PASSWORD_ACCEPTED: 'ADMIN_PASSWORD_ACCEPTED',
+  MFA_CHALLENGE_SUCCEEDED: 'MFA_CHALLENGE_SUCCEEDED',
+  MFA_CHALLENGE_FAILED: 'MFA_CHALLENGE_FAILED',
+  MFA_ENROLLED: 'MFA_ENROLLED',
+  MFA_DISABLED: 'MFA_DISABLED',
+  MFA_RECOVERY_USED: 'MFA_RECOVERY_USED',
+  MFA_RECOVERY_REGENERATED: 'MFA_RECOVERY_REGENERATED',
+  RECENT_AUTH_SUCCEEDED: 'RECENT_AUTH_SUCCEEDED',
+  RECENT_AUTH_FAILED: 'RECENT_AUTH_FAILED',
+  ADMIN_SESSION_REVOKED: 'ADMIN_SESSION_REVOKED',
+  ADMIN_MAGIC_LOGIN_BLOCKED: 'ADMIN_MAGIC_LOGIN_BLOCKED',
+  MFA_ENROLLMENT_STARTED: 'MFA_ENROLLMENT_STARTED',
+  PASSWORD_CHANGED: 'PASSWORD_CHANGED'
+} as const
+
+export type SecurityEventType = (typeof SecurityEventType)[keyof typeof SecurityEventType]

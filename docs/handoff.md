@@ -6,7 +6,7 @@ Phase 5.0 adds centralized deployment-environment validation, environment-specif
 
 The repository baseline remains mixed: Phase 4.2 is committed at `25c6b41`, while its maintainability corrections, branding/authentication UX, permanent customer deletion, documentation, and a trial-state correction were already staged before Phase 5.0. Phase 5.0 did not edit those staged files except that existing mixed documentation could not be synchronized. Separate or commit that prior work before creating the Phase 5.0 commit.
 
-Phase 5.1 must not begin until owner review. PayMongo sandbox certification, Resend production delivery, malware scanning, external monitoring, backup/restore certification, legal/tax work, and launch remain deferred to their assigned gates.
+Phase 5.1 is now implemented in the working tree: mandatory administrator TOTP, recovery codes, recent authentication, hardened sessions/bootstrap, security events, and administrator security management. Its migration, TypeScript, ESLint, and MFA primitives pass. Full browser certification remains open, and four offer integration cases currently fail on shared inactive seed state. PayMongo sandbox certification, Resend production delivery, malware scanning, external monitoring, backup/restore certification, legal/tax work, and launch remain deferred to their assigned gates.
 
 ## Project overview
 

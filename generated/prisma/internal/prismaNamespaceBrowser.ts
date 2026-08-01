@@ -54,6 +54,10 @@ export const ModelName = {
   User: 'User',
   PasswordCredential: 'PasswordCredential',
   Session: 'Session',
+  AdministratorMfaMethod: 'AdministratorMfaMethod',
+  AdministratorRecoveryCode: 'AdministratorRecoveryCode',
+  MfaChallenge: 'MfaChallenge',
+  SecurityEvent: 'SecurityEvent',
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
   CustomerAccount: 'CustomerAccount',
@@ -135,12 +139,70 @@ export const SessionScalarFieldEnum = {
   userId: 'userId',
   expiresAt: 'expiresAt',
   lastAuthenticatedAt: 'lastAuthenticatedAt',
+  mfaVerifiedAt: 'mfaVerifiedAt',
+  recentAuthenticatedAt: 'recentAuthenticatedAt',
+  lastSeenAt: 'lastSeenAt',
+  absoluteExpiresAt: 'absoluteExpiresAt',
   ipHash: 'ipHash',
   userAgent: 'userAgent',
   createdAt: 'createdAt'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const AdministratorMfaMethodScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  encryptedSecret: 'encryptedSecret',
+  keyVersion: 'keyVersion',
+  pendingExpiresAt: 'pendingExpiresAt',
+  enabledAt: 'enabledAt',
+  verifiedAt: 'verifiedAt',
+  disabledAt: 'disabledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdministratorMfaMethodScalarFieldEnum = (typeof AdministratorMfaMethodScalarFieldEnum)[keyof typeof AdministratorMfaMethodScalarFieldEnum]
+
+
+export const AdministratorRecoveryCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AdministratorRecoveryCodeScalarFieldEnum = (typeof AdministratorRecoveryCodeScalarFieldEnum)[keyof typeof AdministratorRecoveryCodeScalarFieldEnum]
+
+
+export const MfaChallengeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  purpose: 'purpose',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  attemptCount: 'attemptCount',
+  createdAt: 'createdAt'
+} as const
+
+export type MfaChallengeScalarFieldEnum = (typeof MfaChallengeScalarFieldEnum)[keyof typeof MfaChallengeScalarFieldEnum]
+
+
+export const SecurityEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  ipHint: 'ipHint',
+  userAgentHint: 'userAgentHint',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type SecurityEventScalarFieldEnum = (typeof SecurityEventScalarFieldEnum)[keyof typeof SecurityEventScalarFieldEnum]
 
 
 export const VerificationTokenScalarFieldEnum = {
@@ -705,19 +767,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

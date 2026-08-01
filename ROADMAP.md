@@ -2,7 +2,7 @@
 
 ## Current phase
 
-Phase 5.0 — Production Baseline and Deployment Foundation is implemented and under owner review. Phase 5.1 has not started.
+Phase 5.0 — Production Baseline and Deployment Foundation is implemented and under owner review. Phase 5.1 — Administrator MFA and Recent Authentication is implemented in the working tree and awaiting complete browser/regression verification and owner review.
 
 ## Milestones
 
@@ -56,4 +56,4 @@ Phase 4.1 is an additive completion of Phase 4 and is a prerequisite to, not par
 
 ## Next phase
 
-Phase 5.1 — Authentication and Administrative Security, after Phase 5.0 is reviewed and committed independently. External provider certification remains in Phase 5.2 and Phase 5.3.
+Phase 5.1 — Administrator MFA and Recent Authentication. Phase 5.2 covers API credentials, service accounts, and rotation; Phase 5.3 covers expanded security operations and session administration; Phase 5.4 is the enterprise security review/certification gate. The later subphases are documented only and not implemented. External provider certification remains a separate launch gate.

@@ -57,6 +57,26 @@ export type PasswordCredential = Prisma.PasswordCredentialModel
  */
 export type Session = Prisma.SessionModel
 /**
+ * Model AdministratorMfaMethod
+ *
+ */
+export type AdministratorMfaMethod = Prisma.AdministratorMfaMethodModel
+/**
+ * Model AdministratorRecoveryCode
+ *
+ */
+export type AdministratorRecoveryCode = Prisma.AdministratorRecoveryCodeModel
+/**
+ * Model MfaChallenge
+ *
+ */
+export type MfaChallenge = Prisma.MfaChallengeModel
+/**
+ * Model SecurityEvent
+ *
+ */
+export type SecurityEvent = Prisma.SecurityEventModel
+/**
  * Model VerificationToken
  *
  */

@@ -636,14 +636,6 @@ export type EditionUncheckedUpdateManyWithoutProductNestedInput = {
   deleteMany?: Prisma.EditionScalarWhereInput | Prisma.EditionScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumUpdatePolicyFieldUpdateOperationsInput = {
   set?: $Enums.UpdatePolicy
 }

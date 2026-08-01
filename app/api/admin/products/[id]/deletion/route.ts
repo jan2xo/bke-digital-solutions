@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { audit } from "@/lib/audit";
 import { evaluateProductDeletionEligibility, permanentlyDeleteProduct, ProductDeletionError } from "@/lib/product-deletion";
 import { assertSameOrigin } from "@/lib/security/request";
@@ -27,7 +27,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   let productId: string | undefined;
   try {
     assertSameOrigin(request);
-    admin = await requireAdmin();
+    admin = await requireRecentAdmin();
     productId = idSchema.parse((await params).id);
     const input = bodySchema.parse(await request.json());
     await permanentlyDeleteProduct({ productId, actorId: admin.id, confirmationName: input.confirmationName });

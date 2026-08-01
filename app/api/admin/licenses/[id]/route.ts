@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
-import {requireAdmin} from "@/lib/auth";
+import {requireRecentAdmin} from "@/lib/auth";
 import {db} from "@/lib/db";
 import {assertSameOrigin} from "@/lib/security/request";
 import {audit} from "@/lib/audit";
@@ -17,7 +17,7 @@ const schema=z.discriminatedUnion("action",[
 
 export async function PATCH(request:Request,{params}:{params:Promise<{id:string}>}){
   try{
-    assertSameOrigin(request);const admin=await requireAdmin();const{id}=await params;
+    assertSameOrigin(request);const admin=await requireRecentAdmin();const{id}=await params;
     const input=schema.parse(await request.json());
     const current=await db.license.findUniqueOrThrow({where:{id}});let plaintext:string|undefined;
     const license=await db.$transaction(async tx=>{

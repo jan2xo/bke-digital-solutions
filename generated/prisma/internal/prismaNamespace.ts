@@ -400,6 +400,10 @@ export const ModelName = {
   User: 'User',
   PasswordCredential: 'PasswordCredential',
   Session: 'Session',
+  AdministratorMfaMethod: 'AdministratorMfaMethod',
+  AdministratorRecoveryCode: 'AdministratorRecoveryCode',
+  MfaChallenge: 'MfaChallenge',
+  SecurityEvent: 'SecurityEvent',
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
   CustomerAccount: 'CustomerAccount',
@@ -449,7 +453,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -672,6 +676,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SessionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdministratorMfaMethod: {
+      payload: Prisma.$AdministratorMfaMethodPayload<ExtArgs>
+      fields: Prisma.AdministratorMfaMethodFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdministratorMfaMethodFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdministratorMfaMethodFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>
+        }
+        findFirst: {
+          args: Prisma.AdministratorMfaMethodFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdministratorMfaMethodFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>
+        }
+        findMany: {
+          args: Prisma.AdministratorMfaMethodFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>[]
+        }
+        create: {
+          args: Prisma.AdministratorMfaMethodCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>
+        }
+        createMany: {
+          args: Prisma.AdministratorMfaMethodCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdministratorMfaMethodCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>[]
+        }
+        delete: {
+          args: Prisma.AdministratorMfaMethodDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>
+        }
+        update: {
+          args: Prisma.AdministratorMfaMethodUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdministratorMfaMethodDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdministratorMfaMethodUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdministratorMfaMethodUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdministratorMfaMethodUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorMfaMethodPayload>
+        }
+        aggregate: {
+          args: Prisma.AdministratorMfaMethodAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdministratorMfaMethod>
+        }
+        groupBy: {
+          args: Prisma.AdministratorMfaMethodGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdministratorMfaMethodGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdministratorMfaMethodCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdministratorMfaMethodCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdministratorRecoveryCode: {
+      payload: Prisma.$AdministratorRecoveryCodePayload<ExtArgs>
+      fields: Prisma.AdministratorRecoveryCodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdministratorRecoveryCodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdministratorRecoveryCodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>
+        }
+        findFirst: {
+          args: Prisma.AdministratorRecoveryCodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdministratorRecoveryCodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>
+        }
+        findMany: {
+          args: Prisma.AdministratorRecoveryCodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>[]
+        }
+        create: {
+          args: Prisma.AdministratorRecoveryCodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>
+        }
+        createMany: {
+          args: Prisma.AdministratorRecoveryCodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdministratorRecoveryCodeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>[]
+        }
+        delete: {
+          args: Prisma.AdministratorRecoveryCodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>
+        }
+        update: {
+          args: Prisma.AdministratorRecoveryCodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>
+        }
+        deleteMany: {
+          args: Prisma.AdministratorRecoveryCodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdministratorRecoveryCodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdministratorRecoveryCodeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>[]
+        }
+        upsert: {
+          args: Prisma.AdministratorRecoveryCodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdministratorRecoveryCodePayload>
+        }
+        aggregate: {
+          args: Prisma.AdministratorRecoveryCodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdministratorRecoveryCode>
+        }
+        groupBy: {
+          args: Prisma.AdministratorRecoveryCodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdministratorRecoveryCodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdministratorRecoveryCodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdministratorRecoveryCodeCountAggregateOutputType> | number
+        }
+      }
+    }
+    MfaChallenge: {
+      payload: Prisma.$MfaChallengePayload<ExtArgs>
+      fields: Prisma.MfaChallengeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MfaChallengeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MfaChallengeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>
+        }
+        findFirst: {
+          args: Prisma.MfaChallengeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MfaChallengeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>
+        }
+        findMany: {
+          args: Prisma.MfaChallengeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>[]
+        }
+        create: {
+          args: Prisma.MfaChallengeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>
+        }
+        createMany: {
+          args: Prisma.MfaChallengeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MfaChallengeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>[]
+        }
+        delete: {
+          args: Prisma.MfaChallengeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>
+        }
+        update: {
+          args: Prisma.MfaChallengeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>
+        }
+        deleteMany: {
+          args: Prisma.MfaChallengeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MfaChallengeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MfaChallengeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>[]
+        }
+        upsert: {
+          args: Prisma.MfaChallengeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MfaChallengePayload>
+        }
+        aggregate: {
+          args: Prisma.MfaChallengeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMfaChallenge>
+        }
+        groupBy: {
+          args: Prisma.MfaChallengeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MfaChallengeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MfaChallengeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MfaChallengeCountAggregateOutputType> | number
+        }
+      }
+    }
+    SecurityEvent: {
+      payload: Prisma.$SecurityEventPayload<ExtArgs>
+      fields: Prisma.SecurityEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SecurityEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SecurityEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>
+        }
+        findFirst: {
+          args: Prisma.SecurityEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SecurityEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>
+        }
+        findMany: {
+          args: Prisma.SecurityEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>[]
+        }
+        create: {
+          args: Prisma.SecurityEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>
+        }
+        createMany: {
+          args: Prisma.SecurityEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SecurityEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>[]
+        }
+        delete: {
+          args: Prisma.SecurityEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>
+        }
+        update: {
+          args: Prisma.SecurityEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.SecurityEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SecurityEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SecurityEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.SecurityEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecurityEventPayload>
+        }
+        aggregate: {
+          args: Prisma.SecurityEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSecurityEvent>
+        }
+        groupBy: {
+          args: Prisma.SecurityEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SecurityEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SecurityEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SecurityEventCountAggregateOutputType> | number
         }
       }
     }
@@ -3259,12 +3559,70 @@ export const SessionScalarFieldEnum = {
   userId: 'userId',
   expiresAt: 'expiresAt',
   lastAuthenticatedAt: 'lastAuthenticatedAt',
+  mfaVerifiedAt: 'mfaVerifiedAt',
+  recentAuthenticatedAt: 'recentAuthenticatedAt',
+  lastSeenAt: 'lastSeenAt',
+  absoluteExpiresAt: 'absoluteExpiresAt',
   ipHash: 'ipHash',
   userAgent: 'userAgent',
   createdAt: 'createdAt'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const AdministratorMfaMethodScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  encryptedSecret: 'encryptedSecret',
+  keyVersion: 'keyVersion',
+  pendingExpiresAt: 'pendingExpiresAt',
+  enabledAt: 'enabledAt',
+  verifiedAt: 'verifiedAt',
+  disabledAt: 'disabledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdministratorMfaMethodScalarFieldEnum = (typeof AdministratorMfaMethodScalarFieldEnum)[keyof typeof AdministratorMfaMethodScalarFieldEnum]
+
+
+export const AdministratorRecoveryCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AdministratorRecoveryCodeScalarFieldEnum = (typeof AdministratorRecoveryCodeScalarFieldEnum)[keyof typeof AdministratorRecoveryCodeScalarFieldEnum]
+
+
+export const MfaChallengeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  purpose: 'purpose',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  attemptCount: 'attemptCount',
+  createdAt: 'createdAt'
+} as const
+
+export type MfaChallengeScalarFieldEnum = (typeof MfaChallengeScalarFieldEnum)[keyof typeof MfaChallengeScalarFieldEnum]
+
+
+export const SecurityEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  ipHint: 'ipHint',
+  userAgentHint: 'userAgentHint',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type SecurityEventScalarFieldEnum = (typeof SecurityEventScalarFieldEnum)[keyof typeof SecurityEventScalarFieldEnum]
 
 
 export const VerificationTokenScalarFieldEnum = {
@@ -3829,19 +4187,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -3918,6 +4276,62 @@ export type ListEnumGlobalRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+
+
+
+/**
+ * Reference to a field of type 'MfaChallengePurpose'
+ */
+export type EnumMfaChallengePurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MfaChallengePurpose'>
+
+
+
+/**
+ * Reference to a field of type 'MfaChallengePurpose[]'
+ */
+export type ListEnumMfaChallengePurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MfaChallengePurpose[]'>
+
+
+
+/**
+ * Reference to a field of type 'SecurityEventType'
+ */
+export type EnumSecurityEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventType'>
+
+
+
+/**
+ * Reference to a field of type 'SecurityEventType[]'
+ */
+export type ListEnumSecurityEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventType[]'>
+
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+
+
+
+/**
  * Reference to a field of type 'AccountType'
  */
 export type EnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType'>
@@ -3977,34 +4391,6 @@ export type ListEnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
 
 
 
@@ -4399,6 +4785,10 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   passwordCredential?: Prisma.PasswordCredentialOmit
   session?: Prisma.SessionOmit
+  administratorMfaMethod?: Prisma.AdministratorMfaMethodOmit
+  administratorRecoveryCode?: Prisma.AdministratorRecoveryCodeOmit
+  mfaChallenge?: Prisma.MfaChallengeOmit
+  securityEvent?: Prisma.SecurityEventOmit
   verificationToken?: Prisma.VerificationTokenOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
   customerAccount?: Prisma.CustomerAccountOmit

@@ -24,11 +24,11 @@
 - Automated refund initiation, accounting-grade revenue, BIR integration
 - Public rendering pipeline for uploaded product imagery
 - Bulk administration actions and advanced analytics
-- Admin MFA and broader recent-authentication enforcement
+- Complete browser and route-level certification of the implemented administrator MFA and recent-authentication controls
 
 ## Known issues and technical debt
 
-- Customer and administrator license-key reveal is repeatable, authenticated, ownership/RBAC protected, and audited. Recent-authentication and administrator MFA remain required production hardening because encrypted key material is retained server-side.
+- Customer and administrator license-key reveal is repeatable, ownership/RBAC protected, audited, and now requires recent authentication; administrator access also requires MFA. Browser certification remains required because encrypted key material is retained server-side.
 - Artifact replacement deletes the old object best-effort after the database switch; orphan cleanup should be scheduled.
 - Audit CSV is capped at 5,000 rows and should move to queued exports at scale.
 - Search uses database substring matching; dedicated search is deferred.
