@@ -1,8 +1,10 @@
 # BKE Digital Solutions roadmap
 
+Current operational milestone: complete local Docker+Caddy production simulation and genuine PayMongo/Resend sandbox certification before VPS deployment.
+
 ## Current phase
 
-Phase 5.0 — Production Baseline and Deployment Foundation is implemented and under owner review. Phase 5.1 — Administrator MFA and Recent Authentication is implemented in the working tree and awaiting complete browser/regression verification and owner review.
+Phase 5.0 — Production Baseline and Deployment Foundation and Phase 5.1 — Administrator MFA and Recent Authentication are committed. Phase 5.2 local production simulation is implemented in the working tree; genuine PayMongo/Resend certification remains owner-credential and tunnel gated.
 
 ## Milestones
 
@@ -17,7 +19,7 @@ Phase 5.0 — Production Baseline and Deployment Foundation is implemented and u
 - [x] Reproducible production image, isolated service topology, configuration validation, and operational health foundation
 - [x] Flexible general and customer-specific offers with immutable pricing and finite monthly promotional cycles
 - [ ] Real PayMongo sandbox lifecycle
-- [ ] Verified Resend delivery domain
+- [x] Resend sending domain verified for `jl-bke.com`
 - [ ] Production infrastructure and operational readiness
 
 ## Completed in Phase 4
@@ -50,7 +52,7 @@ Phase 4.1 is an additive completion of Phase 4 and is a prerequisite to, not par
 - Revenue is an explicitly labeled gross-order placeholder, not accounting recognition.
 - Product-image serving on public pages is deferred; secure upload and metadata are present.
 - Automated refund initiation remains provider-dependent; confirmed refund records continue through webhooks.
-- PayMongo sandbox and Resend verified delivery are blocked by owner-supplied credentials/domain setup.
+- PayMongo sandbox certification and credential-gated Resend delivery/operational-event testing remain blocked by deployment credentials; Resend domain verification itself is complete.
 - Production database, Redis, storage, backups, monitoring, malware scanning, code signing, legal, privacy, and tax review remain incomplete.
 - Provider-aware expiry of abandoned offer reservations is deferred; reservations remain consumed until settlement can be ruled out safely.
 

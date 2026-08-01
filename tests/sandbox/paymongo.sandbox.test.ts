@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { readFile } from "node:fs/promises";
+import { createHmac } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 
 const secret = process.env.PAYMONGO_SECRET_KEY ?? "";
@@ -43,6 +44,14 @@ sandbox("PayMongo sandbox contract", () => {
     expect(event.eventId).toMatch(/^evt_/);
     expect(event.livemode).toBe(false);
     expect(["payment.paid", "payment.failed", "payment.refunded", "unknown"]).toContain(event.type);
+  });
+
+  it.skipIf(!process.env.PAYMONGO_SANDBOX_WEBHOOK_PAYLOAD_FILE)("rejects a stale signature even for an exact sandbox payload", async () => {
+    const raw = await readFile(process.env.PAYMONGO_SANDBOX_WEBHOOK_PAYLOAD_FILE!);
+    const timestamp = Math.floor(Date.now() / 1000) - 301;
+    const signature = createHmac("sha256", webhookSecret).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");
+    const { PayMongoProvider } = await import("@/lib/payments/paymongo");
+    await expect(new PayMongoProvider().verifyAndParseWebhook(raw, new Headers({ "paymongo-signature": `t=${timestamp},te=${signature}` }))).rejects.toThrow("INVALID_SIGNATURE");
   });
 
   it.skipIf(!process.env.PAYMONGO_SANDBOX_ORDER_ID)("reconciles a persisted sandbox payment with PayMongo", async () => {

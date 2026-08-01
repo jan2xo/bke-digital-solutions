@@ -1,5 +1,7 @@
 # Production deployment checklist
 
+Precondition: complete the local provider checklist and Phase 5.2 evidence report. Cloudflare remains authoritative DNS, all Resend records must be preserved, and VPS deployment is intentionally postponed.
+
 Do not mark a deployment ready until every applicable box has an owner, evidence, and completion date.
 
 ## PostgreSQL
@@ -33,7 +35,8 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 
 ## Resend
 
-- [ ] Verify the sending domain and configure SPF, DKIM, and DMARC.
+- [x] Verify the `jl-bke.com` sending domain with Resend.
+- [ ] Confirm Cloudflare DNS retains the required Resend records and configure/review DMARC policy.
 - [ ] Set a production `EMAIL_FROM` and scoped `RESEND_API_KEY` in the secret manager.
 - [ ] Test verification, magic-link, password reset, receipt, invitation, and renewal delivery plus bounce/complaint handling.
 - [ ] Set `RESEND_SANDBOX_TO`, run `npm run test:resend`, and retain evidence that the gated test executed rather than skipped.
@@ -51,7 +54,8 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 
 ## Domain and HTTPS
 
-- [ ] Configure the canonical HTTPS `APP_URL`, DNS, trusted proxy headers, and automatic certificate renewal.
+- [x] Acquire `jl-bke.com` and make Cloudflare authoritative DNS; Namecheap remains the registrar only.
+- [ ] Configure the canonical HTTPS `APP_URL`, Cloudflare proxy records, trusted proxy headers, and automatic certificate renewal after VPS provisioning.
 - [ ] Redirect HTTP to HTTPS and verify HSTS, CSP, frame denial, MIME, referrer, and permissions headers.
 - [ ] Confirm production cookies use `Secure`, `HttpOnly`, `SameSite=Lax`, path `/`, and the `__Host-` prefix.
 - [ ] Restrict allowed origins and run an external TLS and security-header scan.

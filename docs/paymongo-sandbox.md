@@ -1,5 +1,7 @@
 # PayMongo sandbox verification
 
+For the pre-VPS run, also follow [local production simulation](local-production-simulation.md), [temporary tunnel setup](cloudflare-tunnel-paymongo.md), and the [certification checklist](local-provider-certification-checklist.md). Local simulation accepts only `sk_test_` credentials with `PAYMONGO_LIVEMODE=false`; genuine webhook certification requires exact provider-delivered raw bytes and signatures.
+
 This procedure must use PayMongo test mode only. Never place keys in source code, shell history, test output, screenshots, or committed fixtures.
 
 ## Configure

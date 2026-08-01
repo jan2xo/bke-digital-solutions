@@ -9,8 +9,12 @@ type PayMongoEvent = { data: { id: string; attributes: { type: string; livemode:
 export class PayMongoProvider implements PaymentProvider {
   readonly name = "paymongo";
   constructor(private readonly config = { secretKey: env.PAYMONGO_SECRET_KEY, webhookSecret: env.PAYMONGO_WEBHOOK_SECRET, livemode: env.PAYMONGO_LIVEMODE }) {}
+  private assertSafeConfiguration() {
+    if (!this.config.secretKey || !this.config.webhookSecret) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
+    if (!this.config.livemode && !this.config.secretKey.startsWith("sk_test_")) throw new Error("PAYMENT_PROVIDER_UNSAFE_CONFIGURATION");
+  }
   private authorization() {
-    if (!this.config.secretKey) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
+    this.assertSafeConfiguration();
     return `Basic ${Buffer.from(`${this.config.secretKey}:`).toString("base64")}`;
   }
   async createCheckout(input: CheckoutInput) {
@@ -43,6 +47,7 @@ export class PayMongoProvider implements PaymentProvider {
     return { externalId: body.data.id, status, amountMinor: attributes.amount, currency: attributes.currency, livemode: attributes.livemode };
   }
   async verifyAndParseWebhook(raw: Buffer, headers: Headers): Promise<PaymentEvent> {
+    this.assertSafeConfiguration();
     const header = headers.get("paymongo-signature") ?? "";
     const parts = Object.fromEntries(header.split(",").map((part) => part.split("=").map((v) => v.trim())));
     const timestamp = Number(parts.t);

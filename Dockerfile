@@ -21,6 +21,13 @@ ENV NODE_ENV=production
 USER prisma
 CMD ["npx", "prisma", "migrate", "deploy"]
 
+FROM dependencies AS operations
+RUN addgroup --system --gid 1003 operations && adduser --system --uid 1003 operations
+COPY --chown=operations:operations . .
+RUN DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build npm run db:generate
+ENV NODE_ENV=production
+USER operations
+
 FROM node:22.18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0

@@ -1,5 +1,7 @@
 # Implementation status
 
+Phase 5.2 local Docker+Caddy certification scaffolding is implemented. Real PayMongo sandbox and Resend delivery remain credential/owner-action gated and cannot be marked passed until evidence is recorded.
+
 ## Completed modules
 
 - Authentication, verified-email flows, password reset, session revocation, global RBAC
@@ -42,3 +44,6 @@ Admin MFA, approval workflows, queued exports, malware scanning/code signing, ob
 Implemented locally: general promotions, account-specific offers, administrative adjustments, exact integer pricing, annual-catalog separation, immutable order/subscription snapshots, finite monthly promotional cycles, serialized redemption limits, explicitly authorized zero totals, admin controls, checkout selection, audit records, and integration coverage. Migration `20260731025700_flexible_discount_offers` has been applied to the local development PostgreSQL database. See `discount-offers.md`.
 
 Credential-gated PayMongo sandbox and Resend delivery certification remain external blockers. Abandoned offer reservations remain consumed until a future provider-aware finality/release job is designed and verified.
+# Infrastructure status — August 2026
+
+`jl-bke.com` is the canonical production domain, Cloudflare is authoritative DNS, Namecheap is the registrar, and Resend has verified the production sending domain. Docker/Caddy/PostgreSQL/Valkey/MinIO deployment configuration exists, but no VPS or public HTTPS deployment exists yet. Development remains local-first and environment-driven.

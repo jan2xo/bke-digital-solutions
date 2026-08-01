@@ -1,0 +1,55 @@
+services:
+  app:
+    env_file: ${BKE_ENV_FILE:-.env.certification}
+  migrate:
+    env_file: ${BKE_ENV_FILE:-.env.certification}
+  seed:
+    build:
+      context: .
+      target: operations
+    command: ["npm", "run", "db:seed"]
+    env_file: ${BKE_ENV_FILE:-.env.certification}
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+    networks: [private]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+  smoke:
+    build:
+      context: .
+      target: operations
+    command: ["npm", "run", "db:smoke"]
+    env_file: ${BKE_ENV_FILE:-.env.certification}
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [private]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+  minio:
+    profiles: ["self-hosted-storage"]
+  minio-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        until mc alias set local http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}"; do sleep 2; done;
+        mc mb --ignore-existing "local/$${S3_BUCKET}";
+        mc anonymous set none "local/$${S3_BUCKET}"
+    env_file: ${BKE_ENV_FILE:-.env.certification}
+    depends_on:
+      minio: { condition: service_healthy }
+    networks: [private]
+    restart: "no"
+    profiles: ["self-hosted-storage"]
+    security_opt: ["no-new-privileges:true"]
+  caddy:
+    ports: !override
+      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8443:443"
+    volumes: !override
+      - ./Caddyfile.certification:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config

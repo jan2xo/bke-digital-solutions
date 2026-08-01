@@ -1,12 +1,14 @@
 # Engineering handoff
 
+The next operational milestone is local provider certification, not VPS deployment. Use `docs/local-production-simulation.md`; never commit `.env.certification`, tunnel URLs, provider secrets, webhook payloads, or signatures.
+
 ## Phase 5.0 deployment foundation
 
 Phase 5.0 adds centralized deployment-environment validation, environment-specific Valkey prefixes and private buckets, live/ready health routes, structured redacted operational logging, a Next.js standalone non-root image, a private PostgreSQL/Valkey/optional-MinIO Compose topology, Caddy HTTPS termination, one-shot migration tooling, repository hygiene checks, and CI enforcement. See `docs/deployment-foundation.md` and the Phase 5.0 report. No schema migration was required.
 
 The repository baseline remains mixed: Phase 4.2 is committed at `25c6b41`, while its maintainability corrections, branding/authentication UX, permanent customer deletion, documentation, and a trial-state correction were already staged before Phase 5.0. Phase 5.0 did not edit those staged files except that existing mixed documentation could not be synchronized. Separate or commit that prior work before creating the Phase 5.0 commit.
 
-Phase 5.1 is now implemented in the working tree: mandatory administrator TOTP, recovery codes, recent authentication, hardened sessions/bootstrap, security events, and administrator security management. Its migration, TypeScript, ESLint, and MFA primitives pass. Full browser certification remains open, and four offer integration cases currently fail on shared inactive seed state. PayMongo sandbox certification, Resend production delivery, malware scanning, external monitoring, backup/restore certification, legal/tax work, and launch remain deferred to their assigned gates.
+Phase 5.1 is committed at `d0909f7`: mandatory administrator TOTP, recovery codes, recent authentication, hardened sessions/bootstrap, security events, and administrator security management. The Phase 5.2 run passed the full local Vitest and Playwright suites; genuine PayMongo sandbox and Resend delivery, malware scanning, external monitoring, backup/restore certification, legal/tax work, and launch remain deferred to their assigned gates.
 
 ## Project overview
 
@@ -69,7 +71,7 @@ Migration `20260731025700_flexible_discount_offers` adds discount definitions, r
 
 ## Environment and manual configuration
 
-No new variables were added. Existing `DATABASE_URL`, Redis, S3, session/license secrets, PayMongo, Resend, and cron variables remain required as documented in `.env.example`. Owner action is still required for PayMongo test credentials, a Resend verified sender (or onboarding test sender), production storage/IAM, infrastructure, backups, and monitoring.
+Existing `DATABASE_URL`, Redis, S3, session/MFA/license secrets, PayMongo, Resend, and cron variables remain required as documented in the environment examples. The official domain is `jl-bke.com`, Cloudflare is authoritative DNS, Namecheap is the registrar, and Resend has verified the sending domain. No VPS has been deployed. Owner action is still required for PayMongo test credentials, credential-gated Resend delivery evidence, production storage/IAM, VPS provisioning, public HTTPS validation, backups, and monitoring.
 
 ## Known limitations and future work
 

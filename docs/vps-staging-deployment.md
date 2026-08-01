@@ -2,21 +2,23 @@
 
 This runbook deploys BKE Digital Solutions to a VPS for controlled testing. It supports either pulling the repository with Git or copying the local working tree over SSH.
 
+No VPS has been deployed as of August 2026. Cloudflare is authoritative DNS for `jl-bke.com`; Namecheap is the registrar only. Use environment variables for every origin and hostname. See the [infrastructure baseline](./infrastructure-baseline.md).
+
 It does **not** certify the platform for live payments. Start with mock payments and log-only email. PayMongo sandbox and Resend must pass their separate credential-gated checks before they are enabled.
 
 ## 1. Choose the deployment mode
 
 ### Recommended: staging hostname with HTTPS
 
-Use a hostname such as `staging.example.com`, point its DNS `A`/`AAAA` records to the VPS, and allow inbound TCP ports 80 and 443. Caddy will obtain and renew the TLS certificate.
+Use the canonical hostname `jl-bke.com`, create its VPS DNS record in Cloudflare, and allow inbound TCP ports 80 and 443. Caddy will obtain and renew the TLS certificate.
 
 Use:
 
 ```env
 NODE_ENV=production
 DEPLOYMENT_ENV=staging
-APP_URL=https://staging.example.com
-APP_DOMAIN=staging.example.com
+APP_URL=https://jl-bke.com
+APP_DOMAIN=jl-bke.com
 ```
 
 Staging requires an HTTPS S3-compatible endpoint. The included MinIO service is suitable for local or temporary smoke testing, but it is not exposed with TLS by the included Caddy configuration.
@@ -133,9 +135,9 @@ At minimum, replace and verify:
 NODE_ENV=production
 DEPLOYMENT_ENV=staging
 DEPLOYMENT_ID=bke-staging
-APP_URL=https://staging.example.com
-APP_DOMAIN=staging.example.com
-ACME_EMAIL=operations@example.com
+APP_URL=https://jl-bke.com
+APP_DOMAIN=jl-bke.com
+ACME_EMAIL=security@jl-bke.com
 
 POSTGRES_DB=bke
 POSTGRES_USER=bke_application
@@ -165,8 +167,8 @@ PAYMONGO_LIVEMODE=false
 
 EMAIL_PROVIDER=log
 RESEND_API_KEY=
-EMAIL_FROM=BKE Digital Solutions <no-reply@staging.example.com>
-SUPPORT_EMAIL=YOUR_REAL_SUPPORT_ADDRESS
+EMAIL_FROM=BKE Digital Solutions <noreply@jl-bke.com>
+SUPPORT_EMAIL=support@jl-bke.com
 
 ALLOW_DESTRUCTIVE_ADMIN=false
 ```
@@ -279,9 +281,9 @@ Do not paste environment dumps, checkout URLs, webhook signatures, license keys,
 For HTTPS staging:
 
 ```bash
-curl --fail --silent --show-error https://staging.example.com/api/health/live
-curl --fail --silent --show-error https://staging.example.com/api/health/ready
-curl --fail --silent --show-error https://staging.example.com/products >/dev/null
+curl --fail --silent --show-error https://jl-bke.com/api/health/live
+curl --fail --silent --show-error https://jl-bke.com/api/health/ready
+curl --fail --silent --show-error https://jl-bke.com/products >/dev/null
 ```
 
 For the no-domain smoke mode, replace the origin with `http://VPS_PUBLIC_IP`.
@@ -356,7 +358,7 @@ Do **not** add `--volumes` unless you intentionally want to permanently erase th
 A successful VPS smoke deployment does not remove these gates:
 
 - real PayMongo sandbox checkout and signed webhook lifecycle;
-- real Resend delivery from a verified sender/domain;
+- credential-gated Resend delivery and operational-event testing from the verified `jl-bke.com` domain;
 - encrypted database and object-storage backups plus a restore drill;
 - external monitoring, log retention, and alerting;
 - private S3/MinIO access review and installer malware scanning;

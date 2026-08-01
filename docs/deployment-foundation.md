@@ -10,7 +10,7 @@ Phase 5.0 prepares BKE Digital Solutions for reproducible development, staging, 
 | Origin | one chosen `http://localhost:3000` origin | canonical HTTPS hostname | canonical HTTPS hostname |
 | Data | disposable local data | isolated synthetic data | isolated customer data |
 | Payments | mock, later PayMongo sandbox | mock until Phase 5.2, then sandbox | PayMongo only after certification |
-| Email | redacted log transport | Resend staging sender after Phase 5.3 | Resend verified sender after certification |
+| Email | redacted log transport | Resend using verified `jl-bke.com` sender | Resend using verified `jl-bke.com` sender after delivery certification |
 | Storage | private MinIO bucket | isolated private bucket | isolated private bucket |
 
 Each deployed environment needs a unique `DEPLOYMENT_ID`, database, Valkey namespace, S3 bucket, session secret, license pepper, cron secret, provider credentials, and administrator bootstrap process. Never copy production data into staging. `localhost` and `127.0.0.1` are distinct browser origins; choose one canonical `APP_URL` and use it for browser navigation, authentication links, payment returns, and webhook configuration.

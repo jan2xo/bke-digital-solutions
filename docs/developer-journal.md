@@ -1,5 +1,9 @@
 # Developer journal
 
+## 2026-08-02 — Phase 5.2 local certification foundation
+
+Added an isolated ignored certification environment, loopback-only HTTPS Caddy override, private MinIO initialization, production-image operations, PayMongo test-key enforcement, credential-gated provider checks, and owner runbooks. VPS work and genuine provider evidence remain deferred.
+
 ## 2026-07-31 — Phase 4.2 blueprint and repository inspection
 
 ### Objective

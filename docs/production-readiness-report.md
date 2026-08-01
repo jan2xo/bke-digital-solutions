@@ -1,8 +1,12 @@
 # Production-readiness verification report
 
+Local Docker+Caddy simulation is the current certification target. Configuration alone does not pass public HTTPS/VPS, genuine PayMongo sandbox, or genuine Resend delivery gates; see the Phase 5.2 report.
+
 Date: 2026-07-30 (Asia/Manila)
 
 Status: **Not production ready.** Local database, Valkey, MinIO, mock-payment, integration, browser, and build checks passed. A real PayMongo sandbox flow and production external-service configuration have not been completed.
+
+Infrastructure update, August 2026: `jl-bke.com` is the official domain, Cloudflare is authoritative DNS, Namecheap is the registrar, and Resend domain verification is complete. No VPS deployment or public HTTPS validation has occurred. Local Docker development remains the active environment. PayMongo certification, credential-gated Resend delivery evidence, monitoring, backups/restore drills, malware scanning/code signing, and legal/compliance work remain open.
 
 ## Phase 4.2 editions and multi-plan update — 2026-07-31
 

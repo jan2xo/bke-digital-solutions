@@ -10,6 +10,9 @@ export const environmentSchema = z.object({
   DEPLOYMENT_ENV: z.enum(["development", "test", "staging", "production"]).default("development"),
   DEPLOYMENT_ID: z.string().regex(/^[a-z0-9][a-z0-9-]{1,30}$/).default("bke-development"),
   APP_URL: z.url(),
+  INTERNAL_APP_URL: z.preprocess(optional, z.url().optional()),
+  PUBLIC_WEBHOOK_ORIGIN: z.preprocess(optional, z.url().optional()),
+  LOCAL_PRODUCTION_SIMULATION: bool.default(false),
   TRUSTED_ORIGINS: z.preprocess(optional, z.string().optional()),
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(1),
   DATABASE_URL: z.string().min(1),
@@ -45,16 +48,22 @@ export const environmentSchema = z.object({
 }).superRefine((value, context) => {
   const origin = new URL(value.APP_URL);
   const protectedEnvironment = value.DEPLOYMENT_ENV === "staging" || value.DEPLOYMENT_ENV === "production";
+  if (value.LOCAL_PRODUCTION_SIMULATION && value.DEPLOYMENT_ENV !== "staging") context.addIssue({ code: "custom", path: ["DEPLOYMENT_ENV"], message: "local production simulation must use staging" });
+  if (value.INTERNAL_APP_URL && new URL(value.INTERNAL_APP_URL).protocol !== "http:") context.addIssue({ code: "custom", path: ["INTERNAL_APP_URL"], message: "must be an internal HTTP service origin" });
+  if (value.PUBLIC_WEBHOOK_ORIGIN && new URL(value.PUBLIC_WEBHOOK_ORIGIN).protocol !== "https:") context.addIssue({ code: "custom", path: ["PUBLIC_WEBHOOK_ORIGIN"], message: "must use HTTPS" });
   if (protectedEnvironment && origin.protocol !== "https:") context.addIssue({ code: "custom", path: ["APP_URL"], message: "must use HTTPS in staging and production" });
   if (origin.pathname !== "/" || origin.search || origin.hash) context.addIssue({ code: "custom", path: ["APP_URL"], message: "must be a canonical origin without a path, query, or fragment" });
   if (Boolean(value.UPSTASH_REDIS_REST_URL) !== Boolean(value.UPSTASH_REDIS_REST_TOKEN)) context.addIssue({ code: "custom", path: ["UPSTASH_REDIS_REST_URL"], message: "URL and token must be configured together" });
   if (protectedEnvironment && !value.REDIS_URL && !value.UPSTASH_REDIS_REST_URL) context.addIssue({ code: "custom", path: ["REDIS_URL"], message: "a distributed Valkey/Redis backend is required" });
   if (Boolean(value.S3_ACCESS_KEY_ID) !== Boolean(value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "storage access and secret keys must be configured together" });
   if (protectedEnvironment && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required" });
-  if (protectedEnvironment && value.S3_ENDPOINT && new URL(value.S3_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS outside development" });
+  if (protectedEnvironment && value.S3_ENDPOINT && new URL(value.S3_ENDPOINT).protocol !== "https:" && !(value.LOCAL_PRODUCTION_SIMULATION && new URL(value.S3_ENDPOINT).hostname === "minio")) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS outside an explicitly local private-storage simulation" });
   if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (protectedEnvironment && !value.REDIS_KEY_PREFIX.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["REDIS_KEY_PREFIX"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (value.PAYMENT_PROVIDER === "paymongo" && (!value.PAYMONGO_SECRET_KEY || !value.PAYMONGO_WEBHOOK_SECRET)) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "PayMongo credentials are required when selected" });
+  if (!value.PAYMONGO_LIVEMODE && value.PAYMONGO_SECRET_KEY?.startsWith("sk_live_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "live PayMongo credentials are forbidden when livemode is false" });
+  if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_SECRET_KEY?.startsWith("sk_test_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "local production simulation accepts PayMongo test credentials only" });
+  if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
   if (value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required when Resend is selected" });
   if (value.DEPLOYMENT_ENV === "production" && value.EMAIL_PROVIDER === "log") context.addIssue({ code: "custom", path: ["EMAIL_PROVIDER"], message: "log email transport is forbidden in production" });

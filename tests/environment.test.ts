@@ -17,7 +17,7 @@ const base = {
   S3_ACCESS_KEY_ID: "storage-access-value",
   S3_SECRET_ACCESS_KEY: "storage-secret-value",
   PAYMENT_PROVIDER: "paymongo",
-  PAYMONGO_SECRET_KEY: "payment-key-" + "p".repeat(32),
+  PAYMONGO_SECRET_KEY: "sk_test_" + "p".repeat(32),
   PAYMONGO_WEBHOOK_SECRET: "webhook-key-" + "w".repeat(32),
   EMAIL_PROVIDER: "resend",
   RESEND_API_KEY: "email-key-" + "e".repeat(32),
@@ -31,5 +31,7 @@ describe("deployment environment validation", () => {
   it("rejects paths on the canonical origin", () => expect(() => parseEnvironment({ ...base, APP_URL: "https://commerce.bke.example/app" })).toThrow("APP_URL"));
   it("rejects shared storage and Valkey namespaces", () => expect(() => parseEnvironment({ ...base, S3_BUCKET: "shared-private", REDIS_KEY_PREFIX: "shared" })).toThrow(/S3_BUCKET|REDIS_KEY_PREFIX/));
   it("rejects placeholder secrets", () => expect(() => parseEnvironment({ ...base, SESSION_SECRET: "replace-with-a-production-session-secret-value-123456" })).toThrow("SESSION_SECRET"));
+  it("accepts a staging-only local production simulation", () => expect(parseEnvironment({ ...base, DEPLOYMENT_ENV: "staging", DEPLOYMENT_ID: "bke-local-certification", LOCAL_PRODUCTION_SIMULATION: "true", APP_URL: "https://jl-bke.localhost:8443", INTERNAL_APP_URL: "http://app:3000", PUBLIC_WEBHOOK_ORIGIN: "https://temporary.example.net", REDIS_KEY_PREFIX: "bke-local-certification", S3_ENDPOINT: "http://minio:9000", S3_BUCKET: "bke-local-certification-private" })).toMatchObject({ LOCAL_PRODUCTION_SIMULATION: true }));
+  it("rejects live credentials and insecure tunnel origins in local simulation", () => expect(() => parseEnvironment({ ...base, DEPLOYMENT_ENV: "staging", DEPLOYMENT_ID: "bke-local-certification", LOCAL_PRODUCTION_SIMULATION: "true", APP_URL: "https://jl-bke.localhost:8443", PUBLIC_WEBHOOK_ORIGIN: "http://temporary.example.net", REDIS_KEY_PREFIX: "bke-local-certification", S3_BUCKET: "bke-local-certification-private", PAYMONGO_SECRET_KEY: "sk_live_" + "p".repeat(32) })).toThrow(/PUBLIC_WEBHOOK_ORIGIN|PAYMONGO_SECRET_KEY/));
   it("permits mock providers and HTTP only in development", () => expect(parseEnvironment({ ...base, NODE_ENV: "development", DEPLOYMENT_ENV: "development", DEPLOYMENT_ID: "bke-development", APP_URL: "http://localhost:3000", SESSION_SECRET: "x".repeat(32), LICENSE_PEPPER: "y".repeat(32), CRON_SECRET: "z".repeat(32), REDIS_URL: undefined, REDIS_KEY_PREFIX: "bke-development", S3_BUCKET: "bke-private", S3_ACCESS_KEY_ID: undefined, S3_SECRET_ACCESS_KEY: undefined, PAYMENT_PROVIDER: "mock", PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, EMAIL_PROVIDER: "log", RESEND_API_KEY: undefined, EMAIL_FROM: "test@example.com", SUPPORT_EMAIL: "support@example.com" })).toMatchObject({ DEPLOYMENT_ENV: "development" }));
 });

@@ -25,6 +25,7 @@
     "test:paymongo": "vitest run tests/sandbox/paymongo.sandbox.test.ts",
     "test:resend": "vitest run tests/sandbox/resend.sandbox.test.ts",
     "config:validate": "tsx scripts/validate-environment.ts",
+    "certification:env": "tsx scripts/create-certification-env.ts",
     "health:check": "tsx scripts/health-check.ts",
     "security:hygiene": "node scripts/repository-hygiene.mjs"
   },

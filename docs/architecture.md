@@ -1,5 +1,9 @@
 # Architecture
 
+## Local production simulation
+
+Before VPS deployment, the production runner is exercised as `Caddy -> Next.js -> PostgreSQL/Valkey/MinIO` through the production Compose file plus `docker-compose.certification.yml`. Only Caddy binds loopback host ports. `APP_URL` is the canonical browser/provider-redirect origin, `INTERNAL_APP_URL` is the private container origin, and `PUBLIC_WEBHOOK_ORIGIN` is an optional temporary HTTPS tunnel origin.
+
 ## Platform administration relationships
 
 ```text
