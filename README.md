@@ -45,9 +45,11 @@ PayMongo redirects never confirm orders. Only a verified webhook with matching p
 
 See the [brand system](docs/brand-system.md), [admin product management](docs/admin-product-management.md), [customer purchase flow](docs/customer-purchase-flow.md), [two-day MVP report](docs/two-day-mvp-report.md), [architecture](docs/architecture.md), [authorization matrix](docs/authorization.md), [payment flow](docs/payment-flow.md), [threat model](docs/threat-model.md), [PayMongo sandbox verification](docs/paymongo-sandbox.md), [Phase 5 enterprise security roadmap](docs/phase-5-enterprise-security.md), [administrator MFA runbook](docs/admin-mfa-runbook.md), and the [production deployment checklist](docs/deployment-checklist.md).
 
+For a controlled VPS test deployment using either Git pull or direct SSH copy, follow the [VPS staging deployment runbook](docs/vps-staging-deployment.md).
+
 Platform administration documentation: [roadmap](ROADMAP.md), [Phase 4 overview](docs/phase-4-platform-administration.md), [implementation status](docs/implementation-status.md), [engineering handoff](docs/handoff.md), [developer journal](docs/developer-journal.md), [detailed Phase 4 report](docs/phase-reports/phase-4-platform-administration.md), [Phase 4.1 product lifecycle report](docs/phase-reports/phase-4.1-product-lifecycle-completion.md), [Phase 4.2 editions and plans report](docs/phase-reports/phase-4.2-product-editions-and-multi-plan-commerce.md), and [Phase 4.2 maintainability audit](docs/phase-reports/phase-4.2-maintainability-audit.md).
 
-Browser checkout sends only `{ purchasePlanId }`; all prices, discounts, limits, intervals, and renewal terms are loaded and calculated by the server.
+Browser checkout sends only `{ purchasePlanId, customerAccountId, offerIdentifier? }`; all prices, discount amounts, limits, intervals, and renewal terms are loaded and calculated by the server.
 
 Pending orders can resume their stored provider checkout or create one recorded replacement session for older orders, and customers can cancel while the order is still pending. A verified provider payment received after local cancellation still completes the paid order; redirects and local cancellation never override provider-confirmed funds.
 

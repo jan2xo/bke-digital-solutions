@@ -284,3 +284,5 @@ A development phase is complete only when:
 Build platforms, not features.
 
 Every implementation should make the next BKE product easier to build, integrate, deploy, license, and maintain.
+
+Every phase must end in a deployable, documented, testable, production-progressing state. No phase may introduce unfinished architecture that blocks subsequent phases. Documentation, roadmap, architecture, developer journal, implementation status, and handoff documents must be updated before a phase is considered complete.
