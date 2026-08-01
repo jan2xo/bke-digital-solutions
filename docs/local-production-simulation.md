@@ -1,39 +1,41 @@
 # Local production simulation
 
-This is the primary pre-VPS environment. It runs the production Next.js image behind local HTTPS Caddy with private PostgreSQL, Valkey, and MinIO networks. Only Caddy binds host ports (`127.0.0.1:8080` and `127.0.0.1:8443`).
+This is the primary pre-VPS environment. Cloudflare terminates public HTTPS and the named tunnel forwards HTTP to Caddy on loopback. Caddy forwards the original public host and `X-Forwarded-Proto=https` to the production Next.js image. PostgreSQL, Valkey, and MinIO remain private.
 
-## Prepare
-
-```bash
-npm run certification:env
+```text
+Browser / provider -> HTTPS Cloudflare -> named tunnel
+-> http://localhost:8080 -> Caddy -> app:3000
+-> PostgreSQL / Valkey / MinIO
 ```
 
-The command creates ignored `.env.certification` with mode `0600`, generated local secrets, mock payments, and log email. To certify providers, edit that ignored file locally: select `paymongo`/`resend`, add test credentials and an owner-controlled recipient, and keep `PAYMONGO_LIVEMODE=false`. Never copy values into documentation or evidence.
+Only Caddy binds a host port: `127.0.0.1:8080`. The real domain works only while Docker, Caddy, the connector, the Mac, and its network connection remain available.
 
-## Validate and start
+## Environment model
 
-```bash
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml config --quiet
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml build
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml up -d postgres valkey minio minio-init
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml --profile operations run --rm migrate
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml --profile operations run --rm seed
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml up -d app caddy
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml --profile operations run --rm smoke
-curl --fail --insecure https://jl-bke.localhost:8443/api/health/live
-curl --fail --insecure https://jl-bke.localhost:8443/api/health/ready
-```
+- `.env`: ordinary localhost development; mock/log providers by default.
+- `.env.certification.example`: safe committed template.
+- `.env.certification`: ignored owner-managed test credentials and certification values.
+- `.env.production.example`: safe future VPS template.
+- `.env.production`: future ignored VPS values.
 
-`.localhost` resolves locally without a hosts-file edit on supported systems. Caddy uses an internal certificate, so either trust Caddy's local root certificate or use `--insecure` only for this local health check. Do not weaken application cookies or CSRF controls.
+The certification canonical origin is `https://jl-bke.com`; internal Docker traffic uses `http://app:3000`. Changing `.env.certification` requires `npm run certification:compose -- refresh` because existing containers do not reload environment files.
 
-## Stop
+## Commands
 
 ```bash
-docker compose -p bke-certification --profile self-hosted-storage --env-file .env.certification -f docker-compose.production.yml -f docker-compose.certification.yml down
+npm run certification:check
+npm run certification:compose -- config
+npm run certification:compose -- up
+npm run certification:compose -- migrate
+npm run certification:compose -- seed
+npm run certification:compose -- smoke
+npm run certification:compose -- status
+curl --fail http://127.0.0.1:8080/api/health/live -H 'Host: jl-bke.com'
+curl --fail https://jl-bke.com/api/health/ready
+npm run certification:compose -- logs
+npm run certification:compose -- down
 ```
 
-Do not add `-v` unless intentionally deleting certification database, object, and Caddy state.
+Use `npm run certification:compose -- admin` to bootstrap an owner-controlled administrator in the certification database. Set the documented acknowledgement plus admin email, name, and a temporary 12+ character password only in ignored `.env.certification`; remove the password afterward. The database is independent of development and production. Administrators must complete MFA enrollment and retain recovery codes privately.
 
-## Operations
-
-Run migrations with the one-shot `migrate` service, not `prisma migrate dev`. The `seed` is designed to be idempotent. The `smoke` service checks the migrated database. PostgreSQL, Valkey, and MinIO have no host port in this topology.
+The first owner session used the wrong Compose base before correcting it. The required base is `docker-compose.production.yml`, the override is `docker-compose.certification.yml`, the project is `bke-certification`, and the storage profile is `self-hosted-storage`. Do not run provider Vitest suites inside the slim application image; it intentionally excludes development test tools.

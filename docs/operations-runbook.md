@@ -1,14 +1,33 @@
-# Local operations runbook
-
-The current operational target is local Docker+Caddy simulation. See `local-production-simulation.md` for startup/migration/seed/smoke/stop commands.
-
-Credential-gated provider commands:
+# Local certification operations
 
 ```bash
-npm run test:paymongo
-npm run test:resend
-npm run payments:reconcile -- --order-id <local-order-id>
+npm run certification:check
+npm run certification:compose -- config
+npm run certification:compose -- up
+npm run certification:compose -- refresh
+npm run certification:compose -- migrate
+npm run certification:compose -- seed
+npm run certification:compose -- smoke
+npm run certification:compose -- status
+npm run certification:compose -- logs
+npm run certification:test:resend
+npm run certification:test:paymongo
+npm run certification:compose -- queue-email
+npm run certification:outbox
+npm run certification:compose -- admin
+npm run certification:compose -- down
 ```
 
-Authenticated cron handlers remain the interfaces for outbox processing, expiration, and renewal reminders. A production scheduler is intentionally not configured before VPS deployment. Use the configured `CRON_SECRET` in an authorization header, never in a URL or evidence log. Temporary Cloudflare tunnels must be stopped and their PayMongo webhook registrations disabled after each certification session.
+Local health:
 
+```bash
+curl --fail http://127.0.0.1:8080/api/health/live -H 'Host: jl-bke.com'
+```
+
+Public health:
+
+```bash
+curl --fail https://jl-bke.com/api/health/ready
+```
+
+The authenticated cron routes process outbox, expirations, and renewal reminders. A durable production scheduler remains VPS-only. Never place `CRON_SECRET` in a URL, command argument, evidence file, or log.

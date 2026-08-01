@@ -4,7 +4,7 @@ Current operational milestone: complete local Docker+Caddy production simulation
 
 ## Current phase
 
-Phase 5.0 — Production Baseline and Deployment Foundation and Phase 5.1 — Administrator MFA and Recent Authentication are committed. Phase 5.2 local production simulation is implemented in the working tree; genuine PayMongo/Resend certification remains owner-credential and tunnel gated.
+Phase 5.0 and Phase 5.1 are committed. Phase 5.2 has verified public Cloudflare-to-local routing, genuine Resend API/registration/outbox delivery, and real PayMongo test checkout creation. Genuine PayMongo payment/webhook/refund/reconciliation evidence remains open.
 
 ## Milestones
 
@@ -18,7 +18,7 @@ Phase 5.0 — Production Baseline and Deployment Foundation and Phase 5.1 — Ad
 - [x] Multi-plan administration, storefront, checkout, and licensing migration
 - [x] Reproducible production image, isolated service topology, configuration validation, and operational health foundation
 - [x] Flexible general and customer-specific offers with immutable pricing and finite monthly promotional cycles
-- [ ] Real PayMongo sandbox lifecycle
+- [ ] Complete PayMongo sandbox lifecycle (checkout creation passed; payment/webhook/refund/reconciliation remain)
 - [x] Resend sending domain verified for `jl-bke.com`
 - [ ] Production infrastructure and operational readiness
 
@@ -52,7 +52,7 @@ Phase 4.1 is an additive completion of Phase 4 and is a prerequisite to, not par
 - Revenue is an explicitly labeled gross-order placeholder, not accounting recognition.
 - Product-image serving on public pages is deferred; secure upload and metadata are present.
 - Automated refund initiation remains provider-dependent; confirmed refund records continue through webhooks.
-- PayMongo sandbox certification and credential-gated Resend delivery/operational-event testing remain blocked by deployment credentials; Resend domain verification itself is complete.
+- PayMongo test checkout creation passed. A real customer-authorized sandbox payment, genuine signed webhook replay/delay/failure/refund, and reconciliation remain open. Genuine Resend direct, registration, and outbox delivery passed.
 - Production database, Redis, storage, backups, monitoring, malware scanning, code signing, legal, privacy, and tax review remain incomplete.
 - Provider-aware expiry of abandoned offer reservations is deferred; reservations remain consumed until settlement can be ruled out safely.
 

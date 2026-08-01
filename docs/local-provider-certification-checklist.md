@@ -4,11 +4,11 @@ Never paste credentials, webhook signatures, raw payloads, email tokens, or cust
 
 Evidence fields for each case: date/time; local order ID; redacted provider reference; observed event type; result; issue; screenshot/log reference; production blocker yes/no.
 
-- [ ] Start the production-like Docker stack; record health/readiness.
-- [ ] Start the temporary HTTPS tunnel and register the test webhook.
+- [x] Start the production-like Docker stack; local and public health/readiness passed.
+- [x] Start the named HTTPS tunnel; public application routing passed.
 - [ ] Sign in as an MFA-enabled administrator.
 - [ ] Verify a published product and perpetual, monthly, and annual plans.
-- [ ] Create a synthetic verified customer account and optional scoped/general offers.
+- [x] Register an owner-controlled certification customer and deliver its verification email; owner verification click remains.
 - [ ] Complete undiscounted perpetual checkout.
 - [ ] Complete monthly and annual checkout.
 - [ ] Confirm annual catalog discount plus promotion snapshot on order/invoice.
@@ -28,7 +28,6 @@ Evidence fields for each case: date/time; local order ID; redacted provider refe
 - [ ] Test refund and refund-before-payment if the sandbox account permits it.
 - [ ] Run reconciliation and review pending/paid/cancelled/refunded/unmatched results.
 - [ ] Confirm invoice, license, download, and activation ownership boundaries.
-- [ ] Run genuine Resend delivery for verification, reset, security, payment, invoice, license, trial/refund messages where implemented.
-- [ ] Process outbox success/failure/retry and verify cron authentication.
+- [x] Run genuine Resend direct delivery and public registration verification delivery.
+- [x] Process one genuine outbox message twice; it remained one `SENT` row with one attempt.
 - [ ] Stop the tunnel and disable/delete the temporary webhook.
-

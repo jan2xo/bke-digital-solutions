@@ -32,7 +32,9 @@ The payload must be the exact unmodified request bytes and the signature file mu
 
 1. Expose the HTTPS development webhook endpoint through an approved authenticated tunnel or development server.
 2. Register one PayMongo test webhook at `/api/webhooks/payments` for checkout/payment success, failure, and refund events available to the account.
-3. Run `npm run test:paymongo`. Confirm the real checkout test executes and returns a `cs_…` ID and HTTPS URL without logging either value or customer data.
+3. Run `npm run certification:test:paymongo`. It explicitly loads ignored `.env.certification`; confirm real checkout creation executes without logging its URL, keys, or customer data.
+
+The public test webhook route is `https://jl-bke.com/api/webhooks/payments`.
 4. Complete PayMongo's test checkout using provider-supplied sandbox payment details; never use a real card or wallet.
 5. Confirm the received event has `livemode=false`, the order becomes paid only after the signed webhook, one invoice and one license are created, and identical delivery remains a no-op.
 6. Exercise a provider-declined test payment and confirm no entitlement is created.

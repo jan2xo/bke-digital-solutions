@@ -1,12 +1,26 @@
-# Email and Resend operations
+# Email and Resend certification
 
-Resend is the production transport and `jl-bke.com` is verified according to the infrastructure baseline. Use the provider abstraction and commerce outbox; do not send directly from routes that settle payment. The certification sender is `noreply@jl-bke.com`; inbound mail service is separate.
+Resend is the configured production transport and `jl-bke.com` is verified. Sending identity does not create an inbound mailbox.
 
-Run genuine owner-authorized delivery only with ignored credentials:
+Run genuine owner-authorized delivery from the host, not the slim production image:
 
 ```bash
-npm run test:resend
+npm run certification:test:resend
 ```
 
-The check skips when required variables are absent. With variables present, API/auth/sender errors fail the check. Never enable real mail in the general automated test environment. Token values, full license keys, and full message bodies must not be logged.
+This command explicitly loads ignored `.env.certification`; it does not fall back to `.env`. Missing requirements skip clearly, while invalid present credentials or sender configuration fail. The general test suite does not intentionally send external mail.
 
+Registration, verification resend, magic link, and password reset currently send immediately. Registration returns `emailSent:false` if provider delivery fails. Commerce settlement transactionally queues payment, invoice, license, failure, and refund messages in `EmailOutbox`, then attempts dispatch. A cron-authenticated processor handles retries:
+
+```bash
+npm run certification:outbox
+```
+
+For an owner-controlled outbox smoke message:
+
+```bash
+npm run certification:compose -- queue-email
+npm run certification:outbox
+```
+
+Phase 5.2 genuine results: direct Resend delivery passed; public registration returned HTTP 201 with `emailSent:true`; password-reset delivery returned HTTP 200; one queued message became `SENT` with one attempt, and a second processor call did not resend it. Inbox placement is not guaranteed by API acceptance.

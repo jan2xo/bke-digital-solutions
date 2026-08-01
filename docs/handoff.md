@@ -1,6 +1,6 @@
 # Engineering handoff
 
-The next operational milestone is local provider certification, not VPS deployment. Use `docs/local-production-simulation.md`; never commit `.env.certification`, tunnel URLs, provider secrets, webhook payloads, or signatures.
+Phase 5.2 now verifies the named Cloudflare tunnel to local Caddy, public health, canonical runtime origin, genuine Resend direct/registration/outbox delivery, and real PayMongo test checkout creation. The remaining operational gate is a customer-authorized sandbox payment with genuine webhook/replay/refund/reconciliation evidence—not VPS deployment. Never commit `.env.certification`, tunnel credentials, provider secrets, webhook payloads, or signatures.
 
 ## Phase 5.0 deployment foundation
 

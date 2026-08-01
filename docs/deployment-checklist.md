@@ -28,7 +28,7 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Compare the adapter against PayMongo's current checkout and signature documentation.
 - [ ] Set only `sk_test_…`, the sandbox webhook secret, `PAYMONGO_LIVEMODE=false`, and `PAYMENT_PROVIDER=paymongo`; prove the safety gate rejects live credentials.
 - [ ] Register one HTTPS webhook at `/api/webhooks/payments`; store its signing secret only in the secret manager.
-- [ ] Run `npm run test:paymongo` and retain evidence that real checkout creation, paid, failed, refunded, duplicate, delayed, and reconciliation checks executed rather than skipped.
+- [ ] Run `npm run certification:test:paymongo`; checkout creation passed locally, but retain genuine paid/failed/refunded/duplicate/delayed/reconciliation evidence before launch.
 - [ ] Test stale signature, wrong mode, wrong amount/currency, malformed payload, replay, delayed delivery, and provider outage scenarios.
 - [ ] Reconcile daily provider settlements against local payments, orders, invoices, refunds, and failed webhook records.
 - [ ] Switch to live keys and `PAYMONGO_LIVEMODE=true` only after sandbox evidence is approved.
@@ -39,7 +39,7 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Confirm Cloudflare DNS retains the required Resend records and configure/review DMARC policy.
 - [ ] Set a production `EMAIL_FROM` and scoped `RESEND_API_KEY` in the secret manager.
 - [ ] Test verification, magic-link, password reset, receipt, invitation, and renewal delivery plus bounce/complaint handling.
-- [ ] Set `RESEND_SANDBOX_TO`, run `npm run test:resend`, and retain evidence that the gated test executed rather than skipped.
+- [x] Set the owner-controlled recipient and run `npm run certification:test:resend`; genuine API, registration, and outbox delivery were accepted in Phase 5.2.
 - [ ] Ensure emails never contain passwords, provider secrets, or reusable download grants.
 
 ## S3-compatible private storage

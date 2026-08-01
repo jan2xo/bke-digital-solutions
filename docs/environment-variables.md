@@ -4,9 +4,9 @@ Environment values are server-only unless explicitly prefixed for browser use. C
 
 | Variable | Purpose |
 | --- | --- |
-| `APP_URL` | Canonical browser and provider redirect origin; no path/query/fragment. Production: `https://jl-bke.com`. Local certification: `https://jl-bke.localhost:8443`. |
+| `APP_URL` | Canonical browser, email-link, and provider-redirect origin. Certification and production: `https://jl-bke.com`. |
 | `INTERNAL_APP_URL` | Optional private Docker application origin, normally `http://app:3000`. |
-| `PUBLIC_WEBHOOK_ORIGIN` | Optional temporary public HTTPS tunnel origin used to register a provider webhook. |
+| `PUBLIC_WEBHOOK_ORIGIN` | Public HTTPS origin used to register the test webhook; certification: `https://jl-bke.com`. |
 | `LOCAL_PRODUCTION_SIMULATION` | Enables staging-only local safety exceptions such as private HTTP MinIO; never production. |
 | `PAYMONGO_SECRET_KEY` / `PAYMONGO_WEBHOOK_SECRET` | Server-only test credentials during certification. |
 | `PAYMONGO_LIVEMODE` | Must be `false` for local certification. |
@@ -14,3 +14,4 @@ Environment values are server-only unless explicitly prefixed for browser use. C
 
 The full template is `.env.certification.example`. `npm run certification:env` generates an ignored safe local file without provider credentials.
 
+Provider and certification commands explicitly load `.env.certification`. Existing containers retain their creation-time environment; use `npm run certification:compose -- refresh` after any change. Ordinary development continues to read `.env` and must not call PayMongo or Resend unless explicitly reconfigured.

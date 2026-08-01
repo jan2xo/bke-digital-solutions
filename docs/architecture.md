@@ -2,7 +2,7 @@
 
 ## Local production simulation
 
-Before VPS deployment, the production runner is exercised as `Caddy -> Next.js -> PostgreSQL/Valkey/MinIO` through the production Compose file plus `docker-compose.certification.yml`. Only Caddy binds loopback host ports. `APP_URL` is the canonical browser/provider-redirect origin, `INTERNAL_APP_URL` is the private container origin, and `PUBLIC_WEBHOOK_ORIGIN` is an optional temporary HTTPS tunnel origin.
+Before VPS deployment, the production runner is exercised as `Cloudflare HTTPS -> named tunnel -> loopback HTTP Caddy -> Next.js -> PostgreSQL/Valkey/MinIO`. Only Caddy binds `127.0.0.1:8080`; data services remain private. `APP_URL` is the public browser/email/provider-redirect origin, `INTERNAL_APP_URL` is the private container origin, and `PUBLIC_WEBHOOK_ORIGIN` is the public webhook origin. Certification Caddy handles the tunnel's local host override and passes the original forwarded public host upstream; production Caddy keeps ACME/TLS behavior.
 
 ## Platform administration relationships
 

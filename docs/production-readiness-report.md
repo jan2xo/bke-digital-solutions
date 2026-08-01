@@ -1,6 +1,6 @@
 # Production-readiness verification report
 
-Local Docker+Caddy simulation is the current certification target. Configuration alone does not pass public HTTPS/VPS, genuine PayMongo sandbox, or genuine Resend delivery gates; see the Phase 5.2 report.
+The named Cloudflare tunnel now provides public HTTPS to the local Docker/Caddy simulation. Genuine Resend direct/registration/outbox delivery and PayMongo test checkout creation passed. The platform remains not production-ready because genuine payment/webhook/refund/reconciliation, VPS, monitoring, backup/restore, code signing/malware scanning, and compliance gates remain open.
 
 Date: 2026-07-30 (Asia/Manila)
 

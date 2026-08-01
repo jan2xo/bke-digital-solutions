@@ -1,19 +1,26 @@
-# Temporary Cloudflare tunnel for PayMongo sandbox
+# Cloudflare Tunnel and PayMongo certification
 
-The official root domain must not point to a development laptop. Cloudflare is authoritative DNS; Namecheap is only the registrar.
+Namecheap is the registrar; Cloudflare is authoritative DNS. The owner-managed named tunnel currently routes `jl-bke.com` to `http://localhost:8080`. The safe repository example is `cloudflared/config.example.yml`; never commit the real UUID, JSON credentials, token, `cert.pem`, or an owner home path.
 
-1. Start the local certification stack and confirm `https://jl-bke.localhost:8443/api/health/ready`.
-2. Install/authenticate `cloudflared` using the owner's Cloudflare account, or use a disposable quick tunnel.
-3. Expose only local Caddy:
+The connector may send origin `Host: jl-bke.localhost` while preserving `X-Forwarded-Host: jl-bke.com`. Certification Caddy accepts both origin names and passes the public forwarded host upstream. It uses plain loopback HTTP: Cloudflare owns public TLS. `tls internal` caused redirect/origin conflicts and must not be used here. Production `Caddyfile` retains normal public ACME/TLS behavior.
 
-   ```bash
-   cloudflared tunnel --url https://localhost:8443 --no-tls-verify
-   ```
+## PayMongo test webhook
 
-4. Copy only the generated HTTPS origin into ignored `.env.certification` as `PUBLIC_WEBHOOK_ORIGIN`. Do not change `APP_URL`; browser redirects remain on the canonical local origin.
-5. Register `${PUBLIC_WEBHOOK_ORIGIN}/api/webhooks/paymongo` in the PayMongo test dashboard and place its test webhook secret in the ignored file.
-6. Restart the app, complete sandbox transactions, and record only IDs/statuses—not signatures or payloads.
-7. Stop `cloudflared`, then disable/delete the temporary PayMongo webhook endpoint.
+The implemented endpoint is:
 
-The tunnel must never expose PostgreSQL, Valkey, MinIO, its console, Docker, or the filesystem. A dedicated `webhook-dev.jl-bke.com` may be used later only by an intentional Cloudflare configuration change that preserves Resend DNS records.
+```text
+https://jl-bke.com/api/webhooks/payments
+```
+
+In PayMongo Test Mode, subscribe only to event forms normalized by the adapter:
+
+- `payment.paid`
+- `checkout_session.payment.paid`
+- `payment.failed`
+- `checkout_session.payment.failed`
+- `payment.refunded`
+
+After changing the ignored webhook secret, run `npm run certification:compose -- refresh`. Then run `npm run certification:test:paymongo`, complete a real sandbox checkout, confirm the genuine signed event in the database, replay identical bytes, and run reconciliation with a known local order. Unknown valid events are recorded and acknowledged; unsigned, malformed, stale, wrong-mode, wrong-amount, and wrong-currency events are rejected.
+
+The official root domain is temporarily served by the owner's Mac. Future VPS deployment replaces this tunnel origin while preserving Resend DNS records. Disable the sandbox webhook when the certification session ends if it is no longer needed.
 

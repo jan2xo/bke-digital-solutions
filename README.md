@@ -21,7 +21,7 @@ npm run dev
 
 The mock payment provider is the safe local default. Development email transport logs only a non-sensitive subject; it never prints recipients, authentication tokens, license keys, or message bodies. Resend is the production transactional email provider and `jl-bke.com` is its verified sending domain; API credentials and delivery certification remain environment-specific.
 
-The real PayMongo and Resend suites are credential-gated. Follow [PayMongo sandbox verification](docs/paymongo-sandbox.md), then run `npm run test:paymongo`; set `RESEND_SANDBOX_TO` and run `npm run test:resend` for delivery evidence.
+The certification suites explicitly load ignored `.env.certification`: run `npm run certification:test:paymongo` and `npm run certification:test:resend`. The ordinary test commands continue to use ordinary development configuration. See the [local operations runbook](docs/operations-runbook.md).
 
 Create the first administrator interactively with `npm run admin:create`. Do not place `ADMIN_PASSWORD` in committed files or shell history. Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` before deployment.
 

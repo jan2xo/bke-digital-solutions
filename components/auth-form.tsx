@@ -14,11 +14,11 @@ export function AuthForm({ mode, returnTo }: { mode: "login" | "register"; retur
   }
   return <form method="post" onSubmit={submit} className="card grid gap-5 p-8">
     {mode === "register" && <label className="label">Full name<input className="input" name="name" required minLength={2} maxLength={100} autoComplete="name" /></label>}
-    <label className="label">Email address<input className="input" type="email" name="email" required autoComplete="email" /></label>
+    <label className="label">{mode === "login" ? "Email" : "Email address"}<input className="input" type="email" name="email" required autoComplete="email" aria-label={mode === "login" ? "Email address" : undefined} /></label>
     <label className="label">Password<input className="input" type="password" name="password" required minLength={mode === "register" ? 12 : 1} maxLength={128} autoComplete={mode === "register" ? "new-password" : "current-password"} aria-describedby={mode==="register"?"password-requirements":undefined} value={password} onChange={e=>setPassword(e.target.value)} /></label>
     {mode === "register" && <div id="password-requirements" className="rounded-lg border border-[#2D5579]/30 bg-[#3D75A7]/5 p-4 text-sm"><p className="font-bold text-[#213A53]">Your password must include:</p><ul className="mt-2 grid gap-1 sm:grid-cols-2"><Requirement met={password.length>=12}>12 or more characters</Requirement><Requirement met={/[A-Z]/.test(password)}>One uppercase letter</Requirement><Requirement met={/[a-z]/.test(password)}>One lowercase letter</Requirement><Requirement met={/[0-9]/.test(password)}>One number</Requirement></ul></div>}
     {error && <p role="alert" className="text-sm font-semibold text-red-700">{error}</p>}
-    <button disabled={busy} className="button" type="submit">{busy ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}</button>
+    <button disabled={busy} className="button" type="submit">{busy ? "Please wait…" : mode === "login" ? "Sign In" : "Create account"}</button>
   </form>;
 }
 function Requirement({met,children}:{met:boolean;children:React.ReactNode}){return <li className={met?"font-semibold text-green-700":"text-slate-600"}><span aria-hidden="true">{met?"✓":"○"}</span> {children}</li>}

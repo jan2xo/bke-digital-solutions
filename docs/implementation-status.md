@@ -1,6 +1,6 @@
 # Implementation status
 
-Phase 5.2 local Docker+Caddy certification scaffolding is implemented. Real PayMongo sandbox and Resend delivery remain credential/owner-action gated and cannot be marked passed until evidence is recorded.
+Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, genuine Resend direct/registration/outbox delivery, and real PayMongo test checkout creation are verified. Genuine payment/webhook/refund/reconciliation certification remains open.
 
 ## Completed modules
 
@@ -17,8 +17,7 @@ Phase 5.2 local Docker+Caddy certification scaffolding is implemented. Real PayM
 
 ## In progress
 
-- Credential-gated PayMongo sandbox certification
-- Credential-gated Resend delivery certification
+- Genuine PayMongo payment, webhook, refund, and reconciliation certification
 - Production infrastructure selection and provisioning
 
 ## Deferred
@@ -46,4 +45,4 @@ Implemented locally: general promotions, account-specific offers, administrative
 Credential-gated PayMongo sandbox and Resend delivery certification remain external blockers. Abandoned offer reservations remain consumed until a future provider-aware finality/release job is designed and verified.
 # Infrastructure status — August 2026
 
-`jl-bke.com` is the canonical production domain, Cloudflare is authoritative DNS, Namecheap is the registrar, and Resend has verified the production sending domain. Docker/Caddy/PostgreSQL/Valkey/MinIO deployment configuration exists, but no VPS or public HTTPS deployment exists yet. Development remains local-first and environment-driven.
+`jl-bke.com` is the canonical domain, Cloudflare is authoritative DNS, Namecheap is the registrar, and Resend has verified the sending domain. A named Cloudflare Tunnel currently exposes the owner's local Docker/Caddy stack over public HTTPS for certification only. No VPS deployment exists.

@@ -4,6 +4,10 @@
 
 Added an isolated ignored certification environment, loopback-only HTTPS Caddy override, private MinIO initialization, production-image operations, PayMongo test-key enforcement, credential-gated provider checks, and owner runbooks. VPS work and genuine provider evidence remain deferred.
 
+## 2026-08-02 — Owner-session certification correction
+
+Verified the populated ignored environment without printing secrets. The running app still held the old localhost `APP_URL`, and the named tunnel overrode origin `Host` to `jl-bke.localhost`, causing Caddy NOP empty responses. Restored production Caddy, changed certification Caddy to loopback HTTP accepting both origin hosts, forwarded the public host/protocol, refreshed containers, and verified public health. Genuine Resend direct, registration, and outbox delivery passed; real PayMongo test checkout creation passed. Genuine payment/webhook/refund/reconciliation remain open. No migration or commit was created.
+
 ## 2026-07-31 — Phase 4.2 blueprint and repository inspection
 
 ### Objective
