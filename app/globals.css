@@ -16,6 +16,16 @@
   --navy: #14202b;
   --blue: #3d75a7;
 }
+
+.legal-content { line-height: 1.75; }
+.legal-content h1, .legal-content h2, .legal-content h3 { color: #14202B; font-weight: 800; line-height: 1.25; margin: 1.5rem 0 .75rem; }
+.legal-content h1 { font-size: 2rem; }
+.legal-content h2 { font-size: 1.5rem; }
+.legal-content h3 { font-size: 1.2rem; }
+.legal-content p, .legal-content ul { margin: .75rem 0; }
+.legal-content ul { list-style: disc; padding-left: 1.5rem; }
+.legal-content a { color: #3D75A7; font-weight: 700; text-decoration: underline; }
+.legal-content code { border-radius: .25rem; background: #f1f5f9; padding: .1rem .3rem; }
 * { box-sizing: border-box; }
 body { margin: 0; color: var(--ink); background: #fbfcfc; font-family: Arial, Helvetica, sans-serif; }
 .shell { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }

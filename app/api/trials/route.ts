@@ -6,12 +6,14 @@ import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { grantProductTrial } from "@/lib/trials";
 import { apiError } from "@/lib/http";
+import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 
 const schema = z.object({ editionId: z.string().cuid(), accountId: z.string().cuid() }).strict();
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const user = await requireUser();
+    await assertLegalAcceptanceCurrent(user.id);
     if (!user.emailVerified) throw new Error("EMAIL_NOT_VERIFIED");
     if (!(await rateLimit(`trial:${user.id}:${clientIp(request)}`, 5, 3600)).allowed) throw new Error("RATE_LIMITED");
     const input = schema.parse(await request.json());

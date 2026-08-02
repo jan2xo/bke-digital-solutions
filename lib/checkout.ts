@@ -7,14 +7,16 @@ import { randomToken } from "@/lib/security/crypto";
 import { issueEntitlements } from "@/lib/licensing";
 import { queueCommerceEmail } from "@/lib/email";
 import type { Prisma } from "@/generated/prisma/client";
+import { checkoutLegalTypes, recordLegalAcceptances } from "@/lib/legal/service";
 
-export async function createCheckout(userId:string,purchasePlanId:string,accountId?:string,offerIdentifier?:string,renewalSubscriptionId?:string){
+export async function createCheckout(userId:string,purchasePlanId:string,accountId?:string,offerIdentifier?:string,renewalSubscriptionId?:string,legal?:{versionIds:string[];request:Request}){
   const idempotencyKey=randomToken();
   const result=await db.$transaction(async tx=>{
     const access={OR:[{ownerId:userId},{memberships:{some:{userId,role:{in:["OWNER" as const,"BILLING" as const]}}}}]};
     const account=accountId?await tx.customerAccount.findFirstOrThrow({where:{id:accountId,...access}}):await tx.customerAccount.findFirstOrThrow({where:access,orderBy:{createdAt:"asc"}});
     const plan=await tx.purchasePlan.findFirst({where:{id:purchasePlanId,active:true,edition:{active:true,product:{active:true,archivedAt:null}}},include:{monthlySource:true,edition:{include:{product:true}}}});
     if(!plan)throw new Error("INVALID_PURCHASE_PLAN");
+    if(legal)await recordLegalAcceptances(tx,{userId,customerAccountId:account.id,types:checkoutLegalTypes(plan.type),selectedVersionIds:legal.versionIds,context:renewalSubscriptionId?"RENEWAL_CHECKOUT":"CHECKOUT",request:legal.request});
     const terms=resolvePurchasePlan(plan);const planName=purchasePlanLabel(plan.type);let catalogAmountMinor=terms.amountMinor;
     const renewal=renewalSubscriptionId?await tx.subscription.findFirst({where:{id:renewalSubscriptionId,accountId:account.id,purchasePlanId:plan.id}}):null;
     if(renewalSubscriptionId&&!renewal)throw new Error("INVALID_RENEWAL");

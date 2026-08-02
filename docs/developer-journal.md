@@ -1,5 +1,13 @@
 # Developer journal
 
+## August 2, 2026 — Phase 6.1A legal platform
+
+Implemented normalized `LegalDocument`, `LegalDocumentVersion`, and `LegalAcceptance` models, additive migrations, database immutability triggers, unique semantic document types, null-account idempotency, seed templates, secure Markdown rendering, public history, admin lifecycle management, registration/checkout/renewal consent, and login reacceptance. Added unit, PostgreSQL integration, migration-protection, authorization, and Playwright coverage.
+
+Verification evidence: Prisma generation, schema validation, both migrations, seed, and migration status passed. TypeScript and ESLint passed. The first ordinary `npm test` attempt failed because the execution sandbox denied access to local PostgreSQL (`EPERM 127.0.0.1:5432`); the identical approved run passed 110 tests with six external-provider scenarios skipped. The focused legal Playwright test initially failed twice because its own asynchronous draft query and loose URL assertion were incorrect; both test defects were fixed and the focused scenario passed. The first full Playwright run passed eight of nine; its remaining legal assertion used Playwright's shared request context immediately after browser logout and observed its stale cookie. The assertion was changed to browser `fetch`, which tests the actual session cookie. Final rerun evidence follows the completed verification.
+
+Final verification passed: TypeScript, ESLint, 110/110 locally executable Vitest scenarios (six genuine-provider scenarios skipped), all 9 Playwright scenarios, and the production Next.js build. The first sandboxed build attempt was blocked when Turbopack could not bind an internal worker port; the identical approved build compiled, type-checked, generated all 68 static pages, and completed. No real PayMongo/Resend certification was rerun because it is outside Phase 6.1A and remains credential/evidence gated.
+
 ## 2026-08-02 — Phase 5.2 local certification foundation
 
 Added an isolated ignored certification environment, loopback-only HTTPS Caddy override, private MinIO initialization, production-image operations, PayMongo test-key enforcement, credential-gated provider checks, and owner runbooks. VPS work and genuine provider evidence remain deferred.

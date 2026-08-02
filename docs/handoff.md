@@ -1,5 +1,11 @@
 # Engineering handoff
 
+## Active handoff — Phase 6.1A
+
+The current uncommitted working tree contains the Legal Document Management System and the previously requested roadmap/truth-check documentation. Do not commit until owner review. Apply both `20260802170000_legal_document_management` and `20260802171000_legal_document_type_uniqueness`, then run the idempotent seed to create the nine placeholder documents. Replace and professionally approve every placeholder before public commerce.
+
+Key entry points are `/admin/legal`, `/legal/[slug]`, `/legal/accept`, `lib/legal/`, and the three legal documentation files. Publication requires a recent MFA-verified administrator session. Database triggers—not only route checks—protect published content and acceptance rows. Because acceptance evidence intentionally restricts deletion of its related user/account/version, any later governed erasure design must preserve or legally reconcile those records rather than bypassing the triggers.
+
 Phase 5.2 now verifies the named Cloudflare tunnel to local Caddy, public health, canonical runtime origin, genuine Resend direct/registration/outbox delivery, and real PayMongo test checkout creation. The remaining operational gate is a customer-authorized sandbox payment with genuine webhook/replay/refund/reconciliation evidence—not VPS deployment. Never commit `.env.certification`, tunnel credentials, provider secrets, webhook payloads, or signatures.
 
 ## Phase 5.0 deployment foundation

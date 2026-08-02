@@ -1,5 +1,15 @@
 # Local certification operations
 
+## Legal document operations
+
+1. Keep a published current version for Terms, Privacy, EULA, Refund Policy, and Subscription Terms before enabling registration or checkout.
+2. Draft and preview in `/admin/legal`. Publishing requires recent authentication and MFA; review the summary, effective date, variables, and reacceptance flag first.
+3. Use reacceptance only when existing customers must affirm the new version. It does not revoke sessions; affected customers are redirected on their next login or protected portal navigation.
+4. Restore a prior published version instead of editing published content. Only drafts may be physically deleted.
+5. Inspect acceptance counts and recent history in the Legal Center. Never update or delete acceptance rows directly; PostgreSQL rejects both operations.
+6. Before changing `BUSINESS_ADDRESS`, `APP_URL`, `SUPPORT_EMAIL`, or company identity, preserve the old values. Each acceptance snapshots rendered variables and the rendered-content hash.
+7. After restore or incident recovery, run `npm run db:status`, verify legal triggers/current pointers, and confirm registration plus perpetual/subscription checkout fail closed if required publications are absent.
+
 ```bash
 npm run certification:check
 npm run certification:compose -- config

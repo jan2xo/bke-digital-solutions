@@ -239,6 +239,8 @@ model User {
   providerConfigurationsCreated ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
   providerConfigurationsUpdated ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
   providerCredentialsCreated    ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
+  legalVersionsAuthored         LegalDocumentVersion[]          @relation("LegalVersionAuthor")
+  legalAcceptances              LegalAcceptance[]
 }
 
 model PasswordCredential {
@@ -382,8 +384,70 @@ model CustomerAccount {
   trials           TrialGrant[]
   offers           DiscountOffer[]
   offerRedemptions OfferRedemption[]
+  legalAcceptances LegalAcceptance[]
 
   @@index([ownerId])
+}
+
+model LegalDocument {
+  id                        String                 @id @default(cuid())
+  title                     String
+  slug                      String                 @unique
+  documentType              String                 @unique
+  status                    String                 @default("ACTIVE")
+  currentPublishedVersionId String?                @unique
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+  versions                  LegalDocumentVersion[] @relation("LegalDocumentVersions")
+  currentPublishedVersion   LegalDocumentVersion?  @relation("CurrentPublishedLegalVersion", fields: [currentPublishedVersionId], references: [id], onDelete: SetNull)
+
+  @@index([documentType, status])
+}
+
+model LegalDocumentVersion {
+  id                   String            @id @default(cuid())
+  documentId           String
+  versionNumber        Int
+  markdownContent      String
+  renderedHtml         String?
+  status               String            @default("DRAFT")
+  effectiveAt          DateTime?
+  publishedAt          DateTime?
+  archivedAt           DateTime?
+  authorId             String?
+  changeSummary        String
+  requiresReacceptance Boolean           @default(false)
+  contentHash          String
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  document             LegalDocument     @relation("LegalDocumentVersions", fields: [documentId], references: [id], onDelete: Restrict)
+  currentForDocument   LegalDocument?    @relation("CurrentPublishedLegalVersion")
+  author               User?             @relation("LegalVersionAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  acceptances          LegalAcceptance[]
+
+  @@unique([documentId, versionNumber])
+  @@index([documentId, status, publishedAt])
+}
+
+model LegalAcceptance {
+  id                  String               @id @default(cuid())
+  userId              String
+  customerAccountId   String?
+  documentVersionId   String
+  acceptanceContext   String
+  acceptedAt          DateTime             @default(now())
+  ipAddress           String?
+  userAgent           String?
+  renderedContentHash String
+  variablesSnapshot   Json                 @default("{}")
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+  customerAccount     CustomerAccount?     @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  documentVersion     LegalDocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, customerAccountId, documentVersionId, acceptanceContext])
+  @@index([userId, acceptedAt])
+  @@index([customerAccountId, acceptedAt])
+  @@index([documentVersionId, acceptedAt])
 }
 
 model OrganizationProfile {

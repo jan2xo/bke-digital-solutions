@@ -4,13 +4,17 @@ import { db } from "@/lib/db";
 import { createCheckout } from "@/lib/checkout";
 import { assertSameOrigin } from "@/lib/security/request";
 import { apiError } from "@/lib/http";
+import { z } from "zod";
+import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     assertSameOrigin(request);
     const user = await requireUser();
+    await assertLegalAcceptanceCurrent(user.id);
     if (!user.emailVerified) throw new Error("FORBIDDEN");
     const { id } = await params;
+    const { legalVersionIds } = z.object({ legalVersionIds: z.array(z.string().cuid()).length(3) }).strict().parse(await request.json());
     const subscription = await db.subscription.findFirst({
       where: { id, account: { OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
     });
@@ -22,7 +26,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       planId = mapped?.id ?? null;
     }
     if (!planId) throw new Error("NOT_FOUND");
-    return NextResponse.json(await createCheckout(user.id, planId, subscription.accountId, undefined, subscription.id), { status: 201 });
+    return NextResponse.json(await createCheckout(user.id, planId, subscription.accountId, undefined, subscription.id, { versionIds: legalVersionIds, request }), { status: 201 });
   } catch (error) {
     return apiError(error);
   }

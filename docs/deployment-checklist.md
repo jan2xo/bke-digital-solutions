@@ -1,5 +1,17 @@
 # Production deployment checklist
 
+## Phase 6.1A legal system
+
+- [ ] Back up PostgreSQL, then apply `20260802170000_legal_document_management` and `20260802171000_legal_document_type_uniqueness` with `npm run db:deploy`.
+- [ ] Run the idempotent seed or create and publish all nine document types through `/admin/legal`.
+- [ ] Replace every seeded placeholder with professionally approved wording; record legal and privacy approval outside the application.
+- [ ] Set and verify `APP_URL`, `SUPPORT_EMAIL`, and `BUSINESS_ADDRESS`; confirm variable rendering contains no placeholder address.
+- [ ] Verify Terms/Privacy registration acceptance, perpetual EULA/Refund acceptance, subscription EULA/Refund/Subscription acceptance, and renewal acceptance.
+- [ ] Publish a staging revision with reacceptance enabled and prove login redirects without session revocation.
+- [ ] Confirm administrator publication is denied without MFA and recent authentication.
+- [ ] Confirm published-version mutation/deletion and acceptance update/deletion fail at the database layer.
+- [ ] Include legal acceptance tables and trigger functions in backup/restore validation and retention planning.
+
 Precondition: complete the local provider checklist and Phase 5.2 evidence report. Cloudflare remains authoritative DNS, all Resend records must be preserved, and VPS deployment is intentionally postponed.
 
 Do not mark a deployment ready until every applicable box has an owner, evidence, and completion date.

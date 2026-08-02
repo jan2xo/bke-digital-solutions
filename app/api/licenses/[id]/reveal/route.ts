@@ -4,11 +4,13 @@ import { db } from "@/lib/db";
 import { decryptLicenseKey } from "@/lib/security/crypto";
 import { assertSameOrigin } from "@/lib/security/request";
 import { apiError } from "@/lib/http";
+import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     assertSameOrigin(request);
     const user = await requireUser();
+    await assertLegalAcceptanceCurrent(user.id);
     const { id } = await params;
     const license = await db.license.findFirst({
       where: {

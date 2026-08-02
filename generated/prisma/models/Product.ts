@@ -630,10 +630,6 @@ export type EnumProductTypeFieldUpdateOperationsInput = {
   set?: $Enums.ProductType
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type ProductUpdatetagsInput = {
   set?: string[]
   push?: string | string[]

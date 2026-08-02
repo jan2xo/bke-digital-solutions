@@ -92,6 +92,21 @@ export type PasswordResetToken = Prisma.PasswordResetTokenModel
  */
 export type CustomerAccount = Prisma.CustomerAccountModel
 /**
+ * Model LegalDocument
+ *
+ */
+export type LegalDocument = Prisma.LegalDocumentModel
+/**
+ * Model LegalDocumentVersion
+ *
+ */
+export type LegalDocumentVersion = Prisma.LegalDocumentVersionModel
+/**
+ * Model LegalAcceptance
+ *
+ */
+export type LegalAcceptance = Prisma.LegalAcceptanceModel
+/**
  * Model OrganizationProfile
  *
  */

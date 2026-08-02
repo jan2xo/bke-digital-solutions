@@ -1,4 +1,4 @@
-x`# BKE Digital Solutions
+# BKE Digital Solutions
 
 Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simulation.md), a [temporary Cloudflare tunnel](docs/cloudflare-tunnel-paymongo.md), and the [owner evidence checklist](docs/local-provider-certification-checklist.md). Genuine PayMongo/Resend status is tracked in the [Phase 5.2 report](docs/phase-reports/phase-5.2-local-paymongo-resend-certification.md).
 
@@ -51,7 +51,9 @@ For a controlled VPS test deployment using either Git pull or direct SSH copy, f
 
 Platform administration documentation: [roadmap](ROADMAP.md), [Phase 4 overview](docs/phase-4-platform-administration.md), [implementation status](docs/implementation-status.md), [engineering handoff](docs/handoff.md), [developer journal](docs/developer-journal.md), [detailed Phase 4 report](docs/phase-reports/phase-4-platform-administration.md), [Phase 4.1 product lifecycle report](docs/phase-reports/phase-4.1-product-lifecycle-completion.md), [Phase 4.2 editions and plans report](docs/phase-reports/phase-4.2-product-editions-and-multi-plan-commerce.md), and [Phase 4.2 maintainability audit](docs/phase-reports/phase-4.2-maintainability-audit.md).
 
-Browser checkout sends only `{ purchasePlanId, customerAccountId, offerIdentifier? }`; all prices, discount amounts, limits, intervals, and renewal terms are loaded and calculated by the server.
+Browser checkout sends only identifiers and acknowledgements; all prices, discount amounts, limits, intervals, and renewal terms are loaded and calculated by the server.
+
+Registration and checkout submit the identifiers of the exact published legal versions shown to the customer. The server rejects missing, stale, or plan-inappropriate versions and writes immutable acceptance evidence in the same transaction as registration or order creation. Administrators manage Markdown templates, publication history, rollback, reacceptance, and acceptance counts at `/admin/legal`; public current and historical versions live under `/legal/:slug`. Seeded text is placeholder content and must receive professional legal, privacy, and tax review before launch. See the [Legal Center](docs/legal-center.md), [versioning rules](docs/legal-versioning.md), and [acceptance-history model](docs/legal-acceptance-history.md).
 
 Pending orders can resume their stored provider checkout or create one recorded replacement session for older orders, and customers can cancel while the order is still pending. A verified provider payment received after local cancellation still completes the paid order; redirects and local cancellation never override provider-confirmed funds.
 

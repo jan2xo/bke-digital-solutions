@@ -3,11 +3,13 @@ import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { assertSameOrigin } from "@/lib/security/request";
 import { apiError } from "@/lib/http";
+import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     assertSameOrigin(request);
     const user = await requireUser();
+    await assertLegalAcceptanceCurrent(user.id);
     const { id } = await params;
     await db.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${id} FOR UPDATE`;

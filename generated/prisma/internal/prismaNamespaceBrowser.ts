@@ -61,6 +61,9 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
   CustomerAccount: 'CustomerAccount',
+  LegalDocument: 'LegalDocument',
+  LegalDocumentVersion: 'LegalDocumentVersion',
+  LegalAcceptance: 'LegalAcceptance',
   OrganizationProfile: 'OrganizationProfile',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -255,6 +258,57 @@ export const CustomerAccountScalarFieldEnum = {
 } as const
 
 export type CustomerAccountScalarFieldEnum = (typeof CustomerAccountScalarFieldEnum)[keyof typeof CustomerAccountScalarFieldEnum]
+
+
+export const LegalDocumentScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  documentType: 'documentType',
+  status: 'status',
+  currentPublishedVersionId: 'currentPublishedVersionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LegalDocumentScalarFieldEnum = (typeof LegalDocumentScalarFieldEnum)[keyof typeof LegalDocumentScalarFieldEnum]
+
+
+export const LegalDocumentVersionScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  versionNumber: 'versionNumber',
+  markdownContent: 'markdownContent',
+  renderedHtml: 'renderedHtml',
+  status: 'status',
+  effectiveAt: 'effectiveAt',
+  publishedAt: 'publishedAt',
+  archivedAt: 'archivedAt',
+  authorId: 'authorId',
+  changeSummary: 'changeSummary',
+  requiresReacceptance: 'requiresReacceptance',
+  contentHash: 'contentHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LegalDocumentVersionScalarFieldEnum = (typeof LegalDocumentVersionScalarFieldEnum)[keyof typeof LegalDocumentVersionScalarFieldEnum]
+
+
+export const LegalAcceptanceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  customerAccountId: 'customerAccountId',
+  documentVersionId: 'documentVersionId',
+  acceptanceContext: 'acceptanceContext',
+  acceptedAt: 'acceptedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  renderedContentHash: 'renderedContentHash',
+  variablesSnapshot: 'variablesSnapshot'
+} as const
+
+export type LegalAcceptanceScalarFieldEnum = (typeof LegalAcceptanceScalarFieldEnum)[keyof typeof LegalAcceptanceScalarFieldEnum]
 
 
 export const OrganizationProfileScalarFieldEnum = {

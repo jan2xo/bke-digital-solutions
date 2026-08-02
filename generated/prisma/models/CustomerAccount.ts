@@ -218,6 +218,7 @@ export type CustomerAccountWhereInput = {
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
   offerRedemptions?: Prisma.OfferRedemptionListRelationFilter
+  legalAcceptances?: Prisma.LegalAcceptanceListRelationFilter
 }
 
 export type CustomerAccountOrderByWithRelationInput = {
@@ -241,6 +242,7 @@ export type CustomerAccountOrderByWithRelationInput = {
   trials?: Prisma.TrialGrantOrderByRelationAggregateInput
   offers?: Prisma.DiscountOfferOrderByRelationAggregateInput
   offerRedemptions?: Prisma.OfferRedemptionOrderByRelationAggregateInput
+  legalAcceptances?: Prisma.LegalAcceptanceOrderByRelationAggregateInput
 }
 
 export type CustomerAccountWhereUniqueInput = Prisma.AtLeast<{
@@ -267,6 +269,7 @@ export type CustomerAccountWhereUniqueInput = Prisma.AtLeast<{
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
   offerRedemptions?: Prisma.OfferRedemptionListRelationFilter
+  legalAcceptances?: Prisma.LegalAcceptanceListRelationFilter
 }, "id">
 
 export type CustomerAccountOrderByWithAggregationInput = {
@@ -317,6 +320,7 @@ export type CustomerAccountCreateInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateInput = {
@@ -339,6 +343,7 @@ export type CustomerAccountUncheckedCreateInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUpdateInput = {
@@ -361,6 +366,7 @@ export type CustomerAccountUpdateInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateInput = {
@@ -383,6 +389,7 @@ export type CustomerAccountUncheckedUpdateInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateManyInput = {
@@ -460,14 +467,14 @@ export type CustomerAccountMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type CustomerAccountScalarRelationFilter = {
-  is?: Prisma.CustomerAccountWhereInput
-  isNot?: Prisma.CustomerAccountWhereInput
-}
-
 export type CustomerAccountNullableScalarRelationFilter = {
   is?: Prisma.CustomerAccountWhereInput | null
   isNot?: Prisma.CustomerAccountWhereInput | null
+}
+
+export type CustomerAccountScalarRelationFilter = {
+  is?: Prisma.CustomerAccountWhereInput
+  isNot?: Prisma.CustomerAccountWhereInput
 }
 
 export type CustomerAccountCreateNestedManyWithoutOwnerInput = {
@@ -514,6 +521,22 @@ export type CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput = {
 
 export type EnumAccountTypeFieldUpdateOperationsInput = {
   set?: $Enums.AccountType
+}
+
+export type CustomerAccountCreateNestedOneWithoutLegalAcceptancesInput = {
+  create?: Prisma.XOR<Prisma.CustomerAccountCreateWithoutLegalAcceptancesInput, Prisma.CustomerAccountUncheckedCreateWithoutLegalAcceptancesInput>
+  connectOrCreate?: Prisma.CustomerAccountCreateOrConnectWithoutLegalAcceptancesInput
+  connect?: Prisma.CustomerAccountWhereUniqueInput
+}
+
+export type CustomerAccountUpdateOneWithoutLegalAcceptancesNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerAccountCreateWithoutLegalAcceptancesInput, Prisma.CustomerAccountUncheckedCreateWithoutLegalAcceptancesInput>
+  connectOrCreate?: Prisma.CustomerAccountCreateOrConnectWithoutLegalAcceptancesInput
+  upsert?: Prisma.CustomerAccountUpsertWithoutLegalAcceptancesInput
+  disconnect?: Prisma.CustomerAccountWhereInput | boolean
+  delete?: Prisma.CustomerAccountWhereInput | boolean
+  connect?: Prisma.CustomerAccountWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerAccountUpdateToOneWithWhereWithoutLegalAcceptancesInput, Prisma.CustomerAccountUpdateWithoutLegalAcceptancesInput>, Prisma.CustomerAccountUncheckedUpdateWithoutLegalAcceptancesInput>
 }
 
 export type CustomerAccountCreateNestedOneWithoutOrganizationInput = {
@@ -693,6 +716,7 @@ export type CustomerAccountCreateWithoutOwnerInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOwnerInput = {
@@ -714,6 +738,7 @@ export type CustomerAccountUncheckedCreateWithoutOwnerInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOwnerInput = {
@@ -756,6 +781,110 @@ export type CustomerAccountScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
 }
 
+export type CustomerAccountCreateWithoutLegalAcceptancesInput = {
+  id?: string
+  type: $Enums.AccountType
+  displayName: string
+  billingEmail: string
+  taxId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
+  organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutAccountInput
+  carts?: Prisma.CartCreateNestedManyWithoutAccountInput
+  orders?: Prisma.OrderCreateNestedManyWithoutAccountInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutAccountInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutAccountInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
+  offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+}
+
+export type CustomerAccountUncheckedCreateWithoutLegalAcceptancesInput = {
+  id?: string
+  type: $Enums.AccountType
+  displayName: string
+  ownerId: string
+  billingEmail: string
+  taxId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutAccountInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutAccountInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutAccountInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutAccountInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
+  offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+}
+
+export type CustomerAccountCreateOrConnectWithoutLegalAcceptancesInput = {
+  where: Prisma.CustomerAccountWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerAccountCreateWithoutLegalAcceptancesInput, Prisma.CustomerAccountUncheckedCreateWithoutLegalAcceptancesInput>
+}
+
+export type CustomerAccountUpsertWithoutLegalAcceptancesInput = {
+  update: Prisma.XOR<Prisma.CustomerAccountUpdateWithoutLegalAcceptancesInput, Prisma.CustomerAccountUncheckedUpdateWithoutLegalAcceptancesInput>
+  create: Prisma.XOR<Prisma.CustomerAccountCreateWithoutLegalAcceptancesInput, Prisma.CustomerAccountUncheckedCreateWithoutLegalAcceptancesInput>
+  where?: Prisma.CustomerAccountWhereInput
+}
+
+export type CustomerAccountUpdateToOneWithWhereWithoutLegalAcceptancesInput = {
+  where?: Prisma.CustomerAccountWhereInput
+  data: Prisma.XOR<Prisma.CustomerAccountUpdateWithoutLegalAcceptancesInput, Prisma.CustomerAccountUncheckedUpdateWithoutLegalAcceptancesInput>
+}
+
+export type CustomerAccountUpdateWithoutLegalAcceptancesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
+  organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutAccountNestedInput
+  carts?: Prisma.CartUpdateManyWithoutAccountNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutAccountNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutAccountNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutAccountNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
+  offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+}
+
+export type CustomerAccountUncheckedUpdateWithoutLegalAcceptancesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutAccountNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutAccountNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutAccountNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutAccountNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
+  offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+}
+
 export type CustomerAccountCreateWithoutOrganizationInput = {
   id?: string
   type: $Enums.AccountType
@@ -775,6 +904,7 @@ export type CustomerAccountCreateWithoutOrganizationInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOrganizationInput = {
@@ -796,6 +926,7 @@ export type CustomerAccountUncheckedCreateWithoutOrganizationInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOrganizationInput = {
@@ -833,6 +964,7 @@ export type CustomerAccountUpdateWithoutOrganizationInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOrganizationInput = {
@@ -854,6 +986,7 @@ export type CustomerAccountUncheckedUpdateWithoutOrganizationInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutMembershipsInput = {
@@ -875,6 +1008,7 @@ export type CustomerAccountCreateWithoutMembershipsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutMembershipsInput = {
@@ -896,6 +1030,7 @@ export type CustomerAccountUncheckedCreateWithoutMembershipsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutMembershipsInput = {
@@ -933,6 +1068,7 @@ export type CustomerAccountUpdateWithoutMembershipsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutMembershipsInput = {
@@ -954,6 +1090,7 @@ export type CustomerAccountUncheckedUpdateWithoutMembershipsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutInvitationsInput = {
@@ -975,6 +1112,7 @@ export type CustomerAccountCreateWithoutInvitationsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutInvitationsInput = {
@@ -996,6 +1134,7 @@ export type CustomerAccountUncheckedCreateWithoutInvitationsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutInvitationsInput = {
@@ -1033,6 +1172,7 @@ export type CustomerAccountUpdateWithoutInvitationsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutInvitationsInput = {
@@ -1054,6 +1194,7 @@ export type CustomerAccountUncheckedUpdateWithoutInvitationsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutCartsInput = {
@@ -1075,6 +1216,7 @@ export type CustomerAccountCreateWithoutCartsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutCartsInput = {
@@ -1096,6 +1238,7 @@ export type CustomerAccountUncheckedCreateWithoutCartsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutCartsInput = {
@@ -1133,6 +1276,7 @@ export type CustomerAccountUpdateWithoutCartsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutCartsInput = {
@@ -1154,6 +1298,7 @@ export type CustomerAccountUncheckedUpdateWithoutCartsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutOrdersInput = {
@@ -1175,6 +1320,7 @@ export type CustomerAccountCreateWithoutOrdersInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOrdersInput = {
@@ -1196,6 +1342,7 @@ export type CustomerAccountUncheckedCreateWithoutOrdersInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOrdersInput = {
@@ -1233,6 +1380,7 @@ export type CustomerAccountUpdateWithoutOrdersInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOrdersInput = {
@@ -1254,6 +1402,7 @@ export type CustomerAccountUncheckedUpdateWithoutOrdersInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutSubscriptionsInput = {
@@ -1275,6 +1424,7 @@ export type CustomerAccountCreateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutSubscriptionsInput = {
@@ -1296,6 +1446,7 @@ export type CustomerAccountUncheckedCreateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutSubscriptionsInput = {
@@ -1333,6 +1484,7 @@ export type CustomerAccountUpdateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1354,6 +1506,7 @@ export type CustomerAccountUncheckedUpdateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutOffersInput = {
@@ -1375,6 +1528,7 @@ export type CustomerAccountCreateWithoutOffersInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOffersInput = {
@@ -1396,6 +1550,7 @@ export type CustomerAccountUncheckedCreateWithoutOffersInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOffersInput = {
@@ -1433,6 +1588,7 @@ export type CustomerAccountUpdateWithoutOffersInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOffersInput = {
@@ -1454,6 +1610,7 @@ export type CustomerAccountUncheckedUpdateWithoutOffersInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutOfferRedemptionsInput = {
@@ -1475,6 +1632,7 @@ export type CustomerAccountCreateWithoutOfferRedemptionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutOfferRedemptionsInput = {
@@ -1496,6 +1654,7 @@ export type CustomerAccountUncheckedCreateWithoutOfferRedemptionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutOfferRedemptionsInput = {
@@ -1533,6 +1692,7 @@ export type CustomerAccountUpdateWithoutOfferRedemptionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOfferRedemptionsInput = {
@@ -1554,6 +1714,7 @@ export type CustomerAccountUncheckedUpdateWithoutOfferRedemptionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutLicensesInput = {
@@ -1575,6 +1736,7 @@ export type CustomerAccountCreateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutLicensesInput = {
@@ -1596,6 +1758,7 @@ export type CustomerAccountUncheckedCreateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutLicensesInput = {
@@ -1633,6 +1796,7 @@ export type CustomerAccountUpdateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutLicensesInput = {
@@ -1654,6 +1818,7 @@ export type CustomerAccountUncheckedUpdateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutTrialsInput = {
@@ -1675,6 +1840,7 @@ export type CustomerAccountCreateWithoutTrialsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutTrialsInput = {
@@ -1696,6 +1862,7 @@ export type CustomerAccountUncheckedCreateWithoutTrialsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutTrialsInput = {
@@ -1733,6 +1900,7 @@ export type CustomerAccountUpdateWithoutTrialsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutTrialsInput = {
@@ -1754,6 +1922,7 @@ export type CustomerAccountUncheckedUpdateWithoutTrialsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateWithoutAuditLogsInput = {
@@ -1775,6 +1944,7 @@ export type CustomerAccountCreateWithoutAuditLogsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountUncheckedCreateWithoutAuditLogsInput = {
@@ -1796,6 +1966,7 @@ export type CustomerAccountUncheckedCreateWithoutAuditLogsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutAccountInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCustomerAccountInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedCreateNestedManyWithoutAccountInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutCustomerAccountInput
 }
 
 export type CustomerAccountCreateOrConnectWithoutAuditLogsInput = {
@@ -1833,6 +2004,7 @@ export type CustomerAccountUpdateWithoutAuditLogsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -1854,6 +2026,7 @@ export type CustomerAccountUncheckedUpdateWithoutAuditLogsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountCreateManyOwnerInput = {
@@ -1885,6 +2058,7 @@ export type CustomerAccountUpdateWithoutOwnerInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateWithoutOwnerInput = {
@@ -1906,6 +2080,7 @@ export type CustomerAccountUncheckedUpdateWithoutOwnerInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutAccountNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCustomerAccountNestedInput
   offerRedemptions?: Prisma.OfferRedemptionUncheckedUpdateManyWithoutAccountNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutCustomerAccountNestedInput
 }
 
 export type CustomerAccountUncheckedUpdateManyWithoutOwnerInput = {
@@ -1934,6 +2109,7 @@ export type CustomerAccountCountOutputType = {
   trials: number
   offers: number
   offerRedemptions: number
+  legalAcceptances: number
 }
 
 export type CustomerAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1947,6 +2123,7 @@ export type CustomerAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.E
   trials?: boolean | CustomerAccountCountOutputTypeCountTrialsArgs
   offers?: boolean | CustomerAccountCountOutputTypeCountOffersArgs
   offerRedemptions?: boolean | CustomerAccountCountOutputTypeCountOfferRedemptionsArgs
+  legalAcceptances?: boolean | CustomerAccountCountOutputTypeCountLegalAcceptancesArgs
 }
 
 /**
@@ -2029,6 +2206,13 @@ export type CustomerAccountCountOutputTypeCountOfferRedemptionsArgs<ExtArgs exte
   where?: Prisma.OfferRedemptionWhereInput
 }
 
+/**
+ * CustomerAccountCountOutputType without action
+ */
+export type CustomerAccountCountOutputTypeCountLegalAcceptancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LegalAcceptanceWhereInput
+}
+
 
 export type CustomerAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2051,6 +2235,7 @@ export type CustomerAccountSelect<ExtArgs extends runtime.Types.Extensions.Inter
   trials?: boolean | Prisma.CustomerAccount$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.CustomerAccount$offersArgs<ExtArgs>
   offerRedemptions?: boolean | Prisma.CustomerAccount$offerRedemptionsArgs<ExtArgs>
+  legalAcceptances?: boolean | Prisma.CustomerAccount$legalAcceptancesArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerAccountCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customerAccount"]>
 
@@ -2103,6 +2288,7 @@ export type CustomerAccountInclude<ExtArgs extends runtime.Types.Extensions.Inte
   trials?: boolean | Prisma.CustomerAccount$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.CustomerAccount$offersArgs<ExtArgs>
   offerRedemptions?: boolean | Prisma.CustomerAccount$offerRedemptionsArgs<ExtArgs>
+  legalAcceptances?: boolean | Prisma.CustomerAccount$legalAcceptancesArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerAccountCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CustomerAccountIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2127,6 +2313,7 @@ export type $CustomerAccountPayload<ExtArgs extends runtime.Types.Extensions.Int
     trials: Prisma.$TrialGrantPayload<ExtArgs>[]
     offers: Prisma.$DiscountOfferPayload<ExtArgs>[]
     offerRedemptions: Prisma.$OfferRedemptionPayload<ExtArgs>[]
+    legalAcceptances: Prisma.$LegalAcceptancePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2543,6 +2730,7 @@ export interface Prisma__CustomerAccountClient<T, Null = never, ExtArgs extends 
   trials<T extends Prisma.CustomerAccount$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offers<T extends Prisma.CustomerAccount$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiscountOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offerRedemptions<T extends Prisma.CustomerAccount$offerRedemptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$offerRedemptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferRedemptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  legalAcceptances<T extends Prisma.CustomerAccount$legalAcceptancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerAccount$legalAcceptancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LegalAcceptancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3237,6 +3425,30 @@ export type CustomerAccount$offerRedemptionsArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.OfferRedemptionScalarFieldEnum | Prisma.OfferRedemptionScalarFieldEnum[]
+}
+
+/**
+ * CustomerAccount.legalAcceptances
+ */
+export type CustomerAccount$legalAcceptancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LegalAcceptance
+   */
+  select?: Prisma.LegalAcceptanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LegalAcceptance
+   */
+  omit?: Prisma.LegalAcceptanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LegalAcceptanceInclude<ExtArgs> | null
+  where?: Prisma.LegalAcceptanceWhereInput
+  orderBy?: Prisma.LegalAcceptanceOrderByWithRelationInput | Prisma.LegalAcceptanceOrderByWithRelationInput[]
+  cursor?: Prisma.LegalAcceptanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LegalAcceptanceScalarFieldEnum | Prisma.LegalAcceptanceScalarFieldEnum[]
 }
 
 /**

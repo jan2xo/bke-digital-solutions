@@ -1,5 +1,16 @@
 # Implementation status
 
+## Phase 6.1A — Legal Document Management System (implemented, awaiting owner review)
+
+- Added normalized legal documents, versions, and immutable acceptance records with two additive migrations.
+- Added an MFA-protected administrator Legal & Compliance center for creation, title edits, drafts, preview, publishing, archive/restore, duplication, comparison, search/filter, acceptance counts/history, and draft-only deletion.
+- Added current and historical public legal routes with safe Markdown rendering and environment-driven template variables.
+- Registration now requires current Terms and Privacy versions; checkout requires EULA and Refund Policy, with Subscription Terms added for recurring plans and renewals.
+- Versions flagged for reacceptance redirect the next customer login and protected portal navigation without revoking sessions.
+- Seeded nine clearly labeled non-legal templates. Professional review and replacement remain a commercial-launch blocker.
+- Verification results are recorded in the developer journal and must remain distinguished from credential-gated provider certification.
+- Known integration boundary: immutable acceptances intentionally prevent the legacy permanent-customer deletion path from erasing a registered customer's evidence. Phase 6.1 must replace that destructive workflow with governed retention/pseudonymization; do not weaken the legal triggers.
+
 Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, genuine Resend direct/registration/outbox delivery, and real PayMongo test checkout creation are verified. Genuine payment/webhook/refund/reconciliation certification remains open.
 
 ## Completed modules

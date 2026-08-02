@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
+import { createHash } from "node:crypto";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const catalog = [
@@ -8,6 +9,17 @@ const catalog = [
   { slug: "bke-cloudops", name: "BKE CloudOps", summary: "Shared SaaS operations with annual access.", description: "A secure hosted workspace for teams that need visibility, accountability, and reliable operational records.", type: "SAAS" as const, policy: { name: "Professional", maxSeats: 5, maxDevicesPerSeat: 3, validityDays: 365 }, price: { name: "Annual team plan", amountMinor: 299900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "team", name: "Team", features: ["Shared workspace", "Operational audit trail", "Team reporting"], maxUsers: 5, maxDevicesPerUser: 3, updatePolicy: "ACTIVE_TERM" as const, perpetual: null, monthly: 29900, annualDiscountBps: 1000 } },
   { slug: "bke-institution-suite", name: "BKE Institution Suite", summary: "Flexible deployment for organizations and institutions.", description: "Organization licensing with authorized users, managed devices, and a central customer portal.", type: "HYBRID" as const, policy: { name: "Institution 25", maxSeats: 25, maxDevicesPerSeat: 2, validityDays: 365 }, price: { name: "Annual organization license", amountMinor: 1199900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "institution", name: "Institution", features: ["25 authorized users", "Managed devices", "Central license portal"], maxUsers: 25, maxDevicesPerUser: 2, updatePolicy: "ACTIVE_TERM" as const, perpetual: 1199900, monthly: 109900, annualDiscountBps: 900 } },
 ];
+const legalTemplates = [
+  ["TERMS_OF_SERVICE", "Terms of Service", "terms"],
+  ["PRIVACY_POLICY", "Privacy Policy", "privacy"],
+  ["SOFTWARE_LICENSE_AGREEMENT", "Software License Agreement (EULA)", "eula"],
+  ["SUBSCRIPTION_TERMS", "Subscription Terms", "subscription"],
+  ["REFUND_POLICY", "Refund Policy", "refund"],
+  ["ACCEPTABLE_USE_POLICY", "Acceptable Use Policy", "acceptable-use"],
+  ["COOKIE_POLICY", "Cookie Policy", "cookies"],
+  ["SUPPORT_POLICY", "Support Policy", "support"],
+  ["DATA_PROCESSING_ADDENDUM", "Data Processing Addendum", "dpa"],
+] as const;
 
 async function main() {
   for (const item of catalog) {
@@ -71,6 +83,12 @@ async function main() {
         create: { productId: product.id, versionId: version.id, name: "BKE CloudOps Installer.bin", objectKey: "installers/bke-installer.bin", sha256: "523b125a5fba47594385b3d41c1bc474c58d9e0161ce5e731be7db8c5da95fd5", sizeBytes: 37, contentType: "application/octet-stream" },
       });
     }
+  }
+  for (const [documentType, title, slug] of legalTemplates) {
+    const document = await db.legalDocument.upsert({ where: { slug }, update: { title, documentType, status: "ACTIVE" }, create: { title, slug, documentType } });
+    const markdownContent = `# ${title}\n\nTemplate content for {{company_name}}. This placeholder must be reviewed and replaced before commercial launch.\n\n- Website: {{website}}\n- Support: {{support_email}}\n- Business address: {{business_address}}`;
+    const version = await db.legalDocumentVersion.upsert({ where: { documentId_versionNumber: { documentId: document.id, versionNumber: 1 } }, update: {}, create: { documentId: document.id, versionNumber: 1, markdownContent, status: "PUBLISHED", effectiveAt: new Date(), publishedAt: new Date(), changeSummary: "Initial non-legal template", requiresReacceptance: false, contentHash: createHash("sha256").update(markdownContent).digest("hex") } });
+    if (!document.currentPublishedVersionId) await db.legalDocument.update({ where: { id: document.id }, data: { currentPublishedVersionId: version.id } });
   }
   console.info(`Seeded ${catalog.length} BKE Digital Solutions products and editions.`);
 }

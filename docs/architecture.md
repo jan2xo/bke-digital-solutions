@@ -41,6 +41,14 @@ User 1---* CustomerAccount 1---* Order 1---1 Invoice
 
 The administration layer is not a separate service. It is an RBAC-protected presentation and command layer over the same domain models used by customer and webhook flows. This preserves one source of truth and prevents admin-only shadow state.
 
+## Legal document and consent boundary
+
+`LegalDocument` is the stable identity and public slug for one semantic document type. `LegalDocumentVersion` is an append-only version stream: drafts may change or be deleted, while PostgreSQL triggers prevent content mutation or physical deletion after publication. One document type and one current published pointer are unique. Publishing archives the previous current version in a serializable transaction; restoring a prior version changes state and the current pointer without rewriting its content.
+
+`LegalAcceptance` records the user, optional purchasing account, exact document version, context, time, request metadata, rendered-content hash, and variable snapshot. Foreign-key restrictions and database triggers reject updates and deletes. Registration records Terms and Privacy in the registration transaction. Checkout records EULA and Refund acceptance, plus Subscription Terms for monthly and annual plans, in the order transaction. A published version marked for reacceptance redirects customers who predate that publication on their next interactive login or protected portal visit to `/legal/accept` without revoking the active session. Customer commerce, download, license, order, device, and trial APIs also return `LEGAL_REACCEPTANCE_REQUIRED` until completion, preventing direct API bypass.
+
+Legal Markdown is rendered by a deliberately limited server-side renderer. Raw HTML is escaped, unsafe links are neutralized, and only approved variables are substituted. The public route renders the source with current environment values; acceptance evidence hashes that exact rendered output and snapshots those values.
+
 The application uses server-rendered Next.js pages and route handlers. Browser input is treated as untrusted; prices, ownership, payment state, and entitlement rules are always loaded from PostgreSQL. Prisma supplies parameterized queries and transactions.
 
 The domain is provider-neutral: `PaymentProvider` maps hosted checkout and signed events into normalized payment events. PayMongo and deterministic mock adapters implement that boundary. Resend and S3-compatible services are likewise behind server-only modules.

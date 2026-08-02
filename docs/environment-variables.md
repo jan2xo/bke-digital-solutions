@@ -1,5 +1,7 @@
 # Environment variables
 
+`BUSINESS_ADDRESS` is a server-only, non-secret legal-template variable. Set it to the professionally approved business address before publishing production legal documents. It is snapshotted with every legal acceptance; changing it later does not rewrite historical evidence.
+
 Environment values are server-only unless explicitly prefixed for browser use. Commit examples, never real values.
 
 | Variable | Purpose |

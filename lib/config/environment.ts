@@ -45,6 +45,7 @@ export const environmentSchema = z.object({
   RESEND_API_KEY: z.preprocess(optional, z.string().min(1).optional()),
   EMAIL_FROM: z.string().min(3),
   SUPPORT_EMAIL: z.email().default("support@example.com"),
+  BUSINESS_ADDRESS: z.string().trim().min(3).max(500).default("Business address to be supplied during legal review"),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   ALLOW_DESTRUCTIVE_ADMIN: bool.default(false),
   MONITORING_DSN: z.preprocess(optional, z.url().optional()),
