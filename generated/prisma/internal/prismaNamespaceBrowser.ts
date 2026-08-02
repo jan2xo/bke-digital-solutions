@@ -147,6 +147,12 @@ export const SessionScalarFieldEnum = {
   absoluteExpiresAt: 'absoluteExpiresAt',
   ipHash: 'ipHash',
   userAgent: 'userAgent',
+  userAgentSummary: 'userAgentSummary',
+  networkHint: 'networkHint',
+  authenticationMethod: 'authenticationMethod',
+  assuranceLevel: 'assuranceLevel',
+  revokedAt: 'revokedAt',
+  revocationReason: 'revocationReason',
   createdAt: 'createdAt'
 } as const
 
@@ -198,6 +204,11 @@ export const SecurityEventScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   type: 'type',
+  outcome: 'outcome',
+  severity: 'severity',
+  sessionId: 'sessionId',
+  provider: 'provider',
+  authenticationMethod: 'authenticationMethod',
   ipHint: 'ipHint',
   userAgentHint: 'userAgentHint',
   metadata: 'metadata',
@@ -755,7 +766,8 @@ export const EmailOutboxScalarFieldEnum = {
   attempts: 'attempts',
   lastError: 'lastError',
   createdAt: 'createdAt',
-  sentAt: 'sentAt'
+  sentAt: 'sentAt',
+  deduplicationKey: 'deduplicationKey'
 } as const
 
 export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]

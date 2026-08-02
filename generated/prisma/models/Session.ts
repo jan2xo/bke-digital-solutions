@@ -36,6 +36,12 @@ export type SessionMinAggregateOutputType = {
   absoluteExpiresAt: Date | null
   ipHash: string | null
   userAgent: string | null
+  userAgentSummary: string | null
+  networkHint: string | null
+  authenticationMethod: $Enums.SessionAuthenticationMethod | null
+  assuranceLevel: $Enums.SessionAssuranceLevel | null
+  revokedAt: Date | null
+  revocationReason: string | null
   createdAt: Date | null
 }
 
@@ -51,6 +57,12 @@ export type SessionMaxAggregateOutputType = {
   absoluteExpiresAt: Date | null
   ipHash: string | null
   userAgent: string | null
+  userAgentSummary: string | null
+  networkHint: string | null
+  authenticationMethod: $Enums.SessionAuthenticationMethod | null
+  assuranceLevel: $Enums.SessionAssuranceLevel | null
+  revokedAt: Date | null
+  revocationReason: string | null
   createdAt: Date | null
 }
 
@@ -66,6 +78,12 @@ export type SessionCountAggregateOutputType = {
   absoluteExpiresAt: number
   ipHash: number
   userAgent: number
+  userAgentSummary: number
+  networkHint: number
+  authenticationMethod: number
+  assuranceLevel: number
+  revokedAt: number
+  revocationReason: number
   createdAt: number
   _all: number
 }
@@ -83,6 +101,12 @@ export type SessionMinAggregateInputType = {
   absoluteExpiresAt?: true
   ipHash?: true
   userAgent?: true
+  userAgentSummary?: true
+  networkHint?: true
+  authenticationMethod?: true
+  assuranceLevel?: true
+  revokedAt?: true
+  revocationReason?: true
   createdAt?: true
 }
 
@@ -98,6 +122,12 @@ export type SessionMaxAggregateInputType = {
   absoluteExpiresAt?: true
   ipHash?: true
   userAgent?: true
+  userAgentSummary?: true
+  networkHint?: true
+  authenticationMethod?: true
+  assuranceLevel?: true
+  revokedAt?: true
+  revocationReason?: true
   createdAt?: true
 }
 
@@ -113,6 +143,12 @@ export type SessionCountAggregateInputType = {
   absoluteExpiresAt?: true
   ipHash?: true
   userAgent?: true
+  userAgentSummary?: true
+  networkHint?: true
+  authenticationMethod?: true
+  assuranceLevel?: true
+  revokedAt?: true
+  revocationReason?: true
   createdAt?: true
   _all?: true
 }
@@ -201,6 +237,12 @@ export type SessionGroupByOutputType = {
   absoluteExpiresAt: Date
   ipHash: string | null
   userAgent: string | null
+  userAgentSummary: string | null
+  networkHint: string | null
+  authenticationMethod: $Enums.SessionAuthenticationMethod
+  assuranceLevel: $Enums.SessionAssuranceLevel
+  revokedAt: Date | null
+  revocationReason: string | null
   createdAt: Date
   _count: SessionCountAggregateOutputType | null
   _min: SessionMinAggregateOutputType | null
@@ -237,8 +279,15 @@ export type SessionWhereInput = {
   absoluteExpiresAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   ipHash?: Prisma.StringNullableFilter<"Session"> | string | null
   userAgent?: Prisma.StringNullableFilter<"Session"> | string | null
+  userAgentSummary?: Prisma.StringNullableFilter<"Session"> | string | null
+  networkHint?: Prisma.StringNullableFilter<"Session"> | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFilter<"Session"> | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFilter<"Session"> | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
+  revocationReason?: Prisma.StringNullableFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  securityEvents?: Prisma.SecurityEventListRelationFilter
 }
 
 export type SessionOrderByWithRelationInput = {
@@ -253,8 +302,15 @@ export type SessionOrderByWithRelationInput = {
   absoluteExpiresAt?: Prisma.SortOrder
   ipHash?: Prisma.SortOrderInput | Prisma.SortOrder
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
+  userAgentSummary?: Prisma.SortOrderInput | Prisma.SortOrder
+  networkHint?: Prisma.SortOrderInput | Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
+  assuranceLevel?: Prisma.SortOrder
+  revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  revocationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  securityEvents?: Prisma.SecurityEventOrderByRelationAggregateInput
 }
 
 export type SessionWhereUniqueInput = Prisma.AtLeast<{
@@ -272,8 +328,15 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   absoluteExpiresAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   ipHash?: Prisma.StringNullableFilter<"Session"> | string | null
   userAgent?: Prisma.StringNullableFilter<"Session"> | string | null
+  userAgentSummary?: Prisma.StringNullableFilter<"Session"> | string | null
+  networkHint?: Prisma.StringNullableFilter<"Session"> | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFilter<"Session"> | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFilter<"Session"> | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
+  revocationReason?: Prisma.StringNullableFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  securityEvents?: Prisma.SecurityEventListRelationFilter
 }, "id" | "tokenHash">
 
 export type SessionOrderByWithAggregationInput = {
@@ -288,6 +351,12 @@ export type SessionOrderByWithAggregationInput = {
   absoluteExpiresAt?: Prisma.SortOrder
   ipHash?: Prisma.SortOrderInput | Prisma.SortOrder
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
+  userAgentSummary?: Prisma.SortOrderInput | Prisma.SortOrder
+  networkHint?: Prisma.SortOrderInput | Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
+  assuranceLevel?: Prisma.SortOrder
+  revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  revocationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SessionCountOrderByAggregateInput
   _max?: Prisma.SessionMaxOrderByAggregateInput
@@ -309,6 +378,12 @@ export type SessionScalarWhereWithAggregatesInput = {
   absoluteExpiresAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
   ipHash?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
   userAgent?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
+  userAgentSummary?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
+  networkHint?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodWithAggregatesFilter<"Session"> | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelWithAggregatesFilter<"Session"> | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
+  revocationReason?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
 }
 
@@ -323,8 +398,15 @@ export type SessionCreateInput = {
   absoluteExpiresAt: Date | string
   ipHash?: string | null
   userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSessionsInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUncheckedCreateInput = {
@@ -339,7 +421,14 @@ export type SessionUncheckedCreateInput = {
   absoluteExpiresAt: Date | string
   ipHash?: string | null
   userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
   createdAt?: Date | string
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUpdateInput = {
@@ -353,8 +442,15 @@ export type SessionUpdateInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSessionsNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateInput = {
@@ -369,7 +465,14 @@ export type SessionUncheckedUpdateInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionCreateManyInput = {
@@ -384,6 +487,12 @@ export type SessionCreateManyInput = {
   absoluteExpiresAt: Date | string
   ipHash?: string | null
   userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
   createdAt?: Date | string
 }
 
@@ -398,6 +507,12 @@ export type SessionUpdateManyMutationInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -413,6 +528,12 @@ export type SessionUncheckedUpdateManyInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -438,6 +559,12 @@ export type SessionCountOrderByAggregateInput = {
   absoluteExpiresAt?: Prisma.SortOrder
   ipHash?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
+  userAgentSummary?: Prisma.SortOrder
+  networkHint?: Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
+  assuranceLevel?: Prisma.SortOrder
+  revokedAt?: Prisma.SortOrder
+  revocationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -453,6 +580,12 @@ export type SessionMaxOrderByAggregateInput = {
   absoluteExpiresAt?: Prisma.SortOrder
   ipHash?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
+  userAgentSummary?: Prisma.SortOrder
+  networkHint?: Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
+  assuranceLevel?: Prisma.SortOrder
+  revokedAt?: Prisma.SortOrder
+  revocationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -468,7 +601,18 @@ export type SessionMinOrderByAggregateInput = {
   absoluteExpiresAt?: Prisma.SortOrder
   ipHash?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
+  userAgentSummary?: Prisma.SortOrder
+  networkHint?: Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
+  assuranceLevel?: Prisma.SortOrder
+  revokedAt?: Prisma.SortOrder
+  revocationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type SessionNullableScalarRelationFilter = {
+  is?: Prisma.SessionWhereInput | null
+  isNot?: Prisma.SessionWhereInput | null
 }
 
 export type SessionCreateNestedManyWithoutUserInput = {
@@ -513,6 +657,30 @@ export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
 }
 
+export type EnumSessionAuthenticationMethodFieldUpdateOperationsInput = {
+  set?: $Enums.SessionAuthenticationMethod
+}
+
+export type EnumSessionAssuranceLevelFieldUpdateOperationsInput = {
+  set?: $Enums.SessionAssuranceLevel
+}
+
+export type SessionCreateNestedOneWithoutSecurityEventsInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutSecurityEventsInput, Prisma.SessionUncheckedCreateWithoutSecurityEventsInput>
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutSecurityEventsInput
+  connect?: Prisma.SessionWhereUniqueInput
+}
+
+export type SessionUpdateOneWithoutSecurityEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutSecurityEventsInput, Prisma.SessionUncheckedCreateWithoutSecurityEventsInput>
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutSecurityEventsInput
+  upsert?: Prisma.SessionUpsertWithoutSecurityEventsInput
+  disconnect?: Prisma.SessionWhereInput | boolean
+  delete?: Prisma.SessionWhereInput | boolean
+  connect?: Prisma.SessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SessionUpdateToOneWithWhereWithoutSecurityEventsInput, Prisma.SessionUpdateWithoutSecurityEventsInput>, Prisma.SessionUncheckedUpdateWithoutSecurityEventsInput>
+}
+
 export type SessionCreateWithoutUserInput = {
   id?: string
   tokenHash: string
@@ -524,7 +692,14 @@ export type SessionCreateWithoutUserInput = {
   absoluteExpiresAt: Date | string
   ipHash?: string | null
   userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
   createdAt?: Date | string
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUncheckedCreateWithoutUserInput = {
@@ -538,7 +713,14 @@ export type SessionUncheckedCreateWithoutUserInput = {
   absoluteExpiresAt: Date | string
   ipHash?: string | null
   userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
   createdAt?: Date | string
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type SessionCreateOrConnectWithoutUserInput = {
@@ -582,7 +764,113 @@ export type SessionScalarWhereInput = {
   absoluteExpiresAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   ipHash?: Prisma.StringNullableFilter<"Session"> | string | null
   userAgent?: Prisma.StringNullableFilter<"Session"> | string | null
+  userAgentSummary?: Prisma.StringNullableFilter<"Session"> | string | null
+  networkHint?: Prisma.StringNullableFilter<"Session"> | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFilter<"Session"> | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFilter<"Session"> | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
+  revocationReason?: Prisma.StringNullableFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+}
+
+export type SessionCreateWithoutSecurityEventsInput = {
+  id?: string
+  tokenHash: string
+  expiresAt: Date | string
+  lastAuthenticatedAt?: Date | string
+  mfaVerifiedAt?: Date | string | null
+  recentAuthenticatedAt?: Date | string | null
+  lastSeenAt?: Date | string
+  absoluteExpiresAt: Date | string
+  ipHash?: string | null
+  userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutSessionsInput
+}
+
+export type SessionUncheckedCreateWithoutSecurityEventsInput = {
+  id?: string
+  tokenHash: string
+  userId: string
+  expiresAt: Date | string
+  lastAuthenticatedAt?: Date | string
+  mfaVerifiedAt?: Date | string | null
+  recentAuthenticatedAt?: Date | string | null
+  lastSeenAt?: Date | string
+  absoluteExpiresAt: Date | string
+  ipHash?: string | null
+  userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
+  createdAt?: Date | string
+}
+
+export type SessionCreateOrConnectWithoutSecurityEventsInput = {
+  where: Prisma.SessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SessionCreateWithoutSecurityEventsInput, Prisma.SessionUncheckedCreateWithoutSecurityEventsInput>
+}
+
+export type SessionUpsertWithoutSecurityEventsInput = {
+  update: Prisma.XOR<Prisma.SessionUpdateWithoutSecurityEventsInput, Prisma.SessionUncheckedUpdateWithoutSecurityEventsInput>
+  create: Prisma.XOR<Prisma.SessionCreateWithoutSecurityEventsInput, Prisma.SessionUncheckedCreateWithoutSecurityEventsInput>
+  where?: Prisma.SessionWhereInput
+}
+
+export type SessionUpdateToOneWithWhereWithoutSecurityEventsInput = {
+  where?: Prisma.SessionWhereInput
+  data: Prisma.XOR<Prisma.SessionUpdateWithoutSecurityEventsInput, Prisma.SessionUncheckedUpdateWithoutSecurityEventsInput>
+}
+
+export type SessionUpdateWithoutSecurityEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastAuthenticatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recentAuthenticatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutSessionsNestedInput
+}
+
+export type SessionUncheckedUpdateWithoutSecurityEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastAuthenticatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recentAuthenticatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionCreateManyUserInput = {
@@ -596,6 +884,12 @@ export type SessionCreateManyUserInput = {
   absoluteExpiresAt: Date | string
   ipHash?: string | null
   userAgent?: string | null
+  userAgentSummary?: string | null
+  networkHint?: string | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod
+  assuranceLevel?: $Enums.SessionAssuranceLevel
+  revokedAt?: Date | string | null
+  revocationReason?: string | null
   createdAt?: Date | string
 }
 
@@ -610,7 +904,14 @@ export type SessionUpdateWithoutUserInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutUserInput = {
@@ -624,7 +925,14 @@ export type SessionUncheckedUpdateWithoutUserInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateManyWithoutUserInput = {
@@ -638,9 +946,44 @@ export type SessionUncheckedUpdateManyWithoutUserInput = {
   absoluteExpiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  networkHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod
+  assuranceLevel?: Prisma.EnumSessionAssuranceLevelFieldUpdateOperationsInput | $Enums.SessionAssuranceLevel
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revocationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type SessionCountOutputType
+ */
+
+export type SessionCountOutputType = {
+  securityEvents: number
+}
+
+export type SessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  securityEvents?: boolean | SessionCountOutputTypeCountSecurityEventsArgs
+}
+
+/**
+ * SessionCountOutputType without action
+ */
+export type SessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SessionCountOutputType
+   */
+  select?: Prisma.SessionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SessionCountOutputType without action
+ */
+export type SessionCountOutputTypeCountSecurityEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SecurityEventWhereInput
+}
 
 
 export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -655,8 +998,16 @@ export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   absoluteExpiresAt?: boolean
   ipHash?: boolean
   userAgent?: boolean
+  userAgentSummary?: boolean
+  networkHint?: boolean
+  authenticationMethod?: boolean
+  assuranceLevel?: boolean
+  revokedAt?: boolean
+  revocationReason?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  securityEvents?: boolean | Prisma.Session$securityEventsArgs<ExtArgs>
+  _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -671,6 +1022,12 @@ export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   absoluteExpiresAt?: boolean
   ipHash?: boolean
   userAgent?: boolean
+  userAgentSummary?: boolean
+  networkHint?: boolean
+  authenticationMethod?: boolean
+  assuranceLevel?: boolean
+  revokedAt?: boolean
+  revocationReason?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
@@ -687,6 +1044,12 @@ export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   absoluteExpiresAt?: boolean
   ipHash?: boolean
   userAgent?: boolean
+  userAgentSummary?: boolean
+  networkHint?: boolean
+  authenticationMethod?: boolean
+  assuranceLevel?: boolean
+  revokedAt?: boolean
+  revocationReason?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
@@ -703,12 +1066,20 @@ export type SessionSelectScalar = {
   absoluteExpiresAt?: boolean
   ipHash?: boolean
   userAgent?: boolean
+  userAgentSummary?: boolean
+  networkHint?: boolean
+  authenticationMethod?: boolean
+  assuranceLevel?: boolean
+  revokedAt?: boolean
+  revocationReason?: boolean
   createdAt?: boolean
 }
 
-export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tokenHash" | "userId" | "expiresAt" | "lastAuthenticatedAt" | "mfaVerifiedAt" | "recentAuthenticatedAt" | "lastSeenAt" | "absoluteExpiresAt" | "ipHash" | "userAgent" | "createdAt", ExtArgs["result"]["session"]>
+export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tokenHash" | "userId" | "expiresAt" | "lastAuthenticatedAt" | "mfaVerifiedAt" | "recentAuthenticatedAt" | "lastSeenAt" | "absoluteExpiresAt" | "ipHash" | "userAgent" | "userAgentSummary" | "networkHint" | "authenticationMethod" | "assuranceLevel" | "revokedAt" | "revocationReason" | "createdAt", ExtArgs["result"]["session"]>
 export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  securityEvents?: boolean | Prisma.Session$securityEventsArgs<ExtArgs>
+  _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -721,6 +1092,7 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Session"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    securityEvents: Prisma.$SecurityEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -734,6 +1106,12 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     absoluteExpiresAt: Date
     ipHash: string | null
     userAgent: string | null
+    userAgentSummary: string | null
+    networkHint: string | null
+    authenticationMethod: $Enums.SessionAuthenticationMethod
+    assuranceLevel: $Enums.SessionAssuranceLevel
+    revokedAt: Date | null
+    revocationReason: string | null
     createdAt: Date
   }, ExtArgs["result"]["session"]>
   composites: {}
@@ -1130,6 +1508,7 @@ readonly fields: SessionFieldRefs;
 export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  securityEvents<T extends Prisma.Session$securityEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$securityEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1170,6 +1549,12 @@ export interface SessionFieldRefs {
   readonly absoluteExpiresAt: Prisma.FieldRef<"Session", 'DateTime'>
   readonly ipHash: Prisma.FieldRef<"Session", 'String'>
   readonly userAgent: Prisma.FieldRef<"Session", 'String'>
+  readonly userAgentSummary: Prisma.FieldRef<"Session", 'String'>
+  readonly networkHint: Prisma.FieldRef<"Session", 'String'>
+  readonly authenticationMethod: Prisma.FieldRef<"Session", 'SessionAuthenticationMethod'>
+  readonly assuranceLevel: Prisma.FieldRef<"Session", 'SessionAssuranceLevel'>
+  readonly revokedAt: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly revocationReason: Prisma.FieldRef<"Session", 'String'>
   readonly createdAt: Prisma.FieldRef<"Session", 'DateTime'>
 }
 
@@ -1569,6 +1954,30 @@ export type SessionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Sessions to delete.
    */
   limit?: number
+}
+
+/**
+ * Session.securityEvents
+ */
+export type Session$securityEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SecurityEvent
+   */
+  select?: Prisma.SecurityEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SecurityEvent
+   */
+  omit?: Prisma.SecurityEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SecurityEventInclude<ExtArgs> | null
+  where?: Prisma.SecurityEventWhereInput
+  orderBy?: Prisma.SecurityEventOrderByWithRelationInput | Prisma.SecurityEventOrderByWithRelationInput[]
+  cursor?: Prisma.SecurityEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SecurityEventScalarFieldEnum | Prisma.SecurityEventScalarFieldEnum[]
 }
 
 /**

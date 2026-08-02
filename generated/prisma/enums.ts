@@ -202,7 +202,11 @@ export type MfaChallengePurpose = (typeof MfaChallengePurpose)[keyof typeof MfaC
 
 
 export const SecurityEventType = {
+  ADMIN_LOGIN_SUCCEEDED: 'ADMIN_LOGIN_SUCCEEDED',
+  ADMIN_LOGIN_FAILED: 'ADMIN_LOGIN_FAILED',
   ADMIN_PASSWORD_ACCEPTED: 'ADMIN_PASSWORD_ACCEPTED',
+  ADMIN_PASSWORD_REJECTED: 'ADMIN_PASSWORD_REJECTED',
+  ADMIN_SESSION_CREATED: 'ADMIN_SESSION_CREATED',
   MFA_CHALLENGE_SUCCEEDED: 'MFA_CHALLENGE_SUCCEEDED',
   MFA_CHALLENGE_FAILED: 'MFA_CHALLENGE_FAILED',
   MFA_ENROLLED: 'MFA_ENROLLED',
@@ -214,10 +218,60 @@ export const SecurityEventType = {
   ADMIN_SESSION_REVOKED: 'ADMIN_SESSION_REVOKED',
   ADMIN_MAGIC_LOGIN_BLOCKED: 'ADMIN_MAGIC_LOGIN_BLOCKED',
   MFA_ENROLLMENT_STARTED: 'MFA_ENROLLMENT_STARTED',
-  PASSWORD_CHANGED: 'PASSWORD_CHANGED'
+  PASSWORD_CHANGED: 'PASSWORD_CHANGED',
+  PASSWORD_RESET_COMPLETED: 'PASSWORD_RESET_COMPLETED',
+  ADMIN_ALL_OTHER_SESSIONS_REVOKED: 'ADMIN_ALL_OTHER_SESSIONS_REVOKED',
+  ADMIN_ALL_SESSIONS_REVOKED: 'ADMIN_ALL_SESSIONS_REVOKED',
+  SECURITY_RATE_LIMIT_TRIGGERED: 'SECURITY_RATE_LIMIT_TRIGGERED',
+  PROVIDER_CREDENTIAL_REPLACED: 'PROVIDER_CREDENTIAL_REPLACED',
+  PROVIDER_CREDENTIAL_REVOKED: 'PROVIDER_CREDENTIAL_REVOKED',
+  PROVIDER_VALIDATION_SUCCEEDED: 'PROVIDER_VALIDATION_SUCCEEDED',
+  PROVIDER_VALIDATION_FAILED: 'PROVIDER_VALIDATION_FAILED',
+  LIVE_PAYMENT_ENABLE_BLOCKED: 'LIVE_PAYMENT_ENABLE_BLOCKED'
 } as const
 
 export type SecurityEventType = (typeof SecurityEventType)[keyof typeof SecurityEventType]
+
+
+export const SecurityEventOutcome = {
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  BLOCKED: 'BLOCKED',
+  INFORMATIONAL: 'INFORMATIONAL'
+} as const
+
+export type SecurityEventOutcome = (typeof SecurityEventOutcome)[keyof typeof SecurityEventOutcome]
+
+
+export const SecurityEventSeverity = {
+  INFORMATIONAL: 'INFORMATIONAL',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type SecurityEventSeverity = (typeof SecurityEventSeverity)[keyof typeof SecurityEventSeverity]
+
+
+export const SessionAuthenticationMethod = {
+  PASSWORD: 'PASSWORD',
+  PASSWORD_TOTP: 'PASSWORD_TOTP',
+  PASSWORD_RECOVERY: 'PASSWORD_RECOVERY',
+  MAGIC_LINK: 'MAGIC_LINK',
+  MFA_ENROLLMENT: 'MFA_ENROLLMENT'
+} as const
+
+export type SessionAuthenticationMethod = (typeof SessionAuthenticationMethod)[keyof typeof SessionAuthenticationMethod]
+
+
+export const SessionAssuranceLevel = {
+  BASIC: 'BASIC',
+  MFA_VERIFIED: 'MFA_VERIFIED',
+  RECENTLY_AUTHENTICATED: 'RECENTLY_AUTHENTICATED'
+} as const
+
+export type SessionAssuranceLevel = (typeof SessionAssuranceLevel)[keyof typeof SessionAssuranceLevel]
 
 
 export const ExternalProvider = {

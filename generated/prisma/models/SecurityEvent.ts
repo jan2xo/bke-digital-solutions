@@ -28,6 +28,11 @@ export type SecurityEventMinAggregateOutputType = {
   id: string | null
   userId: string | null
   type: $Enums.SecurityEventType | null
+  outcome: $Enums.SecurityEventOutcome | null
+  severity: $Enums.SecurityEventSeverity | null
+  sessionId: string | null
+  provider: $Enums.ExternalProvider | null
+  authenticationMethod: $Enums.SessionAuthenticationMethod | null
   ipHint: string | null
   userAgentHint: string | null
   createdAt: Date | null
@@ -37,6 +42,11 @@ export type SecurityEventMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   type: $Enums.SecurityEventType | null
+  outcome: $Enums.SecurityEventOutcome | null
+  severity: $Enums.SecurityEventSeverity | null
+  sessionId: string | null
+  provider: $Enums.ExternalProvider | null
+  authenticationMethod: $Enums.SessionAuthenticationMethod | null
   ipHint: string | null
   userAgentHint: string | null
   createdAt: Date | null
@@ -46,6 +56,11 @@ export type SecurityEventCountAggregateOutputType = {
   id: number
   userId: number
   type: number
+  outcome: number
+  severity: number
+  sessionId: number
+  provider: number
+  authenticationMethod: number
   ipHint: number
   userAgentHint: number
   metadata: number
@@ -58,6 +73,11 @@ export type SecurityEventMinAggregateInputType = {
   id?: true
   userId?: true
   type?: true
+  outcome?: true
+  severity?: true
+  sessionId?: true
+  provider?: true
+  authenticationMethod?: true
   ipHint?: true
   userAgentHint?: true
   createdAt?: true
@@ -67,6 +87,11 @@ export type SecurityEventMaxAggregateInputType = {
   id?: true
   userId?: true
   type?: true
+  outcome?: true
+  severity?: true
+  sessionId?: true
+  provider?: true
+  authenticationMethod?: true
   ipHint?: true
   userAgentHint?: true
   createdAt?: true
@@ -76,6 +101,11 @@ export type SecurityEventCountAggregateInputType = {
   id?: true
   userId?: true
   type?: true
+  outcome?: true
+  severity?: true
+  sessionId?: true
+  provider?: true
+  authenticationMethod?: true
   ipHint?: true
   userAgentHint?: true
   metadata?: true
@@ -159,6 +189,11 @@ export type SecurityEventGroupByOutputType = {
   id: string
   userId: string | null
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  sessionId: string | null
+  provider: $Enums.ExternalProvider | null
+  authenticationMethod: $Enums.SessionAuthenticationMethod | null
   ipHint: string | null
   userAgentHint: string | null
   metadata: runtime.JsonValue | null
@@ -190,22 +225,34 @@ export type SecurityEventWhereInput = {
   id?: Prisma.StringFilter<"SecurityEvent"> | string
   userId?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   type?: Prisma.EnumSecurityEventTypeFilter<"SecurityEvent"> | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFilter<"SecurityEvent"> | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFilter<"SecurityEvent"> | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
+  provider?: Prisma.EnumExternalProviderNullableFilter<"SecurityEvent"> | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodNullableFilter<"SecurityEvent"> | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   userAgentHint?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableFilter<"SecurityEvent">
   createdAt?: Prisma.DateTimeFilter<"SecurityEvent"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
 }
 
 export type SecurityEventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  provider?: Prisma.SortOrderInput | Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   ipHint?: Prisma.SortOrderInput | Prisma.SortOrder
   userAgentHint?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  session?: Prisma.SessionOrderByWithRelationInput
 }
 
 export type SecurityEventWhereUniqueInput = Prisma.AtLeast<{
@@ -215,17 +262,28 @@ export type SecurityEventWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SecurityEventWhereInput | Prisma.SecurityEventWhereInput[]
   userId?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   type?: Prisma.EnumSecurityEventTypeFilter<"SecurityEvent"> | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFilter<"SecurityEvent"> | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFilter<"SecurityEvent"> | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
+  provider?: Prisma.EnumExternalProviderNullableFilter<"SecurityEvent"> | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodNullableFilter<"SecurityEvent"> | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   userAgentHint?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableFilter<"SecurityEvent">
   createdAt?: Prisma.DateTimeFilter<"SecurityEvent"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
 }, "id">
 
 export type SecurityEventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  provider?: Prisma.SortOrderInput | Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   ipHint?: Prisma.SortOrderInput | Prisma.SortOrder
   userAgentHint?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -242,6 +300,11 @@ export type SecurityEventScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"SecurityEvent"> | string
   userId?: Prisma.StringNullableWithAggregatesFilter<"SecurityEvent"> | string | null
   type?: Prisma.EnumSecurityEventTypeWithAggregatesFilter<"SecurityEvent"> | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeWithAggregatesFilter<"SecurityEvent"> | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityWithAggregatesFilter<"SecurityEvent"> | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.StringNullableWithAggregatesFilter<"SecurityEvent"> | string | null
+  provider?: Prisma.EnumExternalProviderNullableWithAggregatesFilter<"SecurityEvent"> | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodNullableWithAggregatesFilter<"SecurityEvent"> | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.StringNullableWithAggregatesFilter<"SecurityEvent"> | string | null
   userAgentHint?: Prisma.StringNullableWithAggregatesFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"SecurityEvent">
@@ -251,17 +314,27 @@ export type SecurityEventScalarWhereWithAggregatesInput = {
 export type SecurityEventCreateInput = {
   id?: string
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
   userAgentHint?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutSecurityEventsInput
+  session?: Prisma.SessionCreateNestedOneWithoutSecurityEventsInput
 }
 
 export type SecurityEventUncheckedCreateInput = {
   id?: string
   userId?: string | null
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  sessionId?: string | null
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
   userAgentHint?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -271,17 +344,27 @@ export type SecurityEventUncheckedCreateInput = {
 export type SecurityEventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutSecurityEventsNestedInput
+  session?: Prisma.SessionUpdateOneWithoutSecurityEventsNestedInput
 }
 
 export type SecurityEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -292,6 +375,11 @@ export type SecurityEventCreateManyInput = {
   id?: string
   userId?: string | null
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  sessionId?: string | null
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
   userAgentHint?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -301,6 +389,10 @@ export type SecurityEventCreateManyInput = {
 export type SecurityEventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -311,6 +403,11 @@ export type SecurityEventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -331,6 +428,11 @@ export type SecurityEventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
   ipHint?: Prisma.SortOrder
   userAgentHint?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -341,6 +443,11 @@ export type SecurityEventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
   ipHint?: Prisma.SortOrder
   userAgentHint?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -350,6 +457,11 @@ export type SecurityEventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  authenticationMethod?: Prisma.SortOrder
   ipHint?: Prisma.SortOrder
   userAgentHint?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -397,22 +509,90 @@ export type SecurityEventUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
 }
 
+export type SecurityEventCreateNestedManyWithoutSessionInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutSessionInput, Prisma.SecurityEventUncheckedCreateWithoutSessionInput> | Prisma.SecurityEventCreateWithoutSessionInput[] | Prisma.SecurityEventUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutSessionInput | Prisma.SecurityEventCreateOrConnectWithoutSessionInput[]
+  createMany?: Prisma.SecurityEventCreateManySessionInputEnvelope
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+}
+
+export type SecurityEventUncheckedCreateNestedManyWithoutSessionInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutSessionInput, Prisma.SecurityEventUncheckedCreateWithoutSessionInput> | Prisma.SecurityEventCreateWithoutSessionInput[] | Prisma.SecurityEventUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutSessionInput | Prisma.SecurityEventCreateOrConnectWithoutSessionInput[]
+  createMany?: Prisma.SecurityEventCreateManySessionInputEnvelope
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+}
+
+export type SecurityEventUpdateManyWithoutSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutSessionInput, Prisma.SecurityEventUncheckedCreateWithoutSessionInput> | Prisma.SecurityEventCreateWithoutSessionInput[] | Prisma.SecurityEventUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutSessionInput | Prisma.SecurityEventCreateOrConnectWithoutSessionInput[]
+  upsert?: Prisma.SecurityEventUpsertWithWhereUniqueWithoutSessionInput | Prisma.SecurityEventUpsertWithWhereUniqueWithoutSessionInput[]
+  createMany?: Prisma.SecurityEventCreateManySessionInputEnvelope
+  set?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  disconnect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  delete?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  update?: Prisma.SecurityEventUpdateWithWhereUniqueWithoutSessionInput | Prisma.SecurityEventUpdateWithWhereUniqueWithoutSessionInput[]
+  updateMany?: Prisma.SecurityEventUpdateManyWithWhereWithoutSessionInput | Prisma.SecurityEventUpdateManyWithWhereWithoutSessionInput[]
+  deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
+}
+
+export type SecurityEventUncheckedUpdateManyWithoutSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutSessionInput, Prisma.SecurityEventUncheckedCreateWithoutSessionInput> | Prisma.SecurityEventCreateWithoutSessionInput[] | Prisma.SecurityEventUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutSessionInput | Prisma.SecurityEventCreateOrConnectWithoutSessionInput[]
+  upsert?: Prisma.SecurityEventUpsertWithWhereUniqueWithoutSessionInput | Prisma.SecurityEventUpsertWithWhereUniqueWithoutSessionInput[]
+  createMany?: Prisma.SecurityEventCreateManySessionInputEnvelope
+  set?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  disconnect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  delete?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  update?: Prisma.SecurityEventUpdateWithWhereUniqueWithoutSessionInput | Prisma.SecurityEventUpdateWithWhereUniqueWithoutSessionInput[]
+  updateMany?: Prisma.SecurityEventUpdateManyWithWhereWithoutSessionInput | Prisma.SecurityEventUpdateManyWithWhereWithoutSessionInput[]
+  deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
+}
+
 export type EnumSecurityEventTypeFieldUpdateOperationsInput = {
   set?: $Enums.SecurityEventType
+}
+
+export type EnumSecurityEventOutcomeFieldUpdateOperationsInput = {
+  set?: $Enums.SecurityEventOutcome
+}
+
+export type EnumSecurityEventSeverityFieldUpdateOperationsInput = {
+  set?: $Enums.SecurityEventSeverity
+}
+
+export type NullableEnumExternalProviderFieldUpdateOperationsInput = {
+  set?: $Enums.ExternalProvider | null
+}
+
+export type NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput = {
+  set?: $Enums.SessionAuthenticationMethod | null
 }
 
 export type SecurityEventCreateWithoutUserInput = {
   id?: string
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
   userAgentHint?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  session?: Prisma.SessionCreateNestedOneWithoutSecurityEventsInput
 }
 
 export type SecurityEventUncheckedCreateWithoutUserInput = {
   id?: string
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  sessionId?: string | null
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
   userAgentHint?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -452,15 +632,79 @@ export type SecurityEventScalarWhereInput = {
   id?: Prisma.StringFilter<"SecurityEvent"> | string
   userId?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   type?: Prisma.EnumSecurityEventTypeFilter<"SecurityEvent"> | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFilter<"SecurityEvent"> | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFilter<"SecurityEvent"> | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
+  provider?: Prisma.EnumExternalProviderNullableFilter<"SecurityEvent"> | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.EnumSessionAuthenticationMethodNullableFilter<"SecurityEvent"> | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   userAgentHint?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableFilter<"SecurityEvent">
   createdAt?: Prisma.DateTimeFilter<"SecurityEvent"> | Date | string
 }
 
+export type SecurityEventCreateWithoutSessionInput = {
+  id?: string
+  type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
+  ipHint?: string | null
+  userAgentHint?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutSecurityEventsInput
+}
+
+export type SecurityEventUncheckedCreateWithoutSessionInput = {
+  id?: string
+  userId?: string | null
+  type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
+  ipHint?: string | null
+  userAgentHint?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+}
+
+export type SecurityEventCreateOrConnectWithoutSessionInput = {
+  where: Prisma.SecurityEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.SecurityEventCreateWithoutSessionInput, Prisma.SecurityEventUncheckedCreateWithoutSessionInput>
+}
+
+export type SecurityEventCreateManySessionInputEnvelope = {
+  data: Prisma.SecurityEventCreateManySessionInput | Prisma.SecurityEventCreateManySessionInput[]
+  skipDuplicates?: boolean
+}
+
+export type SecurityEventUpsertWithWhereUniqueWithoutSessionInput = {
+  where: Prisma.SecurityEventWhereUniqueInput
+  update: Prisma.XOR<Prisma.SecurityEventUpdateWithoutSessionInput, Prisma.SecurityEventUncheckedUpdateWithoutSessionInput>
+  create: Prisma.XOR<Prisma.SecurityEventCreateWithoutSessionInput, Prisma.SecurityEventUncheckedCreateWithoutSessionInput>
+}
+
+export type SecurityEventUpdateWithWhereUniqueWithoutSessionInput = {
+  where: Prisma.SecurityEventWhereUniqueInput
+  data: Prisma.XOR<Prisma.SecurityEventUpdateWithoutSessionInput, Prisma.SecurityEventUncheckedUpdateWithoutSessionInput>
+}
+
+export type SecurityEventUpdateManyWithWhereWithoutSessionInput = {
+  where: Prisma.SecurityEventScalarWhereInput
+  data: Prisma.XOR<Prisma.SecurityEventUpdateManyMutationInput, Prisma.SecurityEventUncheckedUpdateManyWithoutSessionInput>
+}
+
 export type SecurityEventCreateManyUserInput = {
   id?: string
   type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  sessionId?: string | null
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
   userAgentHint?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -470,15 +714,25 @@ export type SecurityEventCreateManyUserInput = {
 export type SecurityEventUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  session?: Prisma.SessionUpdateOneWithoutSecurityEventsNestedInput
 }
 
 export type SecurityEventUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -488,6 +742,67 @@ export type SecurityEventUncheckedUpdateWithoutUserInput = {
 export type SecurityEventUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
+  ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SecurityEventCreateManySessionInput = {
+  id?: string
+  userId?: string | null
+  type: $Enums.SecurityEventType
+  outcome: $Enums.SecurityEventOutcome
+  severity: $Enums.SecurityEventSeverity
+  provider?: $Enums.ExternalProvider | null
+  authenticationMethod?: $Enums.SessionAuthenticationMethod | null
+  ipHint?: string | null
+  userAgentHint?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+}
+
+export type SecurityEventUpdateWithoutSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
+  ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutSecurityEventsNestedInput
+}
+
+export type SecurityEventUncheckedUpdateWithoutSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
+  ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SecurityEventUncheckedUpdateManyWithoutSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumSecurityEventTypeFieldUpdateOperationsInput | $Enums.SecurityEventType
+  outcome?: Prisma.EnumSecurityEventOutcomeFieldUpdateOperationsInput | $Enums.SecurityEventOutcome
+  severity?: Prisma.EnumSecurityEventSeverityFieldUpdateOperationsInput | $Enums.SecurityEventSeverity
+  provider?: Prisma.NullableEnumExternalProviderFieldUpdateOperationsInput | $Enums.ExternalProvider | null
+  authenticationMethod?: Prisma.NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput | $Enums.SessionAuthenticationMethod | null
   ipHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgentHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -500,65 +815,97 @@ export type SecurityEventSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   userId?: boolean
   type?: boolean
+  outcome?: boolean
+  severity?: boolean
+  sessionId?: boolean
+  provider?: boolean
+  authenticationMethod?: boolean
   ipHint?: boolean
   userAgentHint?: boolean
   metadata?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  session?: boolean | Prisma.SecurityEvent$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["securityEvent"]>
 
 export type SecurityEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   type?: boolean
+  outcome?: boolean
+  severity?: boolean
+  sessionId?: boolean
+  provider?: boolean
+  authenticationMethod?: boolean
   ipHint?: boolean
   userAgentHint?: boolean
   metadata?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  session?: boolean | Prisma.SecurityEvent$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["securityEvent"]>
 
 export type SecurityEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   type?: boolean
+  outcome?: boolean
+  severity?: boolean
+  sessionId?: boolean
+  provider?: boolean
+  authenticationMethod?: boolean
   ipHint?: boolean
   userAgentHint?: boolean
   metadata?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  session?: boolean | Prisma.SecurityEvent$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["securityEvent"]>
 
 export type SecurityEventSelectScalar = {
   id?: boolean
   userId?: boolean
   type?: boolean
+  outcome?: boolean
+  severity?: boolean
+  sessionId?: boolean
+  provider?: boolean
+  authenticationMethod?: boolean
   ipHint?: boolean
   userAgentHint?: boolean
   metadata?: boolean
   createdAt?: boolean
 }
 
-export type SecurityEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "ipHint" | "userAgentHint" | "metadata" | "createdAt", ExtArgs["result"]["securityEvent"]>
+export type SecurityEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "outcome" | "severity" | "sessionId" | "provider" | "authenticationMethod" | "ipHint" | "userAgentHint" | "metadata" | "createdAt", ExtArgs["result"]["securityEvent"]>
 export type SecurityEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  session?: boolean | Prisma.SecurityEvent$sessionArgs<ExtArgs>
 }
 export type SecurityEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  session?: boolean | Prisma.SecurityEvent$sessionArgs<ExtArgs>
 }
 export type SecurityEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  session?: boolean | Prisma.SecurityEvent$sessionArgs<ExtArgs>
 }
 
 export type $SecurityEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SecurityEvent"
   objects: {
     user: Prisma.$UserPayload<ExtArgs> | null
+    session: Prisma.$SessionPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string | null
     type: $Enums.SecurityEventType
+    outcome: $Enums.SecurityEventOutcome
+    severity: $Enums.SecurityEventSeverity
+    sessionId: string | null
+    provider: $Enums.ExternalProvider | null
+    authenticationMethod: $Enums.SessionAuthenticationMethod | null
     ipHint: string | null
     userAgentHint: string | null
     metadata: runtime.JsonValue | null
@@ -958,6 +1305,7 @@ readonly fields: SecurityEventFieldRefs;
 export interface Prisma__SecurityEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.SecurityEvent$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SecurityEvent$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  session<T extends Prisma.SecurityEvent$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SecurityEvent$sessionArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -990,6 +1338,11 @@ export interface SecurityEventFieldRefs {
   readonly id: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly userId: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly type: Prisma.FieldRef<"SecurityEvent", 'SecurityEventType'>
+  readonly outcome: Prisma.FieldRef<"SecurityEvent", 'SecurityEventOutcome'>
+  readonly severity: Prisma.FieldRef<"SecurityEvent", 'SecurityEventSeverity'>
+  readonly sessionId: Prisma.FieldRef<"SecurityEvent", 'String'>
+  readonly provider: Prisma.FieldRef<"SecurityEvent", 'ExternalProvider'>
+  readonly authenticationMethod: Prisma.FieldRef<"SecurityEvent", 'SessionAuthenticationMethod'>
   readonly ipHint: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly userAgentHint: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly metadata: Prisma.FieldRef<"SecurityEvent", 'Json'>
@@ -1411,6 +1764,25 @@ export type SecurityEvent$userArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * SecurityEvent.session
+ */
+export type SecurityEvent$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Session
+   */
+  select?: Prisma.SessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Session
+   */
+  omit?: Prisma.SessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
 }
 
 /**

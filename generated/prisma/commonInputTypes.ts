@@ -152,6 +152,40 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type EnumSessionAuthenticationMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAuthenticationMethodFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod
+}
+
+export type EnumSessionAssuranceLevelFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAssuranceLevel | Prisma.EnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAssuranceLevelFilter<$PrismaModel> | $Enums.SessionAssuranceLevel
+}
+
+export type EnumSessionAuthenticationMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAuthenticationMethodWithAggregatesFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionAuthenticationMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionAuthenticationMethodFilter<$PrismaModel>
+}
+
+export type EnumSessionAssuranceLevelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAssuranceLevel | Prisma.EnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAssuranceLevelWithAggregatesFilter<$PrismaModel> | $Enums.SessionAssuranceLevel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionAssuranceLevelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionAssuranceLevelFilter<$PrismaModel>
+}
+
 export type IntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -203,6 +237,34 @@ export type EnumSecurityEventTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSecurityEventTypeFilter<$PrismaModel> | $Enums.SecurityEventType
 }
 
+export type EnumSecurityEventOutcomeFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventOutcome | Prisma.EnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventOutcomeFilter<$PrismaModel> | $Enums.SecurityEventOutcome
+}
+
+export type EnumSecurityEventSeverityFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventSeverity | Prisma.EnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventSeverityFilter<$PrismaModel> | $Enums.SecurityEventSeverity
+}
+
+export type EnumExternalProviderNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExternalProviderNullableFilter<$PrismaModel> | $Enums.ExternalProvider | null
+}
+
+export type EnumSessionAuthenticationMethodNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod | null
+}
+
 export type JsonNullableFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -235,6 +297,46 @@ export type EnumSecurityEventTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSecurityEventTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSecurityEventTypeFilter<$PrismaModel>
+}
+
+export type EnumSecurityEventOutcomeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventOutcome | Prisma.EnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventOutcomeWithAggregatesFilter<$PrismaModel> | $Enums.SecurityEventOutcome
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSecurityEventOutcomeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSecurityEventOutcomeFilter<$PrismaModel>
+}
+
+export type EnumSecurityEventSeverityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventSeverity | Prisma.EnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventSeverityWithAggregatesFilter<$PrismaModel> | $Enums.SecurityEventSeverity
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSecurityEventSeverityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSecurityEventSeverityFilter<$PrismaModel>
+}
+
+export type EnumExternalProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExternalProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExternalProvider | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExternalProviderNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExternalProviderNullableFilter<$PrismaModel>
+}
+
+export type EnumSessionAuthenticationMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionAuthenticationMethodNullableWithAggregatesFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel>
 }
 
 export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
@@ -958,6 +1060,40 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type NestedEnumSessionAuthenticationMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAuthenticationMethodFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod
+}
+
+export type NestedEnumSessionAssuranceLevelFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAssuranceLevel | Prisma.EnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAssuranceLevelFilter<$PrismaModel> | $Enums.SessionAssuranceLevel
+}
+
+export type NestedEnumSessionAuthenticationMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAuthenticationMethodWithAggregatesFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionAuthenticationMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionAuthenticationMethodFilter<$PrismaModel>
+}
+
+export type NestedEnumSessionAssuranceLevelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAssuranceLevel | Prisma.EnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SessionAssuranceLevel[] | Prisma.ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSessionAssuranceLevelWithAggregatesFilter<$PrismaModel> | $Enums.SessionAssuranceLevel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionAssuranceLevelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionAssuranceLevelFilter<$PrismaModel>
+}
+
 export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -1009,6 +1145,34 @@ export type NestedEnumSecurityEventTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSecurityEventTypeFilter<$PrismaModel> | $Enums.SecurityEventType
 }
 
+export type NestedEnumSecurityEventOutcomeFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventOutcome | Prisma.EnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventOutcomeFilter<$PrismaModel> | $Enums.SecurityEventOutcome
+}
+
+export type NestedEnumSecurityEventSeverityFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventSeverity | Prisma.EnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventSeverityFilter<$PrismaModel> | $Enums.SecurityEventSeverity
+}
+
+export type NestedEnumExternalProviderNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExternalProviderNullableFilter<$PrismaModel> | $Enums.ExternalProvider | null
+}
+
+export type NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod | null
+}
+
 export type NestedEnumSecurityEventTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.SecurityEventType | Prisma.EnumSecurityEventTypeFieldRefInput<$PrismaModel>
   in?: $Enums.SecurityEventType[] | Prisma.ListEnumSecurityEventTypeFieldRefInput<$PrismaModel>
@@ -1017,6 +1181,46 @@ export type NestedEnumSecurityEventTypeWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSecurityEventTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSecurityEventTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumSecurityEventOutcomeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventOutcome | Prisma.EnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventOutcome[] | Prisma.ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventOutcomeWithAggregatesFilter<$PrismaModel> | $Enums.SecurityEventOutcome
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSecurityEventOutcomeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSecurityEventOutcomeFilter<$PrismaModel>
+}
+
+export type NestedEnumSecurityEventSeverityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SecurityEventSeverity | Prisma.EnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SecurityEventSeverity[] | Prisma.ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSecurityEventSeverityWithAggregatesFilter<$PrismaModel> | $Enums.SecurityEventSeverity
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSecurityEventSeverityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSecurityEventSeverityFilter<$PrismaModel>
+}
+
+export type NestedEnumExternalProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExternalProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExternalProvider | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExternalProviderNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExternalProviderNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumSessionAuthenticationMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionAuthenticationMethod | Prisma.EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionAuthenticationMethod[] | Prisma.ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionAuthenticationMethodNullableWithAggregatesFilter<$PrismaModel> | $Enums.SessionAuthenticationMethod | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionAuthenticationMethodNullableFilter<$PrismaModel>
 }
 
 export type NestedJsonNullableFilter<$PrismaModel = never> =

@@ -30,6 +30,8 @@ describe.sequential("database provider configuration service", () => {
   });
   afterAll(async () => {
     await db.externalProviderConfiguration.deleteMany({ where: { createdByUserId: actorId } });
+    await db.emailOutbox.deleteMany({ where: { recipient: { startsWith: "provider-service-" } } });
+    await db.securityEvent.deleteMany({ where: { userId: actorId } });
     await db.user.delete({ where: { id: actorId } });
     await db.$disconnect();
   });

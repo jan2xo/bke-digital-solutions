@@ -3715,6 +3715,12 @@ export const SessionScalarFieldEnum = {
   absoluteExpiresAt: 'absoluteExpiresAt',
   ipHash: 'ipHash',
   userAgent: 'userAgent',
+  userAgentSummary: 'userAgentSummary',
+  networkHint: 'networkHint',
+  authenticationMethod: 'authenticationMethod',
+  assuranceLevel: 'assuranceLevel',
+  revokedAt: 'revokedAt',
+  revocationReason: 'revocationReason',
   createdAt: 'createdAt'
 } as const
 
@@ -3766,6 +3772,11 @@ export const SecurityEventScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   type: 'type',
+  outcome: 'outcome',
+  severity: 'severity',
+  sessionId: 'sessionId',
+  provider: 'provider',
+  authenticationMethod: 'authenticationMethod',
   ipHint: 'ipHint',
   userAgentHint: 'userAgentHint',
   metadata: 'metadata',
@@ -4323,7 +4334,8 @@ export const EmailOutboxScalarFieldEnum = {
   attempts: 'attempts',
   lastError: 'lastError',
   createdAt: 'createdAt',
-  sentAt: 'sentAt'
+  sentAt: 'sentAt',
+  deduplicationKey: 'deduplicationKey'
 } as const
 
 export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
@@ -4465,6 +4477,34 @@ export type ListEnumGlobalRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'SessionAuthenticationMethod'
+ */
+export type EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionAuthenticationMethod'>
+
+
+
+/**
+ * Reference to a field of type 'SessionAuthenticationMethod[]'
+ */
+export type ListEnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionAuthenticationMethod[]'>
+
+
+
+/**
+ * Reference to a field of type 'SessionAssuranceLevel'
+ */
+export type EnumSessionAssuranceLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionAssuranceLevel'>
+
+
+
+/**
+ * Reference to a field of type 'SessionAssuranceLevel[]'
+ */
+export type ListEnumSessionAssuranceLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionAssuranceLevel[]'>
+
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4503,6 +4543,48 @@ export type EnumSecurityEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'SecurityEventType[]'
  */
 export type ListEnumSecurityEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventType[]'>
+
+
+
+/**
+ * Reference to a field of type 'SecurityEventOutcome'
+ */
+export type EnumSecurityEventOutcomeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventOutcome'>
+
+
+
+/**
+ * Reference to a field of type 'SecurityEventOutcome[]'
+ */
+export type ListEnumSecurityEventOutcomeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventOutcome[]'>
+
+
+
+/**
+ * Reference to a field of type 'SecurityEventSeverity'
+ */
+export type EnumSecurityEventSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventSeverity'>
+
+
+
+/**
+ * Reference to a field of type 'SecurityEventSeverity[]'
+ */
+export type ListEnumSecurityEventSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventSeverity[]'>
+
+
+
+/**
+ * Reference to a field of type 'ExternalProvider'
+ */
+export type EnumExternalProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalProvider'>
+
+
+
+/**
+ * Reference to a field of type 'ExternalProvider[]'
+ */
+export type ListEnumExternalProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalProvider[]'>
 
 
 
@@ -4804,20 +4886,6 @@ export type EnumTrialSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'TrialSource[]'
  */
 export type ListEnumTrialSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TrialSource[]'>
-
-
-
-/**
- * Reference to a field of type 'ExternalProvider'
- */
-export type EnumExternalProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalProvider'>
-
-
-
-/**
- * Reference to a field of type 'ExternalProvider[]'
- */
-export type ListEnumExternalProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalProvider[]'>
 
 
 

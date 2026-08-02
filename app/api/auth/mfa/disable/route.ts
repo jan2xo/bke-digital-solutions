@@ -17,9 +17,9 @@ export async function POST(request: Request) {
       await tx.administratorMfaMethod.update({ where: { userId: session.userId }, data: { enabledAt: null, disabledAt: new Date(), pendingExpiresAt: null } });
       await tx.administratorRecoveryCode.deleteMany({ where: { userId: session.userId } });
       await tx.mfaChallenge.deleteMany({ where: { userId: session.userId } });
-      await tx.session.deleteMany({ where: { userId: session.userId } });
+      await tx.session.updateMany({ where: { userId: session.userId, revokedAt: null }, data: { revokedAt: new Date(), revocationReason: "MFA_DISABLED" } });
     });
-    await createSession(session.userId, request, { recent: true });
+    await createSession(session.userId, request, { recent: true, authenticationMethod: "MFA_ENROLLMENT" });
     await securityEvent("MFA_DISABLED", request, session.userId);
     await audit({ actorId: session.userId, action: "MFA_DISABLED", targetType: "User", targetId: session.userId });
     return NextResponse.json({ enrollmentRequired: true });

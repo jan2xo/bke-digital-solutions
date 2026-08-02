@@ -79,3 +79,7 @@ See `implementation-status.md`, `ROADMAP.md`, the deployment checklist, and the 
 # Phase 5.2C handoff
 
 Keep provider source on `environment` until newly rotated PayMongo TEST and Resend credentials have been saved, validated, and enabled with an externally managed master key. Then select `database`, restart, and rerun provider certification. Never copy current environment values automatically. See `docs/operations/provider-credential-rotation.md`.
+
+# Phase 5.3 handoff
+
+Migration `20260802143000_security_dashboard_sessions` must be deployed before this application version. It adds retained session revocation metadata, safe client/network summaries, authentication method and assurance, normalized security-event outcome/severity/provider context, supporting indexes, and an email-outbox deduplication key. `/admin/security` is self-service only: administrators cannot inspect or revoke another administrator's sessions. No automated retention purge is enabled; approve policy and backup interaction before adding one.

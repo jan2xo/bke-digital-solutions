@@ -1,6 +1,6 @@
 # Phase 5 — Enterprise Security Roadmap
 
-Status: Phase 5.1 implemented in the working tree; later subphases are documented only.
+Status: Phase 5.3 implemented and locally verified in the working tree; later subphases remain deferred.
 
 ## Phase 5.1: administrator MFA and session hardening
 
@@ -23,9 +23,9 @@ The bootstrap script requires an explicit production acknowledgement, refuses a 
 
 Planned: scoped API keys, personal access tokens, service accounts/client credentials, identifiable non-secret prefixes, hashed one-time-reveal secrets, expiry, rotation, revocation, last-used timestamps, optional IP restrictions, permission scopes, webhook signing-secret versioning, API-specific rate limits/audit events, and future licensing-client credentials. No API credential implementation exists in Phase 5.1.
 
-## Phase 5.3: security dashboard and session operations — not implemented
+## Phase 5.3: security dashboard and session operations
 
-Planned: active-session administration, login history, failed attempts, MFA and API-key activity, security-event timeline, suspicious-activity rules, administrator alerts, targeted/revoke-all session operations, recovery events, and security notifications. Phase 5.1 exposes only the administrator's own summary and MFA management.
+The administrator security dashboard now provides owner-only active-session administration, current-session labeling, normalized authentication history, severity/outcome/provider filters, conservative review signals, MFA/recovery/password controls, and safe provider-security events. Targeted, all-other, and all-session revocation require recent administrator authentication and are transactional and idempotent. New administrator sessions and session revocations queue deduplicated notifications through the existing email outbox. The dashboard never exposes session secrets, raw user agents, full IPs, credentials, or raw provider payloads.
 
 ## Phase 5.4: advanced detection and response — not implemented
 

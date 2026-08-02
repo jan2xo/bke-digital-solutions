@@ -22,7 +22,7 @@ describe("external provider credential encryption", () => {
   });
 
   it("exposes only a small non-sensitive hint", () => {
-    expect(providerCredentialHint("sk_test_abcdefghijklmnopqrstuvwxyz")).toBe("sk_t••••wxyz");
+    expect(providerCredentialHint("synthetic_test_abcdefghijklmnopqrstuvwxyz")).toBe("synt••••wxyz");
     expect(providerCredentialHint("short")).toBe("••••");
   });
 });

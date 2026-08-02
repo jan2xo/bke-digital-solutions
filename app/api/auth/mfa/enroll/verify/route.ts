@@ -23,9 +23,9 @@ export async function POST(request: Request) {
       await tx.administratorMfaMethod.update({ where: { userId: session.userId }, data: { enabledAt: now, verifiedAt: now, disabledAt: null, pendingExpiresAt: null } });
       await tx.administratorRecoveryCode.deleteMany({ where: { userId: session.userId } });
       await tx.administratorRecoveryCode.createMany({ data: codes.map((value) => ({ userId: session.userId, codeHash: hashRecoveryCode(value) })) });
-      await tx.session.deleteMany({ where: { userId: session.userId } });
+      await tx.session.updateMany({ where: { userId: session.userId, revokedAt: null }, data: { revokedAt: new Date(), revocationReason: "MFA_ENROLLED" } });
     });
-    await createSession(session.userId, request, { mfaVerified: true, recent: true });
+    await createSession(session.userId, request, { mfaVerified: true, recent: true, authenticationMethod: "PASSWORD_TOTP" });
     await securityEvent("MFA_ENROLLED", request, session.userId);
     return NextResponse.json({ ok: true, recoveryCodes: codes });
   } catch (error) { return apiError(error); }

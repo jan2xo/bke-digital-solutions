@@ -14,6 +14,7 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 - Pending-order hosted-checkout continuation, recorded replacement sessions, pending-only cancellation, and late-payment webhook recovery
 - Account-selectable product trials with UTC annual eligibility, administrator grants, 0–14 day grace management, revocation, and standard entitlement enforcement
 - Administrator-only permanent customer deletion, including commerce and licensing history, protected by recent authentication, origin validation, exact email and destructive-phrase confirmation, rate limiting, a serializable transaction, and a redacted audit tombstone
+- Administrator security dashboard with own-session administration, retained revocation state, normalized event catalog, conservative review signals, provider-security history, and deduplicated security notifications
 
 ## In progress
 
@@ -37,7 +38,7 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 
 ## Future improvements
 
-Admin MFA, approval workflows, queued exports, malware scanning/code signing, object-retention jobs, accounting integration, and richer organization administration.
+Approval workflows, queued exports, malware scanning/code signing, automated security-retention jobs, accounting integration, and richer organization administration.
 # Flexible discount and customer-offer status
 
 Implemented locally: general promotions, account-specific offers, administrative adjustments, exact integer pricing, annual-catalog separation, immutable order/subscription snapshots, finite monthly promotional cycles, serialized redemption limits, explicitly authorized zero totals, admin controls, checkout selection, audit records, and integration coverage. Migration `20260731025700_flexible_discount_offers` has been applied to the local development PostgreSQL database. See `discount-offers.md`.

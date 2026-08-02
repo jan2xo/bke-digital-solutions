@@ -40,10 +40,10 @@ export async function POST(request: Request) {
         const used = await tx.administratorRecoveryCode.updateMany({ where: { id: recoveryId, usedAt: null }, data: { usedAt: new Date() } });
         if (used.count !== 1) throw new Error("INVALID_CREDENTIALS");
       }
-      await tx.session.update({ where: { id: session.id }, data: { recentAuthenticatedAt: new Date() } });
+      await tx.session.update({ where: { id: session.id }, data: { recentAuthenticatedAt: new Date(), assuranceLevel: "RECENTLY_AUTHENTICATED" } });
     });
-    if (recoveryId) await securityEvent("MFA_RECOVERY_USED", request, session.userId);
-    await securityEvent("RECENT_AUTH_SUCCEEDED", request, session.userId);
+    if (recoveryId) await securityEvent("MFA_RECOVERY_USED", request, session.userId, undefined, { sessionId: session.id, authenticationMethod: "PASSWORD_RECOVERY" });
+    await securityEvent("RECENT_AUTH_SUCCEEDED", request, session.userId, undefined, { sessionId: session.id, authenticationMethod: recoveryId ? "PASSWORD_RECOVERY" : session.user.role === "ADMIN" ? "PASSWORD_TOTP" : "PASSWORD" });
     return NextResponse.json({ ok: true });
   } catch (error) { return apiError(error); }
 }

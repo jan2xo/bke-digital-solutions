@@ -137,7 +137,11 @@ enum MfaChallengePurpose {
 }
 
 enum SecurityEventType {
+  ADMIN_LOGIN_SUCCEEDED
+  ADMIN_LOGIN_FAILED
   ADMIN_PASSWORD_ACCEPTED
+  ADMIN_PASSWORD_REJECTED
+  ADMIN_SESSION_CREATED
   MFA_CHALLENGE_SUCCEEDED
   MFA_CHALLENGE_FAILED
   MFA_ENROLLED
@@ -150,6 +154,44 @@ enum SecurityEventType {
   ADMIN_MAGIC_LOGIN_BLOCKED
   MFA_ENROLLMENT_STARTED
   PASSWORD_CHANGED
+  PASSWORD_RESET_COMPLETED
+  ADMIN_ALL_OTHER_SESSIONS_REVOKED
+  ADMIN_ALL_SESSIONS_REVOKED
+  SECURITY_RATE_LIMIT_TRIGGERED
+  PROVIDER_CREDENTIAL_REPLACED
+  PROVIDER_CREDENTIAL_REVOKED
+  PROVIDER_VALIDATION_SUCCEEDED
+  PROVIDER_VALIDATION_FAILED
+  LIVE_PAYMENT_ENABLE_BLOCKED
+}
+
+enum SecurityEventOutcome {
+  SUCCESS
+  FAILURE
+  BLOCKED
+  INFORMATIONAL
+}
+
+enum SecurityEventSeverity {
+  INFORMATIONAL
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum SessionAuthenticationMethod {
+  PASSWORD
+  PASSWORD_TOTP
+  PASSWORD_RECOVERY
+  MAGIC_LINK
+  MFA_ENROLLMENT
+}
+
+enum SessionAssuranceLevel {
+  BASIC
+  MFA_VERIFIED
+  RECENTLY_AUTHENTICATED
 }
 
 enum ExternalProvider {
@@ -175,28 +217,28 @@ enum ProviderValidationStatus {
 }
 
 model User {
-  id               String                      @id @default(cuid())
-  email            String                      @unique
-  name             String?
-  emailVerified    DateTime?
-  role             GlobalRole                  @default(CUSTOMER)
-  createdAt        DateTime                    @default(now())
-  updatedAt        DateTime                    @updatedAt
-  suspendedAt      DateTime?
-  credential       PasswordCredential?
-  sessions         Session[]
-  ownedAccounts    CustomerAccount[]           @relation("AccountOwner")
-  memberships      Membership[]
-  assignments      LicenseAssignment[]
-  auditLogs        AuditLog[]                  @relation("AuditActor")
-  createdOffers    DiscountOffer[]             @relation("OfferCreator")
-  administratorMfa AdministratorMfaMethod?
-  recoveryCodes    AdministratorRecoveryCode[]
-  mfaChallenges    MfaChallenge[]
-  securityEvents   SecurityEvent[]
+  id                            String                          @id @default(cuid())
+  email                         String                          @unique
+  name                          String?
+  emailVerified                 DateTime?
+  role                          GlobalRole                      @default(CUSTOMER)
+  createdAt                     DateTime                        @default(now())
+  updatedAt                     DateTime                        @updatedAt
+  suspendedAt                   DateTime?
+  credential                    PasswordCredential?
+  sessions                      Session[]
+  ownedAccounts                 CustomerAccount[]               @relation("AccountOwner")
+  memberships                   Membership[]
+  assignments                   LicenseAssignment[]
+  auditLogs                     AuditLog[]                      @relation("AuditActor")
+  createdOffers                 DiscountOffer[]                 @relation("OfferCreator")
+  administratorMfa              AdministratorMfaMethod?
+  recoveryCodes                 AdministratorRecoveryCode[]
+  mfaChallenges                 MfaChallenge[]
+  securityEvents                SecurityEvent[]
   providerConfigurationsCreated ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
   providerConfigurationsUpdated ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
-  providerCredentialsCreated ExternalProviderCredential[] @relation("ProviderCredentialCreator")
+  providerCredentialsCreated    ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
 }
 
 model PasswordCredential {
@@ -207,21 +249,31 @@ model PasswordCredential {
 }
 
 model Session {
-  id                    String    @id @default(cuid())
-  tokenHash             String    @unique
+  id                    String                      @id @default(cuid())
+  tokenHash             String                      @unique
   userId                String
   expiresAt             DateTime
-  lastAuthenticatedAt   DateTime  @default(now())
+  lastAuthenticatedAt   DateTime                    @default(now())
   mfaVerifiedAt         DateTime?
   recentAuthenticatedAt DateTime?
-  lastSeenAt            DateTime  @default(now())
+  lastSeenAt            DateTime                    @default(now())
   absoluteExpiresAt     DateTime
   ipHash                String?
   userAgent             String?
-  createdAt             DateTime  @default(now())
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgentSummary      String?
+  networkHint           String?
+  authenticationMethod  SessionAuthenticationMethod @default(PASSWORD)
+  assuranceLevel        SessionAssuranceLevel       @default(BASIC)
+  revokedAt             DateTime?
+  revocationReason      String?
+  createdAt             DateTime                    @default(now())
+  user                  User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  securityEvents        SecurityEvent[]
 
   @@index([userId, expiresAt])
+  @@index([userId, revokedAt])
+  @@index([userId, absoluteExpiresAt])
+  @@index([userId, lastSeenAt])
 }
 
 model AdministratorMfaMethod {
@@ -264,17 +316,26 @@ model MfaChallenge {
 }
 
 model SecurityEvent {
-  id            String            @id @default(cuid())
-  userId        String?
-  type          SecurityEventType
-  ipHint        String?
-  userAgentHint String?
-  metadata      Json?
-  createdAt     DateTime          @default(now())
-  user          User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id                   String                       @id @default(cuid())
+  userId               String?
+  type                 SecurityEventType
+  outcome              SecurityEventOutcome
+  severity             SecurityEventSeverity
+  sessionId            String?
+  provider             ExternalProvider?
+  authenticationMethod SessionAuthenticationMethod?
+  ipHint               String?
+  userAgentHint        String?
+  metadata             Json?
+  createdAt            DateTime                     @default(now())
+  user                 User?                        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  session              Session?                     @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
   @@index([type, createdAt])
+  @@index([severity, createdAt])
+  @@index([outcome, createdAt])
+  @@index([provider, createdAt])
 }
 
 model VerificationToken {
@@ -879,39 +940,40 @@ model JobRun {
 }
 
 model EmailOutbox {
-  id        String    @id @default(cuid())
-  type      String
-  recipient String
-  subject   String
-  payload   Json
-  status    String    @default("PENDING")
-  attempts  Int       @default(0)
-  lastError String?
-  createdAt DateTime  @default(now())
-  sentAt    DateTime?
+  id               String    @id @default(cuid())
+  type             String
+  recipient        String
+  subject          String
+  payload          Json
+  status           String    @default("PENDING")
+  attempts         Int       @default(0)
+  lastError        String?
+  createdAt        DateTime  @default(now())
+  sentAt           DateTime?
+  deduplicationKey String?   @unique
 
   @@index([status, createdAt])
 }
 
 model ExternalProviderConfiguration {
-  id                 String                   @id @default(cuid())
+  id                 String                       @id @default(cuid())
   provider           ExternalProvider
   environment        ProviderEnvironment
-  enabled            Boolean                  @default(false)
+  enabled            Boolean                      @default(false)
   senderName         String?
   senderEmail        String?
   supportEmail       String?
-  metadata           Json                     @default("{}")
-  validationStatus   ProviderValidationStatus @default(NOT_VALIDATED)
+  metadata           Json                         @default("{}")
+  validationStatus   ProviderValidationStatus     @default(NOT_VALIDATED)
   lastValidatedAt    DateTime?
   lastValidationCode String?
   lastRotatedAt      DateTime?
   createdByUserId    String
   updatedByUserId    String
-  createdAt          DateTime                 @default(now())
-  updatedAt          DateTime                 @updatedAt
-  createdBy          User                     @relation("ProviderConfigurationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  updatedBy          User                     @relation("ProviderConfigurationUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
+  createdBy          User                         @relation("ProviderConfigurationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedBy          User                         @relation("ProviderConfigurationUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
   credentials        ExternalProviderCredential[]
 
   @@unique([provider, environment])
@@ -919,21 +981,21 @@ model ExternalProviderConfiguration {
 }
 
 model ExternalProviderCredential {
-  id                       String                     @id @default(cuid())
-  configurationId          String
-  credentialType           ProviderCredentialType
-  encryptedValue           String
-  encryptionKeyVersion     Int
-  maskedHint               String
-  createdAt                DateTime                   @default(now())
-  activatedAt              DateTime                   @default(now())
-  revokedAt                DateTime?
-  replacedByCredentialId   String?
-  createdByUserId          String
-  configuration            ExternalProviderConfiguration @relation(fields: [configurationId], references: [id], onDelete: Cascade)
-  createdBy                User                       @relation("ProviderCredentialCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  replacedByCredential     ExternalProviderCredential? @relation("ProviderCredentialReplacement", fields: [replacedByCredentialId], references: [id], onDelete: SetNull)
-  replaces                 ExternalProviderCredential[] @relation("ProviderCredentialReplacement")
+  id                     String                        @id @default(cuid())
+  configurationId        String
+  credentialType         ProviderCredentialType
+  encryptedValue         String
+  encryptionKeyVersion   Int
+  maskedHint             String
+  createdAt              DateTime                      @default(now())
+  activatedAt            DateTime                      @default(now())
+  revokedAt              DateTime?
+  replacedByCredentialId String?
+  createdByUserId        String
+  configuration          ExternalProviderConfiguration @relation(fields: [configurationId], references: [id], onDelete: Cascade)
+  createdBy              User                          @relation("ProviderCredentialCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  replacedByCredential   ExternalProviderCredential?   @relation("ProviderCredentialReplacement", fields: [replacedByCredentialId], references: [id], onDelete: SetNull)
+  replaces               ExternalProviderCredential[]  @relation("ProviderCredentialReplacement")
 
   @@index([configurationId, credentialType, revokedAt], map: "ExternalProviderCredential_config_type_revoked_idx")
   @@index([encryptionKeyVersion, revokedAt])

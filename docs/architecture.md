@@ -85,3 +85,9 @@ Administrator authentication is password then TOTP. Password-only login for an e
 # Phase 5.2C provider boundary
 
 PayMongo and Resend adapters resolve typed configuration through `lib/provider-config/service.ts`. Source selection is explicit (`environment` or encrypted `database`), fallback defaults off, and live PayMongo is denied during local simulation. Database credentials use versioned AES-256-GCM envelopes and one-active-credential constraints. See [provider credential management](security/provider-credential-management.md).
+
+# Phase 5.3 administrator security boundary
+
+`Session` remains the server-owned authorization record. A cookie carries only a random token; PostgreSQL stores its hash. Revocation sets `revokedAt` and a bounded reason, and `currentSession` rejects it on the next request. The dashboard queries only the current administrator's active sessions and renders normalized browser/device and keyed network hints. Session commands require same-origin POST, recent password-plus-MFA authentication, ownership checks, rate limiting, and a database transaction that records the normalized security event and deduplicated outbox notification.
+
+`SecurityEvent` is a typed operational timeline with outcome, severity, optional provider/authentication/session context, keyed request hints, and allowlisted metadata. Review signals are deterministic advisory summaries; they do not claim compromise or automatically suspend accounts. Provider credentials and raw provider payloads remain outside this event store.

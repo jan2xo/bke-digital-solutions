@@ -4,6 +4,13 @@ import { env } from "@/lib/env";
 import { decryptProviderCredential, encryptProviderCredential, providerCredentialHint } from "@/lib/provider-config/crypto";
 import { resolveProviderSource } from "@/lib/provider-config/policy";
 import type { ProviderContext, ProviderCredentialKind, ProviderName, ResolvedPayMongoConfiguration, ResolvedResendConfiguration } from "@/lib/provider-config/types";
+import { securityEventDefinition } from "@/lib/security/catalog";
+
+function providerSecurityEvent(type: "PROVIDER_CREDENTIAL_REPLACED" | "PROVIDER_CREDENTIAL_REVOKED" | "PROVIDER_VALIDATION_SUCCEEDED" | "PROVIDER_VALIDATION_FAILED", userId: string, provider: ProviderName, metadata: Record<string, string>) {
+  const definition = securityEventDefinition(type);
+  return { type, userId, provider, outcome: definition.outcome, severity: definition.severity, metadata } as const;
+}
+async function recordBlockedLiveEnablement(userId: string) { const definition=securityEventDefinition("LIVE_PAYMENT_ENABLE_BLOCKED");await db.securityEvent.create({data:{type:"LIVE_PAYMENT_ENABLE_BLOCKED",userId,provider:"PAYMONGO",outcome:definition.outcome,severity:definition.severity,metadata:{environment:"LIVE"}}}); }
 
 const credentialsFor = {
   PAYMONGO: ["SECRET_KEY", "WEBHOOK_SECRET"],
@@ -83,7 +90,7 @@ export async function resolveResendConfiguration(): Promise<ResolvedResendConfig
 }
 
 export async function saveProviderConfiguration(input: { actorId: string; provider: ProviderName; environment: ProviderContext; secrets: Partial<Record<ProviderCredentialKind, string>>; senderName?: string; senderEmail?: string; supportEmail?: string }) {
-  if (input.provider === "PAYMONGO" && input.environment === "LIVE" && (env.DEPLOYMENT_ENV !== "production" || env.LOCAL_PRODUCTION_SIMULATION)) throw new Error("PROVIDER_LIVE_MODE_FORBIDDEN");
+  if (input.provider === "PAYMONGO" && input.environment === "LIVE" && (env.DEPLOYMENT_ENV !== "production" || env.LOCAL_PRODUCTION_SIMULATION)) { await recordBlockedLiveEnablement(input.actorId); throw new Error("PROVIDER_LIVE_MODE_FORBIDDEN"); }
   const required = credentialsFor[input.provider];
   const allowed = new Set(required);
   if (Object.keys(input.secrets).some((kind) => !allowed.has(kind as ProviderCredentialKind))) throw new Error("PROVIDER_CREDENTIAL_INVALID");
@@ -104,12 +111,15 @@ export async function saveProviderConfiguration(input: { actorId: string; provid
     }
     await tx.externalProviderConfiguration.update({ where: { id: configuration.id }, data: { lastRotatedAt: new Date() } });
     await tx.auditLog.create({ data: { actorId: input.actorId, action: "PROVIDER_CREDENTIALS_REPLACED", targetType: "ExternalProviderConfiguration", targetId: configuration.id, metadata: { provider: input.provider, environment: input.environment, credentialTypes: Object.keys(input.secrets) } } });
+    const event=await tx.securityEvent.create({ data: providerSecurityEvent("PROVIDER_CREDENTIAL_REPLACED", input.actorId, input.provider, { environment: input.environment }) });
+    const actor=await tx.user.findUniqueOrThrow({where:{id:input.actorId},select:{email:true}});
+    await tx.emailOutbox.createMany({data:[{type:"SECURITY_ACCOUNT_CHANGED",recipient:actor.email,subject:"BKE provider credential changed",payload:{provider:input.provider,environment:input.environment},deduplicationKey:`security-provider-change:${event.id}`}],skipDuplicates:true});
     return configuration.id;
   }, { isolationLevel: "Serializable" });
 }
 
 export async function setProviderState(input: { actorId: string; provider: ProviderName; environment: ProviderContext; enabled: boolean }) {
-  if (input.enabled && input.provider === "PAYMONGO" && input.environment === "LIVE" && (env.DEPLOYMENT_ENV !== "production" || env.LOCAL_PRODUCTION_SIMULATION)) throw new Error("PROVIDER_LIVE_MODE_FORBIDDEN");
+  if (input.enabled && input.provider === "PAYMONGO" && input.environment === "LIVE" && (env.DEPLOYMENT_ENV !== "production" || env.LOCAL_PRODUCTION_SIMULATION)) { await recordBlockedLiveEnablement(input.actorId); throw new Error("PROVIDER_LIVE_MODE_FORBIDDEN"); }
   return db.$transaction(async (tx) => {
     const config = await tx.externalProviderConfiguration.findUniqueOrThrow({ where: { provider_environment: { provider: input.provider, environment: input.environment } }, include: { credentials: { where: { revokedAt: null } } } });
     if (input.enabled && (config.validationStatus !== "VALID" || credentialsFor[input.provider].some((kind) => !config.credentials.some((credential) => credential.credentialType === kind)))) throw new Error("PROVIDER_CREDENTIAL_INVALID");
@@ -124,6 +134,9 @@ export async function revokeProviderCredentials(input: { actorId: string; provid
     await tx.externalProviderCredential.updateMany({ where: { configurationId: config.id, revokedAt: null }, data: { revokedAt: new Date() } });
     await tx.externalProviderConfiguration.update({ where: { id: config.id }, data: { enabled: false, validationStatus: "NOT_VALIDATED", updatedByUserId: input.actorId } });
     await tx.auditLog.create({ data: { actorId: input.actorId, action: "PROVIDER_CREDENTIALS_REVOKED", targetType: "ExternalProviderConfiguration", targetId: config.id, metadata: { provider: input.provider, environment: input.environment } } });
+    const event=await tx.securityEvent.create({ data: providerSecurityEvent("PROVIDER_CREDENTIAL_REVOKED", input.actorId, input.provider, { environment: input.environment }) });
+    const actor=await tx.user.findUniqueOrThrow({where:{id:input.actorId},select:{email:true}});
+    await tx.emailOutbox.createMany({data:[{type:"SECURITY_ACCOUNT_CHANGED",recipient:actor.email,subject:"BKE provider credential revoked",payload:{provider:input.provider,environment:input.environment},deduplicationKey:`security-provider-revocation:${event.id}`}],skipDuplicates:true});
   });
 }
 
@@ -148,11 +161,11 @@ export async function validateProviderConfiguration(input: { actorId: string; pr
       if (!response.ok) throw new Error("PROVIDER_VALIDATION_FAILED");
     }
     code = "VALID";
-    await db.$transaction([db.externalProviderConfiguration.update({ where: { id: configuration.id }, data: { validationStatus: "VALID", lastValidatedAt: new Date(), lastValidationCode: code, updatedByUserId: input.actorId } }), db.auditLog.create({ data: { actorId: input.actorId, action: "PROVIDER_VALIDATION_SUCCEEDED", targetType: "ExternalProviderConfiguration", targetId: configuration.id, metadata: { provider: input.provider, environment: input.environment, resultCode: code } } })]);
+    await db.$transaction([db.externalProviderConfiguration.update({ where: { id: configuration.id }, data: { validationStatus: "VALID", lastValidatedAt: new Date(), lastValidationCode: code, updatedByUserId: input.actorId } }), db.auditLog.create({ data: { actorId: input.actorId, action: "PROVIDER_VALIDATION_SUCCEEDED", targetType: "ExternalProviderConfiguration", targetId: configuration.id, metadata: { provider: input.provider, environment: input.environment, resultCode: code } } }), db.securityEvent.create({ data: providerSecurityEvent("PROVIDER_VALIDATION_SUCCEEDED", input.actorId, input.provider, { environment: input.environment, result: code }) })]);
     return { valid: true as const, code };
   } catch (error) {
     code = error instanceof Error && error.message.startsWith("PROVIDER_") ? error.message : "PROVIDER_VALIDATION_FAILED";
-    await db.$transaction([db.externalProviderConfiguration.update({ where: { id: configuration.id }, data: { validationStatus: "INVALID", lastValidatedAt: new Date(), lastValidationCode: code, updatedByUserId: input.actorId } }), db.auditLog.create({ data: { actorId: input.actorId, action: "PROVIDER_VALIDATION_FAILED", targetType: "ExternalProviderConfiguration", targetId: configuration.id, metadata: { provider: input.provider, environment: input.environment, resultCode: code } } })]);
+    await db.$transaction([db.externalProviderConfiguration.update({ where: { id: configuration.id }, data: { validationStatus: "INVALID", lastValidatedAt: new Date(), lastValidationCode: code, updatedByUserId: input.actorId } }), db.auditLog.create({ data: { actorId: input.actorId, action: "PROVIDER_VALIDATION_FAILED", targetType: "ExternalProviderConfiguration", targetId: configuration.id, metadata: { provider: input.provider, environment: input.environment, resultCode: code } } }), db.securityEvent.create({ data: providerSecurityEvent("PROVIDER_VALIDATION_FAILED", input.actorId, input.provider, { environment: input.environment, result: code }) })]);
     return { valid: false as const, code };
   }
 }
