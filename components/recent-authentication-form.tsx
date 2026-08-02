@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { PasswordInput } from "@/components/password-input";
 
 export function RecentAuthenticationForm({ admin }: { admin: boolean }) {
   const router = useRouter();
@@ -18,5 +19,5 @@ export function RecentAuthenticationForm({ admin }: { admin: boolean }) {
     const destination = requested?.startsWith("/") && !requested.startsWith("//") ? requested : admin ? "/admin/security" : "/dashboard";
     router.replace(destination); router.refresh();
   }
-  return <form className="card grid gap-5 p-8" onSubmit={submit}><label className="label">Password<input className="input" name="password" type="password" required autoComplete="current-password"/></label>{admin && <label className="label">Authenticator or recovery code<input className="input" name="code" required maxLength={32} autoComplete="one-time-code"/></label>}{error && <p role="alert" className="text-red-700">{error}</p>}<button className="button" disabled={busy}>{busy ? "Confirming…" : "Confirm identity"}</button></form>;
+  return <form className="card grid gap-5 p-8" onSubmit={submit}><label className="label">Password<PasswordInput name="password" required autoComplete="current-password"/></label>{admin && <label className="label">Authenticator or recovery code<input className="input" name="code" required maxLength={32} autoComplete="one-time-code"/></label>}{error && <p role="alert" className="text-red-700">{error}</p>}<button className="button" disabled={busy}>{busy ? "Confirming…" : "Confirm identity"}</button></form>;
 }
