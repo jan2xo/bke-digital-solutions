@@ -1,4 +1,4 @@
-# BKE Digital Solutions
+x`# BKE Digital Solutions
 
 Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simulation.md), a [temporary Cloudflare tunnel](docs/cloudflare-tunnel-paymongo.md), and the [owner evidence checklist](docs/local-provider-certification-checklist.md). Genuine PayMongo/Resend status is tracked in the [Phase 5.2 report](docs/phase-reports/phase-5.2-local-paymongo-resend-certification.md).
 

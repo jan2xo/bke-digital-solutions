@@ -218,3 +218,37 @@ export const SecurityEventType = {
 } as const
 
 export type SecurityEventType = (typeof SecurityEventType)[keyof typeof SecurityEventType]
+
+
+export const ExternalProvider = {
+  PAYMONGO: 'PAYMONGO',
+  RESEND: 'RESEND'
+} as const
+
+export type ExternalProvider = (typeof ExternalProvider)[keyof typeof ExternalProvider]
+
+
+export const ProviderEnvironment = {
+  TEST: 'TEST',
+  LIVE: 'LIVE'
+} as const
+
+export type ProviderEnvironment = (typeof ProviderEnvironment)[keyof typeof ProviderEnvironment]
+
+
+export const ProviderCredentialType = {
+  SECRET_KEY: 'SECRET_KEY',
+  WEBHOOK_SECRET: 'WEBHOOK_SECRET',
+  API_KEY: 'API_KEY'
+} as const
+
+export type ProviderCredentialType = (typeof ProviderCredentialType)[keyof typeof ProviderCredentialType]
+
+
+export const ProviderValidationStatus = {
+  NOT_VALIDATED: 'NOT_VALIDATED',
+  VALID: 'VALID',
+  INVALID: 'INVALID'
+} as const
+
+export type ProviderValidationStatus = (typeof ProviderValidationStatus)[keyof typeof ProviderValidationStatus]

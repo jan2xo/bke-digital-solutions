@@ -16,11 +16,11 @@ test("administrator MFA recovery is single-use and recent authentication is enfo
   const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
   const { secret, recoveryCodes } = await enrollAndLoginAdmin(page, email, password);
   await page.getByRole("button", { name: "Log out" }).click();
-  await page.getByLabel("Email address").first().fill(email); await page.getByLabel("Password").fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
+  await page.getByLabel("Email address").first().fill(email); await page.locator('input[name="password"]').fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
   await page.getByLabel("Authenticator or recovery code").fill(recoveryCodes[0]!); await page.getByRole("button", { name: "Verify and sign in" }).click();
   await expect(page).toHaveURL(/admin/);
   await page.getByRole("button", { name: "Log out" }).click();
-  await page.getByLabel("Email address").first().fill(email); await page.getByLabel("Password").fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
+  await page.getByLabel("Email address").first().fill(email); await page.locator('input[name="password"]').fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
   await page.getByLabel("Authenticator or recovery code").fill(recoveryCodes[0]!); await page.getByRole("button", { name: "Verify and sign in" }).click();
   await expect(page.getByText("That code is invalid, expired, or has already been used.")).toBeVisible();
   await page.getByLabel("Authenticator or recovery code").fill(totpCode(secret)); await page.getByRole("button", { name: "Verify and sign in" }).click();
@@ -29,7 +29,7 @@ test("administrator MFA recovery is single-use and recent authentication is enfo
   const denied = await page.request.get("/api/admin/audit/export");
   expect(denied.status()).toBe(403);
   await page.goto("/security/recent?returnTo=/admin/security");
-  await page.getByLabel("Password").fill(password); await page.getByLabel("Authenticator or recovery code").fill(totpCode(secret)); const recentResponse = page.waitForResponse((response) => response.url().endsWith("/api/auth/recent") && response.request().method() === "POST"); await page.getByRole("button", { name: "Confirm identity" }).click(); expect((await recentResponse).status()).toBe(200);
+  await page.locator('input[name="password"]').fill(password); await page.getByLabel("Authenticator or recovery code").fill(totpCode(secret)); const recentResponse = page.waitForResponse((response) => response.url().endsWith("/api/auth/recent") && response.request().method() === "POST"); await page.getByRole("button", { name: "Confirm identity" }).click(); expect((await recentResponse).status()).toBe(200);
   await expect(page).toHaveURL(/\/admin\/security$/);
   expect((await page.request.get("/api/admin/audit/export")).status()).toBe(200);
 });
@@ -132,7 +132,7 @@ test("administrator permanently deletes only disposable archived products", asyn
   expect(unauthenticated.status()).toBe(401);
   await page.goto("/login");
   await page.getByLabel("Email address").first().fill(customer.email);
-  await page.getByLabel("Password").fill(password);
+  await page.locator('input[name="password"]').fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/dashboard/);
   const forbidden = await page.request.delete(`/api/admin/products/${blocked.id}/deletion`, { headers: { origin: "http://127.0.0.1:3000" }, data: { confirmationName: blocked.name } });

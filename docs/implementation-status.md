@@ -46,3 +46,6 @@ Credential-gated PayMongo sandbox and Resend delivery certification remain exter
 # Infrastructure status — August 2026
 
 `jl-bke.com` is the canonical domain, Cloudflare is authoritative DNS, Namecheap is the registrar, and Resend has verified the sending domain. A named Cloudflare Tunnel currently exposes the owner's local Docker/Caddy stack over public HTTPS for certification only. No VPS deployment exists.
+# Phase 5.2C status
+
+Encrypted provider persistence, runtime resolution, PayMongo/Resend adapter integration, admin controls, validation, replacement/revocation, migration, and focused tests are implemented. Database-source activation is not complete until the owner rotates credentials and repeats genuine provider certification.

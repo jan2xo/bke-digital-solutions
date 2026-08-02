@@ -82,3 +82,6 @@ The serializable transaction locks the user and removes owned accounts plus thei
 # Phase 5.1 security boundary
 
 Administrator authentication is password then TOTP. Password-only login for an enrolled administrator creates a database challenge, not an application session. Unenrolled administrators receive a restricted enrollment session that cannot pass `requireAdmin`. Session privilege, MFA verification, recent authentication, idle expiry, and absolute expiry are server-owned database state. See [Phase 5 enterprise security](./phase-5-enterprise-security.md).
+# Phase 5.2C provider boundary
+
+PayMongo and Resend adapters resolve typed configuration through `lib/provider-config/service.ts`. Source selection is explicit (`environment` or encrypted `database`), fallback defaults off, and live PayMongo is denied during local simulation. Database credentials use versioned AES-256-GCM envelopes and one-active-credential constraints. See [provider credential management](security/provider-credential-management.md).

@@ -181,3 +181,6 @@ The audit recommends continuing to version generated Prisma output and adding a 
 - Added restricted mandatory enrollment, MFA-aware admin authorization, 15-minute password-plus-TOTP recent authentication, 60-minute idle/14-day absolute session limits, and redacted security event hints.
 - Hardened administrator bootstrap against silent additional admins and protected-environment execution.
 - Applied both migrations. TypeScript, ESLint, production build, 72 Vitest tests, and all five Playwright scenarios passed; five external-credential sandbox tests remained correctly skipped.
+# 2026-08-02 — Phase 5.2C
+
+Added encrypted, versioned provider credentials with atomic replacement and an explicit runtime source policy. Provider adapters now use the central resolver. Admin mutations require recent MFA-backed authentication, Origin checks, rate limiting, validation-before-enable, and redacted audit records. Live PayMongo remains locked in local certification.

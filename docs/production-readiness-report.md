@@ -308,3 +308,6 @@ The working tree contains administrator TOTP enrollment, password-to-MFA login c
 # Flexible offer-layer readiness update — 2026-07-31
 
 The additive offer migration was reviewed, validated, and applied to the local PostgreSQL development database. TypeScript, ESLint, production build, production Docker runner image, all 5 Playwright scenarios, database smoke checks, repository hygiene, the complete Vitest suite (68 passed; 5 credential-gated skipped), and focused concurrent-redemption tests passed as recorded in `phase-reports/flexible-discount-and-customer-offers.md`. Production readiness is **not** claimed: credential-gated PayMongo/Resend certification has not run, and the existing infrastructure/operational blockers still apply.
+# Phase 5.2C readiness note
+
+Secure provider credential management is implemented, but production readiness is not claimed. Owner credential rotation, external master-key provisioning, database-source activation, genuine PayMongo sandbox lifecycle verification, and genuine Resend delivery verification remain required. Live PayMongo remains out of scope.

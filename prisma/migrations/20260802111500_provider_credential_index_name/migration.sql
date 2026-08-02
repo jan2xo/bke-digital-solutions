@@ -1,0 +1,2 @@
+ALTER INDEX "ExternalProviderCredential_configurationId_credentialType_revok"
+  RENAME TO "ExternalProviderCredential_config_type_revoked_idx";

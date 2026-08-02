@@ -217,6 +217,9 @@ export type UserWhereInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeListRelationFilter
   mfaChallenges?: Prisma.MfaChallengeListRelationFilter
   securityEvents?: Prisma.SecurityEventListRelationFilter
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationListRelationFilter
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationListRelationFilter
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -239,6 +242,9 @@ export type UserOrderByWithRelationInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeOrderByRelationAggregateInput
   mfaChallenges?: Prisma.MfaChallengeOrderByRelationAggregateInput
   securityEvents?: Prisma.SecurityEventOrderByRelationAggregateInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationOrderByRelationAggregateInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationOrderByRelationAggregateInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -264,6 +270,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   recoveryCodes?: Prisma.AdministratorRecoveryCodeListRelationFilter
   mfaChallenges?: Prisma.MfaChallengeListRelationFilter
   securityEvents?: Prisma.SecurityEventListRelationFilter
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationListRelationFilter
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationListRelationFilter
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -314,6 +323,9 @@ export type UserCreateInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -336,6 +348,9 @@ export type UserUncheckedCreateInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -358,6 +373,9 @@ export type UserUpdateInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -380,6 +398,9 @@ export type UserUncheckedUpdateInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -636,6 +657,48 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutProviderConfigurationsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderConfigurationsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutProviderConfigurationsUpdatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsUpdatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderConfigurationsUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProviderConfigurationsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderConfigurationsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutProviderConfigurationsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProviderConfigurationsCreatedInput, Prisma.UserUpdateWithoutProviderConfigurationsCreatedInput>, Prisma.UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput>
+}
+
+export type UserUpdateOneRequiredWithoutProviderConfigurationsUpdatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsUpdatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderConfigurationsUpdatedInput
+  upsert?: Prisma.UserUpsertWithoutProviderConfigurationsUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProviderConfigurationsUpdatedInput, Prisma.UserUpdateWithoutProviderConfigurationsUpdatedInput>, Prisma.UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput>
+}
+
+export type UserCreateNestedOneWithoutProviderCredentialsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderCredentialsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderCredentialsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderCredentialsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProviderCredentialsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderCredentialsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderCredentialsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderCredentialsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutProviderCredentialsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProviderCredentialsCreatedInput, Prisma.UserUpdateWithoutProviderCredentialsCreatedInput>, Prisma.UserUncheckedUpdateWithoutProviderCredentialsCreatedInput>
+}
+
 export type UserCreateWithoutCredentialInput = {
   id?: string
   email: string
@@ -655,6 +718,9 @@ export type UserCreateWithoutCredentialInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCredentialInput = {
@@ -676,6 +742,9 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCredentialInput = {
@@ -713,6 +782,9 @@ export type UserUpdateWithoutCredentialInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialInput = {
@@ -734,6 +806,9 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -755,6 +830,9 @@ export type UserCreateWithoutSessionsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -776,6 +854,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -813,6 +894,9 @@ export type UserUpdateWithoutSessionsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -834,6 +918,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAdministratorMfaInput = {
@@ -855,6 +942,9 @@ export type UserCreateWithoutAdministratorMfaInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAdministratorMfaInput = {
@@ -876,6 +966,9 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAdministratorMfaInput = {
@@ -913,6 +1006,9 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
@@ -934,6 +1030,9 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -955,6 +1054,9 @@ export type UserCreateWithoutRecoveryCodesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -976,6 +1078,9 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1013,6 +1118,9 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1034,6 +1142,9 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutMfaChallengesInput = {
@@ -1055,6 +1166,9 @@ export type UserCreateWithoutMfaChallengesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutMfaChallengesInput = {
@@ -1076,6 +1190,9 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutMfaChallengesInput = {
@@ -1113,6 +1230,9 @@ export type UserUpdateWithoutMfaChallengesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMfaChallengesInput = {
@@ -1134,6 +1254,9 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutSecurityEventsInput = {
@@ -1155,6 +1278,9 @@ export type UserCreateWithoutSecurityEventsInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutSecurityEventsInput = {
@@ -1176,6 +1302,9 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutSecurityEventsInput = {
@@ -1213,6 +1342,9 @@ export type UserUpdateWithoutSecurityEventsInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSecurityEventsInput = {
@@ -1234,6 +1366,9 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutOwnedAccountsInput = {
@@ -1255,6 +1390,9 @@ export type UserCreateWithoutOwnedAccountsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutOwnedAccountsInput = {
@@ -1276,6 +1414,9 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutOwnedAccountsInput = {
@@ -1313,6 +1454,9 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
@@ -1334,6 +1478,9 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -1355,6 +1502,9 @@ export type UserCreateWithoutMembershipsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -1376,6 +1526,9 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -1413,6 +1566,9 @@ export type UserUpdateWithoutMembershipsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -1434,6 +1590,9 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutCreatedOffersInput = {
@@ -1455,6 +1614,9 @@ export type UserCreateWithoutCreatedOffersInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedOffersInput = {
@@ -1476,6 +1638,9 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedOffersInput = {
@@ -1513,6 +1678,9 @@ export type UserUpdateWithoutCreatedOffersInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedOffersInput = {
@@ -1534,6 +1702,9 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAssignmentsInput = {
@@ -1555,6 +1726,9 @@ export type UserCreateWithoutAssignmentsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentsInput = {
@@ -1576,6 +1750,9 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentsInput = {
@@ -1613,6 +1790,9 @@ export type UserUpdateWithoutAssignmentsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentsInput = {
@@ -1634,6 +1814,9 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1655,6 +1838,9 @@ export type UserCreateWithoutAuditLogsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1676,6 +1862,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1713,6 +1902,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1734,6 +1926,345 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutProviderConfigurationsCreatedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutProviderConfigurationsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsCreatedInput>
+}
+
+export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutProviderConfigurationsUpdatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsUpdatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput>
+}
+
+export type UserUpsertWithoutProviderConfigurationsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProviderConfigurationsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput>
+}
+
+export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUpsertWithoutProviderConfigurationsUpdatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProviderConfigurationsUpdatedInput, Prisma.UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsUpdatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProviderConfigurationsUpdatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProviderConfigurationsUpdatedInput, Prisma.UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput>
+}
+
+export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutProviderCredentialsCreatedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserCreateOrConnectWithoutProviderCredentialsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderCredentialsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderCredentialsCreatedInput>
+}
+
+export type UserUpsertWithoutProviderCredentialsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProviderCredentialsCreatedInput, Prisma.UserUncheckedUpdateWithoutProviderCredentialsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderCredentialsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderCredentialsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProviderCredentialsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProviderCredentialsCreatedInput, Prisma.UserUncheckedUpdateWithoutProviderCredentialsCreatedInput>
+}
+
+export type UserUpdateWithoutProviderCredentialsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 
@@ -1751,6 +2282,9 @@ export type UserCountOutputType = {
   recoveryCodes: number
   mfaChallenges: number
   securityEvents: number
+  providerConfigurationsCreated: number
+  providerConfigurationsUpdated: number
+  providerCredentialsCreated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1763,6 +2297,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   recoveryCodes?: boolean | UserCountOutputTypeCountRecoveryCodesArgs
   mfaChallenges?: boolean | UserCountOutputTypeCountMfaChallengesArgs
   securityEvents?: boolean | UserCountOutputTypeCountSecurityEventsArgs
+  providerConfigurationsCreated?: boolean | UserCountOutputTypeCountProviderConfigurationsCreatedArgs
+  providerConfigurationsUpdated?: boolean | UserCountOutputTypeCountProviderConfigurationsUpdatedArgs
+  providerCredentialsCreated?: boolean | UserCountOutputTypeCountProviderCredentialsCreatedArgs
 }
 
 /**
@@ -1838,6 +2375,27 @@ export type UserCountOutputTypeCountSecurityEventsArgs<ExtArgs extends runtime.T
   where?: Prisma.SecurityEventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProviderConfigurationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExternalProviderConfigurationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProviderConfigurationsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExternalProviderConfigurationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProviderCredentialsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExternalProviderCredentialWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1859,6 +2417,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   recoveryCodes?: boolean | Prisma.User$recoveryCodesArgs<ExtArgs>
   mfaChallenges?: boolean | Prisma.User$mfaChallengesArgs<ExtArgs>
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
+  providerConfigurationsCreated?: boolean | Prisma.User$providerConfigurationsCreatedArgs<ExtArgs>
+  providerConfigurationsUpdated?: boolean | Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs>
+  providerCredentialsCreated?: boolean | Prisma.User$providerCredentialsCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1908,6 +2469,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   recoveryCodes?: boolean | Prisma.User$recoveryCodesArgs<ExtArgs>
   mfaChallenges?: boolean | Prisma.User$mfaChallengesArgs<ExtArgs>
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
+  providerConfigurationsCreated?: boolean | Prisma.User$providerConfigurationsCreatedArgs<ExtArgs>
+  providerConfigurationsUpdated?: boolean | Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs>
+  providerCredentialsCreated?: boolean | Prisma.User$providerCredentialsCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1927,6 +2491,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     recoveryCodes: Prisma.$AdministratorRecoveryCodePayload<ExtArgs>[]
     mfaChallenges: Prisma.$MfaChallengePayload<ExtArgs>[]
     securityEvents: Prisma.$SecurityEventPayload<ExtArgs>[]
+    providerConfigurationsCreated: Prisma.$ExternalProviderConfigurationPayload<ExtArgs>[]
+    providerConfigurationsUpdated: Prisma.$ExternalProviderConfigurationPayload<ExtArgs>[]
+    providerCredentialsCreated: Prisma.$ExternalProviderCredentialPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2342,6 +2909,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   recoveryCodes<T extends Prisma.User$recoveryCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recoveryCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdministratorRecoveryCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mfaChallenges<T extends Prisma.User$mfaChallengesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mfaChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MfaChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   securityEvents<T extends Prisma.User$securityEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$securityEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  providerConfigurationsCreated<T extends Prisma.User$providerConfigurationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerConfigurationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalProviderConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  providerConfigurationsUpdated<T extends Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalProviderConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  providerCredentialsCreated<T extends Prisma.User$providerCredentialsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerCredentialsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalProviderCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3023,6 +3593,78 @@ export type User$securityEventsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SecurityEventScalarFieldEnum | Prisma.SecurityEventScalarFieldEnum[]
+}
+
+/**
+ * User.providerConfigurationsCreated
+ */
+export type User$providerConfigurationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExternalProviderConfiguration
+   */
+  select?: Prisma.ExternalProviderConfigurationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExternalProviderConfiguration
+   */
+  omit?: Prisma.ExternalProviderConfigurationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExternalProviderConfigurationInclude<ExtArgs> | null
+  where?: Prisma.ExternalProviderConfigurationWhereInput
+  orderBy?: Prisma.ExternalProviderConfigurationOrderByWithRelationInput | Prisma.ExternalProviderConfigurationOrderByWithRelationInput[]
+  cursor?: Prisma.ExternalProviderConfigurationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExternalProviderConfigurationScalarFieldEnum | Prisma.ExternalProviderConfigurationScalarFieldEnum[]
+}
+
+/**
+ * User.providerConfigurationsUpdated
+ */
+export type User$providerConfigurationsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExternalProviderConfiguration
+   */
+  select?: Prisma.ExternalProviderConfigurationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExternalProviderConfiguration
+   */
+  omit?: Prisma.ExternalProviderConfigurationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExternalProviderConfigurationInclude<ExtArgs> | null
+  where?: Prisma.ExternalProviderConfigurationWhereInput
+  orderBy?: Prisma.ExternalProviderConfigurationOrderByWithRelationInput | Prisma.ExternalProviderConfigurationOrderByWithRelationInput[]
+  cursor?: Prisma.ExternalProviderConfigurationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExternalProviderConfigurationScalarFieldEnum | Prisma.ExternalProviderConfigurationScalarFieldEnum[]
+}
+
+/**
+ * User.providerCredentialsCreated
+ */
+export type User$providerCredentialsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExternalProviderCredential
+   */
+  select?: Prisma.ExternalProviderCredentialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExternalProviderCredential
+   */
+  omit?: Prisma.ExternalProviderCredentialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExternalProviderCredentialInclude<ExtArgs> | null
+  where?: Prisma.ExternalProviderCredentialWhereInput
+  orderBy?: Prisma.ExternalProviderCredentialOrderByWithRelationInput | Prisma.ExternalProviderCredentialOrderByWithRelationInput[]
+  cursor?: Prisma.ExternalProviderCredentialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExternalProviderCredentialScalarFieldEnum | Prisma.ExternalProviderCredentialScalarFieldEnum[]
 }
 
 /**

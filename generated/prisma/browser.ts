@@ -222,3 +222,13 @@ export type JobRun = Prisma.JobRunModel
  *
  */
 export type EmailOutbox = Prisma.EmailOutboxModel
+/**
+ * Model ExternalProviderConfiguration
+ *
+ */
+export type ExternalProviderConfiguration = Prisma.ExternalProviderConfigurationModel
+/**
+ * Model ExternalProviderCredential
+ *
+ */
+export type ExternalProviderCredential = Prisma.ExternalProviderCredentialModel

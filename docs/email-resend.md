@@ -24,3 +24,6 @@ npm run certification:outbox
 ```
 
 Phase 5.2 genuine results: direct Resend delivery passed; public registration returned HTTP 201 with `emailSent:true`; password-reset delivery returned HTTP 200; one queued message became `SENT` with one attempt, and a second processor call did not resend it. Inbox placement is not guaranteed by API acceptance.
+# Database credential source
+
+Resend may resolve its API key and sender identity from the encrypted provider store. Save and validate the `@jl-bke.com` sender before enablement. Status APIs show only a masked hint. Genuine delivery certification remains separate from credential validation.

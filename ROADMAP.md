@@ -20,6 +20,7 @@ Phase 5.0 and Phase 5.1 are committed. Phase 5.2 has verified public Cloudflare-
 - [x] Flexible general and customer-specific offers with immutable pricing and finite monthly promotional cycles
 - [ ] Complete PayMongo sandbox lifecycle (checkout creation passed; payment/webhook/refund/reconciliation remain)
 - [x] Resend sending domain verified for `jl-bke.com`
+- [x] Phase 5.2C encrypted provider credential store, centralized source policy, and protected administrator controls
 - [ ] Production infrastructure and operational readiness
 
 ## Completed in Phase 4

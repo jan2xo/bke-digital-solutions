@@ -3,12 +3,14 @@ import { Resend } from "resend";
 import { env } from "@/lib/env";
 import { db } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
+import { resolveResendConfiguration } from "@/lib/provider-config/service";
 
 type Message={to:string;subject:string;text:string};
 export interface EmailProvider{send(message:Message):Promise<void>}
-class ResendProvider implements EmailProvider{private client=new Resend(env.RESEND_API_KEY);async send(message:Message){const result=await this.client.emails.send({from:env.EMAIL_FROM,...message});if(result.error)throw new Error("EMAIL_DELIVERY_FAILED")}}
+class ResendProvider implements EmailProvider{async send(message:Message){const config=await resolveResendConfiguration();const client=new Resend(config.apiKey);const result=await client.emails.send({from:`${config.senderName} <${config.senderEmail}>`,...message});if(result.error)throw new Error("EMAIL_DELIVERY_FAILED")}}
 class DevelopmentProvider implements EmailProvider{async send(message:Message){console.info(`[development email] queued: ${message.subject}`)}}
-export const emailProvider:EmailProvider=(env.EMAIL_PROVIDER==="resend"||Boolean(process.env.RESEND_SANDBOX_TO))&&process.env.BKE_DISABLE_EXTERNAL_EMAIL!=="true"&&(env.NODE_ENV!=="test"||Boolean(process.env.RESEND_SANDBOX_TO))?new ResendProvider():new DevelopmentProvider();
+class RuntimeEmailProvider implements EmailProvider{async send(message:Message){const disabled=process.env.BKE_DISABLE_EXTERNAL_EMAIL==="true"||(env.NODE_ENV==="test"&&!process.env.RESEND_SANDBOX_TO);const useLog=env.PROVIDER_CONFIG_SOURCE==="environment"&&env.EMAIL_PROVIDER!=="resend"&&!process.env.RESEND_SANDBOX_TO;if(disabled||useLog)return new DevelopmentProvider().send(message);return new ResendProvider().send(message)}}
+export const emailProvider:EmailProvider=new RuntimeEmailProvider();
 
 export async function sendVerificationEmail(email:string,token:string){const url=new URL("/api/auth/verify",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Verify your BKE Digital Solutions account",text:`Verify your account using this one-time link: ${url}`})}
 export async function sendMagicLink(email:string,token:string){const url=new URL("/api/auth/magic/consume",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Your BKE Digital Solutions sign-in link",text:`Sign in using this one-time link (expires in 15 minutes): ${url}`})}

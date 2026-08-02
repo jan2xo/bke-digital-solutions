@@ -56,3 +56,6 @@ The public test webhook route is `https://jl-bke.com/api/webhooks/payments`.
 Until every item above executes without skips, PayMongo remains a production blocker.
 
 As of 2026-07-30, the local environment has no PayMongo test secret or webhook secret. The credential-gated cases therefore remain skipped and PayMongo sandbox readiness is not claimed.
+# Database credential source
+
+PayMongo sandbox credentials can be saved under the TEST context and resolved by the existing adapter through the centralized provider service. Local simulation rejects live keys and live configuration. Credential validation authenticates a safe read request; it does not replace signed webhook and complete sandbox lifecycle certification.

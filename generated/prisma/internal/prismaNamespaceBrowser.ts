@@ -91,7 +91,9 @@ export const ModelName = {
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
   JobRun: 'JobRun',
-  EmailOutbox: 'EmailOutbox'
+  EmailOutbox: 'EmailOutbox',
+  ExternalProviderConfiguration: 'ExternalProviderConfiguration',
+  ExternalProviderCredential: 'ExternalProviderCredential'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -757,6 +759,45 @@ export const EmailOutboxScalarFieldEnum = {
 } as const
 
 export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
+
+
+export const ExternalProviderConfigurationScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  environment: 'environment',
+  enabled: 'enabled',
+  senderName: 'senderName',
+  senderEmail: 'senderEmail',
+  supportEmail: 'supportEmail',
+  metadata: 'metadata',
+  validationStatus: 'validationStatus',
+  lastValidatedAt: 'lastValidatedAt',
+  lastValidationCode: 'lastValidationCode',
+  lastRotatedAt: 'lastRotatedAt',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExternalProviderConfigurationScalarFieldEnum = (typeof ExternalProviderConfigurationScalarFieldEnum)[keyof typeof ExternalProviderConfigurationScalarFieldEnum]
+
+
+export const ExternalProviderCredentialScalarFieldEnum = {
+  id: 'id',
+  configurationId: 'configurationId',
+  credentialType: 'credentialType',
+  encryptedValue: 'encryptedValue',
+  encryptionKeyVersion: 'encryptionKeyVersion',
+  maskedHint: 'maskedHint',
+  createdAt: 'createdAt',
+  activatedAt: 'activatedAt',
+  revokedAt: 'revokedAt',
+  replacedByCredentialId: 'replacedByCredentialId',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type ExternalProviderCredentialScalarFieldEnum = (typeof ExternalProviderCredentialScalarFieldEnum)[keyof typeof ExternalProviderCredentialScalarFieldEnum]
 
 
 export const SortOrder = {

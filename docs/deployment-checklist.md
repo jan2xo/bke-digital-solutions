@@ -119,3 +119,11 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Confirm Valkey is available for distributed login, MFA, and recent-auth throttling.
 - [ ] Exercise password → TOTP, one recovery code, expiry, replay rejection, idle expiry, and recent-auth denial in staging.
 - [ ] Record the manual account-takeover recovery approvers and identity-verification process.
+# Provider credential activation
+
+- [ ] Generate and externally store `PROVIDER_CREDENTIALS_ENCRYPTION_KEY`; set its key version.
+- [ ] Rotate PayMongo TEST and Resend credentials before saving them to PostgreSQL.
+- [ ] Save, validate, and enable each provider through `/admin/providers`.
+- [ ] Set `PROVIDER_CONFIG_SOURCE=database` with fallback false and restart.
+- [ ] Repeat PayMongo sandbox webhook and Resend delivery certification; scan logs for secrets.
+- [ ] Remove and revoke superseded environment credentials only after database-source certification passes.

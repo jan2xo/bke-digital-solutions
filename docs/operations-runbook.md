@@ -31,3 +31,6 @@ curl --fail https://jl-bke.com/api/health/ready
 ```
 
 The authenticated cron routes process outbox, expirations, and renewal reminders. A durable production scheduler remains VPS-only. Never place `CRON_SECRET` in a URL, command argument, evidence file, or log.
+# Provider credential operations
+
+Use `/admin/providers` only after MFA and recent authentication. Follow [the rotation runbook](operations/provider-credential-rotation.md) to save, validate, enable, replace, revoke, or migrate provider credentials. Loss of the external master key requires provider-side revocation and newly issued credentials; there is no plaintext recovery endpoint.

@@ -9,3 +9,6 @@ TOTP uses six digits, SHA-1, 30-second periods, and accepts the current period p
 Administrator magic links are deliberately rejected. MFA disablement immediately revokes sessions and returns the administrator to mandatory enrollment. Recovery-code regeneration replaces every prior unused code and revokes other sessions.
 
 Operational setup and emergency recovery are documented in [emergency-admin-recovery.md](./emergency-admin-recovery.md).
+# Provider settings
+
+External provider mutations use `requireRecentAdmin`: enrolled administrator MFA and a recently reauthenticated session are mandatory. A normal administrator page session is insufficient for credential changes, validation, enablement, or revocation.

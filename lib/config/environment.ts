@@ -21,6 +21,11 @@ export const environmentSchema = z.object({
   MFA_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_PEPPER: secret,
   CRON_SECRET: secret,
+  PROVIDER_CREDENTIALS_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
+  PROVIDER_CREDENTIALS_KEY_VERSION: z.coerce.number().int().min(1).default(1),
+  PROVIDER_CREDENTIALS_PREVIOUS_KEYS: z.preprocess(optional, z.string().optional()),
+  PROVIDER_CONFIG_SOURCE: z.enum(["environment", "database"]).default("environment"),
+  PROVIDER_CONFIG_ALLOW_ENV_FALLBACK: bool.default(false),
   REDIS_URL: z.preprocess(optional, z.url().optional()),
   REDIS_KEY_PREFIX: z.string().regex(/^[a-z0-9:-]+$/).default("bke-development"),
   UPSTASH_REDIS_REST_URL: z.preprocess(optional, z.url().optional()),
@@ -60,13 +65,15 @@ export const environmentSchema = z.object({
   if (protectedEnvironment && value.S3_ENDPOINT && new URL(value.S3_ENDPOINT).protocol !== "https:" && !(value.LOCAL_PRODUCTION_SIMULATION && new URL(value.S3_ENDPOINT).hostname === "minio")) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS outside an explicitly local private-storage simulation" });
   if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (protectedEnvironment && !value.REDIS_KEY_PREFIX.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["REDIS_KEY_PREFIX"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
-  if (value.PAYMENT_PROVIDER === "paymongo" && (!value.PAYMONGO_SECRET_KEY || !value.PAYMONGO_WEBHOOK_SECRET)) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "PayMongo credentials are required when selected" });
-  if (!value.PAYMONGO_LIVEMODE && value.PAYMONGO_SECRET_KEY?.startsWith("sk_live_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "live PayMongo credentials are forbidden when livemode is false" });
-  if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_SECRET_KEY?.startsWith("sk_test_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "local production simulation accepts PayMongo test credentials only" });
+  const environmentCredentialsRequired = value.NODE_ENV !== "test" && (value.PROVIDER_CONFIG_SOURCE === "environment" || value.PROVIDER_CONFIG_ALLOW_ENV_FALLBACK);
+  if (environmentCredentialsRequired && value.PAYMENT_PROVIDER === "paymongo" && (!value.PAYMONGO_SECRET_KEY || !value.PAYMONGO_WEBHOOK_SECRET)) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "PayMongo credentials are required for the selected provider source" });
+  if (environmentCredentialsRequired && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_LIVEMODE && value.PAYMONGO_SECRET_KEY?.startsWith("sk_live_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "live PayMongo credentials are forbidden when livemode is false" });
+  if (environmentCredentialsRequired && value.LOCAL_PRODUCTION_SIMULATION && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_SECRET_KEY?.startsWith("sk_test_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "local production simulation accepts PayMongo test credentials only" });
   if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
-  if (value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required when Resend is selected" });
+  if (environmentCredentialsRequired && value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required for the selected provider source" });
   if (value.DEPLOYMENT_ENV === "production" && value.EMAIL_PROVIDER === "log") context.addIssue({ code: "custom", path: ["EMAIL_PROVIDER"], message: "log email transport is forbidden in production" });
+  if (value.PROVIDER_CONFIG_SOURCE === "database" && !value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "is required for database provider configuration" });
   if (protectedEnvironment && value.SUPPORT_EMAIL.endsWith("@example.com")) context.addIssue({ code: "custom", path: ["SUPPORT_EMAIL"], message: "must be an operational address outside development" });
   if (protectedEnvironment) {
     for (const key of ["SESSION_SECRET", "MFA_ENCRYPTION_KEY", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
@@ -77,6 +84,7 @@ export const environmentSchema = z.object({
       const configured = value[key];
       if (!configured || configured.length < 48 || placeholder.test(configured)) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
     }
+    if (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY && (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY.length < 48 || placeholder.test(value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY))) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "must be at least 48 characters and not a placeholder" });
     for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"] as const) {
       if (value[key] && placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must not be a placeholder" });
     }

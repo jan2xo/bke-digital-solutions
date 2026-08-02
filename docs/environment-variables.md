@@ -15,3 +15,12 @@ Environment values are server-only unless explicitly prefixed for browser use. C
 The full template is `.env.certification.example`. `npm run certification:env` generates an ignored safe local file without provider credentials.
 
 Provider and certification commands explicitly load `.env.certification`. Existing containers retain their creation-time environment; use `npm run certification:compose -- refresh` after any change. Ordinary development continues to read `.env` and must not call PayMongo or Resend unless explicitly reconfigured.
+# Provider credential source
+
+- `PROVIDER_CONFIG_SOURCE`: `environment` (default) or `database`.
+- `PROVIDER_CONFIG_ALLOW_ENV_FALLBACK`: explicit fallback switch; defaults false.
+- `PROVIDER_CREDENTIALS_ENCRYPTION_KEY`: external root secret required by database source; at least 48 strong characters in protected environments.
+- `PROVIDER_CREDENTIALS_KEY_VERSION`: positive active key version.
+- `PROVIDER_CREDENTIALS_PREVIOUS_KEYS`: temporary JSON version-to-key map for manual rotation.
+
+The master key must never be stored in PostgreSQL or committed. Database source does not automatically import existing environment credentials.

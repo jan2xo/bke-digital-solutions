@@ -437,7 +437,9 @@ export const ModelName = {
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
   JobRun: 'JobRun',
-  EmailOutbox: 'EmailOutbox'
+  EmailOutbox: 'EmailOutbox',
+  ExternalProviderConfiguration: 'ExternalProviderConfiguration',
+  ExternalProviderCredential: 'ExternalProviderCredential'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -453,7 +455,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3491,6 +3493,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ExternalProviderConfiguration: {
+      payload: Prisma.$ExternalProviderConfigurationPayload<ExtArgs>
+      fields: Prisma.ExternalProviderConfigurationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExternalProviderConfigurationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExternalProviderConfigurationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>
+        }
+        findFirst: {
+          args: Prisma.ExternalProviderConfigurationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExternalProviderConfigurationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>
+        }
+        findMany: {
+          args: Prisma.ExternalProviderConfigurationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>[]
+        }
+        create: {
+          args: Prisma.ExternalProviderConfigurationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>
+        }
+        createMany: {
+          args: Prisma.ExternalProviderConfigurationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExternalProviderConfigurationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>[]
+        }
+        delete: {
+          args: Prisma.ExternalProviderConfigurationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>
+        }
+        update: {
+          args: Prisma.ExternalProviderConfigurationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExternalProviderConfigurationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExternalProviderConfigurationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExternalProviderConfigurationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExternalProviderConfigurationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderConfigurationPayload>
+        }
+        aggregate: {
+          args: Prisma.ExternalProviderConfigurationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExternalProviderConfiguration>
+        }
+        groupBy: {
+          args: Prisma.ExternalProviderConfigurationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalProviderConfigurationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExternalProviderConfigurationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalProviderConfigurationCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExternalProviderCredential: {
+      payload: Prisma.$ExternalProviderCredentialPayload<ExtArgs>
+      fields: Prisma.ExternalProviderCredentialFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExternalProviderCredentialFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExternalProviderCredentialFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>
+        }
+        findFirst: {
+          args: Prisma.ExternalProviderCredentialFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExternalProviderCredentialFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>
+        }
+        findMany: {
+          args: Prisma.ExternalProviderCredentialFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>[]
+        }
+        create: {
+          args: Prisma.ExternalProviderCredentialCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>
+        }
+        createMany: {
+          args: Prisma.ExternalProviderCredentialCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExternalProviderCredentialCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>[]
+        }
+        delete: {
+          args: Prisma.ExternalProviderCredentialDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>
+        }
+        update: {
+          args: Prisma.ExternalProviderCredentialUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExternalProviderCredentialDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExternalProviderCredentialUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExternalProviderCredentialUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExternalProviderCredentialUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalProviderCredentialPayload>
+        }
+        aggregate: {
+          args: Prisma.ExternalProviderCredentialAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExternalProviderCredential>
+        }
+        groupBy: {
+          args: Prisma.ExternalProviderCredentialGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalProviderCredentialGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExternalProviderCredentialCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalProviderCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -4179,6 +4329,45 @@ export const EmailOutboxScalarFieldEnum = {
 export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
 
 
+export const ExternalProviderConfigurationScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  environment: 'environment',
+  enabled: 'enabled',
+  senderName: 'senderName',
+  senderEmail: 'senderEmail',
+  supportEmail: 'supportEmail',
+  metadata: 'metadata',
+  validationStatus: 'validationStatus',
+  lastValidatedAt: 'lastValidatedAt',
+  lastValidationCode: 'lastValidationCode',
+  lastRotatedAt: 'lastRotatedAt',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExternalProviderConfigurationScalarFieldEnum = (typeof ExternalProviderConfigurationScalarFieldEnum)[keyof typeof ExternalProviderConfigurationScalarFieldEnum]
+
+
+export const ExternalProviderCredentialScalarFieldEnum = {
+  id: 'id',
+  configurationId: 'configurationId',
+  credentialType: 'credentialType',
+  encryptedValue: 'encryptedValue',
+  encryptionKeyVersion: 'encryptionKeyVersion',
+  maskedHint: 'maskedHint',
+  createdAt: 'createdAt',
+  activatedAt: 'activatedAt',
+  revokedAt: 'revokedAt',
+  replacedByCredentialId: 'replacedByCredentialId',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type ExternalProviderCredentialScalarFieldEnum = (typeof ExternalProviderCredentialScalarFieldEnum)[keyof typeof ExternalProviderCredentialScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -4619,6 +4808,62 @@ export type ListEnumTrialSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'ExternalProvider'
+ */
+export type EnumExternalProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalProvider'>
+
+
+
+/**
+ * Reference to a field of type 'ExternalProvider[]'
+ */
+export type ListEnumExternalProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalProvider[]'>
+
+
+
+/**
+ * Reference to a field of type 'ProviderEnvironment'
+ */
+export type EnumProviderEnvironmentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderEnvironment'>
+
+
+
+/**
+ * Reference to a field of type 'ProviderEnvironment[]'
+ */
+export type ListEnumProviderEnvironmentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderEnvironment[]'>
+
+
+
+/**
+ * Reference to a field of type 'ProviderValidationStatus'
+ */
+export type EnumProviderValidationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderValidationStatus'>
+
+
+
+/**
+ * Reference to a field of type 'ProviderValidationStatus[]'
+ */
+export type ListEnumProviderValidationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderValidationStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'ProviderCredentialType'
+ */
+export type EnumProviderCredentialTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderCredentialType'>
+
+
+
+/**
+ * Reference to a field of type 'ProviderCredentialType[]'
+ */
+export type ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderCredentialType[]'>
+
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4823,6 +5068,8 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   jobRun?: Prisma.JobRunOmit
   emailOutbox?: Prisma.EmailOutboxOmit
+  externalProviderConfiguration?: Prisma.ExternalProviderConfigurationOmit
+  externalProviderCredential?: Prisma.ExternalProviderCredentialOmit
 }
 
 /* Types for Logging */

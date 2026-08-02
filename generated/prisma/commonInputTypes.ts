@@ -739,6 +739,74 @@ export type EnumTrialSourceWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTrialSourceFilter<$PrismaModel>
 }
 
+export type EnumExternalProviderFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalProviderFilter<$PrismaModel> | $Enums.ExternalProvider
+}
+
+export type EnumProviderEnvironmentFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderEnvironment | Prisma.EnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderEnvironmentFilter<$PrismaModel> | $Enums.ProviderEnvironment
+}
+
+export type EnumProviderValidationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderValidationStatus | Prisma.EnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderValidationStatusFilter<$PrismaModel> | $Enums.ProviderValidationStatus
+}
+
+export type EnumExternalProviderWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalProviderWithAggregatesFilter<$PrismaModel> | $Enums.ExternalProvider
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExternalProviderFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExternalProviderFilter<$PrismaModel>
+}
+
+export type EnumProviderEnvironmentWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderEnvironment | Prisma.EnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderEnvironmentWithAggregatesFilter<$PrismaModel> | $Enums.ProviderEnvironment
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProviderEnvironmentFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProviderEnvironmentFilter<$PrismaModel>
+}
+
+export type EnumProviderValidationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderValidationStatus | Prisma.EnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderValidationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProviderValidationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProviderValidationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProviderValidationStatusFilter<$PrismaModel>
+}
+
+export type EnumProviderCredentialTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderCredentialType | Prisma.EnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderCredentialTypeFilter<$PrismaModel> | $Enums.ProviderCredentialType
+}
+
+export type EnumProviderCredentialTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderCredentialType | Prisma.EnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderCredentialTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProviderCredentialType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProviderCredentialTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProviderCredentialTypeFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1421,6 +1489,74 @@ export type NestedEnumTrialSourceWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTrialSourceFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTrialSourceFilter<$PrismaModel>
+}
+
+export type NestedEnumExternalProviderFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalProviderFilter<$PrismaModel> | $Enums.ExternalProvider
+}
+
+export type NestedEnumProviderEnvironmentFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderEnvironment | Prisma.EnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderEnvironmentFilter<$PrismaModel> | $Enums.ProviderEnvironment
+}
+
+export type NestedEnumProviderValidationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderValidationStatus | Prisma.EnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderValidationStatusFilter<$PrismaModel> | $Enums.ProviderValidationStatus
+}
+
+export type NestedEnumExternalProviderWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalProviderWithAggregatesFilter<$PrismaModel> | $Enums.ExternalProvider
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExternalProviderFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExternalProviderFilter<$PrismaModel>
+}
+
+export type NestedEnumProviderEnvironmentWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderEnvironment | Prisma.EnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderEnvironment[] | Prisma.ListEnumProviderEnvironmentFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderEnvironmentWithAggregatesFilter<$PrismaModel> | $Enums.ProviderEnvironment
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProviderEnvironmentFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProviderEnvironmentFilter<$PrismaModel>
+}
+
+export type NestedEnumProviderValidationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderValidationStatus | Prisma.EnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderValidationStatus[] | Prisma.ListEnumProviderValidationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderValidationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProviderValidationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProviderValidationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProviderValidationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumProviderCredentialTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderCredentialType | Prisma.EnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderCredentialTypeFilter<$PrismaModel> | $Enums.ProviderCredentialType
+}
+
+export type NestedEnumProviderCredentialTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProviderCredentialType | Prisma.EnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProviderCredentialType[] | Prisma.ListEnumProviderCredentialTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProviderCredentialTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProviderCredentialType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProviderCredentialTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProviderCredentialTypeFilter<$PrismaModel>
 }
 
 

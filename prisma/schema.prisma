@@ -152,6 +152,28 @@ enum SecurityEventType {
   PASSWORD_CHANGED
 }
 
+enum ExternalProvider {
+  PAYMONGO
+  RESEND
+}
+
+enum ProviderEnvironment {
+  TEST
+  LIVE
+}
+
+enum ProviderCredentialType {
+  SECRET_KEY
+  WEBHOOK_SECRET
+  API_KEY
+}
+
+enum ProviderValidationStatus {
+  NOT_VALIDATED
+  VALID
+  INVALID
+}
+
 model User {
   id               String                      @id @default(cuid())
   email            String                      @unique
@@ -172,6 +194,9 @@ model User {
   recoveryCodes    AdministratorRecoveryCode[]
   mfaChallenges    MfaChallenge[]
   securityEvents   SecurityEvent[]
+  providerConfigurationsCreated ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
+  providerConfigurationsUpdated ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
+  providerCredentialsCreated ExternalProviderCredential[] @relation("ProviderCredentialCreator")
 }
 
 model PasswordCredential {
@@ -866,4 +891,50 @@ model EmailOutbox {
   sentAt    DateTime?
 
   @@index([status, createdAt])
+}
+
+model ExternalProviderConfiguration {
+  id                 String                   @id @default(cuid())
+  provider           ExternalProvider
+  environment        ProviderEnvironment
+  enabled            Boolean                  @default(false)
+  senderName         String?
+  senderEmail        String?
+  supportEmail       String?
+  metadata           Json                     @default("{}")
+  validationStatus   ProviderValidationStatus @default(NOT_VALIDATED)
+  lastValidatedAt    DateTime?
+  lastValidationCode String?
+  lastRotatedAt      DateTime?
+  createdByUserId    String
+  updatedByUserId    String
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  createdBy          User                     @relation("ProviderConfigurationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedBy          User                     @relation("ProviderConfigurationUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  credentials        ExternalProviderCredential[]
+
+  @@unique([provider, environment])
+  @@index([enabled, provider, environment])
+}
+
+model ExternalProviderCredential {
+  id                       String                     @id @default(cuid())
+  configurationId          String
+  credentialType           ProviderCredentialType
+  encryptedValue           String
+  encryptionKeyVersion     Int
+  maskedHint               String
+  createdAt                DateTime                   @default(now())
+  activatedAt              DateTime                   @default(now())
+  revokedAt                DateTime?
+  replacedByCredentialId   String?
+  createdByUserId          String
+  configuration            ExternalProviderConfiguration @relation(fields: [configurationId], references: [id], onDelete: Cascade)
+  createdBy                User                       @relation("ProviderCredentialCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  replacedByCredential     ExternalProviderCredential? @relation("ProviderCredentialReplacement", fields: [replacedByCredentialId], references: [id], onDelete: SetNull)
+  replaces                 ExternalProviderCredential[] @relation("ProviderCredentialReplacement")
+
+  @@index([configurationId, credentialType, revokedAt], map: "ExternalProviderCredential_config_type_revoked_idx")
+  @@index([encryptionKeyVersion, revokedAt])
 }

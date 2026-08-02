@@ -8,7 +8,7 @@ export function totpCode(secret: string) { const message = Buffer.alloc(8); mess
 export async function enrollAndLoginAdmin(page: Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByLabel("Email address").first().fill(email);
-  await page.getByLabel("Password").fill(password);
+  await page.locator('input[name="password"]').fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.getByRole("button", { name: "Begin secure setup" }).click();
   const secret = (await page.locator("code").first().textContent())!.trim();

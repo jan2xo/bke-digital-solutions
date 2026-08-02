@@ -31,3 +31,10 @@ Evidence fields for each case: date/time; local order ID; redacted provider refe
 - [x] Run genuine Resend direct delivery and public registration verification delivery.
 - [x] Process one genuine outbox message twice; it remained one `SENT` row with one attempt.
 - [ ] Stop the tunnel and disable/delete the temporary webhook.
+# Database-source certification addendum
+
+- [ ] Rotate credentials rather than importing existing environment values.
+- [ ] Configure the external provider master key and database source.
+- [ ] Validate masked-only admin status after restart.
+- [ ] Repeat genuine PayMongo TEST checkout/webhook and Resend delivery checks.
+- [ ] Confirm live PayMongo remains unavailable and environment fallback remains disabled.

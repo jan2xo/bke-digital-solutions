@@ -76,3 +76,6 @@ Existing `DATABASE_URL`, Redis, S3, session/MFA/license secrets, PayMongo, Resen
 ## Known limitations and future work
 
 See `implementation-status.md`, `ROADMAP.md`, the deployment checklist, and the Phase 4 report. Do not promote the local development administrator or mock-provider configuration to production.
+# Phase 5.2C handoff
+
+Keep provider source on `environment` until newly rotated PayMongo TEST and Resend credentials have been saved, validated, and enabled with an externally managed master key. Then select `database`, restart, and rerun provider certification. Never copy current environment values automatically. See `docs/operations/provider-credential-rotation.md`.

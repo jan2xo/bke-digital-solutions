@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "@/lib/env";
+import { resolvePayMongoConfiguration } from "@/lib/provider-config/service";
+import type { ResolvedPayMongoConfiguration } from "@/lib/provider-config/types";
 import type { CheckoutInput, PaymentEvent, PaymentProvider, ProviderPayment } from "./types";
 
 const API = "https://api.paymongo.com/v1";
@@ -8,19 +10,22 @@ type PayMongoEvent = { data: { id: string; attributes: { type: string; livemode:
 
 export class PayMongoProvider implements PaymentProvider {
   readonly name = "paymongo";
-  constructor(private readonly config = { secretKey: env.PAYMONGO_SECRET_KEY, webhookSecret: env.PAYMONGO_WEBHOOK_SECRET, livemode: env.PAYMONGO_LIVEMODE }) {}
-  private assertSafeConfiguration() {
-    if (!this.config.secretKey || !this.config.webhookSecret) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
-    if (!this.config.livemode && !this.config.secretKey.startsWith("sk_test_")) throw new Error("PAYMENT_PROVIDER_UNSAFE_CONFIGURATION");
+  constructor(private readonly explicitConfig?: { secretKey?: string; webhookSecret?: string; livemode: boolean }) {}
+  private async configuration(): Promise<ResolvedPayMongoConfiguration> {
+    if (!this.explicitConfig) return resolvePayMongoConfiguration();
+    if (!this.explicitConfig.secretKey || !this.explicitConfig.webhookSecret) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
+    return { source: "environment", secretKey: this.explicitConfig.secretKey, webhookSecret: this.explicitConfig.webhookSecret, livemode: this.explicitConfig.livemode };
   }
-  private authorization() {
-    this.assertSafeConfiguration();
-    return `Basic ${Buffer.from(`${this.config.secretKey}:`).toString("base64")}`;
+  private authorization(config: ResolvedPayMongoConfiguration) {
+    if (!config.livemode && !config.secretKey.startsWith("sk_test_")) throw new Error("PAYMENT_PROVIDER_UNSAFE_CONFIGURATION");
+    if (config.livemode && !config.secretKey.startsWith("sk_live_")) throw new Error("PAYMENT_PROVIDER_UNSAFE_CONFIGURATION");
+    return `Basic ${Buffer.from(`${config.secretKey}:`).toString("base64")}`;
   }
   async createCheckout(input: CheckoutInput) {
+    const config = await this.configuration();
     const response = await fetch(`${API}/checkout_sessions`, {
       method: "POST",
-      headers: { Authorization: this.authorization(), "Content-Type": "application/json", "Idempotency-Key": input.idempotencyKey },
+      headers: { Authorization: this.authorization(config), "Content-Type": "application/json", "Idempotency-Key": input.idempotencyKey },
       body: JSON.stringify({ data: { attributes: {
         billing: { name: input.customer.name, email: input.customer.email },
         line_items: input.items.map((i) => ({ name: i.name, description: i.description, amount: i.amountMinor, currency: input.currency, quantity: i.quantity })),
@@ -35,9 +40,10 @@ export class PayMongoProvider implements PaymentProvider {
     return { externalId: body.data.id, checkoutUrl: body.data.attributes.checkout_url };
   }
   async retrievePayment(externalId: string): Promise<ProviderPayment> {
+    const config = await this.configuration();
     if (!/^pay_[A-Za-z0-9]+$/.test(externalId)) throw new Error("INVALID_PROVIDER_ID");
     const response = await fetch(`${API}/payments/${externalId}`, {
-      headers: { Authorization: this.authorization() },
+      headers: { Authorization: this.authorization(config) },
       signal: AbortSignal.timeout(15_000),
     });
     if (!response.ok) throw new Error("PAYMENT_PROVIDER_ERROR");
@@ -47,14 +53,14 @@ export class PayMongoProvider implements PaymentProvider {
     return { externalId: body.data.id, status, amountMinor: attributes.amount, currency: attributes.currency, livemode: attributes.livemode };
   }
   async verifyAndParseWebhook(raw: Buffer, headers: Headers): Promise<PaymentEvent> {
-    this.assertSafeConfiguration();
+    const config = await this.configuration();
+    this.authorization(config);
     const header = headers.get("paymongo-signature") ?? "";
     const parts = Object.fromEntries(header.split(",").map((part) => part.split("=").map((v) => v.trim())));
     const timestamp = Number(parts.t);
-    const signature = this.config.livemode ? parts.li : parts.te;
+    const signature = config.livemode ? parts.li : parts.te;
     if (!timestamp || !signature || Math.abs(Date.now() / 1000 - timestamp) > 300) throw new Error("INVALID_SIGNATURE");
-    if (!this.config.webhookSecret) throw new Error("PAYMENT_PROVIDER_NOT_CONFIGURED");
-    const expected = createHmac("sha256", this.config.webhookSecret).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");
+    const expected = createHmac("sha256", config.webhookSecret).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");
     const a = Buffer.from(signature); const b = Buffer.from(expected);
     if (a.length !== b.length || !timingSafeEqual(a, b)) throw new Error("INVALID_SIGNATURE");
     const event = JSON.parse(raw.toString("utf8")) as PayMongoEvent;
