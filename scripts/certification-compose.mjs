@@ -5,7 +5,7 @@ const base = ["compose", "-p", "bke-certification", "--profile", "self-hosted-st
 const actions = {
   config: ["config", "--quiet"],
   up: ["up", "-d", "postgres", "valkey", "minio", "minio-init", "app", "caddy"],
-  refresh: ["up", "-d", "--force-recreate", "app", "caddy"],
+  refresh: ["up", "-d", "--build", "--force-recreate", "app", "caddy"],
   down: ["down"],
   status: ["ps"],
   logs: ["logs", "--tail", "100", "app", "caddy"],
