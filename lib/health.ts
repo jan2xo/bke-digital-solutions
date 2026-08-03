@@ -5,8 +5,9 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { checkStorageReadiness } from "@/lib/storage";
 import { operationalLog } from "@/lib/logger";
+import { resolvePayMongoConfiguration, resolveResendConfiguration } from "@/lib/provider-config/service";
 
-type Dependency = "postgresql" | "valkey" | "objectStorage";
+type Dependency = "postgresql" | "valkey" | "objectStorage" | "providers";
 
 async function withinTimeout(operation: () => Promise<unknown>, milliseconds = 3_000) {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -28,11 +29,15 @@ async function checkValkey() {
 }
 
 export async function readiness() {
-  const checks: Record<Dependency, "up" | "down"> = { postgresql: "down", valkey: "down", objectStorage: "down" };
+  const checks: Record<Dependency, "up" | "down"> = { postgresql: "down", valkey: "down", objectStorage: "down", providers: "down" };
   const operations: Array<[Dependency, () => Promise<unknown>]> = [
     ["postgresql", () => db.$queryRaw`SELECT 1`],
     ["valkey", checkValkey],
     ["objectStorage", () => checkStorageReadiness(AbortSignal.timeout(3_000))],
+    ["providers", async () => {
+      if (env.PAYMENT_PROVIDER === "paymongo") await resolvePayMongoConfiguration();
+      if (env.EMAIL_PROVIDER === "resend") await resolveResendConfiguration();
+    }],
   ];
   await Promise.all(operations.map(async ([name, operation]) => {
     try { await withinTimeout(operation); checks[name] = "up"; }

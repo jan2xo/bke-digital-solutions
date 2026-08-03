@@ -30,8 +30,19 @@ services:
     security_opt: ["no-new-privileges:true"]
   minio:
     profiles: ["self-hosted-storage"]
+    networks: [private, certification-host]
+    ports: !override
+      - "127.0.0.1:59000:9000"
+  postgres:
+    networks: [private, certification-host]
+    ports:
+      - "127.0.0.1:55432:5432"
+  valkey:
+    networks: [private, certification-host]
+    ports:
+      - "127.0.0.1:56379:6379"
   minio-init:
-    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
     entrypoint: ["/bin/sh", "-c"]
     command:
       - >-
@@ -52,3 +63,6 @@ services:
       - ./Caddyfile.certification:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+
+networks:
+  certification-host:

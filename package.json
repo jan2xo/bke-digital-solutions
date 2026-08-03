@@ -32,6 +32,8 @@
     "config:validate": "tsx scripts/validate-environment.ts",
     "certification:env": "tsx scripts/create-certification-env.ts",
     "certification:compose": "node scripts/certification-compose.mjs",
+    "certification:test:all": "node scripts/certification-host-command.mjs npm test",
+    "certification:test:e2e": "node scripts/certification-host-command.mjs npm run test:e2e",
     "health:check": "tsx scripts/health-check.ts",
     "security:hygiene": "node scripts/repository-hygiene.mjs"
   },

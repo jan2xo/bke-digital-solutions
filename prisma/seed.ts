@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 import { createHash } from "node:crypto";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const catalog = [
@@ -25,7 +26,7 @@ async function main() {
   for (const item of catalog) {
     const product = await db.product.upsert({
       where: { slug: item.slug },
-      update: { name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, publishedAt: new Date(), archivedAt: null },
+      update: { name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, archivedAt: null },
       create: { slug: item.slug, name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, publishedAt: new Date() },
     });
     let policy = await db.licensePolicy.findFirst({ where: { productId: product.id, name: item.policy.name } });
@@ -74,7 +75,7 @@ async function main() {
     if (item.slug === "bke-cloudops") {
       const version = await db.productVersion.upsert({
         where: { productId_version: { productId: product.id, version: "1.0.0" } },
-        update: { active: true, isLatest: true, publishedAt: new Date() },
+        update: { active: true, isLatest: true },
         create: { productId: product.id, version: "1.0.0", releaseNotes: "Initial stable release.", operatingSystem: "Any", architecture: "universal", active: true, isLatest: true, publishedAt: new Date() },
       });
       await db.productArtifact.upsert({
@@ -89,6 +90,11 @@ async function main() {
     const markdownContent = `# ${title}\n\nTemplate content for {{company_name}}. This placeholder must be reviewed and replaced before commercial launch.\n\n- Website: {{website}}\n- Support: {{support_email}}\n- Business address: {{business_address}}`;
     const version = await db.legalDocumentVersion.upsert({ where: { documentId_versionNumber: { documentId: document.id, versionNumber: 1 } }, update: {}, create: { documentId: document.id, versionNumber: 1, markdownContent, status: "PUBLISHED", effectiveAt: new Date(), publishedAt: new Date(), changeSummary: "Initial non-legal template", requiresReacceptance: false, contentHash: createHash("sha256").update(markdownContent).digest("hex") } });
     if (!document.currentPublishedVersionId) await db.legalDocument.update({ where: { id: document.id }, data: { currentPublishedVersionId: version.id } });
+  }
+  if (process.env.LOCAL_PRODUCTION_SIMULATION === "true") {
+    const body = Buffer.from("BKE Digital Solutions test installer\n");
+    const storage = new S3Client({ region: process.env.S3_REGION ?? "auto", endpoint: process.env.S3_ENDPOINT, forcePathStyle: process.env.S3_FORCE_PATH_STYLE !== "false", credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID!, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY! } });
+    await storage.send(new PutObjectCommand({ Bucket: process.env.S3_BUCKET!, Key: "installers/bke-installer.bin", Body: body, ContentType: "application/octet-stream" }));
   }
   console.info(`Seeded ${catalog.length} BKE Digital Solutions products and editions.`);
 }

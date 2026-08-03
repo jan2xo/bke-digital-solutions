@@ -20,6 +20,8 @@ npm run certification:compose -- seed
 npm run certification:compose -- smoke
 npm run certification:compose -- status
 npm run certification:compose -- logs
+npm run certification:test:all
+npm run certification:test:e2e
 npm run certification:test:resend
 npm run certification:test:paymongo
 npm run certification:compose -- queue-email
@@ -27,6 +29,8 @@ npm run certification:outbox
 npm run certification:compose -- admin
 npm run certification:compose -- down
 ```
+
+`up` and `refresh` apply migrations before rebuilding and force-recreating the serving application. Certification database, Valkey, and MinIO host ports bind to loopback only. See [certification-runtime.md](certification-runtime.md) before diagnosing runtime drift. Use the quiet configuration check; resolved Compose output may contain loaded secrets.
 
 Local health:
 
