@@ -19,6 +19,9 @@
 	}
 	log {
 		output stdout
-		format json
+		format filter {
+			request>headers>Paymongo-Signature delete
+			wrap json
+		}
 	}
 }

@@ -1,14 +1,14 @@
 # BKE Digital Solutions — Current-State Truth Check
 
-Baseline updated: August 3, 2026
-Pushed Git baseline: `05cefcb fix(catalog): show active edition pricing on homepage`
-Latest completed roadmap phases: Phase 6.0 — Runtime Parity and Phase 6.1A — Legal Document Management
+Baseline updated: August 4, 2026
+Pushed Git baseline: `a43cfc5 feat(payments): complete PayMongo sandbox lifecycle certification`
+Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, and the Phase 6.2 payment lifecycle implementation
 
-Working-tree truth: Phase 6.1 Data Integrity and Safe Deletion is implemented and verified but uncommitted. Development and certification have 18 migrations applied and current schemas. Full local and certification regression, production/Docker builds, drift, dependency, and hygiene gates pass; pushed HEAD remains the authority until owner approval and commit.
+Working-tree truth: Phase 6.2 certification continuation contains Caddy webhook-signature log redaction, focused regression coverage, and documentation corrections. Development and certification have 19 migrations applied and current schemas. The working tree is intentionally uncommitted pending owner review.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
-Latest Phase 6.1 working-tree verification: Prisma schema, generated client, migrations, and both databases agree at 18 migrations; TypeScript and ESLint passed; local and certification Vitest each passed 125 tests with six credential-gated scenarios skipped; local and certification Playwright each passed 9/9; local and Docker production builds passed; schema drift is zero; and the runtime dependency audit reported zero vulnerabilities. These results do not complete PayMongo lifecycle certification or remove legal-review, backup, monitoring, secure-supply-chain, or production-deployment blockers.
+Phase 6.1 is committed at `952e9e1`. Phase 6.2 lifecycle code is committed at `a43cfc5`, but its commit message overstated certification completeness. Genuine PayMongo paid settlement, payment retrieval, persisted reconciliation, full refund, and signed refund settlement now pass. Genuine failed-payment and provider-resend duplicate/delayed/out-of-order evidence remain open. Legal review, backups, monitoring, secure supply chain, and production deployment remain blocked.
 
 This document is the concise repository baseline for future planning. It records verified implementation and runtime evidence rather than roadmap intent. If this file conflicts with an older phase report, the current repository, applied migrations, executable tests, and runtime evidence take precedence.
 
@@ -21,9 +21,9 @@ It is ready for local development and controlled sandbox certification. It is no
 ## Repository truth
 
 - Branch: `main`.
-- Pushed HEAD: `05cefcb fix(catalog): show active edition pricing on homepage`.
-- `main` matches `origin/main`; the homepage catalog fix is committed and pushed after the Phase 6.0 baseline.
-- Seventeen Prisma migrations exist and are applied in certification.
+- Pushed HEAD: `a43cfc5 feat(payments): complete PayMongo sandbox lifecycle certification`.
+- `main` matches `origin/main`; Phase 6.1 and the Phase 6.2 lifecycle implementation are committed and pushed.
+- Nineteen Prisma migrations exist and are applied in development and certification.
 - Prisma schema validation and generated-client parity passed.
 - TypeScript, ESLint, database-backed Vitest, Playwright, local/Docker production builds, and the runtime dependency audit passed for the latest verified baseline.
 - The certification application and dependencies are current and healthy.
@@ -37,15 +37,15 @@ It is ready for local development and controlled sandbox certification. It is no
 | Vitest | 125 passed locally and in certification, 6 credential-gated scenarios skipped in each |
 | Playwright | 9 passed |
 | Production and Docker builds | Passed |
-| Migration status | 18 migrations, development and certification current |
+| Migration status | 19 migrations, development and certification current |
 | Genuine PayMongo checkout creation | Passed |
 | PayMongo live-key sandbox rejection | Passed |
 | Genuine Resend delivery | Passed |
-| Genuine persisted PayMongo retrieval | Skipped/not certified |
-| Genuine captured webhook verification | Skipped/not certified |
-| Genuine refund lifecycle | Not certified |
-| Genuine delayed/duplicate lifecycle | Not fully certified |
-| Genuine persisted reconciliation | Skipped/not certified |
+| Genuine persisted PayMongo retrieval | Passed |
+| Genuine signed paid/refund webhook processing | Passed at runtime; exact raw fixture intentionally not retained |
+| Genuine refund lifecycle | Passed |
+| Genuine delayed/duplicate/out-of-order provider resend | Owner-interactive and not yet certified |
+| Genuine persisted reconciliation | Passed |
 
 The first sandbox-restricted Vitest execution could not reach local PostgreSQL. The identical suite was rerun with database access and passed. That initial failure was an execution-sandbox restriction, not an application result.
 
@@ -153,13 +153,16 @@ A plain `MEMBER` can currently open the account detail and see broad order, invo
 ### Genuine runtime evidence
 
 - Real PayMongo sandbox hosted-checkout creation passed.
-- Certification data contained seven processed paid webhook events, seven paid orders, seven PayMongo paid records, and seven active licenses.
-- Certification data also contained nine failed `payment.paid` events and one failed `payment.failed` event. Every stored error was `PAYMENT_MISMATCH`.
-- No genuine refund certification evidence was present in the audited aggregate.
+- Real signed `payment.paid` and `checkout_session.payment.paid` events settled PayMongo orders through the canonical endpoint.
+- Real provider payment retrieval and persisted reconciliation passed with no differences.
+- PayMongo accepted a real Test Mode full refund and delivered a signed `payment.refunded` event.
+- The refund transaction changed order/payment to `REFUNDED`, invoice to `VOID`, revoked licenses, cancelled subscription access, and queued the deduplicated refund confirmation.
+- Stored failed PayMongo events caused by reference mismatches are not valid genuine failed-checkout evidence.
+- Caddy access logs previously exposed the PayMongo signature header. Both Caddy configurations now delete it, and a runtime probe confirmed it is absent.
 
 ### Verdict
 
-PayMongo connectivity and some successful settlement are real. Full successful, failed, duplicate, delayed, out-of-order, refund, and reconciliation certification has not passed. PayMongo is not approved for live mode.
+PayMongo is **partially certified**: genuine paid, refund, retrieval, and persisted reconciliation pass. A genuine failed hosted checkout and PayMongo-originated duplicate/delayed/out-of-order resends remain open. PayMongo is not approved for live mode.
 
 ## Email truth
 
@@ -261,16 +264,12 @@ The application has a configurable support email address, but no support platfor
 
 ### Critical
 
-1. Certification migration and application-image drift.
-2. Unexplained stored PayMongo `PAYMENT_MISMATCH` failures.
-3. Incomplete genuine PayMongo lifecycle certification.
-4. Destructive deletion of historical customer commerce.
-5. Partial storage-deletion inconsistency risk.
-6. Missing renewal-reminder and scheduler completion.
-7. No verified backup and restore process.
-8. No operational monitoring and alerting.
-9. No approved administrator recovery and incident-response process.
-10. No completed legal, privacy, refund, support, and tax/BIR foundation.
+1. Incomplete provider-interactive PayMongo failed-payment and resend evidence.
+2. Missing renewal-reminder and scheduler completion.
+3. No verified backup and restore process.
+4. No operational monitoring and alerting.
+5. No approved administrator recovery and incident-response process.
+6. No completed legal, privacy, refund, support, and tax/BIR approval.
 
 ### Desktop-distribution blockers
 
@@ -291,7 +290,7 @@ The application has a configurable support email address, but no support platfor
 | Use | Verdict |
 |---|---|
 | Local development | Ready |
-| Local public certification | Conditionally ready after migration/image repair |
+| Local public certification | Partially certified; provider-interactive cases remain |
 | VPS staging | Not ready until baseline and operating controls are completed |
 | Private sandbox pilot | Conditionally usable for invited testers |
 | Real customer use | Not ready |
@@ -305,7 +304,8 @@ The approved implementation sequence is defined in [`ROADMAP.md`](./ROADMAP.md),
 
 1. Completed: Phase 6.0 — Runtime Parity & Certification Baseline.
 2. Completed: Phase 6.1A — Legal Document Management System.
-3. In owner review: Phase 6.1 — Data Integrity & Safe Deletion (uncommitted; verification passed, owner approval pending).
-4. Still blocked: Phase 6.2 — complete PayMongo lifecycle certification.
+3. Completed and pushed: Phase 6.1 — Data Integrity & Safe Deletion.
+4. Partially certified: Phase 6.2 — paid, refund, retrieval, and persisted reconciliation pass; failed-payment and provider-resend evidence remain.
+5. Phase 6.3 must not start until the Phase 6.2 entry condition is satisfied or explicitly revised by the owner.
 
 No future phase should claim readiness merely because code exists. Database state, runtime configuration, automated tests, genuine provider evidence, documentation, and owner approval must agree.

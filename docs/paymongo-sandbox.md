@@ -53,9 +53,13 @@ The canonical public test webhook route is `https://jl-bke.com/api/webhooks/paym
 - Reconciliation matches the PayMongo payment resource.
 - Application/server/test logs contain no secret, Authorization header, raw payment payload, license key, or customer billing record.
 
-Until every item above executes without skips, PayMongo remains a production blocker.
+Until every item above executes without skips or is explicitly recorded as a provider-interactive limitation with deterministic coverage, PayMongo remains a public-payment blocker.
 
-As of 2026-07-30, the local environment has no PayMongo test secret or webhook secret. The credential-gated cases therefore remain skipped and PayMongo sandbox readiness is not claimed.
+## Current Phase 6.2 result — August 4, 2026
+
+Genuine Test Mode checkout, signed paid settlement, provider retrieval, persisted reconciliation, full-refund creation, signed refund settlement, and transactional access revocation have passed. Deterministic integration coverage passes for failed payments, duplicate/conflicting replay, delayed event occurrence, out-of-order/late settlement, duplicate refund, mismatch rejection, and idempotent effects.
+
+Still requiring owner interaction: a genuine failed hosted checkout and PayMongo Dashboard resends proving duplicate, delayed, and out-of-order provider delivery. The optional exact-raw-payload tests remain skipped because raw payload and signature fixtures are intentionally not retained. See the [Phase 6.2 report](phase-reports/phase-6.2-paymongo-lifecycle-certification.md).
 # Database credential source
 
 PayMongo sandbox credentials can be saved under the TEST context and resolved by the existing adapter through the centralized provider service. Local simulation rejects live keys and live configuration. Credential validation authenticates a safe read request; it does not replace signed webhook and complete sandbox lifecycle certification.

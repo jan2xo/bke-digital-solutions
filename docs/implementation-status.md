@@ -26,16 +26,22 @@
 - Verification results are recorded in the developer journal and must remain distinguished from credential-gated provider certification.
 - Known integration boundary: immutable acceptances intentionally prevent the legacy permanent-customer deletion path from erasing a registered customer's evidence. Phase 6.1 must replace that destructive workflow with governed retention/pseudonymization; do not weaken the legal triggers.
 
-## Phase 6.1 — Data Integrity and Safe Deletion (implemented, uncommitted, under review)
+## Phase 6.1 — Data Integrity and Safe Deletion (committed and pushed)
 
 - Replaced customer hard deletion with suspension, closure/reopen, privacy review, legal hold, pseudonymization, purge eligibility, and deliberately constrained final purge.
 - Closure revokes sessions and blocks new commerce, trials, renewal, downloads, key reveal, and activation while preserving commercial and legal history.
 - Added durable idempotent `StorageCleanupJob` records, retry/backoff, abandoned-worker recovery, manual processing, and staged product finalization. Artifact replacement/removal now queues old-object cleanup after the active database reference is safe.
 - Added explicit account capabilities. Plain members no longer see broad orders, invoices, payments, subscriptions, or unassigned licenses. Billing and license-management duties are separated server-side.
-- Added the forward-only `20260803180000_data_integrity_safe_deletion` migration. It is applied to development; certification remains pending.
-- Final retention periods and legal sufficiency remain Phase 6.7 decisions. Full Phase 6.1 verification and owner approval remain required before commit.
+- Added the forward-only `20260803180000_data_integrity_safe_deletion` migration. It is applied to development and certification.
+- Phase 6.1 is committed at `952e9e1`. Final retention periods and legal sufficiency remain Phase 6.7 decisions.
 
-Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, genuine Resend direct/registration/outbox delivery, and real PayMongo test checkout creation are verified. Genuine payment/webhook/refund/reconciliation certification remains open.
+## Phase 6.2 — PayMongo lifecycle certification (partially certified)
+
+- Lifecycle code and migration 19 are committed at `a43cfc5`; the commit message overstated completion.
+- Genuine Test Mode checkout, signed paid settlement, payment retrieval, persisted reconciliation, full refund, signed refund settlement, and transactional access revocation pass.
+- Deterministic PostgreSQL integration tests cover failed payment, duplicate/conflicting replay, delayed occurrence, out-of-order settlement, duplicate refund, mismatch rejection, and idempotent effects.
+- Genuine failed hosted checkout and PayMongo Dashboard resend evidence for duplicate, delayed, and out-of-order deliveries remain open. Live payments remain disabled.
+- Caddy access logs now delete `Paymongo-Signature`; raw webhook bodies and provider credentials are not retained.
 
 ## Completed modules
 
@@ -53,8 +59,7 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 
 ## In progress
 
-- Phase 6.1 is the active uncommitted owner-review phase. Its implementation verification passes at 18 migrations, 125 deterministic tests plus six credential-gated skips, and 9 browser tests in both local and certification environments. Do not begin Phase 6.2 until the owner approves and commits it.
-- Genuine PayMongo payment, webhook, refund, and reconciliation certification
+- Complete the remaining owner-interactive Phase 6.2 failed-payment and provider-resend evidence described in the Phase 6.2 report.
 - Production infrastructure selection and provisioning
 
 ## Deferred
@@ -69,7 +74,7 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 - Artifact replacement deletes the old object best-effort after the database switch; orphan cleanup should be scheduled.
 - Audit CSV is capped at 5,000 rows and should move to queued exports at scale.
 - Search uses database substring matching; dedicated search is deferred.
-- Permanent customer deletion intentionally removes orders, payments, invoices, licenses, and personal data. Production use remains blocked until legal, tax, accounting, privacy, and backup-retention requirements approve that policy.
+- Governed customer purge preserves required historical commerce and legal evidence. Final retention periods still require legal, tax, accounting, privacy, and backup-policy approval.
 
 ## Future improvements
 
