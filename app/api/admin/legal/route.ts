@@ -12,7 +12,7 @@ export async function GET() {
   try {
     await requireAdmin();
     const documents = await db.legalDocument.findMany({ include: { currentPublishedVersion: true, versions: { orderBy: { versionNumber: "desc" }, include: { author: { select: { name: true, email: true } }, _count: { select: { acceptances: true } }, acceptances: { orderBy: { acceptedAt: "desc" }, take: 20, select: { id: true, acceptanceContext: true, acceptedAt: true, user: { select: { name: true, email: true } }, customerAccount: { select: { displayName: true } } } } } } }, orderBy: { title: "asc" } });
-    return NextResponse.json(documents);
+    return NextResponse.json(documents, { headers: { "cache-control": "private, no-store, max-age=0" } });
   } catch (error) { return apiError(error); }
 }
 

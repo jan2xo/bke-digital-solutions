@@ -39,3 +39,8 @@ body { margin: 0; color: var(--ink); background: #fbfcfc; font-family: Arial, He
 .button.danger:hover { background: #991b1b; }
 .input { width: 100%; border: 1px solid #b9c9cf; border-radius: .65rem; padding: .72rem .8rem; background: white; }
 .label { display: grid; gap: .35rem; font-size: .9rem; font-weight: 700; }
+.admin-nav-scroll { scrollbar-width: thin; scrollbar-color: #3d75a7 #10161e; scroll-padding-inline: 3rem; }
+.admin-nav-control { position: absolute; z-index: 10; top: 0; bottom: 0; width: 2.75rem; border: 0; color: white; background: linear-gradient(90deg, #10161e 55%, transparent); font-size: 2rem; font-weight: 700; }
+.admin-nav-control.right-0 { background: linear-gradient(270deg, #10161e 55%, transparent); }
+.legal-consent-panel { border: 1px solid #b9c9cf; border-radius: .85rem; background: #f8fafc; padding: 1rem; }
+.legal-consent-panel[data-invalid="true"] { border-color: #dc2626; background: #fef2f2; box-shadow: 0 0 0 1px #dc2626; }

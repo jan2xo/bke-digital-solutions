@@ -18,6 +18,8 @@ test("admin publishes a sanitized legal version and a customer completes require
   await enrollAndLoginAdmin(page, adminEmail, password);
 
   await page.goto("/admin/legal");
+  await expect(page.getByRole("navigation", { name: "Administration" }).getByRole("link", { name: "Security" })).toBeAttached();
+  await expect(page.getByRole("link", { name: "Legal & Compliance" })).toHaveAttribute("aria-current", "page");
   await page.getByLabel("Title", { exact: true }).first().fill("Browser Legal Notice");
   await page.getByLabel("Slug", { exact: true }).fill(`browser-legal-${suffix}`);
   await page.getByLabel("Type", { exact: true }).fill(`BROWSER_LEGAL_${suffix.toUpperCase()}`);
@@ -45,6 +47,7 @@ test("admin publishes a sanitized legal version and a customer completes require
   const immutableDelete = await page.request.delete(`/api/admin/legal/versions/${version.id}`, { headers: { origin: "http://127.0.0.1:3000" } });
   expect(immutableDelete.status()).toBe(409);
   await page.getByRole("button", { name: "Log out" }).click();
+  await expect(page).toHaveURL(/\/login$/);
   expect(await page.evaluate(async () => (await fetch("/api/admin/legal")).status)).toBe(401);
 
   await page.getByLabel("Email address").first().fill(customerEmail);
@@ -52,6 +55,8 @@ test("admin publishes a sanitized legal version and a customer completes require
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/legal\/accept/);
   expect(await page.evaluate(async () => (await fetch("/api/orders/cm00000000000000000000000")).status)).toBe(409);
+  await page.getByRole("button", { name: "Accept and continue" }).click();
+  await expect(page.getByText("Please review and accept each required document before continuing.")).toBeVisible();
   for (const checkbox of await page.getByRole("checkbox").all()) await checkbox.check();
   const acceptanceResponse = page.waitForResponse((response) => response.url().endsWith("/api/legal/accept") && response.request().method() === "POST");
   await page.getByRole("button", { name: "Accept and continue" }).click();
