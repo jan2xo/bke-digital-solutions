@@ -48,6 +48,7 @@ export type ProductArtifactMinAggregateOutputType = {
   active: boolean | null
   downloadCount: number | null
   removedAt: Date | null
+  createdAt: Date | null
 }
 
 export type ProductArtifactMaxAggregateOutputType = {
@@ -62,6 +63,7 @@ export type ProductArtifactMaxAggregateOutputType = {
   active: boolean | null
   downloadCount: number | null
   removedAt: Date | null
+  createdAt: Date | null
 }
 
 export type ProductArtifactCountAggregateOutputType = {
@@ -76,6 +78,7 @@ export type ProductArtifactCountAggregateOutputType = {
   active: number
   downloadCount: number
   removedAt: number
+  createdAt: number
   _all: number
 }
 
@@ -102,6 +105,7 @@ export type ProductArtifactMinAggregateInputType = {
   active?: true
   downloadCount?: true
   removedAt?: true
+  createdAt?: true
 }
 
 export type ProductArtifactMaxAggregateInputType = {
@@ -116,6 +120,7 @@ export type ProductArtifactMaxAggregateInputType = {
   active?: true
   downloadCount?: true
   removedAt?: true
+  createdAt?: true
 }
 
 export type ProductArtifactCountAggregateInputType = {
@@ -130,6 +135,7 @@ export type ProductArtifactCountAggregateInputType = {
   active?: true
   downloadCount?: true
   removedAt?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -231,6 +237,7 @@ export type ProductArtifactGroupByOutputType = {
   active: boolean
   downloadCount: number
   removedAt: Date | null
+  createdAt: Date
   _count: ProductArtifactCountAggregateOutputType | null
   _avg: ProductArtifactAvgAggregateOutputType | null
   _sum: ProductArtifactSumAggregateOutputType | null
@@ -268,6 +275,7 @@ export type ProductArtifactWhereInput = {
   active?: Prisma.BoolFilter<"ProductArtifact"> | boolean
   downloadCount?: Prisma.IntFilter<"ProductArtifact"> | number
   removedAt?: Prisma.DateTimeNullableFilter<"ProductArtifact"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"ProductArtifact"> | Date | string
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   version?: Prisma.XOR<Prisma.ProductVersionNullableScalarRelationFilter, Prisma.ProductVersionWhereInput> | null
   grants?: Prisma.DownloadGrantListRelationFilter
@@ -286,6 +294,7 @@ export type ProductArtifactOrderByWithRelationInput = {
   active?: Prisma.SortOrder
   downloadCount?: Prisma.SortOrder
   removedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   product?: Prisma.ProductOrderByWithRelationInput
   version?: Prisma.ProductVersionOrderByWithRelationInput
   grants?: Prisma.DownloadGrantOrderByRelationAggregateInput
@@ -307,6 +316,7 @@ export type ProductArtifactWhereUniqueInput = Prisma.AtLeast<{
   active?: Prisma.BoolFilter<"ProductArtifact"> | boolean
   downloadCount?: Prisma.IntFilter<"ProductArtifact"> | number
   removedAt?: Prisma.DateTimeNullableFilter<"ProductArtifact"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"ProductArtifact"> | Date | string
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   version?: Prisma.XOR<Prisma.ProductVersionNullableScalarRelationFilter, Prisma.ProductVersionWhereInput> | null
   grants?: Prisma.DownloadGrantListRelationFilter
@@ -325,6 +335,7 @@ export type ProductArtifactOrderByWithAggregationInput = {
   active?: Prisma.SortOrder
   downloadCount?: Prisma.SortOrder
   removedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.ProductArtifactCountOrderByAggregateInput
   _avg?: Prisma.ProductArtifactAvgOrderByAggregateInput
   _max?: Prisma.ProductArtifactMaxOrderByAggregateInput
@@ -347,6 +358,7 @@ export type ProductArtifactScalarWhereWithAggregatesInput = {
   active?: Prisma.BoolWithAggregatesFilter<"ProductArtifact"> | boolean
   downloadCount?: Prisma.IntWithAggregatesFilter<"ProductArtifact"> | number
   removedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ProductArtifact"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProductArtifact"> | Date | string
 }
 
 export type ProductArtifactCreateInput = {
@@ -359,6 +371,7 @@ export type ProductArtifactCreateInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
@@ -377,6 +390,7 @@ export type ProductArtifactUncheckedCreateInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
 }
@@ -391,6 +405,7 @@ export type ProductArtifactUpdateInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
@@ -409,6 +424,7 @@ export type ProductArtifactUncheckedUpdateInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
 }
@@ -425,6 +441,7 @@ export type ProductArtifactCreateManyInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type ProductArtifactUpdateManyMutationInput = {
@@ -437,6 +454,7 @@ export type ProductArtifactUpdateManyMutationInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProductArtifactUncheckedUpdateManyInput = {
@@ -451,6 +469,7 @@ export type ProductArtifactUncheckedUpdateManyInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProductArtifactListRelationFilter = {
@@ -475,6 +494,7 @@ export type ProductArtifactCountOrderByAggregateInput = {
   active?: Prisma.SortOrder
   downloadCount?: Prisma.SortOrder
   removedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ProductArtifactAvgOrderByAggregateInput = {
@@ -494,6 +514,7 @@ export type ProductArtifactMaxOrderByAggregateInput = {
   active?: Prisma.SortOrder
   downloadCount?: Prisma.SortOrder
   removedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ProductArtifactMinOrderByAggregateInput = {
@@ -508,6 +529,7 @@ export type ProductArtifactMinOrderByAggregateInput = {
   active?: Prisma.SortOrder
   downloadCount?: Prisma.SortOrder
   removedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ProductArtifactSumOrderByAggregateInput = {
@@ -657,6 +679,7 @@ export type ProductArtifactCreateWithoutProductInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
@@ -673,6 +696,7 @@ export type ProductArtifactUncheckedCreateWithoutProductInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
 }
@@ -718,6 +742,7 @@ export type ProductArtifactScalarWhereInput = {
   active?: Prisma.BoolFilter<"ProductArtifact"> | boolean
   downloadCount?: Prisma.IntFilter<"ProductArtifact"> | number
   removedAt?: Prisma.DateTimeNullableFilter<"ProductArtifact"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"ProductArtifact"> | Date | string
 }
 
 export type ProductArtifactCreateWithoutVersionInput = {
@@ -730,6 +755,7 @@ export type ProductArtifactCreateWithoutVersionInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
@@ -746,6 +772,7 @@ export type ProductArtifactUncheckedCreateWithoutVersionInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
 }
@@ -786,6 +813,7 @@ export type ProductArtifactCreateWithoutCleanupJobsInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
@@ -803,6 +831,7 @@ export type ProductArtifactUncheckedCreateWithoutCleanupJobsInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
 }
 
@@ -832,6 +861,7 @@ export type ProductArtifactUpdateWithoutCleanupJobsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
@@ -849,6 +879,7 @@ export type ProductArtifactUncheckedUpdateWithoutCleanupJobsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
@@ -862,6 +893,7 @@ export type ProductArtifactCreateWithoutGrantsInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
@@ -879,6 +911,7 @@ export type ProductArtifactUncheckedCreateWithoutGrantsInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
 }
 
@@ -908,6 +941,7 @@ export type ProductArtifactUpdateWithoutGrantsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
@@ -925,6 +959,7 @@ export type ProductArtifactUncheckedUpdateWithoutGrantsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
@@ -939,6 +974,7 @@ export type ProductArtifactCreateManyProductInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type ProductArtifactUpdateWithoutProductInput = {
@@ -951,6 +987,7 @@ export type ProductArtifactUpdateWithoutProductInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
@@ -967,6 +1004,7 @@ export type ProductArtifactUncheckedUpdateWithoutProductInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
 }
@@ -982,6 +1020,7 @@ export type ProductArtifactUncheckedUpdateManyWithoutProductInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProductArtifactCreateManyVersionInput = {
@@ -995,6 +1034,7 @@ export type ProductArtifactCreateManyVersionInput = {
   active?: boolean
   downloadCount?: number
   removedAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type ProductArtifactUpdateWithoutVersionInput = {
@@ -1007,6 +1047,7 @@ export type ProductArtifactUpdateWithoutVersionInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
@@ -1023,6 +1064,7 @@ export type ProductArtifactUncheckedUpdateWithoutVersionInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
 }
@@ -1038,6 +1080,7 @@ export type ProductArtifactUncheckedUpdateManyWithoutVersionInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1092,6 +1135,7 @@ export type ProductArtifactSelect<ExtArgs extends runtime.Types.Extensions.Inter
   active?: boolean
   downloadCount?: boolean
   removedAt?: boolean
+  createdAt?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   version?: boolean | Prisma.ProductArtifact$versionArgs<ExtArgs>
   grants?: boolean | Prisma.ProductArtifact$grantsArgs<ExtArgs>
@@ -1111,6 +1155,7 @@ export type ProductArtifactSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   active?: boolean
   downloadCount?: boolean
   removedAt?: boolean
+  createdAt?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   version?: boolean | Prisma.ProductArtifact$versionArgs<ExtArgs>
 }, ExtArgs["result"]["productArtifact"]>
@@ -1127,6 +1172,7 @@ export type ProductArtifactSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   active?: boolean
   downloadCount?: boolean
   removedAt?: boolean
+  createdAt?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   version?: boolean | Prisma.ProductArtifact$versionArgs<ExtArgs>
 }, ExtArgs["result"]["productArtifact"]>
@@ -1143,9 +1189,10 @@ export type ProductArtifactSelectScalar = {
   active?: boolean
   downloadCount?: boolean
   removedAt?: boolean
+  createdAt?: boolean
 }
 
-export type ProductArtifactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "versionId" | "name" | "objectKey" | "sha256" | "sizeBytes" | "contentType" | "active" | "downloadCount" | "removedAt", ExtArgs["result"]["productArtifact"]>
+export type ProductArtifactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "versionId" | "name" | "objectKey" | "sha256" | "sizeBytes" | "contentType" | "active" | "downloadCount" | "removedAt" | "createdAt", ExtArgs["result"]["productArtifact"]>
 export type ProductArtifactInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   version?: boolean | Prisma.ProductArtifact$versionArgs<ExtArgs>
@@ -1182,6 +1229,7 @@ export type $ProductArtifactPayload<ExtArgs extends runtime.Types.Extensions.Int
     active: boolean
     downloadCount: number
     removedAt: Date | null
+    createdAt: Date
   }, ExtArgs["result"]["productArtifact"]>
   composites: {}
 }
@@ -1620,6 +1668,7 @@ export interface ProductArtifactFieldRefs {
   readonly active: Prisma.FieldRef<"ProductArtifact", 'Boolean'>
   readonly downloadCount: Prisma.FieldRef<"ProductArtifact", 'Int'>
   readonly removedAt: Prisma.FieldRef<"ProductArtifact", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"ProductArtifact", 'DateTime'>
 }
 
 

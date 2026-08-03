@@ -138,6 +138,7 @@ test("administrator permanently deletes only disposable archived products", asyn
   expect(await db.auditLog.count({ where: { actorId: admin.id, targetId: blocked.id, action: "PRODUCT_DELETE_BLOCKED" } })).toBe(1);
 
   await page.getByRole("button", { name: "Log out" }).click();
+  await expect(page).toHaveURL(/\/login/);
   const unauthenticated = await page.request.delete(`/api/admin/products/${blocked.id}/deletion`, { headers: { origin: "http://127.0.0.1:3000" }, data: { confirmationName: blocked.name } });
   expect(unauthenticated.status()).toBe(401);
   await page.goto("/login");

@@ -97,6 +97,8 @@ export const ModelName = {
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
   JobRun: 'JobRun',
+  ScheduledJobDefinition: 'ScheduledJobDefinition',
+  ScheduledJobRun: 'ScheduledJobRun',
   EmailOutbox: 'EmailOutbox',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
@@ -483,7 +485,8 @@ export const ProductArtifactScalarFieldEnum = {
   contentType: 'contentType',
   active: 'active',
   downloadCount: 'downloadCount',
-  removedAt: 'removedAt'
+  removedAt: 'removedAt',
+  createdAt: 'createdAt'
 } as const
 
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
@@ -911,6 +914,51 @@ export const JobRunScalarFieldEnum = {
 } as const
 
 export type JobRunScalarFieldEnum = (typeof JobRunScalarFieldEnum)[keyof typeof JobRunScalarFieldEnum]
+
+
+export const ScheduledJobDefinitionScalarFieldEnum = {
+  key: 'key',
+  enabled: 'enabled',
+  cadenceSeconds: 'cadenceSeconds',
+  timeoutSeconds: 'timeoutSeconds',
+  maxAttempts: 'maxAttempts',
+  nextRunAt: 'nextRunAt',
+  lastRunAt: 'lastRunAt',
+  lastSuccessAt: 'lastSuccessAt',
+  lastFailureAt: 'lastFailureAt',
+  consecutiveFailures: 'consecutiveFailures',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ScheduledJobDefinitionScalarFieldEnum = (typeof ScheduledJobDefinitionScalarFieldEnum)[keyof typeof ScheduledJobDefinitionScalarFieldEnum]
+
+
+export const ScheduledJobRunScalarFieldEnum = {
+  id: 'id',
+  jobKey: 'jobKey',
+  status: 'status',
+  scheduledFor: 'scheduledFor',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  durationMs: 'durationMs',
+  attempt: 'attempt',
+  trigger: 'trigger',
+  dryRun: 'dryRun',
+  lockOwner: 'lockOwner',
+  correlationId: 'correlationId',
+  idempotencyKey: 'idempotencyKey',
+  parentRunId: 'parentRunId',
+  retryAt: 'retryAt',
+  resultSummary: 'resultSummary',
+  errorCode: 'errorCode',
+  failureClass: 'failureClass',
+  acknowledgedAt: 'acknowledgedAt',
+  acknowledgedById: 'acknowledgedById',
+  createdAt: 'createdAt'
+} as const
+
+export type ScheduledJobRunScalarFieldEnum = (typeof ScheduledJobRunScalarFieldEnum)[keyof typeof ScheduledJobRunScalarFieldEnum]
 
 
 export const EmailOutboxScalarFieldEnum = {

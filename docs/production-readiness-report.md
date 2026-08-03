@@ -311,3 +311,6 @@ The additive offer migration was reviewed, validated, and applied to the local P
 # Phase 5.2C readiness note
 
 Secure provider credential management is implemented, but production readiness is not claimed. Owner credential rotation, external master-key provisioning, database-source activation, genuine PayMongo sandbox lifecycle verification, and genuine Resend delivery verification remain required. Live PayMongo remains out of scope.
+# Phase 6.3 scheduler status
+
+The current uncommitted Phase 6.3 implementation removes the missing-scheduler code gap through a dedicated Docker worker, durable PostgreSQL history, Valkey locks, bounded retry/backoff, lifecycle processing, and administrator recovery controls. Migration 20, full local/certification regression, production and Docker builds, certification runtime, scheduler health, log/repository hygiene, and operator procedures pass. This verifies local production simulation only; it does not implement backups, monitoring, VPS deployment, live payments, automatic charging, or automatic customer purge.

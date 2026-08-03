@@ -892,6 +892,40 @@ export type EnumTrialSourceWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTrialSourceFilter<$PrismaModel>
 }
 
+export type EnumScheduledJobRunStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobRunStatus | Prisma.EnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobRunStatusFilter<$PrismaModel> | $Enums.ScheduledJobRunStatus
+}
+
+export type EnumScheduledJobTriggerFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobTrigger | Prisma.EnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel> | $Enums.ScheduledJobTrigger
+}
+
+export type EnumScheduledJobRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobRunStatus | Prisma.EnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.ScheduledJobRunStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScheduledJobRunStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScheduledJobRunStatusFilter<$PrismaModel>
+}
+
+export type EnumScheduledJobTriggerWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobTrigger | Prisma.EnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobTriggerWithAggregatesFilter<$PrismaModel> | $Enums.ScheduledJobTrigger
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
+}
+
 export type EnumExternalProviderFilter<$PrismaModel = never> = {
   equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
   in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
@@ -1795,6 +1829,40 @@ export type NestedEnumTrialSourceWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTrialSourceFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTrialSourceFilter<$PrismaModel>
+}
+
+export type NestedEnumScheduledJobRunStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobRunStatus | Prisma.EnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobRunStatusFilter<$PrismaModel> | $Enums.ScheduledJobRunStatus
+}
+
+export type NestedEnumScheduledJobTriggerFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobTrigger | Prisma.EnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel> | $Enums.ScheduledJobTrigger
+}
+
+export type NestedEnumScheduledJobRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobRunStatus | Prisma.EnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobRunStatus[] | Prisma.ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.ScheduledJobRunStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScheduledJobRunStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScheduledJobRunStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumScheduledJobTriggerWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduledJobTrigger | Prisma.EnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduledJobTrigger[] | Prisma.ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduledJobTriggerWithAggregatesFilter<$PrismaModel> | $Enums.ScheduledJobTrigger
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
 }
 
 export type NestedEnumExternalProviderFilter<$PrismaModel = never> = {

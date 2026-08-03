@@ -1,6 +1,8 @@
 services:
   app:
     env_file: ${BKE_ENV_FILE:-.env.certification}
+  scheduler:
+    env_file: ${BKE_ENV_FILE:-.env.certification}
   migrate:
     env_file: ${BKE_ENV_FILE:-.env.certification}
   seed:

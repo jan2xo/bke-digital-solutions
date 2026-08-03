@@ -8,8 +8,8 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 
 - Phase 6.0 runtime parity, Phase 6.1 Data Integrity and Safe Deletion, Phase 6.1A Legal Document Management, legal-consent hardening, administrator email-code verification, and the homepage catalog-pricing fix are committed and pushed.
 - Local development is operational and its PostgreSQL schema is current.
-- The healthy local certification stack is migration-current with 19 migrations; it is not the production deployment.
-- Genuine PayMongo paid, refund, and persisted-reconciliation paths pass. Failed-payment and provider-resend duplicate/delayed/out-of-order evidence remain open.
+- Development and certification have migration 20 applied. The local certification stack is healthy and remains a production simulation, not a production deployment.
+- Genuine PayMongo paid, refund, persisted-reconciliation, duplicate-paid-redelivery, and duplicate-refund-redelivery paths pass. Failed-payment, delayed, out-of-order, and raw-fixture evidence remain open.
 - Live payments remain disabled.
 - VPS deployment remains postponed until the production-readiness gate passes.
 - Phase 6.1 Data Integrity & Safe Deletion is committed and pushed at `952e9e1`.
@@ -107,7 +107,7 @@ Build the technical system for versioned legal documents and immutable customer 
 
 **Priority:** Critical public-payment blocker
 
-**Implementation status:** Lifecycle implementation is committed at `a43cfc5`; the commit message overstated certification completeness. Genuine paid, refund, retrieval, and persisted reconciliation evidence now passes. Genuine failed-payment and PayMongo-originated duplicate/delayed/out-of-order resend evidence remain owner-interactive blockers. See the [Phase 6.2 report](docs/phase-reports/phase-6.2-paymongo-lifecycle-certification.md).
+**Implementation status:** Lifecycle implementation is committed at `a43cfc5`, with current evidence committed at `2bc8e82`. Genuine paid, refund, retrieval, persisted reconciliation, duplicate-paid-redelivery, and duplicate-refund-redelivery evidence passes. Genuine failed-payment, delayed delivery, out-of-order delivery, and raw fixture export remain provider-interactive or impractical and retain deterministic integration coverage. The owner approved this partial certification as sufficient for Phase 6.3. See the [Phase 6.2 report](docs/phase-reports/phase-6.2-paymongo-lifecycle-certification.md).
 
 ### Objective
 
@@ -135,6 +135,8 @@ Complete the genuine PayMongo sandbox lifecycle and define the controlled live-a
 ## Phase 6.3 — Scheduler & Lifecycle Automation
 
 **Priority:** Critical subscription-launch blocker
+
+**Implementation status:** Implemented and fully verified in the current uncommitted working tree, pending owner review. Migration 20 is current in development and certification; eight typed jobs use Valkey ownership locks and database idempotency. Docker runs a dedicated one-minute scheduler worker, while administrators have health, history, pause/resume, run, dry-run, retry, and acknowledge controls. Local and certification Vitest pass 140 with 6 credential-gated skips, local and certification Playwright pass 10/10, production and Docker builds pass, the certification scheduler reports all eight jobs healthy, and the runtime audit reports zero vulnerabilities. Phase 6.4 has not started.
 
 ### Objective
 

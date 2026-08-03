@@ -110,3 +110,8 @@ PayMongo and Resend adapters resolve typed configuration through `lib/provider-c
 # Phase 6.0 runtime boundary
 
 Development, certification, and production share one validated application configuration, generated Prisma client, append-only migration set, standalone application image, and migration-first startup order. Certification is a production Compose overlay with loopback-only test access; it does not contain an alternate application architecture. The readiness endpoint covers PostgreSQL, Valkey, private object storage, and selected-provider configuration. External provider network availability is monitored and certified separately so a provider outage does not make every application instance restart. See `runtime-parity.md` and `certification-runtime.md`.
+# Phase 6.3 scheduler boundary
+
+Time-dependent work is registered in `lib/scheduler/registry.ts` and executed through `lib/scheduler/service.ts`. PostgreSQL stores definitions and immutable run history; Valkey supplies short-lived ownership-token locks. A unique database idempotency key for each scheduled window remains the final duplicate-execution boundary. Domain handlers retain their own transactional claims and deduplication keys.
+
+The dedicated Docker scheduler calls only the internal authenticated scheduler endpoint. Administrator and CLI triggers use the same execution service. Readiness remains independent from a single job failure; `/api/health/scheduler` reports `healthy`, `degraded`, or `unhealthy` separately. Result summaries and errors are bounded and must never contain credentials, raw provider payloads, email content, or license keys.

@@ -4,7 +4,9 @@ Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simul
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.
 
-The pushed baseline includes Phase 6.0 runtime parity, Phase 6.1 Data Integrity and Safe Deletion, Phase 6.1A Legal Document Management, and the Phase 6.2 payment lifecycle implementation. Development and certification are current at 19 migrations. Genuine PayMongo paid, refund, provider-retrieval, and persisted-reconciliation paths pass; genuine failed-payment and provider-resend duplicate/delayed/out-of-order evidence remain open. Live payments remain disabled, and the platform is not production-ready.
+The pushed baseline includes Phase 6.0 runtime parity, Phase 6.1 Data Integrity and Safe Deletion, Phase 6.1A Legal Document Management, and the approved partially certified Phase 6.2 payment lifecycle. The uncommitted Phase 6.3 working tree adds migration 20 and a durable scheduler. Genuine PayMongo paid, refund, provider-retrieval, persisted-reconciliation, duplicate-paid-redelivery, and duplicate-refund-redelivery paths pass; genuine failed-payment, delayed, out-of-order, and raw-fixture evidence remain open. Live payments remain disabled, and the platform is not production-ready.
+
+Phase 6.3 centralizes lifecycle work behind eight typed jobs, durable PostgreSQL run history, Valkey locks, an internal Docker scheduler worker, `/admin/scheduler`, and `/api/health/scheduler`. Run `npm run scheduler:run -- --dry-run` for an operations dry run; renewals always require a customer-authorized checkout.
 
 Phase 6.1 operating references: [data retention](docs/data-retention.md), [customer closure](docs/customer-account-closure.md), [privacy deletion](docs/privacy-deletion-workflow.md), [legal holds](docs/legal-hold.md), [storage cleanup jobs](docs/storage-cleanup-jobs.md), [product deletion](docs/product-deletion-workflow.md), and the [account role matrix](docs/authorization/customer-account-role-matrix.md).
 

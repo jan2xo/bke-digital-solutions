@@ -6,7 +6,7 @@
 - [ ] Confirm customer DELETE returns `HARD_DELETE_DISABLED`; exercise close, reopen, privacy review, legal hold, pseudonymization, and blocker report with a non-production account.
 - [ ] Obtain professional legal/privacy/tax/accounting approval for actual retention periods before enabling final purge.
 - [ ] Confirm legal acceptances, orders, invoices, payments, refunds, licenses, webhook evidence, audit events, and relevant email evidence survive closure/pseudonymization.
-- [ ] Configure Phase 6.3 to process due cleanup jobs; until then, operate manual admin processing and alert on `FAILED` rows.
+- [ ] Deploy and verify the Phase 6.3 `scheduler` service; confirm `storage.lifecycle` processes due cleanup jobs and alerts operators to terminal `FAILED` rows.
 - [ ] Verify no product is finalized while cleanup is pending/failed and no new dependency appeared between request and finalization.
 - [ ] Confirm S3 deletion is idempotent and the runtime identity has delete access only to the private application bucket/prefix.
 - [ ] Test MEMBER, BILLING, LICENSE_MANAGER, and OWNER access with cross-account denial.

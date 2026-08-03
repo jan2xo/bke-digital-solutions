@@ -272,6 +272,16 @@ export type AuditLog = Prisma.AuditLogModel
  */
 export type JobRun = Prisma.JobRunModel
 /**
+ * Model ScheduledJobDefinition
+ *
+ */
+export type ScheduledJobDefinition = Prisma.ScheduledJobDefinitionModel
+/**
+ * Model ScheduledJobRun
+ *
+ */
+export type ScheduledJobRun = Prisma.ScheduledJobRunModel
+/**
  * Model EmailOutbox
  *
  */

@@ -43,6 +43,26 @@ enum StorageCleanupStatus {
   CANCELLED
 }
 
+enum ScheduledJobRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  RETRYING
+  ABANDONED
+  CANCELLED
+  SKIPPED
+}
+
+enum ScheduledJobTrigger {
+  SCHEDULED
+  RETRY
+  MANUAL
+  CRON
+  CLI
+  CERTIFICATION
+}
+
 enum StorageCleanupJobType {
   PRODUCT_DELETION
   ARTIFACT_REPLACEMENT
@@ -286,6 +306,7 @@ model User {
   reconciliationsRun            PaymentReconciliation[]          @relation("ReconciliationRunner")
   reconciliationsAcknowledged   PaymentReconciliation[]          @relation("ReconciliationAcknowledger")
   webhookEventsAcknowledged     WebhookEvent[]                    @relation("WebhookAcknowledger")
+  scheduledRunsAcknowledged     ScheduledJobRun[]
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -691,6 +712,7 @@ model ProductArtifact {
   active        Boolean         @default(true)
   downloadCount Int             @default(0)
   removedAt     DateTime?
+  createdAt     DateTime        @default(now())
   product       Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
   version       ProductVersion? @relation(fields: [versionId], references: [id])
   grants        DownloadGrant[]
@@ -1178,6 +1200,55 @@ model JobRun {
   jobType     String
   completedAt DateTime?
   createdAt   DateTime  @default(now())
+}
+
+model ScheduledJobDefinition {
+  key                 String            @id
+  enabled             Boolean           @default(true)
+  cadenceSeconds      Int
+  timeoutSeconds      Int
+  maxAttempts         Int
+  nextRunAt           DateTime
+  lastRunAt           DateTime?
+  lastSuccessAt       DateTime?
+  lastFailureAt       DateTime?
+  consecutiveFailures Int               @default(0)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  runs                 ScheduledJobRun[]
+
+  @@index([enabled, nextRunAt])
+  @@index([consecutiveFailures, lastFailureAt])
+}
+
+model ScheduledJobRun {
+  id               String                @id @default(cuid())
+  jobKey           String
+  status           ScheduledJobRunStatus @default(QUEUED)
+  scheduledFor     DateTime
+  startedAt        DateTime?
+  completedAt      DateTime?
+  durationMs       Int?
+  attempt          Int                   @default(1)
+  trigger          ScheduledJobTrigger
+  dryRun           Boolean               @default(false)
+  lockOwner        String?
+  correlationId    String                @unique
+  idempotencyKey   String                @unique
+  parentRunId      String?
+  retryAt          DateTime?
+  resultSummary    Json                  @default("{}")
+  errorCode        String?
+  failureClass     String?
+  acknowledgedAt   DateTime?
+  acknowledgedById String?
+  createdAt        DateTime              @default(now())
+  definition       ScheduledJobDefinition @relation(fields: [jobKey], references: [key], onDelete: Restrict)
+  acknowledgedBy   User?                 @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@index([jobKey, createdAt])
+  @@index([status, retryAt])
+  @@index([status, startedAt])
 }
 
 model EmailOutbox {

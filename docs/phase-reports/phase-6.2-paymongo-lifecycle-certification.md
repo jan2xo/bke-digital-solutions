@@ -1,10 +1,10 @@
 # Phase 6.2 — PayMongo Lifecycle Certification
 
-Status: **Partially certified with provider-interactive cases remaining.** Phase 6.3 has not started.
+Status: **Partially certified with provider-interactive cases remaining.** The owner approved this evidence level for Phase 6.3 entry.
 
 ## Executive verdict
 
-The application has genuine PayMongo Test Mode evidence for hosted checkout creation, signed paid settlement, signed refund settlement, provider payment retrieval, and persisted reconciliation. Deterministic PostgreSQL integration coverage verifies duplicate, delayed, out-of-order, failed-payment, refund, replay-conflict, idempotency, and transactional entitlement behavior.
+The application has genuine PayMongo Test Mode evidence for hosted checkout creation, signed paid settlement, signed refund settlement, provider payment retrieval, persisted reconciliation, and dashboard-originated duplicate paid/refund redelivery. Deterministic PostgreSQL integration coverage verifies delayed, out-of-order, failed-payment, refund, replay-conflict, idempotency, and transactional entitlement behavior.
 
 Phase 6.2 is not fully certified. A genuine failed checkout and PayMongo-originated resend of existing deliveries still require owner interaction with PayMongo's hosted checkout and Dashboard. Live payments remain disabled.
 
@@ -21,6 +21,8 @@ Phase 6.2 is not fully certified. A genuine failed checkout and PayMongo-origina
 | Signed refund webhook | Passed | A genuine `payment.refunded` event was signature-verified and processed once. |
 | Transactional refund effects | Passed | Order/payment became `REFUNDED`, invoice became `VOID`, licenses were revoked, subscription access was cancelled, and the refund email was deduplicated. |
 | Live-mode isolation | Passed | Certification uses Test Mode and rejects unsafe live/test key-mode combinations. |
+| Duplicate paid redelivery | Passed | Dashboard retry returned HTTP 200; the provider event remained one row and payment, invoice, license, email, and audit counts were unchanged. |
+| Duplicate refund redelivery | Passed | Dashboard retry returned HTTP 200; refunded/void/revoked state and refund email/audit counts remained unchanged. |
 
 No raw provider payload, Authorization value, API key, webhook secret, full license key, or billing record is retained as certification evidence. Webhook storage contains normalized fields and a SHA-256 payload hash. Caddy now removes `Paymongo-Signature` from access logs in both certification and production configuration.
 
@@ -44,7 +46,6 @@ The ordinary automated suite verifies:
 | Scenario | Status | Required evidence |
 | --- | --- | --- |
 | Genuine failed payment | Blocked on hosted PayMongo interaction | Complete a new local order using PayMongo's documented Test Mode failed-card path; retain only normalized event/result evidence. |
-| Genuine duplicate paid/refund delivery | Blocked on Dashboard resend | Resend an already processed event from the enabled webhook's Event Deliveries view; verify the same event remains one processed record and side-effect counts do not change. |
 | Genuine delayed delivery | Blocked on Dashboard resend/time | Resend an older event. PayMongo must provide a fresh signature timestamp while the immutable event occurrence time remains old. |
 | Genuine out-of-order delivery | Blocked on Dashboard resend | After refund, resend an older paid delivery and verify refunded state and revoked access remain unchanged. |
 | Raw webhook fixture test | Intentionally skipped without restricted evidence files | Supply exact temporary raw bytes and signature outside the repository; delete them after the test. Runtime acceptance already proves genuine signature verification, but the raw fixture is not retained. |
@@ -66,9 +67,8 @@ One initial reconciliation run failed because `.env.certification` names the Com
 ## Remaining owner actions
 
 1. Complete one PayMongo Test Mode failed-card checkout created by this application.
-2. In PayMongo Test Mode, resend one processed paid event and the genuine refund event from the enabled `/api/webhooks/payments` endpoint.
-3. Repeat one resend after sufficient delay and resend an older paid event after refund to preserve duplicate, delayed, and out-of-order provider evidence.
-4. Confirm side-effect counts remain unchanged and no signature/raw payload appears in logs.
-5. Optionally provide exact raw event/signature files in a restricted temporary directory for the two raw-fixture tests, then securely delete them.
+2. Repeat one resend after sufficient delay and resend an older paid event after refund to preserve delayed and out-of-order provider evidence.
+3. Confirm side-effect counts remain unchanged and no signature/raw payload appears in logs.
+4. Optionally provide exact raw event/signature files in a restricted temporary directory for the two raw-fixture tests, then securely delete them.
 
 Until those provider-interactive cases pass, the honest Phase 6.2 verdict remains **partially certified**, and public/live payments remain blocked.

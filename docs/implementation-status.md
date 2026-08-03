@@ -42,6 +42,16 @@
 - Deterministic PostgreSQL integration tests cover failed payment, duplicate/conflicting replay, delayed occurrence, out-of-order settlement, duplicate refund, mismatch rejection, and idempotent effects.
 - Genuine failed hosted checkout and PayMongo Dashboard resend evidence for duplicate, delayed, and out-of-order deliveries remain open. Live payments remain disabled.
 - Caddy access logs now delete `Paymongo-Signature`; raw webhook bodies and provider credentials are not retained.
+- Genuine duplicate `payment.paid` and `payment.refunded` dashboard redeliveries returned HTTP 200 and produced no duplicate payment, invoice, entitlement, email, or audit effects.
+- Genuine failed, delayed, out-of-order, and raw-fixture cases remain explicitly not provider-certified; deterministic integration coverage remains.
+
+## Phase 6.3 — Scheduler and lifecycle automation (implemented, uncommitted)
+
+- Migration 20 adds `ScheduledJobDefinition` and `ScheduledJobRun` with execution status, retry, timing, correlation, acknowledgement, and bounded summaries.
+- Eight typed jobs cover storage, outbox, renewals, expiration, commerce, customer review, authentication cleanup, and payment operations.
+- Valkey ownership-token locks prevent concurrent execution; unique run idempotency keys and domain constraints remain the final safety boundary.
+- Docker runs one internal scheduler tick per minute. Administrators with MFA and recent authentication can inspect, run, dry-run, pause, resume, retry, and acknowledge.
+- Focused unit/integration tests pass 9/9 and focused Playwright passes 1/1. Local and certification Vitest pass 140 with 6 credential-gated skips; local and certification Playwright pass 10/10. Production and Docker app/scheduler builds, migration 20, zero schema drift, certification smoke/readiness/eight-job health, repository hygiene, and the zero-vulnerability runtime audit pass.
 
 ## Completed modules
 
@@ -59,7 +69,8 @@
 
 ## In progress
 
-- Complete the remaining owner-interactive Phase 6.2 failed-payment and provider-resend evidence described in the Phase 6.2 report.
+- Complete the remaining owner-interactive Phase 6.2 failed-payment/delayed/out-of-order evidence when practical; it does not block the approved Phase 6.3 scope.
+- Obtain owner review and commit approval for the verified Phase 6.3 working tree; do not begin Phase 6.4 automatically.
 - Production infrastructure selection and provisioning
 
 ## Deferred

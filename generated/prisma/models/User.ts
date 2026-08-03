@@ -283,6 +283,7 @@ export type UserWhereInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationListRelationFilter
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationListRelationFilter
   webhookEventsAcknowledged?: Prisma.WebhookEventListRelationFilter
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -322,6 +323,7 @@ export type UserOrderByWithRelationInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
   webhookEventsAcknowledged?: Prisma.WebhookEventOrderByRelationAggregateInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -364,6 +366,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reconciliationsRun?: Prisma.PaymentReconciliationListRelationFilter
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationListRelationFilter
   webhookEventsAcknowledged?: Prisma.WebhookEventListRelationFilter
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -445,6 +448,7 @@ export type UserCreateInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -484,6 +488,7 @@ export type UserUncheckedCreateInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUpdateInput = {
@@ -523,6 +528,7 @@ export type UserUpdateInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -562,6 +568,7 @@ export type UserUncheckedUpdateInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -970,6 +977,22 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutScheduledRunsAcknowledgedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutScheduledRunsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutScheduledRunsAcknowledgedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutScheduledRunsAcknowledgedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutScheduledRunsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutScheduledRunsAcknowledgedInput
+  upsert?: Prisma.UserUpsertWithoutScheduledRunsAcknowledgedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutScheduledRunsAcknowledgedInput, Prisma.UserUpdateWithoutScheduledRunsAcknowledgedInput>, Prisma.UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput>
+}
+
 export type UserCreateNestedOneWithoutProviderConfigurationsCreatedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutProviderConfigurationsCreatedInput, Prisma.UserUncheckedCreateWithoutProviderConfigurationsCreatedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderConfigurationsCreatedInput
@@ -1048,6 +1071,7 @@ export type UserCreateWithoutCredentialInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutCredentialInput = {
@@ -1086,6 +1110,7 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutCredentialInput = {
@@ -1140,6 +1165,7 @@ export type UserUpdateWithoutCredentialInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialInput = {
@@ -1178,6 +1204,7 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1216,6 +1243,7 @@ export type UserCreateWithoutSessionsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1254,6 +1282,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1308,6 +1337,7 @@ export type UserUpdateWithoutSessionsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1346,6 +1376,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutAdministratorMfaInput = {
@@ -1384,6 +1415,7 @@ export type UserCreateWithoutAdministratorMfaInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutAdministratorMfaInput = {
@@ -1422,6 +1454,7 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutAdministratorMfaInput = {
@@ -1476,6 +1509,7 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
@@ -1514,6 +1548,7 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -1552,6 +1587,7 @@ export type UserCreateWithoutRecoveryCodesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -1590,6 +1626,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1644,6 +1681,7 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1682,6 +1720,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutMfaChallengesInput = {
@@ -1720,6 +1759,7 @@ export type UserCreateWithoutMfaChallengesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutMfaChallengesInput = {
@@ -1758,6 +1798,7 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutMfaChallengesInput = {
@@ -1812,6 +1853,7 @@ export type UserUpdateWithoutMfaChallengesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMfaChallengesInput = {
@@ -1850,6 +1892,7 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutSecurityEventsInput = {
@@ -1888,6 +1931,7 @@ export type UserCreateWithoutSecurityEventsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutSecurityEventsInput = {
@@ -1926,6 +1970,7 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutSecurityEventsInput = {
@@ -1980,6 +2025,7 @@ export type UserUpdateWithoutSecurityEventsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSecurityEventsInput = {
@@ -2018,6 +2064,7 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutOwnedAccountsInput = {
@@ -2056,6 +2103,7 @@ export type UserCreateWithoutOwnedAccountsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutOwnedAccountsInput = {
@@ -2094,6 +2142,7 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutOwnedAccountsInput = {
@@ -2148,6 +2197,7 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
@@ -2186,6 +2236,7 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutLegalVersionsAuthoredInput = {
@@ -2224,6 +2275,7 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
@@ -2262,6 +2314,7 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutLegalVersionsAuthoredInput = {
@@ -2316,6 +2369,7 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
@@ -2354,6 +2408,7 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutLegalAcceptancesInput = {
@@ -2392,6 +2447,7 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
@@ -2430,6 +2486,7 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutLegalAcceptancesInput = {
@@ -2484,6 +2541,7 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
@@ -2522,6 +2580,7 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -2560,6 +2619,7 @@ export type UserCreateWithoutMembershipsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -2598,6 +2658,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -2652,6 +2713,7 @@ export type UserUpdateWithoutMembershipsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -2690,6 +2752,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
@@ -2728,6 +2791,7 @@ export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
@@ -2766,6 +2830,7 @@ export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutStorageCleanupJobsCreatedInput = {
@@ -2820,6 +2885,7 @@ export type UserUpdateWithoutStorageCleanupJobsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
@@ -2858,6 +2924,7 @@ export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
@@ -2896,6 +2963,7 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
@@ -2934,6 +3002,7 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutWebhookEventsAcknowledgedInput = {
@@ -2988,6 +3057,7 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
@@ -3026,6 +3096,7 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutRefundOperationsRequestedInput = {
@@ -3064,6 +3135,7 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
@@ -3102,6 +3174,7 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutRefundOperationsRequestedInput = {
@@ -3156,6 +3229,7 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
@@ -3194,6 +3268,7 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutReconciliationsRunInput = {
@@ -3232,6 +3307,7 @@ export type UserCreateWithoutReconciliationsRunInput = {
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutReconciliationsRunInput = {
@@ -3270,6 +3346,7 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutReconciliationsRunInput = {
@@ -3313,6 +3390,7 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
@@ -3351,6 +3429,7 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutReconciliationsAcknowledgedInput = {
@@ -3405,6 +3484,7 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
@@ -3443,6 +3523,7 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUpsertWithoutReconciliationsAcknowledgedInput = {
@@ -3492,6 +3573,7 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
@@ -3530,6 +3612,7 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutCreatedOffersInput = {
@@ -3568,6 +3651,7 @@ export type UserCreateWithoutCreatedOffersInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedOffersInput = {
@@ -3606,6 +3690,7 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedOffersInput = {
@@ -3660,6 +3745,7 @@ export type UserUpdateWithoutCreatedOffersInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedOffersInput = {
@@ -3698,6 +3784,7 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutAssignmentsInput = {
@@ -3736,6 +3823,7 @@ export type UserCreateWithoutAssignmentsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentsInput = {
@@ -3774,6 +3862,7 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentsInput = {
@@ -3828,6 +3917,7 @@ export type UserUpdateWithoutAssignmentsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentsInput = {
@@ -3866,6 +3956,7 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -3904,6 +3995,7 @@ export type UserCreateWithoutAuditLogsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -3942,6 +4034,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -3996,6 +4089,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -4019,6 +4113,179 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+}
+
+export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserCreateOrConnectWithoutScheduledRunsAcknowledgedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutScheduledRunsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput>
+}
+
+export type UserUpsertWithoutScheduledRunsAcknowledgedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutScheduledRunsAcknowledgedInput, Prisma.UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutScheduledRunsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutScheduledRunsAcknowledgedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutScheduledRunsAcknowledgedInput, Prisma.UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput>
+}
+
+export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -4072,6 +4339,7 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
@@ -4110,6 +4378,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutProviderConfigurationsCreatedInput = {
@@ -4153,6 +4422,7 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
@@ -4191,6 +4461,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutProviderConfigurationsUpdatedInput = {
@@ -4245,6 +4516,7 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
@@ -4283,6 +4555,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUpsertWithoutProviderConfigurationsUpdatedInput = {
@@ -4332,6 +4605,7 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
@@ -4370,6 +4644,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserCreateWithoutProviderCredentialsCreatedInput = {
@@ -4408,6 +4683,7 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
@@ -4446,6 +4722,7 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
 }
 
 export type UserCreateOrConnectWithoutProviderCredentialsCreatedInput = {
@@ -4500,6 +4777,7 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
@@ -4538,6 +4816,7 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
 }
 
 
@@ -4565,6 +4844,7 @@ export type UserCountOutputType = {
   reconciliationsRun: number
   reconciliationsAcknowledged: number
   webhookEventsAcknowledged: number
+  scheduledRunsAcknowledged: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4587,6 +4867,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reconciliationsRun?: boolean | UserCountOutputTypeCountReconciliationsRunArgs
   reconciliationsAcknowledged?: boolean | UserCountOutputTypeCountReconciliationsAcknowledgedArgs
   webhookEventsAcknowledged?: boolean | UserCountOutputTypeCountWebhookEventsAcknowledgedArgs
+  scheduledRunsAcknowledged?: boolean | UserCountOutputTypeCountScheduledRunsAcknowledgedArgs
 }
 
 /**
@@ -4732,6 +5013,13 @@ export type UserCountOutputTypeCountWebhookEventsAcknowledgedArgs<ExtArgs extend
   where?: Prisma.WebhookEventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountScheduledRunsAcknowledgedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ScheduledJobRunWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4770,6 +5058,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reconciliationsRun?: boolean | Prisma.User$reconciliationsRunArgs<ExtArgs>
   reconciliationsAcknowledged?: boolean | Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>
   webhookEventsAcknowledged?: boolean | Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs>
+  scheduledRunsAcknowledged?: boolean | Prisma.User$scheduledRunsAcknowledgedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -4850,6 +5139,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reconciliationsRun?: boolean | Prisma.User$reconciliationsRunArgs<ExtArgs>
   reconciliationsAcknowledged?: boolean | Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>
   webhookEventsAcknowledged?: boolean | Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs>
+  scheduledRunsAcknowledged?: boolean | Prisma.User$scheduledRunsAcknowledgedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -4879,6 +5169,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reconciliationsRun: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
     reconciliationsAcknowledged: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
     webhookEventsAcknowledged: Prisma.$WebhookEventPayload<ExtArgs>[]
+    scheduledRunsAcknowledged: Prisma.$ScheduledJobRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5311,6 +5602,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reconciliationsRun<T extends Prisma.User$reconciliationsRunArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reconciliationsRunArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reconciliationsAcknowledged<T extends Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   webhookEventsAcknowledged<T extends Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WebhookEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  scheduledRunsAcknowledged<T extends Prisma.User$scheduledRunsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$scheduledRunsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScheduledJobRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6239,6 +6531,30 @@ export type User$webhookEventsAcknowledgedArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.WebhookEventScalarFieldEnum | Prisma.WebhookEventScalarFieldEnum[]
+}
+
+/**
+ * User.scheduledRunsAcknowledged
+ */
+export type User$scheduledRunsAcknowledgedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ScheduledJobRun
+   */
+  select?: Prisma.ScheduledJobRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ScheduledJobRun
+   */
+  omit?: Prisma.ScheduledJobRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScheduledJobRunInclude<ExtArgs> | null
+  where?: Prisma.ScheduledJobRunWhereInput
+  orderBy?: Prisma.ScheduledJobRunOrderByWithRelationInput | Prisma.ScheduledJobRunOrderByWithRelationInput[]
+  cursor?: Prisma.ScheduledJobRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ScheduledJobRunScalarFieldEnum | Prisma.ScheduledJobRunScalarFieldEnum[]
 }
 
 /**

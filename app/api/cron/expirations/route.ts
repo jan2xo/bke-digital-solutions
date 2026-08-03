@@ -1,2 +1,10 @@
-import { NextResponse } from "next/server";import { db } from "@/lib/db";import { env } from "@/lib/env";import { safeEqual } from "@/lib/security/crypto";
-export async function POST(request:Request){const provided=request.headers.get("authorization")?.replace(/^Bearer /,"")??"";if(!safeEqual(provided,env.CRON_SECRET))return NextResponse.json({error:"UNAUTHORIZED"},{status:401});const now=new Date();const [licenses,subscriptions]=await db.$transaction([db.license.updateMany({where:{status:"ACTIVE",expiresAt:{lte:now}},data:{status:"EXPIRED"}}),db.subscription.updateMany({where:{status:{in:["ACTIVE","PAST_DUE"]},currentPeriodEnd:{lte:now}},data:{status:"EXPIRED"}})]);return NextResponse.json({licenses:licenses.count,subscriptions:subscriptions.count})}
+import { NextResponse } from "next/server";
+import { env } from "@/lib/env";
+import { safeEqual } from "@/lib/security/crypto";
+import { runScheduledJob } from "@/lib/scheduler/service";
+
+export async function POST(request: Request) {
+  const provided = request.headers.get("authorization")?.replace(/^Bearer /, "") ?? "";
+  if (!safeEqual(provided, env.CRON_SECRET)) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  return NextResponse.json(await runScheduledJob({ key: "entitlements.expiration", trigger: "CRON" }));
+}

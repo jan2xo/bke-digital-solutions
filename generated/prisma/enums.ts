@@ -60,6 +60,32 @@ export const StorageCleanupStatus = {
 export type StorageCleanupStatus = (typeof StorageCleanupStatus)[keyof typeof StorageCleanupStatus]
 
 
+export const ScheduledJobRunStatus = {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED',
+  RETRYING: 'RETRYING',
+  ABANDONED: 'ABANDONED',
+  CANCELLED: 'CANCELLED',
+  SKIPPED: 'SKIPPED'
+} as const
+
+export type ScheduledJobRunStatus = (typeof ScheduledJobRunStatus)[keyof typeof ScheduledJobRunStatus]
+
+
+export const ScheduledJobTrigger = {
+  SCHEDULED: 'SCHEDULED',
+  RETRY: 'RETRY',
+  MANUAL: 'MANUAL',
+  CRON: 'CRON',
+  CLI: 'CLI',
+  CERTIFICATION: 'CERTIFICATION'
+} as const
+
+export type ScheduledJobTrigger = (typeof ScheduledJobTrigger)[keyof typeof ScheduledJobTrigger]
+
+
 export const StorageCleanupJobType = {
   PRODUCT_DELETION: 'PRODUCT_DELETION',
   ARTIFACT_REPLACEMENT: 'ARTIFACT_REPLACEMENT',

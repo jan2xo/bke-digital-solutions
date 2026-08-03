@@ -443,6 +443,8 @@ export const ModelName = {
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
   JobRun: 'JobRun',
+  ScheduledJobDefinition: 'ScheduledJobDefinition',
+  ScheduledJobRun: 'ScheduledJobRun',
   EmailOutbox: 'EmailOutbox',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
@@ -461,7 +463,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3869,6 +3871,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ScheduledJobDefinition: {
+      payload: Prisma.$ScheduledJobDefinitionPayload<ExtArgs>
+      fields: Prisma.ScheduledJobDefinitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScheduledJobDefinitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScheduledJobDefinitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>
+        }
+        findFirst: {
+          args: Prisma.ScheduledJobDefinitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScheduledJobDefinitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>
+        }
+        findMany: {
+          args: Prisma.ScheduledJobDefinitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>[]
+        }
+        create: {
+          args: Prisma.ScheduledJobDefinitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>
+        }
+        createMany: {
+          args: Prisma.ScheduledJobDefinitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScheduledJobDefinitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>[]
+        }
+        delete: {
+          args: Prisma.ScheduledJobDefinitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>
+        }
+        update: {
+          args: Prisma.ScheduledJobDefinitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScheduledJobDefinitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScheduledJobDefinitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScheduledJobDefinitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScheduledJobDefinitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobDefinitionPayload>
+        }
+        aggregate: {
+          args: Prisma.ScheduledJobDefinitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduledJobDefinition>
+        }
+        groupBy: {
+          args: Prisma.ScheduledJobDefinitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobDefinitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScheduledJobDefinitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobDefinitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ScheduledJobRun: {
+      payload: Prisma.$ScheduledJobRunPayload<ExtArgs>
+      fields: Prisma.ScheduledJobRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScheduledJobRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScheduledJobRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        findFirst: {
+          args: Prisma.ScheduledJobRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScheduledJobRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        findMany: {
+          args: Prisma.ScheduledJobRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>[]
+        }
+        create: {
+          args: Prisma.ScheduledJobRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        createMany: {
+          args: Prisma.ScheduledJobRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScheduledJobRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>[]
+        }
+        delete: {
+          args: Prisma.ScheduledJobRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        update: {
+          args: Prisma.ScheduledJobRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScheduledJobRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScheduledJobRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScheduledJobRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScheduledJobRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        aggregate: {
+          args: Prisma.ScheduledJobRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduledJobRun>
+        }
+        groupBy: {
+          args: Prisma.ScheduledJobRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScheduledJobRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobRunCountAggregateOutputType> | number
+        }
+      }
+    }
     EmailOutbox: {
       payload: Prisma.$EmailOutboxPayload<ExtArgs>
       fields: Prisma.EmailOutboxFieldRefs
@@ -4495,7 +4645,8 @@ export const ProductArtifactScalarFieldEnum = {
   contentType: 'contentType',
   active: 'active',
   downloadCount: 'downloadCount',
-  removedAt: 'removedAt'
+  removedAt: 'removedAt',
+  createdAt: 'createdAt'
 } as const
 
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
@@ -4923,6 +5074,51 @@ export const JobRunScalarFieldEnum = {
 } as const
 
 export type JobRunScalarFieldEnum = (typeof JobRunScalarFieldEnum)[keyof typeof JobRunScalarFieldEnum]
+
+
+export const ScheduledJobDefinitionScalarFieldEnum = {
+  key: 'key',
+  enabled: 'enabled',
+  cadenceSeconds: 'cadenceSeconds',
+  timeoutSeconds: 'timeoutSeconds',
+  maxAttempts: 'maxAttempts',
+  nextRunAt: 'nextRunAt',
+  lastRunAt: 'lastRunAt',
+  lastSuccessAt: 'lastSuccessAt',
+  lastFailureAt: 'lastFailureAt',
+  consecutiveFailures: 'consecutiveFailures',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ScheduledJobDefinitionScalarFieldEnum = (typeof ScheduledJobDefinitionScalarFieldEnum)[keyof typeof ScheduledJobDefinitionScalarFieldEnum]
+
+
+export const ScheduledJobRunScalarFieldEnum = {
+  id: 'id',
+  jobKey: 'jobKey',
+  status: 'status',
+  scheduledFor: 'scheduledFor',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  durationMs: 'durationMs',
+  attempt: 'attempt',
+  trigger: 'trigger',
+  dryRun: 'dryRun',
+  lockOwner: 'lockOwner',
+  correlationId: 'correlationId',
+  idempotencyKey: 'idempotencyKey',
+  parentRunId: 'parentRunId',
+  retryAt: 'retryAt',
+  resultSummary: 'resultSummary',
+  errorCode: 'errorCode',
+  failureClass: 'failureClass',
+  acknowledgedAt: 'acknowledgedAt',
+  acknowledgedById: 'acknowledgedById',
+  createdAt: 'createdAt'
+} as const
+
+export type ScheduledJobRunScalarFieldEnum = (typeof ScheduledJobRunScalarFieldEnum)[keyof typeof ScheduledJobRunScalarFieldEnum]
 
 
 export const EmailOutboxScalarFieldEnum = {
@@ -5533,6 +5729,34 @@ export type ListEnumTrialSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'ScheduledJobRunStatus'
+ */
+export type EnumScheduledJobRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduledJobRunStatus'>
+
+
+
+/**
+ * Reference to a field of type 'ScheduledJobRunStatus[]'
+ */
+export type ListEnumScheduledJobRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduledJobRunStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'ScheduledJobTrigger'
+ */
+export type EnumScheduledJobTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduledJobTrigger'>
+
+
+
+/**
+ * Reference to a field of type 'ScheduledJobTrigger[]'
+ */
+export type ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduledJobTrigger[]'>
+
+
+
+/**
  * Reference to a field of type 'ProviderEnvironment'
  */
 export type EnumProviderEnvironmentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderEnvironment'>
@@ -5784,6 +6008,8 @@ export type GlobalOmitConfig = {
   licenseEvent?: Prisma.LicenseEventOmit
   auditLog?: Prisma.AuditLogOmit
   jobRun?: Prisma.JobRunOmit
+  scheduledJobDefinition?: Prisma.ScheduledJobDefinitionOmit
+  scheduledJobRun?: Prisma.ScheduledJobRunOmit
   emailOutbox?: Prisma.EmailOutboxOmit
   externalProviderConfiguration?: Prisma.ExternalProviderConfigurationOmit
   externalProviderCredential?: Prisma.ExternalProviderCredentialOmit

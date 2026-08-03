@@ -1,14 +1,14 @@
 # BKE Digital Solutions — Current-State Truth Check
 
 Baseline updated: August 4, 2026
-Pushed Git baseline: `a43cfc5 feat(payments): complete PayMongo sandbox lifecycle certification`
+Pushed Git baseline: `2bc8e82 test(payments): record genuine PayMongo refund and reconciliation evidence`
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, and the Phase 6.2 payment lifecycle implementation
 
-Working-tree truth: Phase 6.2 certification continuation contains Caddy webhook-signature log redaction, focused regression coverage, and documentation corrections. Development and certification have 19 migrations applied and current schemas. The working tree is intentionally uncommitted pending owner review.
+Working-tree truth: Phase 6.3 Scheduler & Lifecycle Automation is implemented and fully verified but uncommitted pending owner review. Development and certification have migration 20 applied, and all eight certification jobs report healthy.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
-Phase 6.1 is committed at `952e9e1`. Phase 6.2 lifecycle code is committed at `a43cfc5`, but its commit message overstated certification completeness. Genuine PayMongo paid settlement, payment retrieval, persisted reconciliation, full refund, and signed refund settlement now pass. Genuine failed-payment and provider-resend duplicate/delayed/out-of-order evidence remain open. Legal review, backups, monitoring, secure supply chain, and production deployment remain blocked.
+Phase 6.1 is committed at `952e9e1`. Phase 6.2 is partially certified: genuine paid settlement, retrieval, reconciliation, full refund, signed refund, and duplicate paid/refund redelivery pass. Genuine failed, delayed, out-of-order, and raw-fixture evidence remains open with deterministic coverage. The owner approved this state for Phase 6.3. Legal review, backups, monitoring, secure supply chain, and production deployment remain blocked.
 
 This document is the concise repository baseline for future planning. It records verified implementation and runtime evidence rather than roadmap intent. If this file conflicts with an older phase report, the current repository, applied migrations, executable tests, and runtime evidence take precedence.
 
@@ -21,9 +21,9 @@ It is ready for local development and controlled sandbox certification. It is no
 ## Repository truth
 
 - Branch: `main`.
-- Pushed HEAD: `a43cfc5 feat(payments): complete PayMongo sandbox lifecycle certification`.
+- Pushed HEAD: `2bc8e82 test(payments): record genuine PayMongo refund and reconciliation evidence`.
 - `main` matches `origin/main`; Phase 6.1 and the Phase 6.2 lifecycle implementation are committed and pushed.
-- Nineteen Prisma migrations exist and are applied in development and certification.
+- Nineteen migrations are pushed. Uncommitted migration 20 is applied and current in development and certification with zero development schema drift.
 - Prisma schema validation and generated-client parity passed.
 - TypeScript, ESLint, database-backed Vitest, Playwright, local/Docker production builds, and the runtime dependency audit passed for the latest verified baseline.
 - The certification application and dependencies are current and healthy.
@@ -34,17 +34,18 @@ It is ready for local development and controlled sandbox certification. It is no
 |---|---|
 | TypeScript | Passed |
 | ESLint | Passed |
-| Vitest | 125 passed locally and in certification, 6 credential-gated scenarios skipped in each |
-| Playwright | 9 passed |
+| Vitest | 140 passed locally and in certification, 6 credential-gated scenarios skipped in each |
+| Playwright | 10/10 passed locally and in certification |
 | Production and Docker builds | Passed |
-| Migration status | 19 migrations, development and certification current |
+| Migration status | 20 migrations, development and certification current; migration 20 remains uncommitted |
 | Genuine PayMongo checkout creation | Passed |
 | PayMongo live-key sandbox rejection | Passed |
 | Genuine Resend delivery | Passed |
 | Genuine persisted PayMongo retrieval | Passed |
 | Genuine signed paid/refund webhook processing | Passed at runtime; exact raw fixture intentionally not retained |
 | Genuine refund lifecycle | Passed |
-| Genuine delayed/duplicate/out-of-order provider resend | Owner-interactive and not yet certified |
+| Genuine duplicate paid/refund provider resend | Passed without duplicate effects |
+| Genuine delayed/out-of-order provider resend | Owner-interactive and not yet certified |
 | Genuine persisted reconciliation | Passed |
 
 The first sandbox-restricted Vitest execution could not reach local PostgreSQL. The identical suite was rerun with database access and passed. That initial failure was an execution-sandbox restriction, not an application result.
@@ -173,12 +174,11 @@ PayMongo is **partially certified**: genuine paid, refund, retrieval, and persis
 - A genuine Resend delivery from the verified `jl-bke.com` domain passed.
 - The certification database reported 23 sent outbox records.
 
-### Missing or incomplete notifications
+### Phase 6.3 notification work verified
 
-- Renewal cron selects due subscriptions but does not enqueue reminder emails.
-- Trial start/end and expiration emails are absent.
-- License/subscription expiration messages are absent.
-- Continuous outbox execution requires an external scheduler that is not yet production-certified.
+- Renewal reminders are queued at plan-specific 14/7/1-day windows with durable deduplication.
+- Trial-ending, trial-expiration, license-expiration, and subscription-expiration notifications are queued through the outbox.
+- A dedicated Docker scheduler worker invokes the centralized scheduler every minute. The certification worker and database-backed health endpoint report all eight jobs healthy; this does not replace production deployment or future monitoring.
 
 ## Subscription, trial, and license truth
 
@@ -255,7 +255,7 @@ The application has a configurable support email address, but no support platfor
 - No VPS deployment exists.
 - Public Cloudflare-to-local access is not equivalent to production deployment.
 - Health and environment validation exist.
-- Cron endpoints exist but production scheduling is incomplete.
+- The uncommitted Phase 6.3 Docker worker and centralized cron endpoint passed local-production simulation and certification-runtime verification. Actual production deployment and monitoring remain later phases.
 - No verified backup job or restore drill exists.
 - No verified centralized monitoring or alerting exists.
 - No malware scanning, code-signing operation, or independent production security review is complete.
@@ -265,7 +265,7 @@ The application has a configurable support email address, but no support platfor
 ### Critical
 
 1. Incomplete provider-interactive PayMongo failed-payment and resend evidence.
-2. Missing renewal-reminder and scheduler completion.
+2. Phase 6.3 is verified but still requires owner review and commit approval.
 3. No verified backup and restore process.
 4. No operational monitoring and alerting.
 5. No approved administrator recovery and incident-response process.
@@ -305,7 +305,7 @@ The approved implementation sequence is defined in [`ROADMAP.md`](./ROADMAP.md),
 1. Completed: Phase 6.0 — Runtime Parity & Certification Baseline.
 2. Completed: Phase 6.1A — Legal Document Management System.
 3. Completed and pushed: Phase 6.1 — Data Integrity & Safe Deletion.
-4. Partially certified: Phase 6.2 — paid, refund, retrieval, and persisted reconciliation pass; failed-payment and provider-resend evidence remain.
-5. Phase 6.3 must not start until the Phase 6.2 entry condition is satisfied or explicitly revised by the owner.
+4. Partially certified: Phase 6.2 — paid, refund, retrieval, reconciliation, and duplicate paid/refund redelivery pass; failed/delayed/out-of-order evidence remains.
+5. Implemented, verified, and uncommitted: Phase 6.3 — Scheduler & Lifecycle Automation. Do not begin Phase 6.4 before owner approval.
 
 No future phase should claim readiness merely because code exists. Database state, runtime configuration, automated tests, genuine provider evidence, documentation, and owner approval must agree.
