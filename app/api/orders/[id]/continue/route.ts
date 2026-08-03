@@ -15,12 +15,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const { id } = await params;
     const reserved = await db.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${id} FOR UPDATE`;
-      const order = await tx.order.findFirst({
+      const orderRecord = await tx.order.findFirst({
         where: { id, status: "PENDING", account: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
-        include: { account: true, items: true, attempts: { where: { status: { in: ["CREATING", "PENDING"] } }, orderBy: { createdAt: "desc" }, take: 1 } },
       });
-      if (!order) throw new Error("NOT_FOUND");
-      const existing = order.attempts[0];
+      if (!orderRecord) throw new Error("NOT_FOUND");
+      // A multi-relation include is interpreted as parallel query-plan nodes by
+      // Prisma. Read each relation sequentially while this interactive
+      // transaction owns a single PostgreSQL connection.
+      const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: orderRecord.accountId } });
+      const items = await tx.orderItem.findMany({ where: { orderId: orderRecord.id }, orderBy: { id: "asc" } });
+      const attempts = await tx.paymentAttempt.findMany({ where: { orderId: orderRecord.id, status: { in: ["CREATING", "PENDING"] } }, orderBy: { createdAt: "desc" }, take: 1 });
+      const order = { ...orderRecord, account, items, attempts };
+      const existing = attempts[0];
       if (existing?.status === "PENDING" && existing.checkoutUrl) return { order, checkoutUrl: existing.checkoutUrl, idempotencyKey: null };
       if (existing?.status === "CREATING" && existing.createdAt > new Date(Date.now() - 5 * 60_000)) throw new Error("CHECKOUT_CREATION_IN_PROGRESS");
       if (existing) await tx.paymentAttempt.update({ where: { id: existing.id }, data: { status: "FAILED" } });

@@ -2,7 +2,7 @@ import "dotenv/config";
 import { afterAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client";
-import { evaluateProductDeletionEligibility, permanentlyDeleteProduct } from "@/lib/product-deletion";
+import { evaluateProductDeletionEligibility, permanentlyDeleteProduct, requestProductDeletion } from "@/lib/product-deletion";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
@@ -60,6 +60,25 @@ describe.sequential("archived product permanent deletion", () => {
     expect(await db.edition.count({ where: { productId: product.id } })).toBe(0);
     const log = await db.auditLog.findFirstOrThrow({ where: { targetId: product.id, action: "PRODUCT_DELETION_FINALIZED" } });
     expect(JSON.stringify(log.metadata)).not.toContain("tests/");
+  });
+
+  it("serializes concurrent deletion requests without duplicating cleanup jobs", async () => {
+    const { product } = await createProduct({ artifact: true });
+    const input = { productId: product.id, actorId, confirmationName: product.name };
+    const results = await Promise.allSettled([requestProductDeletion(input), requestProductDeletion(input)]);
+    expect(results.some((result) => result.status === "fulfilled")).toBe(true);
+    expect(await db.storageCleanupJob.count({ where: { productId: product.id } })).toBe(1);
+    await permanentlyDeleteProduct({ ...input, deleteStorageObject: async () => undefined });
+    expect(await db.product.findUnique({ where: { id: product.id } })).toBeNull();
+  });
+
+  it("rolls back the deletion request when confirmation validation fails", async () => {
+    const { product } = await createProduct({ artifact: true });
+    await expect(requestProductDeletion({ productId: product.id, actorId, confirmationName: "incorrect confirmation" })).rejects.toMatchObject({ code: "PRODUCT_DELETE_BLOCKED" });
+    expect(await db.product.findUnique({ where: { id: product.id } })).toMatchObject({ deletionRequestedAt: null });
+    expect(await db.storageCleanupJob.count({ where: { productId: product.id } })).toBe(0);
+    expect(await db.auditLog.count({ where: { targetId: product.id, action: "PRODUCT_DELETION_REQUESTED" } })).toBe(0);
+    await permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async () => undefined });
   });
 
   it("blocks order, invoice, payment, and payment-attempt history without changing preserved records", async () => {

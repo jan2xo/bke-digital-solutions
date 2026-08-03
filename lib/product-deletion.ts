@@ -113,28 +113,26 @@ async function evaluateWithClient(client: EligibilityClient, productId: string):
     };
   }
 
-  const [orderItemRows, licenseRows, artifacts, carts, subscriptions, trials, offers] = await Promise.all([
-    client.orderItem.findMany({ where: { productId }, select: { orderId: true } }),
-    client.license.findMany({ where: { productId }, select: { id: true } }),
-    client.productArtifact.findMany({ where: { productId }, select: { objectKey: true, downloadCount: true } }),
-    client.cartItem.count({ where: { price: { productId } } }),
-    client.subscription.count({ where: { productId } }),
-    client.trialGrant.count({ where: { productId } }),
-    client.discountOffer.findMany({ where: { OR: [{ productId }, { edition: { productId } }, { purchasePlan: { edition: { productId } } }] }, select: { id: true } }),
-  ]);
+  // This helper also runs with Prisma's interactive transaction client. Keep
+  // its queries sequential because that client owns one PostgreSQL connection.
+  const orderItemRows = await client.orderItem.findMany({ where: { productId }, select: { orderId: true } });
+  const licenseRows = await client.license.findMany({ where: { productId }, select: { id: true } });
+  const artifacts = await client.productArtifact.findMany({ where: { productId }, select: { objectKey: true, downloadCount: true } });
+  const carts = await client.cartItem.count({ where: { price: { productId } } });
+  const subscriptions = await client.subscription.count({ where: { productId } });
+  const trials = await client.trialGrant.count({ where: { productId } });
+  const offers = await client.discountOffer.findMany({ where: { OR: [{ productId }, { edition: { productId } }, { purchasePlan: { edition: { productId } } }] }, select: { id: true } });
   const orderIds = [...new Set(orderItemRows.map((item) => item.orderId))];
   const licenseIds = licenseRows.map((license) => license.id);
-  const [orders, invoices, payments, paymentAttempts, assignments, activations, grants, licenseEvents, offerRedemptions] = await Promise.all([
-    orderIds.length ? client.order.count({ where: { id: { in: orderIds } } }) : 0,
-    orderIds.length ? client.invoice.count({ where: { orderId: { in: orderIds } } }) : 0,
-    orderIds.length ? client.payment.count({ where: { orderId: { in: orderIds } } }) : 0,
-    orderIds.length ? client.paymentAttempt.count({ where: { orderId: { in: orderIds } } }) : 0,
-    licenseIds.length ? client.licenseAssignment.count({ where: { licenseId: { in: licenseIds } } }) : 0,
-    licenseIds.length ? client.deviceActivation.count({ where: { licenseId: { in: licenseIds } } }) : 0,
-    client.downloadGrant.count({ where: { OR: [{ artifact: { productId } }, ...(licenseIds.length ? [{ licenseId: { in: licenseIds } }] : [])] } }),
-    licenseIds.length ? client.licenseEvent.count({ where: { licenseId: { in: licenseIds } } }) : 0,
-    offers.length ? client.offerRedemption.count({ where: { offerId: { in: offers.map((offer) => offer.id) } } }) : 0,
-  ]);
+  const orders = orderIds.length ? await client.order.count({ where: { id: { in: orderIds } } }) : 0;
+  const invoices = orderIds.length ? await client.invoice.count({ where: { orderId: { in: orderIds } } }) : 0;
+  const payments = orderIds.length ? await client.payment.count({ where: { orderId: { in: orderIds } } }) : 0;
+  const paymentAttempts = orderIds.length ? await client.paymentAttempt.count({ where: { orderId: { in: orderIds } } }) : 0;
+  const assignments = licenseIds.length ? await client.licenseAssignment.count({ where: { licenseId: { in: licenseIds } } }) : 0;
+  const activations = licenseIds.length ? await client.deviceActivation.count({ where: { licenseId: { in: licenseIds } } }) : 0;
+  const grants = await client.downloadGrant.count({ where: { OR: [{ artifact: { productId } }, ...(licenseIds.length ? [{ licenseId: { in: licenseIds } }] : [])] } });
+  const licenseEvents = licenseIds.length ? await client.licenseEvent.count({ where: { licenseId: { in: licenseIds } } }) : 0;
+  const offerRedemptions = offers.length ? await client.offerRedemption.count({ where: { offerId: { in: offers.map((offer) => offer.id) } } }) : 0;
   const recordedDownloads = artifacts.reduce((sum, artifact) => sum + artifact.downloadCount, 0);
   const blockingDependencies: ProductDeletionDependencies = {
     carts,
@@ -207,10 +205,8 @@ export async function requestProductDeletion(input: {
         throw new ProductDeletionError("PRODUCT_DELETE_BLOCKED", eligibility);
       }
 
-      const [product, artifacts] = await Promise.all([
-        tx.product.findUniqueOrThrow({ where: { id: input.productId }, select: { imageKey: true, deletionRequestedAt: true } }),
-        tx.productArtifact.findMany({ where: { productId: input.productId }, select: { id: true, objectKey: true } }),
-      ]);
+      const product = await tx.product.findUniqueOrThrow({ where: { id: input.productId }, select: { imageKey: true, deletionRequestedAt: true } });
+      const artifacts = await tx.productArtifact.findMany({ where: { productId: input.productId }, select: { id: true, objectKey: true } });
       const now = product.deletionRequestedAt ?? new Date();
       await tx.product.update({ where: { id: input.productId }, data: { deletionRequestedAt: now, active: false } });
       const jobs = [
