@@ -1,23 +1,9 @@
 "use client";
-
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PasswordInput } from "@/components/password-input";
 
-export function RecentAuthenticationForm({ admin }: { admin: boolean }) {
-  const router = useRouter();
-  const search = useSearchParams();
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setBusy(true); setError("");
-    const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/auth/recent", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ password: form.get("password"), code: admin ? form.get("code") : undefined }) });
-    setBusy(false);
-    if (!response.ok) return setError(response.status === 429 ? "Too many attempts. Try again later." : "The credentials were not accepted.");
-    const requested = search.get("returnTo");
-    const destination = requested?.startsWith("/") && !requested.startsWith("//") ? requested : admin ? "/admin/security" : "/dashboard";
-    router.replace(destination); router.refresh();
-  }
-  return <form className="card grid gap-5 p-8" onSubmit={submit}><label className="label">Password<PasswordInput name="password" required autoComplete="current-password"/></label>{admin && <label className="label">Authenticator or recovery code<input className="input" name="code" required maxLength={32} autoComplete="one-time-code"/></label>}{error && <p role="alert" className="text-red-700">{error}</p>}<button className="button" disabled={busy}>{busy ? "Confirming…" : "Confirm identity"}</button></form>;
-}
+export function RecentAuthenticationForm({admin}:{admin:boolean}){const router=useRouter();const search=useSearchParams();const[error,setError]=useState("");const[message,setMessage]=useState("");const[busy,setBusy]=useState(false);const[codeSent,setCodeSent]=useState(!admin);
+  async function requestCode(){setBusy(true);setError("");setMessage("");const response=await fetch("/api/auth/mfa/challenge/request",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({purpose:"RECENT_AUTH"})});const body=await response.json();setBusy(false);if(!response.ok)return setError(response.status===429?"Please wait before requesting another code.":"Unable to request a verification challenge.");setCodeSent(true);if(body.emailSent===false){setError("Email delivery failed. You can still use a saved recovery code.");return}setMessage("A verification code was sent to your registered email address.")}
+  async function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();setBusy(true);setError("");const form=new FormData(event.currentTarget);const response=await fetch("/api/auth/recent",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({password:form.get("password"),code:admin?form.get("code"):undefined})});setBusy(false);if(!response.ok)return setError(response.status===429?"Too many attempts. Try again later.":"The password or verification code was not accepted.");const requested=search.get("returnTo");const destination=requested?.startsWith("/")&&!requested.startsWith("//")?requested:admin?"/admin/security":"/dashboard";router.replace(destination);router.refresh()}
+  return <form className="card grid gap-5 p-8" onSubmit={submit}><label className="label">Password<PasswordInput name="password" required autoComplete="current-password"/></label>{admin&&<>{codeSent?<label className="label">Email or recovery code<input className="input" name="code" required maxLength={32} autoComplete="one-time-code"/></label>:<button className="button-secondary" type="button" disabled={busy} onClick={requestCode}>Email my verification code</button>}{codeSent&&<button className="text-left text-sm font-bold text-[#3D75A7]" type="button" disabled={busy} onClick={requestCode}>Email a new code</button>}</>}{message&&<p role="status" className="text-green-700">{message}</p>}{error&&<p role="alert" className="text-red-700">{error}</p>}<button className="button" disabled={busy||!codeSent}>{busy?"Confirming…":"Confirm identity"}</button></form>}

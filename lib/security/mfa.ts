@@ -62,3 +62,22 @@ export function generateRecoveryCodes(count = 10) {
 }
 export const normalizeRecoveryCode = (code: string) => code.replace(/[^A-Z2-7]/gi, "").toUpperCase();
 export const hashRecoveryCode = (code: string) => createHmac("sha256", key()).update(normalizeRecoveryCode(code)).digest("hex");
+
+export function emailOtpForChallenge(token: string) {
+  const digest = createHmac("sha256", key()).update(`admin-email-otp:${token}`).digest();
+  return String(digest.readUInt32BE(0) % 1_000_000).padStart(6, "0");
+}
+
+export const normalizeEmailOtp = (code: string) => code.trim().replace(/\s/g, "");
+export const hashEmailOtp = (code: string) => createHmac("sha256", key()).update(`admin-email-otp-code:${normalizeEmailOtp(code)}`).digest("hex");
+export function verifyHashedEmailOtp(codeHash: string, candidate: string) {
+  const normalized = normalizeEmailOtp(candidate);
+  if (!/^\d{6}$/.test(normalized) || !/^[a-f0-9]{64}$/.test(codeHash)) return false;
+  return timingSafeEqual(Buffer.from(codeHash, "hex"), Buffer.from(hashEmailOtp(normalized), "hex"));
+}
+
+export function verifyEmailOtp(token: string, candidate: string) {
+  const normalized = normalizeEmailOtp(candidate);
+  if (!/^\d{6}$/.test(normalized)) return false;
+  return timingSafeEqual(Buffer.from(emailOtpForChallenge(token)), Buffer.from(normalized));
+}

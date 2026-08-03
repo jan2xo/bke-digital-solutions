@@ -24,6 +24,6 @@ async function main() {
   if (!existing || process.env.ADMIN_RESET_MFA === "true") {
     await db.$transaction([db.administratorMfaMethod.deleteMany({ where: { userId: user.id } }), db.administratorRecoveryCode.deleteMany({ where: { userId: user.id } }), db.mfaChallenge.deleteMany({ where: { userId: user.id } })]);
   }
-  console.info(existing ? "Administrator credentials updated and sessions revoked." : "Administrator created. Mandatory TOTP enrollment is required before admin access.");
+  console.info(existing ? "Administrator credentials updated and sessions revoked." : "Administrator created. Mandatory email-code verification is required before admin access.");
 }
 main().finally(() => db.$disconnect());

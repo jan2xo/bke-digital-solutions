@@ -253,7 +253,7 @@ npm run db:seed
 ADMIN_BOOTSTRAP_ACK=I_UNDERSTAND_THIS_CREATES_A_PRIVILEGED_ACCOUNT npm run admin:create
 ```
 
-The administrator password must contain at least 12 characters. Interactive input may be visible in the terminal, so perform this over a private SSH session and clear the terminal afterward. Do not put the administrator password in `.env.vps`, shell history, Docker Compose, Git, or deployment logs. On first sign-in, complete mandatory authenticator enrollment and store the one-time recovery codes offline before performing any administrator operation.
+The administrator password must contain at least 12 characters. Interactive input may be visible in the terminal, so perform this over a private SSH session and clear the terminal afterward. Do not put the administrator password in `.env.vps`, shell history, Docker Compose, Git, or deployment logs. On first sign-in, complete mandatory email-code enrollment and store the one-time recovery codes offline before performing any administrator operation.
 
 After bootstrapping, the host `node_modules` directory may be removed if desired; it is not used by the production application container.
 
@@ -290,7 +290,7 @@ For the no-domain smoke mode, replace the origin with `http://VPS_PUBLIC_IP`.
 
 Then verify manually with synthetic accounts:
 
-1. Administrator password login, mandatory TOTP enrollment/challenge, recovery-code storage, and logout.
+1. Administrator password login, mandatory email-code enrollment/challenge, resend invalidation, recovery-code storage, and logout.
 2. Product, edition, plan, version, and installer creation.
 3. Customer registration and development verification flow.
 4. Mock checkout and verified mock webhook completion.

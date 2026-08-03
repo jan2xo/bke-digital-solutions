@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       await tx.administratorRecoveryCode.createMany({ data: codes.map((code) => ({ userId: session.userId, codeHash: hashRecoveryCode(code) })) });
       await tx.session.updateMany({ where: { userId: session.userId, revokedAt: null }, data: { revokedAt: new Date(), revocationReason: "RECOVERY_CODES_REGENERATED" } });
     });
-    await createSession(session.userId, request, { mfaVerified: true, recent: true, authenticationMethod: "PASSWORD_TOTP" });
+    await createSession(session.userId, request, { mfaVerified: true, recent: true, authenticationMethod: "PASSWORD_EMAIL_OTP" });
     await securityEvent("MFA_RECOVERY_REGENERATED", request, session.userId);
     await audit({ actorId: session.userId, action: "MFA_RECOVERY_REGENERATED", targetType: "User", targetId: session.userId });
     return NextResponse.json({ recoveryCodes: codes });

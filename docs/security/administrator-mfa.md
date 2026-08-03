@@ -1,14 +1,9 @@
-# Administrator MFA
+# Administrator email-code verification
 
-Every administrator must use password authentication followed by TOTP. Password success for an enrolled administrator creates only a five-minute, HttpOnly, same-site challenge reference; it does not create an application session. A valid TOTP or unused recovery code atomically consumes the challenge and creates an MFA-verified session.
+Administrator authentication requires the account password followed by a six-digit code sent to the administrator's verified email address through Resend. Customers retain the existing password and magic-link flows; this policy applies only to global `ADMIN` users.
 
-An administrator without MFA receives a restricted enrollment session after password verification. It cannot satisfy `requireAdmin` and can access only the enrollment flow. Enrollment is valid for ten minutes and requires that password verification still be recent. The QR image is rendered locally; no secret is sent to a third-party QR service.
+Password success creates no privileged session. It creates a purpose-bound, ten-minute `MfaChallenge` referenced by a random HttpOnly, Secure-in-production, same-site cookie. The email code is derived from that random token with keyed HMAC and is never stored or logged in plaintext. PostgreSQL stores the token hash, keyed code hash, expiry, purpose, consumption time, and bounded attempt count. Five failed attempts exhaust a challenge. Resending replaces the outstanding challenge and invalidates its earlier code.
 
-TOTP uses six digits, SHA-1, 30-second periods, and accepts the current period plus one adjacent period in either direction. Secrets use versioned AES-256-GCM authenticated encryption. `MFA_ENCRYPTION_KEY` is mandatory in staging and production. Recovery codes are generated with cryptographic randomness, shown once, stored only as keyed hashes, and consumed transactionally.
+Successful verification atomically consumes the challenge and creates a server-owned MFA-verified session with authentication method `PASSWORD_EMAIL_OTP`. Login, enrollment, and recent-authentication challenges cannot be substituted for one another. The six-digit code is stored only as a keyed hash on its database challenge; plaintext codes and raw email payloads are never persisted or logged. Login emails and the verification screen show the same short reference so administrators can identify the newest valid email after a resend. Recovery codes are cryptographically random, shown once, stored only as keyed hashes, and atomically consumed.
 
-Administrator magic links are deliberately rejected. MFA disablement immediately revokes sessions and returns the administrator to mandatory enrollment. Recovery-code regeneration replaces every prior unused code and revokes other sessions.
-
-Operational setup and emergency recovery are documented in [emergency-admin-recovery.md](./emergency-admin-recovery.md).
-# Provider settings
-
-External provider mutations use `requireRecentAdmin`: enrolled administrator MFA and a recently reauthenticated session are mandatory. A normal administrator page session is insufficient for credential changes, validation, enablement, or revocation.
+The email provider is an availability dependency for ordinary administrator login. Keep recovery codes offline and test genuine Resend delivery before production. A mailbox compromise plus password compromise defeats this factor, so the administrator mailbox must itself use strong MFA, security alerts, and recovery controls.

@@ -212,7 +212,7 @@ export type AdministratorMfaMethodGroupByArgs<ExtArgs extends runtime.Types.Exte
 export type AdministratorMfaMethodGroupByOutputType = {
   id: string
   userId: string
-  encryptedSecret: string
+  encryptedSecret: string | null
   keyVersion: number
   pendingExpiresAt: Date | null
   enabledAt: Date | null
@@ -248,7 +248,7 @@ export type AdministratorMfaMethodWhereInput = {
   NOT?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
   id?: Prisma.StringFilter<"AdministratorMfaMethod"> | string
   userId?: Prisma.StringFilter<"AdministratorMfaMethod"> | string
-  encryptedSecret?: Prisma.StringFilter<"AdministratorMfaMethod"> | string
+  encryptedSecret?: Prisma.StringNullableFilter<"AdministratorMfaMethod"> | string | null
   keyVersion?: Prisma.IntFilter<"AdministratorMfaMethod"> | number
   pendingExpiresAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
   enabledAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
@@ -262,7 +262,7 @@ export type AdministratorMfaMethodWhereInput = {
 export type AdministratorMfaMethodOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  encryptedSecret?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   keyVersion?: Prisma.SortOrder
   pendingExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   enabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -279,7 +279,7 @@ export type AdministratorMfaMethodWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
   OR?: Prisma.AdministratorMfaMethodWhereInput[]
   NOT?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
-  encryptedSecret?: Prisma.StringFilter<"AdministratorMfaMethod"> | string
+  encryptedSecret?: Prisma.StringNullableFilter<"AdministratorMfaMethod"> | string | null
   keyVersion?: Prisma.IntFilter<"AdministratorMfaMethod"> | number
   pendingExpiresAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
   enabledAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
@@ -293,7 +293,7 @@ export type AdministratorMfaMethodWhereUniqueInput = Prisma.AtLeast<{
 export type AdministratorMfaMethodOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  encryptedSecret?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   keyVersion?: Prisma.SortOrder
   pendingExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   enabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -314,7 +314,7 @@ export type AdministratorMfaMethodScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput | Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AdministratorMfaMethod"> | string
   userId?: Prisma.StringWithAggregatesFilter<"AdministratorMfaMethod"> | string
-  encryptedSecret?: Prisma.StringWithAggregatesFilter<"AdministratorMfaMethod"> | string
+  encryptedSecret?: Prisma.StringNullableWithAggregatesFilter<"AdministratorMfaMethod"> | string | null
   keyVersion?: Prisma.IntWithAggregatesFilter<"AdministratorMfaMethod"> | number
   pendingExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string | null
   enabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string | null
@@ -326,7 +326,7 @@ export type AdministratorMfaMethodScalarWhereWithAggregatesInput = {
 
 export type AdministratorMfaMethodCreateInput = {
   id?: string
-  encryptedSecret: string
+  encryptedSecret?: string | null
   keyVersion?: number
   pendingExpiresAt?: Date | string | null
   enabledAt?: Date | string | null
@@ -340,7 +340,7 @@ export type AdministratorMfaMethodCreateInput = {
 export type AdministratorMfaMethodUncheckedCreateInput = {
   id?: string
   userId: string
-  encryptedSecret: string
+  encryptedSecret?: string | null
   keyVersion?: number
   pendingExpiresAt?: Date | string | null
   enabledAt?: Date | string | null
@@ -352,7 +352,7 @@ export type AdministratorMfaMethodUncheckedCreateInput = {
 
 export type AdministratorMfaMethodUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  encryptedSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
   pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -366,7 +366,7 @@ export type AdministratorMfaMethodUpdateInput = {
 export type AdministratorMfaMethodUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  encryptedSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
   pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -379,7 +379,7 @@ export type AdministratorMfaMethodUncheckedUpdateInput = {
 export type AdministratorMfaMethodCreateManyInput = {
   id?: string
   userId: string
-  encryptedSecret: string
+  encryptedSecret?: string | null
   keyVersion?: number
   pendingExpiresAt?: Date | string | null
   enabledAt?: Date | string | null
@@ -391,7 +391,7 @@ export type AdministratorMfaMethodCreateManyInput = {
 
 export type AdministratorMfaMethodUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  encryptedSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
   pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -404,7 +404,7 @@ export type AdministratorMfaMethodUpdateManyMutationInput = {
 export type AdministratorMfaMethodUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  encryptedSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
   pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -508,7 +508,7 @@ export type IntFieldUpdateOperationsInput = {
 
 export type AdministratorMfaMethodCreateWithoutUserInput = {
   id?: string
-  encryptedSecret: string
+  encryptedSecret?: string | null
   keyVersion?: number
   pendingExpiresAt?: Date | string | null
   enabledAt?: Date | string | null
@@ -520,7 +520,7 @@ export type AdministratorMfaMethodCreateWithoutUserInput = {
 
 export type AdministratorMfaMethodUncheckedCreateWithoutUserInput = {
   id?: string
-  encryptedSecret: string
+  encryptedSecret?: string | null
   keyVersion?: number
   pendingExpiresAt?: Date | string | null
   enabledAt?: Date | string | null
@@ -548,7 +548,7 @@ export type AdministratorMfaMethodUpdateToOneWithWhereWithoutUserInput = {
 
 export type AdministratorMfaMethodUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  encryptedSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
   pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -560,7 +560,7 @@ export type AdministratorMfaMethodUpdateWithoutUserInput = {
 
 export type AdministratorMfaMethodUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  encryptedSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
   pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -646,7 +646,7 @@ export type $AdministratorMfaMethodPayload<ExtArgs extends runtime.Types.Extensi
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    encryptedSecret: string
+    encryptedSecret: string | null
     keyVersion: number
     pendingExpiresAt: Date | null
     enabledAt: Date | null

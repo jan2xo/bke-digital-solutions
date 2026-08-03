@@ -1,21 +1,7 @@
-import { createHmac } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import type { Page } from "@playwright/test";
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-function decode(value: string) { let bits = ""; for (const char of value) bits += alphabet.indexOf(char).toString(2).padStart(5, "0"); const bytes = []; for (let i = 0; i + 8 <= bits.length; i += 8) bytes.push(Number.parseInt(bits.slice(i, i + 8), 2)); return Buffer.from(bytes); }
-export function totpCode(secret: string) { const message = Buffer.alloc(8); message.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30000))); const digest = createHmac("sha1", decode(secret)).update(message).digest(); const offset = digest[digest.length - 1] & 15; const binary = ((digest[offset] & 127) << 24) | ((digest[offset + 1] & 255) << 16) | ((digest[offset + 2] & 255) << 8) | (digest[offset + 3] & 255); return String(binary % 1_000_000).padStart(6, "0"); }
+function codeFromToken(token:string){const key=createHash("sha256").update(process.env.MFA_ENCRYPTION_KEY??process.env.SESSION_SECRET!).digest();const digest=createHmac("sha256",key).update(`admin-email-otp:${token}`).digest();return String(digest.readUInt32BE(0)%1_000_000).padStart(6,"0")}
+export async function emailOtpCode(page:Page){const cookies=await page.context().cookies();const cookie=cookies.find(item=>item.name.includes("bke_mfa_challenge"));if(!cookie)throw new Error(`MFA challenge cookie missing; present: ${cookies.map(item=>item.name).join(",")}`);return codeFromToken(cookie.value)}
 
-export async function enrollAndLoginAdmin(page: Page, email: string, password: string) {
-  await page.goto("/login");
-  await page.getByLabel("Email address").first().fill(email);
-  await page.locator('input[name="password"]').fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await page.getByRole("button", { name: "Begin secure setup" }).click();
-  const secret = (await page.locator("code").first().textContent())!.trim();
-  await page.getByLabel("Six-digit code").fill(totpCode(secret));
-  await page.getByRole("button", { name: "Enable MFA" }).click();
-  const recoveryCodes = ((await page.locator("pre").textContent()) ?? "").trim().split("\n");
-  await page.getByRole("button", { name: "I saved these codes" }).click();
-  await page.waitForURL(/admin\/security/);
-  return { secret, recoveryCodes };
-}
+export async function enrollAndLoginAdmin(page:Page,email:string,password:string){await page.goto("/login");await page.getByLabel("Email address").first().fill(email);await page.locator('input[name="password"]').fill(password);await page.getByRole("button",{name:"Sign in"}).click();const challengeResponse=page.waitForResponse(response=>response.url().endsWith("/api/auth/mfa/enroll")&&response.request().method()==="POST");await page.getByRole("button",{name:"Email my verification code"}).click();if((await challengeResponse).status()!==200)throw new Error("MFA enrollment challenge request failed");await page.getByLabel("Email verification code").fill(await emailOtpCode(page));await page.getByRole("button",{name:"Enable email verification"}).click();const recoveryCodes=((await page.locator("pre").textContent())??"").trim().split("\n");await page.getByRole("button",{name:"I saved these codes"}).click();await page.waitForURL(/admin\/security/);return{recoveryCodes}}

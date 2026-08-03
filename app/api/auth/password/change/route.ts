@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const passwordHash = await hashPassword(input.newPassword);
     await db.$transaction([db.passwordCredential.update({ where: { userId: session.userId }, data: { passwordHash, changedAt: new Date() } }), db.session.updateMany({ where: { userId: session.userId, revokedAt: null }, data: { revokedAt: new Date(), revocationReason: "PASSWORD_CHANGED" } })]);
     const isAdmin = session.user.role === "ADMIN";
-    await createSession(session.userId, request, { mfaVerified: isAdmin, recent: true, authenticationMethod: isAdmin ? "PASSWORD_TOTP" : "PASSWORD" });
+    await createSession(session.userId, request, { mfaVerified: isAdmin, recent: true, authenticationMethod: isAdmin ? "PASSWORD_EMAIL_OTP" : "PASSWORD" });
     await securityEvent("PASSWORD_CHANGED", request, session.userId);
     await audit({ actorId: session.userId, action: "PASSWORD_CHANGED", targetType: "User", targetId: session.userId });
     return NextResponse.json({ ok: true });

@@ -134,6 +134,8 @@ enum InvitationStatus {
 
 enum MfaChallengePurpose {
   LOGIN
+  ENROLLMENT
+  RECENT_AUTH
 }
 
 enum SecurityEventType {
@@ -183,6 +185,7 @@ enum SecurityEventSeverity {
 enum SessionAuthenticationMethod {
   PASSWORD
   PASSWORD_TOTP
+  PASSWORD_EMAIL_OTP
   PASSWORD_RECOVERY
   MAGIC_LINK
   MFA_ENROLLMENT
@@ -281,7 +284,7 @@ model Session {
 model AdministratorMfaMethod {
   id               String    @id @default(cuid())
   userId           String    @unique
-  encryptedSecret  String
+  encryptedSecret  String?
   keyVersion       Int       @default(1)
   pendingExpiresAt DateTime?
   enabledAt        DateTime?
@@ -308,6 +311,7 @@ model MfaChallenge {
   userId       String
   purpose      MfaChallengePurpose @default(LOGIN)
   tokenHash    String              @unique
+  codeHash     String?
   expiresAt    DateTime
   consumedAt   DateTime?
   attemptCount Int                 @default(0)

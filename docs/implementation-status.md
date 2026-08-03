@@ -1,5 +1,20 @@
 # Implementation status
 
+## Phase 6.0 runtime parity (verified, owner approval pending)
+
+- Production and certification use the same digest-pinned application, database-migration, and startup contract; certification adds only loopback test access and local simulation configuration.
+- Prisma generation is reproducible, all 17 migrations are applied, repeated seeding and database smoke pass, and readiness fails closed for PostgreSQL, Valkey, private storage, and selected-provider configuration failures.
+- TypeScript, ESLint, full Vitest, full Playwright, local production build, Docker production build, Compose validation, secret hygiene, and the runtime dependency audit pass. See `runtime-parity.md` for exact results and limits.
+- Genuine PayMongo lifecycle and credential-gated provider delivery are intentionally not certified by Phase 6.0 and remain later gates.
+
+## Administrator email-code authentication (implemented and browser verified)
+
+- Replaced authenticator-app enrollment and TOTP challenges for global administrators with password-plus-email-code verification through the configured Resend provider.
+- Added ten-minute, purpose-isolated, five-attempt, single-use challenges for enrollment, login, resend, and recent authentication. Codes are HMAC-derived from random HttpOnly challenge tokens and are never stored or logged.
+- Preserved offline single-use recovery codes, MFA-verified server sessions, recent-authentication gates, rate limiting, audit/security events, and the customer password/magic-link flows.
+- Added migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_hash`, which remove stored authenticator seeds, add the email-code session method and challenge purposes, and persist only a keyed code hash.
+- Prisma validation, migration deployment, generated-client synchronization, TypeScript, ESLint, focused unit tests, and the full certification browser suite pass. Explicit route-response cookies fixed the challenge timing defect found by the first browser run.
+
 ## Phase 6.1A — Legal Document Management System (implemented, awaiting owner review)
 
 - Added normalized legal documents, versions, and immutable acceptance records with two additive migrations.

@@ -39,6 +39,7 @@ export type MfaChallengeMinAggregateOutputType = {
   userId: string | null
   purpose: $Enums.MfaChallengePurpose | null
   tokenHash: string | null
+  codeHash: string | null
   expiresAt: Date | null
   consumedAt: Date | null
   attemptCount: number | null
@@ -50,6 +51,7 @@ export type MfaChallengeMaxAggregateOutputType = {
   userId: string | null
   purpose: $Enums.MfaChallengePurpose | null
   tokenHash: string | null
+  codeHash: string | null
   expiresAt: Date | null
   consumedAt: Date | null
   attemptCount: number | null
@@ -61,6 +63,7 @@ export type MfaChallengeCountAggregateOutputType = {
   userId: number
   purpose: number
   tokenHash: number
+  codeHash: number
   expiresAt: number
   consumedAt: number
   attemptCount: number
@@ -82,6 +85,7 @@ export type MfaChallengeMinAggregateInputType = {
   userId?: true
   purpose?: true
   tokenHash?: true
+  codeHash?: true
   expiresAt?: true
   consumedAt?: true
   attemptCount?: true
@@ -93,6 +97,7 @@ export type MfaChallengeMaxAggregateInputType = {
   userId?: true
   purpose?: true
   tokenHash?: true
+  codeHash?: true
   expiresAt?: true
   consumedAt?: true
   attemptCount?: true
@@ -104,6 +109,7 @@ export type MfaChallengeCountAggregateInputType = {
   userId?: true
   purpose?: true
   tokenHash?: true
+  codeHash?: true
   expiresAt?: true
   consumedAt?: true
   attemptCount?: true
@@ -202,6 +208,7 @@ export type MfaChallengeGroupByOutputType = {
   userId: string
   purpose: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash: string | null
   expiresAt: Date
   consumedAt: Date | null
   attemptCount: number
@@ -236,6 +243,7 @@ export type MfaChallengeWhereInput = {
   userId?: Prisma.StringFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFilter<"MfaChallenge"> | string
+  codeHash?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
   consumedAt?: Prisma.DateTimeNullableFilter<"MfaChallenge"> | Date | string | null
   attemptCount?: Prisma.IntFilter<"MfaChallenge"> | number
@@ -248,6 +256,7 @@ export type MfaChallengeOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  codeHash?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   consumedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   attemptCount?: Prisma.SortOrder
@@ -263,6 +272,7 @@ export type MfaChallengeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MfaChallengeWhereInput | Prisma.MfaChallengeWhereInput[]
   userId?: Prisma.StringFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
+  codeHash?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
   consumedAt?: Prisma.DateTimeNullableFilter<"MfaChallenge"> | Date | string | null
   attemptCount?: Prisma.IntFilter<"MfaChallenge"> | number
@@ -275,6 +285,7 @@ export type MfaChallengeOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  codeHash?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   consumedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   attemptCount?: Prisma.SortOrder
@@ -294,6 +305,7 @@ export type MfaChallengeScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeWithAggregatesFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringWithAggregatesFilter<"MfaChallenge"> | string
+  codeHash?: Prisma.StringNullableWithAggregatesFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"MfaChallenge"> | Date | string
   consumedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MfaChallenge"> | Date | string | null
   attemptCount?: Prisma.IntWithAggregatesFilter<"MfaChallenge"> | number
@@ -304,6 +316,7 @@ export type MfaChallengeCreateInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
@@ -316,6 +329,7 @@ export type MfaChallengeUncheckedCreateInput = {
   userId: string
   purpose?: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
@@ -326,6 +340,7 @@ export type MfaChallengeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -338,6 +353,7 @@ export type MfaChallengeUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -349,6 +365,7 @@ export type MfaChallengeCreateManyInput = {
   userId: string
   purpose?: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
@@ -359,6 +376,7 @@ export type MfaChallengeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -370,6 +388,7 @@ export type MfaChallengeUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -391,6 +410,7 @@ export type MfaChallengeCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  codeHash?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   consumedAt?: Prisma.SortOrder
   attemptCount?: Prisma.SortOrder
@@ -406,6 +426,7 @@ export type MfaChallengeMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  codeHash?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   consumedAt?: Prisma.SortOrder
   attemptCount?: Prisma.SortOrder
@@ -417,6 +438,7 @@ export type MfaChallengeMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  codeHash?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   consumedAt?: Prisma.SortOrder
   attemptCount?: Prisma.SortOrder
@@ -477,6 +499,7 @@ export type MfaChallengeCreateWithoutUserInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
@@ -487,6 +510,7 @@ export type MfaChallengeUncheckedCreateWithoutUserInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
@@ -527,6 +551,7 @@ export type MfaChallengeScalarWhereInput = {
   userId?: Prisma.StringFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFilter<"MfaChallenge"> | string
+  codeHash?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
   consumedAt?: Prisma.DateTimeNullableFilter<"MfaChallenge"> | Date | string | null
   attemptCount?: Prisma.IntFilter<"MfaChallenge"> | number
@@ -537,6 +562,7 @@ export type MfaChallengeCreateManyUserInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
   tokenHash: string
+  codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
@@ -547,6 +573,7 @@ export type MfaChallengeUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -557,6 +584,7 @@ export type MfaChallengeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -567,6 +595,7 @@ export type MfaChallengeUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -580,6 +609,7 @@ export type MfaChallengeSelect<ExtArgs extends runtime.Types.Extensions.Internal
   userId?: boolean
   purpose?: boolean
   tokenHash?: boolean
+  codeHash?: boolean
   expiresAt?: boolean
   consumedAt?: boolean
   attemptCount?: boolean
@@ -592,6 +622,7 @@ export type MfaChallengeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   purpose?: boolean
   tokenHash?: boolean
+  codeHash?: boolean
   expiresAt?: boolean
   consumedAt?: boolean
   attemptCount?: boolean
@@ -604,6 +635,7 @@ export type MfaChallengeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   purpose?: boolean
   tokenHash?: boolean
+  codeHash?: boolean
   expiresAt?: boolean
   consumedAt?: boolean
   attemptCount?: boolean
@@ -616,13 +648,14 @@ export type MfaChallengeSelectScalar = {
   userId?: boolean
   purpose?: boolean
   tokenHash?: boolean
+  codeHash?: boolean
   expiresAt?: boolean
   consumedAt?: boolean
   attemptCount?: boolean
   createdAt?: boolean
 }
 
-export type MfaChallengeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "purpose" | "tokenHash" | "expiresAt" | "consumedAt" | "attemptCount" | "createdAt", ExtArgs["result"]["mfaChallenge"]>
+export type MfaChallengeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "purpose" | "tokenHash" | "codeHash" | "expiresAt" | "consumedAt" | "attemptCount" | "createdAt", ExtArgs["result"]["mfaChallenge"]>
 export type MfaChallengeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -643,6 +676,7 @@ export type $MfaChallengePayload<ExtArgs extends runtime.Types.Extensions.Intern
     userId: string
     purpose: $Enums.MfaChallengePurpose
     tokenHash: string
+    codeHash: string | null
     expiresAt: Date
     consumedAt: Date | null
     attemptCount: number
@@ -1075,6 +1109,7 @@ export interface MfaChallengeFieldRefs {
   readonly userId: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly purpose: Prisma.FieldRef<"MfaChallenge", 'MfaChallengePurpose'>
   readonly tokenHash: Prisma.FieldRef<"MfaChallenge", 'String'>
+  readonly codeHash: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly expiresAt: Prisma.FieldRef<"MfaChallenge", 'DateTime'>
   readonly consumedAt: Prisma.FieldRef<"MfaChallenge", 'DateTime'>
   readonly attemptCount: Prisma.FieldRef<"MfaChallenge", 'Int'>

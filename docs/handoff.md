@@ -1,6 +1,10 @@
 # Engineering handoff
 
-## Active handoff — Phase 6.1A
+## Active handoff — Phase 6.0 and Phase 6.1A
+
+Phase 6.0 runtime parity is implemented and verified in the current uncommitted tree. Use `certification-runtime.md` for the authoritative startup/test sequence and `runtime-parity.md` for environment, Docker, database, health, and provider boundaries. Full Vitest (116 passed, 6 credential-gated skipped), Playwright (9 passed), local/Docker production builds, 17-migration status, seed, smoke, readiness dependency outages, and dependency audit pass. This is not PayMongo lifecycle certification or overall production readiness.
+
+An additional uncommitted owner-requested authentication change replaces authenticator TOTP for global administrators with password-plus-email codes. Migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_hash` are applied in certification. Static checks and the full browser suite pass. Customer authentication is unchanged.
 
 The current uncommitted working tree contains the Legal Document Management System and the previously requested roadmap/truth-check documentation. Do not commit until owner review. Apply both `20260802170000_legal_document_management` and `20260802171000_legal_document_type_uniqueness`, then run the idempotent seed to create the nine placeholder documents. Replace and professionally approve every placeholder before public commerce.
 

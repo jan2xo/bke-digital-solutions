@@ -15,7 +15,7 @@ const definitions: Partial<Record<SecurityEventType, Definition>> = {
   MFA_CHALLENGE_SUCCEEDED: { label: "MFA challenge succeeded", outcome: "SUCCESS", severity: "LOW", explanation: "An administrator MFA challenge completed." },
   MFA_RECOVERY_USED: { label: "Recovery code used", outcome: "SUCCESS", severity: "HIGH", explanation: "An administrator recovery code was used to authenticate." },
   MFA_DISABLED: { label: "Administrator MFA disabled", outcome: "SUCCESS", severity: "HIGH", explanation: "Administrator MFA was disabled and must be enrolled again." },
-  MFA_ENROLLED: { label: "Administrator MFA enrolled", outcome: "SUCCESS", severity: "MEDIUM", explanation: "An administrator authenticator was enrolled." },
+  MFA_ENROLLED: { label: "Administrator email verification enabled", outcome: "SUCCESS", severity: "MEDIUM", explanation: "Administrator password-plus-email verification was enabled." },
   MFA_RECOVERY_REGENERATED: { label: "Recovery codes regenerated", outcome: "SUCCESS", severity: "HIGH", explanation: "Existing recovery codes were replaced." },
   PASSWORD_CHANGED: { label: "Administrator password changed", outcome: "SUCCESS", severity: "HIGH", explanation: "The administrator password changed and sessions were revoked." },
   PASSWORD_RESET_COMPLETED: { label: "Administrator password reset", outcome: "SUCCESS", severity: "HIGH", explanation: "A password reset completed for an administrator account." },

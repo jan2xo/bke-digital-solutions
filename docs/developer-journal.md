@@ -192,3 +192,18 @@ The audit recommends continuing to version generated Prisma output and adding a 
 # 2026-08-02 — Phase 5.2C
 
 Added encrypted, versioned provider credentials with atomic replacement and an explicit runtime source policy. Provider adapters now use the central resolver. Admin mutations require recent MFA-backed authentication, Origin checks, rate limiting, validation-before-enable, and redacted audit records. Live PayMongo remains locked in local certification.
+
+# 2026-08-03 — Administrator email-code authentication
+
+Replaced administrator authenticator-app challenges with password-plus-email codes delivered through the existing provider abstraction. Customer authentication is unchanged. Login, enrollment, and recent-authentication challenges are purpose-bound, expire after ten minutes, allow five attempts, are invalidated by resend, and are single-use. The plaintext code is not persisted: it is derived with keyed HMAC from a random HttpOnly challenge token whose hash is stored in PostgreSQL. Recovery codes remain available.
+
+Migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_hash` were applied and clear legacy encrypted authenticator seeds while adding keyed email-code hashes. Prisma validation, generated-client synchronization, TypeScript, ESLint, and focused unit/security tests passed. The first focused Playwright run failed because a challenge cookie set inside a nested server helper was not propagated to the browser response. Cookie creation was moved explicitly onto each route response. The subsequent certification Docker rebuild and complete Playwright rerun passed 9/9. Genuine Resend delivery remains credential-gated and is not established by the deterministic browser suite.
+# August 3, 2026 — Phase 6.0 runtime parity audit
+
+- Unified certification and production startup around the same digest-pinned Docker targets and migration-first sequence.
+- Added loopback-only certification service access and a credential-scrubbing host test wrapper for database-backed Vitest and Playwright.
+- Corrected seed timestamp drift, added the deterministic private installer fixture, and made email provider selection consistent.
+- Extended readiness to selected-provider configuration and verified fail-closed behavior for PostgreSQL, Valkey, MinIO, and provider configuration.
+- Verified TypeScript, ESLint, Prisma generation/validation, 17 migrations, repeated seed, smoke, 116 deterministic tests with 6 credential-gated skips, 9 browser tests, local and Docker builds, Compose, secret hygiene, and zero runtime dependency vulnerabilities.
+- A local build initially failed because the execution sandbox denied Turbopack a helper port; the permitted rerun passed. Initial full suites exposed the certification-network, MFA response-cookie timing, missing storage fixture, and stale browser-message defects; all were corrected and the complete reruns passed.
+- Full PayMongo lifecycle, production backup, monitoring, legal approval, and VPS deployment remain outside Phase 6.0.

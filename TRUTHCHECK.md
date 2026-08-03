@@ -69,7 +69,7 @@ The first sandbox-restricted Vitest execution could not reach local PostgreSQL. 
 ### Administrator services
 
 - Bootstrap an administrator outside public registration.
-- Require TOTP MFA and support single-use recovery codes.
+- Require password-plus-email-code verification for administrators and support single-use recovery codes.
 - Require recent authentication for high-impact operations.
 - Manage products, editions, purchase plans, releases, and artifacts.
 - Manage customers, orders, invoices, licenses, devices, trials, and offers.
@@ -105,7 +105,7 @@ A plain `MEMBER` can currently open the account detail and see broad order, invo
 - Production cookies use the `__Host-` prefix, HTTP-only, Secure, SameSite `Lax`, and path `/`.
 - Sessions have a 14-day absolute lifetime and a 60-minute idle timeout.
 - Password change/reset, MFA changes, and explicit session administration revoke sessions as applicable.
-- Administrator login requires password plus TOTP or an unused recovery code after enrollment.
+- Administrator login requires a password plus a purpose-bound code sent to the verified administrator email, or an unused recovery code after enrollment.
 - Recent authentication lasts 15 minutes for protected operations.
 - Security events store hashed request hints and sanitized metadata.
 - Security review signals are rule-based indicators, not a threat-detection or SIEM system.

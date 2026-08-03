@@ -3984,6 +3984,7 @@ export const MfaChallengeScalarFieldEnum = {
   userId: 'userId',
   purpose: 'purpose',
   tokenHash: 'tokenHash',
+  codeHash: 'codeHash',
   expiresAt: 'expiresAt',
   consumedAt: 'consumedAt',
   attemptCount: 'attemptCount',

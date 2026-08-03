@@ -127,9 +127,9 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Apply `20260802090000_enterprise_admin_mfa` before the application rollout.
 - [ ] Back up the MFA key separately and restrict read access to deployment operators.
 - [ ] Bootstrap administrators only with the documented protected-environment acknowledgement.
-- [ ] Complete TOTP enrollment and store recovery codes offline before enabling administrator traffic.
+- [ ] Complete administrator email-code enrollment and store recovery codes offline before enabling administrator traffic.
 - [ ] Confirm Valkey is available for distributed login, MFA, and recent-auth throttling.
-- [ ] Exercise password → TOTP, one recovery code, expiry, replay rejection, idle expiry, and recent-auth denial in staging.
+- [ ] Exercise password → email code, resend invalidation, one recovery code, expiry, replay rejection, idle expiry, and recent-auth denial in staging.
 - [ ] Record the manual account-takeover recovery approvers and identity-verification process.
 # Provider credential activation
 
@@ -139,3 +139,13 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 - [ ] Set `PROVIDER_CONFIG_SOURCE=database` with fallback false and restart.
 - [ ] Repeat PayMongo sandbox webhook and Resend delivery certification; scan logs for secrets.
 - [ ] Remove and revoke superseded environment credentials only after database-source certification passes.
+# Phase 6.0 runtime-parity gate
+
+- [x] Production and certification application/migration images use the same digest-pinned build targets.
+- [x] Migration-first startup, idempotent seed, database smoke, readiness, and force-recreate refresh are verified locally.
+- [x] Committed Prisma client regeneration is reproducible and all 17 migrations are current.
+- [x] Full deterministic Vitest and Playwright suites pass against certification PostgreSQL, Valkey, and MinIO.
+- [x] Local and Docker production builds, Compose validation, secret hygiene, and runtime dependency audit pass.
+- [ ] Rotate any certification credentials that have appeared in owner chat or retained diagnostic output.
+- [ ] Complete genuine PayMongo lifecycle certification in Phase 6.2; live payments stay disabled.
+- [ ] Complete backup/restore, monitoring, operations hardening, professional compliance review, and production-readiness review before deployment.

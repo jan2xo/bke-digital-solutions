@@ -195,7 +195,9 @@ export type InvitationStatus = (typeof InvitationStatus)[keyof typeof Invitation
 
 
 export const MfaChallengePurpose = {
-  LOGIN: 'LOGIN'
+  LOGIN: 'LOGIN',
+  ENROLLMENT: 'ENROLLMENT',
+  RECENT_AUTH: 'RECENT_AUTH'
 } as const
 
 export type MfaChallengePurpose = (typeof MfaChallengePurpose)[keyof typeof MfaChallengePurpose]
@@ -257,6 +259,7 @@ export type SecurityEventSeverity = (typeof SecurityEventSeverity)[keyof typeof 
 export const SessionAuthenticationMethod = {
   PASSWORD: 'PASSWORD',
   PASSWORD_TOTP: 'PASSWORD_TOTP',
+  PASSWORD_EMAIL_OTP: 'PASSWORD_EMAIL_OTP',
   PASSWORD_RECOVERY: 'PASSWORD_RECOVERY',
   MAGIC_LINK: 'MAGIC_LINK',
   MFA_ENROLLMENT: 'MFA_ENROLLMENT'
