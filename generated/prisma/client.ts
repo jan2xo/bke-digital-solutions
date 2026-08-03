@@ -197,6 +197,16 @@ export type PaymentAttempt = Prisma.PaymentAttemptModel
  */
 export type WebhookEvent = Prisma.WebhookEventModel
 /**
+ * Model RefundOperation
+ *
+ */
+export type RefundOperation = Prisma.RefundOperationModel
+/**
+ * Model PaymentReconciliation
+ *
+ */
+export type PaymentReconciliation = Prisma.PaymentReconciliationModel
+/**
  * Model Invoice
  *
  */

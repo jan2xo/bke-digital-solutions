@@ -282,6 +282,10 @@ model User {
   legalVersionsAuthored         LegalDocumentVersion[]          @relation("LegalVersionAuthor")
   legalAcceptances              LegalAcceptance[]
   storageCleanupJobsCreated     StorageCleanupJob[]              @relation("StorageCleanupCreator")
+  refundOperationsRequested     RefundOperation[]                @relation("RefundRequester")
+  reconciliationsRun            PaymentReconciliation[]          @relation("ReconciliationRunner")
+  reconciliationsAcknowledged   PaymentReconciliation[]          @relation("ReconciliationAcknowledger")
+  webhookEventsAcknowledged     WebhookEvent[]                    @relation("WebhookAcknowledger")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -763,6 +767,9 @@ model Order {
   subscriptions         Subscription[]
   renewalSubscription   Subscription?    @relation("SubscriptionRenewalOrders", fields: [renewalSubscriptionId], references: [id], onDelete: Restrict)
   offerRedemption       OfferRedemption?
+  webhookEvents         WebhookEvent[]
+  refundOperations      RefundOperation[]
+  reconciliations       PaymentReconciliation[]
 
   @@index([accountId, createdAt])
   @@index([renewalSubscriptionId])
@@ -811,6 +818,9 @@ model Payment {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   order       Order         @relation(fields: [orderId], references: [id])
+  webhookEvents WebhookEvent[]
+  refundOperations RefundOperation[]
+  reconciliations PaymentReconciliation[]
 
   @@unique([provider, externalId])
   @@index([orderId])
@@ -826,21 +836,97 @@ model PaymentAttempt {
   status             String
   createdAt          DateTime @default(now())
   order              Order    @relation(fields: [orderId], references: [id])
+  webhookEvents      WebhookEvent[]
 }
 
 model WebhookEvent {
-  id              String    @id @default(cuid())
-  provider        String
-  externalEventId String
-  eventType       String
-  livemode        Boolean
-  payloadHash     String
-  status          String
-  error           String?
-  receivedAt      DateTime  @default(now())
-  processedAt     DateTime?
+  id                       String          @id @default(cuid())
+  provider                 String
+  externalEventId          String
+  rawEventType             String?
+  eventType                String
+  livemode                 Boolean
+  payloadHash              String
+  normalizedData           Json?
+  status                   String
+  error                    String?
+  lastErrorCode            String?
+  mismatchCategory         String?
+  processingAttempts       Int             @default(0)
+  conflictCount            Int             @default(0)
+  receivedAt               DateTime        @default(now())
+  lastAttemptAt            DateTime?
+  processedAt              DateTime?
+  occurredAt               DateTime?
+  orderId                  String?
+  paymentAttemptId         String?
+  paymentId                String?
+  providerCheckoutId       String?
+  providerPaymentId        String?
+  providerRefundId         String?
+  resolutionStatus         String          @default("OPEN")
+  resolutionCode           String?
+  resolvedAt               DateTime?
+  resolvedById             String?
+  order                    Order?          @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  paymentAttempt           PaymentAttempt? @relation(fields: [paymentAttemptId], references: [id], onDelete: SetNull)
+  payment                  Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  resolvedBy               User?           @relation("WebhookAcknowledger", fields: [resolvedById], references: [id], onDelete: SetNull)
 
   @@unique([provider, externalEventId])
+  @@index([status, receivedAt])
+  @@index([mismatchCategory, receivedAt])
+  @@index([orderId, receivedAt])
+}
+
+model RefundOperation {
+  id               String    @id @default(cuid())
+  orderId          String
+  paymentId        String
+  provider         String
+  amountMinor      Int
+  currency         String
+  reasonCode       String
+  idempotencyKey   String    @unique
+  externalRefundId String?   @unique
+  status           String    @default("REQUESTED")
+  lastErrorCode    String?
+  requestedById    String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  completedAt      DateTime?
+  order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  payment          Payment   @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  requestedBy      User      @relation("RefundRequester", fields: [requestedById], references: [id], onDelete: Restrict)
+
+  @@index([orderId, createdAt])
+  @@index([status, createdAt])
+}
+
+model PaymentReconciliation {
+  id               String    @id @default(cuid())
+  orderId          String
+  paymentId        String?
+  provider         String
+  classification   String
+  differences      Json      @default("[]")
+  localStatus      String
+  providerStatus   String?
+  status           String    @default("OPEN")
+  correlationId    String    @unique
+  lastErrorCode    String?
+  runById          String
+  acknowledgedById String?
+  acknowledgedAt   DateTime?
+  createdAt        DateTime  @default(now())
+  order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  payment          Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  runBy             User      @relation("ReconciliationRunner", fields: [runById], references: [id], onDelete: Restrict)
+  acknowledgedBy   User?     @relation("ReconciliationAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@index([orderId, createdAt])
+  @@index([status, createdAt])
+  @@index([classification, createdAt])
 }
 
 model Invoice {

@@ -43,7 +43,7 @@ sandbox("PayMongo sandbox contract", () => {
     const event = await new PayMongoProvider().verifyAndParseWebhook(raw, new Headers({ "paymongo-signature": signature.trim() }));
     expect(event.eventId).toMatch(/^evt_/);
     expect(event.livemode).toBe(false);
-    expect(["payment.paid", "payment.failed", "payment.refunded", "unknown"]).toContain(event.type);
+    expect(["payment.paid", "payment.failed", "payment.refunded", "payment.refund.updated", "unknown"]).toContain(event.type);
   });
 
   it.skipIf(!process.env.PAYMONGO_SANDBOX_WEBHOOK_PAYLOAD_FILE)("rejects a stale signature even for an exact sandbox payload", async () => {
@@ -51,7 +51,7 @@ sandbox("PayMongo sandbox contract", () => {
     const timestamp = Math.floor(Date.now() / 1000) - 301;
     const signature = createHmac("sha256", webhookSecret).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");
     const { PayMongoProvider } = await import("@/lib/payments/paymongo");
-    await expect(new PayMongoProvider().verifyAndParseWebhook(raw, new Headers({ "paymongo-signature": `t=${timestamp},te=${signature}` }))).rejects.toThrow("INVALID_SIGNATURE");
+    await expect(new PayMongoProvider().verifyAndParseWebhook(raw, new Headers({ "paymongo-signature": `t=${timestamp},te=${signature}` }))).rejects.toThrow("PAYMENT_SIGNATURE_STALE");
   });
 
   it.skipIf(!process.env.PAYMONGO_SANDBOX_ORDER_ID)("reconciles a persisted sandbox payment with PayMongo", async () => {

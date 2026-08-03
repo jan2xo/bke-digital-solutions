@@ -23,4 +23,3 @@ In PayMongo Test Mode, subscribe only to event forms normalized by the adapter:
 After changing the ignored webhook secret, run `npm run certification:compose -- refresh`. Then run `npm run certification:test:paymongo`, complete a real sandbox checkout, confirm the genuine signed event in the database, replay identical bytes, and run reconciliation with a known local order. Unknown valid events are recorded and acknowledged; unsigned, malformed, stale, wrong-mode, wrong-amount, and wrong-currency events are rejected.
 
 The official root domain is temporarily served by the owner's Mac. Future VPS deployment replaces this tunnel origin while preserving Resend DNS records. Disable the sandbox webhook when the certification session ends if it is no longer needed.
-

@@ -279,6 +279,10 @@ export type UserWhereInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionListRelationFilter
   legalAcceptances?: Prisma.LegalAcceptanceListRelationFilter
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobListRelationFilter
+  refundOperationsRequested?: Prisma.RefundOperationListRelationFilter
+  reconciliationsRun?: Prisma.PaymentReconciliationListRelationFilter
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationListRelationFilter
+  webhookEventsAcknowledged?: Prisma.WebhookEventListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -314,6 +318,10 @@ export type UserOrderByWithRelationInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionOrderByRelationAggregateInput
   legalAcceptances?: Prisma.LegalAcceptanceOrderByRelationAggregateInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobOrderByRelationAggregateInput
+  refundOperationsRequested?: Prisma.RefundOperationOrderByRelationAggregateInput
+  reconciliationsRun?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -352,6 +360,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   legalVersionsAuthored?: Prisma.LegalDocumentVersionListRelationFilter
   legalAcceptances?: Prisma.LegalAcceptanceListRelationFilter
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobListRelationFilter
+  refundOperationsRequested?: Prisma.RefundOperationListRelationFilter
+  reconciliationsRun?: Prisma.PaymentReconciliationListRelationFilter
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationListRelationFilter
+  webhookEventsAcknowledged?: Prisma.WebhookEventListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -429,6 +441,10 @@ export type UserCreateInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -464,6 +480,10 @@ export type UserUncheckedCreateInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUpdateInput = {
@@ -499,6 +519,10 @@ export type UserUpdateInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -534,6 +558,10 @@ export type UserUncheckedUpdateInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -838,6 +866,66 @@ export type UserUpdateOneWithoutStorageCleanupJobsCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStorageCleanupJobsCreatedInput, Prisma.UserUpdateWithoutStorageCleanupJobsCreatedInput>, Prisma.UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput>
 }
 
+export type UserCreateNestedOneWithoutWebhookEventsAcknowledgedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWebhookEventsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWebhookEventsAcknowledgedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutWebhookEventsAcknowledgedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWebhookEventsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWebhookEventsAcknowledgedInput
+  upsert?: Prisma.UserUpsertWithoutWebhookEventsAcknowledgedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWebhookEventsAcknowledgedInput, Prisma.UserUpdateWithoutWebhookEventsAcknowledgedInput>, Prisma.UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput>
+}
+
+export type UserCreateNestedOneWithoutRefundOperationsRequestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefundOperationsRequestedInput, Prisma.UserUncheckedCreateWithoutRefundOperationsRequestedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefundOperationsRequestedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRefundOperationsRequestedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefundOperationsRequestedInput, Prisma.UserUncheckedCreateWithoutRefundOperationsRequestedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefundOperationsRequestedInput
+  upsert?: Prisma.UserUpsertWithoutRefundOperationsRequestedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefundOperationsRequestedInput, Prisma.UserUpdateWithoutRefundOperationsRequestedInput>, Prisma.UserUncheckedUpdateWithoutRefundOperationsRequestedInput>
+}
+
+export type UserCreateNestedOneWithoutReconciliationsRunInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsRunInput, Prisma.UserUncheckedCreateWithoutReconciliationsRunInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReconciliationsRunInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReconciliationsAcknowledgedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutReconciliationsAcknowledgedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReconciliationsAcknowledgedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReconciliationsRunNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsRunInput, Prisma.UserUncheckedCreateWithoutReconciliationsRunInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReconciliationsRunInput
+  upsert?: Prisma.UserUpsertWithoutReconciliationsRunInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReconciliationsRunInput, Prisma.UserUpdateWithoutReconciliationsRunInput>, Prisma.UserUncheckedUpdateWithoutReconciliationsRunInput>
+}
+
+export type UserUpdateOneWithoutReconciliationsAcknowledgedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutReconciliationsAcknowledgedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReconciliationsAcknowledgedInput
+  upsert?: Prisma.UserUpsertWithoutReconciliationsAcknowledgedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReconciliationsAcknowledgedInput, Prisma.UserUpdateWithoutReconciliationsAcknowledgedInput>, Prisma.UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput>
+}
+
 export type UserCreateNestedOneWithoutCreatedOffersInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedOffersInput, Prisma.UserUncheckedCreateWithoutCreatedOffersInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedOffersInput
@@ -956,6 +1044,10 @@ export type UserCreateWithoutCredentialInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutCredentialInput = {
@@ -990,6 +1082,10 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutCredentialInput = {
@@ -1040,6 +1136,10 @@ export type UserUpdateWithoutCredentialInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialInput = {
@@ -1074,6 +1174,10 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1108,6 +1212,10 @@ export type UserCreateWithoutSessionsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1142,6 +1250,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1192,6 +1304,10 @@ export type UserUpdateWithoutSessionsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1226,6 +1342,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutAdministratorMfaInput = {
@@ -1260,6 +1380,10 @@ export type UserCreateWithoutAdministratorMfaInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutAdministratorMfaInput = {
@@ -1294,6 +1418,10 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutAdministratorMfaInput = {
@@ -1344,6 +1472,10 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
@@ -1378,6 +1510,10 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -1412,6 +1548,10 @@ export type UserCreateWithoutRecoveryCodesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -1446,6 +1586,10 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1496,6 +1640,10 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1530,6 +1678,10 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutMfaChallengesInput = {
@@ -1564,6 +1716,10 @@ export type UserCreateWithoutMfaChallengesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutMfaChallengesInput = {
@@ -1598,6 +1754,10 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutMfaChallengesInput = {
@@ -1648,6 +1808,10 @@ export type UserUpdateWithoutMfaChallengesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMfaChallengesInput = {
@@ -1682,6 +1846,10 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutSecurityEventsInput = {
@@ -1716,6 +1884,10 @@ export type UserCreateWithoutSecurityEventsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutSecurityEventsInput = {
@@ -1750,6 +1922,10 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutSecurityEventsInput = {
@@ -1800,6 +1976,10 @@ export type UserUpdateWithoutSecurityEventsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSecurityEventsInput = {
@@ -1834,6 +2014,10 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutOwnedAccountsInput = {
@@ -1868,6 +2052,10 @@ export type UserCreateWithoutOwnedAccountsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutOwnedAccountsInput = {
@@ -1902,6 +2090,10 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutOwnedAccountsInput = {
@@ -1952,6 +2144,10 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
@@ -1986,6 +2182,10 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutLegalVersionsAuthoredInput = {
@@ -2020,6 +2220,10 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
@@ -2054,6 +2258,10 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutLegalVersionsAuthoredInput = {
@@ -2104,6 +2312,10 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
@@ -2138,6 +2350,10 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutLegalAcceptancesInput = {
@@ -2172,6 +2388,10 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
@@ -2206,6 +2426,10 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutLegalAcceptancesInput = {
@@ -2256,6 +2480,10 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
@@ -2290,6 +2518,10 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -2324,6 +2556,10 @@ export type UserCreateWithoutMembershipsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -2358,6 +2594,10 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -2408,6 +2648,10 @@ export type UserUpdateWithoutMembershipsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -2442,6 +2686,10 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
@@ -2476,6 +2724,10 @@ export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
@@ -2510,6 +2762,10 @@ export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutStorageCleanupJobsCreatedInput = {
@@ -2560,6 +2816,10 @@ export type UserUpdateWithoutStorageCleanupJobsCreatedInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
@@ -2594,6 +2854,682 @@ export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+}
+
+export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+}
+
+export type UserCreateOrConnectWithoutWebhookEventsAcknowledgedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWebhookEventsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput>
+}
+
+export type UserUpsertWithoutWebhookEventsAcknowledgedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWebhookEventsAcknowledgedInput, Prisma.UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWebhookEventsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWebhookEventsAcknowledgedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWebhookEventsAcknowledgedInput, Prisma.UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput>
+}
+
+export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+}
+
+export type UserCreateWithoutRefundOperationsRequestedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserCreateOrConnectWithoutRefundOperationsRequestedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefundOperationsRequestedInput, Prisma.UserUncheckedCreateWithoutRefundOperationsRequestedInput>
+}
+
+export type UserUpsertWithoutRefundOperationsRequestedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRefundOperationsRequestedInput, Prisma.UserUncheckedUpdateWithoutRefundOperationsRequestedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefundOperationsRequestedInput, Prisma.UserUncheckedCreateWithoutRefundOperationsRequestedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRefundOperationsRequestedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRefundOperationsRequestedInput, Prisma.UserUncheckedUpdateWithoutRefundOperationsRequestedInput>
+}
+
+export type UserUpdateWithoutRefundOperationsRequestedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserCreateWithoutReconciliationsRunInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserUncheckedCreateWithoutReconciliationsRunInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserCreateOrConnectWithoutReconciliationsRunInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsRunInput, Prisma.UserUncheckedCreateWithoutReconciliationsRunInput>
+}
+
+export type UserCreateWithoutReconciliationsAcknowledgedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserCreateOrConnectWithoutReconciliationsAcknowledgedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutReconciliationsAcknowledgedInput>
+}
+
+export type UserUpsertWithoutReconciliationsRunInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReconciliationsRunInput, Prisma.UserUncheckedUpdateWithoutReconciliationsRunInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsRunInput, Prisma.UserUncheckedCreateWithoutReconciliationsRunInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReconciliationsRunInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReconciliationsRunInput, Prisma.UserUncheckedUpdateWithoutReconciliationsRunInput>
+}
+
+export type UserUpdateWithoutReconciliationsRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserUpsertWithoutReconciliationsAcknowledgedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReconciliationsAcknowledgedInput, Prisma.UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReconciliationsAcknowledgedInput, Prisma.UserUncheckedCreateWithoutReconciliationsAcknowledgedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReconciliationsAcknowledgedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReconciliationsAcknowledgedInput, Prisma.UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput>
+}
+
+export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutCreatedOffersInput = {
@@ -2628,6 +3564,10 @@ export type UserCreateWithoutCreatedOffersInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedOffersInput = {
@@ -2662,6 +3602,10 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedOffersInput = {
@@ -2712,6 +3656,10 @@ export type UserUpdateWithoutCreatedOffersInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedOffersInput = {
@@ -2746,6 +3694,10 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutAssignmentsInput = {
@@ -2780,6 +3732,10 @@ export type UserCreateWithoutAssignmentsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentsInput = {
@@ -2814,6 +3770,10 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentsInput = {
@@ -2864,6 +3824,10 @@ export type UserUpdateWithoutAssignmentsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentsInput = {
@@ -2898,6 +3862,10 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -2932,6 +3900,10 @@ export type UserCreateWithoutAuditLogsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -2966,6 +3938,10 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -3016,6 +3992,10 @@ export type UserUpdateWithoutAuditLogsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -3050,6 +4030,10 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutProviderConfigurationsCreatedInput = {
@@ -3084,6 +4068,10 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
@@ -3118,6 +4106,10 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutProviderConfigurationsCreatedInput = {
@@ -3157,6 +4149,10 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
@@ -3191,6 +4187,10 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutProviderConfigurationsUpdatedInput = {
@@ -3241,6 +4241,10 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
@@ -3275,6 +4279,10 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUpsertWithoutProviderConfigurationsUpdatedInput = {
@@ -3320,6 +4328,10 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
@@ -3354,6 +4366,10 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserCreateWithoutProviderCredentialsCreatedInput = {
@@ -3388,6 +4404,10 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
@@ -3422,6 +4442,10 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
 }
 
 export type UserCreateOrConnectWithoutProviderCredentialsCreatedInput = {
@@ -3472,6 +4496,10 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
@@ -3506,6 +4534,10 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
   storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 
@@ -3529,6 +4561,10 @@ export type UserCountOutputType = {
   legalVersionsAuthored: number
   legalAcceptances: number
   storageCleanupJobsCreated: number
+  refundOperationsRequested: number
+  reconciliationsRun: number
+  reconciliationsAcknowledged: number
+  webhookEventsAcknowledged: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3547,6 +4583,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   legalVersionsAuthored?: boolean | UserCountOutputTypeCountLegalVersionsAuthoredArgs
   legalAcceptances?: boolean | UserCountOutputTypeCountLegalAcceptancesArgs
   storageCleanupJobsCreated?: boolean | UserCountOutputTypeCountStorageCleanupJobsCreatedArgs
+  refundOperationsRequested?: boolean | UserCountOutputTypeCountRefundOperationsRequestedArgs
+  reconciliationsRun?: boolean | UserCountOutputTypeCountReconciliationsRunArgs
+  reconciliationsAcknowledged?: boolean | UserCountOutputTypeCountReconciliationsAcknowledgedArgs
+  webhookEventsAcknowledged?: boolean | UserCountOutputTypeCountWebhookEventsAcknowledgedArgs
 }
 
 /**
@@ -3664,6 +4704,34 @@ export type UserCountOutputTypeCountStorageCleanupJobsCreatedArgs<ExtArgs extend
   where?: Prisma.StorageCleanupJobWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRefundOperationsRequestedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefundOperationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReconciliationsRunArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentReconciliationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReconciliationsAcknowledgedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentReconciliationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWebhookEventsAcknowledgedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WebhookEventWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3698,6 +4766,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   legalVersionsAuthored?: boolean | Prisma.User$legalVersionsAuthoredArgs<ExtArgs>
   legalAcceptances?: boolean | Prisma.User$legalAcceptancesArgs<ExtArgs>
   storageCleanupJobsCreated?: boolean | Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs>
+  refundOperationsRequested?: boolean | Prisma.User$refundOperationsRequestedArgs<ExtArgs>
+  reconciliationsRun?: boolean | Prisma.User$reconciliationsRunArgs<ExtArgs>
+  reconciliationsAcknowledged?: boolean | Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>
+  webhookEventsAcknowledged?: boolean | Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3774,6 +4846,10 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   legalVersionsAuthored?: boolean | Prisma.User$legalVersionsAuthoredArgs<ExtArgs>
   legalAcceptances?: boolean | Prisma.User$legalAcceptancesArgs<ExtArgs>
   storageCleanupJobsCreated?: boolean | Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs>
+  refundOperationsRequested?: boolean | Prisma.User$refundOperationsRequestedArgs<ExtArgs>
+  reconciliationsRun?: boolean | Prisma.User$reconciliationsRunArgs<ExtArgs>
+  reconciliationsAcknowledged?: boolean | Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>
+  webhookEventsAcknowledged?: boolean | Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3799,6 +4875,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     legalVersionsAuthored: Prisma.$LegalDocumentVersionPayload<ExtArgs>[]
     legalAcceptances: Prisma.$LegalAcceptancePayload<ExtArgs>[]
     storageCleanupJobsCreated: Prisma.$StorageCleanupJobPayload<ExtArgs>[]
+    refundOperationsRequested: Prisma.$RefundOperationPayload<ExtArgs>[]
+    reconciliationsRun: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
+    reconciliationsAcknowledged: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
+    webhookEventsAcknowledged: Prisma.$WebhookEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4227,6 +5307,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   legalVersionsAuthored<T extends Prisma.User$legalVersionsAuthoredArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$legalVersionsAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LegalDocumentVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   legalAcceptances<T extends Prisma.User$legalAcceptancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$legalAcceptancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LegalAcceptancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   storageCleanupJobsCreated<T extends Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageCleanupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  refundOperationsRequested<T extends Prisma.User$refundOperationsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refundOperationsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reconciliationsRun<T extends Prisma.User$reconciliationsRunArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reconciliationsRunArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reconciliationsAcknowledged<T extends Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  webhookEventsAcknowledged<T extends Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$webhookEventsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WebhookEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5059,6 +6143,102 @@ export type User$storageCleanupJobsCreatedArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.StorageCleanupJobScalarFieldEnum | Prisma.StorageCleanupJobScalarFieldEnum[]
+}
+
+/**
+ * User.refundOperationsRequested
+ */
+export type User$refundOperationsRequestedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RefundOperation
+   */
+  select?: Prisma.RefundOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RefundOperation
+   */
+  omit?: Prisma.RefundOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundOperationInclude<ExtArgs> | null
+  where?: Prisma.RefundOperationWhereInput
+  orderBy?: Prisma.RefundOperationOrderByWithRelationInput | Prisma.RefundOperationOrderByWithRelationInput[]
+  cursor?: Prisma.RefundOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefundOperationScalarFieldEnum | Prisma.RefundOperationScalarFieldEnum[]
+}
+
+/**
+ * User.reconciliationsRun
+ */
+export type User$reconciliationsRunArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentReconciliation
+   */
+  select?: Prisma.PaymentReconciliationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentReconciliation
+   */
+  omit?: Prisma.PaymentReconciliationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentReconciliationInclude<ExtArgs> | null
+  where?: Prisma.PaymentReconciliationWhereInput
+  orderBy?: Prisma.PaymentReconciliationOrderByWithRelationInput | Prisma.PaymentReconciliationOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentReconciliationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentReconciliationScalarFieldEnum | Prisma.PaymentReconciliationScalarFieldEnum[]
+}
+
+/**
+ * User.reconciliationsAcknowledged
+ */
+export type User$reconciliationsAcknowledgedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentReconciliation
+   */
+  select?: Prisma.PaymentReconciliationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentReconciliation
+   */
+  omit?: Prisma.PaymentReconciliationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentReconciliationInclude<ExtArgs> | null
+  where?: Prisma.PaymentReconciliationWhereInput
+  orderBy?: Prisma.PaymentReconciliationOrderByWithRelationInput | Prisma.PaymentReconciliationOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentReconciliationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentReconciliationScalarFieldEnum | Prisma.PaymentReconciliationScalarFieldEnum[]
+}
+
+/**
+ * User.webhookEventsAcknowledged
+ */
+export type User$webhookEventsAcknowledgedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WebhookEvent
+   */
+  select?: Prisma.WebhookEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WebhookEvent
+   */
+  omit?: Prisma.WebhookEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WebhookEventInclude<ExtArgs> | null
+  where?: Prisma.WebhookEventWhereInput
+  orderBy?: Prisma.WebhookEventOrderByWithRelationInput | Prisma.WebhookEventOrderByWithRelationInput[]
+  cursor?: Prisma.WebhookEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WebhookEventScalarFieldEnum | Prisma.WebhookEventScalarFieldEnum[]
 }
 
 /**
