@@ -1,12 +1,12 @@
 # BKE Digital Solutions — Current-State Truth Check
 
-Audit date: August 2, 2026  
-Audited Git commit: `d004ada6fc9fb09ad7e516b7d91f7c126dcb8a5a`  
-Latest completed implementation phase: Phase 5.3 — Security Dashboard and Session Administration
+Baseline updated: August 3, 2026
+Pushed Git baseline: `05cefcb fix(catalog): show active edition pricing on homepage`
+Latest completed roadmap phases: Phase 6.0 — Runtime Parity and Phase 6.1A — Legal Document Management
 
-Current working-tree candidate: Phase 6.1A adds the legal document/version/acceptance platform, secure rendering, administrator lifecycle UI, registration and checkout consent, and reacceptance. It is uncommitted and awaiting owner review. The seeded text is explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
+Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
-Working-tree verification on August 2, 2026: Prisma schema validation and migration status passed with 15 migrations applied; TypeScript and ESLint passed; Vitest passed 110 tests with six genuine-provider scenarios skipped; Playwright passed 9/9; and the production build passed. These results verify the local Phase 6.1A candidate only and do not change the PayMongo, legal-review, backup, monitoring, secure-supply-chain, or production-deployment launch blockers below.
+Latest baseline verification: Prisma schema and generated client agree; all 17 migrations are applied; TypeScript and ESLint passed; Vitest passed 116 tests with six credential-gated scenarios skipped; Playwright passed 9/9; local and Docker production builds passed; and the runtime dependency audit reported zero vulnerabilities. Certification is current and healthy. These results do not complete PayMongo lifecycle certification or remove legal-review, backup, monitoring, secure-supply-chain, or production-deployment blockers.
 
 This document is the concise repository baseline for future planning. It records verified implementation and runtime evidence rather than roadmap intent. If this file conflicts with an older phase report, the current repository, applied migrations, executable tests, and runtime evidence take precedence.
 
@@ -19,13 +19,12 @@ It is ready for local development and controlled sandbox certification. It is no
 ## Repository truth
 
 - Branch: `main`.
-- Audited HEAD: `d004ada feat(security): add security dashboard and session administration`.
-- At audit completion, `main` matched `origin/main` and the working tree was clean.
-- Thirteen Prisma migrations exist in the repository.
-- The ordinary development PostgreSQL database had all thirteen migrations.
-- TypeScript, ESLint, database-backed Vitest, Playwright, and a production build passed during the audit.
-- The certification PostgreSQL database had only twelve migrations and lacked `20260802143000_security_dashboard_sessions`.
-- The running certification application image predated the audited Phase 5.3 commit.
+- Pushed HEAD: `05cefcb fix(catalog): show active edition pricing on homepage`.
+- `main` matches `origin/main`; the homepage catalog fix is committed and pushed after the Phase 6.0 baseline.
+- Seventeen Prisma migrations exist and are applied in certification.
+- Prisma schema validation and generated-client parity passed.
+- TypeScript, ESLint, database-backed Vitest, Playwright, local/Docker production builds, and the runtime dependency audit passed for the latest verified baseline.
+- The certification application and dependencies are current and healthy.
 
 ## Verified automated results
 
@@ -33,11 +32,10 @@ It is ready for local development and controlled sandbox certification. It is no
 |---|---|
 | TypeScript | Passed |
 | ESLint | Passed |
-| Vitest | 99 passed, 6 provider-gated scenarios skipped |
-| Playwright | 8 passed |
-| Production build | Passed |
-| Development migration status | 13 migrations, current |
-| Certification migration status | 12 migrations, one behind |
+| Vitest | 116 passed, 6 credential-gated scenarios skipped |
+| Playwright | 9 passed |
+| Production and Docker builds | Passed |
+| Migration status | 17 migrations, current |
 | Genuine PayMongo checkout creation | Passed |
 | PayMongo live-key sandbox rejection | Passed |
 | Genuine Resend delivery | Passed |
@@ -303,8 +301,9 @@ The application has a configurable support email address, but no support platfor
 
 The approved implementation sequence is defined in [`ROADMAP.md`](./ROADMAP.md), beginning with:
 
-1. Phase 6.0 — Runtime Parity & Certification Baseline.
-2. Phase 6.1 — Data Integrity & Safe Deletion.
-3. Phase 6.1A — Legal Document Management System.
+1. Completed: Phase 6.0 — Runtime Parity & Certification Baseline.
+2. Completed: Phase 6.1A — Legal Document Management System.
+3. Next: Phase 6.1 — Data Integrity & Safe Deletion.
+4. Still blocked: Phase 6.2 — complete PayMongo lifecycle certification.
 
 No future phase should claim readiness merely because code exists. Database state, runtime configuration, automated tests, genuine provider evidence, documentation, and owner approval must agree.

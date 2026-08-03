@@ -6,13 +6,13 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 
 ## Current position
 
-- Phase 5.3 is the latest completed implementation phase in Git.
+- Phase 6.0 runtime parity, Phase 6.1A Legal Document Management, legal-consent hardening, administrator email-code verification, and the homepage catalog-pricing fix are committed and pushed.
 - Local development is operational and its PostgreSQL schema is current.
-- The publicly reachable local certification stack is not the production deployment.
-- The certification database and application image must be brought to the current repository baseline before further certification.
+- The healthy local certification stack is migration-current with 17 migrations; it is not the production deployment.
 - PayMongo sandbox checkout creation and genuine Resend delivery pass, but the complete PayMongo lifecycle does not.
 - Live payments remain disabled.
 - VPS deployment remains postponed until the production-readiness gate passes.
+- Phase 6.1 Data Integrity & Safe Deletion is the next implementation phase.
 
 ## Priority definitions
 
@@ -47,7 +47,7 @@ Establish one trustworthy version across Git, generated Prisma code, migrations,
 
 ### Current verification
 
-Implemented and verified in the current uncommitted working tree. The generated client is reproducible, all 17 migrations are current, deterministic unit/integration and browser suites pass against certification services, production builds pass, and dependency-loss readiness checks fail closed. Full genuine PayMongo lifecycle certification remains Phase 6.2; Phase 6.0 does not enable live payments or establish overall production readiness.
+Committed and pushed at `4f5a65a`. The generated client is reproducible, all 17 migrations are current, deterministic unit/integration and browser suites pass against certification services, production builds pass, and dependency-loss readiness checks fail closed. Full genuine PayMongo lifecycle certification remains Phase 6.2; Phase 6.0 does not enable live payments or establish overall production readiness.
 
 ## Phase 6.1 — Data Integrity & Safe Deletion
 
@@ -78,7 +78,7 @@ Protect commercial history and make PostgreSQL/object-storage deletion recoverab
 
 **Priority:** Critical commercial-launch foundation
 
-**Implementation status:** Implemented in the current working tree; automated verification and owner review are required before marking complete. Professional legal/privacy/tax approval remains Phase 6.7 and is not satisfied by the template system.
+**Implementation status:** Committed and pushed at `7763dd0`, with consent/navigation hardening at `e5c94f7`. Automated verification passed. Professional legal/privacy/tax approval remains Phase 6.7 and is not satisfied by the template system.
 
 ### Objective
 
@@ -418,9 +418,9 @@ Provide versioned, scoped, revocable machine access for BKE desktop, cloud, and 
 Phase 5.3 complete
         |
         v
-6.0 Runtime parity
+6.0 Runtime parity (complete)
         |
-        +------> 6.1 Data integrity ------> 6.1A Legal system
+        +------> 6.1 Data integrity (next)   6.1A Legal system (complete)
         |               |                         |
         +------> 6.2 PayMongo                     v
         +------> 6.3 Scheduler              6.7 Legal review
@@ -464,17 +464,16 @@ After Phase 6.0, Phases 6.1, 6.2, 6.3, and 6.4 can overlap. Monitoring should be
 
 ## Recommended execution order
 
-1. 6.0 Runtime parity.
-2. 6.1 Data integrity; start legal retention consultation.
-3. 6.1A Legal document system.
-4. 6.2 PayMongo and 6.3 scheduler in parallel.
-5. 6.4 backup and 6.5 monitoring in parallel.
-6. 6.6 operations hardening.
-7. 6.7 legal/privacy/tax approval.
-8. 6.8 secure supply chain.
-9. 6.9 organizations and 6.10 support according to launch scope.
-10. 6.10A formal production-readiness review.
-11. 6.11 VPS deployment.
-12. 6.12 client API when a real integration is ready.
+1. Completed: 6.0 Runtime parity and 6.1A Legal document system.
+2. Next: 6.1 Data integrity; start legal retention consultation.
+3. Then: 6.2 PayMongo and 6.3 scheduler in parallel.
+4. 6.4 backup and 6.5 monitoring in parallel.
+5. 6.6 operations hardening.
+6. 6.7 legal/privacy/tax approval.
+7. 6.8 secure supply chain.
+8. 6.9 organizations and 6.10 support according to launch scope.
+9. 6.10A formal production-readiness review.
+10. 6.11 VPS deployment.
+11. 6.12 client API when a real integration is ready.
 
 No phase is complete until implementation, tests, documentation, security review, and repository consistency have been verified according to `CORE-INSTRUCTION.md`.

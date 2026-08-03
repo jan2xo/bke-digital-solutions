@@ -4,6 +4,8 @@ Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simul
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.
 
+Current pushed baseline: Phase 6.0 runtime parity and Phase 6.1A Legal Document Management are complete, including legal-consent hardening, administrator password-plus-email-code verification with recovery-code fallback, and active edition pricing on the homepage. Certification is healthy with 17 migrations applied. Phase 6.1 Data Integrity and Safe Deletion is next; full PayMongo lifecycle certification remains incomplete, live payments remain disabled, and the platform is not production-ready.
+
 ## Local setup
 
 Requirements: Node.js 22.12+, npm, Docker with Compose, and OpenSSL.

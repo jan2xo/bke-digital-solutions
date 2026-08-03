@@ -1,12 +1,14 @@
 # Engineering handoff
 
-## Active handoff — Phase 6.0 and Phase 6.1A
+## Active handoff — Phase 6.1 next
 
-Phase 6.0 runtime parity is implemented and verified in the current uncommitted tree. Use `certification-runtime.md` for the authoritative startup/test sequence and `runtime-parity.md` for environment, Docker, database, health, and provider boundaries. Full Vitest (116 passed, 6 credential-gated skipped), Playwright (9 passed), local/Docker production builds, 17-migration status, seed, smoke, readiness dependency outages, and dependency audit pass. This is not PayMongo lifecycle certification or overall production readiness.
+Phase 6.0 runtime parity is committed and pushed at `4f5a65a`. Use `certification-runtime.md` for the authoritative startup/test sequence and `runtime-parity.md` for environment, Docker, database, health, and provider boundaries. Full Vitest (116 passed, 6 credential-gated skipped), Playwright (9 passed), local/Docker production builds, 17-migration status, seed, smoke, readiness dependency outages, and the zero-vulnerability runtime audit passed. This is not PayMongo lifecycle certification or overall production readiness.
 
-An additional uncommitted owner-requested authentication change replaces authenticator TOTP for global administrators with password-plus-email codes. Migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_hash` are applied in certification. Static checks and the full browser suite pass. Customer authentication is unchanged.
+Administrator password-plus-email-code verification is committed and pushed at `1cdec97`. Migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_hash` are applied in certification. Recovery codes remain the offline fallback; customer authentication is unchanged. The earlier Phase 5.1 TOTP design is a superseded historical implementation.
 
-The current uncommitted working tree contains the Legal Document Management System and the previously requested roadmap/truth-check documentation. Do not commit until owner review. Apply both `20260802170000_legal_document_management` and `20260802171000_legal_document_type_uniqueness`, then run the idempotent seed to create the nine placeholder documents. Replace and professionally approve every placeholder before public commerce.
+Phase 6.1A Legal Document Management is committed and pushed at `7763dd0`, with consent and navigation hardening at `e5c94f7`. Both legal migrations are applied and the idempotent seed creates nine placeholder documents. Replace and professionally approve every placeholder before public commerce.
+
+The homepage now resolves active edition purchase-plan pricing and is committed and pushed at `05cefcb`. The next implementation phase is Phase 6.1 Data Integrity and Safe Deletion.
 
 Key entry points are `/admin/legal`, `/legal/[slug]`, `/legal/accept`, `lib/legal/`, and the three legal documentation files. Publication requires a recent MFA-verified administrator session. Database triggers—not only route checks—protect published content and acceptance rows. Because acceptance evidence intentionally restricts deletion of its related user/account/version, any later governed erasure design must preserve or legally reconcile those records rather than bypassing the triggers.
 
@@ -18,7 +20,7 @@ Phase 5.0 adds centralized deployment-environment validation, environment-specif
 
 The repository baseline remains mixed: Phase 4.2 is committed at `25c6b41`, while its maintainability corrections, branding/authentication UX, permanent customer deletion, documentation, and a trial-state correction were already staged before Phase 5.0. Phase 5.0 did not edit those staged files except that existing mixed documentation could not be synchronized. Separate or commit that prior work before creating the Phase 5.0 commit.
 
-Phase 5.1 is committed at `d0909f7`: mandatory administrator TOTP, recovery codes, recent authentication, hardened sessions/bootstrap, security events, and administrator security management. The Phase 5.2 run passed the full local Vitest and Playwright suites; genuine PayMongo sandbox and Resend delivery, malware scanning, external monitoring, backup/restore certification, legal/tax work, and launch remain deferred to their assigned gates.
+Phase 5.1 is the historical TOTP-based security foundation committed at `d0909f7`; its authenticator flow was superseded by administrator email-code verification at `1cdec97`. Recovery codes, recent authentication, hardened sessions/bootstrap, and security events remain. Full PayMongo lifecycle certification, malware scanning, monitoring, backup/restore certification, legal/tax work, and launch remain deferred to their assigned gates.
 
 ## Project overview
 
@@ -28,7 +30,7 @@ BKE Digital Solutions is a Next.js 16 commerce, licensing, and private software-
 
 The additive offer implementation is documented in `docs/discount-offers.md` and `docs/phase-reports/flexible-discount-and-customer-offers.md`. Migration `20260731025700_flexible_discount_offers` must be deployed before this application code. It preserves the annual catalog rule, accepts only account/plan/offer identifiers at checkout, snapshots all pricing, serializes limited redemption, supports finite monthly promotional cycles, and keeps private offers account-isolated. Pending offer reservations are conservative and remain consumed because delayed verified payments are supported.
 
-## Current repository state
+## Phase 4.2 historical repository baseline
 
 Phase 4.2 is implemented and locally verified on top of the committed Phase 4/4.1 baseline. It adds editions and multi-plan commerce without replacing authentication, payment providers, historical Price/LicensePolicy rows, or immutable commerce records. The implementation is included in the Phase 4.2 commerce commit.
 

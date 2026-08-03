@@ -1,6 +1,6 @@
 # Implementation status
 
-## Phase 6.0 runtime parity (verified, owner approval pending)
+## Phase 6.0 runtime parity (committed and pushed)
 
 - Production and certification use the same digest-pinned application, database-migration, and startup contract; certification adds only loopback test access and local simulation configuration.
 - Prisma generation is reproducible, all 17 migrations are applied, repeated seeding and database smoke pass, and readiness fails closed for PostgreSQL, Valkey, private storage, and selected-provider configuration failures.
@@ -15,7 +15,7 @@
 - Added migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_hash`, which remove stored authenticator seeds, add the email-code session method and challenge purposes, and persist only a keyed code hash.
 - Prisma validation, migration deployment, generated-client synchronization, TypeScript, ESLint, focused unit tests, and the full certification browser suite pass. Explicit route-response cookies fixed the challenge timing defect found by the first browser run.
 
-## Phase 6.1A — Legal Document Management System (implemented, awaiting owner review)
+## Phase 6.1A — Legal Document Management System (committed and pushed)
 
 - Added normalized legal documents, versions, and immutable acceptance records with two additive migrations.
 - Added an MFA-protected administrator Legal & Compliance center for creation, title edits, drafts, preview, publishing, archive/restore, duplication, comparison, search/filter, acceptance counts/history, and draft-only deletion.
@@ -44,6 +44,7 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 
 ## In progress
 
+- Phase 6.1 Data Integrity and Safe Deletion is the next implementation phase; implementation has not begun.
 - Genuine PayMongo payment, webhook, refund, and reconciliation certification
 - Production infrastructure selection and provisioning
 
@@ -52,11 +53,10 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 - Automated refund initiation, accounting-grade revenue, BIR integration
 - Public rendering pipeline for uploaded product imagery
 - Bulk administration actions and advanced analytics
-- Complete browser and route-level certification of the implemented administrator MFA and recent-authentication controls
 
 ## Known issues and technical debt
 
-- Customer and administrator license-key reveal is repeatable, ownership/RBAC protected, audited, and now requires recent authentication; administrator access also requires MFA. Browser certification remains required because encrypted key material is retained server-side.
+- Customer and administrator license-key reveal is repeatable, ownership/RBAC protected, audited, and requires recent authentication; administrator access also requires email-code verification or a recovery code. Retaining encrypted key material remains a design risk requiring continued review.
 - Artifact replacement deletes the old object best-effort after the database switch; orphan cleanup should be scheduled.
 - Audit CSV is capped at 5,000 rows and should move to queued exports at scale.
 - Search uses database substring matching; dedicated search is deferred.
