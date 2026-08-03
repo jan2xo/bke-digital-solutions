@@ -1,5 +1,11 @@
 # Developer journal
 
+## August 3, 2026 — Phase 6.1 data integrity implementation
+
+Replaced unsafe customer hard deletion with governed account lifecycle, privacy review, legal holds, pseudonymization, blocker inspection, and a narrowly eligible purge. Added explicit account-role capabilities and closed the plain-member commerce/license overexposure. Replaced object deletion inside product transactions with durable cleanup jobs, idempotent claiming, bounded error codes, retry/backoff, abandoned claim recovery, and separate finalization. Artifact replacement/removal now uses the same cleanup queue.
+
+Development applied migration 18, seed and post-migration smoke passed. Static checks and focused tests were run during implementation. The first cleanup test exposed an `actorId` create-shape defect; it was corrected. The next run exposed a real concurrent-upsert unique race; it was corrected by resolving `P2002` to the existing idempotent job. Full regression, certification migration/smoke, browser tests, Docker build, and final hygiene remain to be recorded before Phase 6.1 can be approved.
+
 ## August 2, 2026 — Phase 6.1A legal platform
 
 Implemented normalized `LegalDocument`, `LegalDocumentVersion`, and `LegalAcceptance` models, additive migrations, database immutability triggers, unique semantic document types, null-account idempotency, seed templates, secure Markdown rendering, public history, admin lifecycle management, registration/checkout/renewal consent, and login reacceptance. Added unit, PostgreSQL integration, migration-protection, authorization, and Playwright coverage.

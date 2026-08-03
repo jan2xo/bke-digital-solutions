@@ -1,5 +1,13 @@
 # Local certification operations
 
+## Customer lifecycle and private-storage cleanup
+
+Use `/admin/customers/[id]` only from a recent MFA-verified administrator session. Closure is the normal access-ending operation. Privacy review requires an explicitly reviewed retention-expiry date. Apply legal hold whenever a dispute, investigation, tax, fraud, payment, refund, or legal duty requires preservation. Pseudonymization is allowed only after review and never rewrites invoice/order snapshots or immutable legal acceptances. Final purge must remain exceptional and blocker-free.
+
+Product deletion first returns `CLEANUP_PENDING`. The administrator then runs cleanup/finalization. `PENDING` and `RETRYING` jobs are safe to process repeatedly; stale `PROCESSING` jobs recover after 15 minutes; `FAILED` requires manual retry and investigation. Never delete database rows or bucket objects manually to bypass a failed job. Object keys are operational secrets and must not be copied into tickets or audit notes.
+
+Useful read-only query (run through approved database tooling): group `StorageCleanupJob` by `status` and inspect `attempts`, `nextAttemptAt`, `lastErrorCode`, target type/id, and correlation ID. Do not export `objectKey`.
+
 ## Legal document operations
 
 1. Keep a published current version for Terms, Privacy, EULA, Refund Policy, and Subscription Terms before enabling registration or checkout.

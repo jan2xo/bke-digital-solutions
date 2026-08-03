@@ -74,6 +74,7 @@ export const ModelName = {
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
+  StorageCleanupJob: 'StorageCleanupJob',
   Cart: 'Cart',
   CartItem: 'CartItem',
   Order: 'Order',
@@ -123,7 +124,14 @@ export const UserScalarFieldEnum = {
   role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  suspendedAt: 'suspendedAt'
+  suspendedAt: 'suspendedAt',
+  lifecycleState: 'lifecycleState',
+  privacyRequestedAt: 'privacyRequestedAt',
+  pseudonymizedAt: 'pseudonymizedAt',
+  retentionExpiresAt: 'retentionExpiresAt',
+  legalHoldAt: 'legalHoldAt',
+  legalHoldReason: 'legalHoldReason',
+  emailHash: 'emailHash'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -255,7 +263,15 @@ export const CustomerAccountScalarFieldEnum = {
   billingEmail: 'billingEmail',
   taxId: 'taxId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lifecycleState: 'lifecycleState',
+  closureRequestedAt: 'closureRequestedAt',
+  closedAt: 'closedAt',
+  privacyRequestedAt: 'privacyRequestedAt',
+  pseudonymizedAt: 'pseudonymizedAt',
+  retentionExpiresAt: 'retentionExpiresAt',
+  legalHoldAt: 'legalHoldAt',
+  legalHoldReason: 'legalHoldReason'
 } as const
 
 export type CustomerAccountScalarFieldEnum = (typeof CustomerAccountScalarFieldEnum)[keyof typeof CustomerAccountScalarFieldEnum]
@@ -360,6 +376,7 @@ export const ProductScalarFieldEnum = {
   active: 'active',
   publishedAt: 'publishedAt',
   archivedAt: 'archivedAt',
+  deletionRequestedAt: 'deletionRequestedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -468,6 +485,29 @@ export const ProductArtifactScalarFieldEnum = {
 } as const
 
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
+
+
+export const StorageCleanupJobScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  objectKey: 'objectKey',
+  idempotencyKey: 'idempotencyKey',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lastErrorCode: 'lastErrorCode',
+  correlationId: 'correlationId',
+  productId: 'productId',
+  artifactId: 'artifactId',
+  createdByAdminId: 'createdByAdminId',
+  createdAt: 'createdAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type StorageCleanupJobScalarFieldEnum = (typeof StorageCleanupJobScalarFieldEnum)[keyof typeof StorageCleanupJobScalarFieldEnum]
 
 
 export const CartScalarFieldEnum = {

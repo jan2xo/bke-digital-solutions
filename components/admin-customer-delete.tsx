@@ -1,60 +1,40 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const ACKNOWLEDGEMENT = "DELETE ALL CUSTOMER DATA";
-
-export function AdminCustomerDelete({ customerId, customerEmail }: { customerId: string; customerEmail: string }) {
+type Report = { blockers: string[]; counts: Record<string, number>; canPseudonymize: boolean; canMarkPurgeEligible: boolean; canPurge: boolean };
+export function AdminCustomerDelete({ customerId, lifecycleState, legalHold, initialReport }: { customerId: string; customerEmail?: string; lifecycleState: string; legalHold: boolean; initialReport: Report }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [phrase, setPhrase] = useState("");
-  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const confirmed = email.trim().toLowerCase() === customerEmail.toLowerCase() && phrase === ACKNOWLEDGEMENT;
-
-  async function remove() {
-    setBusy(true);
-    setError("");
-    const response = await fetch(`/api/admin/customers/${customerId}`, {
-      method: "DELETE",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ confirmationEmail: email, acknowledgement: phrase }),
-    });
-    if (response.status === 204) {
-      router.push("/admin/customers");
-      router.refresh();
-      return;
-    }
+  const [busy, setBusy] = useState(false);
+  const [retentionDate, setRetentionDate] = useState("");
+  async function action(body: Record<string, unknown>) {
+    setBusy(true); setError("");
+    const response = await fetch(`/api/admin/customers/${customerId}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    if (response.status === 204) { router.push("/admin/customers"); router.refresh(); return; }
     const payload = await response.json().catch(() => null);
-    setError(payload?.error === "RECENT_AUTH_REQUIRED"
-      ? "For security, sign out and sign in again before deleting this customer."
-      : payload?.error ?? "Unable to delete this customer.");
+    if (!response.ok) setError(payload?.error ?? "Lifecycle action failed."); else router.refresh();
     setBusy(false);
   }
-
-  return <section className="card border-red-500/60 p-6">
-    <h2 className="text-xl font-black text-red-400">Danger zone</h2>
-    <p className="mt-2 text-sm text-muted">Permanently delete this customer and all owned accounts, orders, payments, invoices, subscriptions, licenses, activations, downloads, and authentication records.</p>
-    <button type="button" className="button danger mt-5" onClick={() => setOpen(true)}>Delete customer permanently</button>
-    {open && <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4" role="presentation">
-      <section className="card w-full max-w-xl border-red-500 p-6" role="dialog" aria-modal="true" aria-labelledby={`delete-customer-${customerId}`}>
-        <h2 id={`delete-customer-${customerId}`} className="text-2xl font-black text-red-400">Delete all customer data?</h2>
-        <p className="mt-3 font-bold text-text">This cannot be undone. Financial and licensing history will also be erased.</p>
-        <p className="mt-2 text-sm text-muted">Confirm your legal and accounting retention requirements before continuing. A redacted audit tombstone will remain, but it will not contain the customer email or other personal data.</p>
-        <label className="label mt-5">Type the customer email
-          <input className="input" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" spellCheck={false} />
-        </label>
-        <label className="label mt-4">Type <span className="select-all">{ACKNOWLEDGEMENT}</span>
-          <input className="input" value={phrase} onChange={(event) => setPhrase(event.target.value)} autoComplete="off" spellCheck={false} />
-        </label>
-        {error && <p className="mt-4 font-bold text-red-400" role="alert">{error}</p>}
-        <div className="mt-6 flex justify-end gap-3">
-          <button type="button" className="button secondary" disabled={busy} onClick={() => { setOpen(false); setError(""); }}>Cancel</button>
-          <button type="button" className="button danger disabled:cursor-not-allowed disabled:opacity-50" disabled={busy || !confirmed} onClick={remove}>{busy ? "Deleting everything…" : "Permanently delete everything"}</button>
-        </div>
-      </section>
-    </div>}
+  function confirmedAction(phrase: string, body: Record<string, unknown>) {
+    if (window.prompt(`Type ${phrase} to continue`) === phrase) void action(body);
+  }
+  return <section className="card border-amber-500/60 p-6">
+    <h2 className="text-xl font-black">Customer lifecycle and retention</h2>
+    <p className="mt-2 text-sm text-muted">Current state: <b>{lifecycleState}</b>. Closure preserves commerce, licensing, legal acceptance, and audit history.</p>
+    <div className="mt-4 grid gap-2 text-sm sm:grid-cols-3">{Object.entries(initialReport.counts).map(([label, count]) => <div key={label} className="rounded border p-2"><b>{count}</b> {label}</div>)}</div>
+    {initialReport.blockers.length > 0 && <div className="mt-4 rounded border border-red-400 bg-red-50 p-3 text-sm text-red-900"><b>Retention blockers</b><ul className="list-disc pl-5">{initialReport.blockers.map((blocker) => <li key={blocker}>{blocker}</li>)}</ul></div>}
+    {error && <p className="mt-4 font-bold text-red-600" role="alert">{error}</p>}
+    <div className="mt-5 flex flex-wrap gap-2">
+      <button className="button secondary" disabled={busy || lifecycleState !== "ACTIVE"} onClick={() => confirmedAction("CLOSE CUSTOMER ACCOUNT", { action: "CLOSE", confirmation: "CLOSE CUSTOMER ACCOUNT" })}>Close account</button>
+      <button className="button secondary" disabled={busy || lifecycleState !== "CLOSED"} onClick={() => action({ action: "REOPEN" })}>Reopen account</button>
+      <label className="label">Retention expiry<input className="input" type="datetime-local" value={retentionDate} onChange={(event) => setRetentionDate(event.target.value)} /></label>
+      <button className="button secondary" disabled={busy || !retentionDate} onClick={() => confirmedAction("START PRIVACY REVIEW", { action: "PRIVACY_REVIEW", retentionExpiresAt: new Date(retentionDate).toISOString(), confirmation: "START PRIVACY REVIEW" })}>Start privacy review</button>
+      <button className="button secondary" disabled={busy} onClick={() => action({ action: "LEGAL_HOLD", enabled: !legalHold, reason: legalHold ? undefined : "Administrative review" })}>{legalHold ? "Remove legal hold" : "Apply legal hold"}</button>
+      <button className="button danger" disabled={busy || !initialReport.canPseudonymize} onClick={() => confirmedAction("PSEUDONYMIZE PERSONAL DATA", { action: "PSEUDONYMIZE", confirmation: "PSEUDONYMIZE PERSONAL DATA" })}>Pseudonymize</button>
+      <button className="button danger" disabled={busy || !initialReport.canMarkPurgeEligible} onClick={() => action({ action: "MARK_PURGE_ELIGIBLE" })}>Mark purge eligible</button>
+      <button className="button danger" disabled={busy || !initialReport.canPurge} onClick={() => confirmedAction(`PURGE ${customerId}`, { action: "PURGE", confirmation: `PURGE ${customerId}` })}>Execute final purge</button>
+    </div>
+    <p className="mt-3 text-xs text-muted">Final retention periods require professional legal, privacy, tax, and accounting review. The administrator must supply the reviewed retention-expiry date.</p>
   </section>;
 }

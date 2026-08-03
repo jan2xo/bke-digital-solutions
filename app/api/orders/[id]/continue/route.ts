@@ -16,7 +16,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const reserved = await db.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${id} FOR UPDATE`;
       const order = await tx.order.findFirst({
-        where: { id, status: "PENDING", account: { OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
+        where: { id, status: "PENDING", account: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
         include: { account: true, items: true, attempts: { where: { status: { in: ["CREATING", "PENDING"] } }, orderBy: { createdAt: "desc" }, take: 1 } },
       });
       if (!order) throw new Error("NOT_FOUND");

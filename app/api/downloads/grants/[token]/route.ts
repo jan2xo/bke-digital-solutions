@@ -12,7 +12,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ token: str
         tokenHash,
         usedAt: null,
         expiresAt: { gt: new Date() },
-        license: { status: "ACTIVE", OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
+        license: { status: "ACTIVE", account: { lifecycleState: "ACTIVE" }, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
       },
       data: { usedAt: new Date() },
     });

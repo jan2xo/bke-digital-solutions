@@ -4,7 +4,9 @@ Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simul
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.
 
-Current pushed baseline: Phase 6.0 runtime parity and Phase 6.1A Legal Document Management are complete, including legal-consent hardening, administrator password-plus-email-code verification with recovery-code fallback, and active edition pricing on the homepage. Certification is healthy with 17 migrations applied. Phase 6.1 Data Integrity and Safe Deletion is next; full PayMongo lifecycle certification remains incomplete, live payments remain disabled, and the platform is not production-ready.
+Current pushed baseline remains Phase 6.0 runtime parity and Phase 6.1A Legal Document Management. Phase 6.1 Data Integrity and Safe Deletion is implemented and fully verified in the current uncommitted working tree for owner review, with the eighteenth forward-only migration current in development and certification. Customer hard deletion is disabled; governed closure/privacy/legal-hold/pseudonymization/purge controls and durable storage cleanup replace it. Full PayMongo lifecycle certification remains incomplete, live payments remain disabled, and the platform is not production-ready.
+
+Phase 6.1 operating references: [data retention](docs/data-retention.md), [customer closure](docs/customer-account-closure.md), [privacy deletion](docs/privacy-deletion-workflow.md), [legal holds](docs/legal-hold.md), [storage cleanup jobs](docs/storage-cleanup-jobs.md), [product deletion](docs/product-deletion-workflow.md), and the [account role matrix](docs/authorization/customer-account-role-matrix.md).
 
 ## Local setup
 

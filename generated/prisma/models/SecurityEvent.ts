@@ -314,8 +314,8 @@ export type SecurityEventScalarWhereWithAggregatesInput = {
 export type SecurityEventCreateInput = {
   id?: string
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
@@ -330,8 +330,8 @@ export type SecurityEventUncheckedCreateInput = {
   id?: string
   userId?: string | null
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   sessionId?: string | null
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
@@ -375,8 +375,8 @@ export type SecurityEventCreateManyInput = {
   id?: string
   userId?: string | null
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   sessionId?: string | null
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
@@ -574,8 +574,8 @@ export type NullableEnumSessionAuthenticationMethodFieldUpdateOperationsInput = 
 export type SecurityEventCreateWithoutUserInput = {
   id?: string
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
@@ -588,8 +588,8 @@ export type SecurityEventCreateWithoutUserInput = {
 export type SecurityEventUncheckedCreateWithoutUserInput = {
   id?: string
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   sessionId?: string | null
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
@@ -646,8 +646,8 @@ export type SecurityEventScalarWhereInput = {
 export type SecurityEventCreateWithoutSessionInput = {
   id?: string
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
@@ -661,8 +661,8 @@ export type SecurityEventUncheckedCreateWithoutSessionInput = {
   id?: string
   userId?: string | null
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null
@@ -700,8 +700,8 @@ export type SecurityEventUpdateManyWithWhereWithoutSessionInput = {
 export type SecurityEventCreateManyUserInput = {
   id?: string
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   sessionId?: string | null
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
@@ -757,8 +757,8 @@ export type SecurityEventCreateManySessionInput = {
   id?: string
   userId?: string | null
   type: $Enums.SecurityEventType
-  outcome: $Enums.SecurityEventOutcome
-  severity: $Enums.SecurityEventSeverity
+  outcome?: $Enums.SecurityEventOutcome
+  severity?: $Enums.SecurityEventSeverity
   provider?: $Enums.ExternalProvider | null
   authenticationMethod?: $Enums.SessionAuthenticationMethod | null
   ipHint?: string | null

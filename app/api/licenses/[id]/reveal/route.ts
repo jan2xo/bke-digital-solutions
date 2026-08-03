@@ -16,9 +16,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       where: {
         id,
         account: {
+          lifecycleState: "ACTIVE",
           OR: [
             { ownerId: user.id },
-            { memberships: { some: { userId: user.id, role: { in: ["OWNER", "LICENSE_MANAGER", "BILLING"] } } } },
+            { memberships: { some: { userId: user.id, role: { in: ["OWNER", "LICENSE_MANAGER"] } } } },
           ],
         },
       },

@@ -1,6 +1,6 @@
 # Engineering handoff
 
-## Active handoff — Phase 6.1 next
+## Active handoff — Phase 6.1 owner review
 
 Phase 6.0 runtime parity is committed and pushed at `4f5a65a`. Use `certification-runtime.md` for the authoritative startup/test sequence and `runtime-parity.md` for environment, Docker, database, health, and provider boundaries. Full Vitest (116 passed, 6 credential-gated skipped), Playwright (9 passed), local/Docker production builds, 17-migration status, seed, smoke, readiness dependency outages, and the zero-vulnerability runtime audit passed. This is not PayMongo lifecycle certification or overall production readiness.
 
@@ -8,7 +8,9 @@ Administrator password-plus-email-code verification is committed and pushed at `
 
 Phase 6.1A Legal Document Management is committed and pushed at `7763dd0`, with consent and navigation hardening at `e5c94f7`. Both legal migrations are applied and the idempotent seed creates nine placeholder documents. Replace and professionally approve every placeholder before public commerce.
 
-The homepage now resolves active edition purchase-plan pricing and is committed and pushed at `05cefcb`. The next implementation phase is Phase 6.1 Data Integrity and Safe Deletion.
+The homepage now resolves active edition purchase-plan pricing and is committed and pushed at `05cefcb`. Phase 6.1 Data Integrity and Safe Deletion is implemented and verified in the current uncommitted working tree. Development and certification are current at migration 18; local/certification regression, builds, zero-drift, dependency, and hygiene gates pass. Owner review remains. Do not start Phase 6.2.
+
+Phase 6.1 removes the legacy destructive customer route, adds governed lifecycle and retention controls, preserves legal/commercial evidence, adds account capabilities, and stages private-object deletion through durable cleanup jobs. Review `data-retention.md`, `customer-account-closure.md`, `privacy-deletion-workflow.md`, `storage-cleanup-jobs.md`, and the Phase 6.1 report before operating these controls.
 
 Key entry points are `/admin/legal`, `/legal/[slug]`, `/legal/accept`, `lib/legal/`, and the three legal documentation files. Publication requires a recent MFA-verified administrator session. Database triggers—not only route checks—protect published content and acceptance rows. Because acceptance evidence intentionally restricts deletion of its related user/account/version, any later governed erasure design must preserve or legally reconcile those records rather than bypassing the triggers.
 

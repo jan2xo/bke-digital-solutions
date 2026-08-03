@@ -2,7 +2,7 @@ import "dotenv/config";
 import { afterAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client";
-import { evaluateProductDeletionEligibility, permanentlyDeleteProduct, ProductDeletionError } from "@/lib/product-deletion";
+import { evaluateProductDeletionEligibility, permanentlyDeleteProduct } from "@/lib/product-deletion";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
@@ -58,7 +58,7 @@ describe.sequential("archived product permanent deletion", () => {
     expect(await db.productVersion.count({ where: { productId: product.id } })).toBe(0);
     expect(await db.productArtifact.count({ where: { productId: product.id } })).toBe(0);
     expect(await db.edition.count({ where: { productId: product.id } })).toBe(0);
-    const log = await db.auditLog.findFirstOrThrow({ where: { targetId: product.id, action: "PRODUCT_PERMANENTLY_DELETED" } });
+    const log = await db.auditLog.findFirstOrThrow({ where: { targetId: product.id, action: "PRODUCT_DELETION_FINALIZED" } });
     expect(JSON.stringify(log.metadata)).not.toContain("tests/");
   });
 
@@ -96,10 +96,11 @@ describe.sequential("archived product permanent deletion", () => {
 
   it("rolls back database deletion when private storage cleanup fails and permits a safe retry", async () => {
     const { product } = await createProduct({ artifact: true });
-    await expect(permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async () => { throw new Error("synthetic storage failure"); } })).rejects.toMatchObject({ code: "PRODUCT_STORAGE_CLEANUP_FAILED" });
+    await expect(permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async () => { throw new Error("synthetic storage failure"); } })).rejects.toMatchObject({ code: "STORAGE_CLEANUP_PENDING" });
     expect(await db.product.findUnique({ where: { id: product.id } })).not.toBeNull();
     expect(await db.productArtifact.count({ where: { productId: product.id } })).toBe(1);
-    await permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async () => undefined });
-    await expect(permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async () => undefined })).rejects.toBeInstanceOf(ProductDeletionError);
+    const jobs = await db.storageCleanupJob.findMany({ where: { productId: product.id } });
+    expect(jobs).toHaveLength(1);
+    expect(jobs[0]!.status).toBe("RETRYING");
   });
 });

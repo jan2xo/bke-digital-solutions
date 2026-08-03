@@ -39,6 +39,14 @@ User 1---* CustomerAccount 1---* Order 1---1 Invoice
                          * License  * Payment
 ```
 
+## Phase 6.1 retention and cleanup boundaries
+
+`User` and `CustomerAccount` have explicit lifecycle, retention-expiry, pseudonymization, and legal-hold state. Closure revokes sessions and suspends entitlements; it does not cascade into historical commerce. Legal acceptances remain `RESTRICT`-protected and immutable. Audit/security evidence uses nullable actor/account references so an otherwise eligible final purge does not destroy the event.
+
+Private-object deletion is staged: a transaction marks the product/artifact and creates idempotent `StorageCleanupJob` rows; workers delete objects only after commit; success/failure is recorded; product rows are finalized only in a later serializable transaction after dependencies are rechecked. Stored object keys never enter ordinary audit metadata.
+
+Account authorization is capability-based rather than a numeric role rank. `BILLING` sees finance and checkout operations, `LICENSE_MANAGER` manages entitlements, and `MEMBER` receives no broad account-level commerce visibility; individually assigned entitlements remain narrowly accessible.
+
 The administration layer is not a separate service. It is an RBAC-protected presentation and command layer over the same domain models used by customer and webhook flows. This preserves one source of truth and prevents admin-only shadow state.
 
 ## Legal document and consent boundary

@@ -73,6 +73,13 @@ export type DateTimeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeFilter<$PrismaModel> | Date | string
 }
 
+export type EnumCustomerLifecycleStateFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomerLifecycleState | Prisma.EnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCustomerLifecycleStateFilter<$PrismaModel> | $Enums.CustomerLifecycleState
+}
+
 export type SortOrderInput = {
   sort: Prisma.SortOrder
   nulls?: Prisma.NullsOrder
@@ -150,6 +157,16 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
+}
+
+export type EnumCustomerLifecycleStateWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomerLifecycleState | Prisma.EnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCustomerLifecycleStateWithAggregatesFilter<$PrismaModel> | $Enums.CustomerLifecycleState
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCustomerLifecycleStateFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCustomerLifecycleStateFilter<$PrismaModel>
 }
 
 export type EnumSessionAuthenticationMethodFilter<$PrismaModel = never> = {
@@ -654,6 +671,40 @@ export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBigIntFilter<$PrismaModel>
 }
 
+export type EnumStorageCleanupJobTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupJobType | Prisma.EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupJobTypeFilter<$PrismaModel> | $Enums.StorageCleanupJobType
+}
+
+export type EnumStorageCleanupStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupStatus | Prisma.EnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupStatusFilter<$PrismaModel> | $Enums.StorageCleanupStatus
+}
+
+export type EnumStorageCleanupJobTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupJobType | Prisma.EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupJobTypeWithAggregatesFilter<$PrismaModel> | $Enums.StorageCleanupJobType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStorageCleanupJobTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStorageCleanupJobTypeFilter<$PrismaModel>
+}
+
+export type EnumStorageCleanupStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupStatus | Prisma.EnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupStatusWithAggregatesFilter<$PrismaModel> | $Enums.StorageCleanupStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStorageCleanupStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStorageCleanupStatusFilter<$PrismaModel>
+}
+
 export type EnumOrderStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.OrderStatus | Prisma.EnumOrderStatusFieldRefInput<$PrismaModel>
   in?: $Enums.OrderStatus[] | Prisma.ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -966,6 +1017,13 @@ export type NestedDateTimeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeFilter<$PrismaModel> | Date | string
 }
 
+export type NestedEnumCustomerLifecycleStateFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomerLifecycleState | Prisma.EnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCustomerLifecycleStateFilter<$PrismaModel> | $Enums.CustomerLifecycleState
+}
+
 export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1058,6 +1116,16 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
+}
+
+export type NestedEnumCustomerLifecycleStateWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomerLifecycleState | Prisma.EnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CustomerLifecycleState[] | Prisma.ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCustomerLifecycleStateWithAggregatesFilter<$PrismaModel> | $Enums.CustomerLifecycleState
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCustomerLifecycleStateFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCustomerLifecycleStateFilter<$PrismaModel>
 }
 
 export type NestedEnumSessionAuthenticationMethodFilter<$PrismaModel = never> = {
@@ -1506,6 +1574,40 @@ export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedBigIntFilter<$PrismaModel>
   _min?: Prisma.NestedBigIntFilter<$PrismaModel>
   _max?: Prisma.NestedBigIntFilter<$PrismaModel>
+}
+
+export type NestedEnumStorageCleanupJobTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupJobType | Prisma.EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupJobTypeFilter<$PrismaModel> | $Enums.StorageCleanupJobType
+}
+
+export type NestedEnumStorageCleanupStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupStatus | Prisma.EnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupStatusFilter<$PrismaModel> | $Enums.StorageCleanupStatus
+}
+
+export type NestedEnumStorageCleanupJobTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupJobType | Prisma.EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupJobTypeWithAggregatesFilter<$PrismaModel> | $Enums.StorageCleanupJobType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStorageCleanupJobTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStorageCleanupJobTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumStorageCleanupStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StorageCleanupStatus | Prisma.EnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StorageCleanupStatus[] | Prisma.ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStorageCleanupStatusWithAggregatesFilter<$PrismaModel> | $Enums.StorageCleanupStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStorageCleanupStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStorageCleanupStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {

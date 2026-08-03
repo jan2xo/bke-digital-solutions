@@ -9,3 +9,5 @@ Registration accepts the current Terms and Privacy versions in the same transact
 PostgreSQL foreign keys retain the referenced user/account/version, triggers reject updates and deletes, and unique indexes make retries idempotent even when the optional account is null. Administrators may view counts and the 20 most recent entries per version, but no application route can alter history.
 
 Acceptance evidence is operational evidence, not a legal opinion. Retention, privacy access, erasure, legal hold, and evidentiary sufficiency require Phase 6.7 approval. Do not bypass immutability triggers to make a customer deletion workflow succeed.
+
+Phase 6.1 preserves acceptance rows through closure, privacy review, legal hold, and pseudonymization. The user/account identifiers continue to reference pseudonymized subjects, so administrators can prove the accepted published version without exposing the former email/name. Network and user-agent evidence remains immutable with the acceptance; minimization or retention changes to those fields require professional review and a new forward migration, never trigger bypass. Any acceptance is an explicit final-purge blocker.

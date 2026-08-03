@@ -35,6 +35,42 @@ export const MemberRole = {
 export type MemberRole = (typeof MemberRole)[keyof typeof MemberRole]
 
 
+export const CustomerLifecycleState = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  CLOSURE_REQUESTED: 'CLOSURE_REQUESTED',
+  CLOSED: 'CLOSED',
+  PRIVACY_REVIEW: 'PRIVACY_REVIEW',
+  PSEUDONYMIZED: 'PSEUDONYMIZED',
+  PURGE_ELIGIBLE: 'PURGE_ELIGIBLE'
+} as const
+
+export type CustomerLifecycleState = (typeof CustomerLifecycleState)[keyof typeof CustomerLifecycleState]
+
+
+export const StorageCleanupStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  RETRYING: 'RETRYING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type StorageCleanupStatus = (typeof StorageCleanupStatus)[keyof typeof StorageCleanupStatus]
+
+
+export const StorageCleanupJobType = {
+  PRODUCT_DELETION: 'PRODUCT_DELETION',
+  ARTIFACT_REPLACEMENT: 'ARTIFACT_REPLACEMENT',
+  ARTIFACT_REMOVAL: 'ARTIFACT_REMOVAL',
+  ABANDONED_UPLOAD: 'ABANDONED_UPLOAD',
+  ORPHANED_OBJECT: 'ORPHANED_OBJECT'
+} as const
+
+export type StorageCleanupJobType = (typeof StorageCleanupJobType)[keyof typeof StorageCleanupJobType]
+
+
 export const ProductType = {
   SOFTWARE: 'SOFTWARE',
   SAAS: 'SAAS',
@@ -229,7 +265,10 @@ export const SecurityEventType = {
   PROVIDER_CREDENTIAL_REVOKED: 'PROVIDER_CREDENTIAL_REVOKED',
   PROVIDER_VALIDATION_SUCCEEDED: 'PROVIDER_VALIDATION_SUCCEEDED',
   PROVIDER_VALIDATION_FAILED: 'PROVIDER_VALIDATION_FAILED',
-  LIVE_PAYMENT_ENABLE_BLOCKED: 'LIVE_PAYMENT_ENABLE_BLOCKED'
+  LIVE_PAYMENT_ENABLE_BLOCKED: 'LIVE_PAYMENT_ENABLE_BLOCKED',
+  CUSTOMER_LIFECYCLE_CHANGED: 'CUSTOMER_LIFECYCLE_CHANGED',
+  CUSTOMER_PURGE_EXECUTED: 'CUSTOMER_PURGE_EXECUTED',
+  STORAGE_CLEANUP_FAILED: 'STORAGE_CLEANUP_FAILED'
 } as const
 
 export type SecurityEventType = (typeof SecurityEventType)[keyof typeof SecurityEventType]

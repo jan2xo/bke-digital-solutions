@@ -1,5 +1,16 @@
 # Production deployment checklist
 
+## Phase 6.1 data integrity
+
+- [ ] Back up PostgreSQL and review/apply `20260803180000_data_integrity_safe_deletion`; treat it as forward-only.
+- [ ] Confirm customer DELETE returns `HARD_DELETE_DISABLED`; exercise close, reopen, privacy review, legal hold, pseudonymization, and blocker report with a non-production account.
+- [ ] Obtain professional legal/privacy/tax/accounting approval for actual retention periods before enabling final purge.
+- [ ] Confirm legal acceptances, orders, invoices, payments, refunds, licenses, webhook evidence, audit events, and relevant email evidence survive closure/pseudonymization.
+- [ ] Configure Phase 6.3 to process due cleanup jobs; until then, operate manual admin processing and alert on `FAILED` rows.
+- [ ] Verify no product is finalized while cleanup is pending/failed and no new dependency appeared between request and finalization.
+- [ ] Confirm S3 deletion is idempotent and the runtime identity has delete access only to the private application bucket/prefix.
+- [ ] Test MEMBER, BILLING, LICENSE_MANAGER, and OWNER access with cross-account denial.
+
 ## Phase 6.1A legal system
 
 - [ ] Back up PostgreSQL, then apply `20260802170000_legal_document_management` and `20260802171000_legal_document_type_uniqueness` with `npm run db:deploy`.
@@ -143,7 +154,7 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 
 - [x] Production and certification application/migration images use the same digest-pinned build targets.
 - [x] Migration-first startup, idempotent seed, database smoke, readiness, and force-recreate refresh are verified locally.
-- [x] Committed Prisma client regeneration is reproducible and all 17 migrations are current.
+- [x] Prisma client regeneration is reproducible and all 18 migrations are current in the Phase 6.1 review tree.
 - [x] Full deterministic Vitest and Playwright suites pass against certification PostgreSQL, Valkey, and MinIO.
 - [x] Local and Docker production builds, Compose validation, secret hygiene, and runtime dependency audit pass.
 - [ ] Rotate any certification credentials that have appeared in owner chat or retained diagnostic output.

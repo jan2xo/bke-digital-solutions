@@ -15,9 +15,9 @@ export async function POST(request: Request) {
     const result = await db.$transaction(async (tx) => {
       const license = await tx.license.findUnique({
         where: { keyHash },
-        include: { edition: { select: { name: true, features: true, updatePolicy: true } } },
+        include: { edition: { select: { name: true, features: true, updatePolicy: true } }, account: { select: { lifecycleState: true } } },
       });
-      if (!license || license.status !== "ACTIVE" || (license.expiresAt && license.expiresAt < new Date())) throw new Error("INVALID_LICENSE");
+      if (!license || license.account.lifecycleState !== "ACTIVE" || license.status !== "ACTIVE" || (license.expiresAt && license.expiresAt < new Date())) throw new Error("INVALID_LICENSE");
       const deviceHash = sha256(input.deviceId);
       const hint = input.deviceId.slice(-8);
       const existing = await tx.deviceActivation.findUnique({ where: { licenseId_deviceHash: { licenseId: license.id, deviceHash } } });

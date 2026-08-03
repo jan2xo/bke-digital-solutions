@@ -25,6 +25,9 @@ const definitions: Partial<Record<SecurityEventType, Definition>> = {
   PROVIDER_VALIDATION_SUCCEEDED: { label: "Provider validation succeeded", outcome: "SUCCESS", severity: "LOW", explanation: "External-provider configuration validation completed." },
   PROVIDER_VALIDATION_FAILED: { label: "Provider validation failed", outcome: "FAILURE", severity: "MEDIUM", explanation: "External-provider configuration validation failed." },
   LIVE_PAYMENT_ENABLE_BLOCKED: { label: "Live payment enablement blocked", outcome: "BLOCKED", severity: "CRITICAL", explanation: "A forbidden live-payment enablement attempt was blocked." },
+  CUSTOMER_LIFECYCLE_CHANGED: { label: "Customer lifecycle changed", outcome: "SUCCESS", severity: "HIGH", explanation: "An administrator changed customer access, retention, privacy, or legal-hold state." },
+  CUSTOMER_PURGE_EXECUTED: { label: "Customer purge executed", outcome: "SUCCESS", severity: "CRITICAL", explanation: "An eligible pseudonymized customer record was irreversibly purged." },
+  STORAGE_CLEANUP_FAILED: { label: "Storage cleanup failed", outcome: "FAILURE", severity: "HIGH", explanation: "A durable private-storage cleanup job exhausted its automatic retries." },
 };
 
 export function securityEventDefinition(type: SecurityEventType): Definition { return definitions[type] ?? defaults; }

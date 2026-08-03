@@ -19,7 +19,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         },
       },
     }),
-    user ? db.customerAccount.findMany({ where: { OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] }, select: { id: true, displayName: true }, orderBy: { createdAt: "asc" } }) : [],
+    user ? db.customerAccount.findMany({ where: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] }, select: { id: true, displayName: true }, orderBy: { createdAt: "asc" } }) : [],
   ]);
   if (!product?.active) notFound();
 

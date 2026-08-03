@@ -4,9 +4,11 @@ Baseline updated: August 3, 2026
 Pushed Git baseline: `05cefcb fix(catalog): show active edition pricing on homepage`
 Latest completed roadmap phases: Phase 6.0 — Runtime Parity and Phase 6.1A — Legal Document Management
 
+Working-tree truth: Phase 6.1 Data Integrity and Safe Deletion is implemented and verified but uncommitted. Development and certification have 18 migrations applied and current schemas. Full local and certification regression, production/Docker builds, drift, dependency, and hygiene gates pass; pushed HEAD remains the authority until owner approval and commit.
+
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
-Latest baseline verification: Prisma schema and generated client agree; all 17 migrations are applied; TypeScript and ESLint passed; Vitest passed 116 tests with six credential-gated scenarios skipped; Playwright passed 9/9; local and Docker production builds passed; and the runtime dependency audit reported zero vulnerabilities. Certification is current and healthy. These results do not complete PayMongo lifecycle certification or remove legal-review, backup, monitoring, secure-supply-chain, or production-deployment blockers.
+Latest Phase 6.1 working-tree verification: Prisma schema, generated client, migrations, and both databases agree at 18 migrations; TypeScript and ESLint passed; local and certification Vitest each passed 125 tests with six credential-gated scenarios skipped; local and certification Playwright each passed 9/9; local and Docker production builds passed; schema drift is zero; and the runtime dependency audit reported zero vulnerabilities. These results do not complete PayMongo lifecycle certification or remove legal-review, backup, monitoring, secure-supply-chain, or production-deployment blockers.
 
 This document is the concise repository baseline for future planning. It records verified implementation and runtime evidence rather than roadmap intent. If this file conflicts with an older phase report, the current repository, applied migrations, executable tests, and runtime evidence take precedence.
 
@@ -32,10 +34,10 @@ It is ready for local development and controlled sandbox certification. It is no
 |---|---|
 | TypeScript | Passed |
 | ESLint | Passed |
-| Vitest | 116 passed, 6 credential-gated scenarios skipped |
+| Vitest | 125 passed locally and in certification, 6 credential-gated scenarios skipped in each |
 | Playwright | 9 passed |
 | Production and Docker builds | Passed |
-| Migration status | 17 migrations, current |
+| Migration status | 18 migrations, development and certification current |
 | Genuine PayMongo checkout creation | Passed |
 | PayMongo live-key sandbox rejection | Passed |
 | Genuine Resend delivery | Passed |
@@ -303,7 +305,7 @@ The approved implementation sequence is defined in [`ROADMAP.md`](./ROADMAP.md),
 
 1. Completed: Phase 6.0 — Runtime Parity & Certification Baseline.
 2. Completed: Phase 6.1A — Legal Document Management System.
-3. Next: Phase 6.1 — Data Integrity & Safe Deletion.
+3. In owner review: Phase 6.1 — Data Integrity & Safe Deletion (uncommitted; verification passed, owner approval pending).
 4. Still blocked: Phase 6.2 — complete PayMongo lifecycle certification.
 
 No future phase should claim readiness merely because code exists. Database state, runtime configuration, automated tests, genuine provider evidence, documentation, and owner approval must agree.

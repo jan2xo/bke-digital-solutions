@@ -7,6 +7,7 @@ import { rateLimit } from "@/lib/security/rate-limit";
 import { grantProductTrial } from "@/lib/trials";
 import { apiError } from "@/lib/http";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
+import { assertAccountOperational } from "@/lib/customer-lifecycle";
 
 const schema = z.object({ editionId: z.string().cuid(), accountId: z.string().cuid() }).strict();
 export async function POST(request: Request) {
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
     const input = schema.parse(await request.json());
     const account = await db.customerAccount.findFirst({ where: { id: input.accountId, OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } });
     if (!account) throw new Error("NOT_FOUND");
+    assertAccountOperational(account);
     const trial = await grantProductTrial({ accountId: account.id, editionId: input.editionId, source: "SELF_SERVICE", actorId: user.id });
     return NextResponse.json({ trialId: trial.id, expiresAt: trial.graceEndsAt }, { status: 201 });
   } catch (error) { return apiError(error); }

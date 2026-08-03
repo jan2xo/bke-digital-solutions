@@ -420,6 +420,7 @@ export const ModelName = {
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
+  StorageCleanupJob: 'StorageCleanupJob',
   Cart: 'Cart',
   CartItem: 'CartItem',
   Order: 'Order',
@@ -458,7 +459,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2161,6 +2162,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductArtifactCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductArtifactCountAggregateOutputType> | number
+        }
+      }
+    }
+    StorageCleanupJob: {
+      payload: Prisma.$StorageCleanupJobPayload<ExtArgs>
+      fields: Prisma.StorageCleanupJobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StorageCleanupJobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StorageCleanupJobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
+        }
+        findFirst: {
+          args: Prisma.StorageCleanupJobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StorageCleanupJobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
+        }
+        findMany: {
+          args: Prisma.StorageCleanupJobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>[]
+        }
+        create: {
+          args: Prisma.StorageCleanupJobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
+        }
+        createMany: {
+          args: Prisma.StorageCleanupJobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StorageCleanupJobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>[]
+        }
+        delete: {
+          args: Prisma.StorageCleanupJobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
+        }
+        update: {
+          args: Prisma.StorageCleanupJobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
+        }
+        deleteMany: {
+          args: Prisma.StorageCleanupJobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StorageCleanupJobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StorageCleanupJobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>[]
+        }
+        upsert: {
+          args: Prisma.StorageCleanupJobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
+        }
+        aggregate: {
+          args: Prisma.StorageCleanupJobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStorageCleanupJob>
+        }
+        groupBy: {
+          args: Prisma.StorageCleanupJobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StorageCleanupJobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StorageCleanupJobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StorageCleanupJobCountAggregateOutputType> | number
         }
       }
     }
@@ -3913,7 +3988,14 @@ export const UserScalarFieldEnum = {
   role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  suspendedAt: 'suspendedAt'
+  suspendedAt: 'suspendedAt',
+  lifecycleState: 'lifecycleState',
+  privacyRequestedAt: 'privacyRequestedAt',
+  pseudonymizedAt: 'pseudonymizedAt',
+  retentionExpiresAt: 'retentionExpiresAt',
+  legalHoldAt: 'legalHoldAt',
+  legalHoldReason: 'legalHoldReason',
+  emailHash: 'emailHash'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4045,7 +4127,15 @@ export const CustomerAccountScalarFieldEnum = {
   billingEmail: 'billingEmail',
   taxId: 'taxId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lifecycleState: 'lifecycleState',
+  closureRequestedAt: 'closureRequestedAt',
+  closedAt: 'closedAt',
+  privacyRequestedAt: 'privacyRequestedAt',
+  pseudonymizedAt: 'pseudonymizedAt',
+  retentionExpiresAt: 'retentionExpiresAt',
+  legalHoldAt: 'legalHoldAt',
+  legalHoldReason: 'legalHoldReason'
 } as const
 
 export type CustomerAccountScalarFieldEnum = (typeof CustomerAccountScalarFieldEnum)[keyof typeof CustomerAccountScalarFieldEnum]
@@ -4150,6 +4240,7 @@ export const ProductScalarFieldEnum = {
   active: 'active',
   publishedAt: 'publishedAt',
   archivedAt: 'archivedAt',
+  deletionRequestedAt: 'deletionRequestedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4258,6 +4349,29 @@ export const ProductArtifactScalarFieldEnum = {
 } as const
 
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
+
+
+export const StorageCleanupJobScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  objectKey: 'objectKey',
+  idempotencyKey: 'idempotencyKey',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lastErrorCode: 'lastErrorCode',
+  correlationId: 'correlationId',
+  productId: 'productId',
+  artifactId: 'artifactId',
+  createdByAdminId: 'createdByAdminId',
+  createdAt: 'createdAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type StorageCleanupJobScalarFieldEnum = (typeof StorageCleanupJobScalarFieldEnum)[keyof typeof StorageCleanupJobScalarFieldEnum]
 
 
 export const CartScalarFieldEnum = {
@@ -4754,6 +4868,20 @@ export type ListEnumGlobalRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'CustomerLifecycleState'
+ */
+export type EnumCustomerLifecycleStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerLifecycleState'>
+
+
+
+/**
+ * Reference to a field of type 'CustomerLifecycleState[]'
+ */
+export type ListEnumCustomerLifecycleStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerLifecycleState[]'>
+
+
+
+/**
  * Reference to a field of type 'SessionAuthenticationMethod'
  */
 export type EnumSessionAuthenticationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionAuthenticationMethod'>
@@ -5037,6 +5165,34 @@ export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'BigInt[]'
  */
 export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+
+
+
+/**
+ * Reference to a field of type 'StorageCleanupJobType'
+ */
+export type EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupJobType'>
+
+
+
+/**
+ * Reference to a field of type 'StorageCleanupJobType[]'
+ */
+export type ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupJobType[]'>
+
+
+
+/**
+ * Reference to a field of type 'StorageCleanupStatus'
+ */
+export type EnumStorageCleanupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupStatus'>
+
+
+
+/**
+ * Reference to a field of type 'StorageCleanupStatus[]'
+ */
+export type ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupStatus[]'>
 
 
 
@@ -5395,6 +5551,7 @@ export type GlobalOmitConfig = {
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
   productArtifact?: Prisma.ProductArtifactOmit
+  storageCleanupJob?: Prisma.StorageCleanupJobOmit
   cart?: Prisma.CartOmit
   cartItem?: Prisma.CartItemOmit
   order?: Prisma.OrderOmit

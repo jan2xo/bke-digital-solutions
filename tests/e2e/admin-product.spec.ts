@@ -69,6 +69,14 @@ test("administrator creates, uploads, publishes, and edits a product", async ({ 
   for(const [path,heading] of [["/admin/releases","Release center"],["/admin/artifacts","Artifact manager"],["/admin/customers","Customer manager"],["/admin/licenses","License center"],["/admin/devices","Device manager"],["/admin/orders","Orders"],["/admin/invoices","Invoice center"],["/admin/audit","Audit center"]] as const){await page.goto(path);await expect(page.getByRole("heading",{name:heading})).toBeVisible()}
   const customer=await db.user.create({data:{email:`managed-${suffix}@bke.test`,emailVerified:new Date(),name:"Managed Customer",ownedAccounts:{create:{type:"INDIVIDUAL",displayName:"Managed Customer",billingEmail:`managed-${suffix}@bke.test`}}}});
   const suspended=await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"SUSPEND"}});expect(suspended.status()).toBe(200);expect((await db.user.findUniqueOrThrow({where:{id:customer.id}})).suspendedAt).not.toBeNull();expect(await db.auditLog.count({where:{targetId:customer.id,action:"CUSTOMER_SUSPEND"}})).toBe(1);
+  expect((await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"REACTIVATE"}})).status()).toBe(200);
+  await page.goto(`/admin/customers/${customer.id}`);
+  await expect(page.getByRole("heading",{name:"Customer lifecycle and retention"})).toBeVisible();
+  await expect(page.getByRole("button",{name:"Execute final purge"})).toBeDisabled();
+  expect((await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"CLOSE",confirmation:"CLOSE CUSTOMER ACCOUNT"}})).status()).toBe(200);
+  expect(await db.customerAccount.count({where:{ownerId:customer.id,lifecycleState:"CLOSED"}})).toBe(1);
+  expect((await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"LEGAL_HOLD",enabled:true,reason:"Browser test"}})).status()).toBe(200);
+  const retention=await page.request.get(`/api/admin/customers/${customer.id}`);expect(retention.status()).toBe(200);expect((await retention.json()).blockers).toContain("LEGAL_HOLD");
   await page.getByRole("button",{name:"Log out"}).click();
   await expect(page).toHaveURL(/login/);
   await page.goto("/admin");
@@ -102,10 +110,12 @@ test("administrator permanently deletes only disposable archived products", asyn
   expect(hostile.status()).toBe(403);
   await card.getByRole("button", { name: "Delete permanently" }).click();
   await dialog.getByLabel(new RegExp(`Type ${disposable.name}`)).fill(disposable.name);
-  await dialog.getByRole("button", { name: "Delete permanently" }).click();
+  await dialog.getByRole("button", { name: "Request deletion" }).click();
+  await expect(dialog.getByText("Deletion requested.")).toBeVisible();
+  await dialog.getByRole("button", { name: "Run cleanup and finalize" }).click();
   await expect(card).toHaveCount(0);
   expect(await db.product.findUnique({ where: { id: disposable.id } })).toBeNull();
-  expect(await db.auditLog.count({ where: { actorId: admin.id, targetId: disposable.id, action: "PRODUCT_PERMANENTLY_DELETED" } })).toBe(1);
+  expect(await db.auditLog.count({ where: { actorId: admin.id, targetId: disposable.id, action: "PRODUCT_DELETION_FINALIZED" } })).toBe(1);
   const repeated = await page.request.delete(`/api/admin/products/${disposable.id}/deletion`, { headers: { origin: "http://127.0.0.1:3000" }, data: { confirmationName: disposable.name } });
   expect(repeated.status()).toBe(404);
 

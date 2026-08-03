@@ -33,6 +33,14 @@ export type CustomerAccountMinAggregateOutputType = {
   taxId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  lifecycleState: $Enums.CustomerLifecycleState | null
+  closureRequestedAt: Date | null
+  closedAt: Date | null
+  privacyRequestedAt: Date | null
+  pseudonymizedAt: Date | null
+  retentionExpiresAt: Date | null
+  legalHoldAt: Date | null
+  legalHoldReason: string | null
 }
 
 export type CustomerAccountMaxAggregateOutputType = {
@@ -44,6 +52,14 @@ export type CustomerAccountMaxAggregateOutputType = {
   taxId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  lifecycleState: $Enums.CustomerLifecycleState | null
+  closureRequestedAt: Date | null
+  closedAt: Date | null
+  privacyRequestedAt: Date | null
+  pseudonymizedAt: Date | null
+  retentionExpiresAt: Date | null
+  legalHoldAt: Date | null
+  legalHoldReason: string | null
 }
 
 export type CustomerAccountCountAggregateOutputType = {
@@ -55,6 +71,14 @@ export type CustomerAccountCountAggregateOutputType = {
   taxId: number
   createdAt: number
   updatedAt: number
+  lifecycleState: number
+  closureRequestedAt: number
+  closedAt: number
+  privacyRequestedAt: number
+  pseudonymizedAt: number
+  retentionExpiresAt: number
+  legalHoldAt: number
+  legalHoldReason: number
   _all: number
 }
 
@@ -68,6 +92,14 @@ export type CustomerAccountMinAggregateInputType = {
   taxId?: true
   createdAt?: true
   updatedAt?: true
+  lifecycleState?: true
+  closureRequestedAt?: true
+  closedAt?: true
+  privacyRequestedAt?: true
+  pseudonymizedAt?: true
+  retentionExpiresAt?: true
+  legalHoldAt?: true
+  legalHoldReason?: true
 }
 
 export type CustomerAccountMaxAggregateInputType = {
@@ -79,6 +111,14 @@ export type CustomerAccountMaxAggregateInputType = {
   taxId?: true
   createdAt?: true
   updatedAt?: true
+  lifecycleState?: true
+  closureRequestedAt?: true
+  closedAt?: true
+  privacyRequestedAt?: true
+  pseudonymizedAt?: true
+  retentionExpiresAt?: true
+  legalHoldAt?: true
+  legalHoldReason?: true
 }
 
 export type CustomerAccountCountAggregateInputType = {
@@ -90,6 +130,14 @@ export type CustomerAccountCountAggregateInputType = {
   taxId?: true
   createdAt?: true
   updatedAt?: true
+  lifecycleState?: true
+  closureRequestedAt?: true
+  closedAt?: true
+  privacyRequestedAt?: true
+  pseudonymizedAt?: true
+  retentionExpiresAt?: true
+  legalHoldAt?: true
+  legalHoldReason?: true
   _all?: true
 }
 
@@ -174,6 +222,14 @@ export type CustomerAccountGroupByOutputType = {
   taxId: string | null
   createdAt: Date
   updatedAt: Date
+  lifecycleState: $Enums.CustomerLifecycleState
+  closureRequestedAt: Date | null
+  closedAt: Date | null
+  privacyRequestedAt: Date | null
+  pseudonymizedAt: Date | null
+  retentionExpiresAt: Date | null
+  legalHoldAt: Date | null
+  legalHoldReason: string | null
   _count: CustomerAccountCountAggregateOutputType | null
   _min: CustomerAccountMinAggregateOutputType | null
   _max: CustomerAccountMaxAggregateOutputType | null
@@ -206,6 +262,14 @@ export type CustomerAccountWhereInput = {
   taxId?: Prisma.StringNullableFilter<"CustomerAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFilter<"CustomerAccount"> | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  privacyRequestedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  pseudonymizedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  retentionExpiresAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  legalHoldAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  legalHoldReason?: Prisma.StringNullableFilter<"CustomerAccount"> | string | null
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationProfileNullableScalarRelationFilter, Prisma.OrganizationProfileWhereInput> | null
   memberships?: Prisma.MembershipListRelationFilter
@@ -230,6 +294,14 @@ export type CustomerAccountOrderByWithRelationInput = {
   taxId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lifecycleState?: Prisma.SortOrder
+  closureRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  privacyRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  pseudonymizedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  retentionExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalHoldAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalHoldReason?: Prisma.SortOrderInput | Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationProfileOrderByWithRelationInput
   memberships?: Prisma.MembershipOrderByRelationAggregateInput
@@ -257,6 +329,14 @@ export type CustomerAccountWhereUniqueInput = Prisma.AtLeast<{
   taxId?: Prisma.StringNullableFilter<"CustomerAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFilter<"CustomerAccount"> | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  privacyRequestedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  pseudonymizedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  retentionExpiresAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  legalHoldAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  legalHoldReason?: Prisma.StringNullableFilter<"CustomerAccount"> | string | null
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationProfileNullableScalarRelationFilter, Prisma.OrganizationProfileWhereInput> | null
   memberships?: Prisma.MembershipListRelationFilter
@@ -281,6 +361,14 @@ export type CustomerAccountOrderByWithAggregationInput = {
   taxId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lifecycleState?: Prisma.SortOrder
+  closureRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  privacyRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  pseudonymizedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  retentionExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalHoldAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalHoldReason?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CustomerAccountCountOrderByAggregateInput
   _max?: Prisma.CustomerAccountMaxOrderByAggregateInput
   _min?: Prisma.CustomerAccountMinOrderByAggregateInput
@@ -298,6 +386,14 @@ export type CustomerAccountScalarWhereWithAggregatesInput = {
   taxId?: Prisma.StringNullableWithAggregatesFilter<"CustomerAccount"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CustomerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CustomerAccount"> | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateWithAggregatesFilter<"CustomerAccount"> | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CustomerAccount"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CustomerAccount"> | Date | string | null
+  privacyRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CustomerAccount"> | Date | string | null
+  pseudonymizedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CustomerAccount"> | Date | string | null
+  retentionExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CustomerAccount"> | Date | string | null
+  legalHoldAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CustomerAccount"> | Date | string | null
+  legalHoldReason?: Prisma.StringNullableWithAggregatesFilter<"CustomerAccount"> | string | null
 }
 
 export type CustomerAccountCreateInput = {
@@ -308,6 +404,14 @@ export type CustomerAccountCreateInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -332,6 +436,14 @@ export type CustomerAccountUncheckedCreateInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -354,6 +466,14 @@ export type CustomerAccountUpdateInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -378,6 +498,14 @@ export type CustomerAccountUncheckedUpdateInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -401,6 +529,14 @@ export type CustomerAccountCreateManyInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
 }
 
 export type CustomerAccountUpdateManyMutationInput = {
@@ -411,6 +547,14 @@ export type CustomerAccountUpdateManyMutationInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CustomerAccountUncheckedUpdateManyInput = {
@@ -422,6 +566,14 @@ export type CustomerAccountUncheckedUpdateManyInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CustomerAccountListRelationFilter = {
@@ -443,6 +595,14 @@ export type CustomerAccountCountOrderByAggregateInput = {
   taxId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lifecycleState?: Prisma.SortOrder
+  closureRequestedAt?: Prisma.SortOrder
+  closedAt?: Prisma.SortOrder
+  privacyRequestedAt?: Prisma.SortOrder
+  pseudonymizedAt?: Prisma.SortOrder
+  retentionExpiresAt?: Prisma.SortOrder
+  legalHoldAt?: Prisma.SortOrder
+  legalHoldReason?: Prisma.SortOrder
 }
 
 export type CustomerAccountMaxOrderByAggregateInput = {
@@ -454,6 +614,14 @@ export type CustomerAccountMaxOrderByAggregateInput = {
   taxId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lifecycleState?: Prisma.SortOrder
+  closureRequestedAt?: Prisma.SortOrder
+  closedAt?: Prisma.SortOrder
+  privacyRequestedAt?: Prisma.SortOrder
+  pseudonymizedAt?: Prisma.SortOrder
+  retentionExpiresAt?: Prisma.SortOrder
+  legalHoldAt?: Prisma.SortOrder
+  legalHoldReason?: Prisma.SortOrder
 }
 
 export type CustomerAccountMinOrderByAggregateInput = {
@@ -465,6 +633,14 @@ export type CustomerAccountMinOrderByAggregateInput = {
   taxId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lifecycleState?: Prisma.SortOrder
+  closureRequestedAt?: Prisma.SortOrder
+  closedAt?: Prisma.SortOrder
+  privacyRequestedAt?: Prisma.SortOrder
+  pseudonymizedAt?: Prisma.SortOrder
+  retentionExpiresAt?: Prisma.SortOrder
+  legalHoldAt?: Prisma.SortOrder
+  legalHoldReason?: Prisma.SortOrder
 }
 
 export type CustomerAccountNullableScalarRelationFilter = {
@@ -705,6 +881,14 @@ export type CustomerAccountCreateWithoutOwnerInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutAccountInput
@@ -727,6 +911,14 @@ export type CustomerAccountUncheckedCreateWithoutOwnerInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -779,6 +971,14 @@ export type CustomerAccountScalarWhereInput = {
   taxId?: Prisma.StringNullableFilter<"CustomerAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CustomerAccount"> | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFilter<"CustomerAccount"> | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  privacyRequestedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  pseudonymizedAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  retentionExpiresAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  legalHoldAt?: Prisma.DateTimeNullableFilter<"CustomerAccount"> | Date | string | null
+  legalHoldReason?: Prisma.StringNullableFilter<"CustomerAccount"> | string | null
 }
 
 export type CustomerAccountCreateWithoutLegalAcceptancesInput = {
@@ -789,6 +989,14 @@ export type CustomerAccountCreateWithoutLegalAcceptancesInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -812,6 +1020,14 @@ export type CustomerAccountUncheckedCreateWithoutLegalAcceptancesInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -849,6 +1065,14 @@ export type CustomerAccountUpdateWithoutLegalAcceptancesInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -872,6 +1096,14 @@ export type CustomerAccountUncheckedUpdateWithoutLegalAcceptancesInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -893,6 +1125,14 @@ export type CustomerAccountCreateWithoutOrganizationInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutAccountInput
@@ -916,6 +1156,14 @@ export type CustomerAccountUncheckedCreateWithoutOrganizationInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutAccountInput
@@ -953,6 +1201,14 @@ export type CustomerAccountUpdateWithoutOrganizationInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutAccountNestedInput
@@ -976,6 +1232,14 @@ export type CustomerAccountUncheckedUpdateWithoutOrganizationInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutAccountNestedInput
@@ -997,6 +1261,14 @@ export type CustomerAccountCreateWithoutMembershipsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutAccountInput
@@ -1020,6 +1292,14 @@ export type CustomerAccountUncheckedCreateWithoutMembershipsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutAccountInput
@@ -1057,6 +1337,14 @@ export type CustomerAccountUpdateWithoutMembershipsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutAccountNestedInput
@@ -1080,6 +1368,14 @@ export type CustomerAccountUncheckedUpdateWithoutMembershipsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutAccountNestedInput
@@ -1101,6 +1397,14 @@ export type CustomerAccountCreateWithoutInvitationsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1124,6 +1428,14 @@ export type CustomerAccountUncheckedCreateWithoutInvitationsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutAccountInput
@@ -1161,6 +1473,14 @@ export type CustomerAccountUpdateWithoutInvitationsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1184,6 +1504,14 @@ export type CustomerAccountUncheckedUpdateWithoutInvitationsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutAccountNestedInput
@@ -1205,6 +1533,14 @@ export type CustomerAccountCreateWithoutCartsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1228,6 +1564,14 @@ export type CustomerAccountUncheckedCreateWithoutCartsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1265,6 +1609,14 @@ export type CustomerAccountUpdateWithoutCartsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1288,6 +1640,14 @@ export type CustomerAccountUncheckedUpdateWithoutCartsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1309,6 +1669,14 @@ export type CustomerAccountCreateWithoutOrdersInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1332,6 +1700,14 @@ export type CustomerAccountUncheckedCreateWithoutOrdersInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1369,6 +1745,14 @@ export type CustomerAccountUpdateWithoutOrdersInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1392,6 +1776,14 @@ export type CustomerAccountUncheckedUpdateWithoutOrdersInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1413,6 +1805,14 @@ export type CustomerAccountCreateWithoutSubscriptionsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1436,6 +1836,14 @@ export type CustomerAccountUncheckedCreateWithoutSubscriptionsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1473,6 +1881,14 @@ export type CustomerAccountUpdateWithoutSubscriptionsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1496,6 +1912,14 @@ export type CustomerAccountUncheckedUpdateWithoutSubscriptionsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1517,6 +1941,14 @@ export type CustomerAccountCreateWithoutOffersInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1540,6 +1972,14 @@ export type CustomerAccountUncheckedCreateWithoutOffersInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1577,6 +2017,14 @@ export type CustomerAccountUpdateWithoutOffersInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1600,6 +2048,14 @@ export type CustomerAccountUncheckedUpdateWithoutOffersInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1621,6 +2077,14 @@ export type CustomerAccountCreateWithoutOfferRedemptionsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1644,6 +2108,14 @@ export type CustomerAccountUncheckedCreateWithoutOfferRedemptionsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1681,6 +2153,14 @@ export type CustomerAccountUpdateWithoutOfferRedemptionsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1704,6 +2184,14 @@ export type CustomerAccountUncheckedUpdateWithoutOfferRedemptionsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1725,6 +2213,14 @@ export type CustomerAccountCreateWithoutLicensesInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1748,6 +2244,14 @@ export type CustomerAccountUncheckedCreateWithoutLicensesInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1785,6 +2289,14 @@ export type CustomerAccountUpdateWithoutLicensesInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1808,6 +2320,14 @@ export type CustomerAccountUncheckedUpdateWithoutLicensesInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1829,6 +2349,14 @@ export type CustomerAccountCreateWithoutTrialsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1852,6 +2380,14 @@ export type CustomerAccountUncheckedCreateWithoutTrialsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1889,6 +2425,14 @@ export type CustomerAccountUpdateWithoutTrialsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -1912,6 +2456,14 @@ export type CustomerAccountUncheckedUpdateWithoutTrialsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -1933,6 +2485,14 @@ export type CustomerAccountCreateWithoutAuditLogsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   owner: Prisma.UserCreateNestedOneWithoutOwnedAccountsInput
   organization?: Prisma.OrganizationProfileCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutAccountInput
@@ -1956,6 +2516,14 @@ export type CustomerAccountUncheckedCreateWithoutAuditLogsInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
   organization?: Prisma.OrganizationProfileUncheckedCreateNestedOneWithoutAccountInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAccountInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAccountInput
@@ -1993,6 +2561,14 @@ export type CustomerAccountUpdateWithoutAuditLogsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedAccountsNestedInput
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
@@ -2016,6 +2592,14 @@ export type CustomerAccountUncheckedUpdateWithoutAuditLogsInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -2037,6 +2621,14 @@ export type CustomerAccountCreateManyOwnerInput = {
   taxId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lifecycleState?: $Enums.CustomerLifecycleState
+  closureRequestedAt?: Date | string | null
+  closedAt?: Date | string | null
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
 }
 
 export type CustomerAccountUpdateWithoutOwnerInput = {
@@ -2047,6 +2639,14 @@ export type CustomerAccountUpdateWithoutOwnerInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutAccountNestedInput
@@ -2069,6 +2669,14 @@ export type CustomerAccountUncheckedUpdateWithoutOwnerInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationProfileUncheckedUpdateOneWithoutAccountNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAccountNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAccountNestedInput
@@ -2091,6 +2699,14 @@ export type CustomerAccountUncheckedUpdateManyWithoutOwnerInput = {
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  closureRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2223,6 +2839,14 @@ export type CustomerAccountSelect<ExtArgs extends runtime.Types.Extensions.Inter
   taxId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lifecycleState?: boolean
+  closureRequestedAt?: boolean
+  closedAt?: boolean
+  privacyRequestedAt?: boolean
+  pseudonymizedAt?: boolean
+  retentionExpiresAt?: boolean
+  legalHoldAt?: boolean
+  legalHoldReason?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.CustomerAccount$organizationArgs<ExtArgs>
   memberships?: boolean | Prisma.CustomerAccount$membershipsArgs<ExtArgs>
@@ -2248,6 +2872,14 @@ export type CustomerAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   taxId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lifecycleState?: boolean
+  closureRequestedAt?: boolean
+  closedAt?: boolean
+  privacyRequestedAt?: boolean
+  pseudonymizedAt?: boolean
+  retentionExpiresAt?: boolean
+  legalHoldAt?: boolean
+  legalHoldReason?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customerAccount"]>
 
@@ -2260,6 +2892,14 @@ export type CustomerAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   taxId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lifecycleState?: boolean
+  closureRequestedAt?: boolean
+  closedAt?: boolean
+  privacyRequestedAt?: boolean
+  pseudonymizedAt?: boolean
+  retentionExpiresAt?: boolean
+  legalHoldAt?: boolean
+  legalHoldReason?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customerAccount"]>
 
@@ -2272,9 +2912,17 @@ export type CustomerAccountSelectScalar = {
   taxId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lifecycleState?: boolean
+  closureRequestedAt?: boolean
+  closedAt?: boolean
+  privacyRequestedAt?: boolean
+  pseudonymizedAt?: boolean
+  retentionExpiresAt?: boolean
+  legalHoldAt?: boolean
+  legalHoldReason?: boolean
 }
 
-export type CustomerAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "displayName" | "ownerId" | "billingEmail" | "taxId" | "createdAt" | "updatedAt", ExtArgs["result"]["customerAccount"]>
+export type CustomerAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "displayName" | "ownerId" | "billingEmail" | "taxId" | "createdAt" | "updatedAt" | "lifecycleState" | "closureRequestedAt" | "closedAt" | "privacyRequestedAt" | "pseudonymizedAt" | "retentionExpiresAt" | "legalHoldAt" | "legalHoldReason", ExtArgs["result"]["customerAccount"]>
 export type CustomerAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.CustomerAccount$organizationArgs<ExtArgs>
@@ -2324,6 +2972,14 @@ export type $CustomerAccountPayload<ExtArgs extends runtime.Types.Extensions.Int
     taxId: string | null
     createdAt: Date
     updatedAt: Date
+    lifecycleState: $Enums.CustomerLifecycleState
+    closureRequestedAt: Date | null
+    closedAt: Date | null
+    privacyRequestedAt: Date | null
+    pseudonymizedAt: Date | null
+    retentionExpiresAt: Date | null
+    legalHoldAt: Date | null
+    legalHoldReason: string | null
   }, ExtArgs["result"]["customerAccount"]>
   composites: {}
 }
@@ -2768,6 +3424,14 @@ export interface CustomerAccountFieldRefs {
   readonly taxId: Prisma.FieldRef<"CustomerAccount", 'String'>
   readonly createdAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly lifecycleState: Prisma.FieldRef<"CustomerAccount", 'CustomerLifecycleState'>
+  readonly closureRequestedAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly closedAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly privacyRequestedAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly pseudonymizedAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly retentionExpiresAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly legalHoldAt: Prisma.FieldRef<"CustomerAccount", 'DateTime'>
+  readonly legalHoldReason: Prisma.FieldRef<"CustomerAccount", 'String'>
 }
 
 

@@ -26,6 +26,15 @@
 - Verification results are recorded in the developer journal and must remain distinguished from credential-gated provider certification.
 - Known integration boundary: immutable acceptances intentionally prevent the legacy permanent-customer deletion path from erasing a registered customer's evidence. Phase 6.1 must replace that destructive workflow with governed retention/pseudonymization; do not weaken the legal triggers.
 
+## Phase 6.1 — Data Integrity and Safe Deletion (implemented, uncommitted, under review)
+
+- Replaced customer hard deletion with suspension, closure/reopen, privacy review, legal hold, pseudonymization, purge eligibility, and deliberately constrained final purge.
+- Closure revokes sessions and blocks new commerce, trials, renewal, downloads, key reveal, and activation while preserving commercial and legal history.
+- Added durable idempotent `StorageCleanupJob` records, retry/backoff, abandoned-worker recovery, manual processing, and staged product finalization. Artifact replacement/removal now queues old-object cleanup after the active database reference is safe.
+- Added explicit account capabilities. Plain members no longer see broad orders, invoices, payments, subscriptions, or unassigned licenses. Billing and license-management duties are separated server-side.
+- Added the forward-only `20260803180000_data_integrity_safe_deletion` migration. It is applied to development; certification remains pending.
+- Final retention periods and legal sufficiency remain Phase 6.7 decisions. Full Phase 6.1 verification and owner approval remain required before commit.
+
 Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, genuine Resend direct/registration/outbox delivery, and real PayMongo test checkout creation are verified. Genuine payment/webhook/refund/reconciliation certification remains open.
 
 ## Completed modules
@@ -44,7 +53,7 @@ Phase 5.2 public Cloudflare-to-local routing, canonical runtime configuration, g
 
 ## In progress
 
-- Phase 6.1 Data Integrity and Safe Deletion is the next implementation phase; implementation has not begun.
+- Phase 6.1 is the active uncommitted owner-review phase. Its implementation verification passes at 18 migrations, 125 deterministic tests plus six credential-gated skips, and 9 browser tests in both local and certification environments. Do not begin Phase 6.2 until the owner approves and commits it.
 - Genuine PayMongo payment, webhook, refund, and reconciliation certification
 - Production infrastructure selection and provisioning
 

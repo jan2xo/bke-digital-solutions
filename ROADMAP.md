@@ -8,11 +8,11 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 
 - Phase 6.0 runtime parity, Phase 6.1A Legal Document Management, legal-consent hardening, administrator email-code verification, and the homepage catalog-pricing fix are committed and pushed.
 - Local development is operational and its PostgreSQL schema is current.
-- The healthy local certification stack is migration-current with 17 migrations; it is not the production deployment.
+- The healthy local certification stack is migration-current with 18 migrations in the Phase 6.1 working tree; it is not the production deployment.
 - PayMongo sandbox checkout creation and genuine Resend delivery pass, but the complete PayMongo lifecycle does not.
 - Live payments remain disabled.
 - VPS deployment remains postponed until the production-readiness gate passes.
-- Phase 6.1 Data Integrity & Safe Deletion is the next implementation phase.
+- Phase 6.1 Data Integrity & Safe Deletion is implemented and its certification/full regression gates pass in the uncommitted working tree. Owner review and an intentional commit remain before the phase becomes the pushed baseline.
 
 ## Priority definitions
 

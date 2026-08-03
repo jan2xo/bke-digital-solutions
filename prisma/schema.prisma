@@ -24,6 +24,33 @@ enum MemberRole {
   MEMBER
 }
 
+enum CustomerLifecycleState {
+  ACTIVE
+  SUSPENDED
+  CLOSURE_REQUESTED
+  CLOSED
+  PRIVACY_REVIEW
+  PSEUDONYMIZED
+  PURGE_ELIGIBLE
+}
+
+enum StorageCleanupStatus {
+  PENDING
+  PROCESSING
+  RETRYING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum StorageCleanupJobType {
+  PRODUCT_DELETION
+  ARTIFACT_REPLACEMENT
+  ARTIFACT_REMOVAL
+  ABANDONED_UPLOAD
+  ORPHANED_OBJECT
+}
+
 enum ProductType {
   SOFTWARE
   SAAS
@@ -165,6 +192,9 @@ enum SecurityEventType {
   PROVIDER_VALIDATION_SUCCEEDED
   PROVIDER_VALIDATION_FAILED
   LIVE_PAYMENT_ENABLE_BLOCKED
+  CUSTOMER_LIFECYCLE_CHANGED
+  CUSTOMER_PURGE_EXECUTED
+  STORAGE_CLEANUP_FAILED
 }
 
 enum SecurityEventOutcome {
@@ -228,6 +258,13 @@ model User {
   createdAt                     DateTime                        @default(now())
   updatedAt                     DateTime                        @updatedAt
   suspendedAt                   DateTime?
+  lifecycleState                CustomerLifecycleState          @default(ACTIVE)
+  privacyRequestedAt            DateTime?
+  pseudonymizedAt               DateTime?
+  retentionExpiresAt            DateTime?
+  legalHoldAt                   DateTime?
+  legalHoldReason               String?
+  emailHash                     String?
   credential                    PasswordCredential?
   sessions                      Session[]
   ownedAccounts                 CustomerAccount[]               @relation("AccountOwner")
@@ -244,6 +281,11 @@ model User {
   providerCredentialsCreated    ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
   legalVersionsAuthored         LegalDocumentVersion[]          @relation("LegalVersionAuthor")
   legalAcceptances              LegalAcceptance[]
+  storageCleanupJobsCreated     StorageCleanupJob[]              @relation("StorageCleanupCreator")
+
+  @@index([lifecycleState])
+  @@index([retentionExpiresAt])
+  @@index([legalHoldAt])
 }
 
 model PasswordCredential {
@@ -325,8 +367,8 @@ model SecurityEvent {
   id                   String                       @id @default(cuid())
   userId               String?
   type                 SecurityEventType
-  outcome              SecurityEventOutcome
-  severity             SecurityEventSeverity
+  outcome              SecurityEventOutcome            @default(INFORMATIONAL)
+  severity             SecurityEventSeverity           @default(INFORMATIONAL)
   sessionId            String?
   provider             ExternalProvider?
   authenticationMethod SessionAuthenticationMethod?
@@ -376,6 +418,14 @@ model CustomerAccount {
   taxId            String?
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
+  lifecycleState   CustomerLifecycleState @default(ACTIVE)
+  closureRequestedAt DateTime?
+  closedAt         DateTime?
+  privacyRequestedAt DateTime?
+  pseudonymizedAt  DateTime?
+  retentionExpiresAt DateTime?
+  legalHoldAt      DateTime?
+  legalHoldReason  String?
   owner            User                 @relation("AccountOwner", fields: [ownerId], references: [id])
   organization     OrganizationProfile?
   memberships      Membership[]
@@ -391,6 +441,10 @@ model CustomerAccount {
   legalAcceptances LegalAcceptance[]
 
   @@index([ownerId])
+  @@index([lifecycleState])
+  @@index([closedAt])
+  @@index([retentionExpiresAt])
+  @@index([legalHoldAt])
 }
 
 model LegalDocument {
@@ -448,7 +502,7 @@ model LegalAcceptance {
   customerAccount     CustomerAccount?     @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
   documentVersion     LegalDocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Restrict)
 
-  @@unique([userId, customerAccountId, documentVersionId, acceptanceContext])
+  @@unique([userId, customerAccountId, documentVersionId, acceptanceContext], map: "LegalAcceptance_userId_customerAccountId_documentVersionId_acce")
   @@index([userId, acceptedAt])
   @@index([customerAccountId, acceptedAt])
   @@index([documentVersionId, acceptedAt])
@@ -502,6 +556,7 @@ model Product {
   active        Boolean           @default(true)
   publishedAt   DateTime?
   archivedAt    DateTime?
+  deletionRequestedAt DateTime?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   versions      ProductVersion[]
@@ -513,6 +568,9 @@ model Product {
   subscriptions Subscription[]
   trials        TrialGrant[]
   offers        DiscountOffer[]
+  cleanupJobs   StorageCleanupJob[]
+
+  @@index([deletionRequestedAt])
 }
 
 model Edition {
@@ -632,6 +690,35 @@ model ProductArtifact {
   product       Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
   version       ProductVersion? @relation(fields: [versionId], references: [id])
   grants        DownloadGrant[]
+  cleanupJobs   StorageCleanupJob[]
+}
+
+model StorageCleanupJob {
+  id               String                @id @default(cuid())
+  type             StorageCleanupJobType
+  status           StorageCleanupStatus  @default(PENDING)
+  targetType       String
+  targetId         String
+  objectKey        String
+  idempotencyKey   String                @unique
+  attempts         Int                   @default(0)
+  nextAttemptAt    DateTime              @default(now())
+  lastErrorCode    String?
+  correlationId    String
+  productId        String?
+  artifactId       String?
+  createdByAdminId String?
+  createdAt        DateTime              @default(now())
+  startedAt        DateTime?
+  completedAt      DateTime?
+  product          Product?              @relation(fields: [productId], references: [id], onDelete: SetNull)
+  artifact         ProductArtifact?      @relation(fields: [artifactId], references: [id], onDelete: SetNull)
+  createdByAdmin   User?                 @relation("StorageCleanupCreator", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@index([targetType, targetId])
+  @@index([productId, status])
+  @@index([artifactId, status])
 }
 
 model Cart {
@@ -992,8 +1079,8 @@ model AuditLog {
   ipHash     String?
   metadata   Json             @default("{}")
   createdAt  DateTime         @default(now())
-  actor      User?            @relation("AuditActor", fields: [actorId], references: [id])
-  account    CustomerAccount? @relation(fields: [accountId], references: [id])
+  actor      User?            @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  account    CustomerAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
 
   @@index([accountId, createdAt])
   @@index([actorId, createdAt])

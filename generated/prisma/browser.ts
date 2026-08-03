@@ -133,6 +133,11 @@ export type Price = Prisma.PriceModel
  */
 export type ProductArtifact = Prisma.ProductArtifactModel
 /**
+ * Model StorageCleanupJob
+ *
+ */
+export type StorageCleanupJob = Prisma.StorageCleanupJobModel
+/**
  * Model Cart
  *
  */

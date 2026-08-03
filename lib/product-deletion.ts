@@ -1,8 +1,9 @@
 import "server-only";
+import { randomUUID } from "node:crypto";
 import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { redact } from "@/lib/redaction";
-import { deleteObject } from "@/lib/storage";
+import { processStorageCleanupJob, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 
 export type ProductDeletionDependencies = {
   carts: number;
@@ -185,22 +186,20 @@ export function evaluateProductDeletionEligibility(productId: string) {
 
 export class ProductDeletionError extends Error {
   constructor(
-    public readonly code: "NOT_FOUND" | "PRODUCT_DELETE_BLOCKED" | "PRODUCT_STORAGE_CLEANUP_FAILED",
+    public readonly code: "NOT_FOUND" | "PRODUCT_DELETE_BLOCKED" | "STORAGE_CLEANUP_PENDING" | "STORAGE_CLEANUP_FAILED" | "PRODUCT_DELETION_NOT_READY",
     public readonly eligibility?: ProductDeletionEligibility,
   ) {
     super(code);
   }
 }
 
-export async function permanentlyDeleteProduct(input: {
+export async function requestProductDeletion(input: {
   productId: string;
   actorId: string;
   confirmationName: string;
-  deleteStorageObject?: (objectKey: string) => Promise<void>;
 }) {
-  const removeObject = input.deleteStorageObject ?? deleteObject;
-  try {
-    return await db.$transaction(async (tx) => {
+  const correlationId = randomUUID();
+  return db.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM "Product" WHERE id = ${input.productId} FOR UPDATE`;
       const eligibility = await evaluateWithClient(tx, input.productId);
       if (!eligibility.productExists) throw new ProductDeletionError("NOT_FOUND", eligibility);
@@ -209,41 +208,64 @@ export async function permanentlyDeleteProduct(input: {
       }
 
       const [product, artifacts] = await Promise.all([
-        tx.product.findUniqueOrThrow({ where: { id: input.productId }, select: { imageKey: true } }),
-        tx.productArtifact.findMany({ where: { productId: input.productId }, select: { objectKey: true } }),
+        tx.product.findUniqueOrThrow({ where: { id: input.productId }, select: { imageKey: true, deletionRequestedAt: true } }),
+        tx.productArtifact.findMany({ where: { productId: input.productId }, select: { id: true, objectKey: true } }),
       ]);
-      const objectKeys = [...new Set([product.imageKey, ...artifacts.map((artifact) => artifact.objectKey)].filter((key): key is string => Boolean(key)))];
-      try {
-        for (const objectKey of objectKeys) await removeObject(objectKey);
-      } catch {
-        throw new ProductDeletionError("PRODUCT_STORAGE_CLEANUP_FAILED", eligibility);
+      const now = product.deletionRequestedAt ?? new Date();
+      await tx.product.update({ where: { id: input.productId }, data: { deletionRequestedAt: now, active: false } });
+      const jobs = [
+        ...(product.imageKey ? [{ type: "PRODUCT_DELETION" as const, targetType: "Product", targetId: input.productId, objectKey: product.imageKey, productId: input.productId }] : []),
+        ...artifacts.map((artifact) => ({ type: "PRODUCT_DELETION" as const, targetType: "ProductArtifact", targetId: artifact.id, objectKey: artifact.objectKey, productId: input.productId, artifactId: artifact.id })),
+      ];
+      for (const job of jobs) {
+        const idempotencyKey = storageCleanupIdempotencyKey(job.type, job.targetId, job.objectKey);
+        await tx.storageCleanupJob.upsert({ where: { idempotencyKey }, update: {}, create: { ...job, idempotencyKey, correlationId, createdByAdminId: input.actorId } });
       }
-
-      await tx.productArtifact.deleteMany({ where: { productId: input.productId } });
-      await tx.productVersion.deleteMany({ where: { productId: input.productId } });
-      await tx.purchasePlan.deleteMany({ where: { edition: { productId: input.productId } } });
-      await tx.edition.deleteMany({ where: { productId: input.productId } });
-      await tx.price.deleteMany({ where: { productId: input.productId } });
-      await tx.licensePolicy.deleteMany({ where: { productId: input.productId } });
-      await tx.product.delete({ where: { id: input.productId } });
       await tx.auditLog.create({
         data: {
           actorId: input.actorId,
-          action: "PRODUCT_PERMANENTLY_DELETED",
+          action: "PRODUCT_DELETION_REQUESTED",
           targetType: "Product",
           targetId: input.productId,
           metadata: redact({
             productName: eligibility.productName,
             productSlug: eligibility.productSlug,
-            deletedResources: eligibility.removableResources,
+            queuedObjects: jobs.length,
             eligibility: { reason: eligibility.reason, blockingDependencies: eligibility.blockingDependencies },
           }) as Prisma.InputJsonValue,
         },
       });
-      return eligibility;
+      return { eligibility, queuedJobs: jobs.length };
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 5_000, timeout: 30_000 });
-  } catch (error) {
-    if (error instanceof ProductDeletionError) throw error;
-    throw error;
-  }
+}
+
+export async function finalizeProductDeletion(input: { productId: string; actorId: string }) {
+  return db.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM "Product" WHERE id = ${input.productId} FOR UPDATE`;
+    const product = await tx.product.findUnique({ where: { id: input.productId }, select: { deletionRequestedAt: true } });
+    if (!product) throw new ProductDeletionError("NOT_FOUND");
+    if (!product.deletionRequestedAt) throw new ProductDeletionError("PRODUCT_DELETION_NOT_READY");
+    const jobs = await tx.storageCleanupJob.findMany({ where: { productId: input.productId }, select: { status: true } });
+    if (jobs.some((job) => job.status === "FAILED")) throw new ProductDeletionError("STORAGE_CLEANUP_FAILED");
+    if (jobs.some((job) => job.status !== "SUCCEEDED")) throw new ProductDeletionError("STORAGE_CLEANUP_PENDING");
+    const eligibility = await evaluateWithClient(tx, input.productId);
+    if (!eligibility.canDelete) throw new ProductDeletionError("PRODUCT_DELETE_BLOCKED", eligibility);
+    await tx.productArtifact.deleteMany({ where: { productId: input.productId } });
+    await tx.productVersion.deleteMany({ where: { productId: input.productId } });
+    await tx.purchasePlan.deleteMany({ where: { edition: { productId: input.productId } } });
+    await tx.edition.deleteMany({ where: { productId: input.productId } });
+    await tx.price.deleteMany({ where: { productId: input.productId } });
+    await tx.licensePolicy.deleteMany({ where: { productId: input.productId } });
+    await tx.product.delete({ where: { id: input.productId } });
+    await tx.auditLog.create({ data: { actorId: input.actorId, action: "PRODUCT_DELETION_FINALIZED", targetType: "Product", targetId: input.productId, metadata: { cleanupJobs: jobs.length } } });
+    return eligibility;
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 5_000, timeout: 30_000 });
+}
+
+// Operational helper: each storage operation occurs after the request transaction commits.
+export async function permanentlyDeleteProduct(input: { productId: string; actorId: string; confirmationName: string; deleteStorageObject?: (objectKey: string) => Promise<void> }) {
+  await requestProductDeletion(input);
+  const jobs = await db.storageCleanupJob.findMany({ where: { productId: input.productId, status: { not: "SUCCEEDED" } }, select: { id: true } });
+  for (const job of jobs) await processStorageCleanupJob(job.id, input.deleteStorageObject);
+  return finalizeProductDeletion({ productId: input.productId, actorId: input.actorId });
 }

@@ -16,7 +16,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const { id } = await params;
     const { legalVersionIds } = z.object({ legalVersionIds: z.array(z.string().cuid()).length(3) }).strict().parse(await request.json());
     const subscription = await db.subscription.findFirst({
-      where: { id, account: { OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
+      where: { id, account: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
     });
     if (!subscription) throw new Error("NOT_FOUND");
     let planId = subscription.purchasePlanId;

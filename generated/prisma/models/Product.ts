@@ -38,6 +38,7 @@ export type ProductMinAggregateOutputType = {
   active: boolean | null
   publishedAt: Date | null
   archivedAt: Date | null
+  deletionRequestedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +57,7 @@ export type ProductMaxAggregateOutputType = {
   active: boolean | null
   publishedAt: Date | null
   archivedAt: Date | null
+  deletionRequestedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -75,6 +77,7 @@ export type ProductCountAggregateOutputType = {
   active: number
   publishedAt: number
   archivedAt: number
+  deletionRequestedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -95,6 +98,7 @@ export type ProductMinAggregateInputType = {
   active?: true
   publishedAt?: true
   archivedAt?: true
+  deletionRequestedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -113,6 +117,7 @@ export type ProductMaxAggregateInputType = {
   active?: true
   publishedAt?: true
   archivedAt?: true
+  deletionRequestedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,6 +137,7 @@ export type ProductCountAggregateInputType = {
   active?: true
   publishedAt?: true
   archivedAt?: true
+  deletionRequestedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -224,6 +230,7 @@ export type ProductGroupByOutputType = {
   active: boolean
   publishedAt: Date | null
   archivedAt: Date | null
+  deletionRequestedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: ProductCountAggregateOutputType | null
@@ -264,6 +271,7 @@ export type ProductWhereInput = {
   active?: Prisma.BoolFilter<"Product"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   archivedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
+  deletionRequestedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   versions?: Prisma.ProductVersionListRelationFilter
@@ -275,6 +283,7 @@ export type ProductWhereInput = {
   subscriptions?: Prisma.SubscriptionListRelationFilter
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
+  cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -292,6 +301,7 @@ export type ProductOrderByWithRelationInput = {
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletionRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   versions?: Prisma.ProductVersionOrderByRelationAggregateInput
@@ -303,6 +313,7 @@ export type ProductOrderByWithRelationInput = {
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
   trials?: Prisma.TrialGrantOrderByRelationAggregateInput
   offers?: Prisma.DiscountOfferOrderByRelationAggregateInput
+  cleanupJobs?: Prisma.StorageCleanupJobOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -323,6 +334,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   active?: Prisma.BoolFilter<"Product"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   archivedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
+  deletionRequestedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   versions?: Prisma.ProductVersionListRelationFilter
@@ -334,6 +346,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   subscriptions?: Prisma.SubscriptionListRelationFilter
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
+  cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
 }, "id" | "slug">
 
 export type ProductOrderByWithAggregationInput = {
@@ -351,6 +364,7 @@ export type ProductOrderByWithAggregationInput = {
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletionRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProductCountOrderByAggregateInput
@@ -376,6 +390,7 @@ export type ProductScalarWhereWithAggregatesInput = {
   active?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
+  deletionRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
 }
@@ -395,6 +410,7 @@ export type ProductCreateInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -406,6 +422,7 @@ export type ProductCreateInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -423,6 +440,7 @@ export type ProductUncheckedCreateInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -434,6 +452,7 @@ export type ProductUncheckedCreateInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -451,6 +470,7 @@ export type ProductUpdateInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -462,6 +482,7 @@ export type ProductUpdateInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -479,6 +500,7 @@ export type ProductUncheckedUpdateInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -490,6 +512,7 @@ export type ProductUncheckedUpdateInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -507,6 +530,7 @@ export type ProductCreateManyInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -526,6 +550,7 @@ export type ProductUpdateManyMutationInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -545,6 +570,7 @@ export type ProductUncheckedUpdateManyInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -572,6 +598,7 @@ export type ProductCountOrderByAggregateInput = {
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  deletionRequestedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -590,6 +617,7 @@ export type ProductMaxOrderByAggregateInput = {
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  deletionRequestedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -608,6 +636,7 @@ export type ProductMinOrderByAggregateInput = {
   active?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  deletionRequestedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -705,6 +734,22 @@ export type ProductUpdateOneRequiredWithoutArtifactsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutArtifactsInput, Prisma.ProductUpdateWithoutArtifactsInput>, Prisma.ProductUncheckedUpdateWithoutArtifactsInput>
 }
 
+export type ProductCreateNestedOneWithoutCleanupJobsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCleanupJobsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneWithoutCleanupJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCleanupJobsInput
+  upsert?: Prisma.ProductUpsertWithoutCleanupJobsInput
+  disconnect?: Prisma.ProductWhereInput | boolean
+  delete?: Prisma.ProductWhereInput | boolean
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutCleanupJobsInput, Prisma.ProductUpdateWithoutCleanupJobsInput>, Prisma.ProductUncheckedUpdateWithoutCleanupJobsInput>
+}
+
 export type ProductCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutSubscriptionsInput, Prisma.ProductUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutSubscriptionsInput
@@ -778,6 +823,7 @@ export type ProductCreateWithoutEditionsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -788,6 +834,7 @@ export type ProductCreateWithoutEditionsInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutEditionsInput = {
@@ -805,6 +852,7 @@ export type ProductUncheckedCreateWithoutEditionsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -815,6 +863,7 @@ export type ProductUncheckedCreateWithoutEditionsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutEditionsInput = {
@@ -848,6 +897,7 @@ export type ProductUpdateWithoutEditionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -858,6 +908,7 @@ export type ProductUpdateWithoutEditionsInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutEditionsInput = {
@@ -875,6 +926,7 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -885,6 +937,7 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutVersionsInput = {
@@ -902,6 +955,7 @@ export type ProductCreateWithoutVersionsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
@@ -912,6 +966,7 @@ export type ProductCreateWithoutVersionsInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutVersionsInput = {
@@ -929,6 +984,7 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
@@ -939,6 +995,7 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutVersionsInput = {
@@ -972,6 +1029,7 @@ export type ProductUpdateWithoutVersionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
@@ -982,6 +1040,7 @@ export type ProductUpdateWithoutVersionsInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutVersionsInput = {
@@ -999,6 +1058,7 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
@@ -1009,6 +1069,7 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPoliciesInput = {
@@ -1026,6 +1087,7 @@ export type ProductCreateWithoutPoliciesInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1036,6 +1098,7 @@ export type ProductCreateWithoutPoliciesInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPoliciesInput = {
@@ -1053,6 +1116,7 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1063,6 +1127,7 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPoliciesInput = {
@@ -1096,6 +1161,7 @@ export type ProductUpdateWithoutPoliciesInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1106,6 +1172,7 @@ export type ProductUpdateWithoutPoliciesInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPoliciesInput = {
@@ -1123,6 +1190,7 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -1133,6 +1201,7 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPricesInput = {
@@ -1150,6 +1219,7 @@ export type ProductCreateWithoutPricesInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1160,6 +1230,7 @@ export type ProductCreateWithoutPricesInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPricesInput = {
@@ -1177,6 +1248,7 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1187,6 +1259,7 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPricesInput = {
@@ -1220,6 +1293,7 @@ export type ProductUpdateWithoutPricesInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1230,6 +1304,7 @@ export type ProductUpdateWithoutPricesInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPricesInput = {
@@ -1247,6 +1322,7 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -1257,6 +1333,7 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutArtifactsInput = {
@@ -1274,6 +1351,7 @@ export type ProductCreateWithoutArtifactsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1284,6 +1362,7 @@ export type ProductCreateWithoutArtifactsInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutArtifactsInput = {
@@ -1301,6 +1380,7 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1311,6 +1391,7 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutArtifactsInput = {
@@ -1344,6 +1425,7 @@ export type ProductUpdateWithoutArtifactsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1354,6 +1436,7 @@ export type ProductUpdateWithoutArtifactsInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutArtifactsInput = {
@@ -1371,12 +1454,146 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutCleanupJobsInput = {
+  id?: string
+  slug: string
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutCleanupJobsInput = {
+  id?: string
+  slug: string
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutCleanupJobsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
+}
+
+export type ProductUpsertWithoutCleanupJobsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutCleanupJobsInput, Prisma.ProductUncheckedUpdateWithoutCleanupJobsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutCleanupJobsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutCleanupJobsInput, Prisma.ProductUncheckedUpdateWithoutCleanupJobsInput>
+}
+
+export type ProductUpdateWithoutCleanupJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
@@ -1398,6 +1615,7 @@ export type ProductCreateWithoutSubscriptionsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1408,6 +1626,7 @@ export type ProductCreateWithoutSubscriptionsInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutSubscriptionsInput = {
@@ -1425,6 +1644,7 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1435,6 +1655,7 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutSubscriptionsInput = {
@@ -1468,6 +1689,7 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1478,6 +1700,7 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1495,6 +1718,7 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -1505,6 +1729,7 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutOffersInput = {
@@ -1522,6 +1747,7 @@ export type ProductCreateWithoutOffersInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1532,6 +1758,7 @@ export type ProductCreateWithoutOffersInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutOffersInput = {
@@ -1549,6 +1776,7 @@ export type ProductUncheckedCreateWithoutOffersInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1559,6 +1787,7 @@ export type ProductUncheckedCreateWithoutOffersInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutOffersInput = {
@@ -1592,6 +1821,7 @@ export type ProductUpdateWithoutOffersInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1602,6 +1832,7 @@ export type ProductUpdateWithoutOffersInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutOffersInput = {
@@ -1619,6 +1850,7 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -1629,6 +1861,7 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutLicensesInput = {
@@ -1646,6 +1879,7 @@ export type ProductCreateWithoutLicensesInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1656,6 +1890,7 @@ export type ProductCreateWithoutLicensesInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutLicensesInput = {
@@ -1673,6 +1908,7 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1683,6 +1919,7 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutLicensesInput = {
@@ -1716,6 +1953,7 @@ export type ProductUpdateWithoutLicensesInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1726,6 +1964,7 @@ export type ProductUpdateWithoutLicensesInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutLicensesInput = {
@@ -1743,6 +1982,7 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -1753,6 +1993,7 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutTrialsInput = {
@@ -1770,6 +2011,7 @@ export type ProductCreateWithoutTrialsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
@@ -1780,6 +2022,7 @@ export type ProductCreateWithoutTrialsInput = {
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutTrialsInput = {
@@ -1797,6 +2040,7 @@ export type ProductUncheckedCreateWithoutTrialsInput = {
   active?: boolean
   publishedAt?: Date | string | null
   archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
@@ -1807,6 +2051,7 @@ export type ProductUncheckedCreateWithoutTrialsInput = {
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutTrialsInput = {
@@ -1840,6 +2085,7 @@ export type ProductUpdateWithoutTrialsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
@@ -1850,6 +2096,7 @@ export type ProductUpdateWithoutTrialsInput = {
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutTrialsInput = {
@@ -1867,6 +2114,7 @@ export type ProductUncheckedUpdateWithoutTrialsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
@@ -1877,6 +2125,7 @@ export type ProductUncheckedUpdateWithoutTrialsInput = {
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
 }
 
 
@@ -1894,6 +2143,7 @@ export type ProductCountOutputType = {
   subscriptions: number
   trials: number
   offers: number
+  cleanupJobs: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1906,6 +2156,7 @@ export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   subscriptions?: boolean | ProductCountOutputTypeCountSubscriptionsArgs
   trials?: boolean | ProductCountOutputTypeCountTrialsArgs
   offers?: boolean | ProductCountOutputTypeCountOffersArgs
+  cleanupJobs?: boolean | ProductCountOutputTypeCountCleanupJobsArgs
 }
 
 /**
@@ -1981,6 +2232,13 @@ export type ProductCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types.
   where?: Prisma.DiscountOfferWhereInput
 }
 
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountCleanupJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StorageCleanupJobWhereInput
+}
+
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1997,6 +2255,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
+  deletionRequestedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
@@ -2008,6 +2267,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   subscriptions?: boolean | Prisma.Product$subscriptionsArgs<ExtArgs>
   trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.Product$offersArgs<ExtArgs>
+  cleanupJobs?: boolean | Prisma.Product$cleanupJobsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -2026,6 +2286,7 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
+  deletionRequestedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["product"]>
@@ -2045,6 +2306,7 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
+  deletionRequestedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["product"]>
@@ -2064,11 +2326,12 @@ export type ProductSelectScalar = {
   active?: boolean
   publishedAt?: boolean
   archivedAt?: boolean
+  deletionRequestedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
   editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
@@ -2079,6 +2342,7 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   subscriptions?: boolean | Prisma.Product$subscriptionsArgs<ExtArgs>
   trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.Product$offersArgs<ExtArgs>
+  cleanupJobs?: boolean | Prisma.Product$cleanupJobsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2096,6 +2360,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
     trials: Prisma.$TrialGrantPayload<ExtArgs>[]
     offers: Prisma.$DiscountOfferPayload<ExtArgs>[]
+    cleanupJobs: Prisma.$StorageCleanupJobPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2112,6 +2377,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     active: boolean
     publishedAt: Date | null
     archivedAt: Date | null
+    deletionRequestedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["product"]>
@@ -2517,6 +2783,7 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   subscriptions<T extends Prisma.Product$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   trials<T extends Prisma.Product$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offers<T extends Prisma.Product$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiscountOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cleanupJobs<T extends Prisma.Product$cleanupJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$cleanupJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageCleanupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2560,6 +2827,7 @@ export interface ProductFieldRefs {
   readonly active: Prisma.FieldRef<"Product", 'Boolean'>
   readonly publishedAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly archivedAt: Prisma.FieldRef<"Product", 'DateTime'>
+  readonly deletionRequestedAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Product", 'DateTime'>
 }
@@ -3168,6 +3436,30 @@ export type Product$offersArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.DiscountOfferScalarFieldEnum | Prisma.DiscountOfferScalarFieldEnum[]
+}
+
+/**
+ * Product.cleanupJobs
+ */
+export type Product$cleanupJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StorageCleanupJob
+   */
+  select?: Prisma.StorageCleanupJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StorageCleanupJob
+   */
+  omit?: Prisma.StorageCleanupJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StorageCleanupJobInclude<ExtArgs> | null
+  where?: Prisma.StorageCleanupJobWhereInput
+  orderBy?: Prisma.StorageCleanupJobOrderByWithRelationInput | Prisma.StorageCleanupJobOrderByWithRelationInput[]
+  cursor?: Prisma.StorageCleanupJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StorageCleanupJobScalarFieldEnum | Prisma.StorageCleanupJobScalarFieldEnum[]
 }
 
 /**
