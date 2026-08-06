@@ -190,6 +190,21 @@ export const ReleaseChannel = {
 export type ReleaseChannel = (typeof ReleaseChannel)[keyof typeof ReleaseChannel]
 
 
+export const ReleaseLifecycle = {
+  DRAFT: 'DRAFT',
+  INTERNAL: 'INTERNAL',
+  ALPHA: 'ALPHA',
+  BETA: 'BETA',
+  RELEASE_CANDIDATE: 'RELEASE_CANDIDATE',
+  STABLE: 'STABLE',
+  LTS: 'LTS',
+  DEPRECATED: 'DEPRECATED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type ReleaseLifecycle = (typeof ReleaseLifecycle)[keyof typeof ReleaseLifecycle]
+
+
 export const BillingType = {
   ONE_TIME: 'ONE_TIME',
   SUBSCRIPTION: 'SUBSCRIPTION'

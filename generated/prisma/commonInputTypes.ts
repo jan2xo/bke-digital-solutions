@@ -600,6 +600,13 @@ export type EnumReleaseChannelFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel> | $Enums.ReleaseChannel
 }
 
+export type EnumReleaseLifecycleFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseLifecycle | Prisma.EnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseLifecycleFilter<$PrismaModel> | $Enums.ReleaseLifecycle
+}
+
 export type EnumReleaseChannelWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ReleaseChannel | Prisma.EnumReleaseChannelFieldRefInput<$PrismaModel>
   in?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
@@ -608,6 +615,16 @@ export type EnumReleaseChannelWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
   _max?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
+}
+
+export type EnumReleaseLifecycleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseLifecycle | Prisma.EnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseLifecycleWithAggregatesFilter<$PrismaModel> | $Enums.ReleaseLifecycle
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReleaseLifecycleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReleaseLifecycleFilter<$PrismaModel>
 }
 
 export type EnumBillingTypeFilter<$PrismaModel = never> = {
@@ -1658,6 +1675,13 @@ export type NestedEnumReleaseChannelFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel> | $Enums.ReleaseChannel
 }
 
+export type NestedEnumReleaseLifecycleFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseLifecycle | Prisma.EnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseLifecycleFilter<$PrismaModel> | $Enums.ReleaseLifecycle
+}
+
 export type NestedEnumReleaseChannelWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ReleaseChannel | Prisma.EnumReleaseChannelFieldRefInput<$PrismaModel>
   in?: $Enums.ReleaseChannel[] | Prisma.ListEnumReleaseChannelFieldRefInput<$PrismaModel>
@@ -1666,6 +1690,16 @@ export type NestedEnumReleaseChannelWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
   _max?: Prisma.NestedEnumReleaseChannelFilter<$PrismaModel>
+}
+
+export type NestedEnumReleaseLifecycleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReleaseLifecycle | Prisma.EnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  in?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReleaseLifecycle[] | Prisma.ListEnumReleaseLifecycleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReleaseLifecycleWithAggregatesFilter<$PrismaModel> | $Enums.ReleaseLifecycle
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReleaseLifecycleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReleaseLifecycleFilter<$PrismaModel>
 }
 
 export type NestedEnumBillingTypeFilter<$PrismaModel = never> = {

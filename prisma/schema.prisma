@@ -137,6 +137,18 @@ enum ReleaseChannel {
   BETA
 }
 
+enum ReleaseLifecycle {
+  DRAFT
+  INTERNAL
+  ALPHA
+  BETA
+  RELEASE_CANDIDATE
+  STABLE
+  LTS
+  DEPRECATED
+  ARCHIVED
+}
+
 enum BillingType {
   ONE_TIME
   SUBSCRIPTION
@@ -366,6 +378,9 @@ model User {
   observabilityAlertsAcknowledged ObservabilityAlert[]            @relation("ObservabilityAlertAcknowledger")
   observabilityAlertsResolved     ObservabilityAlert[]            @relation("ObservabilityAlertResolver")
   complianceEvidenceRecorded      ComplianceEvidence[]
+  releaseApprovalsCreated         ReleaseApproval[] @relation("ReleaseApprovalCreator")
+  releaseApprovalsReviewed        ReleaseApproval[] @relation("ReleaseApprovalReviewer")
+  releaseApprovalsApproved        ReleaseApproval[] @relation("ReleaseApprovalApprover")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -714,6 +729,7 @@ model ProductVersion {
   releaseNotes    String?
   changelog       String?
   channel         ReleaseChannel    @default(STABLE)
+  lifecycle       ReleaseLifecycle  @default(DRAFT)
   deprecatedAt    DateTime?
   active          Boolean           @default(true)
   operatingSystem String
@@ -724,8 +740,28 @@ model ProductVersion {
   product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
   artifacts       ProductArtifact[]
   supplyChainEvidence SupplyChainEvidence?
+  approvals       ReleaseApproval[]
+  backupEvidence  String?
+  complianceEvidence String?
 
   @@unique([productId, version])
+}
+
+model ReleaseApproval {
+  id          String        @id @default(cuid())
+  versionId   String
+  stage       ReleaseLifecycle
+  createdById String
+  reviewedById String?
+  approvedById String?
+  approvedAt  DateTime?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  version     ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  createdBy   User          @relation("ReleaseApprovalCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  reviewedBy  User?         @relation("ReleaseApprovalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  approvedBy  User?         @relation("ReleaseApprovalApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  @@index([versionId, stage])
 }
 
 model SupplyChainEvidence {

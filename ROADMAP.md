@@ -6,6 +6,8 @@ Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an adminis
 
 Phase 6.8 Secure Software Supply Chain is technically implemented with SBOM/provenance generation and release evidence tracking. Signing certificates and malware scanning remain pending.
 
+Phase 6.9 Production Release Management is technically implemented with controlled lifecycle transitions and approval evidence. It does not imply release signing, malware clearance, or production deployment approval.
+
 This roadmap supersedes the earlier Phase 5 continuation plan. The verified current-state audit in [`TRUTHCHECK.md`](./TRUTHCHECK.md) is the authority for priorities and launch gates.
 
 ## Current position

@@ -126,3 +126,7 @@ Added `ComplianceRequirement` and immutable `ComplianceEvidence` records, seeded
 ## Phase 6.8 — Secure software supply chain
 
 Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence`, artifact hash manifests, administrator visibility at `/admin/supply-chain`, and audited status updates. Signing keys/certificates and malware scanning remain explicitly pending.
+
+## Phase 6.9 — Production release management
+
+Added release lifecycle stages, forward-only transition enforcement, approval records, evidence indicators, and Release Center visibility. Stable/LTS require explicit approval. Signing, malware, backup, compliance, and deployment gates remain separate.

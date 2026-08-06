@@ -31,6 +31,7 @@ export type ProductVersionMinAggregateOutputType = {
   releaseNotes: string | null
   changelog: string | null
   channel: $Enums.ReleaseChannel | null
+  lifecycle: $Enums.ReleaseLifecycle | null
   deprecatedAt: Date | null
   active: boolean | null
   operatingSystem: string | null
@@ -38,6 +39,8 @@ export type ProductVersionMinAggregateOutputType = {
   isLatest: boolean | null
   publishedAt: Date | null
   releasedAt: Date | null
+  backupEvidence: string | null
+  complianceEvidence: string | null
 }
 
 export type ProductVersionMaxAggregateOutputType = {
@@ -47,6 +50,7 @@ export type ProductVersionMaxAggregateOutputType = {
   releaseNotes: string | null
   changelog: string | null
   channel: $Enums.ReleaseChannel | null
+  lifecycle: $Enums.ReleaseLifecycle | null
   deprecatedAt: Date | null
   active: boolean | null
   operatingSystem: string | null
@@ -54,6 +58,8 @@ export type ProductVersionMaxAggregateOutputType = {
   isLatest: boolean | null
   publishedAt: Date | null
   releasedAt: Date | null
+  backupEvidence: string | null
+  complianceEvidence: string | null
 }
 
 export type ProductVersionCountAggregateOutputType = {
@@ -63,6 +69,7 @@ export type ProductVersionCountAggregateOutputType = {
   releaseNotes: number
   changelog: number
   channel: number
+  lifecycle: number
   deprecatedAt: number
   active: number
   operatingSystem: number
@@ -70,6 +77,8 @@ export type ProductVersionCountAggregateOutputType = {
   isLatest: number
   publishedAt: number
   releasedAt: number
+  backupEvidence: number
+  complianceEvidence: number
   _all: number
 }
 
@@ -81,6 +90,7 @@ export type ProductVersionMinAggregateInputType = {
   releaseNotes?: true
   changelog?: true
   channel?: true
+  lifecycle?: true
   deprecatedAt?: true
   active?: true
   operatingSystem?: true
@@ -88,6 +98,8 @@ export type ProductVersionMinAggregateInputType = {
   isLatest?: true
   publishedAt?: true
   releasedAt?: true
+  backupEvidence?: true
+  complianceEvidence?: true
 }
 
 export type ProductVersionMaxAggregateInputType = {
@@ -97,6 +109,7 @@ export type ProductVersionMaxAggregateInputType = {
   releaseNotes?: true
   changelog?: true
   channel?: true
+  lifecycle?: true
   deprecatedAt?: true
   active?: true
   operatingSystem?: true
@@ -104,6 +117,8 @@ export type ProductVersionMaxAggregateInputType = {
   isLatest?: true
   publishedAt?: true
   releasedAt?: true
+  backupEvidence?: true
+  complianceEvidence?: true
 }
 
 export type ProductVersionCountAggregateInputType = {
@@ -113,6 +128,7 @@ export type ProductVersionCountAggregateInputType = {
   releaseNotes?: true
   changelog?: true
   channel?: true
+  lifecycle?: true
   deprecatedAt?: true
   active?: true
   operatingSystem?: true
@@ -120,6 +136,8 @@ export type ProductVersionCountAggregateInputType = {
   isLatest?: true
   publishedAt?: true
   releasedAt?: true
+  backupEvidence?: true
+  complianceEvidence?: true
   _all?: true
 }
 
@@ -202,6 +220,7 @@ export type ProductVersionGroupByOutputType = {
   releaseNotes: string | null
   changelog: string | null
   channel: $Enums.ReleaseChannel
+  lifecycle: $Enums.ReleaseLifecycle
   deprecatedAt: Date | null
   active: boolean
   operatingSystem: string
@@ -209,6 +228,8 @@ export type ProductVersionGroupByOutputType = {
   isLatest: boolean
   publishedAt: Date | null
   releasedAt: Date
+  backupEvidence: string | null
+  complianceEvidence: string | null
   _count: ProductVersionCountAggregateOutputType | null
   _min: ProductVersionMinAggregateOutputType | null
   _max: ProductVersionMaxAggregateOutputType | null
@@ -239,6 +260,7 @@ export type ProductVersionWhereInput = {
   releaseNotes?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   changelog?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   channel?: Prisma.EnumReleaseChannelFilter<"ProductVersion"> | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFilter<"ProductVersion"> | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   active?: Prisma.BoolFilter<"ProductVersion"> | boolean
   operatingSystem?: Prisma.StringFilter<"ProductVersion"> | string
@@ -246,9 +268,12 @@ export type ProductVersionWhereInput = {
   isLatest?: Prisma.BoolFilter<"ProductVersion"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeFilter<"ProductVersion"> | Date | string
+  backupEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
+  complianceEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   artifacts?: Prisma.ProductArtifactListRelationFilter
   supplyChainEvidence?: Prisma.XOR<Prisma.SupplyChainEvidenceNullableScalarRelationFilter, Prisma.SupplyChainEvidenceWhereInput> | null
+  approvals?: Prisma.ReleaseApprovalListRelationFilter
 }
 
 export type ProductVersionOrderByWithRelationInput = {
@@ -258,6 +283,7 @@ export type ProductVersionOrderByWithRelationInput = {
   releaseNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   changelog?: Prisma.SortOrderInput | Prisma.SortOrder
   channel?: Prisma.SortOrder
+  lifecycle?: Prisma.SortOrder
   deprecatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   operatingSystem?: Prisma.SortOrder
@@ -265,9 +291,12 @@ export type ProductVersionOrderByWithRelationInput = {
   isLatest?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
+  backupEvidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  complianceEvidence?: Prisma.SortOrderInput | Prisma.SortOrder
   product?: Prisma.ProductOrderByWithRelationInput
   artifacts?: Prisma.ProductArtifactOrderByRelationAggregateInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceOrderByWithRelationInput
+  approvals?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
 }
 
 export type ProductVersionWhereUniqueInput = Prisma.AtLeast<{
@@ -281,6 +310,7 @@ export type ProductVersionWhereUniqueInput = Prisma.AtLeast<{
   releaseNotes?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   changelog?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   channel?: Prisma.EnumReleaseChannelFilter<"ProductVersion"> | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFilter<"ProductVersion"> | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   active?: Prisma.BoolFilter<"ProductVersion"> | boolean
   operatingSystem?: Prisma.StringFilter<"ProductVersion"> | string
@@ -288,9 +318,12 @@ export type ProductVersionWhereUniqueInput = Prisma.AtLeast<{
   isLatest?: Prisma.BoolFilter<"ProductVersion"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeFilter<"ProductVersion"> | Date | string
+  backupEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
+  complianceEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   artifacts?: Prisma.ProductArtifactListRelationFilter
   supplyChainEvidence?: Prisma.XOR<Prisma.SupplyChainEvidenceNullableScalarRelationFilter, Prisma.SupplyChainEvidenceWhereInput> | null
+  approvals?: Prisma.ReleaseApprovalListRelationFilter
 }, "id" | "productId_version">
 
 export type ProductVersionOrderByWithAggregationInput = {
@@ -300,6 +333,7 @@ export type ProductVersionOrderByWithAggregationInput = {
   releaseNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   changelog?: Prisma.SortOrderInput | Prisma.SortOrder
   channel?: Prisma.SortOrder
+  lifecycle?: Prisma.SortOrder
   deprecatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   operatingSystem?: Prisma.SortOrder
@@ -307,6 +341,8 @@ export type ProductVersionOrderByWithAggregationInput = {
   isLatest?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
+  backupEvidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  complianceEvidence?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProductVersionCountOrderByAggregateInput
   _max?: Prisma.ProductVersionMaxOrderByAggregateInput
   _min?: Prisma.ProductVersionMinOrderByAggregateInput
@@ -322,6 +358,7 @@ export type ProductVersionScalarWhereWithAggregatesInput = {
   releaseNotes?: Prisma.StringNullableWithAggregatesFilter<"ProductVersion"> | string | null
   changelog?: Prisma.StringNullableWithAggregatesFilter<"ProductVersion"> | string | null
   channel?: Prisma.EnumReleaseChannelWithAggregatesFilter<"ProductVersion"> | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleWithAggregatesFilter<"ProductVersion"> | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ProductVersion"> | Date | string | null
   active?: Prisma.BoolWithAggregatesFilter<"ProductVersion"> | boolean
   operatingSystem?: Prisma.StringWithAggregatesFilter<"ProductVersion"> | string
@@ -329,6 +366,8 @@ export type ProductVersionScalarWhereWithAggregatesInput = {
   isLatest?: Prisma.BoolWithAggregatesFilter<"ProductVersion"> | boolean
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeWithAggregatesFilter<"ProductVersion"> | Date | string
+  backupEvidence?: Prisma.StringNullableWithAggregatesFilter<"ProductVersion"> | string | null
+  complianceEvidence?: Prisma.StringNullableWithAggregatesFilter<"ProductVersion"> | string | null
 }
 
 export type ProductVersionCreateInput = {
@@ -337,6 +376,7 @@ export type ProductVersionCreateInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -344,9 +384,12 @@ export type ProductVersionCreateInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   product: Prisma.ProductCreateNestedOneWithoutVersionsInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutVersionInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceCreateNestedOneWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionUncheckedCreateInput = {
@@ -356,6 +399,7 @@ export type ProductVersionUncheckedCreateInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -363,8 +407,11 @@ export type ProductVersionUncheckedCreateInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutVersionInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedCreateNestedOneWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionUpdateInput = {
@@ -373,6 +420,7 @@ export type ProductVersionUpdateInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -380,9 +428,12 @@ export type ProductVersionUpdateInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   product?: Prisma.ProductUpdateOneRequiredWithoutVersionsNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutVersionNestedInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUpdateOneWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionUncheckedUpdateInput = {
@@ -392,6 +443,7 @@ export type ProductVersionUncheckedUpdateInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -399,8 +451,11 @@ export type ProductVersionUncheckedUpdateInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutVersionNestedInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedUpdateOneWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionCreateManyInput = {
@@ -410,6 +465,7 @@ export type ProductVersionCreateManyInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -417,6 +473,8 @@ export type ProductVersionCreateManyInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
 }
 
 export type ProductVersionUpdateManyMutationInput = {
@@ -425,6 +483,7 @@ export type ProductVersionUpdateManyMutationInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -432,6 +491,8 @@ export type ProductVersionUpdateManyMutationInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProductVersionUncheckedUpdateManyInput = {
@@ -441,6 +502,7 @@ export type ProductVersionUncheckedUpdateManyInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -448,6 +510,8 @@ export type ProductVersionUncheckedUpdateManyInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProductVersionListRelationFilter = {
@@ -472,6 +536,7 @@ export type ProductVersionCountOrderByAggregateInput = {
   releaseNotes?: Prisma.SortOrder
   changelog?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  lifecycle?: Prisma.SortOrder
   deprecatedAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   operatingSystem?: Prisma.SortOrder
@@ -479,6 +544,8 @@ export type ProductVersionCountOrderByAggregateInput = {
   isLatest?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
+  backupEvidence?: Prisma.SortOrder
+  complianceEvidence?: Prisma.SortOrder
 }
 
 export type ProductVersionMaxOrderByAggregateInput = {
@@ -488,6 +555,7 @@ export type ProductVersionMaxOrderByAggregateInput = {
   releaseNotes?: Prisma.SortOrder
   changelog?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  lifecycle?: Prisma.SortOrder
   deprecatedAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   operatingSystem?: Prisma.SortOrder
@@ -495,6 +563,8 @@ export type ProductVersionMaxOrderByAggregateInput = {
   isLatest?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
+  backupEvidence?: Prisma.SortOrder
+  complianceEvidence?: Prisma.SortOrder
 }
 
 export type ProductVersionMinOrderByAggregateInput = {
@@ -504,6 +574,7 @@ export type ProductVersionMinOrderByAggregateInput = {
   releaseNotes?: Prisma.SortOrder
   changelog?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  lifecycle?: Prisma.SortOrder
   deprecatedAt?: Prisma.SortOrder
   active?: Prisma.SortOrder
   operatingSystem?: Prisma.SortOrder
@@ -511,6 +582,8 @@ export type ProductVersionMinOrderByAggregateInput = {
   isLatest?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
+  backupEvidence?: Prisma.SortOrder
+  complianceEvidence?: Prisma.SortOrder
 }
 
 export type ProductVersionScalarRelationFilter = {
@@ -569,6 +642,24 @@ export type EnumReleaseChannelFieldUpdateOperationsInput = {
   set?: $Enums.ReleaseChannel
 }
 
+export type EnumReleaseLifecycleFieldUpdateOperationsInput = {
+  set?: $Enums.ReleaseLifecycle
+}
+
+export type ProductVersionCreateNestedOneWithoutApprovalsInput = {
+  create?: Prisma.XOR<Prisma.ProductVersionCreateWithoutApprovalsInput, Prisma.ProductVersionUncheckedCreateWithoutApprovalsInput>
+  connectOrCreate?: Prisma.ProductVersionCreateOrConnectWithoutApprovalsInput
+  connect?: Prisma.ProductVersionWhereUniqueInput
+}
+
+export type ProductVersionUpdateOneRequiredWithoutApprovalsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductVersionCreateWithoutApprovalsInput, Prisma.ProductVersionUncheckedCreateWithoutApprovalsInput>
+  connectOrCreate?: Prisma.ProductVersionCreateOrConnectWithoutApprovalsInput
+  upsert?: Prisma.ProductVersionUpsertWithoutApprovalsInput
+  connect?: Prisma.ProductVersionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductVersionUpdateToOneWithWhereWithoutApprovalsInput, Prisma.ProductVersionUpdateWithoutApprovalsInput>, Prisma.ProductVersionUncheckedUpdateWithoutApprovalsInput>
+}
+
 export type ProductVersionCreateNestedOneWithoutSupplyChainEvidenceInput = {
   create?: Prisma.XOR<Prisma.ProductVersionCreateWithoutSupplyChainEvidenceInput, Prisma.ProductVersionUncheckedCreateWithoutSupplyChainEvidenceInput>
   connectOrCreate?: Prisma.ProductVersionCreateOrConnectWithoutSupplyChainEvidenceInput
@@ -605,6 +696,7 @@ export type ProductVersionCreateWithoutProductInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -612,8 +704,11 @@ export type ProductVersionCreateWithoutProductInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutVersionInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceCreateNestedOneWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionUncheckedCreateWithoutProductInput = {
@@ -622,6 +717,7 @@ export type ProductVersionUncheckedCreateWithoutProductInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -629,8 +725,11 @@ export type ProductVersionUncheckedCreateWithoutProductInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutVersionInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedCreateNestedOneWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionCreateOrConnectWithoutProductInput = {
@@ -669,6 +768,7 @@ export type ProductVersionScalarWhereInput = {
   releaseNotes?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   changelog?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
   channel?: Prisma.EnumReleaseChannelFilter<"ProductVersion"> | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFilter<"ProductVersion"> | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   active?: Prisma.BoolFilter<"ProductVersion"> | boolean
   operatingSystem?: Prisma.StringFilter<"ProductVersion"> | string
@@ -676,6 +776,108 @@ export type ProductVersionScalarWhereInput = {
   isLatest?: Prisma.BoolFilter<"ProductVersion"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeFilter<"ProductVersion"> | Date | string
+  backupEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
+  complianceEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
+}
+
+export type ProductVersionCreateWithoutApprovalsInput = {
+  id?: string
+  version: string
+  releaseNotes?: string | null
+  changelog?: string | null
+  channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
+  deprecatedAt?: Date | string | null
+  active?: boolean
+  operatingSystem: string
+  architecture: string
+  isLatest?: boolean
+  publishedAt?: Date | string | null
+  releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
+  product: Prisma.ProductCreateNestedOneWithoutVersionsInput
+  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutVersionInput
+  supplyChainEvidence?: Prisma.SupplyChainEvidenceCreateNestedOneWithoutVersionInput
+}
+
+export type ProductVersionUncheckedCreateWithoutApprovalsInput = {
+  id?: string
+  productId: string
+  version: string
+  releaseNotes?: string | null
+  changelog?: string | null
+  channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
+  deprecatedAt?: Date | string | null
+  active?: boolean
+  operatingSystem: string
+  architecture: string
+  isLatest?: boolean
+  publishedAt?: Date | string | null
+  releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
+  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutVersionInput
+  supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedCreateNestedOneWithoutVersionInput
+}
+
+export type ProductVersionCreateOrConnectWithoutApprovalsInput = {
+  where: Prisma.ProductVersionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductVersionCreateWithoutApprovalsInput, Prisma.ProductVersionUncheckedCreateWithoutApprovalsInput>
+}
+
+export type ProductVersionUpsertWithoutApprovalsInput = {
+  update: Prisma.XOR<Prisma.ProductVersionUpdateWithoutApprovalsInput, Prisma.ProductVersionUncheckedUpdateWithoutApprovalsInput>
+  create: Prisma.XOR<Prisma.ProductVersionCreateWithoutApprovalsInput, Prisma.ProductVersionUncheckedCreateWithoutApprovalsInput>
+  where?: Prisma.ProductVersionWhereInput
+}
+
+export type ProductVersionUpdateToOneWithWhereWithoutApprovalsInput = {
+  where?: Prisma.ProductVersionWhereInput
+  data: Prisma.XOR<Prisma.ProductVersionUpdateWithoutApprovalsInput, Prisma.ProductVersionUncheckedUpdateWithoutApprovalsInput>
+}
+
+export type ProductVersionUpdateWithoutApprovalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
+  deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
+  architecture?: Prisma.StringFieldUpdateOperationsInput | string
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  product?: Prisma.ProductUpdateOneRequiredWithoutVersionsNestedInput
+  artifacts?: Prisma.ProductArtifactUpdateManyWithoutVersionNestedInput
+  supplyChainEvidence?: Prisma.SupplyChainEvidenceUpdateOneWithoutVersionNestedInput
+}
+
+export type ProductVersionUncheckedUpdateWithoutApprovalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
+  deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
+  architecture?: Prisma.StringFieldUpdateOperationsInput | string
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutVersionNestedInput
+  supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedUpdateOneWithoutVersionNestedInput
 }
 
 export type ProductVersionCreateWithoutSupplyChainEvidenceInput = {
@@ -684,6 +886,7 @@ export type ProductVersionCreateWithoutSupplyChainEvidenceInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -691,8 +894,11 @@ export type ProductVersionCreateWithoutSupplyChainEvidenceInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   product: Prisma.ProductCreateNestedOneWithoutVersionsInput
   artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionUncheckedCreateWithoutSupplyChainEvidenceInput = {
@@ -702,6 +908,7 @@ export type ProductVersionUncheckedCreateWithoutSupplyChainEvidenceInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -709,7 +916,10 @@ export type ProductVersionUncheckedCreateWithoutSupplyChainEvidenceInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionCreateOrConnectWithoutSupplyChainEvidenceInput = {
@@ -734,6 +944,7 @@ export type ProductVersionUpdateWithoutSupplyChainEvidenceInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -741,8 +952,11 @@ export type ProductVersionUpdateWithoutSupplyChainEvidenceInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   product?: Prisma.ProductUpdateOneRequiredWithoutVersionsNestedInput
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionUncheckedUpdateWithoutSupplyChainEvidenceInput = {
@@ -752,6 +966,7 @@ export type ProductVersionUncheckedUpdateWithoutSupplyChainEvidenceInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -759,7 +974,10 @@ export type ProductVersionUncheckedUpdateWithoutSupplyChainEvidenceInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionCreateWithoutArtifactsInput = {
@@ -768,6 +986,7 @@ export type ProductVersionCreateWithoutArtifactsInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -775,8 +994,11 @@ export type ProductVersionCreateWithoutArtifactsInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   product: Prisma.ProductCreateNestedOneWithoutVersionsInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceCreateNestedOneWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionUncheckedCreateWithoutArtifactsInput = {
@@ -786,6 +1008,7 @@ export type ProductVersionUncheckedCreateWithoutArtifactsInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -793,7 +1016,10 @@ export type ProductVersionUncheckedCreateWithoutArtifactsInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedCreateNestedOneWithoutVersionInput
+  approvals?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutVersionInput
 }
 
 export type ProductVersionCreateOrConnectWithoutArtifactsInput = {
@@ -818,6 +1044,7 @@ export type ProductVersionUpdateWithoutArtifactsInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -825,8 +1052,11 @@ export type ProductVersionUpdateWithoutArtifactsInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   product?: Prisma.ProductUpdateOneRequiredWithoutVersionsNestedInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUpdateOneWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionUncheckedUpdateWithoutArtifactsInput = {
@@ -836,6 +1066,7 @@ export type ProductVersionUncheckedUpdateWithoutArtifactsInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -843,7 +1074,10 @@ export type ProductVersionUncheckedUpdateWithoutArtifactsInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedUpdateOneWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionCreateManyProductInput = {
@@ -852,6 +1086,7 @@ export type ProductVersionCreateManyProductInput = {
   releaseNotes?: string | null
   changelog?: string | null
   channel?: $Enums.ReleaseChannel
+  lifecycle?: $Enums.ReleaseLifecycle
   deprecatedAt?: Date | string | null
   active?: boolean
   operatingSystem: string
@@ -859,6 +1094,8 @@ export type ProductVersionCreateManyProductInput = {
   isLatest?: boolean
   publishedAt?: Date | string | null
   releasedAt?: Date | string
+  backupEvidence?: string | null
+  complianceEvidence?: string | null
 }
 
 export type ProductVersionUpdateWithoutProductInput = {
@@ -867,6 +1104,7 @@ export type ProductVersionUpdateWithoutProductInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -874,8 +1112,11 @@ export type ProductVersionUpdateWithoutProductInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   artifacts?: Prisma.ProductArtifactUpdateManyWithoutVersionNestedInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUpdateOneWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionUncheckedUpdateWithoutProductInput = {
@@ -884,6 +1125,7 @@ export type ProductVersionUncheckedUpdateWithoutProductInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -891,8 +1133,11 @@ export type ProductVersionUncheckedUpdateWithoutProductInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutVersionNestedInput
   supplyChainEvidence?: Prisma.SupplyChainEvidenceUncheckedUpdateOneWithoutVersionNestedInput
+  approvals?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutVersionNestedInput
 }
 
 export type ProductVersionUncheckedUpdateManyWithoutProductInput = {
@@ -901,6 +1146,7 @@ export type ProductVersionUncheckedUpdateManyWithoutProductInput = {
   releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changelog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumReleaseChannelFieldUpdateOperationsInput | $Enums.ReleaseChannel
+  lifecycle?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   deprecatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
@@ -908,6 +1154,8 @@ export type ProductVersionUncheckedUpdateManyWithoutProductInput = {
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complianceEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -917,10 +1165,12 @@ export type ProductVersionUncheckedUpdateManyWithoutProductInput = {
 
 export type ProductVersionCountOutputType = {
   artifacts: number
+  approvals: number
 }
 
 export type ProductVersionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   artifacts?: boolean | ProductVersionCountOutputTypeCountArtifactsArgs
+  approvals?: boolean | ProductVersionCountOutputTypeCountApprovalsArgs
 }
 
 /**
@@ -940,6 +1190,13 @@ export type ProductVersionCountOutputTypeCountArtifactsArgs<ExtArgs extends runt
   where?: Prisma.ProductArtifactWhereInput
 }
 
+/**
+ * ProductVersionCountOutputType without action
+ */
+export type ProductVersionCountOutputTypeCountApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReleaseApprovalWhereInput
+}
+
 
 export type ProductVersionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -948,6 +1205,7 @@ export type ProductVersionSelect<ExtArgs extends runtime.Types.Extensions.Intern
   releaseNotes?: boolean
   changelog?: boolean
   channel?: boolean
+  lifecycle?: boolean
   deprecatedAt?: boolean
   active?: boolean
   operatingSystem?: boolean
@@ -955,9 +1213,12 @@ export type ProductVersionSelect<ExtArgs extends runtime.Types.Extensions.Intern
   isLatest?: boolean
   publishedAt?: boolean
   releasedAt?: boolean
+  backupEvidence?: boolean
+  complianceEvidence?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   artifacts?: boolean | Prisma.ProductVersion$artifactsArgs<ExtArgs>
   supplyChainEvidence?: boolean | Prisma.ProductVersion$supplyChainEvidenceArgs<ExtArgs>
+  approvals?: boolean | Prisma.ProductVersion$approvalsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductVersionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productVersion"]>
 
@@ -968,6 +1229,7 @@ export type ProductVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   releaseNotes?: boolean
   changelog?: boolean
   channel?: boolean
+  lifecycle?: boolean
   deprecatedAt?: boolean
   active?: boolean
   operatingSystem?: boolean
@@ -975,6 +1237,8 @@ export type ProductVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   isLatest?: boolean
   publishedAt?: boolean
   releasedAt?: boolean
+  backupEvidence?: boolean
+  complianceEvidence?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productVersion"]>
 
@@ -985,6 +1249,7 @@ export type ProductVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   releaseNotes?: boolean
   changelog?: boolean
   channel?: boolean
+  lifecycle?: boolean
   deprecatedAt?: boolean
   active?: boolean
   operatingSystem?: boolean
@@ -992,6 +1257,8 @@ export type ProductVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   isLatest?: boolean
   publishedAt?: boolean
   releasedAt?: boolean
+  backupEvidence?: boolean
+  complianceEvidence?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productVersion"]>
 
@@ -1002,6 +1269,7 @@ export type ProductVersionSelectScalar = {
   releaseNotes?: boolean
   changelog?: boolean
   channel?: boolean
+  lifecycle?: boolean
   deprecatedAt?: boolean
   active?: boolean
   operatingSystem?: boolean
@@ -1009,13 +1277,16 @@ export type ProductVersionSelectScalar = {
   isLatest?: boolean
   publishedAt?: boolean
   releasedAt?: boolean
+  backupEvidence?: boolean
+  complianceEvidence?: boolean
 }
 
-export type ProductVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "version" | "releaseNotes" | "changelog" | "channel" | "deprecatedAt" | "active" | "operatingSystem" | "architecture" | "isLatest" | "publishedAt" | "releasedAt", ExtArgs["result"]["productVersion"]>
+export type ProductVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "version" | "releaseNotes" | "changelog" | "channel" | "lifecycle" | "deprecatedAt" | "active" | "operatingSystem" | "architecture" | "isLatest" | "publishedAt" | "releasedAt" | "backupEvidence" | "complianceEvidence", ExtArgs["result"]["productVersion"]>
 export type ProductVersionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   artifacts?: boolean | Prisma.ProductVersion$artifactsArgs<ExtArgs>
   supplyChainEvidence?: boolean | Prisma.ProductVersion$supplyChainEvidenceArgs<ExtArgs>
+  approvals?: boolean | Prisma.ProductVersion$approvalsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductVersionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductVersionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1031,6 +1302,7 @@ export type $ProductVersionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     product: Prisma.$ProductPayload<ExtArgs>
     artifacts: Prisma.$ProductArtifactPayload<ExtArgs>[]
     supplyChainEvidence: Prisma.$SupplyChainEvidencePayload<ExtArgs> | null
+    approvals: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1039,6 +1311,7 @@ export type $ProductVersionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     releaseNotes: string | null
     changelog: string | null
     channel: $Enums.ReleaseChannel
+    lifecycle: $Enums.ReleaseLifecycle
     deprecatedAt: Date | null
     active: boolean
     operatingSystem: string
@@ -1046,6 +1319,8 @@ export type $ProductVersionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     isLatest: boolean
     publishedAt: Date | null
     releasedAt: Date
+    backupEvidence: string | null
+    complianceEvidence: string | null
   }, ExtArgs["result"]["productVersion"]>
   composites: {}
 }
@@ -1443,6 +1718,7 @@ export interface Prisma__ProductVersionClient<T, Null = never, ExtArgs extends r
   product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   artifacts<T extends Prisma.ProductVersion$artifactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductVersion$artifactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supplyChainEvidence<T extends Prisma.ProductVersion$supplyChainEvidenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductVersion$supplyChainEvidenceArgs<ExtArgs>>): Prisma.Prisma__SupplyChainEvidenceClient<runtime.Types.Result.GetResult<Prisma.$SupplyChainEvidencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  approvals<T extends Prisma.ProductVersion$approvalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductVersion$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1478,6 +1754,7 @@ export interface ProductVersionFieldRefs {
   readonly releaseNotes: Prisma.FieldRef<"ProductVersion", 'String'>
   readonly changelog: Prisma.FieldRef<"ProductVersion", 'String'>
   readonly channel: Prisma.FieldRef<"ProductVersion", 'ReleaseChannel'>
+  readonly lifecycle: Prisma.FieldRef<"ProductVersion", 'ReleaseLifecycle'>
   readonly deprecatedAt: Prisma.FieldRef<"ProductVersion", 'DateTime'>
   readonly active: Prisma.FieldRef<"ProductVersion", 'Boolean'>
   readonly operatingSystem: Prisma.FieldRef<"ProductVersion", 'String'>
@@ -1485,6 +1762,8 @@ export interface ProductVersionFieldRefs {
   readonly isLatest: Prisma.FieldRef<"ProductVersion", 'Boolean'>
   readonly publishedAt: Prisma.FieldRef<"ProductVersion", 'DateTime'>
   readonly releasedAt: Prisma.FieldRef<"ProductVersion", 'DateTime'>
+  readonly backupEvidence: Prisma.FieldRef<"ProductVersion", 'String'>
+  readonly complianceEvidence: Prisma.FieldRef<"ProductVersion", 'String'>
 }
 
 
@@ -1926,6 +2205,30 @@ export type ProductVersion$supplyChainEvidenceArgs<ExtArgs extends runtime.Types
    */
   include?: Prisma.SupplyChainEvidenceInclude<ExtArgs> | null
   where?: Prisma.SupplyChainEvidenceWhereInput
+}
+
+/**
+ * ProductVersion.approvals
+ */
+export type ProductVersion$approvalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReleaseApproval
+   */
+  select?: Prisma.ReleaseApprovalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReleaseApproval
+   */
+  omit?: Prisma.ReleaseApprovalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReleaseApprovalInclude<ExtArgs> | null
+  where?: Prisma.ReleaseApprovalWhereInput
+  orderBy?: Prisma.ReleaseApprovalOrderByWithRelationInput | Prisma.ReleaseApprovalOrderByWithRelationInput[]
+  cursor?: Prisma.ReleaseApprovalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReleaseApprovalScalarFieldEnum | Prisma.ReleaseApprovalScalarFieldEnum[]
 }
 
 /**

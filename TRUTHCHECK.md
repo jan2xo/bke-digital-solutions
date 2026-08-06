@@ -5,6 +5,8 @@ Baseline updated: August 6, 2026
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
 Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling are available. No production signing certificate or malware certification is claimed.
+
+Phase 6.9 release lifecycle and approval tracking are present in the Release Center. Stable/LTS promotions require approval records; production readiness remains blocked by pending signing, malware, recovery, compliance, and deployment gates.
 Pushed Git baseline: `66f9fdd fix(database): serialize Prisma queries in interactive transactions`
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 

@@ -71,6 +71,7 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
+  ReleaseApproval: 'ReleaseApproval',
   SupplyChainEvidence: 'SupplyChainEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
@@ -438,16 +439,34 @@ export const ProductVersionScalarFieldEnum = {
   releaseNotes: 'releaseNotes',
   changelog: 'changelog',
   channel: 'channel',
+  lifecycle: 'lifecycle',
   deprecatedAt: 'deprecatedAt',
   active: 'active',
   operatingSystem: 'operatingSystem',
   architecture: 'architecture',
   isLatest: 'isLatest',
   publishedAt: 'publishedAt',
-  releasedAt: 'releasedAt'
+  releasedAt: 'releasedAt',
+  backupEvidence: 'backupEvidence',
+  complianceEvidence: 'complianceEvidence'
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
+
+
+export const ReleaseApprovalScalarFieldEnum = {
+  id: 'id',
+  versionId: 'versionId',
+  stage: 'stage',
+  createdById: 'createdById',
+  reviewedById: 'reviewedById',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type ReleaseApprovalScalarFieldEnum = (typeof ReleaseApprovalScalarFieldEnum)[keyof typeof ReleaseApprovalScalarFieldEnum]
 
 
 export const SupplyChainEvidenceScalarFieldEnum = {

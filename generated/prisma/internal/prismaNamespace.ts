@@ -417,6 +417,7 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
+  ReleaseApproval: 'ReleaseApproval',
   SupplyChainEvidence: 'SupplyChainEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
@@ -469,7 +470,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "supplyChainEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1950,6 +1951,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductVersionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductVersionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReleaseApproval: {
+      payload: Prisma.$ReleaseApprovalPayload<ExtArgs>
+      fields: Prisma.ReleaseApprovalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReleaseApprovalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReleaseApprovalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
+        }
+        findFirst: {
+          args: Prisma.ReleaseApprovalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReleaseApprovalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
+        }
+        findMany: {
+          args: Prisma.ReleaseApprovalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>[]
+        }
+        create: {
+          args: Prisma.ReleaseApprovalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
+        }
+        createMany: {
+          args: Prisma.ReleaseApprovalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReleaseApprovalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>[]
+        }
+        delete: {
+          args: Prisma.ReleaseApprovalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
+        }
+        update: {
+          args: Prisma.ReleaseApprovalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReleaseApprovalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReleaseApprovalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReleaseApprovalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReleaseApprovalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
+        }
+        aggregate: {
+          args: Prisma.ReleaseApprovalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReleaseApproval>
+        }
+        groupBy: {
+          args: Prisma.ReleaseApprovalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReleaseApprovalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReleaseApprovalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReleaseApprovalCountAggregateOutputType> | number
         }
       }
     }
@@ -5042,16 +5117,34 @@ export const ProductVersionScalarFieldEnum = {
   releaseNotes: 'releaseNotes',
   changelog: 'changelog',
   channel: 'channel',
+  lifecycle: 'lifecycle',
   deprecatedAt: 'deprecatedAt',
   active: 'active',
   operatingSystem: 'operatingSystem',
   architecture: 'architecture',
   isLatest: 'isLatest',
   publishedAt: 'publishedAt',
-  releasedAt: 'releasedAt'
+  releasedAt: 'releasedAt',
+  backupEvidence: 'backupEvidence',
+  complianceEvidence: 'complianceEvidence'
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
+
+
+export const ReleaseApprovalScalarFieldEnum = {
+  id: 'id',
+  versionId: 'versionId',
+  stage: 'stage',
+  createdById: 'createdById',
+  reviewedById: 'reviewedById',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type ReleaseApprovalScalarFieldEnum = (typeof ReleaseApprovalScalarFieldEnum)[keyof typeof ReleaseApprovalScalarFieldEnum]
 
 
 export const SupplyChainEvidenceScalarFieldEnum = {
@@ -6117,6 +6210,20 @@ export type ListEnumReleaseChannelFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'ReleaseLifecycle'
+ */
+export type EnumReleaseLifecycleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReleaseLifecycle'>
+
+
+
+/**
+ * Reference to a field of type 'ReleaseLifecycle[]'
+ */
+export type ListEnumReleaseLifecycleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReleaseLifecycle[]'>
+
+
+
+/**
  * Reference to a field of type 'BillingType'
  */
 export type EnumBillingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingType'>
@@ -6664,6 +6771,7 @@ export type GlobalOmitConfig = {
   edition?: Prisma.EditionOmit
   purchasePlan?: Prisma.PurchasePlanOmit
   productVersion?: Prisma.ProductVersionOmit
+  releaseApproval?: Prisma.ReleaseApprovalOmit
   supplyChainEvidence?: Prisma.SupplyChainEvidenceOmit
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
