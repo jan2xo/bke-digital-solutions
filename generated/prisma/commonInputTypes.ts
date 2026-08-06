@@ -1011,6 +1011,40 @@ export type EnumBackupOperationTriggerWithAggregatesFilter<$PrismaModel = never>
   _max?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
 }
 
+export type EnumObservabilityAlertSeverityFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertSeverity | Prisma.EnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertSeverityFilter<$PrismaModel> | $Enums.ObservabilityAlertSeverity
+}
+
+export type EnumObservabilityAlertStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertStatus | Prisma.EnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertStatusFilter<$PrismaModel> | $Enums.ObservabilityAlertStatus
+}
+
+export type EnumObservabilityAlertSeverityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertSeverity | Prisma.EnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertSeverityWithAggregatesFilter<$PrismaModel> | $Enums.ObservabilityAlertSeverity
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumObservabilityAlertSeverityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumObservabilityAlertSeverityFilter<$PrismaModel>
+}
+
+export type EnumObservabilityAlertStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertStatus | Prisma.EnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertStatusWithAggregatesFilter<$PrismaModel> | $Enums.ObservabilityAlertStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumObservabilityAlertStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumObservabilityAlertStatusFilter<$PrismaModel>
+}
+
 export type EnumExternalProviderFilter<$PrismaModel = never> = {
   equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
   in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
@@ -2033,6 +2067,40 @@ export type NestedEnumBackupOperationTriggerWithAggregatesFilter<$PrismaModel = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
   _max?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
+}
+
+export type NestedEnumObservabilityAlertSeverityFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertSeverity | Prisma.EnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertSeverityFilter<$PrismaModel> | $Enums.ObservabilityAlertSeverity
+}
+
+export type NestedEnumObservabilityAlertStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertStatus | Prisma.EnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertStatusFilter<$PrismaModel> | $Enums.ObservabilityAlertStatus
+}
+
+export type NestedEnumObservabilityAlertSeverityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertSeverity | Prisma.EnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertSeverity[] | Prisma.ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertSeverityWithAggregatesFilter<$PrismaModel> | $Enums.ObservabilityAlertSeverity
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumObservabilityAlertSeverityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumObservabilityAlertSeverityFilter<$PrismaModel>
+}
+
+export type NestedEnumObservabilityAlertStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservabilityAlertStatus | Prisma.EnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ObservabilityAlertStatus[] | Prisma.ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumObservabilityAlertStatusWithAggregatesFilter<$PrismaModel> | $Enums.ObservabilityAlertStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumObservabilityAlertStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumObservabilityAlertStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumExternalProviderFilter<$PrismaModel = never> = {

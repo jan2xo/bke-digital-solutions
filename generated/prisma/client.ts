@@ -292,6 +292,11 @@ export type BackupArchive = Prisma.BackupArchiveModel
  */
 export type BackupOperation = Prisma.BackupOperationModel
 /**
+ * Model ObservabilityAlert
+ *
+ */
+export type ObservabilityAlert = Prisma.ObservabilityAlertModel
+/**
  * Model EmailOutbox
  *
  */

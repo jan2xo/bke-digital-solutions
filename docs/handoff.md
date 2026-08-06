@@ -97,3 +97,6 @@ Keep provider source on `environment` until newly rotated PayMongo TEST and Rese
 # Phase 5.3 handoff
 
 Migration `20260802143000_security_dashboard_sessions` must be deployed before this application version. It adds retained session revocation metadata, safe client/network summaries, authentication method and assurance, normalized security-event outcome/severity/provider context, supporting indexes, and an email-outbox deduplication key. `/admin/security` is self-service only: administrators cannot inspect or revoke another administrator's sessions. No automated retention purge is enabled; approve policy and backup interaction before adding one.
+## Phase 6.5 handoff
+
+The current working tree adds monitoring and observability over existing services. Review `docs/observability.md`. Migration 22 is current in development and certification. TypeScript, ESLint, Prisma validation/generation, Vitest 155/6 skipped, Playwright 11/11, production build, Docker builds, runtime health checks, and repository hygiene passed. The metrics endpoint correctly reports CRITICAL for the incomplete Phase 6.4 recovery point. Complete the Phase 6.4 recovery drill and operations-image smoke run before final release. Do not begin Phase 6.6.

@@ -447,6 +447,7 @@ export const ModelName = {
   ScheduledJobRun: 'ScheduledJobRun',
   BackupArchive: 'BackupArchive',
   BackupOperation: 'BackupOperation',
+  ObservabilityAlert: 'ObservabilityAlert',
   EmailOutbox: 'EmailOutbox',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
@@ -465,7 +466,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4169,6 +4170,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ObservabilityAlert: {
+      payload: Prisma.$ObservabilityAlertPayload<ExtArgs>
+      fields: Prisma.ObservabilityAlertFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ObservabilityAlertFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ObservabilityAlertFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>
+        }
+        findFirst: {
+          args: Prisma.ObservabilityAlertFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ObservabilityAlertFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>
+        }
+        findMany: {
+          args: Prisma.ObservabilityAlertFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>[]
+        }
+        create: {
+          args: Prisma.ObservabilityAlertCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>
+        }
+        createMany: {
+          args: Prisma.ObservabilityAlertCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ObservabilityAlertCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>[]
+        }
+        delete: {
+          args: Prisma.ObservabilityAlertDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>
+        }
+        update: {
+          args: Prisma.ObservabilityAlertUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>
+        }
+        deleteMany: {
+          args: Prisma.ObservabilityAlertDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ObservabilityAlertUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ObservabilityAlertUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>[]
+        }
+        upsert: {
+          args: Prisma.ObservabilityAlertUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ObservabilityAlertPayload>
+        }
+        aggregate: {
+          args: Prisma.ObservabilityAlertAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateObservabilityAlert>
+        }
+        groupBy: {
+          args: Prisma.ObservabilityAlertGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ObservabilityAlertGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ObservabilityAlertCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ObservabilityAlertCountAggregateOutputType> | number
+        }
+      }
+    }
     EmailOutbox: {
       payload: Prisma.$EmailOutboxPayload<ExtArgs>
       fields: Prisma.EmailOutboxFieldRefs
@@ -5328,6 +5403,26 @@ export const BackupOperationScalarFieldEnum = {
 export type BackupOperationScalarFieldEnum = (typeof BackupOperationScalarFieldEnum)[keyof typeof BackupOperationScalarFieldEnum]
 
 
+export const ObservabilityAlertScalarFieldEnum = {
+  id: 'id',
+  fingerprint: 'fingerprint',
+  source: 'source',
+  title: 'title',
+  detail: 'detail',
+  severity: 'severity',
+  status: 'status',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  acknowledgedAt: 'acknowledgedAt',
+  resolvedAt: 'resolvedAt',
+  acknowledgedById: 'acknowledgedById',
+  resolvedById: 'resolvedById',
+  metadata: 'metadata'
+} as const
+
+export type ObservabilityAlertScalarFieldEnum = (typeof ObservabilityAlertScalarFieldEnum)[keyof typeof ObservabilityAlertScalarFieldEnum]
+
+
 export const EmailOutboxScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -6034,6 +6129,34 @@ export type ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel> = FieldRef
 
 
 /**
+ * Reference to a field of type 'ObservabilityAlertSeverity'
+ */
+export type EnumObservabilityAlertSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObservabilityAlertSeverity'>
+
+
+
+/**
+ * Reference to a field of type 'ObservabilityAlertSeverity[]'
+ */
+export type ListEnumObservabilityAlertSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObservabilityAlertSeverity[]'>
+
+
+
+/**
+ * Reference to a field of type 'ObservabilityAlertStatus'
+ */
+export type EnumObservabilityAlertStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObservabilityAlertStatus'>
+
+
+
+/**
+ * Reference to a field of type 'ObservabilityAlertStatus[]'
+ */
+export type ListEnumObservabilityAlertStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObservabilityAlertStatus[]'>
+
+
+
+/**
  * Reference to a field of type 'ProviderEnvironment'
  */
 export type EnumProviderEnvironmentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderEnvironment'>
@@ -6289,6 +6412,7 @@ export type GlobalOmitConfig = {
   scheduledJobRun?: Prisma.ScheduledJobRunOmit
   backupArchive?: Prisma.BackupArchiveOmit
   backupOperation?: Prisma.BackupOperationOmit
+  observabilityAlert?: Prisma.ObservabilityAlertOmit
   emailOutbox?: Prisma.EmailOutboxOmit
   externalProviderConfiguration?: Prisma.ExternalProviderConfigurationOmit
   externalProviderCredential?: Prisma.ExternalProviderCredentialOmit

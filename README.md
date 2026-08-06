@@ -68,3 +68,6 @@ Pending orders can resume their stored provider checkout or create one recorded 
 Verified customer accounts may start one seven-day trial per product per UTC calendar year, selecting an authorized individual or organization account and a product edition. Selecting another edition does not reset eligibility. Trials use the selected edition's normal license, activation, expiration, and private-download protections. Administrators manage additional grants, 0–14 day grace periods, and revocation at `/admin/trials`.
 
 Archived products expose a typed-name permanent-delete action only to administrators. The server refuses deletion when any customer cart, commerce, invoice, payment, subscription, license, activation, assignment, download, or license-event history exists. There is no force-delete endpoint or UI.
+## Operations visibility
+
+Administrators can use `/admin/observability` to answer “Is the BKE platform healthy?” across application dependencies, scheduler, backups, payments, licensing issuance, email, security, and infrastructure. The typed health feed is available at `/api/health/metrics`. See [docs/observability.md](docs/observability.md).

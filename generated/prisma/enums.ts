@@ -143,6 +143,25 @@ export const BackupOperationTrigger = {
 export type BackupOperationTrigger = (typeof BackupOperationTrigger)[keyof typeof BackupOperationTrigger]
 
 
+export const ObservabilityAlertSeverity = {
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+  ERROR: 'ERROR',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type ObservabilityAlertSeverity = (typeof ObservabilityAlertSeverity)[keyof typeof ObservabilityAlertSeverity]
+
+
+export const ObservabilityAlertStatus = {
+  OPEN: 'OPEN',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED'
+} as const
+
+export type ObservabilityAlertStatus = (typeof ObservabilityAlertStatus)[keyof typeof ObservabilityAlertStatus]
+
+
 export const StorageCleanupJobType = {
   PRODUCT_DELETION: 'PRODUCT_DELETION',
   ARTIFACT_REPLACEMENT: 'ARTIFACT_REPLACEMENT',

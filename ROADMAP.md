@@ -188,6 +188,8 @@ Create encrypted, offsite, verified, and restorable PostgreSQL and MinIO backups
 
 ## Phase 6.5 — Monitoring & Observability
 
+Current working-tree implementation adds the administrator health dashboard, typed metrics endpoint, and durable internal alert acknowledgement/resolution. It consumes existing services and preserves the external Licensing Agent boundary. Verification and migration deployment are pending owner review; Phase 6.6 remains blocked until this phase is reviewed.
+
 **Priority:** Critical production-launch blocker
 
 ### Objective

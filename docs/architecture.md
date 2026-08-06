@@ -119,3 +119,6 @@ The dedicated Docker scheduler calls only the internal authenticated scheduler e
 ## Phase 6.4 recovery boundary
 
 The scheduler only enqueues backup and retention work. A separate backup worker owns `pg_dump`, `pg_restore`, backup-storage credentials, and the archive encryption key; web processes never execute restores. Durable PostgreSQL operations are claimed with row locks and survive restart. Full compressed database dumps and private objects are AES-256-GCM encrypted into a distinct offsite bucket with a canonical SHA-256 manifest. Restore simulation authenticates every artifact. Real restore is restricted to separately configured isolated database and object-storage targets and never changes production routing. Environment secrets, master keys, cloud credentials, API secrets, and Valkey cache are outside the archive boundary.
+## Monitoring and observability
+
+Phase 6.5 adds a read-oriented observability layer over existing readiness, scheduler, backup, commerce, email, webhook, and security services. `lib/observability/metrics.ts` is the shared source for the administrator dashboard and health API. Alerts are durable, deduplicated by fingerprint/status, auditable, and acknowledgeable. It does not replace scheduler or backup execution and does not implement Licensing Agent authorization monitoring.

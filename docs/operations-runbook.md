@@ -64,3 +64,6 @@ Investigate `FAILED`, `INCOMPLETE`, or `CORRUPT` archives before retrying. A res
 # Provider credential operations
 
 Use `/admin/providers` only after MFA and recent authentication. Follow [the rotation runbook](operations/provider-credential-rotation.md) to save, validate, enable, replace, revoke, or migrate provider credentials. Loss of the external master key requires provider-side revocation and newly issued credentials; there is no plaintext recovery endpoint.
+## Observability
+
+Open `/admin/observability` for the consolidated platform state. Use `/api/health/metrics` for automation. A warning means an operational condition needs review; critical means a dependency, scheduler, payment pipeline, security signal, or recovery point needs immediate investigation. Acknowledge and resolve alerts only after the underlying condition is understood. External alert delivery is not yet enabled.

@@ -105,6 +105,19 @@ enum BackupOperationTrigger {
   CLI
 }
 
+enum ObservabilityAlertSeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+enum ObservabilityAlertStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+}
+
 enum StorageCleanupJobType {
   PRODUCT_DELETION
   ARTIFACT_REPLACEMENT
@@ -350,6 +363,8 @@ model User {
   webhookEventsAcknowledged     WebhookEvent[]                  @relation("WebhookAcknowledger")
   scheduledRunsAcknowledged     ScheduledJobRun[]
   backupOperationsRequested     BackupOperation[]               @relation("BackupOperationRequester")
+  observabilityAlertsAcknowledged ObservabilityAlert[]           @relation("ObservabilityAlertAcknowledger")
+  observabilityAlertsResolved     ObservabilityAlert[]           @relation("ObservabilityAlertResolver")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -1354,6 +1369,29 @@ model BackupOperation {
   @@index([status, nextAttemptAt])
   @@index([backupId, createdAt])
   @@index([requestedById, createdAt])
+}
+
+model ObservabilityAlert {
+  id             String                    @id @default(cuid())
+  fingerprint    String
+  source         String
+  title          String
+  detail         String?
+  severity       ObservabilityAlertSeverity
+  status         ObservabilityAlertStatus  @default(OPEN)
+  firstSeenAt    DateTime                  @default(now())
+  lastSeenAt     DateTime                  @default(now())
+  acknowledgedAt DateTime?
+  resolvedAt     DateTime?
+  acknowledgedById String?
+  resolvedById   String?
+  metadata       Json                      @default("{}")
+  acknowledgedBy User?                    @relation("ObservabilityAlertAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  resolvedBy     User?                    @relation("ObservabilityAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@unique([fingerprint, status])
+  @@index([status, severity, lastSeenAt])
+  @@index([source, lastSeenAt])
 }
 
 model EmailOutbox {

@@ -311,3 +311,6 @@ The approved implementation sequence is defined in [`ROADMAP.md`](./ROADMAP.md),
 5. Implemented and uncommitted pending full verification: Phase 6.4 — Backup & Disaster Recovery. Do not begin Phase 6.5 before owner approval.
 
 No future phase should claim readiness merely because code exists. Database state, runtime configuration, automated tests, genuine provider evidence, documentation, and owner approval must agree.
+## Phase 6.5 working-tree truth
+
+Monitoring and observability code exists in the current uncommitted working tree. Migration 22 is applied and current in development and certification. It adds `ObservabilityAlert`, `/admin/observability`, and `/api/health/metrics`. TypeScript, ESLint, Prisma validation/generation, Vitest (155 passed, 6 credential-gated skipped), Playwright (11/11), production build, Docker builds, runtime health checks, and repository hygiene passed. The metrics endpoint correctly reports CRITICAL while the incomplete Phase 6.4 recovery point remains. Phase 6.4 recovery certification remains pending and Phase 6.6 has not started.

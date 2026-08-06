@@ -101,6 +101,7 @@ export const ModelName = {
   ScheduledJobRun: 'ScheduledJobRun',
   BackupArchive: 'BackupArchive',
   BackupOperation: 'BackupOperation',
+  ObservabilityAlert: 'ObservabilityAlert',
   EmailOutbox: 'EmailOutbox',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
@@ -1018,6 +1019,26 @@ export const BackupOperationScalarFieldEnum = {
 } as const
 
 export type BackupOperationScalarFieldEnum = (typeof BackupOperationScalarFieldEnum)[keyof typeof BackupOperationScalarFieldEnum]
+
+
+export const ObservabilityAlertScalarFieldEnum = {
+  id: 'id',
+  fingerprint: 'fingerprint',
+  source: 'source',
+  title: 'title',
+  detail: 'detail',
+  severity: 'severity',
+  status: 'status',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  acknowledgedAt: 'acknowledgedAt',
+  resolvedAt: 'resolvedAt',
+  acknowledgedById: 'acknowledgedById',
+  resolvedById: 'resolvedById',
+  metadata: 'metadata'
+} as const
+
+export type ObservabilityAlertScalarFieldEnum = (typeof ObservabilityAlertScalarFieldEnum)[keyof typeof ObservabilityAlertScalarFieldEnum]
 
 
 export const EmailOutboxScalarFieldEnum = {

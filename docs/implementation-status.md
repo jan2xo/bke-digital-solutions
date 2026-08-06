@@ -111,3 +111,6 @@ Credential-gated PayMongo sandbox and Resend delivery certification remain exter
 # Phase 5.2C status
 
 Encrypted provider persistence, runtime resolution, PayMongo/Resend adapter integration, admin controls, validation, replacement/revocation, migration, and focused tests are implemented. Database-source activation is not complete until the owner rotates credentials and repeats genuine provider certification.
+## Phase 6.5 — Monitoring and observability (working tree)
+
+The observability dashboard, typed metrics endpoint, and internal alert model are implemented in the current working tree. Migration 22 is current in development and certification. TypeScript, ESLint, Prisma validation/generation, Vitest, Playwright, production build, Docker builds, runtime health checks, and repository hygiene passed. Phase 6.4 recovery certification remains pending; Phase 6.6 has not started.
