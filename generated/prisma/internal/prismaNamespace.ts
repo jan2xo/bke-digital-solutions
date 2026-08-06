@@ -417,6 +417,7 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
+  SupplyChainEvidence: 'SupplyChainEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
@@ -468,7 +469,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "supplyChainEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1949,6 +1950,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductVersionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductVersionCountAggregateOutputType> | number
+        }
+      }
+    }
+    SupplyChainEvidence: {
+      payload: Prisma.$SupplyChainEvidencePayload<ExtArgs>
+      fields: Prisma.SupplyChainEvidenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupplyChainEvidenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupplyChainEvidenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
+        }
+        findFirst: {
+          args: Prisma.SupplyChainEvidenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupplyChainEvidenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
+        }
+        findMany: {
+          args: Prisma.SupplyChainEvidenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>[]
+        }
+        create: {
+          args: Prisma.SupplyChainEvidenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
+        }
+        createMany: {
+          args: Prisma.SupplyChainEvidenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SupplyChainEvidenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>[]
+        }
+        delete: {
+          args: Prisma.SupplyChainEvidenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
+        }
+        update: {
+          args: Prisma.SupplyChainEvidenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
+        }
+        deleteMany: {
+          args: Prisma.SupplyChainEvidenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupplyChainEvidenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SupplyChainEvidenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>[]
+        }
+        upsert: {
+          args: Prisma.SupplyChainEvidenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
+        }
+        aggregate: {
+          args: Prisma.SupplyChainEvidenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupplyChainEvidence>
+        }
+        groupBy: {
+          args: Prisma.SupplyChainEvidenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupplyChainEvidenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupplyChainEvidenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupplyChainEvidenceCountAggregateOutputType> | number
         }
       }
     }
@@ -4979,6 +5054,31 @@ export const ProductVersionScalarFieldEnum = {
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
 
 
+export const SupplyChainEvidenceScalarFieldEnum = {
+  id: 'id',
+  versionId: 'versionId',
+  releaseIdentifier: 'releaseIdentifier',
+  commitHash: 'commitHash',
+  branch: 'branch',
+  buildEnvironment: 'buildEnvironment',
+  builderIdentity: 'builderIdentity',
+  builtAt: 'builtAt',
+  manifestJson: 'manifestJson',
+  sbomReference: 'sbomReference',
+  sbomFormat: 'sbomFormat',
+  manifestSignature: 'manifestSignature',
+  signatureVerified: 'signatureVerified',
+  dependencyVerified: 'dependencyVerified',
+  malwareStatus: 'malwareStatus',
+  certificateStatus: 'certificateStatus',
+  provenanceStatus: 'provenanceStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupplyChainEvidenceScalarFieldEnum = (typeof SupplyChainEvidenceScalarFieldEnum)[keyof typeof SupplyChainEvidenceScalarFieldEnum]
+
+
 export const LicensePolicyScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -6564,6 +6664,7 @@ export type GlobalOmitConfig = {
   edition?: Prisma.EditionOmit
   purchasePlan?: Prisma.PurchasePlanOmit
   productVersion?: Prisma.ProductVersionOmit
+  supplyChainEvidence?: Prisma.SupplyChainEvidenceOmit
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
   productArtifact?: Prisma.ProductArtifactOmit

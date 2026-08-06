@@ -4,6 +4,8 @@ Last reorganized: August 6, 2026
 
 Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.
 
+Phase 6.8 Secure Software Supply Chain is technically implemented with SBOM/provenance generation and release evidence tracking. Signing certificates and malware scanning remain pending.
+
 This roadmap supersedes the earlier Phase 5 continuation plan. The verified current-state audit in [`TRUTHCHECK.md`](./TRUTHCHECK.md) is the authority for priorities and launch gates.
 
 ## Current position

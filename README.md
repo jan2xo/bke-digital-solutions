@@ -4,6 +4,8 @@
 
 The administrator compliance register is available at `/admin/compliance`. It tracks implementation evidence separately from owner decisions and professional lawyer, DPO/privacy, accountant/BIR, and regulatory review. It must not be treated as legal or tax approval; see `docs/phase-reports/phase-6.7-legal-tax-compliance-review.md`.
 
+Supply-chain evidence is visible at `/admin/supply-chain`. Generate CycloneDX SBOM and build provenance with `npm run supplychain:sbom` and `npm run supplychain:provenance`; signing certificates and malware clearance remain pending until independently provisioned.
+
 Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simulation.md), a [temporary Cloudflare tunnel](docs/cloudflare-tunnel-paymongo.md), and the [owner evidence checklist](docs/local-provider-certification-checklist.md). Genuine PayMongo/Resend status is tracked in the [Phase 5.2 report](docs/phase-reports/phase-5.2-local-paymongo-resend-certification.md).
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.

@@ -122,3 +122,7 @@ Existing CSP/HSTS and browser-policy headers, secure session cookies, origin/CSR
 ## Phase 6.7 — Legal, tax and compliance review (technical implementation)
 
 Added `ComplianceRequirement` and immutable `ComplianceEvidence` records, seeded with explicit review states and exposed through `/admin/compliance`. Status/evidence mutations require administrator authorization, recent authentication, same-origin validation, rate limiting, and audit entries. Professional counsel, DPO/privacy, accountant/BIR, and regulatory review remain pending.
+
+## Phase 6.8 — Secure software supply chain
+
+Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence`, artifact hash manifests, administrator visibility at `/admin/supply-chain`, and audited status updates. Signing keys/certificates and malware scanning remain explicitly pending.

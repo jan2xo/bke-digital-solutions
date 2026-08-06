@@ -1,0 +1,10 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { db } from "@/lib/db";
+import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
+import { apiError } from "@/lib/http";
+import { assertSameOrigin, clientIp } from "@/lib/security/request";
+import { rateLimit } from "@/lib/security/rate-limit";
+const schema = z.object({ versionId: z.string().min(1), action: z.enum(["RECORD_SCAN", "VERIFY_SIGNATURE", "SET_MALWARE_STATUS"]).optional(), malwareStatus: z.enum(["PENDING_SCAN", "CLEAN", "INFECTED", "FAILED"]).optional(), summary: z.string().trim().max(300).optional() });
+export async function GET() { try { await requireAdmin(); return NextResponse.json(await db.supplyChainEvidence.findMany({ include: { version: { include: { product: { select: { name: true } }, artifacts: { select: { name: true, sha256: true, sizeBytes: true } } } } }, orderBy: { builtAt: "desc" } })); } catch (e) { return apiError(e); } }
+export async function POST(request: Request) { try { assertSameOrigin(request); const admin = await requireRecentAdmin(); const limited = await rateLimit(`admin-supply-chain:${admin.id}:${clientIp(request)}`, 30, 3600); if (!limited.allowed) throw new Error("RATE_LIMITED"); const input = schema.parse(await request.json()); const existing = await db.supplyChainEvidence.findUnique({ where: { versionId: input.versionId } }); if (!existing) throw new Error("NOT_FOUND"); const data = input.action === "VERIFY_SIGNATURE" ? { signatureVerified: true } : input.action === "SET_MALWARE_STATUS" ? { malwareStatus: input.malwareStatus ?? "FAILED" } : input.action === "RECORD_SCAN" ? { malwareStatus: input.malwareStatus ?? "CLEAN" } : {}; const updated = await db.supplyChainEvidence.update({ where: { versionId: input.versionId }, data }); await db.auditLog.create({ data: { actorId: admin.id, action: "SUPPLY_CHAIN_EVIDENCE_UPDATED", targetType: "SupplyChainEvidence", targetId: updated.id, metadata: { action: input.action, malwareStatus: updated.malwareStatus } } }); return NextResponse.json({ ok: true }); } catch (e) { return apiError(e); } }

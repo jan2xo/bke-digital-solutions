@@ -723,8 +723,33 @@ model ProductVersion {
   releasedAt      DateTime          @default(now())
   product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
   artifacts       ProductArtifact[]
+  supplyChainEvidence SupplyChainEvidence?
 
   @@unique([productId, version])
+}
+
+model SupplyChainEvidence {
+  id                 String   @id @default(cuid())
+  versionId          String   @unique
+  releaseIdentifier  String
+  commitHash         String
+  branch             String
+  buildEnvironment   String
+  builderIdentity    String
+  builtAt            DateTime
+  manifestJson       Json     @default("{}")
+  sbomReference      String?
+  sbomFormat         String?
+  manifestSignature  String?
+  signatureVerified  Boolean  @default(false)
+  dependencyVerified Boolean  @default(false)
+  malwareStatus      String   @default("PENDING_SCAN")
+  certificateStatus  String   @default("PENDING_PROVISIONING")
+  provenanceStatus   String   @default("RECORDED")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  version            ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  @@index([malwareStatus, certificateStatus])
 }
 
 model LicensePolicy {

@@ -39,7 +39,9 @@
     "backups:worker": "NODE_OPTIONS=--conditions=react-server tsx scripts/backup-worker.ts",
     "backups:create": "NODE_OPTIONS=--conditions=react-server tsx scripts/request-backup.ts",
     "backups:certify-local": "NODE_OPTIONS=--conditions=react-server tsx scripts/certify-backup-local.ts",
-    "security:hygiene": "node scripts/repository-hygiene.mjs"
+    "security:hygiene": "node scripts/repository-hygiene.mjs",
+    "supplychain:sbom": "node scripts/generate-sbom.mjs",
+    "supplychain:provenance": "node scripts/generate-provenance.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",

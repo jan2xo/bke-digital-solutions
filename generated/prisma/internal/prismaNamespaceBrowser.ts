@@ -71,6 +71,7 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
+  SupplyChainEvidence: 'SupplyChainEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
@@ -447,6 +448,31 @@ export const ProductVersionScalarFieldEnum = {
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
+
+
+export const SupplyChainEvidenceScalarFieldEnum = {
+  id: 'id',
+  versionId: 'versionId',
+  releaseIdentifier: 'releaseIdentifier',
+  commitHash: 'commitHash',
+  branch: 'branch',
+  buildEnvironment: 'buildEnvironment',
+  builderIdentity: 'builderIdentity',
+  builtAt: 'builtAt',
+  manifestJson: 'manifestJson',
+  sbomReference: 'sbomReference',
+  sbomFormat: 'sbomFormat',
+  manifestSignature: 'manifestSignature',
+  signatureVerified: 'signatureVerified',
+  dependencyVerified: 'dependencyVerified',
+  malwareStatus: 'malwareStatus',
+  certificateStatus: 'certificateStatus',
+  provenanceStatus: 'provenanceStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupplyChainEvidenceScalarFieldEnum = (typeof SupplyChainEvidenceScalarFieldEnum)[keyof typeof SupplyChainEvidenceScalarFieldEnum]
 
 
 export const LicensePolicyScalarFieldEnum = {

@@ -104,3 +104,7 @@ Monitoring and observability are verified over existing services. Review `docs/o
 ## Phase 6.7 handoff
 
 The technical compliance register is available at `/admin/compliance`. It records evidence and explicit pending review states; it does not grant legal, privacy, tax, BIR, or regulatory approval. Obtain counsel, DPO/privacy, accountant, and regulatory decisions before production launch.
+
+## Phase 6.8 handoff
+
+Supply-chain evidence is linked to product versions and visible at `/admin/supply-chain`. SBOM/provenance generation is deterministic only when the build environment supplies release metadata. Certificate provisioning, detached signing, and malware scanning are intentionally pending.

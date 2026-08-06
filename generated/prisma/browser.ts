@@ -118,6 +118,11 @@ export type PurchasePlan = Prisma.PurchasePlanModel
  */
 export type ProductVersion = Prisma.ProductVersionModel
 /**
+ * Model SupplyChainEvidence
+ *
+ */
+export type SupplyChainEvidence = Prisma.SupplyChainEvidenceModel
+/**
  * Model LicensePolicy
  *
  */
