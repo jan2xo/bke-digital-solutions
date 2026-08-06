@@ -111,6 +111,10 @@ Credential-gated PayMongo sandbox and Resend delivery certification remain exter
 # Phase 5.2C status
 
 Encrypted provider persistence, runtime resolution, PayMongo/Resend adapter integration, admin controls, validation, replacement/revocation, migration, and focused tests are implemented. Database-source activation is not complete until the owner rotates credentials and repeats genuine provider certification.
-## Phase 6.5 — Monitoring and observability (working tree)
+## Phase 6.5 — Monitoring and observability (implemented)
 
-The observability dashboard, typed metrics endpoint, and internal alert model are implemented in the current working tree. Migration 22 is current in development and certification. TypeScript, ESLint, Prisma validation/generation, Vitest, Playwright, production build, Docker builds, runtime health checks, and repository hygiene passed. Phase 6.4 recovery certification remains pending; Phase 6.6 has not started.
+The observability dashboard, typed metrics endpoint, and internal alert model are implemented. Migration 22 is current in development and certification. TypeScript, ESLint, Prisma validation/generation, Vitest 155/6 skipped, Playwright 11/11, production build, Docker builds, runtime health checks, and repository hygiene passed. Phase 6.4 recovery certification remains pending. Phase 6.6 security hardening verification is the current work.
+
+## Phase 6.6 — Operations and security hardening (verification)
+
+Existing CSP/HSTS and browser-policy headers, secure session cookies, origin/CSRF checks, encrypted versioned provider credentials, MFA/recent-authentication gates, private one-time downloads, upload validation, Docker least-privilege settings, transactional database constraints, scheduler locks, encrypted backup manifests, and the Licensing Agent boundary were audited without redesign. Rate limits were added to observability, backup, backup-action, and download-grant endpoints. Full regression suites remain passing; external recovery certification and credential-gated provider evidence remain blockers to production readiness.

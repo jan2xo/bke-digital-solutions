@@ -1,6 +1,6 @@
 # BKE Digital Solutions Roadmap
 
-Last reorganized: August 2, 2026
+Last reorganized: August 6, 2026
 
 This roadmap supersedes the earlier Phase 5 continuation plan. The verified current-state audit in [`TRUTHCHECK.md`](./TRUTHCHECK.md) is the authority for priorities and launch gates.
 
@@ -14,6 +14,7 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 - Live payments remain disabled.
 - VPS deployment remains postponed until the production-readiness gate passes.
 - Phase 6.1 Data Integrity & Safe Deletion is committed and pushed at `952e9e1`.
+- Phase 6.5 Monitoring & Observability is implemented and verified in the current working tree; migration 22 is current in development and certification. Phase 6.6 Operations & Security Hardening is the current verification phase.
 
 ## Priority definitions
 

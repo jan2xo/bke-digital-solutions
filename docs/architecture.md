@@ -122,3 +122,7 @@ The scheduler only enqueues backup and retention work. A separate backup worker 
 ## Monitoring and observability
 
 Phase 6.5 adds a read-oriented observability layer over existing readiness, scheduler, backup, commerce, email, webhook, and security services. `lib/observability/metrics.ts` is the shared source for the administrator dashboard and health API. Alerts are durable, deduplicated by fingerprint/status, auditable, and acknowledgeable. It does not replace scheduler or backup execution and does not implement Licensing Agent authorization monitoring.
+
+## Operations and security hardening
+
+Phase 6.6 preserves these boundaries and applies defense-in-depth at the HTTP, session, endpoint, storage, container, database, scheduler, and backup layers. Administrator mutations use same-origin, MFA/recent-authentication, audit, and route-specific rate-limit controls. Provider secrets remain encrypted/versioned or environment-validated; raw payment payloads and secrets are excluded from logs. The Licensing Agent remains the sole lease verifier and binding authority.

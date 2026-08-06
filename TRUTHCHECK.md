@@ -1,10 +1,10 @@
 # BKE Digital Solutions — Current-State Truth Check
 
-Baseline updated: August 4, 2026
+Baseline updated: August 6, 2026
 Pushed Git baseline: `66f9fdd fix(database): serialize Prisma queries in interactive transactions`
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 
-Working-tree truth: Phase 6.4 Backup & Disaster Recovery is implemented with migration 21 and is uncommitted pending full verification and owner review. Development has migration 21 applied. Certification still reflects the committed Phase 6.3 baseline until Phase 6.4 rebuild verification finishes.
+Working-tree truth: Phase 6.4 Backup & Disaster Recovery and Phase 6.5 Monitoring & Observability are implemented in the working tree with migrations 21 and 22 applied to development and certification. Phase 6.4 recovery certification remains blocked by missing certification objects. Phase 6.6 Operations & Security Hardening is under verification.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 

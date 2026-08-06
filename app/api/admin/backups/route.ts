@@ -5,6 +5,8 @@ import { assertSameOrigin } from "@/lib/security/request";
 import { apiError } from "@/lib/http";
 import { db } from "@/lib/db";
 import { requestBackup } from "@/lib/backups/service";
+import { rateLimit } from "@/lib/security/rate-limit";
+import { clientIp } from "@/lib/security/request";
 
 const createSchema = z.object({ dryRun: z.boolean().default(false) });
 
@@ -23,6 +25,7 @@ export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const admin = await requireRecentAdmin();
+    if (!(await rateLimit(`admin-backup:${admin.id}:${clientIp(request)}`, 20, 3600)).allowed) throw new Error("RATE_LIMITED");
     const input = createSchema.parse(await request.json());
     const operation = await requestBackup({ actorId: admin.id, trigger: "MANUAL", dryRun: input.dryRun });
     return NextResponse.json({ operationId: operation.id, backupId: operation.backupId, status: operation.status }, { status: 202 });

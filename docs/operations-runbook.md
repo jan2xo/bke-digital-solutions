@@ -67,3 +67,7 @@ Use `/admin/providers` only after MFA and recent authentication. Follow [the rot
 ## Observability
 
 Open `/admin/observability` for the consolidated platform state. Use `/api/health/metrics` for automation. A warning means an operational condition needs review; critical means a dependency, scheduler, payment pipeline, security signal, or recovery point needs immediate investigation. Acknowledge and resolve alerts only after the underlying condition is understood. External alert delivery is not yet enabled.
+
+## Operations hardening
+
+Before exposing a deployment, verify production security headers over HTTPS, secure SameSite cookies, provider credential key versions, and route-specific limits for authentication, checkout, webhooks, downloads, scheduler, backup, and observability. Keep containers non-root with read-only/no-new-privileges settings and use isolated restore targets. Never place secrets, raw webhook bodies, license keys, or signed download URLs in tickets or logs.

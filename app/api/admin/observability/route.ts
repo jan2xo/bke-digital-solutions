@@ -3,8 +3,9 @@ import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { apiError } from "@/lib/http";
 import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { collectObservability, syncObservabilityAlerts } from "@/lib/observability/metrics";
+import { rateLimit } from "@/lib/security/rate-limit";
 
 const actionSchema = z.object({ id: z.string().cuid(), action: z.enum(["ACKNOWLEDGE", "RESOLVE"]) });
 
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const admin = await requireRecentAdmin();
+    if (!(await rateLimit(`admin-observability:${admin.id}:${clientIp(request)}`, 60, 3600)).allowed) throw new Error("RATE_LIMITED");
     const input = actionSchema.parse(await request.json());
     const now = new Date();
     const data = input.action === "ACKNOWLEDGE" ? { status: "ACKNOWLEDGED" as const, acknowledgedAt: now, acknowledgedById: admin.id } : { status: "RESOLVED" as const, resolvedAt: now, resolvedById: admin.id };
