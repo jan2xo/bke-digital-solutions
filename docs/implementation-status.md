@@ -118,3 +118,7 @@ The observability dashboard, typed metrics endpoint, and internal alert model ar
 ## Phase 6.6 — Operations and security hardening (verification)
 
 Existing CSP/HSTS and browser-policy headers, secure session cookies, origin/CSRF checks, encrypted versioned provider credentials, MFA/recent-authentication gates, private one-time downloads, upload validation, Docker least-privilege settings, transactional database constraints, scheduler locks, encrypted backup manifests, and the Licensing Agent boundary were audited without redesign. Rate limits were added to observability, backup, backup-action, and download-grant endpoints. Full regression suites remain passing; external recovery certification and credential-gated provider evidence remain blockers to production readiness.
+
+## Phase 6.7 — Legal, tax and compliance review (technical implementation)
+
+Added `ComplianceRequirement` and immutable `ComplianceEvidence` records, seeded with explicit review states and exposed through `/admin/compliance`. Status/evidence mutations require administrator authorization, recent authentication, same-origin validation, rate limiting, and audit entries. Professional counsel, DPO/privacy, accountant/BIR, and regulatory review remain pending.

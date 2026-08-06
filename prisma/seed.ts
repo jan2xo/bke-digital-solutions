@@ -91,6 +91,18 @@ async function main() {
     const version = await db.legalDocumentVersion.upsert({ where: { documentId_versionNumber: { documentId: document.id, versionNumber: 1 } }, update: {}, create: { documentId: document.id, versionNumber: 1, markdownContent, status: "PUBLISHED", effectiveAt: new Date(), publishedAt: new Date(), changeSummary: "Initial non-legal template", requiresReacceptance: false, contentHash: createHash("sha256").update(markdownContent).digest("hex") } });
     if (!document.currentPublishedVersionId) await db.legalDocument.update({ where: { id: document.id }, data: { currentPublishedVersionId: version.id } });
   }
+  const compliance = [
+    ["LEGAL_TERMS", "Terms of Service", "LEGAL", "PENDING_LAWYER_REVIEW", "Counsel must approve commercial terms and jurisdiction."],
+    ["PRIVACY_DPA", "Privacy Policy and DPA", "PRIVACY", "PENDING_DPO_REVIEW", "DPO/privacy review must approve notices, rights, processors, and retention."],
+    ["TAX_BIR", "Tax and BIR readiness", "TAX", "PENDING_ACCOUNTANT_REVIEW", "Accountant must confirm tax treatment, invoices, records, and BIR obligations."],
+    ["SOFTWARE_LICENSE", "Software licensing terms", "LICENSING", "PENDING_LAWYER_REVIEW", "Counsel must approve EULA, editions, seats, renewals, and authorized users."],
+    ["RETENTION", "Records retention schedule", "RETENTION", "PENDING_OWNER_DECISION", "Owner must approve periods before scheduler enforcement or purge."],
+    ["PAYMENT_RECORDS", "Payment and refund evidence", "TAX", "IMPLEMENTED", "Immutable order, invoice, payment, refund, webhook, and audit records are retained."],
+    ["CONSENT_EVIDENCE", "Consent evidence", "PRIVACY", "IMPLEMENTED", "Versioned legal acceptance records are immutable and auditable."],
+  ] as const;
+  for (const [key, title, category, status, description] of compliance) {
+    await db.complianceRequirement.upsert({ where: { key }, update: { title, category, status, description }, create: { key, title, category, status, description } });
+  }
   if (process.env.LOCAL_PRODUCTION_SIMULATION === "true") {
     const body = Buffer.from("BKE Digital Solutions test installer\n");
     const storage = new S3Client({ region: process.env.S3_REGION ?? "auto", endpoint: process.env.S3_ENDPOINT, forcePathStyle: process.env.S3_FORCE_PATH_STYLE !== "false", credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID!, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY! } });

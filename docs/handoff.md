@@ -100,3 +100,7 @@ Migration `20260802143000_security_dashboard_sessions` must be deployed before t
 ## Phase 6.5 handoff
 
 Monitoring and observability are verified over existing services. Review `docs/observability.md`. Migration 22 is current in development and certification. The metrics endpoint correctly reports CRITICAL for the incomplete Phase 6.4 recovery point. Phase 6.6 audited and tightened operational security without changing the frozen Licensing Agent boundary; review `docs/phase-reports/phase-6.6-operations-security-hardening.md`. Complete recovery certification and external provider evidence before release.
+
+## Phase 6.7 handoff
+
+The technical compliance register is available at `/admin/compliance`. It records evidence and explicit pending review states; it does not grant legal, privacy, tax, BIR, or regulatory approval. Obtain counsel, DPO/privacy, accountant, and regulatory decisions before production launch.

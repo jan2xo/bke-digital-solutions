@@ -96,6 +96,8 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
+  ComplianceRequirement: 'ComplianceRequirement',
+  ComplianceEvidence: 'ComplianceEvidence',
   JobRun: 'JobRun',
   ScheduledJobDefinition: 'ScheduledJobDefinition',
   ScheduledJobRun: 'ScheduledJobRun',
@@ -906,6 +908,38 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const ComplianceRequirementScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  title: 'title',
+  category: 'category',
+  status: 'status',
+  owner: 'owner',
+  reviewer: 'reviewer',
+  description: 'description',
+  decision: 'decision',
+  dueAt: 'dueAt',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceRequirementScalarFieldEnum = (typeof ComplianceRequirementScalarFieldEnum)[keyof typeof ComplianceRequirementScalarFieldEnum]
+
+
+export const ComplianceEvidenceScalarFieldEnum = {
+  id: 'id',
+  requirementId: 'requirementId',
+  kind: 'kind',
+  summary: 'summary',
+  reference: 'reference',
+  recordedBy: 'recordedBy',
+  createdAt: 'createdAt'
+} as const
+
+export type ComplianceEvidenceScalarFieldEnum = (typeof ComplianceEvidenceScalarFieldEnum)[keyof typeof ComplianceEvidenceScalarFieldEnum]
 
 
 export const JobRunScalarFieldEnum = {

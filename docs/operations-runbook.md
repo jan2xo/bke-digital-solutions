@@ -1,5 +1,9 @@
 # Local certification operations
 
+## Compliance review
+
+Use `/admin/compliance` to review technical evidence and explicit pending states. Never mark a legal, privacy, tax, BIR, or regulatory item implemented without the responsible professional approval and an auditable evidence reference.
+
 ## Customer lifecycle and private-storage cleanup
 
 Use `/admin/customers/[id]` only from a recent MFA-verified administrator session. Closure is the normal access-ending operation. Privacy review requires an explicitly reviewed retention-expiry date. Apply legal hold whenever a dispute, investigation, tax, fraud, payment, refund, or legal duty requires preservation. Pseudonymization is allowed only after review and never rewrites invoice/order snapshots or immutable legal acceptances. Final purge must remain exceptional and blocker-free.

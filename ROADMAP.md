@@ -2,6 +2,8 @@
 
 Last reorganized: August 6, 2026
 
+Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.
+
 This roadmap supersedes the earlier Phase 5 continuation plan. The verified current-state audit in [`TRUTHCHECK.md`](./TRUTHCHECK.md) is the authority for priorities and launch gates.
 
 ## Current position

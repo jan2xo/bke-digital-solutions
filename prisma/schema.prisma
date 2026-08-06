@@ -325,46 +325,47 @@ enum ProviderValidationStatus {
 }
 
 model User {
-  id                            String                          @id @default(cuid())
-  email                         String                          @unique
-  name                          String?
-  emailVerified                 DateTime?
-  role                          GlobalRole                      @default(CUSTOMER)
-  createdAt                     DateTime                        @default(now())
-  updatedAt                     DateTime                        @updatedAt
-  suspendedAt                   DateTime?
-  lifecycleState                CustomerLifecycleState          @default(ACTIVE)
-  privacyRequestedAt            DateTime?
-  pseudonymizedAt               DateTime?
-  retentionExpiresAt            DateTime?
-  legalHoldAt                   DateTime?
-  legalHoldReason               String?
-  emailHash                     String?
-  credential                    PasswordCredential?
-  sessions                      Session[]
-  ownedAccounts                 CustomerAccount[]               @relation("AccountOwner")
-  memberships                   Membership[]
-  assignments                   LicenseAssignment[]
-  auditLogs                     AuditLog[]                      @relation("AuditActor")
-  createdOffers                 DiscountOffer[]                 @relation("OfferCreator")
-  administratorMfa              AdministratorMfaMethod?
-  recoveryCodes                 AdministratorRecoveryCode[]
-  mfaChallenges                 MfaChallenge[]
-  securityEvents                SecurityEvent[]
-  providerConfigurationsCreated ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
-  providerConfigurationsUpdated ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
-  providerCredentialsCreated    ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
-  legalVersionsAuthored         LegalDocumentVersion[]          @relation("LegalVersionAuthor")
-  legalAcceptances              LegalAcceptance[]
-  storageCleanupJobsCreated     StorageCleanupJob[]             @relation("StorageCleanupCreator")
-  refundOperationsRequested     RefundOperation[]               @relation("RefundRequester")
-  reconciliationsRun            PaymentReconciliation[]         @relation("ReconciliationRunner")
-  reconciliationsAcknowledged   PaymentReconciliation[]         @relation("ReconciliationAcknowledger")
-  webhookEventsAcknowledged     WebhookEvent[]                  @relation("WebhookAcknowledger")
-  scheduledRunsAcknowledged     ScheduledJobRun[]
-  backupOperationsRequested     BackupOperation[]               @relation("BackupOperationRequester")
-  observabilityAlertsAcknowledged ObservabilityAlert[]           @relation("ObservabilityAlertAcknowledger")
-  observabilityAlertsResolved     ObservabilityAlert[]           @relation("ObservabilityAlertResolver")
+  id                              String                          @id @default(cuid())
+  email                           String                          @unique
+  name                            String?
+  emailVerified                   DateTime?
+  role                            GlobalRole                      @default(CUSTOMER)
+  createdAt                       DateTime                        @default(now())
+  updatedAt                       DateTime                        @updatedAt
+  suspendedAt                     DateTime?
+  lifecycleState                  CustomerLifecycleState          @default(ACTIVE)
+  privacyRequestedAt              DateTime?
+  pseudonymizedAt                 DateTime?
+  retentionExpiresAt              DateTime?
+  legalHoldAt                     DateTime?
+  legalHoldReason                 String?
+  emailHash                       String?
+  credential                      PasswordCredential?
+  sessions                        Session[]
+  ownedAccounts                   CustomerAccount[]               @relation("AccountOwner")
+  memberships                     Membership[]
+  assignments                     LicenseAssignment[]
+  auditLogs                       AuditLog[]                      @relation("AuditActor")
+  createdOffers                   DiscountOffer[]                 @relation("OfferCreator")
+  administratorMfa                AdministratorMfaMethod?
+  recoveryCodes                   AdministratorRecoveryCode[]
+  mfaChallenges                   MfaChallenge[]
+  securityEvents                  SecurityEvent[]
+  providerConfigurationsCreated   ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
+  providerConfigurationsUpdated   ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
+  providerCredentialsCreated      ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
+  legalVersionsAuthored           LegalDocumentVersion[]          @relation("LegalVersionAuthor")
+  legalAcceptances                LegalAcceptance[]
+  storageCleanupJobsCreated       StorageCleanupJob[]             @relation("StorageCleanupCreator")
+  refundOperationsRequested       RefundOperation[]               @relation("RefundRequester")
+  reconciliationsRun              PaymentReconciliation[]         @relation("ReconciliationRunner")
+  reconciliationsAcknowledged     PaymentReconciliation[]         @relation("ReconciliationAcknowledger")
+  webhookEventsAcknowledged       WebhookEvent[]                  @relation("WebhookAcknowledger")
+  scheduledRunsAcknowledged       ScheduledJobRun[]
+  backupOperationsRequested       BackupOperation[]               @relation("BackupOperationRequester")
+  observabilityAlertsAcknowledged ObservabilityAlert[]            @relation("ObservabilityAlertAcknowledger")
+  observabilityAlertsResolved     ObservabilityAlert[]            @relation("ObservabilityAlertResolver")
+  complianceEvidenceRecorded      ComplianceEvidence[]
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -1252,6 +1253,40 @@ model AuditLog {
   @@index([actorId, createdAt])
 }
 
+model ComplianceRequirement {
+  id          String               @id @default(cuid())
+  key         String               @unique
+  title       String
+  category    String
+  status      String               @default("IMPLEMENTED")
+  owner       String?
+  reviewer    String?
+  description String
+  decision    String?
+  dueAt       DateTime?
+  reviewedAt  DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  evidence    ComplianceEvidence[]
+
+  @@index([category, status])
+  @@index([status, dueAt])
+}
+
+model ComplianceEvidence {
+  id            String                @id @default(cuid())
+  requirementId String
+  kind          String
+  summary       String
+  reference     String?
+  recordedBy    String?
+  createdAt     DateTime              @default(now())
+  requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id], onDelete: Restrict)
+  recorder      User?                 @relation(fields: [recordedBy], references: [id], onDelete: SetNull)
+
+  @@index([requirementId, createdAt])
+}
+
 model JobRun {
   id          String    @id @default(cuid())
   key         String    @unique
@@ -1372,22 +1407,22 @@ model BackupOperation {
 }
 
 model ObservabilityAlert {
-  id             String                    @id @default(cuid())
-  fingerprint    String
-  source         String
-  title          String
-  detail         String?
-  severity       ObservabilityAlertSeverity
-  status         ObservabilityAlertStatus  @default(OPEN)
-  firstSeenAt    DateTime                  @default(now())
-  lastSeenAt     DateTime                  @default(now())
-  acknowledgedAt DateTime?
-  resolvedAt     DateTime?
+  id               String                     @id @default(cuid())
+  fingerprint      String
+  source           String
+  title            String
+  detail           String?
+  severity         ObservabilityAlertSeverity
+  status           ObservabilityAlertStatus   @default(OPEN)
+  firstSeenAt      DateTime                   @default(now())
+  lastSeenAt       DateTime                   @default(now())
+  acknowledgedAt   DateTime?
+  resolvedAt       DateTime?
   acknowledgedById String?
-  resolvedById   String?
-  metadata       Json                      @default("{}")
-  acknowledgedBy User?                    @relation("ObservabilityAlertAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
-  resolvedBy     User?                    @relation("ObservabilityAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedById     String?
+  metadata         Json                       @default("{}")
+  acknowledgedBy   User?                      @relation("ObservabilityAlertAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  resolvedBy       User?                      @relation("ObservabilityAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
 
   @@unique([fingerprint, status])
   @@index([status, severity, lastSeenAt])

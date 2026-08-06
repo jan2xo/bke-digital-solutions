@@ -243,6 +243,16 @@ export type LicenseEvent = Prisma.LicenseEventModel
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
+ * Model ComplianceRequirement
+ *
+ */
+export type ComplianceRequirement = Prisma.ComplianceRequirementModel
+/**
+ * Model ComplianceEvidence
+ *
+ */
+export type ComplianceEvidence = Prisma.ComplianceEvidenceModel
+/**
  * Model JobRun
  *
  */

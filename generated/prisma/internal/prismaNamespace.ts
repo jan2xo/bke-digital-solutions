@@ -442,6 +442,8 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
+  ComplianceRequirement: 'ComplianceRequirement',
+  ComplianceEvidence: 'ComplianceEvidence',
   JobRun: 'JobRun',
   ScheduledJobDefinition: 'ScheduledJobDefinition',
   ScheduledJobRun: 'ScheduledJobRun',
@@ -466,7 +468,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3800,6 +3802,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ComplianceRequirement: {
+      payload: Prisma.$ComplianceRequirementPayload<ExtArgs>
+      fields: Prisma.ComplianceRequirementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ComplianceRequirementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ComplianceRequirementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>
+        }
+        findFirst: {
+          args: Prisma.ComplianceRequirementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ComplianceRequirementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>
+        }
+        findMany: {
+          args: Prisma.ComplianceRequirementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>[]
+        }
+        create: {
+          args: Prisma.ComplianceRequirementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>
+        }
+        createMany: {
+          args: Prisma.ComplianceRequirementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ComplianceRequirementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>[]
+        }
+        delete: {
+          args: Prisma.ComplianceRequirementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>
+        }
+        update: {
+          args: Prisma.ComplianceRequirementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>
+        }
+        deleteMany: {
+          args: Prisma.ComplianceRequirementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ComplianceRequirementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ComplianceRequirementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>[]
+        }
+        upsert: {
+          args: Prisma.ComplianceRequirementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRequirementPayload>
+        }
+        aggregate: {
+          args: Prisma.ComplianceRequirementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateComplianceRequirement>
+        }
+        groupBy: {
+          args: Prisma.ComplianceRequirementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceRequirementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ComplianceRequirementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceRequirementCountAggregateOutputType> | number
+        }
+      }
+    }
+    ComplianceEvidence: {
+      payload: Prisma.$ComplianceEvidencePayload<ExtArgs>
+      fields: Prisma.ComplianceEvidenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ComplianceEvidenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ComplianceEvidenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>
+        }
+        findFirst: {
+          args: Prisma.ComplianceEvidenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ComplianceEvidenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>
+        }
+        findMany: {
+          args: Prisma.ComplianceEvidenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>[]
+        }
+        create: {
+          args: Prisma.ComplianceEvidenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>
+        }
+        createMany: {
+          args: Prisma.ComplianceEvidenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ComplianceEvidenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>[]
+        }
+        delete: {
+          args: Prisma.ComplianceEvidenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>
+        }
+        update: {
+          args: Prisma.ComplianceEvidenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>
+        }
+        deleteMany: {
+          args: Prisma.ComplianceEvidenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ComplianceEvidenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ComplianceEvidenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>[]
+        }
+        upsert: {
+          args: Prisma.ComplianceEvidenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceEvidencePayload>
+        }
+        aggregate: {
+          args: Prisma.ComplianceEvidenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateComplianceEvidence>
+        }
+        groupBy: {
+          args: Prisma.ComplianceEvidenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceEvidenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ComplianceEvidenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceEvidenceCountAggregateOutputType> | number
+        }
+      }
+    }
     JobRun: {
       payload: Prisma.$JobRunPayload<ExtArgs>
       fields: Prisma.JobRunFieldRefs
@@ -5290,6 +5440,38 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const ComplianceRequirementScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  title: 'title',
+  category: 'category',
+  status: 'status',
+  owner: 'owner',
+  reviewer: 'reviewer',
+  description: 'description',
+  decision: 'decision',
+  dueAt: 'dueAt',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceRequirementScalarFieldEnum = (typeof ComplianceRequirementScalarFieldEnum)[keyof typeof ComplianceRequirementScalarFieldEnum]
+
+
+export const ComplianceEvidenceScalarFieldEnum = {
+  id: 'id',
+  requirementId: 'requirementId',
+  kind: 'kind',
+  summary: 'summary',
+  reference: 'reference',
+  recordedBy: 'recordedBy',
+  createdAt: 'createdAt'
+} as const
+
+export type ComplianceEvidenceScalarFieldEnum = (typeof ComplianceEvidenceScalarFieldEnum)[keyof typeof ComplianceEvidenceScalarFieldEnum]
+
+
 export const JobRunScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -6407,6 +6589,8 @@ export type GlobalOmitConfig = {
   downloadGrant?: Prisma.DownloadGrantOmit
   licenseEvent?: Prisma.LicenseEventOmit
   auditLog?: Prisma.AuditLogOmit
+  complianceRequirement?: Prisma.ComplianceRequirementOmit
+  complianceEvidence?: Prisma.ComplianceEvidenceOmit
   jobRun?: Prisma.JobRunOmit
   scheduledJobDefinition?: Prisma.ScheduledJobDefinitionOmit
   scheduledJobRun?: Prisma.ScheduledJobRunOmit
