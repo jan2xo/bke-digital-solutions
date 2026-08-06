@@ -495,3 +495,5 @@ After Phase 6.0, Phases 6.1, 6.2, 6.3, and 6.4 can overlap. Monitoring should be
 11. 6.12 client API when a real integration is ready.
 
 No phase is complete until implementation, tests, documentation, security review, and repository consistency have been verified according to `CORE-INSTRUCTION.md`.
+
+The independent Phase 6.10 VPS guide is available at `docs/vps-production-deployment.md`; actual deployment and reboot certification remain owner-operated.

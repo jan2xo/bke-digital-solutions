@@ -108,3 +108,7 @@ The technical compliance register is available at `/admin/compliance`. It record
 ## Phase 6.8 handoff
 
 Supply-chain evidence is linked to product versions and visible at `/admin/supply-chain`. SBOM/provenance generation is deterministic only when the build environment supplies release metadata. Certificate provisioning, detached signing, and malware scanning are intentionally pending.
+
+## VPS deployment handoff
+
+Use `docs/vps-production-deployment.md` for independent Ubuntu/Hetzner deployment. Compose restart policies are statically verified, but Docker boot configuration, Cloudflare DNS, credentials, and cold-reboot recovery require owner evidence and are not claimed here.

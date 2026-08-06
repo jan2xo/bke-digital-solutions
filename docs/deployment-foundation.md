@@ -15,6 +15,12 @@ Phase 5.0 prepares BKE Digital Solutions for reproducible development, staging, 
 
 Each deployed environment needs a unique `DEPLOYMENT_ID`, database, Valkey namespace, S3 bucket, session secret, license pepper, cron secret, provider credentials, and administrator bootstrap process. Never copy production data into staging. `localhost` and `127.0.0.1` are distinct browser origins; choose one canonical `APP_URL` and use it for browser navigation, authentication links, payment returns, and webhook configuration.
 
+## Host reboot recovery
+
+The production Compose file sets `restart: unless-stopped` for app, scheduler, backup-worker, PostgreSQL, Valkey, MinIO (when enabled), and Caddy. The one-shot `migrate` service intentionally uses `restart: "no"` and is run explicitly during deployment. The VPS owner must enable Docker at boot (`sudo systemctl enable --now docker`) and verify after a full reboot with `docker compose ... ps` and health endpoints; repository configuration cannot prove host daemon boot behavior.
+
+See the independent [VPS production deployment guide](vps-production-deployment.md) for exact commands and failure recovery.
+
 ## Configuration
 
 Copy `.env.example` for local development. Copy `.env.production.example` to an ignored secret file for staging or production, replace every placeholder, and inject it through a secret manager where possible. Never commit that file. Validate before deployment:

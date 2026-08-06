@@ -1,5 +1,9 @@
 # Local certification operations
 
+## VPS production deployment and reboot recovery
+
+Use [vps-production-deployment.md](vps-production-deployment.md) for fresh Ubuntu/Hetzner bootstrap, firewall, Docker boot enablement, secrets, Cloudflare/Caddy, migrations, rollback, backups, and cold-reboot certification. Compose statically guarantees `unless-stopped` for all long-running services; Docker daemon boot and actual reboot recovery require owner evidence.
+
 ## Compliance review
 
 Use `/admin/compliance` to review technical evidence and explicit pending states. Never mark a legal, privacy, tax, BIR, or regulatory item implemented without the responsible professional approval and an auditable evidence reference.

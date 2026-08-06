@@ -65,6 +65,8 @@ See the [infrastructure baseline](docs/infrastructure-baseline.md), [brand syste
 
 For a controlled VPS test deployment using either Git pull or direct SSH copy, follow the [VPS staging deployment runbook](docs/vps-staging-deployment.md).
 
+For an independent fresh-server production procedure, use the [VPS production deployment guide](docs/vps-production-deployment.md). It includes Docker boot recovery, Cloudflare/Caddy, secrets, migrations, rollback, backup checks, and cold-reboot certification without fabricating owner infrastructure evidence.
+
 Platform administration documentation: [roadmap](ROADMAP.md), [Phase 4 overview](docs/phase-4-platform-administration.md), [implementation status](docs/implementation-status.md), [engineering handoff](docs/handoff.md), [developer journal](docs/developer-journal.md), [detailed Phase 4 report](docs/phase-reports/phase-4-platform-administration.md), [Phase 4.1 product lifecycle report](docs/phase-reports/phase-4.1-product-lifecycle-completion.md), [Phase 4.2 editions and plans report](docs/phase-reports/phase-4.2-product-editions-and-multi-plan-commerce.md), and [Phase 4.2 maintainability audit](docs/phase-reports/phase-4.2-maintainability-audit.md).
 
 Browser checkout sends only identifiers and acknowledgements; all prices, discount amounts, limits, intervals, and renewal terms are loaded and calculated by the server.

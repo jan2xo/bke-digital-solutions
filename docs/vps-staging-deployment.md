@@ -6,6 +6,10 @@ No VPS has been deployed as of August 2026. Cloudflare is authoritative DNS for 
 
 It does **not** certify the platform for live payments. Start with mock payments and log-only email. PayMongo sandbox and Resend must pass their separate credential-gated checks before they are enabled.
 
+## Automatic recovery after reboot
+
+Before the first reboot drill, run `sudo systemctl enable --now docker` and confirm `systemctl is-enabled docker` returns `enabled`. All long-running production services use `restart: unless-stopped`: app, scheduler, backup-worker, PostgreSQL, Valkey, optional MinIO, and Caddy. `migrate` is a one-shot operations service and intentionally does not restart. After reboot, verify `docker compose --env-file .env.vps -f docker-compose.production.yml ps`, `/api/health/ready`, scheduler health, and backup-worker logs. Record the observed boot and readiness times; do not claim recovery from Compose inspection alone.
+
 ## 1. Choose the deployment mode
 
 ### Recommended: staging hostname with HTTPS
