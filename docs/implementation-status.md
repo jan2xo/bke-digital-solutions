@@ -45,13 +45,23 @@
 - Genuine duplicate `payment.paid` and `payment.refunded` dashboard redeliveries returned HTTP 200 and produced no duplicate payment, invoice, entitlement, email, or audit effects.
 - Genuine failed, delayed, out-of-order, and raw-fixture cases remain explicitly not provider-certified; deterministic integration coverage remains.
 
-## Phase 6.3 — Scheduler and lifecycle automation (implemented, uncommitted)
+## Phase 6.3 — Scheduler and lifecycle automation (committed and pushed)
 
 - Migration 20 adds `ScheduledJobDefinition` and `ScheduledJobRun` with execution status, retry, timing, correlation, acknowledgement, and bounded summaries.
 - Eight typed jobs cover storage, outbox, renewals, expiration, commerce, customer review, authentication cleanup, and payment operations.
 - Valkey ownership-token locks prevent concurrent execution; unique run idempotency keys and domain constraints remain the final safety boundary.
 - Docker runs one internal scheduler tick per minute. Administrators with MFA and recent authentication can inspect, run, dry-run, pause, resume, retry, and acknowledge.
 - Focused unit/integration tests pass 9/9 and focused Playwright passes 1/1. Local and certification Vitest pass 140 with 6 credential-gated skips; local and certification Playwright pass 10/10. Production and Docker app/scheduler builds, migration 20, zero schema drift, certification smoke/readiness/eight-job health, repository hygiene, and the zero-vulnerability runtime audit pass.
+- Committed at `099fe7c`; the subsequent Prisma interactive-transaction serialization fix is committed at `66f9fdd`.
+
+## Phase 6.4 — Backup and disaster recovery (implemented, uncommitted)
+
+- Migration 21 adds durable encrypted archive and operation history.
+- A dedicated worker creates compressed PostgreSQL and private-object archives, verifies SHA-256 and AES-256-GCM integrity, detects missing source objects, recovers abandoned work, and performs bounded retry.
+- Daily/weekly/monthly retention, restore simulation, isolated-target restore, administrator history/actions, and two centralized scheduler jobs are implemented.
+- Environment secrets, master keys, cloud/API credentials, and Valkey cache are excluded. Provider configuration is present only as the ciphertext already stored in PostgreSQL.
+- TypeScript and ESLint pass. Full Vitest passes 155 with 6 credential-gated skips, and full Playwright passes 11/11. The production build and production Docker image build passed during Phase 6.4 verification; certification migration/smoke pass. Repository hygiene and the runtime dependency audit pass with zero vulnerabilities after pinning patched `fast-uri` 3.1.5. A final image refresh against the last small safety adjustments remains required because the execution environment exhausted its external-operation quota after that build.
+- A genuine certification archive correctly detected five database-referenced objects missing from certification MinIO and refused verification/restore. The incomplete ephemeral-key test archive was removed. Certification object drift must be repaired before a complete archive and restore simulation can pass.
 
 ## Completed modules
 
@@ -70,7 +80,7 @@
 ## In progress
 
 - Complete the remaining owner-interactive Phase 6.2 failed-payment/delayed/out-of-order evidence when practical; it does not block the approved Phase 6.3 scope.
-- Obtain owner review and commit approval for the verified Phase 6.3 working tree; do not begin Phase 6.4 automatically.
+- Complete Phase 6.4 full verification and an isolated restore drill, then obtain owner review. Do not begin Phase 6.5 automatically.
 - Production infrastructure selection and provisioning
 
 ## Deferred

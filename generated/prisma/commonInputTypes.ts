@@ -926,6 +926,91 @@ export type EnumScheduledJobTriggerWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
 }
 
+export type EnumBackupArchiveStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupArchiveStatus | Prisma.EnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupArchiveStatusFilter<$PrismaModel> | $Enums.BackupArchiveStatus
+}
+
+export type EnumBackupRetentionTierFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupRetentionTier | Prisma.EnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupRetentionTierFilter<$PrismaModel> | $Enums.BackupRetentionTier
+}
+
+export type EnumBackupArchiveStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupArchiveStatus | Prisma.EnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupArchiveStatusWithAggregatesFilter<$PrismaModel> | $Enums.BackupArchiveStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupArchiveStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupArchiveStatusFilter<$PrismaModel>
+}
+
+export type EnumBackupRetentionTierWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupRetentionTier | Prisma.EnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupRetentionTierWithAggregatesFilter<$PrismaModel> | $Enums.BackupRetentionTier
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupRetentionTierFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupRetentionTierFilter<$PrismaModel>
+}
+
+export type EnumBackupOperationTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationType | Prisma.EnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTypeFilter<$PrismaModel> | $Enums.BackupOperationType
+}
+
+export type EnumBackupOperationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationStatus | Prisma.EnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationStatusFilter<$PrismaModel> | $Enums.BackupOperationStatus
+}
+
+export type EnumBackupOperationTriggerFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationTrigger | Prisma.EnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel> | $Enums.BackupOperationTrigger
+}
+
+export type EnumBackupOperationTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationType | Prisma.EnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTypeWithAggregatesFilter<$PrismaModel> | $Enums.BackupOperationType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupOperationTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupOperationTypeFilter<$PrismaModel>
+}
+
+export type EnumBackupOperationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationStatus | Prisma.EnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationStatusWithAggregatesFilter<$PrismaModel> | $Enums.BackupOperationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupOperationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupOperationStatusFilter<$PrismaModel>
+}
+
+export type EnumBackupOperationTriggerWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationTrigger | Prisma.EnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTriggerWithAggregatesFilter<$PrismaModel> | $Enums.BackupOperationTrigger
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
+}
+
 export type EnumExternalProviderFilter<$PrismaModel = never> = {
   equals?: $Enums.ExternalProvider | Prisma.EnumExternalProviderFieldRefInput<$PrismaModel>
   in?: $Enums.ExternalProvider[] | Prisma.ListEnumExternalProviderFieldRefInput<$PrismaModel>
@@ -1863,6 +1948,91 @@ export type NestedEnumScheduledJobTriggerWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
   _max?: Prisma.NestedEnumScheduledJobTriggerFilter<$PrismaModel>
+}
+
+export type NestedEnumBackupArchiveStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupArchiveStatus | Prisma.EnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupArchiveStatusFilter<$PrismaModel> | $Enums.BackupArchiveStatus
+}
+
+export type NestedEnumBackupRetentionTierFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupRetentionTier | Prisma.EnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupRetentionTierFilter<$PrismaModel> | $Enums.BackupRetentionTier
+}
+
+export type NestedEnumBackupArchiveStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupArchiveStatus | Prisma.EnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupArchiveStatus[] | Prisma.ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupArchiveStatusWithAggregatesFilter<$PrismaModel> | $Enums.BackupArchiveStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupArchiveStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupArchiveStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumBackupRetentionTierWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupRetentionTier | Prisma.EnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupRetentionTier[] | Prisma.ListEnumBackupRetentionTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupRetentionTierWithAggregatesFilter<$PrismaModel> | $Enums.BackupRetentionTier
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupRetentionTierFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupRetentionTierFilter<$PrismaModel>
+}
+
+export type NestedEnumBackupOperationTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationType | Prisma.EnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTypeFilter<$PrismaModel> | $Enums.BackupOperationType
+}
+
+export type NestedEnumBackupOperationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationStatus | Prisma.EnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationStatusFilter<$PrismaModel> | $Enums.BackupOperationStatus
+}
+
+export type NestedEnumBackupOperationTriggerFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationTrigger | Prisma.EnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel> | $Enums.BackupOperationTrigger
+}
+
+export type NestedEnumBackupOperationTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationType | Prisma.EnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationType[] | Prisma.ListEnumBackupOperationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTypeWithAggregatesFilter<$PrismaModel> | $Enums.BackupOperationType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupOperationTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupOperationTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumBackupOperationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationStatus | Prisma.EnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationStatus[] | Prisma.ListEnumBackupOperationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationStatusWithAggregatesFilter<$PrismaModel> | $Enums.BackupOperationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupOperationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupOperationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumBackupOperationTriggerWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BackupOperationTrigger | Prisma.EnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  in?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BackupOperationTrigger[] | Prisma.ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBackupOperationTriggerWithAggregatesFilter<$PrismaModel> | $Enums.BackupOperationTrigger
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBackupOperationTriggerFilter<$PrismaModel>
 }
 
 export type NestedEnumExternalProviderFilter<$PrismaModel = never> = {

@@ -86,6 +86,63 @@ export const ScheduledJobTrigger = {
 export type ScheduledJobTrigger = (typeof ScheduledJobTrigger)[keyof typeof ScheduledJobTrigger]
 
 
+export const BackupArchiveStatus = {
+  PENDING: 'PENDING',
+  CREATING: 'CREATING',
+  AVAILABLE: 'AVAILABLE',
+  VERIFIED: 'VERIFIED',
+  INCOMPLETE: 'INCOMPLETE',
+  CORRUPT: 'CORRUPT',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  DELETED: 'DELETED'
+} as const
+
+export type BackupArchiveStatus = (typeof BackupArchiveStatus)[keyof typeof BackupArchiveStatus]
+
+
+export const BackupRetentionTier = {
+  MANUAL: 'MANUAL',
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY'
+} as const
+
+export type BackupRetentionTier = (typeof BackupRetentionTier)[keyof typeof BackupRetentionTier]
+
+
+export const BackupOperationType = {
+  CREATE: 'CREATE',
+  VERIFY: 'VERIFY',
+  SIMULATE_RESTORE: 'SIMULATE_RESTORE',
+  RESTORE_ISOLATED: 'RESTORE_ISOLATED',
+  DELETE_EXPIRED: 'DELETE_EXPIRED'
+} as const
+
+export type BackupOperationType = (typeof BackupOperationType)[keyof typeof BackupOperationType]
+
+
+export const BackupOperationStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  RETRYING: 'RETRYING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BackupOperationStatus = (typeof BackupOperationStatus)[keyof typeof BackupOperationStatus]
+
+
+export const BackupOperationTrigger = {
+  SCHEDULED: 'SCHEDULED',
+  MANUAL: 'MANUAL',
+  CLI: 'CLI'
+} as const
+
+export type BackupOperationTrigger = (typeof BackupOperationTrigger)[keyof typeof BackupOperationTrigger]
+
+
 export const StorageCleanupJobType = {
   PRODUCT_DELETION: 'PRODUCT_DELETION',
   ARTIFACT_REPLACEMENT: 'ARTIFACT_REPLACEMENT',

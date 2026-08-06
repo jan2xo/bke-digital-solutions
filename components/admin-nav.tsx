@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const links = [["Overview", "/admin"], ["Products", "/admin/products"], ["Offers", "/admin/offers"], ["Releases", "/admin/releases"], ["Artifacts", "/admin/artifacts"], ["Customers", "/admin/customers"], ["Trials", "/admin/trials"], ["Licenses", "/admin/licenses"], ["Devices", "/admin/devices"], ["Orders", "/admin/orders"], ["Payments", "/admin/payments"], ["Invoices", "/admin/invoices"], ["Scheduler", "/admin/scheduler"], ["Legal & Compliance", "/admin/legal"], ["Providers", "/admin/providers"], ["Audit", "/admin/audit"], ["Security", "/admin/security"]] as const;
+const links = [["Overview", "/admin"], ["Products", "/admin/products"], ["Offers", "/admin/offers"], ["Releases", "/admin/releases"], ["Artifacts", "/admin/artifacts"], ["Customers", "/admin/customers"], ["Trials", "/admin/trials"], ["Licenses", "/admin/licenses"], ["Devices", "/admin/devices"], ["Orders", "/admin/orders"], ["Payments", "/admin/payments"], ["Invoices", "/admin/invoices"], ["Scheduler", "/admin/scheduler"], ["Backups", "/admin/backups"], ["Legal & Compliance", "/admin/legal"], ["Providers", "/admin/providers"], ["Audit", "/admin/audit"], ["Security", "/admin/security"]] as const;
 
 export function AdminNav() {
   const pathname = usePathname();

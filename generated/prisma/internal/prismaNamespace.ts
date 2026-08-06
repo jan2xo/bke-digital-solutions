@@ -445,6 +445,8 @@ export const ModelName = {
   JobRun: 'JobRun',
   ScheduledJobDefinition: 'ScheduledJobDefinition',
   ScheduledJobRun: 'ScheduledJobRun',
+  BackupArchive: 'BackupArchive',
+  BackupOperation: 'BackupOperation',
   EmailOutbox: 'EmailOutbox',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
@@ -463,7 +465,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4019,6 +4021,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BackupArchive: {
+      payload: Prisma.$BackupArchivePayload<ExtArgs>
+      fields: Prisma.BackupArchiveFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BackupArchiveFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BackupArchiveFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>
+        }
+        findFirst: {
+          args: Prisma.BackupArchiveFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BackupArchiveFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>
+        }
+        findMany: {
+          args: Prisma.BackupArchiveFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>[]
+        }
+        create: {
+          args: Prisma.BackupArchiveCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>
+        }
+        createMany: {
+          args: Prisma.BackupArchiveCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BackupArchiveCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>[]
+        }
+        delete: {
+          args: Prisma.BackupArchiveDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>
+        }
+        update: {
+          args: Prisma.BackupArchiveUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>
+        }
+        deleteMany: {
+          args: Prisma.BackupArchiveDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BackupArchiveUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BackupArchiveUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>[]
+        }
+        upsert: {
+          args: Prisma.BackupArchiveUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupArchivePayload>
+        }
+        aggregate: {
+          args: Prisma.BackupArchiveAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBackupArchive>
+        }
+        groupBy: {
+          args: Prisma.BackupArchiveGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BackupArchiveGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BackupArchiveCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BackupArchiveCountAggregateOutputType> | number
+        }
+      }
+    }
+    BackupOperation: {
+      payload: Prisma.$BackupOperationPayload<ExtArgs>
+      fields: Prisma.BackupOperationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BackupOperationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BackupOperationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>
+        }
+        findFirst: {
+          args: Prisma.BackupOperationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BackupOperationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>
+        }
+        findMany: {
+          args: Prisma.BackupOperationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>[]
+        }
+        create: {
+          args: Prisma.BackupOperationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>
+        }
+        createMany: {
+          args: Prisma.BackupOperationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BackupOperationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>[]
+        }
+        delete: {
+          args: Prisma.BackupOperationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>
+        }
+        update: {
+          args: Prisma.BackupOperationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>
+        }
+        deleteMany: {
+          args: Prisma.BackupOperationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BackupOperationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BackupOperationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>[]
+        }
+        upsert: {
+          args: Prisma.BackupOperationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BackupOperationPayload>
+        }
+        aggregate: {
+          args: Prisma.BackupOperationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBackupOperation>
+        }
+        groupBy: {
+          args: Prisma.BackupOperationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BackupOperationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BackupOperationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BackupOperationCountAggregateOutputType> | number
+        }
+      }
+    }
     EmailOutbox: {
       payload: Prisma.$EmailOutboxPayload<ExtArgs>
       fields: Prisma.EmailOutboxFieldRefs
@@ -5121,6 +5271,63 @@ export const ScheduledJobRunScalarFieldEnum = {
 export type ScheduledJobRunScalarFieldEnum = (typeof ScheduledJobRunScalarFieldEnum)[keyof typeof ScheduledJobRunScalarFieldEnum]
 
 
+export const BackupArchiveScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  retentionTier: 'retentionTier',
+  deploymentId: 'deploymentId',
+  formatVersion: 'formatVersion',
+  storagePrefix: 'storagePrefix',
+  manifestObjectKey: 'manifestObjectKey',
+  manifestChecksum: 'manifestChecksum',
+  databaseObjectKey: 'databaseObjectKey',
+  databaseChecksum: 'databaseChecksum',
+  encryptedChecksum: 'encryptedChecksum',
+  encryptionKeyVersion: 'encryptionKeyVersion',
+  objectCount: 'objectCount',
+  missingObjectCount: 'missingObjectCount',
+  sizeBytes: 'sizeBytes',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  verifiedAt: 'verifiedAt',
+  expiresAt: 'expiresAt',
+  deletedAt: 'deletedAt',
+  durationMs: 'durationMs',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BackupArchiveScalarFieldEnum = (typeof BackupArchiveScalarFieldEnum)[keyof typeof BackupArchiveScalarFieldEnum]
+
+
+export const BackupOperationScalarFieldEnum = {
+  id: 'id',
+  backupId: 'backupId',
+  type: 'type',
+  status: 'status',
+  trigger: 'trigger',
+  requestedById: 'requestedById',
+  dryRun: 'dryRun',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  nextAttemptAt: 'nextAttemptAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  durationMs: 'durationMs',
+  claimedBy: 'claimedBy',
+  correlationId: 'correlationId',
+  idempotencyKey: 'idempotencyKey',
+  targetFingerprint: 'targetFingerprint',
+  resultSummary: 'resultSummary',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BackupOperationScalarFieldEnum = (typeof BackupOperationScalarFieldEnum)[keyof typeof BackupOperationScalarFieldEnum]
+
+
 export const EmailOutboxScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -5757,6 +5964,76 @@ export type ListEnumScheduledJobTriggerFieldRefInput<$PrismaModel> = FieldRefInp
 
 
 /**
+ * Reference to a field of type 'BackupArchiveStatus'
+ */
+export type EnumBackupArchiveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupArchiveStatus'>
+
+
+
+/**
+ * Reference to a field of type 'BackupArchiveStatus[]'
+ */
+export type ListEnumBackupArchiveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupArchiveStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'BackupRetentionTier'
+ */
+export type EnumBackupRetentionTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupRetentionTier'>
+
+
+
+/**
+ * Reference to a field of type 'BackupRetentionTier[]'
+ */
+export type ListEnumBackupRetentionTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupRetentionTier[]'>
+
+
+
+/**
+ * Reference to a field of type 'BackupOperationType'
+ */
+export type EnumBackupOperationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupOperationType'>
+
+
+
+/**
+ * Reference to a field of type 'BackupOperationType[]'
+ */
+export type ListEnumBackupOperationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupOperationType[]'>
+
+
+
+/**
+ * Reference to a field of type 'BackupOperationStatus'
+ */
+export type EnumBackupOperationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupOperationStatus'>
+
+
+
+/**
+ * Reference to a field of type 'BackupOperationStatus[]'
+ */
+export type ListEnumBackupOperationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupOperationStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'BackupOperationTrigger'
+ */
+export type EnumBackupOperationTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupOperationTrigger'>
+
+
+
+/**
+ * Reference to a field of type 'BackupOperationTrigger[]'
+ */
+export type ListEnumBackupOperationTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupOperationTrigger[]'>
+
+
+
+/**
  * Reference to a field of type 'ProviderEnvironment'
  */
 export type EnumProviderEnvironmentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderEnvironment'>
@@ -6010,6 +6287,8 @@ export type GlobalOmitConfig = {
   jobRun?: Prisma.JobRunOmit
   scheduledJobDefinition?: Prisma.ScheduledJobDefinitionOmit
   scheduledJobRun?: Prisma.ScheduledJobRunOmit
+  backupArchive?: Prisma.BackupArchiveOmit
+  backupOperation?: Prisma.BackupOperationOmit
   emailOutbox?: Prisma.EmailOutboxOmit
   externalProviderConfiguration?: Prisma.ExternalProviderConfigurationOmit
   externalProviderCredential?: Prisma.ExternalProviderCredentialOmit

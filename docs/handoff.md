@@ -1,6 +1,6 @@
 # Engineering handoff
 
-## Active handoff — Phase 6.3 owner review
+## Active handoff — Phase 6.4 owner review
 
 Phase 6.0 runtime parity is committed and pushed at `4f5a65a`. Use `certification-runtime.md` for the authoritative startup/test sequence and `runtime-parity.md` for environment, Docker, database, health, and provider boundaries. Full Vitest (116 passed, 6 credential-gated skipped), Playwright (9 passed), local/Docker production builds, 17-migration status, seed, smoke, readiness dependency outages, and the zero-vulnerability runtime audit passed. This is not PayMongo lifecycle certification or overall production readiness.
 
@@ -8,13 +8,13 @@ Administrator password-plus-email-code verification is committed and pushed at `
 
 Phase 6.1A Legal Document Management is committed and pushed at `7763dd0`, with consent and navigation hardening at `e5c94f7`. Both legal migrations are applied and the idempotent seed creates nine placeholder documents. Replace and professionally approve every placeholder before public commerce.
 
-The homepage pricing fix is committed at `05cefcb`. Phase 6.1 is committed at `952e9e1`. Phase 6.2 lifecycle code and migration 19 are committed, and current evidence is at `2bc8e82`. Genuine duplicate paid/refund dashboard redeliveries pass. The owner approved the remaining provider-interactive limitations as sufficient to start Phase 6.3. The current uncommitted working tree implements Phase 6.3 and migration 20; development and certification are current and healthy.
+The homepage pricing fix is committed at `05cefcb`. Phase 6.1 is committed at `952e9e1`. Phase 6.2 lifecycle code and migration 19 are committed, and current evidence is at `2bc8e82`. Genuine duplicate paid/refund dashboard redeliveries pass. Phase 6.3 is committed at `099fe7c`, with its PostgreSQL client-serialization correction at `66f9fdd`. The current uncommitted working tree implements Phase 6.4 and migration 21; development and certification schemas are current.
 
 Phase 6.1 removes the legacy destructive customer route, adds governed lifecycle and retention controls, preserves legal/commercial evidence, adds account capabilities, and stages private-object deletion through durable cleanup jobs. Review `data-retention.md`, `customer-account-closure.md`, `privacy-deletion-workflow.md`, `storage-cleanup-jobs.md`, and the Phase 6.1 report before operating these controls.
 
 Key entry points are `/admin/legal`, `/legal/[slug]`, `/legal/accept`, `lib/legal/`, and the three legal documentation files. Publication requires a recent MFA-verified administrator session. Database triggers—not only route checks—protect published content and acceptance rows. Because acceptance evidence intentionally restricts deletion of its related user/account/version, any later governed erasure design must preserve or legally reconcile those records rather than bypassing the triggers.
 
-Phase 6.3 provides eight registered jobs, PostgreSQL run history, Valkey locks, restart recovery, bounded retry/backoff, the Docker scheduler worker, administrator controls, and separate scheduler health. It never auto-settles, charges, refunds, or purges. Full local/certification verification passed: Vitest 140/146 with 6 credential-gated skips in each runtime, Playwright 10/10 in each runtime, production/Docker builds, migration/smoke/drift, scheduler health, hygiene, and zero-vulnerability audit. Review the Phase 6.3 report before committing. Never commit `.env.certification`, tunnel credentials, provider secrets, webhook payloads, or signatures. Do not begin Phase 6.4.
+Phase 6.3 provides eight original lifecycle jobs, PostgreSQL run history, Valkey locks, restart recovery, bounded retry/backoff, the Docker scheduler worker, administrator controls, and separate scheduler health. Phase 6.4 adds two backup jobs, durable archive/operation history, encrypted PostgreSQL and private-object archives, verification, retention, and isolated restore controls. Current code verification passes TypeScript, ESLint, Vitest 155 passed with 6 credential-gated skips, Playwright 11/11, production build, and Docker target builds. Certification migration 21 and smoke checks pass. A genuine certification archive correctly stopped as incomplete because five database-referenced source objects are missing from MinIO; repair that drift and complete an isolated restore drill before approving Phase 6.4 for production. Never commit `.env.certification`, tunnel credentials, provider secrets, webhook payloads, signatures, backup keys, or restore credentials. Do not begin Phase 6.5.
 
 ## Phase 5.0 deployment foundation
 

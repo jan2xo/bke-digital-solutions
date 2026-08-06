@@ -63,6 +63,48 @@ enum ScheduledJobTrigger {
   CERTIFICATION
 }
 
+enum BackupArchiveStatus {
+  PENDING
+  CREATING
+  AVAILABLE
+  VERIFIED
+  INCOMPLETE
+  CORRUPT
+  FAILED
+  EXPIRED
+  DELETED
+}
+
+enum BackupRetentionTier {
+  MANUAL
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum BackupOperationType {
+  CREATE
+  VERIFY
+  SIMULATE_RESTORE
+  RESTORE_ISOLATED
+  DELETE_EXPIRED
+}
+
+enum BackupOperationStatus {
+  PENDING
+  PROCESSING
+  RETRYING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum BackupOperationTrigger {
+  SCHEDULED
+  MANUAL
+  CLI
+}
+
 enum StorageCleanupJobType {
   PRODUCT_DELETION
   ARTIFACT_REPLACEMENT
@@ -301,12 +343,13 @@ model User {
   providerCredentialsCreated    ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
   legalVersionsAuthored         LegalDocumentVersion[]          @relation("LegalVersionAuthor")
   legalAcceptances              LegalAcceptance[]
-  storageCleanupJobsCreated     StorageCleanupJob[]              @relation("StorageCleanupCreator")
-  refundOperationsRequested     RefundOperation[]                @relation("RefundRequester")
-  reconciliationsRun            PaymentReconciliation[]          @relation("ReconciliationRunner")
-  reconciliationsAcknowledged   PaymentReconciliation[]          @relation("ReconciliationAcknowledger")
-  webhookEventsAcknowledged     WebhookEvent[]                    @relation("WebhookAcknowledger")
+  storageCleanupJobsCreated     StorageCleanupJob[]             @relation("StorageCleanupCreator")
+  refundOperationsRequested     RefundOperation[]               @relation("RefundRequester")
+  reconciliationsRun            PaymentReconciliation[]         @relation("ReconciliationRunner")
+  reconciliationsAcknowledged   PaymentReconciliation[]         @relation("ReconciliationAcknowledger")
+  webhookEventsAcknowledged     WebhookEvent[]                  @relation("WebhookAcknowledger")
   scheduledRunsAcknowledged     ScheduledJobRun[]
+  backupOperationsRequested     BackupOperation[]               @relation("BackupOperationRequester")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -392,8 +435,8 @@ model SecurityEvent {
   id                   String                       @id @default(cuid())
   userId               String?
   type                 SecurityEventType
-  outcome              SecurityEventOutcome            @default(INFORMATIONAL)
-  severity             SecurityEventSeverity           @default(INFORMATIONAL)
+  outcome              SecurityEventOutcome         @default(INFORMATIONAL)
+  severity             SecurityEventSeverity        @default(INFORMATIONAL)
   sessionId            String?
   provider             ExternalProvider?
   authenticationMethod SessionAuthenticationMethod?
@@ -435,35 +478,35 @@ model PasswordResetToken {
 }
 
 model CustomerAccount {
-  id               String               @id @default(cuid())
-  type             AccountType
-  displayName      String
-  ownerId          String
-  billingEmail     String
-  taxId            String?
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  lifecycleState   CustomerLifecycleState @default(ACTIVE)
+  id                 String                 @id @default(cuid())
+  type               AccountType
+  displayName        String
+  ownerId            String
+  billingEmail       String
+  taxId              String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  lifecycleState     CustomerLifecycleState @default(ACTIVE)
   closureRequestedAt DateTime?
-  closedAt         DateTime?
+  closedAt           DateTime?
   privacyRequestedAt DateTime?
-  pseudonymizedAt  DateTime?
+  pseudonymizedAt    DateTime?
   retentionExpiresAt DateTime?
-  legalHoldAt      DateTime?
-  legalHoldReason  String?
-  owner            User                 @relation("AccountOwner", fields: [ownerId], references: [id])
-  organization     OrganizationProfile?
-  memberships      Membership[]
-  invitations      Invitation[]
-  carts            Cart[]
-  orders           Order[]
-  licenses         License[]
-  subscriptions    Subscription[]
-  auditLogs        AuditLog[]
-  trials           TrialGrant[]
-  offers           DiscountOffer[]
-  offerRedemptions OfferRedemption[]
-  legalAcceptances LegalAcceptance[]
+  legalHoldAt        DateTime?
+  legalHoldReason    String?
+  owner              User                   @relation("AccountOwner", fields: [ownerId], references: [id])
+  organization       OrganizationProfile?
+  memberships        Membership[]
+  invitations        Invitation[]
+  carts              Cart[]
+  orders             Order[]
+  licenses           License[]
+  subscriptions      Subscription[]
+  auditLogs          AuditLog[]
+  trials             TrialGrant[]
+  offers             DiscountOffer[]
+  offerRedemptions   OfferRedemption[]
+  legalAcceptances   LegalAcceptance[]
 
   @@index([ownerId])
   @@index([lifecycleState])
@@ -567,33 +610,33 @@ model Invitation {
 }
 
 model Product {
-  id            String            @id @default(cuid())
-  slug          String            @unique
-  name          String
-  summary       String
-  description   String
-  type          ProductType
-  category      String            @default("General")
-  licenseType   String            @default("Commercial")
-  featured      Boolean           @default(false)
-  imageKey      String?
-  tags          String[]          @default([])
-  active        Boolean           @default(true)
-  publishedAt   DateTime?
-  archivedAt    DateTime?
+  id                  String              @id @default(cuid())
+  slug                String              @unique
+  name                String
+  summary             String
+  description         String
+  type                ProductType
+  category            String              @default("General")
+  licenseType         String              @default("Commercial")
+  featured            Boolean             @default(false)
+  imageKey            String?
+  tags                String[]            @default([])
+  active              Boolean             @default(true)
+  publishedAt         DateTime?
+  archivedAt          DateTime?
   deletionRequestedAt DateTime?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-  versions      ProductVersion[]
-  editions      Edition[]
-  prices        Price[]
-  policies      LicensePolicy[]
-  artifacts     ProductArtifact[]
-  licenses      License[]
-  subscriptions Subscription[]
-  trials        TrialGrant[]
-  offers        DiscountOffer[]
-  cleanupJobs   StorageCleanupJob[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  versions            ProductVersion[]
+  editions            Edition[]
+  prices              Price[]
+  policies            LicensePolicy[]
+  artifacts           ProductArtifact[]
+  licenses            License[]
+  subscriptions       Subscription[]
+  trials              TrialGrant[]
+  offers              DiscountOffer[]
+  cleanupJobs         StorageCleanupJob[]
 
   @@index([deletionRequestedAt])
 }
@@ -701,20 +744,20 @@ model Price {
 }
 
 model ProductArtifact {
-  id            String          @id @default(cuid())
+  id            String              @id @default(cuid())
   productId     String
   versionId     String?
   name          String
-  objectKey     String          @unique
+  objectKey     String              @unique
   sha256        String
   sizeBytes     BigInt
   contentType   String
-  active        Boolean         @default(true)
-  downloadCount Int             @default(0)
+  active        Boolean             @default(true)
+  downloadCount Int                 @default(0)
   removedAt     DateTime?
-  createdAt     DateTime        @default(now())
-  product       Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
-  version       ProductVersion? @relation(fields: [versionId], references: [id])
+  createdAt     DateTime            @default(now())
+  product       Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version       ProductVersion?     @relation(fields: [versionId], references: [id])
   grants        DownloadGrant[]
   cleanupJobs   StorageCleanupJob[]
 }
@@ -768,26 +811,26 @@ model CartItem {
 }
 
 model Order {
-  id                    String           @id @default(cuid())
-  number                String           @unique
+  id                    String                  @id @default(cuid())
+  number                String                  @unique
   accountId             String
-  status                OrderStatus      @default(PENDING)
+  status                OrderStatus             @default(PENDING)
   currency              String
   subtotalMinor         Int
   taxMinor              Int
   totalMinor            Int
   billingSnapshot       Json
-  createdAt             DateTime         @default(now())
+  createdAt             DateTime                @default(now())
   paidAt                DateTime?
   renewalSubscriptionId String?
-  account               CustomerAccount  @relation(fields: [accountId], references: [id])
+  account               CustomerAccount         @relation(fields: [accountId], references: [id])
   items                 OrderItem[]
   payments              Payment[]
   attempts              PaymentAttempt[]
   invoice               Invoice?
   licenses              License[]
   subscriptions         Subscription[]
-  renewalSubscription   Subscription?    @relation("SubscriptionRenewalOrders", fields: [renewalSubscriptionId], references: [id], onDelete: Restrict)
+  renewalSubscription   Subscription?           @relation("SubscriptionRenewalOrders", fields: [renewalSubscriptionId], references: [id], onDelete: Restrict)
   offerRedemption       OfferRedemption?
   webhookEvents         WebhookEvent[]
   refundOperations      RefundOperation[]
@@ -829,71 +872,71 @@ model OrderItem {
 }
 
 model Payment {
-  id          String        @id @default(cuid())
-  orderId     String
-  provider    String
-  externalId  String
-  status      PaymentStatus
-  amountMinor Int
-  currency    String
-  paidAt      DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  order       Order         @relation(fields: [orderId], references: [id])
-  webhookEvents WebhookEvent[]
+  id               String                  @id @default(cuid())
+  orderId          String
+  provider         String
+  externalId       String
+  status           PaymentStatus
+  amountMinor      Int
+  currency         String
+  paidAt           DateTime?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  order            Order                   @relation(fields: [orderId], references: [id])
+  webhookEvents    WebhookEvent[]
   refundOperations RefundOperation[]
-  reconciliations PaymentReconciliation[]
+  reconciliations  PaymentReconciliation[]
 
   @@unique([provider, externalId])
   @@index([orderId])
 }
 
 model PaymentAttempt {
-  id                 String   @id @default(cuid())
+  id                 String         @id @default(cuid())
   orderId            String
   provider           String
-  idempotencyKey     String   @unique
-  externalCheckoutId String?  @unique
+  idempotencyKey     String         @unique
+  externalCheckoutId String?        @unique
   checkoutUrl        String?
   status             String
-  createdAt          DateTime @default(now())
-  order              Order    @relation(fields: [orderId], references: [id])
+  createdAt          DateTime       @default(now())
+  order              Order          @relation(fields: [orderId], references: [id])
   webhookEvents      WebhookEvent[]
 }
 
 model WebhookEvent {
-  id                       String          @id @default(cuid())
-  provider                 String
-  externalEventId          String
-  rawEventType             String?
-  eventType                String
-  livemode                 Boolean
-  payloadHash              String
-  normalizedData           Json?
-  status                   String
-  error                    String?
-  lastErrorCode            String?
-  mismatchCategory         String?
-  processingAttempts       Int             @default(0)
-  conflictCount            Int             @default(0)
-  receivedAt               DateTime        @default(now())
-  lastAttemptAt            DateTime?
-  processedAt              DateTime?
-  occurredAt               DateTime?
-  orderId                  String?
-  paymentAttemptId         String?
-  paymentId                String?
-  providerCheckoutId       String?
-  providerPaymentId        String?
-  providerRefundId         String?
-  resolutionStatus         String          @default("OPEN")
-  resolutionCode           String?
-  resolvedAt               DateTime?
-  resolvedById             String?
-  order                    Order?          @relation(fields: [orderId], references: [id], onDelete: SetNull)
-  paymentAttempt           PaymentAttempt? @relation(fields: [paymentAttemptId], references: [id], onDelete: SetNull)
-  payment                  Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-  resolvedBy               User?           @relation("WebhookAcknowledger", fields: [resolvedById], references: [id], onDelete: SetNull)
+  id                 String          @id @default(cuid())
+  provider           String
+  externalEventId    String
+  rawEventType       String?
+  eventType          String
+  livemode           Boolean
+  payloadHash        String
+  normalizedData     Json?
+  status             String
+  error              String?
+  lastErrorCode      String?
+  mismatchCategory   String?
+  processingAttempts Int             @default(0)
+  conflictCount      Int             @default(0)
+  receivedAt         DateTime        @default(now())
+  lastAttemptAt      DateTime?
+  processedAt        DateTime?
+  occurredAt         DateTime?
+  orderId            String?
+  paymentAttemptId   String?
+  paymentId          String?
+  providerCheckoutId String?
+  providerPaymentId  String?
+  providerRefundId   String?
+  resolutionStatus   String          @default("OPEN")
+  resolutionCode     String?
+  resolvedAt         DateTime?
+  resolvedById       String?
+  order              Order?          @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  paymentAttempt     PaymentAttempt? @relation(fields: [paymentAttemptId], references: [id], onDelete: SetNull)
+  payment            Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  resolvedBy         User?           @relation("WebhookAcknowledger", fields: [resolvedById], references: [id], onDelete: SetNull)
 
   @@unique([provider, externalEventId])
   @@index([status, receivedAt])
@@ -943,7 +986,7 @@ model PaymentReconciliation {
   createdAt        DateTime  @default(now())
   order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
   payment          Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-  runBy             User      @relation("ReconciliationRunner", fields: [runById], references: [id], onDelete: Restrict)
+  runBy            User      @relation("ReconciliationRunner", fields: [runById], references: [id], onDelete: Restrict)
   acknowledgedBy   User?     @relation("ReconciliationAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
 
   @@index([orderId, createdAt])
@@ -1215,40 +1258,102 @@ model ScheduledJobDefinition {
   consecutiveFailures Int               @default(0)
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
-  runs                 ScheduledJobRun[]
+  runs                ScheduledJobRun[]
 
   @@index([enabled, nextRunAt])
   @@index([consecutiveFailures, lastFailureAt])
 }
 
 model ScheduledJobRun {
-  id               String                @id @default(cuid())
+  id               String                 @id @default(cuid())
   jobKey           String
-  status           ScheduledJobRunStatus @default(QUEUED)
+  status           ScheduledJobRunStatus  @default(QUEUED)
   scheduledFor     DateTime
   startedAt        DateTime?
   completedAt      DateTime?
   durationMs       Int?
-  attempt          Int                   @default(1)
+  attempt          Int                    @default(1)
   trigger          ScheduledJobTrigger
-  dryRun           Boolean               @default(false)
+  dryRun           Boolean                @default(false)
   lockOwner        String?
-  correlationId    String                @unique
-  idempotencyKey   String                @unique
+  correlationId    String                 @unique
+  idempotencyKey   String                 @unique
   parentRunId      String?
   retryAt          DateTime?
-  resultSummary    Json                  @default("{}")
+  resultSummary    Json                   @default("{}")
   errorCode        String?
   failureClass     String?
   acknowledgedAt   DateTime?
   acknowledgedById String?
-  createdAt        DateTime              @default(now())
+  createdAt        DateTime               @default(now())
   definition       ScheduledJobDefinition @relation(fields: [jobKey], references: [key], onDelete: Restrict)
-  acknowledgedBy   User?                 @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  acknowledgedBy   User?                  @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
 
   @@index([jobKey, createdAt])
   @@index([status, retryAt])
   @@index([status, startedAt])
+}
+
+model BackupArchive {
+  id                   String              @id @default(cuid())
+  status               BackupArchiveStatus @default(PENDING)
+  retentionTier        BackupRetentionTier
+  deploymentId         String
+  formatVersion        Int                 @default(1)
+  storagePrefix        String              @unique
+  manifestObjectKey    String?
+  manifestChecksum     String?
+  databaseObjectKey    String?
+  databaseChecksum     String?
+  encryptedChecksum    String?
+  encryptionKeyVersion Int?
+  objectCount          Int                 @default(0)
+  missingObjectCount   Int                 @default(0)
+  sizeBytes            BigInt              @default(0)
+  startedAt            DateTime?
+  completedAt          DateTime?
+  verifiedAt           DateTime?
+  expiresAt            DateTime?
+  deletedAt            DateTime?
+  durationMs           Int?
+  errorCode            String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  operations           BackupOperation[]
+
+  @@index([status, createdAt])
+  @@index([expiresAt, status])
+  @@index([deploymentId, createdAt])
+}
+
+model BackupOperation {
+  id                String                 @id @default(cuid())
+  backupId          String?
+  type              BackupOperationType
+  status            BackupOperationStatus  @default(PENDING)
+  trigger           BackupOperationTrigger
+  requestedById     String?
+  dryRun            Boolean                @default(false)
+  attempts          Int                    @default(0)
+  maxAttempts       Int                    @default(3)
+  nextAttemptAt     DateTime               @default(now())
+  startedAt         DateTime?
+  completedAt       DateTime?
+  durationMs        Int?
+  claimedBy         String?
+  correlationId     String                 @unique
+  idempotencyKey    String                 @unique
+  targetFingerprint String?
+  resultSummary     Json                   @default("{}")
+  errorCode         String?
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  backup            BackupArchive?         @relation(fields: [backupId], references: [id], onDelete: Restrict)
+  requestedBy       User?                  @relation("BackupOperationRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@index([backupId, createdAt])
+  @@index([requestedById, createdAt])
 }
 
 model EmailOutbox {

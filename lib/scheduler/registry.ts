@@ -1,6 +1,7 @@
 import "server-only";
 import type { ScheduledJob } from "@/lib/scheduler/types";
 import { commerceLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, renewalReminders, securityCleanup, storageLifecycle } from "@/lib/scheduler/handlers";
+import { backupCreation, backupRetention } from "@/lib/backups/scheduler";
 
 const jobs = [
   { key: "storage.lifecycle", name: "Storage cleanup and deletion", description: "Recovers and processes private-storage cleanup, abandoned uploads, and completed product deletion.", category: "STORAGE", cadenceSeconds: 300, timeoutSeconds: 240, lockSeconds: 300, maxAttempts: 5, dryRunSupported: true, healthThresholdSeconds: 1800, auditPolicy: "FAILURES", handler: storageLifecycle },
@@ -11,6 +12,8 @@ const jobs = [
   { key: "customers.retention-review", name: "Customer retention review", description: "Calculates retention, privacy, purge-eligibility, and legal-hold review backlogs without automatic purge.", category: "CUSTOMER", cadenceSeconds: 86400, timeoutSeconds: 300, lockSeconds: 360, maxAttempts: 3, dryRunSupported: true, healthThresholdSeconds: 172800, auditPolicy: "FAILURES", handler: customerLifecycleReview },
   { key: "security.expired-records", name: "Expired authentication records", description: "Removes expired sessions, MFA challenges, verification, magic-link, and password-reset tokens.", category: "SECURITY", cadenceSeconds: 3600, timeoutSeconds: 120, lockSeconds: 180, maxAttempts: 4, dryRunSupported: true, healthThresholdSeconds: 10800, auditPolicy: "FAILURES", handler: securityCleanup },
   { key: "payments.operations", name: "Payment operations", description: "Retries retryable stored webhooks and reports reconciliation candidates; never auto-settles or refunds.", category: "PAYMENTS", cadenceSeconds: 900, timeoutSeconds: 300, lockSeconds: 360, maxAttempts: 5, dryRunSupported: true, healthThresholdSeconds: 3600, auditPolicy: "ALL", handler: paymentOperations },
+  { key: "backups.daily", name: "Encrypted daily backup", description: "Queues one encrypted PostgreSQL and private-object archive per UTC retention window.", category: "BACKUP", cadenceSeconds: 86400, timeoutSeconds: 120, lockSeconds: 180, maxAttempts: 3, dryRunSupported: true, healthThresholdSeconds: 172800, auditPolicy: "ALL", handler: backupCreation },
+  { key: "backups.retention", name: "Backup retention", description: "Marks expired archives and queues deletion without touching current recovery points.", category: "BACKUP", cadenceSeconds: 86400, timeoutSeconds: 120, lockSeconds: 180, maxAttempts: 3, dryRunSupported: true, healthThresholdSeconds: 172800, auditPolicy: "ALL", handler: backupRetention },
 ] satisfies ScheduledJob[];
 
 const registry = new Map(jobs.map((job) => [job.key, job]));

@@ -258,6 +258,16 @@ export type ScheduledJobDefinition = Prisma.ScheduledJobDefinitionModel
  */
 export type ScheduledJobRun = Prisma.ScheduledJobRunModel
 /**
+ * Model BackupArchive
+ *
+ */
+export type BackupArchive = Prisma.BackupArchiveModel
+/**
+ * Model BackupOperation
+ *
+ */
+export type BackupOperation = Prisma.BackupOperationModel
+/**
  * Model EmailOutbox
  *
  */

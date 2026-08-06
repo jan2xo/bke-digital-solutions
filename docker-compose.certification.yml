@@ -3,6 +3,8 @@ services:
     env_file: ${BKE_ENV_FILE:-.env.certification}
   scheduler:
     env_file: ${BKE_ENV_FILE:-.env.certification}
+  backup-worker:
+    env_file: ${BKE_ENV_FILE:-.env.certification}
   migrate:
     env_file: ${BKE_ENV_FILE:-.env.certification}
   seed:
@@ -50,7 +52,9 @@ services:
       - >-
         until mc alias set local http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}"; do sleep 2; done;
         mc mb --ignore-existing "local/$${S3_BUCKET}";
-        mc anonymous set none "local/$${S3_BUCKET}"
+        mc anonymous set none "local/$${S3_BUCKET}";
+        if [ -n "$${BACKUP_BUCKET}" ]; then mc mb --ignore-existing "local/$${BACKUP_BUCKET}"; mc anonymous set none "local/$${BACKUP_BUCKET}"; fi;
+        if [ -n "$${BACKUP_RESTORE_S3_BUCKET}" ]; then mc mb --ignore-existing "local/$${BACKUP_RESTORE_S3_BUCKET}"; mc anonymous set none "local/$${BACKUP_RESTORE_S3_BUCKET}"; fi
     env_file: ${BKE_ENV_FILE:-.env.certification}
     depends_on:
       minio: { condition: service_healthy }

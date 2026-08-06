@@ -8,7 +8,8 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 
 - Phase 6.0 runtime parity, Phase 6.1 Data Integrity and Safe Deletion, Phase 6.1A Legal Document Management, legal-consent hardening, administrator email-code verification, and the homepage catalog-pricing fix are committed and pushed.
 - Local development is operational and its PostgreSQL schema is current.
-- Development and certification have migration 20 applied. The local certification stack is healthy and remains a production simulation, not a production deployment.
+- Phase 6.3 is committed and pushed at `099fe7c`; the interactive-transaction serialization correction is pushed at `66f9fdd`.
+- Development has migration 21 applied. Certification verification for the uncommitted Phase 6.4 working tree remains part of final validation.
 - Genuine PayMongo paid, refund, persisted-reconciliation, duplicate-paid-redelivery, and duplicate-refund-redelivery paths pass. Failed-payment, delayed, out-of-order, and raw-fixture evidence remain open.
 - Live payments remain disabled.
 - VPS deployment remains postponed until the production-readiness gate passes.
@@ -136,7 +137,7 @@ Complete the genuine PayMongo sandbox lifecycle and define the controlled live-a
 
 **Priority:** Critical subscription-launch blocker
 
-**Implementation status:** Implemented and fully verified in the current uncommitted working tree, pending owner review. Migration 20 is current in development and certification; eight typed jobs use Valkey ownership locks and database idempotency. Docker runs a dedicated one-minute scheduler worker, while administrators have health, history, pause/resume, run, dry-run, retry, and acknowledge controls. Local and certification Vitest pass 140 with 6 credential-gated skips, local and certification Playwright pass 10/10, production and Docker builds pass, the certification scheduler reports all eight jobs healthy, and the runtime audit reports zero vulnerabilities. Phase 6.4 has not started.
+**Implementation status:** Committed and pushed at `099fe7c`, with the PostgreSQL interactive-transaction serialization correction at `66f9fdd`. Migration 20 is current in development and certification; eight typed jobs use Valkey ownership locks and database idempotency. Phase 6.4 builds on this committed scheduler.
 
 ### Objective
 
@@ -162,6 +163,8 @@ Make email, renewal, expiration, reservation, and cleanup workflows automatic, i
 ## Phase 6.4 — Backup & Disaster Recovery
 
 **Priority:** Critical production-launch blocker
+
+**Implementation status:** Implemented in the current uncommitted working tree with migration 21, pending owner review. TypeScript, ESLint, 155 Vitest cases, 11 Playwright cases, production build, migration/smoke, Docker image build, hygiene, and the zero-vulnerability runtime audit pass. A final Docker/certification refresh after the last small safety adjustments remains required because the execution environment exhausted its external-operation quota. The first genuine certification archive correctly refused certification because five database-referenced objects are absent from certification MinIO. Repairing that storage drift, completing a full restore simulation, provisioning production offsite credentials and separate key escrow, and running a production-sized restore drill remain launch gates.
 
 ### Objective
 

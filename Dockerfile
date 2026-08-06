@@ -23,10 +23,14 @@ CMD ["npx", "prisma", "migrate", "deploy"]
 
 FROM dependencies AS operations
 RUN addgroup --system --gid 1003 operations && adduser --system --uid 1003 operations
+RUN apk add --no-cache postgresql17-client
 COPY --chown=operations:operations . .
 RUN DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build npm run db:generate
 ENV NODE_ENV=production
 USER operations
+
+FROM operations AS backup-worker
+CMD ["npm", "run", "backups:worker"]
 
 FROM node:22.18-alpine@sha256:1b2479dd35a99687d6638f5976fd235e26c5b37e8122f786fcd5fe231d63de5b AS runner
 WORKDIR /app

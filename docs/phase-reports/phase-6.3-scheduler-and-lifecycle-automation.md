@@ -46,4 +46,4 @@ Migration `20260804100000_scheduler_lifecycle_automation` adds run-status and tr
 
 The first production build attempt failed because the execution sandbox prohibited Turbopack's internal local port; the identical build passed with authorized local execution. The first full Playwright run exposed a pre-existing logout assertion race in the product-deletion test (409 arrived before logout completed); waiting for the login navigation made the test deterministic, after which both local and certification suites passed 10/10. The initial Docker command returned before BuildKit completed; the completed image was verified by digest and both app and scheduler targets passed. Certification also exposed an inherited web-server health check on the non-HTTP worker; `HEALTHCHECK NONE` now correctly leaves job health to `/api/health/scheduler`.
 
-Phase 6.4 has not started.
+Historical status at the time of this report: Phase 6.4 had not started. Phase 6.4 has since been implemented in a separate uncommitted working tree; this Phase 6.3 report remains the immutable historical verification record for its own phase.

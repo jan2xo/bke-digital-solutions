@@ -36,6 +36,9 @@
     "certification:test:e2e": "node scripts/certification-host-command.mjs npm run test:e2e",
     "health:check": "tsx scripts/health-check.ts",
     "scheduler:run": "tsx scripts/run-scheduler.ts",
+    "backups:worker": "NODE_OPTIONS=--conditions=react-server tsx scripts/backup-worker.ts",
+    "backups:create": "NODE_OPTIONS=--conditions=react-server tsx scripts/request-backup.ts",
+    "backups:certify-local": "NODE_OPTIONS=--conditions=react-server tsx scripts/certify-backup-local.ts",
     "security:hygiene": "node scripts/repository-hygiene.mjs"
   },
   "dependencies": {
@@ -73,6 +76,7 @@
     "vitest": "^3.2.4"
   },
   "overrides": {
+    "fast-uri": "3.1.5",
     "find-my-way": "9.7.0",
     "postcss": "8.5.25",
     "sharp": "0.35.3",

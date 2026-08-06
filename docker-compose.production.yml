@@ -47,6 +47,22 @@ services:
     security_opt: ["no-new-privileges:true"]
     logging: *default-logging
 
+  backup-worker:
+    build:
+      context: .
+      target: backup-worker
+    env_file: ${BKE_ENV_FILE:-.env.production.example}
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 60s
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [private, egress]
+    read_only: true
+    tmpfs: ["/tmp:size=1g,mode=1777"]
+    security_opt: ["no-new-privileges:true"]
+    logging: *default-logging
+
   migrate:
     build:
       context: .

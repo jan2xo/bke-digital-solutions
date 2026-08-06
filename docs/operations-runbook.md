@@ -55,6 +55,12 @@ curl --fail https://jl-bke.com/api/health/ready
 The dedicated Docker `scheduler` service calls `POST /api/cron/scheduler` over `INTERNAL_APP_URL` once per minute. The endpoint dispatches only typed registry jobs. Legacy outbox, expiration, and renewal routes delegate into the same framework. Never place `CRON_SECRET` in a URL, command argument, evidence file, or log.
 
 Use `/admin/scheduler` for health and history. MFA and recent authentication are required for run, dry-run, pause, resume, retry, and acknowledge actions. CLI operations may run all due work with `npm run scheduler:run` or one job with `npm run scheduler:run -- --job=email.outbox --dry-run`. A dry run must be reviewed before manually running destructive-adjacent cleanup work.
+
+## Backup operations
+
+Use `/admin/backups` for audited manual requests. `npm run backups:create -- --dry-run` validates queueing without creating an archive; `npm run backups:create` queues a real archive. The `backup-worker` must be running and `BACKUP_ENABLED=true`. Never print resolved Compose configuration because it contains backup credentials and the encryption key.
+
+Investigate `FAILED`, `INCOMPLETE`, or `CORRUPT` archives before retrying. A restore drill must begin with verification and simulation, then target only the isolated database and bucket documented in [restore-procedure.md](restore-procedure.md). Retention deletion applies only to expired archive prefixes and remains a durable audited operation.
 # Provider credential operations
 
 Use `/admin/providers` only after MFA and recent authentication. Follow [the rotation runbook](operations/provider-credential-rotation.md) to save, validate, enable, replace, revoke, or migrate provider credentials. Loss of the external master key requires provider-side revocation and newly issued credentials; there is no plaintext recovery endpoint.

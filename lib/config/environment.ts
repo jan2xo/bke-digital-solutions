@@ -49,8 +49,23 @@ export const environmentSchema = z.object({
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   ALLOW_DESTRUCTIVE_ADMIN: bool.default(false),
   MONITORING_DSN: z.preprocess(optional, z.url().optional()),
+  BACKUP_ENABLED: bool.default(false),
+  BACKUP_S3_ENDPOINT: z.preprocess(optional, z.url().optional()),
+  BACKUP_S3_REGION: z.string().default("auto"),
   BACKUP_BUCKET: z.preprocess(optional, z.string().min(3).optional()),
-  BACKUP_RETENTION_DAYS: z.coerce.number().int().min(1).max(3650).default(30),
+  BACKUP_S3_ACCESS_KEY_ID: z.preprocess(optional, z.string().min(1).optional()),
+  BACKUP_S3_SECRET_ACCESS_KEY: z.preprocess(optional, z.string().min(1).optional()),
+  BACKUP_S3_FORCE_PATH_STYLE: bool.default(true),
+  BACKUP_ENCRYPTION_KEY: z.preprocess(optional, z.string().min(32).optional()),
+  BACKUP_ENCRYPTION_KEY_VERSION: z.coerce.number().int().min(1).default(1),
+  BACKUP_RETENTION_DAILY: z.coerce.number().int().min(1).max(365).default(7),
+  BACKUP_RETENTION_WEEKLY: z.coerce.number().int().min(1).max(104).default(4),
+  BACKUP_RETENTION_MONTHLY: z.coerce.number().int().min(1).max(120).default(12),
+  BACKUP_WORKER_POLL_SECONDS: z.coerce.number().int().min(2).max(300).default(10),
+  BACKUP_RESTORE_DATABASE_URL: z.preprocess(optional, z.string().min(1).optional()),
+  BACKUP_RESTORE_S3_BUCKET: z.preprocess(optional, z.string().min(3).optional()),
+  BACKUP_RESTORE_ACK: z.preprocess(optional, z.string().optional()),
+  BACKUP_OFFSITE_ACK: z.preprocess(optional, z.string().optional()),
 }).superRefine((value, context) => {
   const origin = new URL(value.APP_URL);
   const protectedEnvironment = value.DEPLOYMENT_ENV === "staging" || value.DEPLOYMENT_ENV === "production";
@@ -76,6 +91,22 @@ export const environmentSchema = z.object({
   if (value.DEPLOYMENT_ENV === "production" && value.EMAIL_PROVIDER === "log") context.addIssue({ code: "custom", path: ["EMAIL_PROVIDER"], message: "log email transport is forbidden in production" });
   if (value.PROVIDER_CONFIG_SOURCE === "database" && !value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "is required for database provider configuration" });
   if (protectedEnvironment && value.SUPPORT_EMAIL.endsWith("@example.com")) context.addIssue({ code: "custom", path: ["SUPPORT_EMAIL"], message: "must be an operational address outside development" });
+  if (Boolean(value.BACKUP_S3_ACCESS_KEY_ID) !== Boolean(value.BACKUP_S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["BACKUP_S3_ACCESS_KEY_ID"], message: "backup storage access and secret keys must be configured together" });
+  if (value.BACKUP_ENABLED) {
+    if (!value.BACKUP_BUCKET || !value.BACKUP_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "backup bucket and encryption key are required when backups are enabled" });
+    if (!value.BACKUP_S3_ACCESS_KEY_ID || !value.BACKUP_S3_SECRET_ACCESS_KEY) context.addIssue({ code: "custom", path: ["BACKUP_S3_ACCESS_KEY_ID"], message: "dedicated backup-storage credentials are required" });
+    if (value.BACKUP_BUCKET === value.S3_BUCKET) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "must differ from the application object-storage bucket" });
+    if (value.BACKUP_ENCRYPTION_KEY) {
+      try {
+        if (Buffer.from(value.BACKUP_ENCRYPTION_KEY, "base64").length !== 32) context.addIssue({ code: "custom", path: ["BACKUP_ENCRYPTION_KEY"], message: "must be a base64-encoded 32-byte key" });
+      } catch {
+        context.addIssue({ code: "custom", path: ["BACKUP_ENCRYPTION_KEY"], message: "must be valid base64" });
+      }
+    }
+  }
+  if (value.BACKUP_RESTORE_DATABASE_URL && value.BACKUP_RESTORE_DATABASE_URL === value.DATABASE_URL) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_DATABASE_URL"], message: "must be isolated from the source database" });
+  if (value.BACKUP_RESTORE_S3_BUCKET && [value.S3_BUCKET, value.BACKUP_BUCKET].includes(value.BACKUP_RESTORE_S3_BUCKET)) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_S3_BUCKET"], message: "must be isolated from source and backup buckets" });
+  if (protectedEnvironment && value.BACKUP_ENABLED && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_OFFSITE_ACK !== "SEPARATE_FAILURE_DOMAIN") context.addIssue({ code: "custom", path: ["BACKUP_OFFSITE_ACK"], message: "must acknowledge an offsite storage failure domain" });
   if (protectedEnvironment) {
     for (const key of ["SESSION_SECRET", "MFA_ENCRYPTION_KEY", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
       if (key === "MFA_ENCRYPTION_KEY" && !value[key]) {

@@ -1,14 +1,14 @@
 # BKE Digital Solutions — Current-State Truth Check
 
 Baseline updated: August 4, 2026
-Pushed Git baseline: `2bc8e82 test(payments): record genuine PayMongo refund and reconciliation evidence`
-Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, and the Phase 6.2 payment lifecycle implementation
+Pushed Git baseline: `66f9fdd fix(database): serialize Prisma queries in interactive transactions`
+Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 
-Working-tree truth: Phase 6.3 Scheduler & Lifecycle Automation is implemented and fully verified but uncommitted pending owner review. Development and certification have migration 20 applied, and all eight certification jobs report healthy.
+Working-tree truth: Phase 6.4 Backup & Disaster Recovery is implemented with migration 21 and is uncommitted pending full verification and owner review. Development has migration 21 applied. Certification still reflects the committed Phase 6.3 baseline until Phase 6.4 rebuild verification finishes.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
-Phase 6.1 is committed at `952e9e1`. Phase 6.2 is partially certified: genuine paid settlement, retrieval, reconciliation, full refund, signed refund, and duplicate paid/refund redelivery pass. Genuine failed, delayed, out-of-order, and raw-fixture evidence remains open with deterministic coverage. The owner approved this state for Phase 6.3. Legal review, backups, monitoring, secure supply chain, and production deployment remain blocked.
+Phase 6.1 is committed at `952e9e1`. Phase 6.2 is partially certified: genuine paid settlement, retrieval, reconciliation, full refund, signed refund, and duplicate paid/refund redelivery pass. Genuine failed, delayed, out-of-order, and raw-fixture evidence remains open with deterministic coverage. Phase 6.3 is committed at `099fe7c`. Offsite backup provisioning and a production-sized restore drill, legal review, monitoring, secure supply chain, and production deployment remain blocked.
 
 This document is the concise repository baseline for future planning. It records verified implementation and runtime evidence rather than roadmap intent. If this file conflicts with an older phase report, the current repository, applied migrations, executable tests, and runtime evidence take precedence.
 
@@ -21,9 +21,9 @@ It is ready for local development and controlled sandbox certification. It is no
 ## Repository truth
 
 - Branch: `main`.
-- Pushed HEAD: `2bc8e82 test(payments): record genuine PayMongo refund and reconciliation evidence`.
-- `main` matches `origin/main`; Phase 6.1 and the Phase 6.2 lifecycle implementation are committed and pushed.
-- Nineteen migrations are pushed. Uncommitted migration 20 is applied and current in development and certification with zero development schema drift.
+- Pushed HEAD: `66f9fdd fix(database): serialize Prisma queries in interactive transactions`.
+- `main` matches `origin/main` at the Phase 6.3 follow-up baseline before Phase 6.4 working-tree changes.
+- Twenty migrations are pushed. Uncommitted migration 21 is applied to development; certification verification remains pending.
 - Prisma schema validation and generated-client parity passed.
 - TypeScript, ESLint, database-backed Vitest, Playwright, local/Docker production builds, and the runtime dependency audit passed for the latest verified baseline.
 - The certification application and dependencies are current and healthy.
@@ -32,12 +32,12 @@ It is ready for local development and controlled sandbox certification. It is no
 
 | Verification | Result |
 |---|---|
-| TypeScript | Passed |
-| ESLint | Passed |
-| Vitest | 140 passed locally and in certification, 6 credential-gated scenarios skipped in each |
-| Playwright | 10/10 passed locally and in certification |
+| TypeScript | Passed for the Phase 6.4 working tree |
+| ESLint | Passed for the Phase 6.4 working tree |
+| Vitest | 155 passed locally, 6 credential-gated scenarios skipped |
+| Playwright | 11/11 passed locally |
 | Production and Docker builds | Passed |
-| Migration status | 20 migrations, development and certification current; migration 20 remains uncommitted |
+| Migration status | 21 migrations in the working tree; development current, certification Phase 6.4 verification pending |
 | Genuine PayMongo checkout creation | Passed |
 | PayMongo live-key sandbox rejection | Passed |
 | Genuine Resend delivery | Passed |
@@ -47,6 +47,8 @@ It is ready for local development and controlled sandbox certification. It is no
 | Genuine duplicate paid/refund provider resend | Passed without duplicate effects |
 | Genuine delayed/out-of-order provider resend | Owner-interactive and not yet certified |
 | Genuine persisted reconciliation | Passed |
+| Phase 6.4 encrypted certification archive | Correctly blocked as incomplete: 5 database-referenced objects missing from certification MinIO |
+| Phase 6.4 complete restore simulation | Blocked until certification object drift is repaired |
 
 The first sandbox-restricted Vitest execution could not reach local PostgreSQL. The identical suite was rerun with database access and passed. That initial failure was an execution-sandbox restriction, not an application result.
 
@@ -255,8 +257,8 @@ The application has a configurable support email address, but no support platfor
 - No VPS deployment exists.
 - Public Cloudflare-to-local access is not equivalent to production deployment.
 - Health and environment validation exist.
-- The uncommitted Phase 6.3 Docker worker and centralized cron endpoint passed local-production simulation and certification-runtime verification. Actual production deployment and monitoring remain later phases.
-- No verified backup job or restore drill exists.
+- The committed Phase 6.3 Docker worker and centralized cron endpoint passed local-production simulation and certification-runtime verification. Actual production deployment and monitoring remain later phases.
+- Phase 6.4 backup jobs, encryption, manifests, verification, retention, and isolated restore controls exist in the uncommitted working tree. A real offsite archive and production-sized restore drill are not yet verified.
 - No verified centralized monitoring or alerting exists.
 - No malware scanning, code-signing operation, or independent production security review is complete.
 
@@ -265,8 +267,8 @@ The application has a configurable support email address, but no support platfor
 ### Critical
 
 1. Incomplete provider-interactive PayMongo failed-payment and resend evidence.
-2. Phase 6.3 is verified but still requires owner review and commit approval.
-3. No verified backup and restore process.
+2. Phase 6.4 requires complete local/certification verification and owner review.
+3. No production offsite backup or production-sized restore drill has passed.
 4. No operational monitoring and alerting.
 5. No approved administrator recovery and incident-response process.
 6. No completed legal, privacy, refund, support, and tax/BIR approval.
@@ -306,6 +308,6 @@ The approved implementation sequence is defined in [`ROADMAP.md`](./ROADMAP.md),
 2. Completed: Phase 6.1A — Legal Document Management System.
 3. Completed and pushed: Phase 6.1 — Data Integrity & Safe Deletion.
 4. Partially certified: Phase 6.2 — paid, refund, retrieval, reconciliation, and duplicate paid/refund redelivery pass; failed/delayed/out-of-order evidence remains.
-5. Implemented, verified, and uncommitted: Phase 6.3 — Scheduler & Lifecycle Automation. Do not begin Phase 6.4 before owner approval.
+5. Implemented and uncommitted pending full verification: Phase 6.4 — Backup & Disaster Recovery. Do not begin Phase 6.5 before owner approval.
 
 No future phase should claim readiness merely because code exists. Database state, runtime configuration, automated tests, genuine provider evidence, documentation, and owner approval must agree.

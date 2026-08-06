@@ -99,6 +99,8 @@ export const ModelName = {
   JobRun: 'JobRun',
   ScheduledJobDefinition: 'ScheduledJobDefinition',
   ScheduledJobRun: 'ScheduledJobRun',
+  BackupArchive: 'BackupArchive',
+  BackupOperation: 'BackupOperation',
   EmailOutbox: 'EmailOutbox',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
@@ -959,6 +961,63 @@ export const ScheduledJobRunScalarFieldEnum = {
 } as const
 
 export type ScheduledJobRunScalarFieldEnum = (typeof ScheduledJobRunScalarFieldEnum)[keyof typeof ScheduledJobRunScalarFieldEnum]
+
+
+export const BackupArchiveScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  retentionTier: 'retentionTier',
+  deploymentId: 'deploymentId',
+  formatVersion: 'formatVersion',
+  storagePrefix: 'storagePrefix',
+  manifestObjectKey: 'manifestObjectKey',
+  manifestChecksum: 'manifestChecksum',
+  databaseObjectKey: 'databaseObjectKey',
+  databaseChecksum: 'databaseChecksum',
+  encryptedChecksum: 'encryptedChecksum',
+  encryptionKeyVersion: 'encryptionKeyVersion',
+  objectCount: 'objectCount',
+  missingObjectCount: 'missingObjectCount',
+  sizeBytes: 'sizeBytes',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  verifiedAt: 'verifiedAt',
+  expiresAt: 'expiresAt',
+  deletedAt: 'deletedAt',
+  durationMs: 'durationMs',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BackupArchiveScalarFieldEnum = (typeof BackupArchiveScalarFieldEnum)[keyof typeof BackupArchiveScalarFieldEnum]
+
+
+export const BackupOperationScalarFieldEnum = {
+  id: 'id',
+  backupId: 'backupId',
+  type: 'type',
+  status: 'status',
+  trigger: 'trigger',
+  requestedById: 'requestedById',
+  dryRun: 'dryRun',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  nextAttemptAt: 'nextAttemptAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  durationMs: 'durationMs',
+  claimedBy: 'claimedBy',
+  correlationId: 'correlationId',
+  idempotencyKey: 'idempotencyKey',
+  targetFingerprint: 'targetFingerprint',
+  resultSummary: 'resultSummary',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BackupOperationScalarFieldEnum = (typeof BackupOperationScalarFieldEnum)[keyof typeof BackupOperationScalarFieldEnum]
 
 
 export const EmailOutboxScalarFieldEnum = {
