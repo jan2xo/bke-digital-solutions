@@ -2,6 +2,7 @@ import "server-only";
 import { env } from "@/lib/env";
 export type MalwareScanResult = { scannerId: string; scannerVersion: string; result: "CLEAN" | "INFECTED" | "FAILED"; reference?: string; failureReason?: string };
 export async function scanArtifact(_artifactHash: string): Promise<MalwareScanResult> {
+  void _artifactHash;
   const provider = process.env.MALWARE_SCANNER_PROVIDER ?? "";
   if (!provider) return { scannerId: "unconfigured", scannerVersion: "unknown", result: "FAILED", failureReason: "SCANNER_NOT_CONFIGURED" };
   if (provider === "deterministic-test" && env.NODE_ENV !== "test") return { scannerId: provider, scannerVersion: "blocked", result: "FAILED", failureReason: "TEST_SCANNER_FORBIDDEN" };

@@ -505,3 +505,153 @@ Repository controls are implemented locally: signed commercial lease issuance, e
 ## RM3 — Release Governance & Separation of Duties
 
 Status: **IMPLEMENTED LOCALLY**. Stable/LTS promotion requires prior independent review, rejects self-approval, records approval notes and audit events, enforces forward-only lifecycle transitions, and supports an explicitly enabled, justified, audited break-glass path. Full production certification remains pending.
+
+
+## Version 7 — Compliance Review Center
+
+After production release, expand the current Compliance Readiness dashboard into a complete workflow-driven Compliance Review Center.
+
+This is a feature enhancement, not a Phase 6 production-readiness requirement.
+
+### Goals
+
+Transform compliance from passive status tracking into a complete review and approval workflow.
+
+### Features
+
+#### Compliance Review Center
+
+The Compliance dashboard becomes the central workspace for all legal, privacy, tax, regulatory, and internal compliance reviews.
+
+Each compliance item should support:
+
+- assigned reviewer
+- current workflow status
+- document version
+- review history
+- approval history
+- reviewer comments
+- requested revisions
+- evidence attachments
+- immutable audit trail
+- approval timestamps
+- superseded versions
+- archived history
+
+---
+
+### Legal Workflow
+
+Implement structured review workflows for:
+
+- Terms of Service
+- Privacy Policy
+- EULA
+- Subscription Terms
+- Refund Policy
+- Cookie Policy
+- Acceptable Use Policy
+- Support Policy
+- DPA
+- Tax-related policies
+- Future compliance documents
+
+Typical workflow:
+
+Draft
+→ Internal Review
+→ Sent for Review
+→ Changes Requested
+→ Approved
+→ Published
+→ Superseded
+→ Archived
+
+---
+
+### Reviewer Assignment
+
+Support assigning reviewers such as:
+
+- Lawyer
+- Privacy/DPO
+- Accountant
+- Regulatory Reviewer
+- Owner
+- Internal Reviewer
+
+Assignments should record:
+
+- assignee
+- assigned date
+- due date
+- completion date
+
+---
+
+### Approval Timeline
+
+Each compliance record should maintain an immutable timeline containing:
+
+- who reviewed
+- who approved
+- approval date
+- document version
+- comments
+- requested revisions
+- publication date
+
+---
+
+### Version Comparison
+
+Support viewing differences between document revisions.
+
+Future capability:
+
+- side-by-side comparison
+- change summaries
+- approval tied to a specific version
+
+---
+
+### Compliance Notifications
+
+Future notification support for:
+
+- pending review
+- reviewer assignment
+- approval completed
+- changes requested
+- publication
+- expiring reviews
+- scheduled policy review reminders
+
+Notification providers may later include:
+
+- Email
+- Discord
+- Telegram
+- Future messaging providers
+
+---
+
+### Future Integrations
+
+Potential integrations:
+
+- Electronic approval records
+- Digital signatures
+- External legal review portals
+- Automated reminder scheduling
+- Policy expiration monitoring
+- Compliance analytics
+- Audit reporting
+
+---
+
+Status:
+
+**Planned for Version 7**
+
+Not required for Phase 6 production readiness.
