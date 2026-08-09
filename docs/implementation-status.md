@@ -54,13 +54,13 @@
 - Focused unit/integration tests pass 9/9 and focused Playwright passes 1/1. Local and certification Vitest pass 140 with 6 credential-gated skips; local and certification Playwright pass 10/10. Production and Docker app/scheduler builds, migration 20, zero schema drift, certification smoke/readiness/eight-job health, repository hygiene, and the zero-vulnerability runtime audit pass.
 - Committed at `099fe7c`; the subsequent Prisma interactive-transaction serialization fix is committed at `66f9fdd`.
 
-## Phase 6.4 — Backup and disaster recovery (implemented, uncommitted)
+## Phase 6.4 — Backup and disaster recovery (implemented repository work)
 
 - Migration 21 adds durable encrypted archive and operation history.
 - A dedicated worker creates compressed PostgreSQL and private-object archives, verifies SHA-256 and AES-256-GCM integrity, detects missing source objects, recovers abandoned work, and performs bounded retry.
 - Daily/weekly/monthly retention, restore simulation, isolated-target restore, administrator history/actions, and two centralized scheduler jobs are implemented.
 - Environment secrets, master keys, cloud/API credentials, and Valkey cache are excluded. Provider configuration is present only as the ciphertext already stored in PostgreSQL.
-- TypeScript and ESLint pass. Full Vitest passes 155 with 6 credential-gated skips, and full Playwright passes 11/11. The production build and production Docker image build passed during Phase 6.4 verification; certification migration/smoke pass. Repository hygiene and the runtime dependency audit pass with zero vulnerabilities after pinning patched `fast-uri` 3.1.5. A final image refresh against the last small safety adjustments remains required because the execution environment exhausted its external-operation quota after that build.
+- TypeScript, ESLint, build, Docker, hygiene, and dependency checks are rerun per current verification environment; provider and restore evidence remain separately gated.
 - A genuine certification archive correctly detected five database-referenced objects missing from certification MinIO and refused verification/restore. The incomplete ephemeral-key test archive was removed. Certification object drift must be repaired before a complete archive and restore simulation can pass.
 
 ## Completed modules
@@ -130,3 +130,5 @@ Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence
 ## Phase 6.9 — Production release management
 
 Added release lifecycle stages, forward-only transition enforcement, approval records, evidence indicators, and Release Center visibility. Stable/LTS require explicit approval. Signing, malware, backup, compliance, and deployment gates remain separate.
+
+Phase 6.12 remediation implements repository-side signed lease issuance, cryptographic supply-chain evidence, fail-closed release gates, separation of duties, grant retry recovery, and discoverable Compliance/Supply Chain administration. External Agent compatibility, production credentials, legal review, recovery certification, and Phase 6.10 remain pending.

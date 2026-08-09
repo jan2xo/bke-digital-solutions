@@ -314,3 +314,784 @@ Secure provider credential management is implemented, but production readiness i
 # Phase 6.3 scheduler status
 
 The current uncommitted Phase 6.3 implementation removes the missing-scheduler code gap through a dedicated Docker worker, durable PostgreSQL history, Valkey locks, bounded retry/backoff, lifecycle processing, and administrator recovery controls. Migration 20, full local/certification regression, production and Docker builds, certification runtime, scheduler health, log/repository hygiene, and operator procedures pass. This verifies local production simulation only; it does not implement backups, monitoring, VPS deployment, live payments, automatic charging, or automatic customer purge.
+
+
+# BKE Digital Solutions — Production Readiness Remediation Roadmap
+
+## Purpose
+
+This roadmap converts the findings from the SOL independent repository audit into an actionable remediation plan.
+
+This is not the normal feature roadmap.
+
+It tracks only the work required to move BKE Digital Solutions from:
+
+`NOT PRODUCTION READY`
+
+to:
+
+`PRODUCTION READY`
+
+The latest SOL audit is the source of truth for this roadmap.
+
+Do not delete findings merely because work has started.
+
+Every finding must eventually end in one of these states:
+
+- RESOLVED
+- PARTIALLY RESOLVED
+- DEFERRED — PHASE 6.10
+- PENDING PROFESSIONAL REVIEW
+- ACCEPTED TECHNICAL DEBT
+
+---
+
+# Current Audit Baseline
+
+SOL verdict:
+
+`NOT PRODUCTION READY`
+
+Production-readiness score:
+
+`44 / 100`
+
+Repository baseline audited:
+
+- Branch: `main`
+- Migrations: 25 current at audit time
+- Vitest: 155 passed, 6 credential-gated skipped
+- Playwright: 10 passed, 1 failed
+- Production build: passed
+- Docker builds: passed
+- Runtime dependency audit: 0 vulnerabilities
+- Working tree: clean
+
+---
+
+# Deferred Real-Infrastructure Work
+
+These items are intentionally excluded from repository remediation.
+
+They belong to Phase 6.10 and require genuine infrastructure or live-provider evidence.
+
+## Status
+
+`DEFERRED — PHASE 6.10`
+
+Includes:
+
+- Hetzner VPS deployment
+- Cloudflare DNS/origin verification
+- Public HTTPS verification
+- VPS firewall verification
+- Docker daemon boot verification
+- Cold reboot recovery
+- Production persistent-volume recovery
+- Production backup operation
+- PayMongo LIVE transaction certification
+- Production Resend delivery certification
+- Production provider credentials
+- Public production health verification
+
+Do not simulate or mark these complete from local repository evidence.
+
+---
+
+# R1 — Licensing Agent Production Integration
+
+Priority:
+
+`P0`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+The documented architecture says BKE Digital Solutions is the commercial licensing authority while the BKE Licensing Agent is the authoritative runtime.
+
+However, the current repository still contains direct commercial-database authorization behavior.
+
+## Required Architecture
+
+BKE Digital Solutions
+
+↓
+
+Commercial entitlement
+
+↓
+
+Signed lease
+
+↓
+
+BKE Licensing Agent
+
+↓
+
+Verified License Repository
+
+↓
+
+Active License Binding
+
+↓
+
+AuthorizationService
+
+↓
+
+AuthorizationDecision
+
+↓
+
+Installed Product
+
+Products must never authorize directly against BKE Digital Solutions.
+
+---
+
+## R1.1 Remove Legacy Direct Product Authorization
+
+Audit:
+
+`app/api/licenses/activate/route.ts`
+
+Current issue:
+
+The endpoint directly validates license material against commercial records and returns authorization information.
+
+Required:
+
+- Remove direct product runtime authorization.
+- Preserve commercial license records.
+- Preserve device and activation history where useful.
+- Do not destroy historical licensing records.
+- Route runtime authorization through the Agent protocol.
+
+Status:
+
+`OPEN`
+
+---
+
+## R1.2 Production Signed Lease Issuance
+
+Implement server-side lease issuance compatible with the existing BKE Licensing Agent.
+
+Required lease contents include:
+
+- Schema version
+- Lease ID
+- Commercial license ID
+- Product ID
+- Edition
+- Features
+- Limits
+- Device/install binding
+- Issued-at timestamp
+- Expiration
+- Refresh/revalidation metadata
+- Signing key ID/version
+- Signature
+
+Signing requirements:
+
+- Ed25519
+- Private signing key never exposed
+- Private signing key never committed
+- External key configuration
+- Key rotation/version support
+
+Status:
+
+`OPEN`
+
+---
+
+## R1.3 Commercial Licensing API
+
+Implement the server side of the existing Agent protocol.
+
+Required workflows:
+
+- Activation / lease issuance
+- Refresh
+- Renewal
+- Suspension
+- Revocation
+- Transfer
+- Device deactivation
+- Trusted public-key retrieval where required
+
+Do not invent a new protocol if the Agent already defines the contract.
+
+Status:
+
+`OPEN`
+
+---
+
+## R1.4 Licensing Regression Coverage
+
+Test:
+
+- Signed lease issuance
+- Invalid commercial entitlement
+- Suspension
+- Revocation
+- Expiration
+- Refresh
+- Renewal
+- Device transfer
+- Signing-key versioning
+- Protocol compatibility
+
+Status:
+
+`OPEN`
+
+---
+
+# R2 — Supply-Chain Evidence Integrity
+
+Priority:
+
+`P0`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+SOL found that supply-chain evidence can currently be administratively self-attested.
+
+---
+
+## R2.1 Cryptographic Signature Verification
+
+Administrators must not be able to set:
+
+`signatureVerified = true`
+
+without actual verification evidence.
+
+Required:
+
+- Cryptographic signature verification
+- Artifact-hash binding
+- Signer/key identity
+- Verification timestamp
+- Verification result
+- Failure reason
+- Immutable or append-only verification evidence
+
+Certification/test signing may exist but must never be represented as production signing.
+
+Status:
+
+`OPEN`
+
+---
+
+## R2.2 Malware Evidence
+
+Administrators must not be able to arbitrarily mark artifacts:
+
+`CLEAN`
+
+Required scanner evidence:
+
+- Scanner identity
+- Scanner version
+- Artifact hash
+- Scan timestamp
+- Result
+- Evidence/reference
+- Failure state
+
+Development/test scanner adapters may be used for deterministic tests but must be clearly marked as non-production.
+
+Status:
+
+`OPEN`
+
+---
+
+# R3 — Release Integrity Gates
+
+Priority:
+
+`P0`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+Stable/LTS promotion is not sufficiently fail-closed.
+
+## Required Promotion Gates
+
+Stable and LTS releases must require appropriate verified evidence for:
+
+- Artifact hash/integrity
+- SBOM
+- Provenance
+- Signature verification
+- Malware scan
+- Required migration state
+- Compliance status
+- Backup/recovery evidence where applicable
+
+Requirements:
+
+- Server-side enforcement
+- No client-only gate
+- No silent manual bypass
+- Rejected transitions must be auditable
+
+Any emergency override must be explicit, strongly authorized, justified, and audited.
+
+Status:
+
+`OPEN`
+
+---
+
+# R4 — Release Separation of Duties
+
+Priority:
+
+`P0`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+One administrator can currently participate too heavily in the release approval lifecycle.
+
+## Minimum Rule
+
+Creator must not be final approver.
+
+Persist:
+
+- Creator
+- Reviewer
+- Approver
+- Approval timestamp
+- Approval notes
+- Stage
+
+Enforce server-side.
+
+If reviewer and approver must also be different, treat this as an owner decision if the existing role model does not resolve it.
+
+Status:
+
+`OPEN`
+
+---
+
+# R5 — Regression and Certification Testing
+
+Priority:
+
+`P0`
+
+Status:
+
+`OPEN`
+
+## R5.1 Current Playwright Failure
+
+Audit finding:
+
+Expected:
+
+`Release center`
+
+Current:
+
+`Release management`
+
+Determine authoritative terminology and synchronize UI/tests.
+
+Status:
+
+`OPEN`
+
+---
+
+## R5.2 Missing Phase 6.7–6.9 Coverage
+
+Add meaningful tests for:
+
+- Compliance workflow integrity
+- Supply-chain signature evidence
+- Malware evidence
+- Release gates
+- Separation of duties
+- Self-attestation rejection
+- Gate-bypass rejection
+- Licensing Agent integration
+
+Tests must validate actual state transitions and authorization boundaries.
+
+Status:
+
+`OPEN`
+
+---
+
+# R6 — Documentation Truth
+
+Priority:
+
+`P0`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+Authoritative documentation materially contradicted committed repository state.
+
+Synchronize:
+
+- README.md
+- ROADMAP.md
+- TRUTHCHECK.md
+- docs/handoff.md
+- docs/implementation-status.md
+- docs/architecture.md
+- docs/operations-runbook.md
+- docs/roadmaps/production-readiness-roadmap.md
+
+Documentation must distinguish:
+
+- Implemented
+- Verified
+- Certification pending
+- Externally blocked
+- Deferred to Phase 6.10
+- Professional review pending
+
+Historical phase reports must remain historical.
+
+Status:
+
+`OPEN`
+
+---
+
+# R7 — Administrator Navigation
+
+Priority:
+
+`P1`
+
+Status:
+
+`OPEN`
+
+Expose administrator navigation for:
+
+- Compliance
+- Supply Chain
+
+Do not weaken server-side authorization.
+
+---
+
+# R8 — Download Grant Reliability
+
+Priority:
+
+`P1`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+A download grant may be consumed before object retrieval succeeds.
+
+## Desired Behavior
+
+- One-time semantics preserved
+- Replay protection preserved
+- Authorization preserved
+- Temporary object-storage failure must not unnecessarily destroy a legitimate grant
+- Successful redemption must generate safe audit evidence
+- Tokens must never be exposed in logs/audit records
+
+---
+
+# R9 — OTP Logging
+
+Priority:
+
+`P1`
+
+Status:
+
+`OPEN`
+
+## Problem
+
+Administrator OTP values appeared in development/test logs.
+
+Required:
+
+- Never log raw OTP values
+- Development and test included
+- Use dedicated test-only retrieval mechanisms where necessary
+- Preserve production secret hygiene
+
+---
+
+# R10 — Container Health and Readiness
+
+Priority:
+
+`P1`
+
+Status:
+
+`OPEN`
+
+Audit:
+
+- Scheduler
+- Backup worker
+- Caddy
+- Other long-running services
+
+Add meaningful health/readiness representation where appropriate.
+
+Do not create fake HTTP endpoints purely to satisfy Compose.
+
+Worker heartbeat/state may be the correct health signal.
+
+---
+
+# R11 — Code Quality and Reviewability
+
+Priority:
+
+`P1`
+
+Status:
+
+`OPEN`
+
+Refactor only where dense implementation materially harms security review or maintainability.
+
+Prioritize:
+
+- Licensing
+- Release management
+- Supply chain
+- Compliance
+- Payment/security-sensitive routes
+
+Avoid broad cosmetic churn.
+
+Add automated circular-dependency detection if practical and low-risk.
+
+---
+
+# R12 — Legal and Professional Review
+
+Priority:
+
+`P0 FOR FINAL RELEASE`
+
+Status:
+
+`PENDING PROFESSIONAL REVIEW`
+
+The technical compliance system exists.
+
+The following must not be fabricated:
+
+- Lawyer approval
+- DPO/privacy approval
+- Accountant/BIR/tax approval
+- Regulatory approval
+- Owner approval of unresolved compliance decisions
+
+Placeholder legal documents remain placeholders until formally replaced/reviewed.
+
+---
+
+# R13 — Backup Recovery Certification
+
+Priority:
+
+`P0`
+
+Status:
+
+`PARTIALLY RESOLVED`
+
+## Existing Evidence
+
+The backup framework successfully detected incomplete source data.
+
+Five certification objects were missing.
+
+The system correctly failed closed.
+
+## Required
+
+- Identify source of missing objects
+- Repair or formally reconcile drift
+- Preserve genuine payment certification evidence
+- Produce complete backup
+- Verify backup
+- Complete isolated restore drill
+- Measure RPO/RTO when meaningful
+
+Do not weaken completeness checks to achieve a green result.
+
+If final recovery requires real infrastructure, remaining work may move to Phase 6.10.
+
+---
+
+# R14 — Live Provider Certification
+
+Priority:
+
+`P0 FOR PRODUCTION`
+
+Status:
+
+`DEFERRED — PHASE 6.10`
+
+Includes:
+
+- PayMongo Live
+- Genuine production payment
+- Genuine production refund
+- Production webhook verification
+- Resend production delivery
+- Production-domain email verification
+
+---
+
+# R15 — VPS / Cloudflare Certification
+
+Priority:
+
+`P0 FOR PRODUCTION`
+
+Status:
+
+`DEFERRED — PHASE 6.10`
+
+Includes:
+
+- Hetzner VPS
+- Production Docker stack
+- Cloudflare
+- DNS
+- HTTPS
+- Firewall
+- Persistent volumes
+- Docker daemon boot
+- Cold reboot
+- Production health endpoints
+- Recovery after reboot
+
+---
+
+# R16 — Accepted / Future Technical Debt
+
+Priority:
+
+`P2+`
+
+Potential later work:
+
+- External paging integration
+- SIEM
+- OpenTelemetry
+- Prometheus/Grafana
+- HSM-backed signing
+- WORM backup storage
+- Multi-region backups
+- Advanced fraud detection
+- IP/device abuse intelligence
+- Trial abuse protection
+- Discount abuse protection
+
+These do not block repository remediation unless promoted by a future audit.
+
+---
+
+# Remediation Execution Order
+
+1. R1 — Licensing Agent production integration
+2. R2 — Supply-chain evidence integrity
+3. R3 — Release integrity gates
+4. R4 — Separation of duties
+5. R5 — Testing completion
+6. R6 — Documentation truth
+7. R7–R11 — High-priority warnings
+8. R13 — Backup recovery remediation
+9. SOL re-audit of repository
+10. Phase 6.10 — VPS and live-provider certification
+11. Final SOL production audit
+12. Release
+
+---
+
+# Repository Exit Criteria
+
+Before moving to final infrastructure certification:
+
+- Licensing Agent integration implemented
+- No direct product authorization against commerce database
+- Signed lease issuance verified
+- Supply-chain evidence cannot be self-attested
+- Stable/LTS gates fail closed
+- Separation of duties enforced
+- Full Playwright green
+- Required regression coverage exists
+- Documentation synchronized
+- Critical warnings remediated or formally accepted
+- Repository working tree clean
+- SOL repository re-audit has no unresolved repository P0 blockers
+
+---
+
+# Final Production Exit Criteria
+
+After Phase 6.10:
+
+- VPS deployed
+- Cloudflare verified
+- HTTPS verified
+- Cold reboot verified
+- Persistent volumes verified
+- Backup recovery verified
+- PayMongo production flow verified
+- Resend production delivery verified
+- Professional legal/privacy/tax requirements resolved
+- Final SOL audit completed
+
+Final acceptable verdict:
+
+`PRODUCTION READY`

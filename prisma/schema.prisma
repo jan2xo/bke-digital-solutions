@@ -785,7 +785,25 @@ model SupplyChainEvidence {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   version            ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  verificationEvidence SupplyChainVerificationEvidence[]
   @@index([malwareStatus, certificateStatus])
+}
+
+model SupplyChainVerificationEvidence {
+  id                String   @id @default(cuid())
+  evidenceId        String
+  kind              String
+  artifactHash      String
+  signerKeyId       String?
+  scannerId         String?
+  scannerVersion    String?
+  result            String
+  reference         String?
+  failureReason     String?
+  verifiedAt        DateTime @default(now())
+  metadata          Json     @default("{}")
+  evidence          SupplyChainEvidence @relation(fields: [evidenceId], references: [id], onDelete: Restrict)
+  @@index([evidenceId, kind, verifiedAt])
 }
 
 model LicensePolicy {
@@ -1283,6 +1301,7 @@ model DownloadGrant {
   tokenHash  String          @unique
   expiresAt  DateTime
   usedAt     DateTime?
+  processingAt DateTime?
   license    License         @relation(fields: [licenseId], references: [id], onDelete: Cascade)
   artifact   ProductArtifact @relation(fields: [artifactId], references: [id])
 }

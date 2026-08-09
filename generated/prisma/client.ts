@@ -152,6 +152,11 @@ export type ReleaseApproval = Prisma.ReleaseApprovalModel
  */
 export type SupplyChainEvidence = Prisma.SupplyChainEvidenceModel
 /**
+ * Model SupplyChainVerificationEvidence
+ *
+ */
+export type SupplyChainVerificationEvidence = Prisma.SupplyChainVerificationEvidenceModel
+/**
  * Model LicensePolicy
  *
  */

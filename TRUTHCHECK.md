@@ -7,10 +7,10 @@ Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It re
 Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling are available. No production signing certificate or malware certification is claimed.
 
 Phase 6.9 release lifecycle and approval tracking are present in the Release Center. Stable/LTS promotions require approval records; production readiness remains blocked by pending signing, malware, recovery, compliance, and deployment gates.
-Pushed Git baseline: `66f9fdd fix(database): serialize Prisma queries in interactive transactions`
+Pushed Git baseline: current `main` commit; historical hashes below are retained for provenance.
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 
-Working-tree truth: Phase 6.4 Backup & Disaster Recovery and Phase 6.5 Monitoring & Observability are implemented in the working tree with migrations 21 and 22 applied to development and certification. Phase 6.4 recovery certification remains blocked by missing certification objects. Phase 6.6 Operations & Security Hardening is under verification.
+Current truth: Phases 6.4 through 6.12 repository controls are implemented. Phase 6.4 recovery certification remains blocked by missing certification objects; Phase 6.10 infrastructure and live-provider evidence remain deferred.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
@@ -320,5 +320,7 @@ No future phase should claim readiness merely because code exists. Database stat
 
 Production Compose restart policies are verified statically. No Docker daemon boot or VPS reboot has been observed; VPS deployment remains uncertified until the owner records cold-reboot evidence.
 ## Phase 6.5 working-tree truth
+
+Licensing boundary correction: the activation response contains no runtime authorization decision. BKE Digital Solutions issues commercial entitlement material; the separate Agent verifies, binds, and produces `AuthorizationDecision`.
 
 Monitoring and observability code exists in the current uncommitted working tree. Migration 22 is applied and current in development and certification. It adds `ObservabilityAlert`, `/admin/observability`, and `/api/health/metrics`. TypeScript, ESLint, Prisma validation/generation, Vitest (155 passed, 6 credential-gated skipped), Playwright (11/11), production build, Docker builds, runtime health checks, and repository hygiene passed. The metrics endpoint correctly reports CRITICAL while the incomplete Phase 6.4 recovery point remains. Phase 6.4 recovery certification remains pending and Phase 6.6 has not started.

@@ -11,4 +11,5 @@ test-results
 *.log
 .DS_Store
 *.tsbuildinfo
+.certification-secrets/
 .supply-chain/

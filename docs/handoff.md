@@ -112,3 +112,7 @@ Supply-chain evidence is linked to product versions and visible at `/admin/suppl
 ## VPS deployment handoff
 
 Use `docs/vps-production-deployment.md` for independent Ubuntu/Hetzner deployment. Compose restart policies are statically verified, but Docker boot configuration, Cloudflare DNS, credentials, and cold-reboot recovery require owner evidence and are not claimed here.
+
+Phase 6.12 adds the commercial signed-lease issuer, evidence-backed supply-chain verification, fail-closed release gates, approval separation, and safe download grant recovery. Do not treat test signing/scanner evidence as production certification.
+
+Licensing boundary correction: `/api/licenses/activate` returns only a signed lease and issuance metadata. Runtime authorization remains exclusively inside the separate Licensing Agent and reaches products only as `AuthorizationDecision`.

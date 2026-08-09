@@ -657,3 +657,7 @@ Items explicitly deferred until deployment:
 - Live Resend
 
 These require real production infrastructure and cannot be certified from repository evidence alone.
+
+Phase 6.12 SOL tracking: legacy activation boundary **PARTIALLY RESOLVED** pending separate Agent compatibility certification; supply-chain self-attestation **RESOLVED** for repository controls; release gates **RESOLVED** server-side; separation of duties **RESOLVED**; download-grant reliability **RESOLVED**; VPS/provider/legal/recovery items remain **DEFERRED — PHASE 6.10** or **PENDING PROFESSIONAL REVIEW** as applicable.
+
+Licensing boundary correction: **RESOLVED LOCALLY** — activation returns lease issuance only; Agent compatibility and end-to-end `AuthorizationDecision` evidence remain pending against the separate Agent repository.

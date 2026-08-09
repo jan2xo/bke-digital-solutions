@@ -291,6 +291,7 @@ export type SupplyChainEvidenceWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"SupplyChainEvidence"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupplyChainEvidence"> | Date | string
   version?: Prisma.XOR<Prisma.ProductVersionScalarRelationFilter, Prisma.ProductVersionWhereInput>
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceListRelationFilter
 }
 
 export type SupplyChainEvidenceOrderByWithRelationInput = {
@@ -314,6 +315,7 @@ export type SupplyChainEvidenceOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   version?: Prisma.ProductVersionOrderByWithRelationInput
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceOrderByRelationAggregateInput
 }
 
 export type SupplyChainEvidenceWhereUniqueInput = Prisma.AtLeast<{
@@ -340,6 +342,7 @@ export type SupplyChainEvidenceWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"SupplyChainEvidence"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupplyChainEvidence"> | Date | string
   version?: Prisma.XOR<Prisma.ProductVersionScalarRelationFilter, Prisma.ProductVersionWhereInput>
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceListRelationFilter
 }, "id" | "versionId">
 
 export type SupplyChainEvidenceOrderByWithAggregationInput = {
@@ -412,6 +415,7 @@ export type SupplyChainEvidenceCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   version: Prisma.ProductVersionCreateNestedOneWithoutSupplyChainEvidenceInput
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceCreateNestedManyWithoutEvidenceInput
 }
 
 export type SupplyChainEvidenceUncheckedCreateInput = {
@@ -434,6 +438,7 @@ export type SupplyChainEvidenceUncheckedCreateInput = {
   provenanceStatus?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceUncheckedCreateNestedManyWithoutEvidenceInput
 }
 
 export type SupplyChainEvidenceUpdateInput = {
@@ -456,6 +461,7 @@ export type SupplyChainEvidenceUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   version?: Prisma.ProductVersionUpdateOneRequiredWithoutSupplyChainEvidenceNestedInput
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceUpdateManyWithoutEvidenceNestedInput
 }
 
 export type SupplyChainEvidenceUncheckedUpdateInput = {
@@ -478,6 +484,7 @@ export type SupplyChainEvidenceUncheckedUpdateInput = {
   provenanceStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceUncheckedUpdateManyWithoutEvidenceNestedInput
 }
 
 export type SupplyChainEvidenceCreateManyInput = {
@@ -614,6 +621,11 @@ export type SupplyChainEvidenceMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type SupplyChainEvidenceScalarRelationFilter = {
+  is?: Prisma.SupplyChainEvidenceWhereInput
+  isNot?: Prisma.SupplyChainEvidenceWhereInput
+}
+
 export type SupplyChainEvidenceCreateNestedOneWithoutVersionInput = {
   create?: Prisma.XOR<Prisma.SupplyChainEvidenceCreateWithoutVersionInput, Prisma.SupplyChainEvidenceUncheckedCreateWithoutVersionInput>
   connectOrCreate?: Prisma.SupplyChainEvidenceCreateOrConnectWithoutVersionInput
@@ -646,6 +658,20 @@ export type SupplyChainEvidenceUncheckedUpdateOneWithoutVersionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SupplyChainEvidenceUpdateToOneWithWhereWithoutVersionInput, Prisma.SupplyChainEvidenceUpdateWithoutVersionInput>, Prisma.SupplyChainEvidenceUncheckedUpdateWithoutVersionInput>
 }
 
+export type SupplyChainEvidenceCreateNestedOneWithoutVerificationEvidenceInput = {
+  create?: Prisma.XOR<Prisma.SupplyChainEvidenceCreateWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUncheckedCreateWithoutVerificationEvidenceInput>
+  connectOrCreate?: Prisma.SupplyChainEvidenceCreateOrConnectWithoutVerificationEvidenceInput
+  connect?: Prisma.SupplyChainEvidenceWhereUniqueInput
+}
+
+export type SupplyChainEvidenceUpdateOneRequiredWithoutVerificationEvidenceNestedInput = {
+  create?: Prisma.XOR<Prisma.SupplyChainEvidenceCreateWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUncheckedCreateWithoutVerificationEvidenceInput>
+  connectOrCreate?: Prisma.SupplyChainEvidenceCreateOrConnectWithoutVerificationEvidenceInput
+  upsert?: Prisma.SupplyChainEvidenceUpsertWithoutVerificationEvidenceInput
+  connect?: Prisma.SupplyChainEvidenceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SupplyChainEvidenceUpdateToOneWithWhereWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUpdateWithoutVerificationEvidenceInput>, Prisma.SupplyChainEvidenceUncheckedUpdateWithoutVerificationEvidenceInput>
+}
+
 export type SupplyChainEvidenceCreateWithoutVersionInput = {
   id?: string
   releaseIdentifier: string
@@ -665,6 +691,7 @@ export type SupplyChainEvidenceCreateWithoutVersionInput = {
   provenanceStatus?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceCreateNestedManyWithoutEvidenceInput
 }
 
 export type SupplyChainEvidenceUncheckedCreateWithoutVersionInput = {
@@ -686,6 +713,7 @@ export type SupplyChainEvidenceUncheckedCreateWithoutVersionInput = {
   provenanceStatus?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceUncheckedCreateNestedManyWithoutEvidenceInput
 }
 
 export type SupplyChainEvidenceCreateOrConnectWithoutVersionInput = {
@@ -723,6 +751,7 @@ export type SupplyChainEvidenceUpdateWithoutVersionInput = {
   provenanceStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceUpdateManyWithoutEvidenceNestedInput
 }
 
 export type SupplyChainEvidenceUncheckedUpdateWithoutVersionInput = {
@@ -744,8 +773,142 @@ export type SupplyChainEvidenceUncheckedUpdateWithoutVersionInput = {
   provenanceStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationEvidence?: Prisma.SupplyChainVerificationEvidenceUncheckedUpdateManyWithoutEvidenceNestedInput
 }
 
+export type SupplyChainEvidenceCreateWithoutVerificationEvidenceInput = {
+  id?: string
+  releaseIdentifier: string
+  commitHash: string
+  branch: string
+  buildEnvironment: string
+  builderIdentity: string
+  builtAt: Date | string
+  manifestJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sbomReference?: string | null
+  sbomFormat?: string | null
+  manifestSignature?: string | null
+  signatureVerified?: boolean
+  dependencyVerified?: boolean
+  malwareStatus?: string
+  certificateStatus?: string
+  provenanceStatus?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  version: Prisma.ProductVersionCreateNestedOneWithoutSupplyChainEvidenceInput
+}
+
+export type SupplyChainEvidenceUncheckedCreateWithoutVerificationEvidenceInput = {
+  id?: string
+  versionId: string
+  releaseIdentifier: string
+  commitHash: string
+  branch: string
+  buildEnvironment: string
+  builderIdentity: string
+  builtAt: Date | string
+  manifestJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sbomReference?: string | null
+  sbomFormat?: string | null
+  manifestSignature?: string | null
+  signatureVerified?: boolean
+  dependencyVerified?: boolean
+  malwareStatus?: string
+  certificateStatus?: string
+  provenanceStatus?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SupplyChainEvidenceCreateOrConnectWithoutVerificationEvidenceInput = {
+  where: Prisma.SupplyChainEvidenceWhereUniqueInput
+  create: Prisma.XOR<Prisma.SupplyChainEvidenceCreateWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUncheckedCreateWithoutVerificationEvidenceInput>
+}
+
+export type SupplyChainEvidenceUpsertWithoutVerificationEvidenceInput = {
+  update: Prisma.XOR<Prisma.SupplyChainEvidenceUpdateWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUncheckedUpdateWithoutVerificationEvidenceInput>
+  create: Prisma.XOR<Prisma.SupplyChainEvidenceCreateWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUncheckedCreateWithoutVerificationEvidenceInput>
+  where?: Prisma.SupplyChainEvidenceWhereInput
+}
+
+export type SupplyChainEvidenceUpdateToOneWithWhereWithoutVerificationEvidenceInput = {
+  where?: Prisma.SupplyChainEvidenceWhereInput
+  data: Prisma.XOR<Prisma.SupplyChainEvidenceUpdateWithoutVerificationEvidenceInput, Prisma.SupplyChainEvidenceUncheckedUpdateWithoutVerificationEvidenceInput>
+}
+
+export type SupplyChainEvidenceUpdateWithoutVerificationEvidenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseIdentifier?: Prisma.StringFieldUpdateOperationsInput | string
+  commitHash?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  buildEnvironment?: Prisma.StringFieldUpdateOperationsInput | string
+  builderIdentity?: Prisma.StringFieldUpdateOperationsInput | string
+  builtAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  manifestJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sbomReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  provenanceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  version?: Prisma.ProductVersionUpdateOneRequiredWithoutSupplyChainEvidenceNestedInput
+}
+
+export type SupplyChainEvidenceUncheckedUpdateWithoutVerificationEvidenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  versionId?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseIdentifier?: Prisma.StringFieldUpdateOperationsInput | string
+  commitHash?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  buildEnvironment?: Prisma.StringFieldUpdateOperationsInput | string
+  builderIdentity?: Prisma.StringFieldUpdateOperationsInput | string
+  builtAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  manifestJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sbomReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  provenanceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type SupplyChainEvidenceCountOutputType
+ */
+
+export type SupplyChainEvidenceCountOutputType = {
+  verificationEvidence: number
+}
+
+export type SupplyChainEvidenceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  verificationEvidence?: boolean | SupplyChainEvidenceCountOutputTypeCountVerificationEvidenceArgs
+}
+
+/**
+ * SupplyChainEvidenceCountOutputType without action
+ */
+export type SupplyChainEvidenceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplyChainEvidenceCountOutputType
+   */
+  select?: Prisma.SupplyChainEvidenceCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SupplyChainEvidenceCountOutputType without action
+ */
+export type SupplyChainEvidenceCountOutputTypeCountVerificationEvidenceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupplyChainVerificationEvidenceWhereInput
+}
 
 
 export type SupplyChainEvidenceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -769,6 +932,8 @@ export type SupplyChainEvidenceSelect<ExtArgs extends runtime.Types.Extensions.I
   createdAt?: boolean
   updatedAt?: boolean
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
+  verificationEvidence?: boolean | Prisma.SupplyChainEvidence$verificationEvidenceArgs<ExtArgs>
+  _count?: boolean | Prisma.SupplyChainEvidenceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["supplyChainEvidence"]>
 
 export type SupplyChainEvidenceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -842,6 +1007,8 @@ export type SupplyChainEvidenceSelectScalar = {
 export type SupplyChainEvidenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "versionId" | "releaseIdentifier" | "commitHash" | "branch" | "buildEnvironment" | "builderIdentity" | "builtAt" | "manifestJson" | "sbomReference" | "sbomFormat" | "manifestSignature" | "signatureVerified" | "dependencyVerified" | "malwareStatus" | "certificateStatus" | "provenanceStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["supplyChainEvidence"]>
 export type SupplyChainEvidenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
+  verificationEvidence?: boolean | Prisma.SupplyChainEvidence$verificationEvidenceArgs<ExtArgs>
+  _count?: boolean | Prisma.SupplyChainEvidenceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SupplyChainEvidenceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
@@ -854,6 +1021,7 @@ export type $SupplyChainEvidencePayload<ExtArgs extends runtime.Types.Extensions
   name: "SupplyChainEvidence"
   objects: {
     version: Prisma.$ProductVersionPayload<ExtArgs>
+    verificationEvidence: Prisma.$SupplyChainVerificationEvidencePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1270,6 +1438,7 @@ readonly fields: SupplyChainEvidenceFieldRefs;
 export interface Prisma__SupplyChainEvidenceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   version<T extends Prisma.ProductVersionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductVersionDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductVersionClient<runtime.Types.Result.GetResult<Prisma.$ProductVersionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  verificationEvidence<T extends Prisma.SupplyChainEvidence$verificationEvidenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplyChainEvidence$verificationEvidenceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplyChainVerificationEvidencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1716,6 +1885,30 @@ export type SupplyChainEvidenceDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many SupplyChainEvidences to delete.
    */
   limit?: number
+}
+
+/**
+ * SupplyChainEvidence.verificationEvidence
+ */
+export type SupplyChainEvidence$verificationEvidenceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplyChainVerificationEvidence
+   */
+  select?: Prisma.SupplyChainVerificationEvidenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupplyChainVerificationEvidence
+   */
+  omit?: Prisma.SupplyChainVerificationEvidenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupplyChainVerificationEvidenceInclude<ExtArgs> | null
+  where?: Prisma.SupplyChainVerificationEvidenceWhereInput
+  orderBy?: Prisma.SupplyChainVerificationEvidenceOrderByWithRelationInput | Prisma.SupplyChainVerificationEvidenceOrderByWithRelationInput[]
+  cursor?: Prisma.SupplyChainVerificationEvidenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupplyChainVerificationEvidenceScalarFieldEnum | Prisma.SupplyChainVerificationEvidenceScalarFieldEnum[]
 }
 
 /**

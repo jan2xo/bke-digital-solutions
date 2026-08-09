@@ -83,3 +83,11 @@ Open `/admin/observability` for the consolidated platform state. Use `/api/healt
 ## Operations hardening
 
 Before exposing a deployment, verify production security headers over HTTPS, secure SameSite cookies, provider credential key versions, and route-specific limits for authentication, checkout, webhooks, downloads, scheduler, backup, and observability. Keep containers non-root with read-only/no-new-privileges settings and use isolated restore targets. Never place secrets, raw webhook bodies, license keys, or signed download URLs in tickets or logs.
+
+Configure versioned Ed25519 lease keys and trusted supply-chain verification keys only through protected environment configuration. Stable/LTS promotion must remain blocked until independently verified evidence exists.
+### Certification lease signing
+
+Protected environments fail closed unless `LICENSE_SIGNING_PRIVATE_KEY`,
+`LICENSE_SIGNING_PUBLIC_KEY`, and `LICENSE_SIGNING_KEY_ID` are configured. Use
+`npm run licensing:keys -- .certification-secrets` to create local certification
+keys; never commit the private PEM or place it in a public secret store.

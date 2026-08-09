@@ -73,6 +73,7 @@ export const ModelName = {
   ProductVersion: 'ProductVersion',
   ReleaseApproval: 'ReleaseApproval',
   SupplyChainEvidence: 'SupplyChainEvidence',
+  SupplyChainVerificationEvidence: 'SupplyChainVerificationEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
@@ -492,6 +493,24 @@ export const SupplyChainEvidenceScalarFieldEnum = {
 } as const
 
 export type SupplyChainEvidenceScalarFieldEnum = (typeof SupplyChainEvidenceScalarFieldEnum)[keyof typeof SupplyChainEvidenceScalarFieldEnum]
+
+
+export const SupplyChainVerificationEvidenceScalarFieldEnum = {
+  id: 'id',
+  evidenceId: 'evidenceId',
+  kind: 'kind',
+  artifactHash: 'artifactHash',
+  signerKeyId: 'signerKeyId',
+  scannerId: 'scannerId',
+  scannerVersion: 'scannerVersion',
+  result: 'result',
+  reference: 'reference',
+  failureReason: 'failureReason',
+  verifiedAt: 'verifiedAt',
+  metadata: 'metadata'
+} as const
+
+export type SupplyChainVerificationEvidenceScalarFieldEnum = (typeof SupplyChainVerificationEvidenceScalarFieldEnum)[keyof typeof SupplyChainVerificationEvidenceScalarFieldEnum]
 
 
 export const LicensePolicyScalarFieldEnum = {
@@ -922,7 +941,8 @@ export const DownloadGrantScalarFieldEnum = {
   artifactId: 'artifactId',
   tokenHash: 'tokenHash',
   expiresAt: 'expiresAt',
-  usedAt: 'usedAt'
+  usedAt: 'usedAt',
+  processingAt: 'processingAt'
 } as const
 
 export type DownloadGrantScalarFieldEnum = (typeof DownloadGrantScalarFieldEnum)[keyof typeof DownloadGrantScalarFieldEnum]

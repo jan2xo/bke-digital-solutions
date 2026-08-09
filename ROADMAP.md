@@ -15,12 +15,12 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 - Phase 6.0 runtime parity, Phase 6.1 Data Integrity and Safe Deletion, Phase 6.1A Legal Document Management, legal-consent hardening, administrator email-code verification, and the homepage catalog-pricing fix are committed and pushed.
 - Local development is operational and its PostgreSQL schema is current.
 - Phase 6.3 is committed and pushed at `099fe7c`; the interactive-transaction serialization correction is pushed at `66f9fdd`.
-- Development has migration 21 applied. Certification verification for the uncommitted Phase 6.4 working tree remains part of final validation.
+- The repository contains 25 migrations; the current database environment must be verified with `prisma migrate status` before deployment.
 - Genuine PayMongo paid, refund, persisted-reconciliation, duplicate-paid-redelivery, and duplicate-refund-redelivery paths pass. Failed-payment, delayed, out-of-order, and raw-fixture evidence remain open.
 - Live payments remain disabled.
 - VPS deployment remains postponed until the production-readiness gate passes.
 - Phase 6.1 Data Integrity & Safe Deletion is committed and pushed at `952e9e1`.
-- Phase 6.5 Monitoring & Observability is implemented and verified in the current working tree; migration 22 is current in development and certification. Phase 6.6 Operations & Security Hardening is the current verification phase.
+- Phases 6.4 through 6.12 are implemented as repository work with external recovery, provider, legal, and infrastructure certification still pending.
 
 ## Priority definitions
 
@@ -497,3 +497,7 @@ After Phase 6.0, Phases 6.1, 6.2, 6.3, and 6.4 can overlap. Monitoring should be
 No phase is complete until implementation, tests, documentation, security review, and repository consistency have been verified according to `CORE-INSTRUCTION.md`.
 
 The independent Phase 6.10 VPS guide is available at `docs/vps-production-deployment.md`; actual deployment and reboot certification remain owner-operated.
+
+## Phase 6.12 — Production Readiness Remediation
+
+Repository controls are implemented locally: signed commercial lease issuance, evidence-backed supply-chain verification, fail-closed release gates, separation of duties, grant recovery, and administrator navigation. Compatibility certification against the separate Licensing Agent, production signing/scanning, professional review, backup restore certification, and Phase 6.10 infrastructure remain pending.

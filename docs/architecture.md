@@ -126,3 +126,5 @@ Phase 6.5 adds a read-oriented observability layer over existing readiness, sche
 ## Operations and security hardening
 
 Phase 6.6 preserves these boundaries and applies defense-in-depth at the HTTP, session, endpoint, storage, container, database, scheduler, and backup layers. Administrator mutations use same-origin, MFA/recent-authentication, audit, and route-specific rate-limit controls. Provider secrets remain encrypted/versioned or environment-validated; raw payment payloads and secrets are excluded from logs. The Licensing Agent remains the sole lease verifier and binding authority.
+
+The commerce platform issues signed `bke.lease.v1` envelopes and publishes a versioned public key. The separate BKE Licensing Agent verifies, stores, binds, and returns `AuthorizationDecision`; products must not query the commerce database or verify leases directly. Supply-chain evidence is append-only and release promotion is server-gated. The activation response contains lease issuance metadata only; it has no runtime authorization decision. Server-side `DeviceActivation` records support commercial limits and administration, while the Agent owns active runtime bindings.

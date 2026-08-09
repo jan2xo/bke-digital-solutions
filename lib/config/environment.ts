@@ -20,6 +20,10 @@ export const environmentSchema = z.object({
   SESSION_SECRET: secret,
   MFA_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_PEPPER: secret,
+  LICENSE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
+  LICENSE_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
+  LICENSE_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-ed25519-v1"),
+  SUPPLY_CHAIN_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   CRON_SECRET: secret,
   PROVIDER_CREDENTIALS_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   PROVIDER_CREDENTIALS_KEY_VERSION: z.coerce.number().int().min(1).default(1),
@@ -87,6 +91,7 @@ export const environmentSchema = z.object({
   if (environmentCredentialsRequired && value.LOCAL_PRODUCTION_SIMULATION && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_SECRET_KEY?.startsWith("sk_test_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "local production simulation accepts PayMongo test credentials only" });
   if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
+  if (protectedEnvironment && (!value.LICENSE_SIGNING_PRIVATE_KEY || !value.LICENSE_SIGNING_PUBLIC_KEY)) context.addIssue({ code: "custom", path: ["LICENSE_SIGNING_PRIVATE_KEY"], message: "Ed25519 lease signing keys are required in protected environments" });
   if (environmentCredentialsRequired && value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required for the selected provider source" });
   if (value.DEPLOYMENT_ENV === "production" && value.EMAIL_PROVIDER === "log") context.addIssue({ code: "custom", path: ["EMAIL_PROVIDER"], message: "log email transport is forbidden in production" });
   if (value.PROVIDER_CONFIG_SOURCE === "database" && !value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "is required for database provider configuration" });

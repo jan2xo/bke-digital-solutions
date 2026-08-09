@@ -419,6 +419,7 @@ export const ModelName = {
   ProductVersion: 'ProductVersion',
   ReleaseApproval: 'ReleaseApproval',
   SupplyChainEvidence: 'SupplyChainEvidence',
+  SupplyChainVerificationEvidence: 'SupplyChainVerificationEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
@@ -470,7 +471,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2099,6 +2100,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SupplyChainEvidenceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SupplyChainEvidenceCountAggregateOutputType> | number
+        }
+      }
+    }
+    SupplyChainVerificationEvidence: {
+      payload: Prisma.$SupplyChainVerificationEvidencePayload<ExtArgs>
+      fields: Prisma.SupplyChainVerificationEvidenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupplyChainVerificationEvidenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupplyChainVerificationEvidenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
+        }
+        findFirst: {
+          args: Prisma.SupplyChainVerificationEvidenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupplyChainVerificationEvidenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
+        }
+        findMany: {
+          args: Prisma.SupplyChainVerificationEvidenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>[]
+        }
+        create: {
+          args: Prisma.SupplyChainVerificationEvidenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
+        }
+        createMany: {
+          args: Prisma.SupplyChainVerificationEvidenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SupplyChainVerificationEvidenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>[]
+        }
+        delete: {
+          args: Prisma.SupplyChainVerificationEvidenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
+        }
+        update: {
+          args: Prisma.SupplyChainVerificationEvidenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
+        }
+        deleteMany: {
+          args: Prisma.SupplyChainVerificationEvidenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupplyChainVerificationEvidenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SupplyChainVerificationEvidenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>[]
+        }
+        upsert: {
+          args: Prisma.SupplyChainVerificationEvidenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
+        }
+        aggregate: {
+          args: Prisma.SupplyChainVerificationEvidenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupplyChainVerificationEvidence>
+        }
+        groupBy: {
+          args: Prisma.SupplyChainVerificationEvidenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupplyChainVerificationEvidenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupplyChainVerificationEvidenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupplyChainVerificationEvidenceCountAggregateOutputType> | number
         }
       }
     }
@@ -5172,6 +5247,24 @@ export const SupplyChainEvidenceScalarFieldEnum = {
 export type SupplyChainEvidenceScalarFieldEnum = (typeof SupplyChainEvidenceScalarFieldEnum)[keyof typeof SupplyChainEvidenceScalarFieldEnum]
 
 
+export const SupplyChainVerificationEvidenceScalarFieldEnum = {
+  id: 'id',
+  evidenceId: 'evidenceId',
+  kind: 'kind',
+  artifactHash: 'artifactHash',
+  signerKeyId: 'signerKeyId',
+  scannerId: 'scannerId',
+  scannerVersion: 'scannerVersion',
+  result: 'result',
+  reference: 'reference',
+  failureReason: 'failureReason',
+  verifiedAt: 'verifiedAt',
+  metadata: 'metadata'
+} as const
+
+export type SupplyChainVerificationEvidenceScalarFieldEnum = (typeof SupplyChainVerificationEvidenceScalarFieldEnum)[keyof typeof SupplyChainVerificationEvidenceScalarFieldEnum]
+
+
 export const LicensePolicyScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -5600,7 +5693,8 @@ export const DownloadGrantScalarFieldEnum = {
   artifactId: 'artifactId',
   tokenHash: 'tokenHash',
   expiresAt: 'expiresAt',
-  usedAt: 'usedAt'
+  usedAt: 'usedAt',
+  processingAt: 'processingAt'
 } as const
 
 export type DownloadGrantScalarFieldEnum = (typeof DownloadGrantScalarFieldEnum)[keyof typeof DownloadGrantScalarFieldEnum]
@@ -6773,6 +6867,7 @@ export type GlobalOmitConfig = {
   productVersion?: Prisma.ProductVersionOmit
   releaseApproval?: Prisma.ReleaseApprovalOmit
   supplyChainEvidence?: Prisma.SupplyChainEvidenceOmit
+  supplyChainVerificationEvidence?: Prisma.SupplyChainVerificationEvidenceOmit
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
   productArtifact?: Prisma.ProductArtifactOmit
