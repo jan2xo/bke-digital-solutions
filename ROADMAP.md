@@ -501,3 +501,7 @@ The independent Phase 6.10 VPS guide is available at `docs/vps-production-deploy
 ## Phase 6.12 — Production Readiness Remediation
 
 Repository controls are implemented locally: signed commercial lease issuance, evidence-backed supply-chain verification, fail-closed release gates, separation of duties, grant recovery, and administrator navigation. Compatibility certification against the separate Licensing Agent, production signing/scanning, professional review, backup restore certification, and Phase 6.10 infrastructure remain pending.
+
+## RM3 — Release Governance & Separation of Duties
+
+Status: **IMPLEMENTED LOCALLY**. Stable/LTS promotion requires prior independent review, rejects self-approval, records approval notes and audit events, enforces forward-only lifecycle transitions, and supports an explicitly enabled, justified, audited break-glass path. Full production certification remains pending.
