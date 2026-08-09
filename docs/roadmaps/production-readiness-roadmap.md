@@ -661,3 +661,10 @@ These require real production infrastructure and cannot be certified from reposi
 Phase 6.12 SOL tracking: legacy activation boundary **PARTIALLY RESOLVED** pending separate Agent compatibility certification; supply-chain self-attestation **RESOLVED** for repository controls; release gates **RESOLVED** server-side; separation of duties **RESOLVED**; download-grant reliability **RESOLVED**; VPS/provider/legal/recovery items remain **DEFERRED — PHASE 6.10** or **PENDING PROFESSIONAL REVIEW** as applicable.
 
 Licensing boundary correction: **RESOLVED LOCALLY** — activation returns lease issuance only; Agent compatibility and end-to-end `AuthorizationDecision` evidence remain pending against the separate Agent repository.
+## RM5 documentation truth
+
+Current implementation and certification status is authoritative in
+`TRUTHCHECK.md`. RM1–RM4 repository controls are implemented or locally
+verified as stated there; external infrastructure and professional reviews are
+not complete. Version 7 is a post-production enhancement and is not a Phase 6
+production blocker.

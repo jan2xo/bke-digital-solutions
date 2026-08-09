@@ -324,3 +324,47 @@ Production Compose restart policies are verified statically. No Docker daemon bo
 Licensing boundary correction: the activation response contains no runtime authorization decision. BKE Digital Solutions issues commercial entitlement material; the separate Agent verifies, binds, and produces `AuthorizationDecision`.
 
 Monitoring and observability code exists in the current uncommitted working tree. Migration 22 is applied and current in development and certification. It adds `ObservabilityAlert`, `/admin/observability`, and `/api/health/metrics`. TypeScript, ESLint, Prisma validation/generation, Vitest (155 passed, 6 credential-gated skipped), Playwright (11/11), production build, Docker builds, runtime health checks, and repository hygiene passed. The metrics endpoint correctly reports CRITICAL while the incomplete Phase 6.4 recovery point remains. Phase 6.4 recovery certification remains pending and Phase 6.6 has not started.
+## Current production-readiness matrix (RM5)
+
+| Area | Status | Evidence/limitation |
+|---|---|---|
+| RM1 Licensing | VERIFIED | Agent wire-format, cryptographic, persistence, binding, and authorization checks passed; live runtime handoff remains environment-gated. |
+| RM2 Supply Chain | COMPLETE | Evidence-backed signature/malware gates implemented; production scanner and certificates remain external. |
+| RM3 Governance | COMPLETE | Server-side approval separation, forward-only transitions, audit, and break-glass controls implemented. |
+| RM4 Reliability | PARTIAL | Download recovery and OTP redaction verified; worker Docker heartbeat certification remains pending. |
+| Tests | PENDING | TypeScript/ESLint passed; full Vitest/Playwright not completed in latest verification. |
+| Builds | PENDING | Production/Docker build verification not completed in latest verification. |
+| Docker | PENDING | Compose/runtime verification requires available Docker daemon. |
+| Documentation | COMPLETE | Current matrix and dispositions synchronized here. |
+| VPS | DEFERRED | Phase 6.10. |
+| Cloudflare | DEFERRED | Phase 6.10. |
+| HTTPS | DEFERRED | Phase 6.10 production validation. |
+| PayMongo Live | BLOCKED | Live payments intentionally disabled. |
+| Resend Production | PENDING | Requires genuine production delivery evidence. |
+| Malware Scanner | PENDING | Production scanner adapter/configuration not provisioned. |
+| Signing Certificates | PENDING | Platform signing certificates not provisioned. |
+| Restore Certification | PENDING | Complete production recovery drill not certified. |
+| Legal Review | PENDING PROFESSIONAL REVIEW | No legal approval fabricated. |
+| Privacy Review | PENDING PROFESSIONAL REVIEW | DPO/privacy review pending. |
+| Accountant/BIR Review | PENDING PROFESSIONAL REVIEW | Tax review pending. |
+
+## SOL dispositions
+
+- Licensing boundary: RESOLVED locally; external runtime handoff certification remains pending.
+- Supply-chain self-attestation: RESOLVED.
+- Release governance/separation of duties: RESOLVED.
+- Download-grant recovery: RESOLVED.
+- OTP log redaction: RESOLVED.
+- Scheduler/backup Docker heartbeat: ACCEPTED TECHNICAL DEBT.
+- Production malware scanner: ACCEPTED TECHNICAL DEBT.
+- Signing certificates: ACCEPTED TECHNICAL DEBT.
+- Restore certification: ACCEPTED TECHNICAL DEBT.
+- Licensing Agent documentation synchronization: ACCEPTED TECHNICAL DEBT.
+- VPS, Cloudflare, and public HTTPS: DEFERRED — PHASE 6.10.
+- Legal, privacy, and tax approvals: PENDING PROFESSIONAL REVIEW.
+
+## Version 7 — Post-production enhancement
+
+Planned after production readiness: Compliance Review Center, Legal Workflow,
+Reviewer Assignment, Approval Timeline, Version Comparison, and Compliance
+Notifications. This is a post-production enhancement, not a Phase 6 blocker.

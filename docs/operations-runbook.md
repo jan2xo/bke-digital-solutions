@@ -91,3 +91,8 @@ Protected environments fail closed unless `LICENSE_SIGNING_PRIVATE_KEY`,
 `LICENSE_SIGNING_PUBLIC_KEY`, and `LICENSE_SIGNING_KEY_ID` are configured. Use
 `npm run licensing:keys -- .certification-secrets` to create local certification
 keys; never commit the private PEM or place it in a public secret store.
+## Readiness note
+
+Operational runbooks are implemented, but worker heartbeat certification,
+production scanner/signing configuration, restore certification, and VPS
+validation are still pending. Check `TRUTHCHECK.md` before declaring readiness.

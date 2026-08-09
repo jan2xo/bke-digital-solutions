@@ -132,3 +132,9 @@ Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence
 Added release lifecycle stages, forward-only transition enforcement, approval records, evidence indicators, and Release Center visibility. Stable/LTS require explicit approval. Signing, malware, backup, compliance, and deployment gates remain separate.
 
 Phase 6.12 remediation implements repository-side signed lease issuance, cryptographic supply-chain evidence, fail-closed release gates, separation of duties, grant retry recovery, and discoverable Compliance/Supply Chain administration. External Agent compatibility, production credentials, legal review, recovery certification, and Phase 6.10 remain pending.
+## Current status synchronization (RM5)
+
+RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4
+download/OTP reliability controls are implemented locally. Latest full-suite,
+production Docker, external provider, restore, VPS, and professional review
+evidence remains pending. See `TRUTHCHECK.md` for the authoritative matrix.

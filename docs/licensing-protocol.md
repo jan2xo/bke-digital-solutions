@@ -1,6 +1,6 @@
 # `bke.licensing.v1` cloud-to-Agent contract — FROZEN
 
-This is the frozen wire boundary between BKE Digital Solutions and the separate BKE Licensing Agent. It does not replace the Agent's AuthorizationService, Verified License Repository, Active License Binding, License Center, or AuthorizationDecision. Compatibility was certified against the Agent repository using its active virtual environment on 2026-08-09.
+This is the frozen wire boundary between BKE Digital Solutions and the separate BKE Licensing Agent. It does not replace the Agent's AuthorizationService, Verified License Repository, Active License Binding, License Center, or AuthorizationDecision. Wire compatibility was certified locally; production runtime handoff remains environment-gated.
 
 ## Certification signing keys
 

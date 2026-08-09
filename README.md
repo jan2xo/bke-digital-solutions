@@ -83,3 +83,5 @@ Archived products expose a typed-name permanent-delete action only to administra
 Administrators can use `/admin/observability` to answer “Is the BKE platform healthy?” across application dependencies, scheduler, backups, payments, licensing issuance, email, security, and infrastructure. The typed health feed is available at `/api/health/metrics`. See [docs/observability.md](docs/observability.md).
 
 Phase 6.12 repository remediation adds signed Ed25519 commercial lease envelopes, evidence-backed supply-chain verification, fail-closed Stable/LTS gates, approval separation, safe download retry, and Compliance/Supply Chain navigation. VPS, Cloudflare, live providers, and production recovery certification remain deferred to Phase 6.10.
+
+Current readiness is tracked authoritatively in [TRUTHCHECK.md](TRUTHCHECK.md). The repository is not production-ready: external infrastructure, production malware scanning/signing, restore certification, full latest regression verification, and professional legal/privacy/tax review remain pending.

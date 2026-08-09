@@ -116,3 +116,9 @@ Use `docs/vps-production-deployment.md` for independent Ubuntu/Hetzner deploymen
 Phase 6.12 adds the commercial signed-lease issuer, evidence-backed supply-chain verification, fail-closed release gates, approval separation, and safe download grant recovery. Do not treat test signing/scanner evidence as production certification.
 
 Licensing boundary correction: `/api/licenses/activate` returns only a signed lease and issuance metadata. Runtime authorization remains exclusively inside the separate Licensing Agent and reaches products only as `AuthorizationDecision`.
+## Handoff status
+
+Do not claim production readiness from repository implementation alone. Use
+`TRUTHCHECK.md` as the current status source. Phase 6.10 VPS deployment is
+deferred; production malware scanning, signing certificates, restore drills,
+provider evidence, and legal/privacy/tax reviews remain outstanding.
