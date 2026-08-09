@@ -48,3 +48,9 @@ There is intentionally no `authorization.allowed`, AuthorizationDecision, launch
 `GET /api/licensing/keys` returns versioned Ed25519 public-key metadata. Private signing keys are never returned or committed.
 
 Refresh and renewal issue replacement leases after commercial checks. Suspension, revocation, expiration, and over-limit records cannot receive a valid new lease; the Agent separately invalidates its local binding according to its own policy. Breaking wire changes require a new schema version and Agent compatibility certification.
+# RM7 lifecycle correction
+
+Lease records are durable and monotonic. Each issuance for an installation/device
+increments both `generation` and `server_revision`; the previous record is marked
+`SUPERSEDED` and linked to the replacement. A lease is never issued with a
+placeholder version: an active semantic product version is required.

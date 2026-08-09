@@ -96,3 +96,11 @@ keys; never commit the private PEM or place it in a public secret store.
 Operational runbooks are implemented, but worker heartbeat certification,
 production scanner/signing configuration, restore certification, and VPS
 validation are still pending. Check `TRUTHCHECK.md` before declaring readiness.
+## RM7 controls
+
+`LICENSE_SIGNING_KEY_ID` identifies the commercial lease signer only.
+`SUPPLY_CHAIN_SIGNING_KEY_ID` identifies the independent release-evidence signer.
+Never reuse or cross-label these keys. `ALLOW_BREAK_GLASS=false` is the default;
+break-glass may bypass governance separation only after an audited justification.
+It never bypasses artifact, signature, malware, SBOM, provenance, migration, or
+compliance evidence gates.

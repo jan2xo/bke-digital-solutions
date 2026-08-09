@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { assertSameOrigin } from "@/lib/security/request";
 import { audit } from "@/lib/audit";
 import { apiError } from "@/lib/http";
+import { env } from "@/lib/env";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
 const schema = z.object({ lifecycle: z.enum(stages).optional(), approve: z.boolean().optional(), reviewed: z.boolean().optional(), published: z.boolean().optional(), latest: z.boolean().optional(), releaseNotes: z.string().max(10000).optional(), changelog: z.string().max(20000).optional(), channel: z.enum(["STABLE", "BETA"]).optional(), deprecated: z.boolean().optional(), rollback: z.boolean().optional(), notes: z.string().trim().max(4000).optional(), breakGlass: z.boolean().optional(), breakGlassJustification: z.string().trim().min(20).max(4000).optional() }).superRefine((value, ctx) => { if (value.breakGlass && !value.breakGlassJustification) ctx.addIssue({ code: "custom", path: ["breakGlassJustification"], message: "Break-glass justification is required" }); if (value.reviewed && value.approve) ctx.addIssue({ code: "custom", path: ["approve"], message: "Review and approval must be separate actions" }); });
@@ -24,9 +25,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const signatureEvidence = evidence?.verificationEvidence.some((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
         const malwareEvidence = evidence?.verificationEvidence.some((v) => v.kind === "MALWARE_SCAN" && v.result === "CLEAN" && v.artifactHash === artifactHash) ?? false;
         const complete = Boolean(signatureEvidence && evidence?.dependencyVerified && evidence.sbomReference && evidence.provenanceStatus === "VERIFIED" && malwareEvidence && current.backupEvidence && current.complianceEvidence && pendingCompliance === 0);
-        if (!complete && !(input.breakGlass && process.env.ALLOW_BREAK_GLASS === "true")) throw new Error("RELEASE_EVIDENCE_INCOMPLETE");
+        if (!complete) throw new Error("RELEASE_EVIDENCE_INCOMPLETE");
         const prior = current.approvals[0];
-        if (!prior?.reviewedById || prior.reviewedById === admin.id || prior.createdById === admin.id) throw new Error("RELEASE_SEPARATION_REQUIRED");
+        if (!(input.breakGlass && env.ALLOW_BREAK_GLASS === "true") && (!prior?.reviewedById || prior.reviewedById === admin.id || prior.createdById === admin.id)) throw new Error("RELEASE_SEPARATION_REQUIRED");
       }
     }
     const version = await db.$transaction(async (tx) => {

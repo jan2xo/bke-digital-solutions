@@ -668,3 +668,12 @@ Current implementation and certification status is authoritative in
 verified as stated there; external infrastructure and professional reviews are
 not complete. Version 7 is a post-production enhancement and is not a Phase 6
 production blocker.
+## RM7 — Repository Certification Corrections (in progress)
+
+- RB1 lease lifecycle and product-version rejection: implemented; verification pending.
+- RB2 governance-only break-glass with mandatory integrity evidence: implemented; verification pending.
+- RB3 separate licensing and supply-chain signing identities: implemented; verification pending.
+
+RM7 dispositions: RB1 PARTIALLY RESOLVED pending database-backed lifecycle tests;
+RB2 RESOLVED in repository code (external operational review pending); RB3
+RESOLVED in repository code (key provisioning/rotation evidence remains external).

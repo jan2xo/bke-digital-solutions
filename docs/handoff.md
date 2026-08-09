@@ -122,3 +122,8 @@ Do not claim production readiness from repository implementation alone. Use
 `TRUTHCHECK.md` as the current status source. Phase 6.10 VPS deployment is
 deferred; production malware scanning, signing certificates, restore drills,
 provider evidence, and legal/privacy/tax reviews remain outstanding.
+### RM7 handoff
+
+Before review, run Prisma generation/validation and the repository verification
+suite. Do not treat RM7 as certified until lifecycle, break-glass, and signer
+identity regression tests pass.

@@ -24,6 +24,8 @@ export const environmentSchema = z.object({
   LICENSE_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   LICENSE_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-ed25519-v1"),
   SUPPLY_CHAIN_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
+  SUPPLY_CHAIN_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-supply-chain-ed25519-v1"),
+  ALLOW_BREAK_GLASS: z.preprocess(optional, z.enum(["true", "false"]).default("false")),
   CRON_SECRET: secret,
   PROVIDER_CREDENTIALS_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   PROVIDER_CREDENTIALS_KEY_VERSION: z.coerce.number().int().min(1).default(1),

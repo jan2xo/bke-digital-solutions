@@ -368,3 +368,7 @@ Monitoring and observability code exists in the current uncommitted working tree
 Planned after production readiness: Compliance Review Center, Legal Workflow,
 Reviewer Assignment, Approval Timeline, Version Comparison, and Compliance
 Notifications. This is a post-production enhancement, not a Phase 6 blocker.
+## RM7 current truth
+
+RM7 corrections are present in the working tree but are not yet committed or
+certified. No production deployment or external certification is claimed.

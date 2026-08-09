@@ -93,6 +93,7 @@ export const ModelName = {
   DiscountOffer: 'DiscountOffer',
   OfferRedemption: 'OfferRedemption',
   License: 'License',
+  LicenseLeaseRecord: 'LicenseLeaseRecord',
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
@@ -887,6 +888,24 @@ export const LicenseScalarFieldEnum = {
 } as const
 
 export type LicenseScalarFieldEnum = (typeof LicenseScalarFieldEnum)[keyof typeof LicenseScalarFieldEnum]
+
+
+export const LicenseLeaseRecordScalarFieldEnum = {
+  id: 'id',
+  licenseId: 'licenseId',
+  leaseId: 'leaseId',
+  generation: 'generation',
+  serverRevision: 'serverRevision',
+  installationId: 'installationId',
+  deviceId: 'deviceId',
+  version: 'version',
+  status: 'status',
+  supersededById: 'supersededById',
+  issuedAt: 'issuedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LicenseLeaseRecordScalarFieldEnum = (typeof LicenseLeaseRecordScalarFieldEnum)[keyof typeof LicenseLeaseRecordScalarFieldEnum]
 
 
 export const TrialGrantScalarFieldEnum = {

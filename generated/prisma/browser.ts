@@ -228,6 +228,11 @@ export type OfferRedemption = Prisma.OfferRedemptionModel
  */
 export type License = Prisma.LicenseModel
 /**
+ * Model LicenseLeaseRecord
+ *
+ */
+export type LicenseLeaseRecord = Prisma.LicenseLeaseRecordModel
+/**
  * Model TrialGrant
  *
  */

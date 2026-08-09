@@ -439,6 +439,7 @@ export const ModelName = {
   DiscountOffer: 'DiscountOffer',
   OfferRedemption: 'OfferRedemption',
   License: 'License',
+  LicenseLeaseRecord: 'LicenseLeaseRecord',
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
@@ -471,7 +472,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3583,6 +3584,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LicenseLeaseRecord: {
+      payload: Prisma.$LicenseLeaseRecordPayload<ExtArgs>
+      fields: Prisma.LicenseLeaseRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LicenseLeaseRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LicenseLeaseRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.LicenseLeaseRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LicenseLeaseRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>
+        }
+        findMany: {
+          args: Prisma.LicenseLeaseRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>[]
+        }
+        create: {
+          args: Prisma.LicenseLeaseRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>
+        }
+        createMany: {
+          args: Prisma.LicenseLeaseRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LicenseLeaseRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.LicenseLeaseRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>
+        }
+        update: {
+          args: Prisma.LicenseLeaseRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.LicenseLeaseRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LicenseLeaseRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LicenseLeaseRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.LicenseLeaseRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicenseLeaseRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.LicenseLeaseRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLicenseLeaseRecord>
+        }
+        groupBy: {
+          args: Prisma.LicenseLeaseRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LicenseLeaseRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LicenseLeaseRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LicenseLeaseRecordCountAggregateOutputType> | number
+        }
+      }
+    }
     TrialGrant: {
       payload: Prisma.$TrialGrantPayload<ExtArgs>
       fields: Prisma.TrialGrantFieldRefs
@@ -5641,6 +5716,24 @@ export const LicenseScalarFieldEnum = {
 export type LicenseScalarFieldEnum = (typeof LicenseScalarFieldEnum)[keyof typeof LicenseScalarFieldEnum]
 
 
+export const LicenseLeaseRecordScalarFieldEnum = {
+  id: 'id',
+  licenseId: 'licenseId',
+  leaseId: 'leaseId',
+  generation: 'generation',
+  serverRevision: 'serverRevision',
+  installationId: 'installationId',
+  deviceId: 'deviceId',
+  version: 'version',
+  status: 'status',
+  supersededById: 'supersededById',
+  issuedAt: 'issuedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LicenseLeaseRecordScalarFieldEnum = (typeof LicenseLeaseRecordScalarFieldEnum)[keyof typeof LicenseLeaseRecordScalarFieldEnum]
+
+
 export const TrialGrantScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
@@ -6887,6 +6980,7 @@ export type GlobalOmitConfig = {
   discountOffer?: Prisma.DiscountOfferOmit
   offerRedemption?: Prisma.OfferRedemptionOmit
   license?: Prisma.LicenseOmit
+  licenseLeaseRecord?: Prisma.LicenseLeaseRecordOmit
   trialGrant?: Prisma.TrialGrantOmit
   licenseAssignment?: Prisma.LicenseAssignmentOmit
   deviceActivation?: Prisma.DeviceActivationOmit

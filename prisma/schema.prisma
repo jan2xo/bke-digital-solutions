@@ -1235,10 +1235,30 @@ model License {
   activations       DeviceActivation[]
   grants            DownloadGrant[]
   events            LicenseEvent[]
+  leaseHistory      LicenseLeaseRecord[]
   trialGrant        TrialGrant?
 
   @@unique([orderItemId])
   @@index([accountId, status])
+}
+
+model LicenseLeaseRecord {
+  id              String   @id @default(cuid())
+  licenseId       String
+  leaseId         String   @unique
+  generation      Int
+  serverRevision  Int
+  installationId  String
+  deviceId        String
+  version         String
+  status          String
+  supersededById  String?
+  issuedAt        DateTime @default(now())
+  createdAt       DateTime @default(now())
+  license         License  @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  supersededBy    LicenseLeaseRecord? @relation("LeaseSupersession", fields: [supersededById], references: [id], onDelete: Restrict)
+  supersedes      LicenseLeaseRecord[] @relation("LeaseSupersession")
+  @@index([licenseId, installationId, deviceId, generation, serverRevision])
 }
 
 model TrialGrant {

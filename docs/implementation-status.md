@@ -138,3 +138,6 @@ RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4
 download/OTP reliability controls are implemented locally. Latest full-suite,
 production Docker, external provider, restore, VPS, and professional review
 evidence remains pending. See `TRUTHCHECK.md` for the authoritative matrix.
+### RM7 — Repository Certification Corrections
+
+Implemented in the working tree; full verification and owner review remain pending.
