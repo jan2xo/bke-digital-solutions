@@ -46,6 +46,12 @@ export type LicenseLeaseRecordMinAggregateOutputType = {
   deviceId: string | null
   version: string | null
   status: string | null
+  action: string | null
+  operationId: string | null
+  signerKeyId: string | null
+  expiresAt: Date | null
+  leasePayload: string | null
+  leaseSignature: string | null
   supersededById: string | null
   issuedAt: Date | null
   createdAt: Date | null
@@ -61,6 +67,12 @@ export type LicenseLeaseRecordMaxAggregateOutputType = {
   deviceId: string | null
   version: string | null
   status: string | null
+  action: string | null
+  operationId: string | null
+  signerKeyId: string | null
+  expiresAt: Date | null
+  leasePayload: string | null
+  leaseSignature: string | null
   supersededById: string | null
   issuedAt: Date | null
   createdAt: Date | null
@@ -76,6 +88,12 @@ export type LicenseLeaseRecordCountAggregateOutputType = {
   deviceId: number
   version: number
   status: number
+  action: number
+  operationId: number
+  signerKeyId: number
+  expiresAt: number
+  leasePayload: number
+  leaseSignature: number
   supersededById: number
   issuedAt: number
   createdAt: number
@@ -103,6 +121,12 @@ export type LicenseLeaseRecordMinAggregateInputType = {
   deviceId?: true
   version?: true
   status?: true
+  action?: true
+  operationId?: true
+  signerKeyId?: true
+  expiresAt?: true
+  leasePayload?: true
+  leaseSignature?: true
   supersededById?: true
   issuedAt?: true
   createdAt?: true
@@ -118,6 +142,12 @@ export type LicenseLeaseRecordMaxAggregateInputType = {
   deviceId?: true
   version?: true
   status?: true
+  action?: true
+  operationId?: true
+  signerKeyId?: true
+  expiresAt?: true
+  leasePayload?: true
+  leaseSignature?: true
   supersededById?: true
   issuedAt?: true
   createdAt?: true
@@ -133,6 +163,12 @@ export type LicenseLeaseRecordCountAggregateInputType = {
   deviceId?: true
   version?: true
   status?: true
+  action?: true
+  operationId?: true
+  signerKeyId?: true
+  expiresAt?: true
+  leasePayload?: true
+  leaseSignature?: true
   supersededById?: true
   issuedAt?: true
   createdAt?: true
@@ -235,6 +271,12 @@ export type LicenseLeaseRecordGroupByOutputType = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId: string | null
+  signerKeyId: string | null
+  expiresAt: Date | null
+  leasePayload: string | null
+  leaseSignature: string | null
   supersededById: string | null
   issuedAt: Date
   createdAt: Date
@@ -273,10 +315,18 @@ export type LicenseLeaseRecordWhereInput = {
   deviceId?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
   version?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
   status?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
+  action?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
+  operationId?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  signerKeyId?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  expiresAt?: Prisma.DateTimeNullableFilter<"LicenseLeaseRecord"> | Date | string | null
+  leasePayload?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  leaseSignature?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
   supersededById?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
   issuedAt?: Prisma.DateTimeFilter<"LicenseLeaseRecord"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LicenseLeaseRecord"> | Date | string
   license?: Prisma.XOR<Prisma.LicenseScalarRelationFilter, Prisma.LicenseWhereInput>
+  operation?: Prisma.XOR<Prisma.CommercialLeaseOperationNullableScalarRelationFilter, Prisma.CommercialLeaseOperationWhereInput> | null
+  operationResult?: Prisma.XOR<Prisma.CommercialLeaseOperationNullableScalarRelationFilter, Prisma.CommercialLeaseOperationWhereInput> | null
   supersededBy?: Prisma.XOR<Prisma.LicenseLeaseRecordNullableScalarRelationFilter, Prisma.LicenseLeaseRecordWhereInput> | null
   supersedes?: Prisma.LicenseLeaseRecordListRelationFilter
 }
@@ -291,10 +341,18 @@ export type LicenseLeaseRecordOrderByWithRelationInput = {
   deviceId?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  operationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  signerKeyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  leasePayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  leaseSignature?: Prisma.SortOrderInput | Prisma.SortOrder
   supersededById?: Prisma.SortOrderInput | Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   license?: Prisma.LicenseOrderByWithRelationInput
+  operation?: Prisma.CommercialLeaseOperationOrderByWithRelationInput
+  operationResult?: Prisma.CommercialLeaseOperationOrderByWithRelationInput
   supersededBy?: Prisma.LicenseLeaseRecordOrderByWithRelationInput
   supersedes?: Prisma.LicenseLeaseRecordOrderByRelationAggregateInput
 }
@@ -302,6 +360,7 @@ export type LicenseLeaseRecordOrderByWithRelationInput = {
 export type LicenseLeaseRecordWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   leaseId?: string
+  operationId?: string
   AND?: Prisma.LicenseLeaseRecordWhereInput | Prisma.LicenseLeaseRecordWhereInput[]
   OR?: Prisma.LicenseLeaseRecordWhereInput[]
   NOT?: Prisma.LicenseLeaseRecordWhereInput | Prisma.LicenseLeaseRecordWhereInput[]
@@ -312,13 +371,20 @@ export type LicenseLeaseRecordWhereUniqueInput = Prisma.AtLeast<{
   deviceId?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
   version?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
   status?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
+  action?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
+  signerKeyId?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  expiresAt?: Prisma.DateTimeNullableFilter<"LicenseLeaseRecord"> | Date | string | null
+  leasePayload?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  leaseSignature?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
   supersededById?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
   issuedAt?: Prisma.DateTimeFilter<"LicenseLeaseRecord"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LicenseLeaseRecord"> | Date | string
   license?: Prisma.XOR<Prisma.LicenseScalarRelationFilter, Prisma.LicenseWhereInput>
+  operation?: Prisma.XOR<Prisma.CommercialLeaseOperationNullableScalarRelationFilter, Prisma.CommercialLeaseOperationWhereInput> | null
+  operationResult?: Prisma.XOR<Prisma.CommercialLeaseOperationNullableScalarRelationFilter, Prisma.CommercialLeaseOperationWhereInput> | null
   supersededBy?: Prisma.XOR<Prisma.LicenseLeaseRecordNullableScalarRelationFilter, Prisma.LicenseLeaseRecordWhereInput> | null
   supersedes?: Prisma.LicenseLeaseRecordListRelationFilter
-}, "id" | "leaseId">
+}, "id" | "leaseId" | "operationId">
 
 export type LicenseLeaseRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -330,6 +396,12 @@ export type LicenseLeaseRecordOrderByWithAggregationInput = {
   deviceId?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  operationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  signerKeyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  leasePayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  leaseSignature?: Prisma.SortOrderInput | Prisma.SortOrder
   supersededById?: Prisma.SortOrderInput | Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -353,6 +425,12 @@ export type LicenseLeaseRecordScalarWhereWithAggregatesInput = {
   deviceId?: Prisma.StringWithAggregatesFilter<"LicenseLeaseRecord"> | string
   version?: Prisma.StringWithAggregatesFilter<"LicenseLeaseRecord"> | string
   status?: Prisma.StringWithAggregatesFilter<"LicenseLeaseRecord"> | string
+  action?: Prisma.StringWithAggregatesFilter<"LicenseLeaseRecord"> | string
+  operationId?: Prisma.StringNullableWithAggregatesFilter<"LicenseLeaseRecord"> | string | null
+  signerKeyId?: Prisma.StringNullableWithAggregatesFilter<"LicenseLeaseRecord"> | string | null
+  expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LicenseLeaseRecord"> | Date | string | null
+  leasePayload?: Prisma.StringNullableWithAggregatesFilter<"LicenseLeaseRecord"> | string | null
+  leaseSignature?: Prisma.StringNullableWithAggregatesFilter<"LicenseLeaseRecord"> | string | null
   supersededById?: Prisma.StringNullableWithAggregatesFilter<"LicenseLeaseRecord"> | string | null
   issuedAt?: Prisma.DateTimeWithAggregatesFilter<"LicenseLeaseRecord"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LicenseLeaseRecord"> | Date | string
@@ -367,9 +445,16 @@ export type LicenseLeaseRecordCreateInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
   license: Prisma.LicenseCreateNestedOneWithoutLeaseHistoryInput
+  operation?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutLeaseRecordsInput
+  operationResult?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutResultLeaseInput
   supersededBy?: Prisma.LicenseLeaseRecordCreateNestedOneWithoutSupersedesInput
   supersedes?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutSupersededByInput
 }
@@ -384,9 +469,16 @@ export type LicenseLeaseRecordUncheckedCreateInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   supersededById?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedCreateNestedOneWithoutResultLeaseInput
   supersedes?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutSupersededByInput
 }
 
@@ -399,9 +491,16 @@ export type LicenseLeaseRecordUpdateInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   license?: Prisma.LicenseUpdateOneRequiredWithoutLeaseHistoryNestedInput
+  operation?: Prisma.CommercialLeaseOperationUpdateOneWithoutLeaseRecordsNestedInput
+  operationResult?: Prisma.CommercialLeaseOperationUpdateOneWithoutResultLeaseNestedInput
   supersededBy?: Prisma.LicenseLeaseRecordUpdateOneWithoutSupersedesNestedInput
   supersedes?: Prisma.LicenseLeaseRecordUpdateManyWithoutSupersededByNestedInput
 }
@@ -416,9 +515,16 @@ export type LicenseLeaseRecordUncheckedUpdateInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedUpdateOneWithoutResultLeaseNestedInput
   supersedes?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByNestedInput
 }
 
@@ -432,6 +538,12 @@ export type LicenseLeaseRecordCreateManyInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   supersededById?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
@@ -446,6 +558,11 @@ export type LicenseLeaseRecordUpdateManyMutationInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -460,6 +577,12 @@ export type LicenseLeaseRecordUncheckedUpdateManyInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -490,6 +613,12 @@ export type LicenseLeaseRecordCountOrderByAggregateInput = {
   deviceId?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  operationId?: Prisma.SortOrder
+  signerKeyId?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrder
+  leasePayload?: Prisma.SortOrder
+  leaseSignature?: Prisma.SortOrder
   supersededById?: Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -510,6 +639,12 @@ export type LicenseLeaseRecordMaxOrderByAggregateInput = {
   deviceId?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  operationId?: Prisma.SortOrder
+  signerKeyId?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrder
+  leasePayload?: Prisma.SortOrder
+  leaseSignature?: Prisma.SortOrder
   supersededById?: Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -525,6 +660,12 @@ export type LicenseLeaseRecordMinOrderByAggregateInput = {
   deviceId?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  operationId?: Prisma.SortOrder
+  signerKeyId?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrder
+  leasePayload?: Prisma.SortOrder
+  leaseSignature?: Prisma.SortOrder
   supersededById?: Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -635,6 +776,64 @@ export type LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByNestedInput 
   deleteMany?: Prisma.LicenseLeaseRecordScalarWhereInput | Prisma.LicenseLeaseRecordScalarWhereInput[]
 }
 
+export type LicenseLeaseRecordCreateNestedOneWithoutOperationResultInput = {
+  create?: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationResultInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationResultInput>
+  connectOrCreate?: Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationResultInput
+  connect?: Prisma.LicenseLeaseRecordWhereUniqueInput
+}
+
+export type LicenseLeaseRecordCreateNestedManyWithoutOperationInput = {
+  create?: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput> | Prisma.LicenseLeaseRecordCreateWithoutOperationInput[] | Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput[]
+  connectOrCreate?: Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput | Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput[]
+  createMany?: Prisma.LicenseLeaseRecordCreateManyOperationInputEnvelope
+  connect?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+}
+
+export type LicenseLeaseRecordUncheckedCreateNestedManyWithoutOperationInput = {
+  create?: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput> | Prisma.LicenseLeaseRecordCreateWithoutOperationInput[] | Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput[]
+  connectOrCreate?: Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput | Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput[]
+  createMany?: Prisma.LicenseLeaseRecordCreateManyOperationInputEnvelope
+  connect?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+}
+
+export type LicenseLeaseRecordUpdateOneWithoutOperationResultNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationResultInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationResultInput>
+  connectOrCreate?: Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationResultInput
+  upsert?: Prisma.LicenseLeaseRecordUpsertWithoutOperationResultInput
+  disconnect?: Prisma.LicenseLeaseRecordWhereInput | boolean
+  delete?: Prisma.LicenseLeaseRecordWhereInput | boolean
+  connect?: Prisma.LicenseLeaseRecordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LicenseLeaseRecordUpdateToOneWithWhereWithoutOperationResultInput, Prisma.LicenseLeaseRecordUpdateWithoutOperationResultInput>, Prisma.LicenseLeaseRecordUncheckedUpdateWithoutOperationResultInput>
+}
+
+export type LicenseLeaseRecordUpdateManyWithoutOperationNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput> | Prisma.LicenseLeaseRecordCreateWithoutOperationInput[] | Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput[]
+  connectOrCreate?: Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput | Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput[]
+  upsert?: Prisma.LicenseLeaseRecordUpsertWithWhereUniqueWithoutOperationInput | Prisma.LicenseLeaseRecordUpsertWithWhereUniqueWithoutOperationInput[]
+  createMany?: Prisma.LicenseLeaseRecordCreateManyOperationInputEnvelope
+  set?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  disconnect?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  delete?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  connect?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  update?: Prisma.LicenseLeaseRecordUpdateWithWhereUniqueWithoutOperationInput | Prisma.LicenseLeaseRecordUpdateWithWhereUniqueWithoutOperationInput[]
+  updateMany?: Prisma.LicenseLeaseRecordUpdateManyWithWhereWithoutOperationInput | Prisma.LicenseLeaseRecordUpdateManyWithWhereWithoutOperationInput[]
+  deleteMany?: Prisma.LicenseLeaseRecordScalarWhereInput | Prisma.LicenseLeaseRecordScalarWhereInput[]
+}
+
+export type LicenseLeaseRecordUncheckedUpdateManyWithoutOperationNestedInput = {
+  create?: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput> | Prisma.LicenseLeaseRecordCreateWithoutOperationInput[] | Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput[]
+  connectOrCreate?: Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput | Prisma.LicenseLeaseRecordCreateOrConnectWithoutOperationInput[]
+  upsert?: Prisma.LicenseLeaseRecordUpsertWithWhereUniqueWithoutOperationInput | Prisma.LicenseLeaseRecordUpsertWithWhereUniqueWithoutOperationInput[]
+  createMany?: Prisma.LicenseLeaseRecordCreateManyOperationInputEnvelope
+  set?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  disconnect?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  delete?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  connect?: Prisma.LicenseLeaseRecordWhereUniqueInput | Prisma.LicenseLeaseRecordWhereUniqueInput[]
+  update?: Prisma.LicenseLeaseRecordUpdateWithWhereUniqueWithoutOperationInput | Prisma.LicenseLeaseRecordUpdateWithWhereUniqueWithoutOperationInput[]
+  updateMany?: Prisma.LicenseLeaseRecordUpdateManyWithWhereWithoutOperationInput | Prisma.LicenseLeaseRecordUpdateManyWithWhereWithoutOperationInput[]
+  deleteMany?: Prisma.LicenseLeaseRecordScalarWhereInput | Prisma.LicenseLeaseRecordScalarWhereInput[]
+}
+
 export type LicenseLeaseRecordCreateWithoutLicenseInput = {
   id?: string
   leaseId: string
@@ -644,8 +843,15 @@ export type LicenseLeaseRecordCreateWithoutLicenseInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
+  operation?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutLeaseRecordsInput
+  operationResult?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutResultLeaseInput
   supersededBy?: Prisma.LicenseLeaseRecordCreateNestedOneWithoutSupersedesInput
   supersedes?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutSupersededByInput
 }
@@ -659,9 +865,16 @@ export type LicenseLeaseRecordUncheckedCreateWithoutLicenseInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   supersededById?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedCreateNestedOneWithoutResultLeaseInput
   supersedes?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutSupersededByInput
 }
 
@@ -704,6 +917,12 @@ export type LicenseLeaseRecordScalarWhereInput = {
   deviceId?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
   version?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
   status?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
+  action?: Prisma.StringFilter<"LicenseLeaseRecord"> | string
+  operationId?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  signerKeyId?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  expiresAt?: Prisma.DateTimeNullableFilter<"LicenseLeaseRecord"> | Date | string | null
+  leasePayload?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
+  leaseSignature?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
   supersededById?: Prisma.StringNullableFilter<"LicenseLeaseRecord"> | string | null
   issuedAt?: Prisma.DateTimeFilter<"LicenseLeaseRecord"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LicenseLeaseRecord"> | Date | string
@@ -718,9 +937,16 @@ export type LicenseLeaseRecordCreateWithoutSupersedesInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
   license: Prisma.LicenseCreateNestedOneWithoutLeaseHistoryInput
+  operation?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutLeaseRecordsInput
+  operationResult?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutResultLeaseInput
   supersededBy?: Prisma.LicenseLeaseRecordCreateNestedOneWithoutSupersedesInput
 }
 
@@ -734,9 +960,16 @@ export type LicenseLeaseRecordUncheckedCreateWithoutSupersedesInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   supersededById?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedCreateNestedOneWithoutResultLeaseInput
 }
 
 export type LicenseLeaseRecordCreateOrConnectWithoutSupersedesInput = {
@@ -753,9 +986,16 @@ export type LicenseLeaseRecordCreateWithoutSupersededByInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
   license: Prisma.LicenseCreateNestedOneWithoutLeaseHistoryInput
+  operation?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutLeaseRecordsInput
+  operationResult?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutResultLeaseInput
   supersedes?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutSupersededByInput
 }
 
@@ -769,8 +1009,15 @@ export type LicenseLeaseRecordUncheckedCreateWithoutSupersededByInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedCreateNestedOneWithoutResultLeaseInput
   supersedes?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutSupersededByInput
 }
 
@@ -804,9 +1051,16 @@ export type LicenseLeaseRecordUpdateWithoutSupersedesInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   license?: Prisma.LicenseUpdateOneRequiredWithoutLeaseHistoryNestedInput
+  operation?: Prisma.CommercialLeaseOperationUpdateOneWithoutLeaseRecordsNestedInput
+  operationResult?: Prisma.CommercialLeaseOperationUpdateOneWithoutResultLeaseNestedInput
   supersededBy?: Prisma.LicenseLeaseRecordUpdateOneWithoutSupersedesNestedInput
 }
 
@@ -820,9 +1074,16 @@ export type LicenseLeaseRecordUncheckedUpdateWithoutSupersedesInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedUpdateOneWithoutResultLeaseNestedInput
 }
 
 export type LicenseLeaseRecordUpsertWithWhereUniqueWithoutSupersededByInput = {
@@ -841,6 +1102,180 @@ export type LicenseLeaseRecordUpdateManyWithWhereWithoutSupersededByInput = {
   data: Prisma.XOR<Prisma.LicenseLeaseRecordUpdateManyMutationInput, Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByInput>
 }
 
+export type LicenseLeaseRecordCreateWithoutOperationResultInput = {
+  id?: string
+  leaseId: string
+  generation: number
+  serverRevision: number
+  installationId: string
+  deviceId: string
+  version: string
+  status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
+  issuedAt?: Date | string
+  createdAt?: Date | string
+  license: Prisma.LicenseCreateNestedOneWithoutLeaseHistoryInput
+  operation?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutLeaseRecordsInput
+  supersededBy?: Prisma.LicenseLeaseRecordCreateNestedOneWithoutSupersedesInput
+  supersedes?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutSupersededByInput
+}
+
+export type LicenseLeaseRecordUncheckedCreateWithoutOperationResultInput = {
+  id?: string
+  licenseId: string
+  leaseId: string
+  generation: number
+  serverRevision: number
+  installationId: string
+  deviceId: string
+  version: string
+  status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
+  supersededById?: string | null
+  issuedAt?: Date | string
+  createdAt?: Date | string
+  supersedes?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutSupersededByInput
+}
+
+export type LicenseLeaseRecordCreateOrConnectWithoutOperationResultInput = {
+  where: Prisma.LicenseLeaseRecordWhereUniqueInput
+  create: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationResultInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationResultInput>
+}
+
+export type LicenseLeaseRecordCreateWithoutOperationInput = {
+  id?: string
+  leaseId: string
+  generation: number
+  serverRevision: number
+  installationId: string
+  deviceId: string
+  version: string
+  status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
+  issuedAt?: Date | string
+  createdAt?: Date | string
+  license: Prisma.LicenseCreateNestedOneWithoutLeaseHistoryInput
+  operationResult?: Prisma.CommercialLeaseOperationCreateNestedOneWithoutResultLeaseInput
+  supersededBy?: Prisma.LicenseLeaseRecordCreateNestedOneWithoutSupersedesInput
+  supersedes?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutSupersededByInput
+}
+
+export type LicenseLeaseRecordUncheckedCreateWithoutOperationInput = {
+  id?: string
+  licenseId: string
+  leaseId: string
+  generation: number
+  serverRevision: number
+  installationId: string
+  deviceId: string
+  version: string
+  status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
+  supersededById?: string | null
+  issuedAt?: Date | string
+  createdAt?: Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedCreateNestedOneWithoutResultLeaseInput
+  supersedes?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutSupersededByInput
+}
+
+export type LicenseLeaseRecordCreateOrConnectWithoutOperationInput = {
+  where: Prisma.LicenseLeaseRecordWhereUniqueInput
+  create: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput>
+}
+
+export type LicenseLeaseRecordCreateManyOperationInputEnvelope = {
+  data: Prisma.LicenseLeaseRecordCreateManyOperationInput | Prisma.LicenseLeaseRecordCreateManyOperationInput[]
+  skipDuplicates?: boolean
+}
+
+export type LicenseLeaseRecordUpsertWithoutOperationResultInput = {
+  update: Prisma.XOR<Prisma.LicenseLeaseRecordUpdateWithoutOperationResultInput, Prisma.LicenseLeaseRecordUncheckedUpdateWithoutOperationResultInput>
+  create: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationResultInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationResultInput>
+  where?: Prisma.LicenseLeaseRecordWhereInput
+}
+
+export type LicenseLeaseRecordUpdateToOneWithWhereWithoutOperationResultInput = {
+  where?: Prisma.LicenseLeaseRecordWhereInput
+  data: Prisma.XOR<Prisma.LicenseLeaseRecordUpdateWithoutOperationResultInput, Prisma.LicenseLeaseRecordUncheckedUpdateWithoutOperationResultInput>
+}
+
+export type LicenseLeaseRecordUpdateWithoutOperationResultInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  generation?: Prisma.IntFieldUpdateOperationsInput | number
+  serverRevision?: Prisma.IntFieldUpdateOperationsInput | number
+  installationId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  license?: Prisma.LicenseUpdateOneRequiredWithoutLeaseHistoryNestedInput
+  operation?: Prisma.CommercialLeaseOperationUpdateOneWithoutLeaseRecordsNestedInput
+  supersededBy?: Prisma.LicenseLeaseRecordUpdateOneWithoutSupersedesNestedInput
+  supersedes?: Prisma.LicenseLeaseRecordUpdateManyWithoutSupersededByNestedInput
+}
+
+export type LicenseLeaseRecordUncheckedUpdateWithoutOperationResultInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseId?: Prisma.StringFieldUpdateOperationsInput | string
+  leaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  generation?: Prisma.IntFieldUpdateOperationsInput | number
+  serverRevision?: Prisma.IntFieldUpdateOperationsInput | number
+  installationId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supersedes?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByNestedInput
+}
+
+export type LicenseLeaseRecordUpsertWithWhereUniqueWithoutOperationInput = {
+  where: Prisma.LicenseLeaseRecordWhereUniqueInput
+  update: Prisma.XOR<Prisma.LicenseLeaseRecordUpdateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedUpdateWithoutOperationInput>
+  create: Prisma.XOR<Prisma.LicenseLeaseRecordCreateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedCreateWithoutOperationInput>
+}
+
+export type LicenseLeaseRecordUpdateWithWhereUniqueWithoutOperationInput = {
+  where: Prisma.LicenseLeaseRecordWhereUniqueInput
+  data: Prisma.XOR<Prisma.LicenseLeaseRecordUpdateWithoutOperationInput, Prisma.LicenseLeaseRecordUncheckedUpdateWithoutOperationInput>
+}
+
+export type LicenseLeaseRecordUpdateManyWithWhereWithoutOperationInput = {
+  where: Prisma.LicenseLeaseRecordScalarWhereInput
+  data: Prisma.XOR<Prisma.LicenseLeaseRecordUpdateManyMutationInput, Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutOperationInput>
+}
+
 export type LicenseLeaseRecordCreateManyLicenseInput = {
   id?: string
   leaseId: string
@@ -850,6 +1285,12 @@ export type LicenseLeaseRecordCreateManyLicenseInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   supersededById?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
@@ -864,8 +1305,15 @@ export type LicenseLeaseRecordUpdateWithoutLicenseInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operation?: Prisma.CommercialLeaseOperationUpdateOneWithoutLeaseRecordsNestedInput
+  operationResult?: Prisma.CommercialLeaseOperationUpdateOneWithoutResultLeaseNestedInput
   supersededBy?: Prisma.LicenseLeaseRecordUpdateOneWithoutSupersedesNestedInput
   supersedes?: Prisma.LicenseLeaseRecordUpdateManyWithoutSupersededByNestedInput
 }
@@ -879,9 +1327,16 @@ export type LicenseLeaseRecordUncheckedUpdateWithoutLicenseInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedUpdateOneWithoutResultLeaseNestedInput
   supersedes?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByNestedInput
 }
 
@@ -894,6 +1349,12 @@ export type LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -909,6 +1370,12 @@ export type LicenseLeaseRecordCreateManySupersededByInput = {
   deviceId: string
   version: string
   status: string
+  action: string
+  operationId?: string | null
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
   issuedAt?: Date | string
   createdAt?: Date | string
 }
@@ -922,9 +1389,16 @@ export type LicenseLeaseRecordUpdateWithoutSupersededByInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   license?: Prisma.LicenseUpdateOneRequiredWithoutLeaseHistoryNestedInput
+  operation?: Prisma.CommercialLeaseOperationUpdateOneWithoutLeaseRecordsNestedInput
+  operationResult?: Prisma.CommercialLeaseOperationUpdateOneWithoutResultLeaseNestedInput
   supersedes?: Prisma.LicenseLeaseRecordUpdateManyWithoutSupersededByNestedInput
 }
 
@@ -938,8 +1412,15 @@ export type LicenseLeaseRecordUncheckedUpdateWithoutSupersededByInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedUpdateOneWithoutResultLeaseNestedInput
   supersedes?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByNestedInput
 }
 
@@ -953,6 +1434,96 @@ export type LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByInput = {
   deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  operationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LicenseLeaseRecordCreateManyOperationInput = {
+  id?: string
+  licenseId: string
+  leaseId: string
+  generation: number
+  serverRevision: number
+  installationId: string
+  deviceId: string
+  version: string
+  status: string
+  action: string
+  signerKeyId?: string | null
+  expiresAt?: Date | string | null
+  leasePayload?: string | null
+  leaseSignature?: string | null
+  supersededById?: string | null
+  issuedAt?: Date | string
+  createdAt?: Date | string
+}
+
+export type LicenseLeaseRecordUpdateWithoutOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  generation?: Prisma.IntFieldUpdateOperationsInput | number
+  serverRevision?: Prisma.IntFieldUpdateOperationsInput | number
+  installationId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  license?: Prisma.LicenseUpdateOneRequiredWithoutLeaseHistoryNestedInput
+  operationResult?: Prisma.CommercialLeaseOperationUpdateOneWithoutResultLeaseNestedInput
+  supersededBy?: Prisma.LicenseLeaseRecordUpdateOneWithoutSupersedesNestedInput
+  supersedes?: Prisma.LicenseLeaseRecordUpdateManyWithoutSupersededByNestedInput
+}
+
+export type LicenseLeaseRecordUncheckedUpdateWithoutOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseId?: Prisma.StringFieldUpdateOperationsInput | string
+  leaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  generation?: Prisma.IntFieldUpdateOperationsInput | number
+  serverRevision?: Prisma.IntFieldUpdateOperationsInput | number
+  installationId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationResult?: Prisma.CommercialLeaseOperationUncheckedUpdateOneWithoutResultLeaseNestedInput
+  supersedes?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutSupersededByNestedInput
+}
+
+export type LicenseLeaseRecordUncheckedUpdateManyWithoutOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseId?: Prisma.StringFieldUpdateOperationsInput | string
+  leaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  generation?: Prisma.IntFieldUpdateOperationsInput | number
+  serverRevision?: Prisma.IntFieldUpdateOperationsInput | number
+  installationId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  signerKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leasePayload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leaseSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supersededById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -998,10 +1569,18 @@ export type LicenseLeaseRecordSelect<ExtArgs extends runtime.Types.Extensions.In
   deviceId?: boolean
   version?: boolean
   status?: boolean
+  action?: boolean
+  operationId?: boolean
+  signerKeyId?: boolean
+  expiresAt?: boolean
+  leasePayload?: boolean
+  leaseSignature?: boolean
   supersededById?: boolean
   issuedAt?: boolean
   createdAt?: boolean
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
+  operation?: boolean | Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>
+  operationResult?: boolean | Prisma.LicenseLeaseRecord$operationResultArgs<ExtArgs>
   supersededBy?: boolean | Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>
   supersedes?: boolean | Prisma.LicenseLeaseRecord$supersedesArgs<ExtArgs>
   _count?: boolean | Prisma.LicenseLeaseRecordCountOutputTypeDefaultArgs<ExtArgs>
@@ -1017,10 +1596,17 @@ export type LicenseLeaseRecordSelectCreateManyAndReturn<ExtArgs extends runtime.
   deviceId?: boolean
   version?: boolean
   status?: boolean
+  action?: boolean
+  operationId?: boolean
+  signerKeyId?: boolean
+  expiresAt?: boolean
+  leasePayload?: boolean
+  leaseSignature?: boolean
   supersededById?: boolean
   issuedAt?: boolean
   createdAt?: boolean
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
+  operation?: boolean | Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>
   supersededBy?: boolean | Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>
 }, ExtArgs["result"]["licenseLeaseRecord"]>
 
@@ -1034,10 +1620,17 @@ export type LicenseLeaseRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.
   deviceId?: boolean
   version?: boolean
   status?: boolean
+  action?: boolean
+  operationId?: boolean
+  signerKeyId?: boolean
+  expiresAt?: boolean
+  leasePayload?: boolean
+  leaseSignature?: boolean
   supersededById?: boolean
   issuedAt?: boolean
   createdAt?: boolean
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
+  operation?: boolean | Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>
   supersededBy?: boolean | Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>
 }, ExtArgs["result"]["licenseLeaseRecord"]>
 
@@ -1051,24 +1644,34 @@ export type LicenseLeaseRecordSelectScalar = {
   deviceId?: boolean
   version?: boolean
   status?: boolean
+  action?: boolean
+  operationId?: boolean
+  signerKeyId?: boolean
+  expiresAt?: boolean
+  leasePayload?: boolean
+  leaseSignature?: boolean
   supersededById?: boolean
   issuedAt?: boolean
   createdAt?: boolean
 }
 
-export type LicenseLeaseRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "licenseId" | "leaseId" | "generation" | "serverRevision" | "installationId" | "deviceId" | "version" | "status" | "supersededById" | "issuedAt" | "createdAt", ExtArgs["result"]["licenseLeaseRecord"]>
+export type LicenseLeaseRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "licenseId" | "leaseId" | "generation" | "serverRevision" | "installationId" | "deviceId" | "version" | "status" | "action" | "operationId" | "signerKeyId" | "expiresAt" | "leasePayload" | "leaseSignature" | "supersededById" | "issuedAt" | "createdAt", ExtArgs["result"]["licenseLeaseRecord"]>
 export type LicenseLeaseRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
+  operation?: boolean | Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>
+  operationResult?: boolean | Prisma.LicenseLeaseRecord$operationResultArgs<ExtArgs>
   supersededBy?: boolean | Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>
   supersedes?: boolean | Prisma.LicenseLeaseRecord$supersedesArgs<ExtArgs>
   _count?: boolean | Prisma.LicenseLeaseRecordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LicenseLeaseRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
+  operation?: boolean | Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>
   supersededBy?: boolean | Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>
 }
 export type LicenseLeaseRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   license?: boolean | Prisma.LicenseDefaultArgs<ExtArgs>
+  operation?: boolean | Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>
   supersededBy?: boolean | Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>
 }
 
@@ -1076,6 +1679,8 @@ export type $LicenseLeaseRecordPayload<ExtArgs extends runtime.Types.Extensions.
   name: "LicenseLeaseRecord"
   objects: {
     license: Prisma.$LicensePayload<ExtArgs>
+    operation: Prisma.$CommercialLeaseOperationPayload<ExtArgs> | null
+    operationResult: Prisma.$CommercialLeaseOperationPayload<ExtArgs> | null
     supersededBy: Prisma.$LicenseLeaseRecordPayload<ExtArgs> | null
     supersedes: Prisma.$LicenseLeaseRecordPayload<ExtArgs>[]
   }
@@ -1089,6 +1694,12 @@ export type $LicenseLeaseRecordPayload<ExtArgs extends runtime.Types.Extensions.
     deviceId: string
     version: string
     status: string
+    action: string
+    operationId: string | null
+    signerKeyId: string | null
+    expiresAt: Date | null
+    leasePayload: string | null
+    leaseSignature: string | null
     supersededById: string | null
     issuedAt: Date
     createdAt: Date
@@ -1487,6 +2098,8 @@ readonly fields: LicenseLeaseRecordFieldRefs;
 export interface Prisma__LicenseLeaseRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   license<T extends Prisma.LicenseDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LicenseDefaultArgs<ExtArgs>>): Prisma.Prisma__LicenseClient<runtime.Types.Result.GetResult<Prisma.$LicensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  operation<T extends Prisma.LicenseLeaseRecord$operationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LicenseLeaseRecord$operationArgs<ExtArgs>>): Prisma.Prisma__CommercialLeaseOperationClient<runtime.Types.Result.GetResult<Prisma.$CommercialLeaseOperationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  operationResult<T extends Prisma.LicenseLeaseRecord$operationResultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LicenseLeaseRecord$operationResultArgs<ExtArgs>>): Prisma.Prisma__CommercialLeaseOperationClient<runtime.Types.Result.GetResult<Prisma.$CommercialLeaseOperationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   supersededBy<T extends Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LicenseLeaseRecord$supersededByArgs<ExtArgs>>): Prisma.Prisma__LicenseLeaseRecordClient<runtime.Types.Result.GetResult<Prisma.$LicenseLeaseRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   supersedes<T extends Prisma.LicenseLeaseRecord$supersedesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LicenseLeaseRecord$supersedesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseLeaseRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1527,6 +2140,12 @@ export interface LicenseLeaseRecordFieldRefs {
   readonly deviceId: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
   readonly version: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
   readonly status: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
+  readonly action: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
+  readonly operationId: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
+  readonly signerKeyId: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
+  readonly expiresAt: Prisma.FieldRef<"LicenseLeaseRecord", 'DateTime'>
+  readonly leasePayload: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
+  readonly leaseSignature: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
   readonly supersededById: Prisma.FieldRef<"LicenseLeaseRecord", 'String'>
   readonly issuedAt: Prisma.FieldRef<"LicenseLeaseRecord", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"LicenseLeaseRecord", 'DateTime'>
@@ -1928,6 +2547,44 @@ export type LicenseLeaseRecordDeleteManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many LicenseLeaseRecords to delete.
    */
   limit?: number
+}
+
+/**
+ * LicenseLeaseRecord.operation
+ */
+export type LicenseLeaseRecord$operationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommercialLeaseOperation
+   */
+  select?: Prisma.CommercialLeaseOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommercialLeaseOperation
+   */
+  omit?: Prisma.CommercialLeaseOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommercialLeaseOperationInclude<ExtArgs> | null
+  where?: Prisma.CommercialLeaseOperationWhereInput
+}
+
+/**
+ * LicenseLeaseRecord.operationResult
+ */
+export type LicenseLeaseRecord$operationResultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommercialLeaseOperation
+   */
+  select?: Prisma.CommercialLeaseOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommercialLeaseOperation
+   */
+  omit?: Prisma.CommercialLeaseOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommercialLeaseOperationInclude<ExtArgs> | null
+  where?: Prisma.CommercialLeaseOperationWhereInput
 }
 
 /**

@@ -1,5 +1,18 @@
 # Engineering handoff
 
+Commercial lease signing consumes the `CommercialSigningKey` registry. Environment
+signing variables are bootstrap-only; later issuance requires exactly one ACTIVE
+key and a resolvable `env:` private-key reference. Private material is never
+stored in PostgreSQL or returned by APIs.
+
+Commercial key rotation uses the administrator endpoint with a validated `env:`
+reference. The old key becomes RETIRED and remains published for verification;
+the successor becomes the only ACTIVE key.
+
+RM7F status: refresh no-change reuse and terminal revocation evidence are
+implemented. Renewal successor issuance and transfer finalization still require
+completion before lifecycle certification.
+
 ## Active handoff — Phase 6.4 owner review
 
 Phase 6.0 runtime parity is committed and pushed at `4f5a65a`. Use `certification-runtime.md` for the authoritative startup/test sequence and `runtime-parity.md` for environment, Docker, database, health, and provider boundaries. Full Vitest (116 passed, 6 credential-gated skipped), Playwright (9 passed), local/Docker production builds, 17-migration status, seed, smoke, readiness dependency outages, and the zero-vulnerability runtime audit passed. This is not PayMongo lifecycle certification or overall production readiness.
@@ -124,6 +137,11 @@ deferred; production malware scanning, signing certificates, restore drills,
 provider evidence, and legal/privacy/tax reviews remain outstanding.
 ### RM7 handoff
 
-Before review, run Prisma generation/validation and the repository verification
-suite. Do not treat RM7 as certified until lifecycle, break-glass, and signer
-identity regression tests pass.
+RM7 is committed. Lease lifecycle records are durable, release break-glass is
+governance-only, and supply-chain signer identity is separate with trusted-key
+history support. Run database-backed certification when PostgreSQL is available.
+
+RM7G transfer retries reuse the prepared operation and issued lease before
+finalizing ownership. Renewal settlement remains valid without an installation;
+bound renewals now invoke successor issuance using existing lease-history
+bindings, with prepared operations retained when signing fails.

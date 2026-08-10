@@ -2,11 +2,12 @@ import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
-import { issueEntitlements } from "@/lib/licensing";
+import { issueEntitlements, type RenewalLeaseRequest } from "@/lib/licensing";
+import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import { paymentProvider } from "@/lib/payments";
 import { PaymentLifecycleError, safePaymentError } from "@/lib/payments/errors";
 import type { PaymentEvent } from "@/lib/payments/types";
-import { sha256 } from "@/lib/security/crypto";
 
 type StoredEvent = Omit<PaymentEvent, "occurredAt"> & { occurredAt: string };
 const normalizedData = (event: PaymentEvent): StoredEvent => ({ ...event, occurredAt: event.occurredAt.toISOString() });
@@ -44,6 +45,7 @@ async function processVerifiedEvent(event: PaymentEvent) {
     await db.webhookEvent.update({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, data: { status: "IGNORED", lastErrorCode: "PAYMENT_EVENT_UNSUPPORTED", processedAt: new Date(), resolutionStatus: "ACKNOWLEDGED" } });
     return { ignored: true as const };
   }
+  const renewalRequests: RenewalLeaseRequest[] = [];
   await db.$transaction(async (tx) => {
     const { order, attempt, knownPayment } = await resolveOrder(tx, event);
     await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${order.id} FOR UPDATE`;
@@ -58,7 +60,7 @@ async function processVerifiedEvent(event: PaymentEvent) {
         await tx.order.update({ where: { id: order.id }, data: { status: "PAID", paidAt: event.occurredAt } });
         if (attempt) await tx.paymentAttempt.update({ where: { id: attempt.id }, data: { status: "COMPLETED" } });
         const invoice = await tx.invoice.update({ where: { orderId: order.id }, data: { status: "FINAL", issuedAt: event.occurredAt } });
-        await issueEntitlements(tx, order.id);
+        await issueEntitlements(tx, order.id, { paymentId, paymentEventId: event.eventId }, renewalRequests);
         const redemption = await tx.offerRedemption.findUnique({ where: { orderId: order.id } });
         if (redemption) await tx.offerRedemption.update({ where: { id: redemption.id }, data: { status: "APPLIED", appliedAt: event.occurredAt } });
         const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
@@ -98,6 +100,22 @@ async function processVerifiedEvent(event: PaymentEvent) {
     }
     await tx.webhookEvent.update({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, data: { ...eventLink, paymentId, status: "PROCESSED", error: null, lastErrorCode: null, mismatchCategory: null, processedAt: new Date(), lastAttemptAt: new Date(), resolutionStatus: "RESOLVED" } });
   }, { isolationLevel: "Serializable" });
+  for (const request of renewalRequests) {
+    try {
+      const license = await db.license.findUniqueOrThrow({
+        where: { id: request.licenseId },
+        select: {
+          keyCiphertext: true,
+          activations: { where: { active: true }, select: { deviceHash: true } },
+          leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true } },
+        },
+      });
+      const activation = license.activations.find((candidate) => candidate.deviceHash === request.deviceHash);
+      const binding = license.leaseHistory.find((candidate) => activation && sha256(candidate.deviceId) === activation.deviceHash);
+      if (!license.keyCiphertext || !activation || !binding) continue;
+      await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: request.operationId, action: "RENEWAL" });
+    } catch { /* payment remains settled; prepared operation is retryable */ }
+  }
   await dispatchEmailOutbox().catch(() => undefined);
   return { processed: true as const };
 }

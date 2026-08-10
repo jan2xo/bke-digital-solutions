@@ -6,6 +6,8 @@ import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { finalizeProductDeletion } from "@/lib/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/lib/storage-cleanup";
 import { retryStoredWebhook } from "@/lib/webhooks";
+import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import type { JobContext, JobSummary } from "@/lib/scheduler/types";
 
 const DAY = 86_400_000;
@@ -131,4 +133,20 @@ export async function paymentOperations(context: JobContext): Promise<JobSummary
     await db.$transaction(async (tx) => { for (const admin of admins) await queueCommerceEmail(tx, { type: "PAYMENT_RECONCILIATION_REVIEW", recipient: admin.email, subject: "BKE payment reconciliation review is due", payload: { candidateCount: reconciliationCandidates }, deduplicationKey: `payment-reconciliation-review:${day}:${admin.id}` }); });
   }
   return { retriedWebhooks: retried, failedRetries, reconciliationReminders: reconciliationCandidates, automaticSettlement: false };
+}
+
+/** Retries prepared renewal lease issuance without re-extending entitlement. */
+export async function preparedRenewalRecovery(context: JobContext): Promise<JobSummary> {
+  const operations = await db.commercialLeaseOperation.findMany({ where: { action: "RENEWAL", status: "PREPARED" }, orderBy: { createdAt: "asc" }, take: 20, include: { license: { select: { keyCiphertext: true, activations: { where: { active: true }, select: { deviceHash: true } }, leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true } } } } } });
+  if (context.dryRun) return { candidates: operations.length };
+  let completed = 0, failed = 0;
+  for (const operation of operations) {
+    const metadata = (operation.metadata ?? {}) as Record<string, unknown>;
+    const activation = operation.license?.activations.find((a) => a.deviceHash === String(metadata.deviceHash ?? ""));
+    const binding = operation.license?.leaseHistory.find((lease) => activation && sha256(lease.deviceId) === activation.deviceHash);
+    if (!operation.license?.keyCiphertext || !binding) { failed++; continue; }
+    try { await issueCommercialLease({ licenseKey: decryptLicenseKey(operation.license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: operation.operationId, action: "RENEWAL" }); completed++; }
+    catch { failed++; }
+  }
+  return { candidates: operations.length, completed, failed };
 }

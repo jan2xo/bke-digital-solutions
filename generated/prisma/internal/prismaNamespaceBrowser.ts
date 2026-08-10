@@ -94,6 +94,8 @@ export const ModelName = {
   OfferRedemption: 'OfferRedemption',
   License: 'License',
   LicenseLeaseRecord: 'LicenseLeaseRecord',
+  CommercialLeaseOperation: 'CommercialLeaseOperation',
+  CommercialSigningKey: 'CommercialSigningKey',
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
@@ -450,7 +452,8 @@ export const ProductVersionScalarFieldEnum = {
   publishedAt: 'publishedAt',
   releasedAt: 'releasedAt',
   backupEvidence: 'backupEvidence',
-  complianceEvidence: 'complianceEvidence'
+  complianceEvidence: 'complianceEvidence',
+  migrationEvidence: 'migrationEvidence'
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
@@ -900,12 +903,50 @@ export const LicenseLeaseRecordScalarFieldEnum = {
   deviceId: 'deviceId',
   version: 'version',
   status: 'status',
+  action: 'action',
+  operationId: 'operationId',
+  signerKeyId: 'signerKeyId',
+  expiresAt: 'expiresAt',
+  leasePayload: 'leasePayload',
+  leaseSignature: 'leaseSignature',
   supersededById: 'supersededById',
   issuedAt: 'issuedAt',
   createdAt: 'createdAt'
 } as const
 
 export type LicenseLeaseRecordScalarFieldEnum = (typeof LicenseLeaseRecordScalarFieldEnum)[keyof typeof LicenseLeaseRecordScalarFieldEnum]
+
+
+export const CommercialLeaseOperationScalarFieldEnum = {
+  id: 'id',
+  operationId: 'operationId',
+  licenseId: 'licenseId',
+  action: 'action',
+  status: 'status',
+  resultLeaseId: 'resultLeaseId',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+} as const
+
+export type CommercialLeaseOperationScalarFieldEnum = (typeof CommercialLeaseOperationScalarFieldEnum)[keyof typeof CommercialLeaseOperationScalarFieldEnum]
+
+
+export const CommercialSigningKeyScalarFieldEnum = {
+  id: 'id',
+  keyId: 'keyId',
+  algorithm: 'algorithm',
+  status: 'status',
+  publicKey: 'publicKey',
+  privateKeyReference: 'privateKeyReference',
+  createdAt: 'createdAt',
+  activatedAt: 'activatedAt',
+  retiredAt: 'retiredAt',
+  rotationReason: 'rotationReason',
+  createdBy: 'createdBy'
+} as const
+
+export type CommercialSigningKeyScalarFieldEnum = (typeof CommercialSigningKeyScalarFieldEnum)[keyof typeof CommercialSigningKeyScalarFieldEnum]
 
 
 export const TrialGrantScalarFieldEnum = {

@@ -655,8 +655,9 @@ Status:
 **Planned for Version 7**
 
 Not required for Phase 6 production readiness.
-### RM7 — Repository Certification Corrections
+### RM7 — Repository Certification Corrections (committed)
 
 Current work corrects durable lease lifecycle progression, prevents break-glass
 from bypassing integrity evidence, and separates supply-chain signer identity
-from commercial licensing keys. Status: implementation complete, verification pending.
+from commercial licensing keys. Status: committed; static verification passes,
+while database, Docker, and browser execution remains environment-dependent.

@@ -104,3 +104,10 @@ Never reuse or cross-label these keys. `ALLOW_BREAK_GLASS=false` is the default;
 break-glass may bypass governance separation only after an audited justification.
 It never bypasses artifact, signature, malware, SBOM, provenance, migration, or
 compliance evidence gates.
+## Commercial signing-key rotation
+
+Register a successor Ed25519 public key and external `env:` secret reference via
+the administrator rotation endpoint. The endpoint validates the private/public
+match and atomically retires the old key while activating the successor. Verify
+`/api/licensing/keys` afterward. Never place private key material or references
+in logs, tickets, or database exports.

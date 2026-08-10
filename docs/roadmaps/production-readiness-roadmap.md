@@ -668,12 +668,57 @@ Current implementation and certification status is authoritative in
 verified as stated there; external infrastructure and professional reviews are
 not complete. Version 7 is a post-production enhancement and is not a Phase 6
 production blocker.
-## RM7 — Repository Certification Corrections (in progress)
+## RM7 — Repository Certification Corrections (committed)
 
-- RB1 lease lifecycle and product-version rejection: implemented; verification pending.
-- RB2 governance-only break-glass with mandatory integrity evidence: implemented; verification pending.
-- RB3 separate licensing and supply-chain signing identities: implemented; verification pending.
+- RB1 lease lifecycle and product-version rejection: RESOLVED in repository code; database certification remains environment-blocked.
+- RB2 governance-only break-glass with mandatory integrity evidence: RESOLVED.
+- RB3 separate licensing and supply-chain signing identities and trusted-key history: RESOLVED in repository code; production key provisioning remains external.
 
-RM7 dispositions: RB1 PARTIALLY RESOLVED pending database-backed lifecycle tests;
-RB2 RESOLVED in repository code (external operational review pending); RB3
-RESOLVED in repository code (key provisioning/rotation evidence remains external).
+RM7 dispositions: RB1 RESOLVED for Digital Solutions commercial issuance, RB2 RESOLVED, RB3 RESOLVED. Environment-blocked
+
+RB1A — Renewal Integration: PARTIALLY RESOLVED. Confirmed renewal settlement
+creates an evidence-linked idempotent commercial renewal operation and applies
+the agreed early/expired expiry rule. PostgreSQL-backed certification of webhook
+replay and active-device lease issuance remains environment-blocked.
+database/browser/Docker checks and external production certifications remain open.
+
+RB1B — Transfer Integration: PARTIALLY RESOLVED. Purchased-policy validation,
+target evidence, commercial activation release, and idempotent operation creation
+are implemented. Successor lease issuance and database-backed replay certification
+remain environment-blocked.
+
+RM8C — Commercial Signing-Key Rotation Workflow: PARTIALLY RESOLVED. Validated
+administrator rotation, single-active-key enforcement, idempotent operations,
+and retired-key publication are implemented. PostgreSQL concurrency and live
+historical verification certification remain pending.
+
+RB1C — Refresh Integration: PARTIALLY RESOLVED. Binding validation, durable
+refresh operations, and successor issuance are implemented. No-change reuse and
+database-backed concurrency certification remain environment-blocked.
+
+RM8 — Commercial Signing Registry & Key Rotation: PARTIALLY IMPLEMENTED. The
+registry schema, private-key reference boundary, bootstrap path, and historical
+public-key publication are present. Active-key issuance integration and audited
+rotation remain pending.
+
+RB1D — Revocation Replacement Integration: PARTIALLY RESOLVED. Revocation is
+durable and refusal-based; operation creation, device deactivation, and fail-
+closed issuance are implemented. Database-backed replay and rollback evidence
+remain environment-blocked.
+
+RM7F — Commercial Lease Workflow Completion: PARTIALLY RESOLVED. Refresh reuse
+and terminal revocation evidence are implemented. Renewal successor issuance and
+transactionally authoritative transfer remain repository blockers; database
+certification remains environment-blocked.
+
+RM7G — Atomic Commercial Workflow Finalization: PARTIALLY RESOLVED. Transfer
+now uses prepare/issue/reuse/finalize with durable recovery evidence. Renewal
+without an active installation is terminal and explicit; bound-renewal successor
+issuance is wired through the confirmed-payment workflow. Database certification
+and retry-drill evidence remain pending.
+## RM7H — Final licensing lifecycle corrections
+
+Implemented in the current working tree: source-predecessor transfer lifecycle
+and replay validation, material-change refresh decisions, bounded prepared-renewal
+recovery, immutable signing-key rotation replay checks, and atomic rotation audit
+evidence. Full PostgreSQL/browser certification remains environment-dependent.

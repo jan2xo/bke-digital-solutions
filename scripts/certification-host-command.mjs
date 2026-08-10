@@ -1,5 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -39,5 +41,19 @@ const testEnvironment = {
 };
 for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY", "RESEND_SANDBOX_TO"]) delete testEnvironment[key];
 
-const result = spawnSync(command, args, { stdio: "inherit", env: testEnvironment });
+let executable = command;
+let executableArgs = args;
+if (command === "npm" && args[0] === "test") {
+  const configPath = join(tmpdir(), `bke-vitest-${process.pid}.config.ts`);
+  const vitestConfig = readFileSync("vitest.config.ts", "utf8")
+    .replace('import { defineConfig } from "vitest/config";\n', "")
+    .replace("defineConfig(", "(")
+    .replaceAll('new URL("./",import.meta.url)', 'new URL("file://" + process.cwd() + "/")')
+    .replaceAll('new URL("./", import.meta.url)', 'new URL("file://" + process.cwd() + "/")')
+    .replaceAll('new URL("./tests/server-only.ts",import.meta.url)', 'new URL("file://" + process.cwd() + "/tests/server-only.ts")');
+  writeFileSync(configPath, vitestConfig);
+  executable = "npm";
+  executableArgs = ["run", "certification:vitest", "--", ...args.slice(1), "--config", configPath];
+}
+const result = spawnSync(executable, executableArgs, { stdio: "inherit", env: testEnvironment });
 process.exit(result.status ?? 1);

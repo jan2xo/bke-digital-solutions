@@ -24,7 +24,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const artifactHash = current.artifacts.map((a) => `${a.id}:${a.sha256}`).sort().join("|");
         const signatureEvidence = evidence?.verificationEvidence.some((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
         const malwareEvidence = evidence?.verificationEvidence.some((v) => v.kind === "MALWARE_SCAN" && v.result === "CLEAN" && v.artifactHash === artifactHash) ?? false;
-        const complete = Boolean(signatureEvidence && evidence?.dependencyVerified && evidence.sbomReference && evidence.provenanceStatus === "VERIFIED" && malwareEvidence && current.backupEvidence && current.complianceEvidence && pendingCompliance === 0);
+        const complete = Boolean(signatureEvidence && evidence?.dependencyVerified && evidence.sbomReference && evidence.provenanceStatus === "VERIFIED" && malwareEvidence && current.backupEvidence && current.complianceEvidence && current.migrationEvidence && pendingCompliance === 0);
         if (!complete) throw new Error("RELEASE_EVIDENCE_INCOMPLETE");
         const prior = current.approvals[0];
         if (!(input.breakGlass && env.ALLOW_BREAK_GLASS === "true") && (!prior?.reviewedById || prior.reviewedById === admin.id || prior.createdById === admin.id)) throw new Error("RELEASE_SEPARATION_REQUIRED");

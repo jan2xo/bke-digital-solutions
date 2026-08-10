@@ -257,6 +257,16 @@ export type License = Prisma.LicenseModel
  */
 export type LicenseLeaseRecord = Prisma.LicenseLeaseRecordModel
 /**
+ * Model CommercialLeaseOperation
+ *
+ */
+export type CommercialLeaseOperation = Prisma.CommercialLeaseOperationModel
+/**
+ * Model CommercialSigningKey
+ *
+ */
+export type CommercialSigningKey = Prisma.CommercialSigningKeyModel
+/**
  * Model TrialGrant
  *
  */

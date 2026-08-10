@@ -1,4 +1,6 @@
 export type LeaseLifecycle = { generation: number; serverRevision: number };
+export const commercialLeaseActions = ["ACTIVATION", "REFRESH", "RENEWAL", "TRANSFER", "REPLACEMENT", "REVOCATION_REPLACEMENT", "KEY_ROTATION"] as const;
+export type CommercialLeaseAction = typeof commercialLeaseActions[number];
 
 export function nextLeaseLifecycle(previous?: LeaseLifecycle | null): LeaseLifecycle {
   return {

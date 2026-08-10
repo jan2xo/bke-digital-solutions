@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nextLeaseLifecycle, requireProductVersion } from "@/lib/licensing/lifecycle";
+import { commercialLeaseActions, nextLeaseLifecycle, requireProductVersion } from "@/lib/licensing/lifecycle";
 
 describe("commercial lease lifecycle", () => {
   it("starts at generation and revision one", () => {
@@ -14,5 +14,9 @@ describe("commercial lease lifecycle", () => {
     expect(() => requireProductVersion(undefined)).toThrow("INVALID_LICENSE_VERSION");
     expect(() => requireProductVersion("0.0.0")).toThrow("INVALID_LICENSE_VERSION");
     expect(() => requireProductVersion("not-a-version")).toThrow("INVALID_LICENSE_VERSION");
+  });
+
+  it("defines every commercial issuance action without creating Agent runtime behavior", () => {
+    expect(commercialLeaseActions).toEqual(["ACTIVATION", "REFRESH", "RENEWAL", "TRANSFER", "REPLACEMENT", "REVOCATION_REPLACEMENT", "KEY_ROTATION"]);
   });
 });

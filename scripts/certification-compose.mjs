@@ -8,7 +8,7 @@ const actions = {
     ["up", "-d", "postgres", "valkey", "minio", "minio-init"],
     ["--profile", "operations", "run", "--rm", "--build", "migrate"],
     ["--profile", "operations", "run", "--rm", "--build", "seed"],
-    ["up", "-d", "--build", "--force-recreate", "app", "scheduler", "caddy"],
+    ["up", "-d", "--build", "--force-recreate", "app", "scheduler", "backup-worker", "caddy"],
   ],
   refresh: [
     ["--profile", "operations", "run", "--rm", "--build", "migrate"],

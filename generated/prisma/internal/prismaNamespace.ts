@@ -440,6 +440,8 @@ export const ModelName = {
   OfferRedemption: 'OfferRedemption',
   License: 'License',
   LicenseLeaseRecord: 'LicenseLeaseRecord',
+  CommercialLeaseOperation: 'CommercialLeaseOperation',
+  CommercialSigningKey: 'CommercialSigningKey',
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
@@ -472,7 +474,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3658,6 +3660,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CommercialLeaseOperation: {
+      payload: Prisma.$CommercialLeaseOperationPayload<ExtArgs>
+      fields: Prisma.CommercialLeaseOperationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommercialLeaseOperationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommercialLeaseOperationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>
+        }
+        findFirst: {
+          args: Prisma.CommercialLeaseOperationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommercialLeaseOperationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>
+        }
+        findMany: {
+          args: Prisma.CommercialLeaseOperationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>[]
+        }
+        create: {
+          args: Prisma.CommercialLeaseOperationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>
+        }
+        createMany: {
+          args: Prisma.CommercialLeaseOperationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommercialLeaseOperationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>[]
+        }
+        delete: {
+          args: Prisma.CommercialLeaseOperationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>
+        }
+        update: {
+          args: Prisma.CommercialLeaseOperationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommercialLeaseOperationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommercialLeaseOperationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommercialLeaseOperationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommercialLeaseOperationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialLeaseOperationPayload>
+        }
+        aggregate: {
+          args: Prisma.CommercialLeaseOperationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommercialLeaseOperation>
+        }
+        groupBy: {
+          args: Prisma.CommercialLeaseOperationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommercialLeaseOperationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommercialLeaseOperationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommercialLeaseOperationCountAggregateOutputType> | number
+        }
+      }
+    }
+    CommercialSigningKey: {
+      payload: Prisma.$CommercialSigningKeyPayload<ExtArgs>
+      fields: Prisma.CommercialSigningKeyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommercialSigningKeyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommercialSigningKeyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>
+        }
+        findFirst: {
+          args: Prisma.CommercialSigningKeyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommercialSigningKeyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>
+        }
+        findMany: {
+          args: Prisma.CommercialSigningKeyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>[]
+        }
+        create: {
+          args: Prisma.CommercialSigningKeyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>
+        }
+        createMany: {
+          args: Prisma.CommercialSigningKeyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommercialSigningKeyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>[]
+        }
+        delete: {
+          args: Prisma.CommercialSigningKeyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>
+        }
+        update: {
+          args: Prisma.CommercialSigningKeyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommercialSigningKeyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommercialSigningKeyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommercialSigningKeyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommercialSigningKeyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommercialSigningKeyPayload>
+        }
+        aggregate: {
+          args: Prisma.CommercialSigningKeyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommercialSigningKey>
+        }
+        groupBy: {
+          args: Prisma.CommercialSigningKeyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommercialSigningKeyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommercialSigningKeyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommercialSigningKeyCountAggregateOutputType> | number
+        }
+      }
+    }
     TrialGrant: {
       payload: Prisma.$TrialGrantPayload<ExtArgs>
       fields: Prisma.TrialGrantFieldRefs
@@ -5276,7 +5426,8 @@ export const ProductVersionScalarFieldEnum = {
   publishedAt: 'publishedAt',
   releasedAt: 'releasedAt',
   backupEvidence: 'backupEvidence',
-  complianceEvidence: 'complianceEvidence'
+  complianceEvidence: 'complianceEvidence',
+  migrationEvidence: 'migrationEvidence'
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
@@ -5726,12 +5877,50 @@ export const LicenseLeaseRecordScalarFieldEnum = {
   deviceId: 'deviceId',
   version: 'version',
   status: 'status',
+  action: 'action',
+  operationId: 'operationId',
+  signerKeyId: 'signerKeyId',
+  expiresAt: 'expiresAt',
+  leasePayload: 'leasePayload',
+  leaseSignature: 'leaseSignature',
   supersededById: 'supersededById',
   issuedAt: 'issuedAt',
   createdAt: 'createdAt'
 } as const
 
 export type LicenseLeaseRecordScalarFieldEnum = (typeof LicenseLeaseRecordScalarFieldEnum)[keyof typeof LicenseLeaseRecordScalarFieldEnum]
+
+
+export const CommercialLeaseOperationScalarFieldEnum = {
+  id: 'id',
+  operationId: 'operationId',
+  licenseId: 'licenseId',
+  action: 'action',
+  status: 'status',
+  resultLeaseId: 'resultLeaseId',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+} as const
+
+export type CommercialLeaseOperationScalarFieldEnum = (typeof CommercialLeaseOperationScalarFieldEnum)[keyof typeof CommercialLeaseOperationScalarFieldEnum]
+
+
+export const CommercialSigningKeyScalarFieldEnum = {
+  id: 'id',
+  keyId: 'keyId',
+  algorithm: 'algorithm',
+  status: 'status',
+  publicKey: 'publicKey',
+  privateKeyReference: 'privateKeyReference',
+  createdAt: 'createdAt',
+  activatedAt: 'activatedAt',
+  retiredAt: 'retiredAt',
+  rotationReason: 'rotationReason',
+  createdBy: 'createdBy'
+} as const
+
+export type CommercialSigningKeyScalarFieldEnum = (typeof CommercialSigningKeyScalarFieldEnum)[keyof typeof CommercialSigningKeyScalarFieldEnum]
 
 
 export const TrialGrantScalarFieldEnum = {
@@ -6981,6 +7170,8 @@ export type GlobalOmitConfig = {
   offerRedemption?: Prisma.OfferRedemptionOmit
   license?: Prisma.LicenseOmit
   licenseLeaseRecord?: Prisma.LicenseLeaseRecordOmit
+  commercialLeaseOperation?: Prisma.CommercialLeaseOperationOmit
+  commercialSigningKey?: Prisma.CommercialSigningKeyOmit
   trialGrant?: Prisma.TrialGrantOmit
   licenseAssignment?: Prisma.LicenseAssignmentOmit
   deviceActivation?: Prisma.DeviceActivationOmit

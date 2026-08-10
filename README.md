@@ -85,7 +85,7 @@ Administrators can use `/admin/observability` to answer “Is the BKE platform h
 Phase 6.12 repository remediation adds signed Ed25519 commercial lease envelopes, evidence-backed supply-chain verification, fail-closed Stable/LTS gates, approval separation, safe download retry, and Compliance/Supply Chain navigation. VPS, Cloudflare, live providers, and production recovery certification remain deferred to Phase 6.10.
 
 Current readiness is tracked authoritatively in [TRUTHCHECK.md](TRUTHCHECK.md). The repository is not production-ready: external infrastructure, production malware scanning/signing, restore certification, full latest regression verification, and professional legal/privacy/tax review remain pending.
-### RM7 repository certification corrections
+### RM7 repository certification corrections (committed)
 
 Lease issuance now persists monotonic generation/revision history and rejects
 missing or invalid product versions. Release break-glass is governance-only and

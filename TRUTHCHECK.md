@@ -370,5 +370,22 @@ Reviewer Assignment, Approval Timeline, Version Comparison, and Compliance
 Notifications. This is a post-production enhancement, not a Phase 6 blocker.
 ## RM7 current truth
 
-RM7 corrections are present in the working tree but are not yet committed or
-certified. No production deployment or external certification is claimed.
+RM7 corrections are committed in `7d7b733`. Repository verification is current
+for static checks; PostgreSQL, Docker, browser-port, and provider checks remain
+environment or external certifications. RM7 lifecycle and key-rotation work is
+implemented with evidence requirements enforced server-side.
+RM8C rotation controls are implemented in repository code; production key
+provisioning and PostgreSQL concurrency certification remain pending.
+
+RM7F refresh reuse and terminal revocation evidence are implemented. Renewal
+successor issuance and atomic transfer finalization remain repository blockers.
+
+RM7G transfer finalization now follows prepare/issue/finalize. Bound-renewal
+successor issuance is wired through the confirmed-payment workflow; no-binding
+renewal remains explicit and terminal. Runtime retry certification remains
+pending.
+
+RM7H implementation adds source-predecessor transfer lifecycle, material refresh
+comparison, bounded prepared-renewal recovery, immutable rotation replay checks,
+and atomic rotation audit evidence. Runtime retry certification remains pending
+where full database/browser evidence is unavailable.

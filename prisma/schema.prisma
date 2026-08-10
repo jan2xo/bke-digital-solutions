@@ -743,6 +743,7 @@ model ProductVersion {
   approvals       ReleaseApproval[]
   backupEvidence  String?
   complianceEvidence String?
+  migrationEvidence String?
 
   @@unique([productId, version])
 }
@@ -1236,6 +1237,7 @@ model License {
   grants            DownloadGrant[]
   events            LicenseEvent[]
   leaseHistory      LicenseLeaseRecord[]
+  leaseOperations   CommercialLeaseOperation[]
   trialGrant        TrialGrant?
 
   @@unique([orderItemId])
@@ -1252,13 +1254,52 @@ model LicenseLeaseRecord {
   deviceId        String
   version         String
   status          String
+  action          String
+  operationId     String?  @unique
+  signerKeyId     String?
+  expiresAt       DateTime?
+  leasePayload    String?
+  leaseSignature  String?
   supersededById  String?
   issuedAt        DateTime @default(now())
   createdAt       DateTime @default(now())
   license         License  @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  operation       CommercialLeaseOperation? @relation("LeaseOperationReference", fields: [operationId], references: [operationId], onDelete: Restrict)
+  operationResult CommercialLeaseOperation? @relation("LeaseOperationResult")
   supersededBy    LicenseLeaseRecord? @relation("LeaseSupersession", fields: [supersededById], references: [id], onDelete: Restrict)
   supersedes      LicenseLeaseRecord[] @relation("LeaseSupersession")
   @@index([licenseId, installationId, deviceId, generation, serverRevision])
+}
+
+model CommercialLeaseOperation {
+  id             String   @id @default(cuid())
+  operationId    String   @unique
+  licenseId      String?
+  action         String
+  status         String   @default("PENDING")
+  resultLeaseId  String?  @unique
+  metadata       Json     @default("{}")
+  createdAt      DateTime @default(now())
+  completedAt    DateTime?
+  license        License? @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  resultLease    LicenseLeaseRecord? @relation("LeaseOperationResult", fields: [resultLeaseId], references: [leaseId], onDelete: Restrict)
+  leaseRecords   LicenseLeaseRecord[] @relation("LeaseOperationReference")
+  @@index([licenseId, action, status])
+}
+
+model CommercialSigningKey {
+  id                  String   @id @default(cuid())
+  keyId               String   @unique
+  algorithm           String   @default("Ed25519")
+  status              String   @default("ACTIVE")
+  publicKey           String
+  privateKeyReference String
+  createdAt           DateTime @default(now())
+  activatedAt         DateTime @default(now())
+  retiredAt           DateTime?
+  rotationReason      String?
+  createdBy           String?
+  @@index([status])
 }
 
 model TrialGrant {

@@ -2,8 +2,11 @@ import "server-only";
 import { addDays, addMonths, addYears } from "@/lib/time";
 import { encryptLicenseKey, generateLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
 import type { Prisma } from "@/generated/prisma/client";
+import { renewalExpiration } from "@/lib/licensing/renewal";
 
-export async function issueEntitlements(tx: Prisma.TransactionClient, orderId: string) {
+export type RenewalLeaseRequest = { operationId: string; licenseId: string; deviceHash: string };
+
+export async function issueEntitlements(tx: Prisma.TransactionClient, orderId: string, evidence?: { paymentId?: string; paymentEventId?: string }, renewalRequests?: RenewalLeaseRequest[]) {
   const order = await tx.order.findUniqueOrThrow({ where: { id: orderId }, include: { items: true } });
   const plaintextKeys: string[] = [];
   for (const item of order.items) {
@@ -24,8 +27,24 @@ export async function issueEntitlements(tx: Prisma.TransactionClient, orderId: s
       if(existing){
         const consumeDiscount=Boolean(item.offerId&&existing.discountedCyclesTotal&&existing.discountedCyclesConsumed<existing.discountedCyclesTotal);
         await tx.subscription.update({where:{id:existing.id},data:{status:"ACTIVE",currentPeriodStart:start,currentPeriodEnd:end,renewalReminderAt:addDays(end,intervalUnit==="MONTH"?-7:-30),discountedCyclesConsumed:consumeDiscount?{increment:1}:undefined}});
+        const licenses=await tx.license.findMany({where:{subscriptionId:existing.id},select:{id:true,expiresAt:true,activations:{where:{active:true},select:{deviceHash:true}}}});
         await tx.license.updateMany({where:{subscriptionId:existing.id},data:{status:"ACTIVE",expiresAt:end}});
-        const licenses=await tx.license.findMany({where:{subscriptionId:existing.id},select:{id:true}});for(const license of licenses)await tx.licenseEvent.create({data:{licenseId:license.id,type:"RENEWED",metadata:{orderId,discountedCycle:consumeDiscount}}});
+        for(const license of licenses){
+          const operationBase = `renewal:${order.id}:${license.id}`;
+          const effectiveExpiry = renewalExpiration(license.expiresAt, new Date(), end.getTime() - start.getTime());
+          const hasBinding=license.activations.length>0;
+          if (hasBinding) {
+            for (const activation of license.activations) {
+              const operationId = `${operationBase}:${activation.deviceHash}`;
+              await tx.commercialLeaseOperation.upsert({ where:{operationId}, create:{operationId,licenseId:license.id,action:"RENEWAL",status:"PREPARED",metadata:{orderId,paymentId:evidence?.paymentId,paymentEventId:evidence?.paymentEventId,oldExpiry:license.expiresAt?.toISOString()??null,newExpiry:effectiveExpiry.toISOString(),durationMs:end.getTime()-start.getTime(),decision:"SUCCESSOR_LEASE_PENDING",deviceHash:activation.deviceHash}}, update:{} });
+              renewalRequests?.push({operationId,licenseId:license.id,deviceHash:activation.deviceHash});
+            }
+          } else {
+            const operationId = `${operationBase}:none`;
+            await tx.commercialLeaseOperation.upsert({ where:{operationId}, create:{operationId,licenseId:license.id,action:"RENEWAL",status:"COMPLETED",metadata:{orderId,paymentId:evidence?.paymentId,paymentEventId:evidence?.paymentEventId,oldExpiry:license.expiresAt?.toISOString()??null,newExpiry:effectiveExpiry.toISOString(),durationMs:end.getTime()-start.getTime(),decision:"ENTITLEMENT_RENEWED_NO_ACTIVE_INSTALLATION"},completedAt:new Date()}, update:{} });
+          }
+          await tx.licenseEvent.create({data:{licenseId:license.id,type:"RENEWED",metadata:{orderId,discountedCycle:consumeDiscount,renewalOperationId:operationBase,oldExpiry:license.expiresAt?.toISOString()??null,newExpiry:effectiveExpiry.toISOString()}}});
+        }
         continue;
       }
       const pricing=(item.pricingSnapshot??{}) as {catalogAmountMinor?:number;finalAmountMinor?:number;offer?:{discountBps?:number;discountedBillingCycles?:number}};

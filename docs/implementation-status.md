@@ -140,4 +140,66 @@ production Docker, external provider, restore, VPS, and professional review
 evidence remains pending. See `TRUTHCHECK.md` for the authoritative matrix.
 ### RM7 — Repository Certification Corrections
 
-Implemented in the working tree; full verification and owner review remain pending.
+Committed and implemented. Static verification passes; database, Docker, and
+browser execution remain environment-dependent.
+
+### RB1A — Renewal integration
+
+Partially resolved in repository code: confirmed renewal settlement now extends
+the existing subscription/license exactly once and records an idempotent,
+evidence-linked `RENEWAL` commercial lease operation with early/expired renewal
+expiry semantics. Lease issuance for an active installation remains performed by
+the shared commercial issuance service; full PostgreSQL webhook certification is
+environment-dependent. No customer-facing renewal UI was added.
+
+### RB1B — Transfer integration
+
+Partially resolved: administrator-approved transfers now validate the exact
+purchased order-item policy, require explicit target installation/device values,
+record an evidence-linked `TRANSFER` operation, release predecessor commercial
+activations, and preserve audit history. Full successor lease issuance and
+PostgreSQL replay certification remain environment-dependent.
+
+### RM8 — Commercial signing registry
+
+Partially implemented: the dedicated registry, private-key reference boundary,
+bootstrap helper, historical public-key publication, and single-active-key
+constraint are present. Lease issuance still resolves the configured environment
+key; administrator rotation and PostgreSQL certification remain pending. Normal
+lease issuance is registry-only after bootstrap and records the registry key ID.
+
+RM8C rotation is implemented with administrator recent-authentication/MFA,
+same-origin validation, rate limiting, Ed25519 key matching, single-active-key
+enforcement, durable idempotent operations, and historical retired-key
+publication. PostgreSQL concurrency certification remains pending.
+
+### RB1C — Refresh integration
+
+Partially resolved: refresh requests validate the exact lease-history binding,
+create durable idempotent `REFRESH` operations, and delegate successor issuance
+to the shared commercial lease service. PostgreSQL concurrency certification and
+no-change refresh reuse remain pending.
+
+RM7F refresh semantics now reuse an active, unexpired lease without creating a
+generation, while replacement refreshes retain operation idempotency. Revocation
+operations now complete with predecessor evidence and explicit refusal status.
+Renewal successor issuance and transactionally authoritative transfer remain
+repository blockers pending a prepare/finalize or outbox implementation.
+
+### RB1D — Revocation replacement integration
+
+Partially resolved: administrator revocation now creates an idempotent,
+evidence-linked `REVOCATION_REPLACEMENT` operation, deactivates commercial
+activations, preserves lease history, and prevents further active lease issuance.
+The protocol uses refusal semantics rather than a revoked active successor
+lease. PostgreSQL replay and rollback certification remain pending.
+
+RM7G transfer finalization now follows a durable prepare/issue/finalize boundary.
+Bound renewals now collect server-owned active lease bindings after entitlement
+settlement and invoke the shared issuance service; no-binding renewals remain
+terminal with `ENTITLEMENT_RENEWED_NO_ACTIVE_INSTALLATION`. Issuance failures
+leave prepared operations retryable without rolling back payment settlement.
+
+RM7H completes source-predecessor transfer lifecycle, material refresh comparison,
+bounded prepared-renewal recovery, immutable rotation replay checks, and atomic
+rotation audit evidence.
