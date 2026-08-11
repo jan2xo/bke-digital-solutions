@@ -31,7 +31,9 @@ export class PayMongoProvider implements PaymentProvider {
       body: JSON.stringify({ data: { attributes: {
         billing: { name: input.customer.name, email: input.customer.email },
         line_items: input.items.map((i) => ({ name: i.name, description: i.description, amount: i.amountMinor, currency: input.currency, quantity: i.quantity })),
-        payment_method_types: ["card", "gcash", "paymaya"], reference_number: input.reference,
+        // Current test-mode merchant capability exposes QR Ph. Keep this isolated
+        // until provider capabilities are resolved dynamically.
+        payment_method_types: ["qrph"], reference_number: input.reference,
         success_url: `${env.APP_URL}/checkout/success?order=${encodeURIComponent(input.orderId)}`,
         cancel_url: `${env.APP_URL}/checkout/cancel?order=${encodeURIComponent(input.orderId)}`,
         send_email_receipt: false, show_line_items: true,

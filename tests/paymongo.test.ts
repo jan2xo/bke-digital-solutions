@@ -6,6 +6,21 @@ const secret="sandbox-webhook-secret";
 function signed(body:object,timestamp=Math.floor(Date.now()/1000)){const raw=Buffer.from(JSON.stringify(body));const signature=createHmac("sha256",secret).update(`${timestamp}.${raw.toString("utf8")}`).digest("hex");return{raw,headers:new Headers({"paymongo-signature":`t=${timestamp},te=${signature},li=unused`})}}
 
 describe("PayMongo event normalization",()=>{
+  it("creates a QR Ph checkout with idempotency and safe return URLs",async()=>{
+    const fetchMock=vi.spyOn(globalThis,"fetch").mockResolvedValue(new Response(JSON.stringify({data:{id:"cs_qrph",attributes:{checkout_url:"https://checkout.paymongo.com/cs_qrph"}}}),{status:200,headers:{"content-type":"application/json"}}));
+    const{PayMongoProvider}=await import("@/lib/payments/paymongo");
+    const provider=new PayMongoProvider({secretKey:"sk_test_placeholder",webhookSecret:secret,livemode:false});
+    const result=await provider.createCheckout({orderId:"order_qrph",reference:"BKE-QRPH",currency:"PHP",amountMinor:100,customer:{name:"Test Customer",email:"test@example.com"},items:[{name:"Test",description:"Test item",amountMinor:100,quantity:1}],idempotencyKey:"idem_qrph"});
+    const request=fetchMock.mock.calls[0]![1] as RequestInit;
+    const payload=JSON.parse(String(request.body));
+    expect(payload.data.attributes.payment_method_types).toEqual(["qrph"]);
+    expect(payload.data.attributes.payment_method_types).not.toEqual(expect.arrayContaining(["card","gcash","paymaya"]));
+    expect(new Headers(request.headers).get("Idempotency-Key")).toBe("idem_qrph");
+    expect(payload.data.attributes.success_url).toContain("/checkout/success?order=order_qrph");
+    expect(payload.data.attributes.cancel_url).toContain("/checkout/cancel?order=order_qrph");
+    expect(result).toEqual({externalId:"cs_qrph",checkoutUrl:"https://checkout.paymongo.com/cs_qrph"});
+    fetchMock.mockRestore();
+  });
   it("refuses a live key when configured for test mode",async()=>{const{PayMongoProvider}=await import("@/lib/payments/paymongo");const provider=new PayMongoProvider({secretKey:"sk_live_unsafe",webhookSecret:secret,livemode:false});await expect(provider.retrievePayment("pay_test")).rejects.toThrow("PAYMENT_PROVIDER_UNSAFE_CONFIGURATION")});
   it("normalizes checkout-session paid events without logging the raw payload",async()=>{const consoleSpies=[vi.spyOn(console,"info"),vi.spyOn(console,"warn"),vi.spyOn(console,"error")];const{PayMongoProvider}=await import("@/lib/payments/paymongo");const provider=new PayMongoProvider({secretKey:"sk_test_placeholder",webhookSecret:secret,livemode:false});const input=signed({data:{id:"evt_test_paid",attributes:{type:"checkout_session.payment.paid",livemode:false,created_at:Math.floor(Date.now()/1000),data:{id:"cs_test",type:"checkout_session",attributes:{reference_number:"BKE-TEST",payments:[{id:"pay_test",type:"payment",attributes:{amount:10000,currency:"PHP"}}]}}}}});const event=await provider.verifyAndParseWebhook(input.raw,input.headers);expect(event).toMatchObject({eventId:"evt_test_paid",type:"payment.paid",externalPaymentId:"pay_test",externalCheckoutId:"cs_test",reference:"BKE-TEST",amountMinor:10000,currency:"PHP",livemode:false});expect(consoleSpies.every(spy=>spy.mock.calls.length===0)).toBe(true);consoleSpies.forEach(spy=>spy.mockRestore())});
   it("normalizes payment failures and refunds",async()=>{const{PayMongoProvider}=await import("@/lib/payments/paymongo");const provider=new PayMongoProvider({secretKey:"sk_test_placeholder",webhookSecret:secret,livemode:false});for(const[type,expected]of [["payment.failed","payment.failed"],["payment.refunded","payment.refunded"]] as const){const input=signed({data:{id:`evt_${expected}`,attributes:{type,livemode:false,created_at:Math.floor(Date.now()/1000),data:{id:"pay_test",type:"payment",attributes:{amount:10000,currency:"PHP",external_reference_number:"BKE-TEST",checkout_session_id:"cs_test"}}}}});expect((await provider.verifyAndParseWebhook(input.raw,input.headers)).type).toBe(expected)}});

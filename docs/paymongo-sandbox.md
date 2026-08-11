@@ -62,4 +62,6 @@ Genuine Test Mode checkout, signed paid settlement, provider retrieval, persiste
 Still requiring owner interaction: a genuine failed hosted checkout and PayMongo Dashboard resends proving duplicate, delayed, and out-of-order provider delivery. The optional exact-raw-payload tests remain skipped because raw payload and signature fixtures are intentionally not retained. See the [Phase 6.2 report](phase-reports/phase-6.2-paymongo-lifecycle-certification.md).
 # Database credential source
 
+The immediate QR Ph test flow requests `payment_method_types: ["qrph"]`, matching the currently exposed merchant capability. This is a test-mode compatibility setting only; the permanent design should resolve and validate supported methods from provider capabilities/configuration rather than hardcoding a method set.
+
 PayMongo sandbox credentials can be saved under the TEST context and resolved by the existing adapter through the centralized provider service. Local simulation rejects live keys and live configuration. Credential validation authenticates a safe read request; it does not replace signed webhook and complete sandbox lifecycle certification.
