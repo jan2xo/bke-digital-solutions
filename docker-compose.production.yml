@@ -6,17 +6,95 @@ x-logging: &default-logging
     max-size: "10m"
     max-file: "5"
 
+x-runtime-environment: &runtime-environment
+  - NODE_ENV
+  - DEPLOYMENT_ENV
+  - DEPLOYMENT_ID
+  - APP_URL
+  - INTERNAL_APP_URL
+  - PUBLIC_WEBHOOK_ORIGIN
+  - LOCAL_PRODUCTION_SIMULATION
+  - TRUSTED_ORIGINS
+  - TRUST_PROXY_HOPS
+  - DATABASE_URL
+  - DIRECT_DATABASE_URL
+  - SESSION_SECRET
+  - MFA_ENCRYPTION_KEY
+  - LICENSE_PEPPER
+  - LICENSE_SIGNING_KEY_ID
+  - LICENSE_SIGNING_PRIVATE_KEY
+  - LICENSE_SIGNING_PUBLIC_KEY
+  - SUPPLY_CHAIN_SIGNING_KEY_ID
+  - SUPPLY_CHAIN_SIGNING_PUBLIC_KEY
+  - SUPPLY_CHAIN_TRUSTED_KEYS
+  - ALLOW_BREAK_GLASS
+  - MALWARE_SCANNER_PROVIDER
+  - MALWARE_SCANNER_VERSION
+  - PROVIDER_CREDENTIALS_ENCRYPTION_KEY
+  - PROVIDER_CREDENTIALS_KEY_VERSION
+  - PROVIDER_CREDENTIALS_PREVIOUS_KEYS
+  - PROVIDER_CONFIG_SOURCE
+  - PROVIDER_CONFIG_ALLOW_ENV_FALLBACK
+  - PAYMENT_PROVIDER
+  - PAYMONGO_SECRET_KEY
+  - PAYMONGO_WEBHOOK_SECRET
+  - PAYMONGO_LIVEMODE
+  - PAYMONGO_SANDBOX_WEBHOOK_PAYLOAD_FILE
+  - PAYMONGO_SANDBOX_WEBHOOK_SIGNATURE_FILE
+  - PAYMONGO_SANDBOX_PAYMENT_ID
+  - PAYMONGO_SANDBOX_ORDER_ID
+  - RESEND_API_KEY
+  - RESEND_SANDBOX_TO
+  - EMAIL_PROVIDER
+  - EMAIL_FROM
+  - SUPPORT_EMAIL
+  - BUSINESS_ADDRESS
+  - REDIS_URL
+  - REDIS_KEY_PREFIX
+  - UPSTASH_REDIS_REST_URL
+  - UPSTASH_REDIS_REST_TOKEN
+  - S3_ENDPOINT
+  - S3_REGION
+  - S3_BUCKET
+  - S3_ACCESS_KEY_ID
+  - S3_SECRET_ACCESS_KEY
+  - S3_FORCE_PATH_STYLE
+  - MAX_ARTIFACT_BYTES
+  - CRON_SECRET
+  - SEED_DEMO_DATA
+  - LOG_LEVEL
+  - ALLOW_DESTRUCTIVE_ADMIN
+  - MONITORING_DSN
+  - BACKUP_ENABLED
+  - BACKUP_S3_ENDPOINT
+  - BACKUP_S3_REGION
+  - BACKUP_BUCKET
+  - BACKUP_S3_ACCESS_KEY_ID
+  - BACKUP_S3_SECRET_ACCESS_KEY
+  - BACKUP_S3_FORCE_PATH_STYLE
+  - BACKUP_ENCRYPTION_KEY
+  - BACKUP_ENCRYPTION_KEY_VERSION
+  - BACKUP_RETENTION_DAILY
+  - BACKUP_RETENTION_WEEKLY
+  - BACKUP_RETENTION_MONTHLY
+  - BACKUP_WORKER_POLL_SECONDS
+  - BACKUP_RESTORE_DATABASE_URL
+  - BACKUP_RESTORE_S3_BUCKET
+  - BACKUP_RESTORE_ACK
+  - BACKUP_OFFSITE_ACK
+
 services:
   app:
     build:
       context: .
       target: runner
-    env_file: ${BKE_ENV_FILE:-.env.production.example}
+    environment: *runtime-environment
     init: true
     restart: unless-stopped
     stop_grace_period: 30s
     depends_on:
       postgres: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
       valkey: { condition: service_healthy }
     networks: [private, egress]
     healthcheck:
@@ -34,7 +112,7 @@ services:
     build:
       context: .
       target: scheduler
-    env_file: ${BKE_ENV_FILE:-.env.production.example}
+    environment: *runtime-environment
     init: true
     restart: unless-stopped
     stop_grace_period: 15s
@@ -51,12 +129,13 @@ services:
     build:
       context: .
       target: backup-worker
-    env_file: ${BKE_ENV_FILE:-.env.production.example}
+    environment: *runtime-environment
     init: true
     restart: unless-stopped
     stop_grace_period: 60s
     depends_on:
       postgres: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
     networks: [private, egress]
     read_only: true
     tmpfs: ["/tmp:size=1g,mode=1777"]
@@ -67,7 +146,7 @@ services:
     build:
       context: .
       target: migrations
-    env_file: ${BKE_ENV_FILE:-.env.production.example}
+    environment: *runtime-environment
     profiles: ["operations"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -117,12 +196,33 @@ services:
     restart: unless-stopped
     volumes: ["object_data:/data"]
     networks: [private]
-    profiles: ["self-hosted-storage"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
       interval: 10s
       timeout: 5s
       retries: 10
+    logging: *default-logging
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
+    entrypoint: ["/bin/sh", "/usr/local/bin/minio-init.sh"]
+    environment:
+      - MINIO_ROOT_USER
+      - MINIO_ROOT_PASSWORD
+      - S3_ENDPOINT
+      - S3_REGION
+      - S3_BUCKET
+      - S3_ACCESS_KEY_ID
+      - S3_SECRET_ACCESS_KEY
+      - S3_FORCE_PATH_STYLE
+      - DEPLOYMENT_ENV
+    depends_on:
+      minio: { condition: service_healthy }
+    volumes:
+      - ./scripts/minio-init.sh:/usr/local/bin/minio-init.sh:ro
+    networks: [private]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
     logging: *default-logging
 
   caddy:

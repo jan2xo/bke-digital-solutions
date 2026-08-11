@@ -85,7 +85,11 @@ export const environmentSchema = z.object({
   if (protectedEnvironment && !value.REDIS_URL && !value.UPSTASH_REDIS_REST_URL) context.addIssue({ code: "custom", path: ["REDIS_URL"], message: "a distributed Valkey/Redis backend is required" });
   if (Boolean(value.S3_ACCESS_KEY_ID) !== Boolean(value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "storage access and secret keys must be configured together" });
   if (protectedEnvironment && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required" });
-  if (protectedEnvironment && value.S3_ENDPOINT && new URL(value.S3_ENDPOINT).protocol !== "https:" && !(value.LOCAL_PRODUCTION_SIMULATION && new URL(value.S3_ENDPOINT).hostname === "minio")) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS outside an explicitly local private-storage simulation" });
+  if (protectedEnvironment && value.S3_ENDPOINT) {
+    const storageEndpoint = new URL(value.S3_ENDPOINT);
+    const privateMinio = value.S3_ENDPOINT === "http://minio:9000";
+    if (storageEndpoint.protocol !== "https:" && !privateMinio) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS unless using the private Docker-network MinIO service" });
+  }
   if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (protectedEnvironment && !value.REDIS_KEY_PREFIX.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["REDIS_KEY_PREFIX"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   const environmentCredentialsRequired = value.NODE_ENV !== "test" && (value.PROVIDER_CONFIG_SOURCE === "environment" || value.PROVIDER_CONFIG_ALLOW_ENV_FALLBACK);
@@ -111,6 +115,7 @@ export const environmentSchema = z.object({
         context.addIssue({ code: "custom", path: ["BACKUP_ENCRYPTION_KEY"], message: "must be valid base64" });
       }
     }
+    if (protectedEnvironment && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_S3_ENDPOINT && new URL(value.BACKUP_S3_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["BACKUP_S3_ENDPOINT"], message: "must use HTTPS for protected offsite backups" });
   }
   if (value.BACKUP_RESTORE_DATABASE_URL && value.BACKUP_RESTORE_DATABASE_URL === value.DATABASE_URL) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_DATABASE_URL"], message: "must be isolated from the source database" });
   if (value.BACKUP_RESTORE_S3_BUCKET && [value.S3_BUCKET, value.BACKUP_BUCKET].includes(value.BACKUP_RESTORE_S3_BUCKET)) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_S3_BUCKET"], message: "must be isolated from source and backup buckets" });

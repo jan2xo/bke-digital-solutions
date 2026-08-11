@@ -9,7 +9,7 @@ Environment values are server-only unless explicitly prefixed for browser use. C
 | `APP_URL` | Canonical browser, email-link, and provider-redirect origin. Certification and production: `https://jl-bke.com`. |
 | `INTERNAL_APP_URL` | Optional private Docker application origin, normally `http://app:3000`. |
 | `PUBLIC_WEBHOOK_ORIGIN` | Public HTTPS origin used to register the test webhook; certification: `https://jl-bke.com`. |
-| `LOCAL_PRODUCTION_SIMULATION` | Enables staging-only local safety exceptions such as private HTTP MinIO; never production. |
+| `LOCAL_PRODUCTION_SIMULATION` | Enables staging-only local safety exceptions. Private `http://minio:9000` is also valid in production only for the internal self-hosted MinIO service; MinIO remains private and R2 remains backup-only. |
 | `PAYMONGO_SECRET_KEY` / `PAYMONGO_WEBHOOK_SECRET` | Server-only test credentials during certification. |
 | `PAYMONGO_LIVEMODE` | Must be `false` for local certification. |
 | `RESEND_API_KEY`, `EMAIL_FROM`, `RESEND_SANDBOX_TO` | Server-only delivery settings; recipient is certification-only. |

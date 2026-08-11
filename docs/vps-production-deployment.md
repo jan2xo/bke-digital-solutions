@@ -75,7 +75,9 @@ docker compose --env-file .env.vps -f docker-compose.production.yml config --qui
 ```bash
 docker compose --env-file .env.vps -f docker-compose.production.yml build app scheduler backup-worker migrate
 docker compose --env-file .env.vps -f docker-compose.production.yml up -d postgres valkey
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile self-hosted-storage up -d minio
+docker compose --env-file .env.vps -f docker-compose.production.yml up -d minio minio-init
+# Wait for minio-init to exit with code 0 before starting application services.
+docker compose --env-file .env.vps -f docker-compose.production.yml ps minio minio-init
 docker compose --env-file .env.vps -f docker-compose.production.yml run --rm migrate
 docker compose --env-file .env.vps -f docker-compose.production.yml up -d app scheduler backup-worker caddy
 docker compose --env-file .env.vps -f docker-compose.production.yml ps

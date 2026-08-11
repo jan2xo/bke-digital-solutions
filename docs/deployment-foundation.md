@@ -45,7 +45,9 @@ Staging and production require HTTPS, 48-character non-placeholder authenticatio
 - Caddy as the only public service on ports 80/443, with automatic HTTPS and persistent certificate data.
 - The Next.js application on private and outbound networks.
 - PostgreSQL and Valkey on the internal network only, with persistent volumes and health checks.
-- Optional self-hosted MinIO behind the `self-hosted-storage` profile; its console is not published.
+- Self-hosted MinIO is the selected production primary object store; its API and console are not published to the host.
+- When enabled for production, MinIO is the primary private object store on the Docker `private` network (`http://minio:9000`) with persistent `object_data`; Cloudflare R2 is configured separately as the encrypted offsite backup destination. MinIO is never published to the host.
+- Production Compose includes the one-shot `minio-init` service. It waits up to 60 seconds for MinIO administrative readiness, creates the application bucket privately, reconciles the dedicated `S3_ACCESS_KEY_ID` identity and bucket-scoped policy, and is a prerequisite of the app and backup worker. It is safe to rerun and never writes credentials to the repository. Root credentials are supplied only to MinIO and this initializer; application services receive only the filtered runtime environment.
 - A one-shot `migrate` image behind the `operations` profile so replicas never race migrations.
 
 Managed PostgreSQL, Valkey, and S3-compatible services can replace the bundled services by changing connection variables; the domain layer does not change. For Compose validation:
