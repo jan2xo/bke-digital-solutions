@@ -50,6 +50,12 @@ Staging and production require HTTPS, 48-character non-placeholder authenticatio
 - Production Compose includes the one-shot `minio-init` service. It waits up to 60 seconds for MinIO administrative readiness, creates the application bucket privately, reconciles the dedicated `S3_ACCESS_KEY_ID` identity and bucket-scoped policy, and is a prerequisite of the app and backup worker. It is safe to rerun and never writes credentials to the repository. Root credentials are supplied only to MinIO and this initializer; application services receive only the filtered runtime environment.
 - A one-shot `migrate` image behind the `operations` profile so replicas never race migrations.
 
+### Production MinIO incident and remediation
+
+The first VPS deployment exposed a bootstrap defect: a fresh self-hosted MinIO instance could be healthy while the configured application bucket and application identity were absent. The remediation adds the bounded, idempotent `minio-init` service described above. It creates the configured private bucket, reconciles a dedicated application identity, and applies only the bucket-scoped `bke-app-storage` policy. Root credentials are available only to `minio` and `minio-init`; app, scheduler, backup-worker, Caddy, PostgreSQL, and Valkey receive no root credentials.
+
+The initializer verifies exact direct policy assignment and rejects identities with broader direct permissions or inherited/group permissions. Disposable runtime tests execute the actual initializer against MinIO and `mc` (clean bootstrap, idempotent rerun, broader-policy rejection, and group/inherited-authorization rejection). Final certification passed the MinIO suite 5/5 and certification Vitest 178 passed with 6 credential-gated skips; Playwright 11/11, TypeScript, ESLint, Prisma validation/generation, production build, Compose validation, hygiene, and `git diff --check` also passed. No production VPS was changed by this remediation.
+
 Managed PostgreSQL, Valkey, and S3-compatible services can replace the bundled services by changing connection variables; the domain layer does not change. For Compose validation:
 
 ```bash

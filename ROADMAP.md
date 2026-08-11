@@ -10,6 +10,10 @@ Phase 6.9 Production Release Management is technically implemented with controll
 
 This roadmap supersedes the earlier Phase 5 continuation plan. The verified current-state audit in [`TRUTHCHECK.md`](./TRUTHCHECK.md) is the authority for priorities and launch gates.
 
+## Production MinIO remediation (certified)
+
+The first VPS deployment exposed a fresh-install failure: production MinIO had no deterministic bucket/user/policy bootstrap, so readiness could fail while the service was healthy. The corrected `minio-init` path is bounded, idempotent, private, and fail-closed; it provisions only bucket-scoped application credentials and rejects broader direct or inherited/group permissions. Runtime integration coverage proves clean bootstrap, rerun, and both rejection cases. This repository result does not claim VPS deployment or cold-reboot evidence.
+
 ## Current position
 
 - RM1/RM2 commercial licensing and signing-registry work is committed and pushed at `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`).

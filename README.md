@@ -12,6 +12,8 @@ Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simul
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.
 
+The production self-hosted MinIO bootstrap remediation is certified in the repository. MinIO remains private primary storage; Cloudflare R2 is reserved for encrypted offsite backups. See [CHANGELOG.md](CHANGELOG.md) and [the deployment foundation](docs/deployment-foundation.md) for the incident, least-privilege policy, and verification evidence.
+
 The committed deployment baseline is `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`). The repository includes the verified Phase 6 platform controls for backup, observability, security, compliance tracking, supply-chain evidence, release management, and commercial licensing. Certification evidence for that baseline includes 32 current migrations, 167 passing Vitest tests (6 credential-gated skips), 11 passing Playwright tests, passing TypeScript/ESLint/build checks, healthy certification Compose services, and clean repository hygiene. VPS deployment, PayMongo/Resend production certification, restore certification, production signing/scanning, and professional review remain external gates. Live payments remain disabled.
 
 Phase 6.3 centralizes lifecycle work behind eight typed jobs, durable PostgreSQL run history, Valkey locks, an internal Docker scheduler worker, `/admin/scheduler`, and `/api/health/scheduler`. Run `npm run scheduler:run -- --dry-run` for an operations dry run; renewals always require a customer-authorized checkout.

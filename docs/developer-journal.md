@@ -1,5 +1,9 @@
 # Developer journal
 
+## August 11, 2026 — Production MinIO bootstrap remediation closeout
+
+The first VPS deployment exposed that self-hosted MinIO could start without the configured private bucket and application identity, causing readiness failure on a fresh host. The corrected `minio-init` service is bounded, idempotent, private, and fail-closed. It reconciles a bucket-scoped application policy, rejects broader direct permissions and inherited/group permissions, and keeps root credentials out of application services. Disposable runtime tests execute the real initializer and verify clean bootstrap, rerun, and both rejection paths. Final certification passed MinIO 5/5, Vitest 178 with 6 credential-gated skips, Playwright 11/11, TypeScript, ESLint, Prisma, production build, Compose validation, repository hygiene, and `git diff --check`. VPS deployment and cold-reboot evidence remain owner-controlled.
+
 ## August 3, 2026 — Phase 6.1 data integrity implementation
 
 Replaced unsafe customer hard deletion with governed account lifecycle, privacy review, legal holds, pseudonymization, blocker inspection, and a narrowly eligible purge. Added explicit account-role capabilities and closed the plain-member commerce/license overexposure. Replaced object deletion inside product transactions with durable cleanup jobs, idempotent claiming, bounded error codes, retry/backoff, abandoned claim recovery, and separate finalization. Artifact replacement/removal now uses the same cleanup queue.

@@ -5,6 +5,10 @@ signing variables are bootstrap-only; later issuance requires exactly one ACTIVE
 key and a resolvable `env:` private-key reference. Private material is never
 stored in PostgreSQL or returned by APIs.
 
+## Current closeout — self-hosted MinIO remediation
+
+The first VPS deployment exposed a deterministic-initialization failure for private MinIO. The repository now starts the one-shot `minio-init` prerequisite before app and backup-worker services, creates the configured private bucket, reconciles bucket-scoped application credentials, and fails closed for broader direct or inherited/group permissions. Root credentials are limited to `minio` and `minio-init`; application services receive only filtered S3 credentials. The actual initializer is covered by disposable runtime tests (clean bootstrap, idempotent rerun, broader direct-policy rejection, and group/inherited rejection). Final evidence is MinIO 5/5, certification Vitest 178 passed/6 credential-gated skipped, Playwright 11/11, and passing static/build/Compose/hygiene checks. Pull the resulting commit on the VPS and follow `docs/vps-production-deployment.md`; this report does not claim deployment or reboot certification.
+
 Commercial key rotation uses the administrator endpoint with a validated `env:`
 reference. The old key becomes RETIRED and remains published for verification;
 the successor becomes the only ACTIVE key.

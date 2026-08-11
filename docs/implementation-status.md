@@ -1,5 +1,11 @@
 # Implementation status
 
+## Production self-hosted MinIO bootstrap remediation — certified
+
+The first VPS deployment revealed that a fresh MinIO instance was not deterministically initialized, which could leave the application bucket and least-privilege identity missing. `minio-init` now performs bounded, idempotent bucket creation, private-policy reconciliation, application-user reconciliation, and fail-closed authorization checks. The application identity is restricted to the configured bucket; broader direct policies and inherited/group permissions are rejected. MinIO root credentials are supplied only to MinIO and the initializer, never to application, scheduler, backup, proxy, database, or cache services. Runtime tests execute the real shell initializer against disposable MinIO/`mc` infrastructure and production Compose credential-boundary assertions.
+
+Final certification: MinIO integration 5/5, certification Vitest 178 passed with 6 credential-gated skips, Playwright 11/11, TypeScript, ESLint, Prisma generate/validate, production build, Compose validation, repository hygiene, conflict scan, and `git diff --check` passed. VPS deployment, secrets, and reboot evidence remain owner-controlled Phase 6.10 work.
+
 ## Phase 6.0 runtime parity (committed and pushed)
 
 - Production and certification use the same digest-pinned application, database-migration, and startup contract; certification adds only loopback test access and local simulation configuration.
