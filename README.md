@@ -12,7 +12,7 @@ Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simul
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.
 
-The committed baseline includes Phases 6.0 through 6.12 repository work, including backup, observability, security, compliance tracking, supply-chain evidence, release management, and remediation controls. Migration state and external certification remain environment-specific; genuine failed/delayed/out-of-order PayMongo evidence, production signing/scanning, professional review, complete restore, VPS, and live-provider evidence remain open. Live payments remain disabled.
+The committed deployment baseline is `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`). The repository includes the verified Phase 6 platform controls for backup, observability, security, compliance tracking, supply-chain evidence, release management, and commercial licensing. Certification evidence for that baseline includes 32 current migrations, 167 passing Vitest tests (6 credential-gated skips), 11 passing Playwright tests, passing TypeScript/ESLint/build checks, healthy certification Compose services, and clean repository hygiene. VPS deployment, PayMongo/Resend production certification, restore certification, production signing/scanning, and professional review remain external gates. Live payments remain disabled.
 
 Phase 6.3 centralizes lifecycle work behind eight typed jobs, durable PostgreSQL run history, Valkey locks, an internal Docker scheduler worker, `/admin/scheduler`, and `/api/health/scheduler`. Run `npm run scheduler:run -- --dry-run` for an operations dry run; renewals always require a customer-authorized checkout.
 
@@ -82,7 +82,7 @@ Archived products expose a typed-name permanent-delete action only to administra
 
 Administrators can use `/admin/observability` to answer “Is the BKE platform healthy?” across application dependencies, scheduler, backups, payments, licensing issuance, email, security, and infrastructure. The typed health feed is available at `/api/health/metrics`. See [docs/observability.md](docs/observability.md).
 
-Phase 6.12 repository remediation adds signed Ed25519 commercial lease envelopes, evidence-backed supply-chain verification, fail-closed Stable/LTS gates, approval separation, safe download retry, and Compliance/Supply Chain navigation. VPS, Cloudflare, live providers, and production recovery certification remain deferred to Phase 6.10.
+The next active milestone is **Phase 6.10 — Production Deployment & Certification**. Deploy only approved commit `5156caa`; follow the staged VPS, secrets, persistent-services, Cloudflare/Caddy/HTTPS, provider-certification, backup/restore, rollback, reboot-recovery, and final-certification gates in [ROADMAP.md](ROADMAP.md). VPS, Cloudflare, live providers, and production recovery evidence are not claimed until verified by the owner.
 
 Current readiness is tracked authoritatively in [TRUTHCHECK.md](TRUTHCHECK.md). The repository is not production-ready: external infrastructure, production malware scanning/signing, restore certification, full latest regression verification, and professional legal/privacy/tax review remain pending.
 ### RM7 repository certification corrections (committed)

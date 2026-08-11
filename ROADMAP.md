@@ -1,6 +1,6 @@
 # BKE Digital Solutions Roadmap
 
-Last reorganized: August 6, 2026
+Last synchronized: August 10, 2026
 
 Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.
 
@@ -12,15 +12,27 @@ This roadmap supersedes the earlier Phase 5 continuation plan. The verified curr
 
 ## Current position
 
-- Phase 6.0 runtime parity, Phase 6.1 Data Integrity and Safe Deletion, Phase 6.1A Legal Document Management, legal-consent hardening, administrator email-code verification, and the homepage catalog-pricing fix are committed and pushed.
-- Local development is operational and its PostgreSQL schema is current.
-- Phase 6.3 is committed and pushed at `099fe7c`; the interactive-transaction serialization correction is pushed at `66f9fdd`.
-- The repository contains 25 migrations; the current database environment must be verified with `prisma migrate status` before deployment.
-- Genuine PayMongo paid, refund, persisted-reconciliation, duplicate-paid-redelivery, and duplicate-refund-redelivery paths pass. Failed-payment, delayed, out-of-order, and raw-fixture evidence remain open.
-- Live payments remain disabled.
-- VPS deployment remains postponed until the production-readiness gate passes.
-- Phase 6.1 Data Integrity & Safe Deletion is committed and pushed at `952e9e1`.
-- Phases 6.4 through 6.12 are implemented as repository work with external recovery, provider, legal, and infrastructure certification still pending.
+- RM1/RM2 commercial licensing and signing-registry work is committed and pushed at `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`).
+- The verified certification baseline for that commit is: 32 migrations current, Vitest 167 passed/6 credential-gated skipped, Playwright 11 passed, TypeScript passed, ESLint passed, production build passed, Compose/runtime healthy, and repository hygiene passed.
+- Commercial lease issuance, lifecycle operations, registry-backed signing, rotation, historical key publication, and Licensing Agent boundary controls are implemented. The Agent remains the runtime verification and authorization authority.
+- Live payments remain disabled. PayMongo/Resend production evidence, VPS deployment, restore certification, production malware scanning, signing certificates, and professional legal/privacy/tax approvals remain external gates.
+- The next active milestone is **Phase 6.10 — Production Deployment & Certification**. Deploy only the explicitly approved commit `5156caa`, not arbitrary working-tree state.
+
+## Current operational sequence (authoritative)
+
+1. **6.10.0 Deployment baseline:** approved commit `5156caa`.
+2. **6.10.1 VPS provisioning:** Hetzner/Ubuntu, SSH hardening, firewall, Docker, and Docker boot enablement.
+3. **6.10.2 Production secrets:** environment, database, storage, signing-key references, PayMongo TEST, and Resend credentials; no secrets in Git.
+4. **6.10.3 Persistent services:** PostgreSQL, Valkey, MinIO/private object storage, persistent volumes, scheduler, and backup worker.
+5. **6.10.4 Cloudflare/Caddy/HTTPS:** DNS, origin routing, TLS, proxy headers, security headers, and firewall validation.
+6. **6.10.5 Initial deployment:** build, migrations, startup, health/readiness, and admin/customer access.
+7. **6.10.6 Provider certification:** PayMongo TEST checkout/webhooks/refunds/reconciliation and Resend production-domain delivery. PayMongo LIVE remains disabled pending owner approval.
+8. **6.10.7 Backup/restore certification:** PostgreSQL and object-storage backup, offsite copy, integrity verification, and isolated restore drill with RPO/RTO evidence.
+9. **6.10.8 Upgrade/rollback certification:** backup, fetch approved release, rebuild affected containers, migrate, verify, and rollback without losing persistent state.
+10. **6.10.9 Failure/reboot recovery:** service restart, scheduler/backup recovery, Docker boot, cold VPS reboot, and persistent-volume recovery.
+11. **6.10.10 Production certification:** record deployed commit/version, migrations, provider, restore, reboot evidence, and remaining external approvals.
+
+Organization management and customer support remain optional pre-deployment workstreams (6.9 and 6.9A). The future service-account/public-client API follows production deployment as Phase 6.11.
 
 ## Priority definitions
 
@@ -55,7 +67,7 @@ Establish one trustworthy version across Git, generated Prisma code, migrations,
 
 ### Current verification
 
-Committed and pushed at `4f5a65a`. The generated client is reproducible, all 17 migrations are current, deterministic unit/integration and browser suites pass against certification services, production builds pass, and dependency-loss readiness checks fail closed. Full genuine PayMongo lifecycle certification remains Phase 6.2; Phase 6.0 does not enable live payments or establish overall production readiness.
+Committed and pushed as part of the verified baseline. The generated client is reproducible, the certification database is current at 32 migrations, deterministic unit/integration and browser suites pass, production builds pass, and dependency-loss readiness checks fail closed. Phase 6.0 does not enable live payments or establish overall production readiness.
 
 ## Phase 6.1 — Data Integrity & Safe Deletion
 
@@ -319,7 +331,7 @@ Expose the existing organization, invitation, membership, billing, and license-m
 - Cross-organization isolation and role boundaries pass.
 - No member can escalate privileges or access unauthorized financial/license data.
 
-## Phase 6.10 — Customer Support Platform
+## Phase 6.9A — Customer Support Platform (optional pre-deployment workstream)
 
 **Priority:** High for public launch
 
@@ -342,7 +354,7 @@ Provide private, auditable customer support rather than relying only on a config
 - Administrators can triage, reply, escalate, and resolve.
 - Ticket content and attachments are isolated, retained, and audited correctly.
 
-## Phase 6.10A — Production Readiness Review
+## Historical readiness-review gate (superseded by the 6.10.10 certification gate)
 
 **Priority:** Mandatory go/no-go gate
 
@@ -373,7 +385,7 @@ Perform an evidence-based approval review before creating the production VPS dep
 - No test or provider scenario is represented as passed without evidence.
 - Owner records a formal go/no-go decision.
 
-## Phase 6.11 — VPS Production Deployment
+## Historical Phase 6.11 — VPS Production Deployment (superseded by current Phase 6.10)
 
 **Priority:** Critical production-launch blocker
 
@@ -383,7 +395,7 @@ Deploy the approved platform to a hardened VPS and validate it under production 
 
 ### Dependencies
 
-- Phase 6.10A must pass.
+- The 6.10 deployment and certification gates must pass.
 
 ### Scope
 
@@ -405,7 +417,7 @@ Deploy the approved platform to a hardened VPS and validate it under production 
 - Backups, scheduler, alerts, and restore operate on the VPS.
 - Production runbook and owner handoff are complete.
 
-## Phase 6.12 — Service Accounts & Public Client API
+## Phase 6.11 — Service Accounts & Public Client API (post-deployment)
 
 **Priority:** Medium; required for external BKE client integrations
 
@@ -443,8 +455,8 @@ Phase 5.3 complete
         +------> 6.2 PayMongo                     v
         +------> 6.3 Scheduler              6.7 Legal review
         +------> 6.4 Backup                       |
-        |                                         +------> 6.9 Organizations
-        +------> 6.5 Monitoring ------------------+------> 6.10 Support
+        |                                         +------> 6.9 Organizations / 6.9A Support
+        +------> 6.5 Monitoring ------------------+
                         |
                         v
                  6.6 Operations hardening
@@ -452,13 +464,12 @@ Phase 5.3 complete
                         +------> 6.8 Supply chain
                         |
                         v
-                6.10A Readiness review
+                6.10 Production deployment & certification
                         |
                         v
-                 6.11 VPS deployment
+                 6.11 Public client API
                         |
                         v
-                 6.12 Public client API
 ```
 
 After Phase 6.0, Phases 6.1, 6.2, 6.3, and 6.4 can overlap. Monitoring should begin alongside them and integrate their final signals. Legal drafting and signing-certificate acquisition should start early because external review can add calendar time.
@@ -467,17 +478,17 @@ After Phase 6.0, Phases 6.1, 6.2, 6.3, and 6.4 can overlap. Monitoring should be
 
 ### Public payments are blocked by
 
-- 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.10A, and 6.11.
+- 6.0 through 6.7, the 6.10 deployment/certification gates, and the owner go/no-go decision.
 
 ### Production desktop distribution is blocked by
 
-- 6.1, 6.5, 6.6, 6.7, 6.8, 6.10A, and 6.11.
-- 6.12 also blocks desktop products that require ongoing public API validation.
+- 6.1, 6.5, 6.6, 6.7, 6.8, and the applicable 6.10 deployment/certification gates.
+- 6.11 also blocks desktop products that require ongoing public API validation.
 
 ### Optional for an initial individual browser-only launch
 
 - 6.9 organization management.
-- 6.12 public client API when no external client is shipping.
+- 6.11 public client API when no external client is shipping.
 - Advanced support features beyond an approved operational support workflow.
 
 ## Recommended execution order
@@ -489,16 +500,15 @@ After Phase 6.0, Phases 6.1, 6.2, 6.3, and 6.4 can overlap. Monitoring should be
 5. 6.6 operations hardening.
 6. 6.7 legal/privacy/tax approval.
 7. 6.8 secure supply chain.
-8. 6.9 organizations and 6.10 support according to launch scope.
-9. 6.10A formal production-readiness review.
-10. 6.11 VPS deployment.
-11. 6.12 client API when a real integration is ready.
+8. 6.9 organizations and 6.9A support according to launch scope.
+9. 6.10 production deployment and certification using approved commit `5156caa`.
+10. 6.11 client API when a real integration is ready.
 
 No phase is complete until implementation, tests, documentation, security review, and repository consistency have been verified according to `CORE-INSTRUCTION.md`.
 
 The independent Phase 6.10 VPS guide is available at `docs/vps-production-deployment.md`; actual deployment and reboot certification remain owner-operated.
 
-## Phase 6.12 — Production Readiness Remediation
+## Historical RM remediation (completed before current Phase 6.10)
 
 Repository controls are implemented locally: signed commercial lease issuance, evidence-backed supply-chain verification, fail-closed release gates, separation of duties, grant recovery, and administrator navigation. Compatibility certification against the separate Licensing Agent, production signing/scanning, professional review, backup restore certification, and Phase 6.10 infrastructure remain pending.
 
