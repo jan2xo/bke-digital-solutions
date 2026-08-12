@@ -36,8 +36,9 @@ Certification-only cleanup removed only those twelve orphan `ProductArtifact` ro
 preserving products, orders, payments, invoices, licenses, audits, and history. No
 production database, MinIO bucket, or R2 bucket was touched. Certification CREATE,
 VERIFY, and SIMULATE_RESTORE subsequently passed with zero missing objects.
-Disposable isolated restore targets are provisioned and safety-validated;
-RESTORE_ISOLATED has not yet been executed.
+Disposable isolated restore targets were provisioned and safety-validated;
+RESTORE_ISOLATED passed against the certification archive. Production RPO/RTO
+evidence remains pending.
 
 The backup engine remains correct: it derives expected source keys from current
 `ProductArtifact.objectKey` and `Product.imageKey` values, preserves extensions,

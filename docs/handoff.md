@@ -13,7 +13,8 @@ were not accessed or changed.
 The backup engine remains extension-agnostic and authoritative to the database
 object key. Certification CREATE, VERIFY, and SIMULATE_RESTORE now pass with zero
 missing objects. Disposable isolated restore targets are provisioned and safety-
-validated; RESTORE_ISOLATED is intentionally not yet executed.
+validated; RESTORE_ISOLATED passed against the certification archive. Production
+RPO/RTO evidence remains pending.
 
 Commercial lease signing consumes the `CommercialSigningKey` registry. Environment
 signing variables are bootstrap-only; later issuance requires exactly one ACTIVE

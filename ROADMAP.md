@@ -1,5 +1,7 @@
 # BKE Digital Solutions Roadmap
 
+Cross-repository master plan: [docs/roadmaps/master-completion-roadmap.md](docs/roadmaps/master-completion-roadmap.md).
+
 Last synchronized: August 10, 2026
 
 Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.

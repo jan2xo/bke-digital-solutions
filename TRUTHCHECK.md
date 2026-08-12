@@ -1,6 +1,8 @@
 # BKE Digital Solutions — Current-State Truth Check
 
-Baseline updated: August 6, 2026
+Cross-repository planning baseline: [docs/roadmaps/master-completion-roadmap.md](docs/roadmaps/master-completion-roadmap.md).
+
+Baseline updated: August 13, 2026
 
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
@@ -10,11 +12,11 @@ Phase 6.9 release lifecycle and approval tracking are present in the Release Cen
 Pushed Git baseline: current `main` commit; historical hashes below are retained for provenance.
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 
-Current truth: Phases 6.4 through 6.12 repository controls are implemented. Phase 6.4 recovery certification remains blocked by missing certification objects; Phase 6.10 infrastructure and live-provider evidence remain deferred.
+Current truth: Phases 6.4 through 6.12 repository controls are implemented. Certification backup CREATE, VERIFY, SIMULATE_RESTORE, and RESTORE_ISOLATED passed; production RPO/RTO, Phase 6.10 infrastructure, and live-provider evidence remain deferred.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
-Phase 6.1 is committed at `952e9e1`. Phase 6.2 is partially certified: genuine paid settlement, retrieval, reconciliation, full refund, signed refund, and duplicate paid/refund redelivery pass. Genuine failed, delayed, out-of-order, and raw-fixture evidence remains open with deterministic coverage. Phase 6.3 is committed at `099fe7c`. Offsite backup provisioning and a production-sized restore drill, legal review, monitoring, secure supply chain, and production deployment remain blocked.
+Phase 6.1 is committed at `952e9e1`. Phase 6.2 is partially certified: genuine paid settlement, retrieval, reconciliation, full refund, signed refund, and duplicate paid/refund redelivery pass. Genuine failed, delayed, out-of-order, and raw-fixture evidence remains open with deterministic coverage. Phase 6.3 is committed at `099fe7c`. Certification backup recovery is complete through isolated restore; production RPO/RTO, legal review, monitoring, secure supply chain, and production deployment remain blocked or externally deferred.
 
 This document is the concise repository baseline for future planning. It records verified implementation and runtime evidence rather than roadmap intent. If this file conflicts with an older phase report, the current repository, applied migrations, executable tests, and runtime evidence take precedence.
 
@@ -53,8 +55,8 @@ It is ready for local development and controlled sandbox certification. It is no
 | Genuine duplicate paid/refund provider resend | Passed without duplicate effects |
 | Genuine delayed/out-of-order provider resend | Owner-interactive and not yet certified |
 | Genuine persisted reconciliation | Passed |
-| Phase 6.4 encrypted certification archive | Correctly blocked as incomplete: 5 database-referenced objects missing from certification MinIO |
-| Phase 6.4 complete restore simulation | Blocked until certification object drift is repaired |
+| Phase 6.4 encrypted certification archive | CREATE/VERIFY passed; zero missing source objects |
+| Phase 6.4 complete recovery | SIMULATE_RESTORE and RESTORE_ISOLATED passed; production RPO/RTO remains pending |
 
 The first sandbox-restricted Vitest execution could not reach local PostgreSQL. The identical suite was rerun with database access and passed. That initial failure was an execution-sandbox restriction, not an application result.
 

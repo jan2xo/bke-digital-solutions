@@ -12,8 +12,9 @@ licensing, and audit records. No production storage or database was modified.
 The backup implementation uses the exact database object key, including its file
 extension, for primary-storage checks and manifest entries. Certification CREATE,
 VERIFY, and SIMULATE_RESTORE subsequently passed with zero missing objects.
-Isolated restore targets are provisioned and safety-validated;
-RESTORE_ISOLATED remains not yet executed.
+Isolated restore targets were provisioned and safety-validated. RESTORE_ISOLATED
+passed against the certification archive; the restored database and 16 source
+objects matched the manifest. Production RPO/RTO evidence remains pending.
 
 ## Production self-hosted MinIO bootstrap remediation — certified
 
