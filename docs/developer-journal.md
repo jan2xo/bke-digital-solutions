@@ -1,5 +1,21 @@
 # Developer journal
 
+## August 12, 2026 — Certification backup source-object cleanup
+
+Revalidated certification backup evidence and traced the missing source objects to
+twelve archived inactive `delete-*` products created by persistent product-deletion
+integration fixtures. Each synthetic artifact referenced a missing `tests/...zip`
+MinIO key. The seeded `installers/bke-installer.bin` object existed, confirming no
+installer-name or extension-handling defect.
+
+The governed deletion service correctly blocked hard deletion because historical
+commerce/licensing dependencies must remain. In certification only, removed the
+twelve orphan `ProductArtifact` rows while preserving products, orders, payments,
+invoices, licenses, and audit history. Certification CREATE, VERIFY, and
+SIMULATE_RESTORE subsequently passed with zero missing objects. Disposable
+isolated restore targets were provisioned and safety-validated; RESTORE_ISOLATED
+remains intentionally unexecuted.
+
 ## August 11, 2026 — Production MinIO bootstrap remediation closeout
 
 The first VPS deployment exposed that self-hosted MinIO could start without the configured private bucket and application identity, causing readiness failure on a fresh host. The corrected `minio-init` service is bounded, idempotent, private, and fail-closed. It reconciles a bucket-scoped application policy, rejects broader direct permissions and inherited/group permissions, and keeps root credentials out of application services. Disposable runtime tests execute the real initializer and verify clean bootstrap, rerun, and both rejection paths. Final certification passed MinIO 5/5, Vitest 178 with 6 credential-gated skips, Playwright 11/11, TypeScript, ESLint, Prisma, production build, Compose validation, repository hygiene, and `git diff --check`. VPS deployment and cold-reboot evidence remain owner-controlled.

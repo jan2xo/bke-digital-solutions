@@ -1,5 +1,20 @@
 # Implementation status
 
+## Certification backup source-object cleanup — 2026-08-12
+
+The missing-object evidence was traced to twelve archived inactive `delete-*`
+products left by product-deletion integration fixtures. Their artifact keys were
+`tests/...zip`; none existed in certification MinIO. The seeded
+`installers/bke-installer.bin` was present. Certification-only cleanup removed only
+the twelve orphan `ProductArtifact` rows and preserved historical commerce,
+licensing, and audit records. No production storage or database was modified.
+
+The backup implementation uses the exact database object key, including its file
+extension, for primary-storage checks and manifest entries. Certification CREATE,
+VERIFY, and SIMULATE_RESTORE subsequently passed with zero missing objects.
+Isolated restore targets are provisioned and safety-validated;
+RESTORE_ISOLATED remains not yet executed.
+
 ## Production self-hosted MinIO bootstrap remediation — certified
 
 The first VPS deployment revealed that a fresh MinIO instance was not deterministically initialized, which could leave the application bucket and least-privilege identity missing. `minio-init` now performs bounded, idempotent bucket creation, private-policy reconciliation, application-user reconciliation, and fail-closed authorization checks. The application identity is restricted to the configured bucket; broader direct policies and inherited/group permissions are rejected. MinIO root credentials are supplied only to MinIO and the initializer, never to application, scheduler, backup, proxy, database, or cache services. Runtime tests execute the real shell initializer against disposable MinIO/`mc` infrastructure and production Compose credential-boundary assertions.

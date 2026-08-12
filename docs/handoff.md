@@ -1,5 +1,20 @@
 # Engineering handoff
 
+## Certification backup cleanup — 2026-08-12
+
+The previous `SOURCE_OBJECTS_MISSING` result was caused by persistent synthetic
+product-deletion fixtures: twelve archived inactive `delete-*` products retained
+`ProductArtifact` rows for absent `tests/...zip` objects. The seeded
+`installers/bke-installer.bin` was not missing. Certification cleanup removed only
+those orphan artifact rows; historical products, orders, payments, invoices,
+licenses, and audit records were preserved. Production PostgreSQL, MinIO, and R2
+were not accessed or changed.
+
+The backup engine remains extension-agnostic and authoritative to the database
+object key. Certification CREATE, VERIFY, and SIMULATE_RESTORE now pass with zero
+missing objects. Disposable isolated restore targets are provisioned and safety-
+validated; RESTORE_ISOLATED is intentionally not yet executed.
+
 Commercial lease signing consumes the `CommercialSigningKey` registry. Environment
 signing variables are bootstrap-only; later issuance requires exactly one ACTIVE
 key and a resolvable `env:` private-key reference. Private material is never

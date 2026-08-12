@@ -23,6 +23,28 @@ These defaults are configuration, not a legal retention decision. Phase 6.7 must
 
 Never put `BACKUP_ENCRYPTION_KEY`, storage secrets, or restore credentials in source control, manifests, logs, or database metadata. Store the encryption key separately from the archive and include it in the offline recovery key ceremony.
 
+## Certification backup consistency closeout — 2026-08-12
+
+The certification database contained twelve archived, inactive `delete-*` products
+created by product-deletion integration runs. Each had one synthetic historical
+order item and license, so the governed deletion service correctly refused to
+remove the product or its commerce/licensing history. Their `ProductArtifact` rows
+referenced `tests/...zip` keys never uploaded to certification MinIO. The seeded
+`installers/bke-installer.bin` object was present and was not missing.
+
+Certification-only cleanup removed only those twelve orphan `ProductArtifact` rows,
+preserving products, orders, payments, invoices, licenses, audits, and history. No
+production database, MinIO bucket, or R2 bucket was touched. Certification CREATE,
+VERIFY, and SIMULATE_RESTORE subsequently passed with zero missing objects.
+Disposable isolated restore targets are provisioned and safety-validated;
+RESTORE_ISOLATED has not yet been executed.
+
+The backup engine remains correct: it derives expected source keys from current
+`ProductArtifact.objectKey` and `Product.imageKey` values, preserves extensions,
+compares them with the primary bucket, and records `SOURCE_OBJECTS_MISSING` when a
+referenced source object is absent. The root cause was persistent integration-test
+fixture data, not an `installer.bin` assumption or extension-handling defect.
+
 ## Capacity boundary
 
 The Phase 6.4 worker uses encrypted temporary files for the database archive and processes source objects sequentially, but the current implementation still materializes each database dump and each individual object in memory during encryption or verification. The production Compose scratch volume is also capped at 1 GiB. Before production data approaches either boundary, replace the buffer-based encryption and verification path with streaming or multipart processing and size scratch storage from a measured production dump. A production-sized backup and restore drill is a launch gate, not an optional optimization.
