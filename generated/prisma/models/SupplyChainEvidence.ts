@@ -37,6 +37,10 @@ export type SupplyChainEvidenceMinAggregateOutputType = {
   sbomFormat: string | null
   manifestSignature: string | null
   signatureVerified: boolean | null
+  canonicalPayloadHash: string | null
+  signatureAlgorithm: string | null
+  signatureKeyId: string | null
+  signedAt: Date | null
   dependencyVerified: boolean | null
   malwareStatus: string | null
   certificateStatus: string | null
@@ -58,6 +62,10 @@ export type SupplyChainEvidenceMaxAggregateOutputType = {
   sbomFormat: string | null
   manifestSignature: string | null
   signatureVerified: boolean | null
+  canonicalPayloadHash: string | null
+  signatureAlgorithm: string | null
+  signatureKeyId: string | null
+  signedAt: Date | null
   dependencyVerified: boolean | null
   malwareStatus: string | null
   certificateStatus: string | null
@@ -80,6 +88,10 @@ export type SupplyChainEvidenceCountAggregateOutputType = {
   sbomFormat: number
   manifestSignature: number
   signatureVerified: number
+  canonicalPayloadHash: number
+  signatureAlgorithm: number
+  signatureKeyId: number
+  signedAt: number
   dependencyVerified: number
   malwareStatus: number
   certificateStatus: number
@@ -103,6 +115,10 @@ export type SupplyChainEvidenceMinAggregateInputType = {
   sbomFormat?: true
   manifestSignature?: true
   signatureVerified?: true
+  canonicalPayloadHash?: true
+  signatureAlgorithm?: true
+  signatureKeyId?: true
+  signedAt?: true
   dependencyVerified?: true
   malwareStatus?: true
   certificateStatus?: true
@@ -124,6 +140,10 @@ export type SupplyChainEvidenceMaxAggregateInputType = {
   sbomFormat?: true
   manifestSignature?: true
   signatureVerified?: true
+  canonicalPayloadHash?: true
+  signatureAlgorithm?: true
+  signatureKeyId?: true
+  signedAt?: true
   dependencyVerified?: true
   malwareStatus?: true
   certificateStatus?: true
@@ -146,6 +166,10 @@ export type SupplyChainEvidenceCountAggregateInputType = {
   sbomFormat?: true
   manifestSignature?: true
   signatureVerified?: true
+  canonicalPayloadHash?: true
+  signatureAlgorithm?: true
+  signatureKeyId?: true
+  signedAt?: true
   dependencyVerified?: true
   malwareStatus?: true
   certificateStatus?: true
@@ -241,6 +265,10 @@ export type SupplyChainEvidenceGroupByOutputType = {
   sbomFormat: string | null
   manifestSignature: string | null
   signatureVerified: boolean
+  canonicalPayloadHash: string | null
+  signatureAlgorithm: string | null
+  signatureKeyId: string | null
+  signedAt: Date | null
   dependencyVerified: boolean
   malwareStatus: string
   certificateStatus: string
@@ -284,6 +312,10 @@ export type SupplyChainEvidenceWhereInput = {
   sbomFormat?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
   manifestSignature?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
   signatureVerified?: Prisma.BoolFilter<"SupplyChainEvidence"> | boolean
+  canonicalPayloadHash?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
+  signatureAlgorithm?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
+  signatureKeyId?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
+  signedAt?: Prisma.DateTimeNullableFilter<"SupplyChainEvidence"> | Date | string | null
   dependencyVerified?: Prisma.BoolFilter<"SupplyChainEvidence"> | boolean
   malwareStatus?: Prisma.StringFilter<"SupplyChainEvidence"> | string
   certificateStatus?: Prisma.StringFilter<"SupplyChainEvidence"> | string
@@ -308,6 +340,10 @@ export type SupplyChainEvidenceOrderByWithRelationInput = {
   sbomFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   manifestSignature?: Prisma.SortOrderInput | Prisma.SortOrder
   signatureVerified?: Prisma.SortOrder
+  canonicalPayloadHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  signatureAlgorithm?: Prisma.SortOrderInput | Prisma.SortOrder
+  signatureKeyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  signedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   dependencyVerified?: Prisma.SortOrder
   malwareStatus?: Prisma.SortOrder
   certificateStatus?: Prisma.SortOrder
@@ -335,6 +371,10 @@ export type SupplyChainEvidenceWhereUniqueInput = Prisma.AtLeast<{
   sbomFormat?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
   manifestSignature?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
   signatureVerified?: Prisma.BoolFilter<"SupplyChainEvidence"> | boolean
+  canonicalPayloadHash?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
+  signatureAlgorithm?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
+  signatureKeyId?: Prisma.StringNullableFilter<"SupplyChainEvidence"> | string | null
+  signedAt?: Prisma.DateTimeNullableFilter<"SupplyChainEvidence"> | Date | string | null
   dependencyVerified?: Prisma.BoolFilter<"SupplyChainEvidence"> | boolean
   malwareStatus?: Prisma.StringFilter<"SupplyChainEvidence"> | string
   certificateStatus?: Prisma.StringFilter<"SupplyChainEvidence"> | string
@@ -359,6 +399,10 @@ export type SupplyChainEvidenceOrderByWithAggregationInput = {
   sbomFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   manifestSignature?: Prisma.SortOrderInput | Prisma.SortOrder
   signatureVerified?: Prisma.SortOrder
+  canonicalPayloadHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  signatureAlgorithm?: Prisma.SortOrderInput | Prisma.SortOrder
+  signatureKeyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  signedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   dependencyVerified?: Prisma.SortOrder
   malwareStatus?: Prisma.SortOrder
   certificateStatus?: Prisma.SortOrder
@@ -387,6 +431,10 @@ export type SupplyChainEvidenceScalarWhereWithAggregatesInput = {
   sbomFormat?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainEvidence"> | string | null
   manifestSignature?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainEvidence"> | string | null
   signatureVerified?: Prisma.BoolWithAggregatesFilter<"SupplyChainEvidence"> | boolean
+  canonicalPayloadHash?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainEvidence"> | string | null
+  signatureAlgorithm?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainEvidence"> | string | null
+  signatureKeyId?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainEvidence"> | string | null
+  signedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SupplyChainEvidence"> | Date | string | null
   dependencyVerified?: Prisma.BoolWithAggregatesFilter<"SupplyChainEvidence"> | boolean
   malwareStatus?: Prisma.StringWithAggregatesFilter<"SupplyChainEvidence"> | string
   certificateStatus?: Prisma.StringWithAggregatesFilter<"SupplyChainEvidence"> | string
@@ -408,6 +456,10 @@ export type SupplyChainEvidenceCreateInput = {
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -432,6 +484,10 @@ export type SupplyChainEvidenceUncheckedCreateInput = {
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -454,6 +510,10 @@ export type SupplyChainEvidenceUpdateInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -478,6 +538,10 @@ export type SupplyChainEvidenceUncheckedUpdateInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -501,6 +565,10 @@ export type SupplyChainEvidenceCreateManyInput = {
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -522,6 +590,10 @@ export type SupplyChainEvidenceUpdateManyMutationInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -544,6 +616,10 @@ export type SupplyChainEvidenceUncheckedUpdateManyInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -571,6 +647,10 @@ export type SupplyChainEvidenceCountOrderByAggregateInput = {
   sbomFormat?: Prisma.SortOrder
   manifestSignature?: Prisma.SortOrder
   signatureVerified?: Prisma.SortOrder
+  canonicalPayloadHash?: Prisma.SortOrder
+  signatureAlgorithm?: Prisma.SortOrder
+  signatureKeyId?: Prisma.SortOrder
+  signedAt?: Prisma.SortOrder
   dependencyVerified?: Prisma.SortOrder
   malwareStatus?: Prisma.SortOrder
   certificateStatus?: Prisma.SortOrder
@@ -592,6 +672,10 @@ export type SupplyChainEvidenceMaxOrderByAggregateInput = {
   sbomFormat?: Prisma.SortOrder
   manifestSignature?: Prisma.SortOrder
   signatureVerified?: Prisma.SortOrder
+  canonicalPayloadHash?: Prisma.SortOrder
+  signatureAlgorithm?: Prisma.SortOrder
+  signatureKeyId?: Prisma.SortOrder
+  signedAt?: Prisma.SortOrder
   dependencyVerified?: Prisma.SortOrder
   malwareStatus?: Prisma.SortOrder
   certificateStatus?: Prisma.SortOrder
@@ -613,6 +697,10 @@ export type SupplyChainEvidenceMinOrderByAggregateInput = {
   sbomFormat?: Prisma.SortOrder
   manifestSignature?: Prisma.SortOrder
   signatureVerified?: Prisma.SortOrder
+  canonicalPayloadHash?: Prisma.SortOrder
+  signatureAlgorithm?: Prisma.SortOrder
+  signatureKeyId?: Prisma.SortOrder
+  signedAt?: Prisma.SortOrder
   dependencyVerified?: Prisma.SortOrder
   malwareStatus?: Prisma.SortOrder
   certificateStatus?: Prisma.SortOrder
@@ -685,6 +773,10 @@ export type SupplyChainEvidenceCreateWithoutVersionInput = {
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -707,6 +799,10 @@ export type SupplyChainEvidenceUncheckedCreateWithoutVersionInput = {
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -745,6 +841,10 @@ export type SupplyChainEvidenceUpdateWithoutVersionInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -767,6 +867,10 @@ export type SupplyChainEvidenceUncheckedUpdateWithoutVersionInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -789,6 +893,10 @@ export type SupplyChainEvidenceCreateWithoutVerificationEvidenceInput = {
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -812,6 +920,10 @@ export type SupplyChainEvidenceUncheckedCreateWithoutVerificationEvidenceInput =
   sbomFormat?: string | null
   manifestSignature?: string | null
   signatureVerified?: boolean
+  canonicalPayloadHash?: string | null
+  signatureAlgorithm?: string | null
+  signatureKeyId?: string | null
+  signedAt?: Date | string | null
   dependencyVerified?: boolean
   malwareStatus?: string
   certificateStatus?: string
@@ -849,6 +961,10 @@ export type SupplyChainEvidenceUpdateWithoutVerificationEvidenceInput = {
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -872,6 +988,10 @@ export type SupplyChainEvidenceUncheckedUpdateWithoutVerificationEvidenceInput =
   sbomFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   manifestSignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signatureVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canonicalPayloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureAlgorithm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dependencyVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   malwareStatus?: Prisma.StringFieldUpdateOperationsInput | string
   certificateStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -925,6 +1045,10 @@ export type SupplyChainEvidenceSelect<ExtArgs extends runtime.Types.Extensions.I
   sbomFormat?: boolean
   manifestSignature?: boolean
   signatureVerified?: boolean
+  canonicalPayloadHash?: boolean
+  signatureAlgorithm?: boolean
+  signatureKeyId?: boolean
+  signedAt?: boolean
   dependencyVerified?: boolean
   malwareStatus?: boolean
   certificateStatus?: boolean
@@ -950,6 +1074,10 @@ export type SupplyChainEvidenceSelectCreateManyAndReturn<ExtArgs extends runtime
   sbomFormat?: boolean
   manifestSignature?: boolean
   signatureVerified?: boolean
+  canonicalPayloadHash?: boolean
+  signatureAlgorithm?: boolean
+  signatureKeyId?: boolean
+  signedAt?: boolean
   dependencyVerified?: boolean
   malwareStatus?: boolean
   certificateStatus?: boolean
@@ -973,6 +1101,10 @@ export type SupplyChainEvidenceSelectUpdateManyAndReturn<ExtArgs extends runtime
   sbomFormat?: boolean
   manifestSignature?: boolean
   signatureVerified?: boolean
+  canonicalPayloadHash?: boolean
+  signatureAlgorithm?: boolean
+  signatureKeyId?: boolean
+  signedAt?: boolean
   dependencyVerified?: boolean
   malwareStatus?: boolean
   certificateStatus?: boolean
@@ -996,6 +1128,10 @@ export type SupplyChainEvidenceSelectScalar = {
   sbomFormat?: boolean
   manifestSignature?: boolean
   signatureVerified?: boolean
+  canonicalPayloadHash?: boolean
+  signatureAlgorithm?: boolean
+  signatureKeyId?: boolean
+  signedAt?: boolean
   dependencyVerified?: boolean
   malwareStatus?: boolean
   certificateStatus?: boolean
@@ -1004,7 +1140,7 @@ export type SupplyChainEvidenceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SupplyChainEvidenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "versionId" | "releaseIdentifier" | "commitHash" | "branch" | "buildEnvironment" | "builderIdentity" | "builtAt" | "manifestJson" | "sbomReference" | "sbomFormat" | "manifestSignature" | "signatureVerified" | "dependencyVerified" | "malwareStatus" | "certificateStatus" | "provenanceStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["supplyChainEvidence"]>
+export type SupplyChainEvidenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "versionId" | "releaseIdentifier" | "commitHash" | "branch" | "buildEnvironment" | "builderIdentity" | "builtAt" | "manifestJson" | "sbomReference" | "sbomFormat" | "manifestSignature" | "signatureVerified" | "canonicalPayloadHash" | "signatureAlgorithm" | "signatureKeyId" | "signedAt" | "dependencyVerified" | "malwareStatus" | "certificateStatus" | "provenanceStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["supplyChainEvidence"]>
 export type SupplyChainEvidenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
   verificationEvidence?: boolean | Prisma.SupplyChainEvidence$verificationEvidenceArgs<ExtArgs>
@@ -1037,6 +1173,10 @@ export type $SupplyChainEvidencePayload<ExtArgs extends runtime.Types.Extensions
     sbomFormat: string | null
     manifestSignature: string | null
     signatureVerified: boolean
+    canonicalPayloadHash: string | null
+    signatureAlgorithm: string | null
+    signatureKeyId: string | null
+    signedAt: Date | null
     dependencyVerified: boolean
     malwareStatus: string
     certificateStatus: string
@@ -1481,6 +1621,10 @@ export interface SupplyChainEvidenceFieldRefs {
   readonly sbomFormat: Prisma.FieldRef<"SupplyChainEvidence", 'String'>
   readonly manifestSignature: Prisma.FieldRef<"SupplyChainEvidence", 'String'>
   readonly signatureVerified: Prisma.FieldRef<"SupplyChainEvidence", 'Boolean'>
+  readonly canonicalPayloadHash: Prisma.FieldRef<"SupplyChainEvidence", 'String'>
+  readonly signatureAlgorithm: Prisma.FieldRef<"SupplyChainEvidence", 'String'>
+  readonly signatureKeyId: Prisma.FieldRef<"SupplyChainEvidence", 'String'>
+  readonly signedAt: Prisma.FieldRef<"SupplyChainEvidence", 'DateTime'>
   readonly dependencyVerified: Prisma.FieldRef<"SupplyChainEvidence", 'Boolean'>
   readonly malwareStatus: Prisma.FieldRef<"SupplyChainEvidence", 'String'>
   readonly certificateStatus: Prisma.FieldRef<"SupplyChainEvidence", 'String'>

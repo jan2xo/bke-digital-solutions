@@ -246,3 +246,9 @@ Migrations `20260803090000_admin_email_otp` and `20260803140000_admin_email_otp_
 # August 4, 2026 — Phase 6.3 scheduler implementation
 
 Verified the clean pushed entry baseline, 19 current development/certification migrations, healthy certification runtime, Phase 6.1 cleanup/lifecycle foundations, and the owner-approved partial Phase 6.2 evidence. Added migration 20, eight typed scheduled jobs, PostgreSQL run history, Valkey ownership locks, retry/backoff, restart recovery, Docker execution, administrator controls, CLI/cron entry points, renewal reminders, expiration processing, and separate scheduler health. Initial focused unit collection failed because the test did not load `.env`; after adding the normal test bootstrap, focused unit/integration tests passed 9/9 and focused Playwright passed 1/1. Final verification passed locally and in certification: Vitest 140 passed with 6 credential-gated skips, Playwright 10/10, production and Docker app/scheduler builds, migration/smoke/drift, eight-job scheduler health, repository hygiene, and zero runtime vulnerabilities. Certification caught and corrected an inherited web health check on the non-HTTP scheduler worker. No commit was created.
+## Phase 3 — Product Verification & Supply-Chain Signing
+
+Implemented a server-only Ed25519 signing service with a dedicated supply-chain
+private-key configuration, deterministic versioned release manifests, immediate
+trusted-key verification, idempotent evidence, and canonical-manifest release
+gates. No malware scanner or production certificate provisioning was added.

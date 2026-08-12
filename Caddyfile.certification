@@ -8,9 +8,6 @@ http://jl-bke.localhost {
 	encode zstd gzip
 
 	reverse_proxy app:3000 {
-		header_up Host {$APP_DOMAIN}
-		header_up X-Forwarded-Host {$APP_DOMAIN}
-		header_up X-Forwarded-Proto https
 		header_up X-Real-IP {remote_host}
 	}
 

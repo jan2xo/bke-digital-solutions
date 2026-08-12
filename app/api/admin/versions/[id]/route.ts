@@ -6,6 +6,7 @@ import { assertSameOrigin } from "@/lib/security/request";
 import { audit } from "@/lib/audit";
 import { apiError } from "@/lib/http";
 import { env } from "@/lib/env";
+import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
 const schema = z.object({ lifecycle: z.enum(stages).optional(), approve: z.boolean().optional(), reviewed: z.boolean().optional(), published: z.boolean().optional(), latest: z.boolean().optional(), releaseNotes: z.string().max(10000).optional(), changelog: z.string().max(20000).optional(), channel: z.enum(["STABLE", "BETA"]).optional(), deprecated: z.boolean().optional(), rollback: z.boolean().optional(), notes: z.string().trim().max(4000).optional(), breakGlass: z.boolean().optional(), breakGlassJustification: z.string().trim().min(20).max(4000).optional() }).superRefine((value, ctx) => { if (value.breakGlass && !value.breakGlassJustification) ctx.addIssue({ code: "custom", path: ["breakGlassJustification"], message: "Break-glass justification is required" }); if (value.reviewed && value.approve) ctx.addIssue({ code: "custom", path: ["approve"], message: "Review and approval must be separate actions" }); });
@@ -13,7 +14,7 @@ const schema = z.object({ lifecycle: z.enum(stages).optional(), approve: z.boole
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     assertSameOrigin(request); const admin = await requireRecentAdmin(); const { id } = await params; const input = schema.parse(await request.json());
-    const current = await db.productVersion.findUniqueOrThrow({ where: { id }, include: { artifacts: true, supplyChainEvidence: { include: { verificationEvidence: true } }, approvals: { orderBy: { createdAt: "desc" }, take: 1 } } });
+    const current = await db.productVersion.findUniqueOrThrow({ where: { id }, include: { product: true, artifacts: true, supplyChainEvidence: { include: { verificationEvidence: true } }, approvals: { orderBy: { createdAt: "desc" }, take: 1 } } });
     if (input.lifecycle) {
       const from = stages.indexOf(current.lifecycle as typeof stages[number]); const to = stages.indexOf(input.lifecycle);
       if (to !== from + 1 && !(input.lifecycle === "DEPRECATED" && from >= stages.indexOf("STABLE")) && !(input.lifecycle === "ARCHIVED" && current.lifecycle === "DEPRECATED")) throw new Error("INVALID_RELEASE_TRANSITION");
@@ -21,7 +22,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         if (!input.approve) throw new Error("RELEASE_APPROVAL_REQUIRED");
         const evidence = current.supplyChainEvidence;
         const pendingCompliance = await db.complianceRequirement.count({ where: { status: { not: "IMPLEMENTED" } } });
-        const artifactHash = current.artifacts.map((a) => `${a.id}:${a.sha256}`).sort().join("|");
+        const artifactHash = manifestHash(canonicalizeManifest(buildReleaseManifest({ productId: current.productId, productSlug: current.product.slug, versionId: current.id, version: current.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: current.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) })));
         const signatureEvidence = evidence?.verificationEvidence.some((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
         const malwareEvidence = evidence?.verificationEvidence.some((v) => v.kind === "MALWARE_SCAN" && v.result === "CLEAN" && v.artifactHash === artifactHash) ?? false;
         const complete = Boolean(signatureEvidence && evidence?.dependencyVerified && evidence.sbomReference && evidence.provenanceStatus === "VERIFIED" && malwareEvidence && current.backupEvidence && current.complianceEvidence && current.migrationEvidence && pendingCompliance === 0);

@@ -1,5 +1,23 @@
 # Implementation status
 
+## Phase 3 — Product Verification & Supply-Chain Signing (implemented; owner review pending)
+
+Supply-chain signing now runs as a protected server-side administrator operation.
+The `SIGN` action constructs and signs a deterministic `bke.supply-chain.v1`
+manifest containing product/version identity and sorted artifact identity, object
+key, SHA-256, size, and content type. The server independently verifies its
+signature through the trusted public-key resolver before persisting evidence.
+`SUPPLY_CHAIN_SIGNING_PRIVATE_KEY` is separate from commercial lease signing,
+never stored in PostgreSQL, accepted from clients, returned, or logged. Repeated
+signing of unchanged state reuses matching evidence; artifact changes produce a
+new manifest hash and cannot satisfy prior evidence. Legacy artifact-hash
+verification remains historical and is not reinterpreted as a new manifest.
+
+Stable/LTS gates consume matching canonical-manifest evidence while retaining
+dependency, SBOM, provenance, malware, backup, compliance, migration, approval,
+and separation-of-duties requirements. Production malware scanner provisioning,
+certificate provisioning, and operational key rotation remain deferred.
+
 ## Phase 2 — Release and artifact lifecycle correction
 
 Customer release selection now uses a canonical eligible-release resolver. Draft
@@ -238,3 +256,7 @@ leave prepared operations retryable without rolling back payment settlement.
 RM7H completes source-predecessor transfer lifecycle, material refresh comparison,
 bounded prepared-renewal recovery, immutable rotation replay checks, and atomic
 rotation audit evidence.
+
+Phase 3 certification is PASS: live server-side Ed25519 signing, independent
+verification, artifact mutation invalidation, re-signing, repeat-sign idempotency,
+authorization controls, publication signing evidence, and private-key non-exposure.

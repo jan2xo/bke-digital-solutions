@@ -13,6 +13,7 @@ const base = {
   LICENSE_SIGNING_PRIVATE_KEY: "p".repeat(96),
   LICENSE_SIGNING_PUBLIC_KEY: "u".repeat(64),
   LICENSE_SIGNING_KEY_ID: "test-license-ed25519-v1",
+  SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: "supply-chain-private-test-material-" + "s".repeat(64),
   CRON_SECRET: "c".repeat(64),
   REDIS_URL: "redis://valkey:6379",
   REDIS_KEY_PREFIX: "bke-production",

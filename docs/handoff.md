@@ -175,3 +175,17 @@ RM7G transfer retries reuse the prepared operation and issued lease before
 finalizing ownership. Renewal settlement remains valid without an installation;
 bound renewals now invoke successor issuance using existing lease-history
 bindings, with prepared operations retained when signing fails.
+## Phase 3 supply-chain signing
+
+Administrators can request `SIGN` at `/api/admin/supply-chain`; the server builds
+the exact release manifest and signs it with the dedicated
+`SUPPLY_CHAIN_SIGNING_PRIVATE_KEY`. The key is never persisted or returned.
+Ed25519 output is independently verified through the trusted public-key
+keyring before immutable evidence is recorded. The canonical contract is
+`bke.supply-chain.v1`; legacy artifact-hash evidence remains historical only.
+Do not use `LICENSE_SIGNING_*` for artifacts. Production scanner and certificate
+provisioning remain pending.
+
+Phase 3 certification passed on 2026-08-13, including live signing, mutation
+invalidation, re-signing, idempotency, and authorization checks. Phase 4 is not
+started.

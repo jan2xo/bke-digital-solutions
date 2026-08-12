@@ -1,6 +1,6 @@
 # BKE Digital Solutions + BKE Licensing Agent — Master Completion Roadmap
 
-Status: planning baseline only (2026-08-13). This reconciles both repositories; it does not authorize implementation, deployment, data changes, or commits.
+Status: planning baseline; Phase 3 certified PASS (2026-08-13). This reconciles both repositories; it does not authorize deployment or Phase 4.
 
 ## Ownership and invariants
 
@@ -66,3 +66,4 @@ Phases 1–5 and 16–19 can run in parallel after Phase 0. Phases 8–12 requir
 ## Recommendation
 
 Do not start a feature phase automatically. Obtain owner review, then pursue the smallest outstanding evidence gate. Agent-owned phases must not be reimplemented here, and historical reports must remain historical.
+- Phase 3 — Product Verification & Supply-Chain Signing is implemented in the repository: protected server-side signing, deterministic manifests, independent verification, idempotent evidence, and canonical release gating. Owner review is pending; production scanner/certificate provisioning remains deferred.

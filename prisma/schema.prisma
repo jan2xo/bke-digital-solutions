@@ -779,6 +779,10 @@ model SupplyChainEvidence {
   sbomFormat         String?
   manifestSignature  String?
   signatureVerified  Boolean  @default(false)
+  canonicalPayloadHash String?
+  signatureAlgorithm String?
+  signatureKeyId    String?
+  signedAt          DateTime?
   dependencyVerified Boolean  @default(false)
   malwareStatus      String   @default("PENDING_SCAN")
   certificateStatus  String   @default("PENDING_PROVISIONING")

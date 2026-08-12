@@ -4,8 +4,7 @@ Cross-repository planning baseline: [docs/roadmaps/master-completion-roadmap.md]
 
 Baseline updated: August 13, 2026
 
-Phase 2 release/latest resolution correction is implemented in the working tree
-and awaits owner review; Phase 3 has not started.
+Phase 2 release/latest resolution correction is implemented. Phase 3 is **PASS (certified 2026-08-13)** for live signing, independent verification, mutation invalidation, re-signing, idempotency, authorization, and private-key non-exposure. Phase 4 has not started.
 
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
