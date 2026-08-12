@@ -4,6 +4,9 @@ Cross-repository planning baseline: [docs/roadmaps/master-completion-roadmap.md]
 
 Baseline updated: August 13, 2026
 
+Phase 2 release/latest resolution correction is implemented in the working tree
+and awaits owner review; Phase 3 has not started.
+
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
 Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling are available. No production signing certificate or malware certification is claimed.

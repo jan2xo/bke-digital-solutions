@@ -31,7 +31,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       }
     }
     const version = await db.$transaction(async (tx) => {
-      const updated = await tx.productVersion.update({ where: { id }, data: { lifecycle: input.lifecycle, releaseNotes: input.releaseNotes, changelog: input.changelog, channel: input.channel, active: input.lifecycle === "ARCHIVED" ? false : input.published ?? undefined, publishedAt: input.published === true ? new Date() : input.published === false ? null : undefined, deprecatedAt: input.lifecycle === "DEPRECATED" ? new Date() : input.lifecycle && String(input.lifecycle) !== "DEPRECATED" ? null : undefined } });
+      const eligible = input.lifecycle === "STABLE" || input.lifecycle === "LTS";
+      if (eligible && input.published !== false) await tx.productVersion.updateMany({ where: { productId: current.productId, id: { not: id }, active: true, publishedAt: { not: null }, lifecycle: { in: ["STABLE", "LTS"] } }, data: { isLatest: false } });
+      const now = new Date();
+      const updated = await tx.productVersion.update({ where: { id }, data: { lifecycle: input.lifecycle, releaseNotes: input.releaseNotes, changelog: input.changelog, channel: input.channel, active: input.lifecycle === "ARCHIVED" ? false : eligible && input.published !== false ? true : input.published ?? undefined, publishedAt: input.published === true || (eligible && input.published !== false && !current.publishedAt) ? now : input.published === false ? null : undefined, isLatest: eligible && input.published !== false ? true : input.lifecycle === "ARCHIVED" || input.published === false ? false : undefined, deprecatedAt: input.lifecycle === "DEPRECATED" ? now : input.lifecycle && String(input.lifecycle) !== "DEPRECATED" ? null : undefined } });
+      if (input.lifecycle === "ARCHIVED" || input.lifecycle === "DEPRECATED" || input.published === false) {
+        const fallback = await tx.productVersion.findFirst({ where: { productId: current.productId, id: { not: id }, active: true, publishedAt: { not: null }, lifecycle: { in: ["STABLE", "LTS"] } }, orderBy: [{ publishedAt: "desc" }, { releasedAt: "desc" }] });
+        if (fallback) await tx.productVersion.update({ where: { id: fallback.id }, data: { isLatest: true } });
+      }
       if (input.reviewed || input.approve) await tx.releaseApproval.create({ data: { versionId: id, stage: input.lifecycle ?? current.lifecycle, createdById: admin.id, reviewedById: input.reviewed ? admin.id : undefined, approvedById: input.approve ? admin.id : undefined, approvedAt: input.approve ? new Date() : undefined, notes: input.notes } });
       return updated;
     });

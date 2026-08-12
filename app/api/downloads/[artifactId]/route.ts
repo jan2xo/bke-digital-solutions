@@ -5,6 +5,7 @@ import { hashToken, randomToken } from "@/lib/security/crypto";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { apiError } from "@/lib/http";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
+import { resolveEligibleReleaseForArtifact } from "@/lib/releases/resolution";
 
 export async function GET(_: Request, { params }: { params: Promise<{ artifactId: string }> }) {
   try {
@@ -20,9 +21,10 @@ export async function GET(_: Request, { params }: { params: Promise<{ artifactId
         { assignments: { some: { userId: user.id } } },
       ],
     };
-    const artifact = await db.productArtifact.findFirst({ where: { id: artifactId, active: true, product: { licenses: { some: { status: "ACTIVE", account: { lifecycleState: "ACTIVE" }, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }], AND: access } } } } });
+    const artifact = await resolveEligibleReleaseForArtifact(artifactId);
     if (!artifact) throw new Error("NOT_FOUND");
-    const license = await db.license.findFirstOrThrow({ where: { productId: artifact.productId, status: "ACTIVE", account: { lifecycleState: "ACTIVE" }, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }], AND: access } });
+    const license = await db.license.findFirst({ where: { productId: artifact.productId, status: "ACTIVE", account: { lifecycleState: "ACTIVE" }, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }], AND: access } });
+    if (!license) throw new Error("NOT_FOUND");
     const token = randomToken();
     await db.downloadGrant.create({ data: { licenseId: license.id, artifactId: artifact.id, tokenHash: hashToken(token), expiresAt: new Date(Date.now() + 60_000) } });
     return NextResponse.redirect(new URL(`/api/downloads/grants/${token}`, process.env.APP_URL), { status: 303 });

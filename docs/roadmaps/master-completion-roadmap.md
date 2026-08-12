@@ -31,7 +31,7 @@ Status: planning baseline only (2026-08-13). This reconciles both repositories; 
 
 0. **Truth audit and capability matrix** — reconcile both repositories and evidence; owner-approved baseline.
 1. **Backup and disaster recovery** — encrypted PostgreSQL/MinIO archives, manifests, retention, verification, simulation, isolated restore. Repository and certification restore complete; production drill/RPO/RTO pending.
-2. **Release and artifact lifecycle** — product/version/release states, immutable artifact identity, safe deletion. Implemented; deployment evidence pending.
+2. **Release and artifact lifecycle** — product/version/release states, immutable artifact identity, safe deletion, and canonical eligible-release resolution. Implemented and Phase 2 certified; deployment evidence pending.
 3. **Supply-chain evidence** — SBOM, provenance, signatures, malware scanner evidence, dependency integrity. Gates implemented; production keys/scanner pending.
 4. **Administrator plane** — MFA, audit, provider credentials, compliance, supply-chain, backup, monitoring, scheduler controls. Implemented; operational certification pending.
 5. **Subscription lifecycle** — renewal, expiration, grace, trials, refunds, idempotent provider events. Implemented; PayMongo evidence remains.

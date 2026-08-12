@@ -36,7 +36,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     await uploadObject(objectKey, bytes, file.type || "application/octet-stream");
     uploaded = { objectKey, productId: id, actorId: admin.id };
     const version = await db.$transaction(async (tx) => {
-      if (input.latest === "true") await tx.productVersion.updateMany({ where: { productId: id }, data: { isLatest: false } });
+      if (input.latest === "true" && input.publish === "true") await tx.productVersion.updateMany({ where: { productId: id, active: true, publishedAt: { not: null }, lifecycle: { in: ["STABLE", "LTS"] } }, data: { isLatest: false } });
       return tx.productVersion.create({ data: { productId: id, version: input.version, releaseNotes: input.releaseNotes, operatingSystem: input.operatingSystem, architecture: input.architecture, active: input.publish === "true", publishedAt: input.publish === "true" ? new Date() : null, isLatest: input.latest === "true", artifacts: { create: { productId: id, name: file.name, objectKey, sha256, sizeBytes: file.size, contentType: file.type || "application/octet-stream", active: input.publish === "true" } } } });
     });
     uploaded = null;

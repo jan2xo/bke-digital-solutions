@@ -11,6 +11,7 @@ import { publishedLegalDocuments } from "@/lib/legal/service";
 import { SUBSCRIPTION_LEGAL_TYPES, CHECKOUT_LEGAL_TYPES } from "@/lib/legal/constants";
 import { SubscriptionRenewButton } from "@/components/subscription-renew-button";
 import { roleHasCapability } from "@/lib/authorization";
+import { resolveCurrentCustomerRelease } from "@/lib/releases/resolution";
 
 export default async function AccountPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser().catch(() => redirect("/login"));
@@ -22,14 +23,15 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
   const canViewSubscriptions = roleHasCapability(account.effectiveRole, "VIEW_SUBSCRIPTIONS");
   const [orders, licenses, subscriptions, trials, renewalLegal] = await Promise.all([
     canViewOrders ? db.order.findMany({ where: { accountId: id }, include: { invoice: true, payments: true, items: true, attempts: { select: { status: true, checkoutUrl: true }, orderBy: { createdAt: "desc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
-    db.license.findMany({ where: { accountId: id, ...(canViewLicenses ? {} : { assignments: { some: { userId: user.id } } }) }, include: { edition: true, purchasePlan: true, product: { include: { versions: { where: { active: true, isLatest: true }, include: { artifacts: { where: { active: true } } }, take: 1 } } }, activations: { orderBy: { activatedAt: "desc" } } }, orderBy: { createdAt: "desc" }, take: 50 }),
+    db.license.findMany({ where: { accountId: id, ...(canViewLicenses ? {} : { assignments: { some: { userId: user.id } } }) }, include: { edition: true, purchasePlan: true, product: true, activations: { orderBy: { activatedAt: "desc" } } }, orderBy: { createdAt: "desc" }, take: 50 }),
     canViewSubscriptions ? db.subscription.findMany({ where: { accountId: id }, include: { product: true, edition: true, purchasePlan: true }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
     canViewLicenses ? db.trialGrant.findMany({ where: { accountId: id }, include: { product: true, edition: true, license: true }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
     publishedLegalDocuments([...CHECKOUT_LEGAL_TYPES, ...SUBSCRIPTION_LEGAL_TYPES]),
   ]);
+  const customerReleases = new Map(await Promise.all(licenses.map(async (license) => [license.id, await resolveCurrentCustomerRelease(license.productId)] as const)));
   return <section className="shell py-14"><p className="font-bold text-[#0b7197]">{account.type} · {account.effectiveRole}</p><h1 className="mt-2 text-4xl font-black">{account.displayName}</h1>{account.lifecycleState !== "ACTIVE" && <p className="mt-3 rounded border border-amber-400 bg-amber-50 p-3 font-bold text-amber-900">This account is {account.lifecycleState.toLowerCase()}. New purchases, renewals, downloads, key reveal, trials, and activations are disabled.</p>}<div className="mt-10 grid gap-8">
     <section><h2 className="mb-4 text-2xl font-black">Products and licenses</h2><div className="grid gap-5 md:grid-cols-2">{licenses.length ? licenses.map((license) => {
-      const latest = license.product.versions[0];
+      const latest = customerReleases.get(license.id);
       const productName = `${license.product.name}${license.edition ? ` — ${license.edition.name} (${license.purchasePlan ? purchasePlanLabel(license.purchasePlan.type) : "Legacy"})` : ""}`;
       return <CustomerLicenseCard key={license.id} license={{ id: license.id, productName, status: license.status, lastFour: license.keyLastFour, expiresAt: license.expiresAt?.toISOString() ?? null, maxDevices: license.maxSeats * license.maxDevicesPerSeat, activations: license.activations.map((activation) => ({ id: activation.id, label: activation.label, active: activation.active })), downloads: latest?.artifacts.map((artifact) => ({ id: artifact.id, name: artifact.name, version: latest.version })) ?? [] }}/>;
     }) : <Empty/>}</div></section>

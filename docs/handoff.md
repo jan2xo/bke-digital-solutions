@@ -1,5 +1,15 @@
 # Engineering handoff
 
+## Phase 2 — Release and artifact lifecycle correction
+
+The release/download boundary is now explicit: only active, published STABLE or
+LTS versions are customer-eligible. Draft creation never displaces the current
+eligible release, and promotion clears the previous latest marker atomically.
+Customer release presentation resolves through the canonical helper; download
+authorization preserves the existing license/account/expiry checks and adds
+release eligibility. Existing signed leases and stored lease versions are not
+rewritten. Phase 3 supply-chain automation remains out of scope.
+
 ## Certification backup cleanup — 2026-08-12
 
 The previous `SOURCE_OBJECTS_MISSING` result was caused by persistent synthetic

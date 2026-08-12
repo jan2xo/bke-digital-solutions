@@ -1,5 +1,18 @@
 # Implementation status
 
+## Phase 2 — Release and artifact lifecycle correction
+
+Customer release selection now uses a canonical eligible-release resolver. Draft
+or unpublished versions cannot clear the current stable/LTS release's `isLatest`
+marker, and promotion updates latest state atomically for eligible releases.
+Customer dashboards and download authorization require an active, published
+stable/LTS version while retaining independent commercial entitlement checks.
+Stored lease versions are never rewritten by release changes. Focused release
+eligibility tests pass. Certification PostgreSQL Vitest passed 182 tests with 6
+provider-gated skips, and Playwright passed 11/11. The production build was
+blocked by the execution sandbox's Turbopack port permission; no Phase 2 code
+failure was observed.
+
 ## Certification backup source-object cleanup — 2026-08-12
 
 The missing-object evidence was traced to twelve archived inactive `delete-*`

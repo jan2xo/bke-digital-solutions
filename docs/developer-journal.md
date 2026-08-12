@@ -1,5 +1,15 @@
 # Developer journal
 
+## August 13, 2026 — Phase 2 release/latest resolution correction
+
+Inspection found that creating an unpublished version with `latest=true` could
+clear the previous eligible release's marker, while customer presentation read
+only `active && isLatest`. A canonical resolver now defines customer eligibility
+as active, published, and STABLE/LTS; draft uploads no longer clear eligible
+latest state, eligible promotion updates it atomically, and downloads enforce
+the same lifecycle boundary. Commercial entitlement and stored lease versions
+remain independent of release publication.
+
 ## August 12, 2026 — Certification backup source-object cleanup
 
 Revalidated certification backup evidence and traced the missing source objects to
@@ -14,7 +24,7 @@ twelve orphan `ProductArtifact` rows while preserving products, orders, payments
 invoices, licenses, and audit history. Certification CREATE, VERIFY, and
 SIMULATE_RESTORE subsequently passed with zero missing objects. Disposable
 isolated restore targets were provisioned and safety-validated; RESTORE_ISOLATED
-remains intentionally unexecuted.
+passed against the certification archive.
 
 ## August 11, 2026 — Production MinIO bootstrap remediation closeout
 
