@@ -27,6 +27,8 @@ export async function POST(request: Request) {
     const expectedVersion = requireProductVersion(license.product.versions[0]?.version);
     if (!refreshRequiresReplacement(current, { version: expectedVersion, expiresAt: license.expiresAt, installationId: input.installationId, deviceId: input.deviceId, signerKeyId: signingKey.keyId })) {
       const operation = await db.commercialLeaseOperation.upsert({ where: { operationId: input.operationId }, create: { operationId: input.operationId, licenseId: license.id, action: "REFRESH", status: "COMPLETED", resultLeaseId: current.leaseId, metadata: { currentLeaseId: input.currentLeaseId, installationId: input.installationId, deviceId: input.deviceId, decision: "REUSED" }, completedAt: new Date() }, update: {} });
+      const metadata = (operation.metadata ?? {}) as Record<string, unknown>;
+      if (metadata.currentLeaseId !== input.currentLeaseId || metadata.installationId !== input.installationId || metadata.deviceId !== input.deviceId) throw new Error("OPERATION_INPUT_MISMATCH");
       if (operation.resultLeaseId === current.leaseId) return NextResponse.json({ lease: { payload: current.leasePayload, signature: current.leaseSignature, key_id: current.signerKeyId, algorithm: "Ed25519" as const } }, { status: 200 });
     }
     await db.commercialLeaseOperation.upsert({ where: { operationId: input.operationId }, create: { operationId: input.operationId, licenseId: license.id, action: "REFRESH", metadata: { currentLeaseId: input.currentLeaseId, installationId: input.installationId, deviceId: input.deviceId, decision: "REPLACEMENT" } }, update: {} });

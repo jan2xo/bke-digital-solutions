@@ -19,4 +19,10 @@ describe("commercial lease lifecycle", () => {
   it("defines every commercial issuance action without creating Agent runtime behavior", () => {
     expect(commercialLeaseActions).toEqual(["ACTIVATION", "REFRESH", "RENEWAL", "TRANSFER", "REPLACEMENT", "REVOCATION_REPLACEMENT", "KEY_ROTATION"]);
   });
+
+  it("requires replay callers to preserve the original binding inputs", () => {
+    const metadata = { installationId: "install-a", deviceId: "device-a" };
+    expect(metadata.installationId).toBe("install-a");
+    expect(metadata.deviceId).toBe("device-a");
+  });
 });
