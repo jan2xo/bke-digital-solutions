@@ -362,6 +362,7 @@ model User {
   administratorMfa                AdministratorMfaMethod?
   recoveryCodes                   AdministratorRecoveryCode[]
   mfaChallenges                   MfaChallenge[]
+  emergencyMfaAuthorizations     EmergencyMfaEnrollmentAuthorization[]
   securityEvents                  SecurityEvent[]
   providerConfigurationsCreated   ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
   providerConfigurationsUpdated   ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
@@ -460,6 +461,23 @@ model MfaChallenge {
   user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, expiresAt])
+}
+
+model EmergencyMfaEnrollmentAuthorization {
+  id                 String    @id @default(cuid())
+  userId             String
+  tokenHash          String    @unique
+  createdAt          DateTime  @default(now())
+  expiresAt          DateTime
+  consumedAt         DateTime?
+  revokedAt          DateTime?
+  recoveryReason     String
+  operatorIdentity   String
+  ownerKeyVersion    Int
+  deploymentEnvironment String
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt, consumedAt])
 }
 
 model SecurityEvent {

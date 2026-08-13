@@ -72,6 +72,11 @@ export type AdministratorRecoveryCode = Prisma.AdministratorRecoveryCodeModel
  */
 export type MfaChallenge = Prisma.MfaChallengeModel
 /**
+ * Model EmergencyMfaEnrollmentAuthorization
+ *
+ */
+export type EmergencyMfaEnrollmentAuthorization = Prisma.EmergencyMfaEnrollmentAuthorizationModel
+/**
  * Model SecurityEvent
  *
  */

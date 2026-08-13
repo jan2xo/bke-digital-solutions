@@ -403,6 +403,7 @@ export const ModelName = {
   AdministratorMfaMethod: 'AdministratorMfaMethod',
   AdministratorRecoveryCode: 'AdministratorRecoveryCode',
   MfaChallenge: 'MfaChallenge',
+  EmergencyMfaEnrollmentAuthorization: 'EmergencyMfaEnrollmentAuthorization',
   SecurityEvent: 'SecurityEvent',
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
@@ -474,7 +475,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -919,6 +920,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MfaChallengeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MfaChallengeCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmergencyMfaEnrollmentAuthorization: {
+      payload: Prisma.$EmergencyMfaEnrollmentAuthorizationPayload<ExtArgs>
+      fields: Prisma.EmergencyMfaEnrollmentAuthorizationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>
+        }
+        findFirst: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>
+        }
+        findMany: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>[]
+        }
+        create: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>
+        }
+        createMany: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>[]
+        }
+        delete: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>
+        }
+        update: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload>
+        }
+        aggregate: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmergencyMfaEnrollmentAuthorization>
+        }
+        groupBy: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmergencyMfaEnrollmentAuthorizationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmergencyMfaEnrollmentAuthorizationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmergencyMfaEnrollmentAuthorizationCountAggregateOutputType> | number
         }
       }
     }
@@ -5201,6 +5276,23 @@ export const MfaChallengeScalarFieldEnum = {
 export type MfaChallengeScalarFieldEnum = (typeof MfaChallengeScalarFieldEnum)[keyof typeof MfaChallengeScalarFieldEnum]
 
 
+export const EmergencyMfaEnrollmentAuthorizationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  revokedAt: 'revokedAt',
+  recoveryReason: 'recoveryReason',
+  operatorIdentity: 'operatorIdentity',
+  ownerKeyVersion: 'ownerKeyVersion',
+  deploymentEnvironment: 'deploymentEnvironment'
+} as const
+
+export type EmergencyMfaEnrollmentAuthorizationScalarFieldEnum = (typeof EmergencyMfaEnrollmentAuthorizationScalarFieldEnum)[keyof typeof EmergencyMfaEnrollmentAuthorizationScalarFieldEnum]
+
+
 export const SecurityEventScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -7137,6 +7229,7 @@ export type GlobalOmitConfig = {
   administratorMfaMethod?: Prisma.AdministratorMfaMethodOmit
   administratorRecoveryCode?: Prisma.AdministratorRecoveryCodeOmit
   mfaChallenge?: Prisma.MfaChallengeOmit
+  emergencyMfaEnrollmentAuthorization?: Prisma.EmergencyMfaEnrollmentAuthorizationOmit
   securityEvent?: Prisma.SecurityEventOmit
   verificationToken?: Prisma.VerificationTokenOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit

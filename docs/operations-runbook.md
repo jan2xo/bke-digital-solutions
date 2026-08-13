@@ -12,6 +12,7 @@ last resort, not an HTTP endpoint or MFA bypass:
 
 ```sh
 ADMIN_RECOVERY_ACK=I_UNDERSTAND_THIS_RESETS_ADMINISTRATOR_MFA \
+ADMIN_RECOVERY_OWNER_SECRET='<owner-supplied-secret>' \
 ADMIN_RECOVERY_EMAIL=admin@example.invalid \
 ADMIN_RECOVERY_CONFIRM=admin@example.invalid \
 ADMIN_RECOVERY_REASON='Documented emergency lockout' \
@@ -24,9 +25,10 @@ non-empty reason, and operator identity. The command targets an existing active
 administrator, preserves password and role, invalidates MFA methods, recovery
 codes, challenges, and active sessions, records an
 `ADMIN_EMERGENCY_MFA_RECOVERY` audit entry, creates no session, and forces fresh
-MFA enrollment at the next normal login. Keep secrets, passwords, and codes out
-of shell history. This is separate from `ALLOW_BREAK_GLASS`, which is release
-governance only.
+MFA enrollment at the next normal login. The command prints a short-lived
+one-time enrollment token; pass it only through the enrollment screen and never
+log or persist it. Keep secrets, passwords, and codes out of shell history.
+This is separate from `ALLOW_BREAK_GLASS`, which is release governance only.
 
 ## Compliance review
 

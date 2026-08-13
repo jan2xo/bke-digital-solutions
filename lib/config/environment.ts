@@ -34,6 +34,8 @@ export const environmentSchema = z.object({
   MALWARE_SCANNER_TIMEOUT_MS: z.coerce.number().int().min(100).max(120000).default(30000),
   MALWARE_SCANNER_MAX_BYTES: z.coerce.number().int().min(1).max(536870912).default(262144000),
   ALLOW_BREAK_GLASS: z.preprocess(optional, z.enum(["true", "false"]).default("false")),
+  ADMIN_OWNER_RECOVERY_KEY: z.preprocess(optional, secret.optional()),
+  ADMIN_OWNER_RECOVERY_KEY_VERSION: z.coerce.number().int().min(1).default(1),
   CRON_SECRET: secret,
   PROVIDER_CREDENTIALS_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   PROVIDER_CREDENTIALS_KEY_VERSION: z.coerce.number().int().min(1).default(1),

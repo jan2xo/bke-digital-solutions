@@ -57,6 +57,7 @@ export const ModelName = {
   AdministratorMfaMethod: 'AdministratorMfaMethod',
   AdministratorRecoveryCode: 'AdministratorRecoveryCode',
   MfaChallenge: 'MfaChallenge',
+  EmergencyMfaEnrollmentAuthorization: 'EmergencyMfaEnrollmentAuthorization',
   SecurityEvent: 'SecurityEvent',
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
@@ -225,6 +226,23 @@ export const MfaChallengeScalarFieldEnum = {
 } as const
 
 export type MfaChallengeScalarFieldEnum = (typeof MfaChallengeScalarFieldEnum)[keyof typeof MfaChallengeScalarFieldEnum]
+
+
+export const EmergencyMfaEnrollmentAuthorizationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  revokedAt: 'revokedAt',
+  recoveryReason: 'recoveryReason',
+  operatorIdentity: 'operatorIdentity',
+  ownerKeyVersion: 'ownerKeyVersion',
+  deploymentEnvironment: 'deploymentEnvironment'
+} as const
+
+export type EmergencyMfaEnrollmentAuthorizationScalarFieldEnum = (typeof EmergencyMfaEnrollmentAuthorizationScalarFieldEnum)[keyof typeof EmergencyMfaEnrollmentAuthorizationScalarFieldEnum]
 
 
 export const SecurityEventScalarFieldEnum = {

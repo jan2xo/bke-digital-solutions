@@ -65,7 +65,7 @@ services:
       - ./scripts/minio-init.sh:/usr/local/bin/minio-init.sh:ro
   caddy:
     ports: !override
-      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8443:443"
     volumes: !override
       - ./Caddyfile.certification:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

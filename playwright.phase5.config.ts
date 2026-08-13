@@ -1,2 +1,2 @@
 import { defineConfig } from "@playwright/test";
-export default defineConfig({ testDir: "tests/e2e", workers: 1, fullyParallel: false, use: { baseURL: "http://jl-bke.localhost:8080", trace: "on-first-retry" }, timeout: 120000 });
+export default defineConfig({ testDir: "tests/e2e", workers: 1, fullyParallel: false, use: { baseURL: "https://jl-bke.localhost:8443", ignoreHTTPSErrors: true, trace: "on-first-retry" }, timeout: 120000 });
