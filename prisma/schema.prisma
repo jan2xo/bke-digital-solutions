@@ -1603,9 +1603,13 @@ model EmailOutbox {
   lastError        String?
   createdAt        DateTime  @default(now())
   sentAt           DateTime?
+  claimedBy        String?
+  claimedAt        DateTime?
+  claimExpiresAt   DateTime?
   deduplicationKey String?   @unique
 
   @@index([status, createdAt])
+  @@index([status, claimExpiresAt])
 }
 
 model ExternalProviderConfiguration {

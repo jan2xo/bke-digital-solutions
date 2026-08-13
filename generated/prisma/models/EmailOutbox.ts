@@ -44,6 +44,9 @@ export type EmailOutboxMinAggregateOutputType = {
   lastError: string | null
   createdAt: Date | null
   sentAt: Date | null
+  claimedBy: string | null
+  claimedAt: Date | null
+  claimExpiresAt: Date | null
   deduplicationKey: string | null
 }
 
@@ -57,6 +60,9 @@ export type EmailOutboxMaxAggregateOutputType = {
   lastError: string | null
   createdAt: Date | null
   sentAt: Date | null
+  claimedBy: string | null
+  claimedAt: Date | null
+  claimExpiresAt: Date | null
   deduplicationKey: string | null
 }
 
@@ -71,6 +77,9 @@ export type EmailOutboxCountAggregateOutputType = {
   lastError: number
   createdAt: number
   sentAt: number
+  claimedBy: number
+  claimedAt: number
+  claimExpiresAt: number
   deduplicationKey: number
   _all: number
 }
@@ -94,6 +103,9 @@ export type EmailOutboxMinAggregateInputType = {
   lastError?: true
   createdAt?: true
   sentAt?: true
+  claimedBy?: true
+  claimedAt?: true
+  claimExpiresAt?: true
   deduplicationKey?: true
 }
 
@@ -107,6 +119,9 @@ export type EmailOutboxMaxAggregateInputType = {
   lastError?: true
   createdAt?: true
   sentAt?: true
+  claimedBy?: true
+  claimedAt?: true
+  claimExpiresAt?: true
   deduplicationKey?: true
 }
 
@@ -121,6 +136,9 @@ export type EmailOutboxCountAggregateInputType = {
   lastError?: true
   createdAt?: true
   sentAt?: true
+  claimedBy?: true
+  claimedAt?: true
+  claimExpiresAt?: true
   deduplicationKey?: true
   _all?: true
 }
@@ -222,6 +240,9 @@ export type EmailOutboxGroupByOutputType = {
   lastError: string | null
   createdAt: Date
   sentAt: Date | null
+  claimedBy: string | null
+  claimedAt: Date | null
+  claimExpiresAt: Date | null
   deduplicationKey: string | null
   _count: EmailOutboxCountAggregateOutputType | null
   _avg: EmailOutboxAvgAggregateOutputType | null
@@ -259,6 +280,9 @@ export type EmailOutboxWhereInput = {
   lastError?: Prisma.StringNullableFilter<"EmailOutbox"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmailOutbox"> | Date | string
   sentAt?: Prisma.DateTimeNullableFilter<"EmailOutbox"> | Date | string | null
+  claimedBy?: Prisma.StringNullableFilter<"EmailOutbox"> | string | null
+  claimedAt?: Prisma.DateTimeNullableFilter<"EmailOutbox"> | Date | string | null
+  claimExpiresAt?: Prisma.DateTimeNullableFilter<"EmailOutbox"> | Date | string | null
   deduplicationKey?: Prisma.StringNullableFilter<"EmailOutbox"> | string | null
 }
 
@@ -273,6 +297,9 @@ export type EmailOutboxOrderByWithRelationInput = {
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  claimedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  claimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  claimExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deduplicationKey?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
@@ -291,6 +318,9 @@ export type EmailOutboxWhereUniqueInput = Prisma.AtLeast<{
   lastError?: Prisma.StringNullableFilter<"EmailOutbox"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmailOutbox"> | Date | string
   sentAt?: Prisma.DateTimeNullableFilter<"EmailOutbox"> | Date | string | null
+  claimedBy?: Prisma.StringNullableFilter<"EmailOutbox"> | string | null
+  claimedAt?: Prisma.DateTimeNullableFilter<"EmailOutbox"> | Date | string | null
+  claimExpiresAt?: Prisma.DateTimeNullableFilter<"EmailOutbox"> | Date | string | null
 }, "id" | "deduplicationKey">
 
 export type EmailOutboxOrderByWithAggregationInput = {
@@ -304,6 +334,9 @@ export type EmailOutboxOrderByWithAggregationInput = {
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  claimedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  claimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  claimExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deduplicationKey?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EmailOutboxCountOrderByAggregateInput
   _avg?: Prisma.EmailOutboxAvgOrderByAggregateInput
@@ -326,6 +359,9 @@ export type EmailOutboxScalarWhereWithAggregatesInput = {
   lastError?: Prisma.StringNullableWithAggregatesFilter<"EmailOutbox"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EmailOutbox"> | Date | string
   sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailOutbox"> | Date | string | null
+  claimedBy?: Prisma.StringNullableWithAggregatesFilter<"EmailOutbox"> | string | null
+  claimedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailOutbox"> | Date | string | null
+  claimExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailOutbox"> | Date | string | null
   deduplicationKey?: Prisma.StringNullableWithAggregatesFilter<"EmailOutbox"> | string | null
 }
 
@@ -340,6 +376,9 @@ export type EmailOutboxCreateInput = {
   lastError?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
+  claimedBy?: string | null
+  claimedAt?: Date | string | null
+  claimExpiresAt?: Date | string | null
   deduplicationKey?: string | null
 }
 
@@ -354,6 +393,9 @@ export type EmailOutboxUncheckedCreateInput = {
   lastError?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
+  claimedBy?: string | null
+  claimedAt?: Date | string | null
+  claimExpiresAt?: Date | string | null
   deduplicationKey?: string | null
 }
 
@@ -368,6 +410,9 @@ export type EmailOutboxUpdateInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deduplicationKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -382,6 +427,9 @@ export type EmailOutboxUncheckedUpdateInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deduplicationKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -396,6 +444,9 @@ export type EmailOutboxCreateManyInput = {
   lastError?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
+  claimedBy?: string | null
+  claimedAt?: Date | string | null
+  claimExpiresAt?: Date | string | null
   deduplicationKey?: string | null
 }
 
@@ -410,6 +461,9 @@ export type EmailOutboxUpdateManyMutationInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deduplicationKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -424,6 +478,9 @@ export type EmailOutboxUncheckedUpdateManyInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  claimExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deduplicationKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -438,6 +495,9 @@ export type EmailOutboxCountOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  claimedBy?: Prisma.SortOrder
+  claimedAt?: Prisma.SortOrder
+  claimExpiresAt?: Prisma.SortOrder
   deduplicationKey?: Prisma.SortOrder
 }
 
@@ -455,6 +515,9 @@ export type EmailOutboxMaxOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  claimedBy?: Prisma.SortOrder
+  claimedAt?: Prisma.SortOrder
+  claimExpiresAt?: Prisma.SortOrder
   deduplicationKey?: Prisma.SortOrder
 }
 
@@ -468,6 +531,9 @@ export type EmailOutboxMinOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  claimedBy?: Prisma.SortOrder
+  claimedAt?: Prisma.SortOrder
+  claimExpiresAt?: Prisma.SortOrder
   deduplicationKey?: Prisma.SortOrder
 }
 
@@ -488,6 +554,9 @@ export type EmailOutboxSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   lastError?: boolean
   createdAt?: boolean
   sentAt?: boolean
+  claimedBy?: boolean
+  claimedAt?: boolean
+  claimExpiresAt?: boolean
   deduplicationKey?: boolean
 }, ExtArgs["result"]["emailOutbox"]>
 
@@ -502,6 +571,9 @@ export type EmailOutboxSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   lastError?: boolean
   createdAt?: boolean
   sentAt?: boolean
+  claimedBy?: boolean
+  claimedAt?: boolean
+  claimExpiresAt?: boolean
   deduplicationKey?: boolean
 }, ExtArgs["result"]["emailOutbox"]>
 
@@ -516,6 +588,9 @@ export type EmailOutboxSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   lastError?: boolean
   createdAt?: boolean
   sentAt?: boolean
+  claimedBy?: boolean
+  claimedAt?: boolean
+  claimExpiresAt?: boolean
   deduplicationKey?: boolean
 }, ExtArgs["result"]["emailOutbox"]>
 
@@ -530,10 +605,13 @@ export type EmailOutboxSelectScalar = {
   lastError?: boolean
   createdAt?: boolean
   sentAt?: boolean
+  claimedBy?: boolean
+  claimedAt?: boolean
+  claimExpiresAt?: boolean
   deduplicationKey?: boolean
 }
 
-export type EmailOutboxOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "recipient" | "subject" | "payload" | "status" | "attempts" | "lastError" | "createdAt" | "sentAt" | "deduplicationKey", ExtArgs["result"]["emailOutbox"]>
+export type EmailOutboxOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "recipient" | "subject" | "payload" | "status" | "attempts" | "lastError" | "createdAt" | "sentAt" | "claimedBy" | "claimedAt" | "claimExpiresAt" | "deduplicationKey", ExtArgs["result"]["emailOutbox"]>
 
 export type $EmailOutboxPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "EmailOutbox"
@@ -549,6 +627,9 @@ export type $EmailOutboxPayload<ExtArgs extends runtime.Types.Extensions.Interna
     lastError: string | null
     createdAt: Date
     sentAt: Date | null
+    claimedBy: string | null
+    claimedAt: Date | null
+    claimExpiresAt: Date | null
     deduplicationKey: string | null
   }, ExtArgs["result"]["emailOutbox"]>
   composites: {}
@@ -983,6 +1064,9 @@ export interface EmailOutboxFieldRefs {
   readonly lastError: Prisma.FieldRef<"EmailOutbox", 'String'>
   readonly createdAt: Prisma.FieldRef<"EmailOutbox", 'DateTime'>
   readonly sentAt: Prisma.FieldRef<"EmailOutbox", 'DateTime'>
+  readonly claimedBy: Prisma.FieldRef<"EmailOutbox", 'String'>
+  readonly claimedAt: Prisma.FieldRef<"EmailOutbox", 'DateTime'>
+  readonly claimExpiresAt: Prisma.FieldRef<"EmailOutbox", 'DateTime'>
   readonly deduplicationKey: Prisma.FieldRef<"EmailOutbox", 'String'>
 }
 

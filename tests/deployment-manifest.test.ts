@@ -22,7 +22,7 @@ const baseCompose = {
 const caddyfile = "${APP_DOMAIN} { reverse_proxy app:3000 }";
 const dockerfile = "HEALTHCHECK CMD node health.js";
 
-function composeWith(change) {
+function composeWith(change: Record<string, unknown>) {
   return { ...baseCompose, services: { ...baseCompose.services, ...change } };
 }
 
