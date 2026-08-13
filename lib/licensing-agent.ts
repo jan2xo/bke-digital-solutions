@@ -9,7 +9,12 @@ function canonical(payload: LeasePayload) { return Buffer.from(JSON.stringify(pa
 export function issueSignedLease(payload: LeasePayload, privateKeyOverride?: string) {
   if (env.NODE_ENV === "production" && !privateKeyOverride && (!env.LICENSE_SIGNING_PRIVATE_KEY || !env.LICENSE_SIGNING_PUBLIC_KEY)) throw new Error("LEASE_SIGNING_NOT_CONFIGURED");
   const serialized = canonical(payload).toString("utf8");
-  return { payload: serialized, signature: sign(null, Buffer.from(serialized), key(privateKeyOverride ?? env.LICENSE_SIGNING_PRIVATE_KEY, "private")).toString("base64"), key_id: payload.key_id, algorithm: "Ed25519" as const };
+  const privateKey = key(privateKeyOverride ?? env.LICENSE_SIGNING_PRIVATE_KEY, "private");
+  const signature = sign(null, Buffer.from(serialized), privateKey).toString("base64");
+  // Never return an envelope that cannot be verified by the corresponding key.
+  const publicKey = createPublicKey(privateKey);
+  if (!verify(null, Buffer.from(serialized), publicKey, Buffer.from(signature, "base64"))) throw new Error("LEASE_SIGNING_SELF_VERIFICATION_FAILED");
+  return { payload: serialized, signature, key_id: payload.key_id, algorithm: "Ed25519" as const };
 }
 export function verifySignedLease(lease: ReturnType<typeof issueSignedLease>, publicKeyOverride?: string) { return Boolean(lease.algorithm === "Ed25519" && verify(null, Buffer.from(lease.payload), key(publicKeyOverride ?? env.LICENSE_SIGNING_PUBLIC_KEY, "public"), Buffer.from(lease.signature, "base64"))); }
 export function publicLeaseKey() { if (env.NODE_ENV === "production" && !env.LICENSE_SIGNING_PUBLIC_KEY) throw new Error("LEASE_SIGNING_NOT_CONFIGURED"); const configured = env.LICENSE_SIGNING_PUBLIC_KEY; const publicKey = configured ? (configured.includes("BEGIN") ? configured : Buffer.from(configured, "base64").toString("utf8")) : testKeys?.publicKey.export({ format: "pem", type: "spki" }).toString(); return { key_id: env.LICENSE_SIGNING_KEY_ID, algorithm: "Ed25519" as const, public_key: publicKey }; }

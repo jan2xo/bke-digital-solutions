@@ -17,6 +17,12 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
     expect(() => deviceIdentity("short")).toThrow("INVALID_DEVICE_ID");
   });
 
+  it("canonicalizes Unicode identities and rejects control characters", async () => {
+    const { canonicalIdentity } = await import("@/lib/licensing/product-identity");
+    expect(canonicalIdentity("  Ｄｅｖｉｃｅ-identity-123456  ")).toBe("Device-identity-123456");
+    expect(() => canonicalIdentity("device-identity-\u0000123456")).toThrow("INVALID_DEVICE_ID");
+  });
+
   it("builds the product manifest identity consumed by products", async () => {
     const { buildProductManifest } = await import("@/lib/licensing/product-identity");
     expect(buildProductManifest({ product_id: "prod-1", product_version: "1.2.3", install_id: "install-1", device_id: "device-1" })).toEqual({ schema: "bke.manifest.v1", product_id: "prod-1", product_version: "1.2.3", install_id: "install-1", device_id: "device-1" });
@@ -29,5 +35,13 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
     expect(parseLeaseEnvelope(envelope)).toEqual(envelope);
     expect(() => leaseEnvelopeSchema.parse({ ...envelope, authorization: { allowed: true } })).toThrow();
     expect(() => leasePayloadSchema.parse({ ...JSON.parse(payload), authorization: true })).toThrow();
+  });
+
+  it("self-verifies newly issued signed leases", async () => {
+    const { issueSignedLease, verifySignedLease } = await import("@/lib/licensing-agent");
+    const payload = { lease_id: "l-self", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519" as const, revoked: false, superseded_by: null };
+    const lease = issueSignedLease(payload);
+    expect(verifySignedLease(lease)).toBe(true);
+    expect(verifySignedLease({ ...lease, payload: lease.payload.replace("l-self", "l-other") })).toBe(false);
   });
 });
