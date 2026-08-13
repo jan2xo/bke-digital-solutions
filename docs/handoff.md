@@ -212,3 +212,12 @@ returned 200, the certification Vitest suite passed 187 tests with 6 credential-
 gated skips, and the Phase 5 Playwright control-plane checks passed 2/2. Static,
 Prisma, hygiene, and diff checks also passed. This is local certification evidence,
 not VPS or live-provider certification.
+### Phase 5.5 handoff
+
+Email delivery failures now use sanitized BKE categories in operational
+evidence; raw provider errors, credentials, codes, and message bodies are not
+persisted. `ALLOW_BREAK_GLASS` remains release-governance-only and does not
+bypass MFA or integrity gates. Phase 5.5 certification passed in the
+owner-provided runtime: Vitest 194 passed with 6 credential-gated skips; Core
+Playwright 11/11, Phase 4 2/2, and Phase 5 control-plane/scanner checks passed.
+Production provider credentials and deployment certification remain external.

@@ -266,3 +266,14 @@ ClamAV. ClamAV NUL-terminated response text was sanitized before persistence.
 
 Added a release detail/readiness surface, supported multi-artifact controls, evidence inspection, and read-only commercial signing-key registry visibility. No schema migration or production data change was required.
 Phase 5 completion pass added subscription visibility, scanner status visibility, confirmation hardening, and guided transfer/reveal controls without schema changes.
+## Phase 5.5
+
+The production email-quota incident is addressed without an MFA bypass:
+provider failures are normalized and recorded safely while the authentication
+surface remains generic and fail closed. Recovery codes remain the only
+supported email-outage recovery path.
+Final owner-provided certification passed: provider failure handling,
+fail-closed MFA, recovery-code replay/regeneration, observability, and
+non-exposure controls passed in the certification stack. Vitest passed 194
+tests with 6 credential-gated skips; browser regression passed Core 11/11,
+Phase 4 2/2, and Phase 5 control-plane/scanner lifecycle checks.

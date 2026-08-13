@@ -7,3 +7,10 @@ Password success creates no privileged session. It creates a purpose-bound, ten-
 Successful verification atomically consumes the challenge and creates a server-owned MFA-verified session with authentication method `PASSWORD_EMAIL_OTP`. Login, enrollment, and recent-authentication challenges cannot be substituted for one another. The six-digit code is stored only as a keyed hash on its database challenge; plaintext codes and raw email payloads are never persisted or logged. Login emails and the verification screen show the same short reference so administrators can identify the newest valid email after a resend. Recovery codes are cryptographically random, shown once, stored only as keyed hashes, and atomically consumed.
 
 The email provider is an availability dependency for ordinary administrator login. Keep recovery codes offline and test genuine Resend delivery before production. A mailbox compromise plus password compromise defeats this factor, so the administrator mailbox must itself use strong MFA, security alerts, and recovery controls.
+# Provider outage behavior
+
+If MFA email delivery fails, authentication remains blocked and the UI directs
+the administrator to use a saved recovery code or try again later. Recovery
+codes are generated cryptographically, stored only as HMAC hashes, consumed
+once, invalidated on regeneration, and regeneration requires recent MFA-authenticated
+administrator access. `ALLOW_BREAK_GLASS` is unrelated to authentication.

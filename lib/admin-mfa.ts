@@ -7,6 +7,8 @@ import { createSession } from "@/lib/auth";
 import { sendAdministratorLoginCode } from "@/lib/email";
 import { hashToken, randomToken } from "@/lib/security/crypto";
 import { emailOtpForChallenge, hashEmailOtp, hashRecoveryCode, verifyHashedEmailOtp } from "@/lib/security/mfa";
+import { safeEmailFailureCode } from "@/lib/email/failures";
+import { audit } from "@/lib/audit";
 
 export const ADMIN_EMAIL_CHALLENGE_COOKIE = env.NODE_ENV === "production" ? "__Host-bke_mfa_challenge" : "bke_mfa_challenge";
 const CHALLENGE_TTL_MS = 10 * 60_000;
@@ -25,7 +27,7 @@ export async function createEmailChallenge(userId: string, purpose: MfaChallenge
   });
   let delivered=true;
   try { await sendAdministratorLoginCode(user.email, code, reference); }
-  catch { delivered=false; }
+  catch (error) { delivered=false; await audit({ actorId: userId, action: "EMAIL_DELIVERY_FAILED", targetType: "MfaChallenge", targetId: "delivery", metadata: { provider: "resend", purpose, category: safeEmailFailureCode(error) } }).catch(() => undefined); }
   return {token,delivered,reference};
 }
 

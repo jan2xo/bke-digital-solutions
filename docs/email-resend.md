@@ -27,3 +27,10 @@ Phase 5.2 genuine results: direct Resend delivery passed; public registration re
 # Database credential source
 
 Resend may resolve its API key and sender identity from the encrypted provider store. Save and validate the `@jl-bke.com` sender before enablement. Status APIs show only a masked hint. Genuine delivery certification remains separate from credential validation.
+# Phase 5.5 resilience
+
+Resend failures are normalized into BKE-owned categories before they reach
+outbox persistence or operational audit evidence. User-facing MFA responses
+remain generic and fail closed; provider status, request identifiers, and
+credentials are never exposed. The certification incident (quota exhaustion)
+must be handled with a saved recovery code or later retry.

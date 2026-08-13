@@ -71,3 +71,12 @@ Phases 1–5 and 16–19 can run in parallel after Phase 0. Phases 8–12 requir
 Do not start a feature phase automatically. Obtain owner review, then pursue the smallest outstanding evidence gate. Agent-owned phases must not be reimplemented here, and historical reports must remain historical.
 - Phase 3 — Product Verification & Supply-Chain Signing is implemented in the repository: protected server-side signing, deterministic manifests, independent verification, idempotent evidence, and canonical release gating. Owner review is pending; production scanner/certificate provisioning remains deferred.
 Phase 5 implementation and certification are complete for the current control-plane scope. The rebuilt certification stack was healthy; control-plane browser checks passed, certification Vitest passed 187 tests with 6 credential-gated skips, and static/Prisma/security checks passed. Production provider credentials, scanner provisioning, and VPS deployment remain external gates.
+### Phase 5.5 — Production authentication and provider resilience
+
+PASS — owner-provided certification runtime verified normalized provider failure
+evidence, fail-closed MFA delivery, provider observability, recovery-code
+status/UX and replay/regeneration, and sensitive-data non-exposure. Vitest
+passed 194 tests with 6 credential-gated skips; Core Playwright 11/11, Phase 4
+2/2, and Phase 5 control-plane/scanner lifecycle checks passed. No
+authentication bypass was introduced. Production provider credentials and
+deployment certification remain external.

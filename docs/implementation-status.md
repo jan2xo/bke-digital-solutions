@@ -283,3 +283,13 @@ validation, security hygiene, and `git diff --check` passed. The scanner page no
 uses a live ClamAV health probe rather than inferring availability from historical
 evidence. Production provider credentials, VPS deployment, and production scanner
 provisioning remain external work.
+## Phase 5.5 — Production authentication and provider resilience
+
+Phase 5.5 is certified in the owner-provided certification runtime. Normalized
+email failure taxonomy, sanitized outbox/audit evidence, fail-closed MFA
+delivery, provider delivery observability, recovery-code status/UX, and
+non-exposure controls passed. Certification Vitest completed with 194 passed
+and 6 credential-gated skips; Core Playwright passed 11/11, Phase 4 passed 2/2,
+and Phase 5 control-plane plus scanner lifecycle checks passed. TypeScript,
+ESLint, Prisma validation, security hygiene, and `git diff --check` passed.
+Production provider credentials and deployment certification remain external.
