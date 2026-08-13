@@ -9,11 +9,13 @@ import { decryptLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
 import { activeCommercialSigningKey } from "@/lib/licensing/signing-registry";
 import { requireProductVersion } from "@/lib/licensing/lifecycle";
 import { refreshRequiresReplacement } from "@/lib/licensing/refresh-decision";
+import { CLOUD_AGENT_PROTOCOL_VERSION, CloudAgentProtocolError, requireCloudAgentVersion } from "@/lib/licensing/cloud-agent-contract";
 
 const schema = activationSchema.extend({ operationId: z.string().min(8).max(128), currentLeaseId: z.string().uuid() });
 
 export async function POST(request: Request) {
   try {
+    requireCloudAgentVersion(request);
     const input = schema.parse(await request.json());
     if (!(await rateLimit(`refresh:${clientIp(request)}:${input.licenseKey.slice(-4)}`, 20, 3600)).allowed) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
     const license = await db.license.findUnique({
@@ -29,11 +31,12 @@ export async function POST(request: Request) {
       const operation = await db.commercialLeaseOperation.upsert({ where: { operationId: input.operationId }, create: { operationId: input.operationId, licenseId: license.id, action: "REFRESH", status: "COMPLETED", resultLeaseId: current.leaseId, metadata: { currentLeaseId: input.currentLeaseId, installationId: input.installationId, deviceId: input.deviceId, decision: "REUSED" }, completedAt: new Date() }, update: {} });
       const metadata = (operation.metadata ?? {}) as Record<string, unknown>;
       if (metadata.currentLeaseId !== input.currentLeaseId || metadata.installationId !== input.installationId || metadata.deviceId !== input.deviceId) throw new Error("OPERATION_INPUT_MISMATCH");
-      if (operation.resultLeaseId === current.leaseId) return NextResponse.json({ lease: { payload: current.leasePayload, signature: current.leaseSignature, key_id: current.signerKeyId, algorithm: "Ed25519" as const } }, { status: 200 });
+      if (operation.resultLeaseId === current.leaseId) return NextResponse.json({ lease: { payload: current.leasePayload, signature: current.leaseSignature, key_id: current.signerKeyId, algorithm: "Ed25519" as const } }, { status: 200, headers: { "x-bke-licensing-version": CLOUD_AGENT_PROTOCOL_VERSION } });
     }
     await db.commercialLeaseOperation.upsert({ where: { operationId: input.operationId }, create: { operationId: input.operationId, licenseId: license.id, action: "REFRESH", metadata: { currentLeaseId: input.currentLeaseId, installationId: input.installationId, deviceId: input.deviceId, decision: "REPLACEMENT" } }, update: {} });
-    return NextResponse.json(await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext!), installationId: input.installationId, deviceId: input.deviceId, operationId: input.operationId, action: "REFRESH" }), { status: 200 });
+    return NextResponse.json(await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext!), installationId: input.installationId, deviceId: input.deviceId, operationId: input.operationId, action: "REFRESH" }), { status: 200, headers: { "x-bke-licensing-version": CLOUD_AGENT_PROTOCOL_VERSION } });
   } catch (error) {
+    if (error instanceof CloudAgentProtocolError) return NextResponse.json({ error: error.code }, { status: error.status });
     const code = error instanceof Error && ["REFRESH_BINDING_MISMATCH", "INVALID_LICENSE_VERSION"].includes(error.message) ? error.message : "INVALID_LICENSE";
     return NextResponse.json({ error: code }, { status: code === "INVALID_LICENSE" ? 400 : 409 });
   }

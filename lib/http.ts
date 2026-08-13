@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { CloudAgentProtocolError } from "@/lib/licensing/cloud-agent-contract";
 
 const statuses: Record<string, number> = {
   UNAUTHENTICATED: 401, EMAIL_NOT_VERIFIED: 403, FORBIDDEN: 403, ACCOUNT_NOT_ACTIVE: 403, ACCOUNT_ROLE_FORBIDDEN: 403,
@@ -27,6 +28,7 @@ const statuses: Record<string, number> = {
 };
 
 export function apiError(error: unknown) {
+  if (error instanceof CloudAgentProtocolError) return NextResponse.json({ error: error.code }, { status: error.status });
   const code = error instanceof Error ? error.message : "INTERNAL_ERROR";
   const status = statuses[code] ?? 400;
   return NextResponse.json({ error: status >= 500 ? "INTERNAL_ERROR" : code }, { status });
