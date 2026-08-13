@@ -4,7 +4,7 @@ Cross-repository master plan: [docs/roadmaps/master-completion-roadmap.md](docs/
 
 Last synchronized: August 10, 2026
 
-Phase 2 release/latest resolution correction is implemented. Phase 3 Product Verification & Supply-Chain Signing is **PASS (certified 2026-08-13)**; Phase 4 has not started.
+Phase 2 release/latest resolution correction is implemented. Phase 3 Product Verification & Supply-Chain Signing is **PASS (certified 2026-08-13)**. Phase 4's malware/artifact security pipeline is implemented and has certification evidence for real ClamAV CLEAN, INFECTED, unavailable, timeout, mutation/rescan, and multi-artifact behavior; production ClamAV provisioning and production certification remain incomplete.
 
 Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.
 
@@ -23,8 +23,8 @@ The first VPS deployment exposed a fresh-install failure: production MinIO had n
 - RM1/RM2 commercial licensing and signing-registry work is committed and pushed at `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`).
 - The verified certification baseline for that commit is: 32 migrations current, Vitest 167 passed/6 credential-gated skipped, Playwright 11 passed, TypeScript passed, ESLint passed, production build passed, Compose/runtime healthy, and repository hygiene passed.
 - Commercial lease issuance, lifecycle operations, registry-backed signing, rotation, historical key publication, and Licensing Agent boundary controls are implemented. The Agent remains the runtime verification and authorization authority.
-- Live payments remain disabled. PayMongo/Resend production evidence, VPS deployment, restore certification, production malware scanning, signing certificates, and professional legal/privacy/tax approvals remain external gates.
-- The next active milestone is **Phase 6.10 — Production Deployment & Certification**. Deploy only the explicitly approved commit `5156caa`, not arbitrary working-tree state.
+- The project owner confirmed on 2026-08-13 that PayMongo is live and operational on the production VPS. Repository evidence independently verifies the implementation and substantial Test Mode lifecycle coverage, but a dated production evidence bundle for the deployed commit, live checkout/webhook/refund/reconciliation scenarios, and the remaining provider-interactive cases is not retained here. Resend production evidence, full VPS certification, restore certification, production malware scanning, signing certificates, and professional legal/privacy/tax approvals remain separate gates.
+- The first incomplete ordered requirement is the existing **Phase 4 production ClamAV provisioning and certification** gate. After that gate, continue the existing **Phase 6.10 — Production Deployment & Certification** sequence. Deploy only the explicitly approved commit `5156caa`, not arbitrary working-tree state, unless the owner separately approves and certifies a newer baseline.
 
 ## Current operational sequence (authoritative)
 
@@ -34,7 +34,7 @@ The first VPS deployment exposed a fresh-install failure: production MinIO had n
 4. **6.10.3 Persistent services:** PostgreSQL, Valkey, MinIO/private object storage, persistent volumes, scheduler, and backup worker.
 5. **6.10.4 Cloudflare/Caddy/HTTPS:** DNS, origin routing, TLS, proxy headers, security headers, and firewall validation.
 6. **6.10.5 Initial deployment:** build, migrations, startup, health/readiness, and admin/customer access.
-7. **6.10.6 Provider certification:** PayMongo TEST checkout/webhooks/refunds/reconciliation and Resend production-domain delivery. PayMongo LIVE remains disabled pending owner approval.
+7. **6.10.6 Provider certification:** PayMongo TEST checkout/webhooks/refunds/reconciliation and Resend production-domain delivery. PayMongo LIVE operation is owner-confirmed; repository-retained production certification evidence remains incomplete.
 8. **6.10.7 Backup/restore certification:** PostgreSQL and object-storage backup, offsite copy, integrity verification, and isolated restore drill with RPO/RTO evidence.
 9. **6.10.8 Upgrade/rollback certification:** backup, fetch approved release, rebuild affected containers, migrate, verify, and rollback without losing persistent state.
 10. **6.10.9 Failure/reboot recovery:** service restart, scheduler/backup recovery, Docker boot, cold VPS reboot, and persistent-volume recovery.
@@ -158,7 +158,7 @@ Complete the genuine PayMongo sandbox lifecycle and define the controlled live-a
 - Duplicate delivery issues exactly one entitlement.
 - Failed/mismatched payments issue no entitlement.
 - Refund revokes access once.
-- Live payments remain disabled pending a separate owner approval.
+- PayMongo LIVE operation is owner-confirmed as of 2026-08-13. Full Phase 6.2 certification still requires the stated genuine provider evidence; operational use alone does not satisfy every certification criterion.
 
 ## Phase 6.3 — Scheduler & Lifecycle Automation
 

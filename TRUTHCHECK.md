@@ -4,7 +4,7 @@ Cross-repository planning baseline: [docs/roadmaps/master-completion-roadmap.md]
 
 Baseline updated: August 13, 2026
 
-Phase 2 release/latest resolution correction is implemented. Phase 3 is **PASS (certified 2026-08-13)** for live signing, independent verification, mutation invalidation, re-signing, idempotency, authorization, and private-key non-exposure. Phase 4 has not started.
+Phase 2 release/latest resolution correction is implemented. Phase 3 is **PASS (certified 2026-08-13)** for live signing, independent verification, mutation invalidation, re-signing, idempotency, authorization, and private-key non-exposure. Phase 4's malware/artifact pipeline is implemented and certified in the repository/certification environment; production ClamAV provisioning and certification remain incomplete.
 
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
@@ -14,7 +14,7 @@ Phase 6.9 release lifecycle and approval tracking are present in the Release Cen
 Pushed Git baseline: current `main` commit; historical hashes below are retained for provenance.
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 
-Current truth: Phases 6.4 through 6.12 repository controls are implemented. Certification backup CREATE, VERIFY, SIMULATE_RESTORE, and RESTORE_ISOLATED passed; production RPO/RTO, Phase 6.10 infrastructure, and live-provider evidence remain deferred.
+Current truth: Phases 6.4 through 6.12 repository controls are implemented. Certification backup CREATE, VERIFY, SIMULATE_RESTORE, and RESTORE_ISOLATED passed. The project owner confirmed on 2026-08-13 that the production VPS exists and PayMongo is live and operational there. Repository-retained evidence still does not certify the complete Phase 6.10 infrastructure sequence, production RPO/RTO, cold reboot, deployed commit, or every live-provider lifecycle scenario.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
@@ -26,7 +26,7 @@ This document is the concise repository baseline for future planning. It records
 
 BKE Digital Solutions is a functional software-commerce and licensing MVP. It includes a public catalog, customer portal, MFA-protected administrator portal, PayMongo hosted checkout integration, invoices, application-managed subscriptions, encrypted licenses, device activation, private installer downloads, trials, discounts, audit history, security events, and external-provider credential management.
 
-It is ready for local development and controlled sandbox certification. It is not ready for unrestricted public payments, real-customer production use, or production installer distribution.
+It is ready for local development and controlled sandbox certification. PayMongo production operation is owner-confirmed, but the repository does not yet contain the complete evidence required to certify unrestricted public payments, general real-customer production readiness, or production installer distribution.
 
 ## Repository truth
 

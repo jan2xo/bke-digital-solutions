@@ -6,7 +6,7 @@ Status: **Partially certified with provider-interactive cases remaining.** The o
 
 The application has genuine PayMongo Test Mode evidence for hosted checkout creation, signed paid settlement, signed refund settlement, provider payment retrieval, persisted reconciliation, and dashboard-originated duplicate paid/refund redelivery. Deterministic PostgreSQL integration coverage verifies delayed, out-of-order, failed-payment, refund, replay-conflict, idempotency, and transactional entitlement behavior.
 
-Phase 6.2 is not fully certified. A genuine failed checkout and PayMongo-originated resend of existing deliveries still require owner interaction with PayMongo's hosted checkout and Dashboard. Live payments remain disabled.
+Phase 6.2 is not fully certified. A genuine failed checkout and PayMongo-originated delayed/out-of-order resend evidence still require owner interaction with PayMongo's hosted checkout and Dashboard. The project owner confirmed on 2026-08-13 that PayMongo is live and operational on the production VPS. That operational fact does not replace the missing repository-retained certification evidence.
 
 ## Genuine provider evidence
 
@@ -71,4 +71,4 @@ One initial reconciliation run failed because `.env.certification` names the Com
 3. Confirm side-effect counts remain unchanged and no signature/raw payload appears in logs.
 4. Optionally provide exact raw event/signature files in a restricted temporary directory for the two raw-fixture tests, then securely delete them.
 
-Until those provider-interactive cases pass, the honest Phase 6.2 verdict remains **partially certified**, and public/live payments remain blocked.
+Until those provider-interactive cases pass, the honest Phase 6.2 repository verdict remains **partially certified**. PayMongo LIVE operation is owner-confirmed, but full certification remains open.

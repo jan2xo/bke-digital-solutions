@@ -93,7 +93,7 @@ Final certification: MinIO integration 5/5, certification Vitest 178 passed with
 - Lifecycle code and migration 19 are committed at `a43cfc5`; the commit message overstated completion.
 - Genuine Test Mode checkout, signed paid settlement, payment retrieval, persisted reconciliation, full refund, signed refund settlement, and transactional access revocation pass.
 - Deterministic PostgreSQL integration tests cover failed payment, duplicate/conflicting replay, delayed occurrence, out-of-order settlement, duplicate refund, mismatch rejection, and idempotent effects.
-- Genuine failed hosted checkout and PayMongo Dashboard resend evidence for duplicate, delayed, and out-of-order deliveries remain open. Live payments remain disabled.
+- Genuine failed hosted checkout and PayMongo Dashboard resend evidence for delayed and out-of-order deliveries remain open. Duplicate paid/refund redelivery evidence passes. The project owner confirmed on 2026-08-13 that PayMongo is live and operational on the production VPS; the repository does not yet retain a complete dated production lifecycle evidence bundle.
 - Caddy access logs now delete `Paymongo-Signature`; raw webhook bodies and provider credentials are not retained.
 - Genuine duplicate `payment.paid` and `payment.refunded` dashboard redeliveries returned HTTP 200 and produced no duplicate payment, invoice, entitlement, email, or audit effects.
 - Genuine failed, delayed, out-of-order, and raw-fixture cases remain explicitly not provider-certified; deterministic integration coverage remains.
