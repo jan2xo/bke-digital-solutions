@@ -221,3 +221,12 @@ bypass MFA or integrity gates. Phase 5.5 certification passed in the
 owner-provided runtime: Vitest 194 passed with 6 credential-gated skips; Core
 Playwright 11/11, Phase 4 2/2, and Phase 5 control-plane/scanner checks passed.
 Production provider credentials and deployment certification remain external.
+### Phase 5.6 handoff
+
+Administrator catastrophic lockout recovery is certified for the local
+certification environment. Use `npm run admin:recover-mfa` only as a last resort
+when email MFA, recovery codes, and authenticated sessions are unavailable. It
+requires deployment acknowledgement, exact target confirmation, reason, and
+operator identity; invalidates MFA/recovery/session state; preserves password
+and role; writes an audit record; and forces fresh MFA enrollment. It is not a
+public endpoint and is separate from `ALLOW_BREAK_GLASS`.

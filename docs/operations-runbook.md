@@ -4,6 +4,30 @@
 
 Use [vps-production-deployment.md](vps-production-deployment.md) for fresh Ubuntu/Hetzner bootstrap, firewall, Docker boot enablement, secrets, Cloudflare/Caddy, migrations, rollback, backups, and cold-reboot certification. Compose statically guarantees `unless-stopped` for all long-running services; Docker daemon boot and actual reboot recovery require owner evidence.
 
+## Administrator catastrophic lockout recovery
+
+Use this only when email MFA is unavailable, no recovery code exists, and no
+MFA-verified administrator session remains. This deployment-only command is a
+last resort, not an HTTP endpoint or MFA bypass:
+
+```sh
+ADMIN_RECOVERY_ACK=I_UNDERSTAND_THIS_RESETS_ADMINISTRATOR_MFA \
+ADMIN_RECOVERY_EMAIL=admin@example.invalid \
+ADMIN_RECOVERY_CONFIRM=admin@example.invalid \
+ADMIN_RECOVERY_REASON='Documented emergency lockout' \
+ADMIN_RECOVERY_OPERATOR_ID='approved-operator-id' \
+npm run admin:recover-mfa
+```
+
+Protected environments require the acknowledgement, exact target confirmation,
+non-empty reason, and operator identity. The command targets an existing active
+administrator, preserves password and role, invalidates MFA methods, recovery
+codes, challenges, and active sessions, records an
+`ADMIN_EMERGENCY_MFA_RECOVERY` audit entry, creates no session, and forces fresh
+MFA enrollment at the next normal login. Keep secrets, passwords, and codes out
+of shell history. This is separate from `ALLOW_BREAK_GLASS`, which is release
+governance only.
+
 ## Compliance review
 
 Use `/admin/compliance` to review technical evidence and explicit pending states. Never mark a legal, privacy, tax, BIR, or regulatory item implemented without the responsible professional approval and an auditable evidence reference.

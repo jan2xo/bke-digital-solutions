@@ -22,6 +22,7 @@
     "db:smoke": "tsx scripts/post-migration-smoke.ts",
     "db:seed": "tsx prisma/seed.ts",
     "admin:create": "tsx scripts/create-admin.ts",
+    "admin:recover-mfa": "tsx scripts/recover-admin.ts",
     "payments:reconcile": "tsx scripts/reconcile-payments.ts",
     "test:paymongo": "vitest run tests/sandbox/paymongo.sandbox.test.ts",
     "test:resend": "vitest run tests/sandbox/resend.sandbox.test.ts",

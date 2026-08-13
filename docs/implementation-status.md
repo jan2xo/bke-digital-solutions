@@ -293,3 +293,11 @@ and 6 credential-gated skips; Core Playwright passed 11/11, Phase 4 passed 2/2,
 and Phase 5 control-plane plus scanner lifecycle checks passed. TypeScript,
 ESLint, Prisma validation, security hygiene, and `git diff --check` passed.
 Production provider credentials and deployment certification remain external.
+## Phase 5.6 — Administrator emergency recovery
+
+PASS in certification: `npm run admin:recover-mfa` reset a disposable existing
+administrator's MFA state, recovery codes, challenges, and sessions atomically;
+preserved the password and role; recorded sanitized operator/reason evidence;
+and forced fresh MFA enrollment. Unknown-admin rejection and repository
+validation passed. The command is deployment-only and is not an authentication
+bypass.
