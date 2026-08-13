@@ -185,6 +185,8 @@ Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence
 Added release lifecycle stages, forward-only transition enforcement, approval records, evidence indicators, and Release Center visibility. Stable/LTS require explicit approval. Signing, malware, backup, compliance, and deployment gates remain separate.
 
 Phase 6.12 remediation implements repository-side signed lease issuance, cryptographic supply-chain evidence, fail-closed release gates, separation of duties, grant retry recovery, and discoverable Compliance/Supply Chain administration. External Agent compatibility, production credentials, legal review, recovery certification, and Phase 6.10 remain pending.
+
+Phase 4 malware/artifact security pipeline is implemented at the repository boundary: current private artifact bytes are scanned, per-artifact evidence is bound to the canonical manifest hash, failures are fail-closed, and multi-artifact releases require every artifact to be CLEAN. ClamAV deployment and live production certification remain operational follow-up work.
 ## Current status synchronization (RM5)
 
 RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4
@@ -260,3 +262,11 @@ rotation audit evidence.
 Phase 3 certification is PASS: live server-side Ed25519 signing, independent
 verification, artifact mutation invalidation, re-signing, repeat-sign idempotency,
 authorization controls, publication signing evidence, and private-key non-exposure.
+
+Phase 4 certification update: the real certification admin/API flow passed a
+harmless CLEAN scan and standard EICAR INFECTED scan through private MinIO and
+ClamAV. This is certification-only evidence; production scanner deployment and
+remaining failure/mutation/aggregation scenarios remain pending.
+### Phase 4 multi-artifact workflow
+
+Administrator artifact addition is supported at `POST /api/admin/versions/:id/artifacts`. The operation uploads to private storage, computes SHA-256 server-side, invalidates release integrity state, and records an audit event. Current malware publication requires matching CLEAN evidence for every active artifact.

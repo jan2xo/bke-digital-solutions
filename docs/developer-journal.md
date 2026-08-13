@@ -252,3 +252,13 @@ Implemented a server-only Ed25519 signing service with a dedicated supply-chain
 private-key configuration, deterministic versioned release manifests, immediate
 trusted-key verification, idempotent evidence, and canonical-manifest release
 gates. No malware scanner or production certificate provisioning was added.
+## Phase 4 — Malware/artifact security pipeline
+
+Implemented canonical-hash-bound scanning of private artifact bytes, ClamAV
+adapter support with bounded timeouts/size, deterministic EICAR test behavior,
+per-artifact immutable evidence, rescan controls, and fail-closed publication
+gates. Production scanner provisioning and live certification remain pending.
+
+Certification evidence now includes a real disposable admin/API CLEAN scan and
+standard EICAR INFECTED scan through certification Caddy, MinIO, the app, and
+ClamAV. ClamAV NUL-terminated response text was sanitized before persistence.

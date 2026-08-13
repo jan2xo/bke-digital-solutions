@@ -158,6 +158,18 @@ Use `docs/vps-production-deployment.md` for independent Ubuntu/Hetzner deploymen
 
 Phase 6.12 adds the commercial signed-lease issuer, evidence-backed supply-chain verification, fail-closed release gates, approval separation, and safe download grant recovery. Do not treat test signing/scanner evidence as production certification.
 
+## Phase 4 malware pipeline
+
+`RECORD_SCAN`/`RESCAN` downloads the exact private objects, scans them through
+the configured adapter, and stores per-artifact evidence keyed to the current
+canonical release payload. `deterministic-test` is test-only; production should
+configure ClamAV and certify CLEAN/INFECTED/FAILED, timeout, and mutation
+scenarios before release publication.
+
+Certification currently proves CLEAN and EICAR INFECTED through the real admin
+upload and scan endpoint. Scanner failure, timeout, mutation/rescan, and
+multi-artifact scenarios remain to be certified.
+
 Licensing boundary correction: `/api/licenses/activate` returns only a signed lease and issuance metadata. Runtime authorization remains exclusively inside the separate Licensing Agent and reaches products only as `AuthorizationDecision`.
 ## Handoff status
 

@@ -7,6 +7,7 @@ import { audit } from "@/lib/audit";
 import { apiError } from "@/lib/http";
 import { env } from "@/lib/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
+import { hasCurrentCleanMalwareEvidence } from "@/lib/supply-chain/malware-gate";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
 const schema = z.object({ lifecycle: z.enum(stages).optional(), approve: z.boolean().optional(), reviewed: z.boolean().optional(), published: z.boolean().optional(), latest: z.boolean().optional(), releaseNotes: z.string().max(10000).optional(), changelog: z.string().max(20000).optional(), channel: z.enum(["STABLE", "BETA"]).optional(), deprecated: z.boolean().optional(), rollback: z.boolean().optional(), notes: z.string().trim().max(4000).optional(), breakGlass: z.boolean().optional(), breakGlassJustification: z.string().trim().min(20).max(4000).optional() }).superRefine((value, ctx) => { if (value.breakGlass && !value.breakGlassJustification) ctx.addIssue({ code: "custom", path: ["breakGlassJustification"], message: "Break-glass justification is required" }); if (value.reviewed && value.approve) ctx.addIssue({ code: "custom", path: ["approve"], message: "Review and approval must be separate actions" }); });
@@ -24,7 +25,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const pendingCompliance = await db.complianceRequirement.count({ where: { status: { not: "IMPLEMENTED" } } });
         const artifactHash = manifestHash(canonicalizeManifest(buildReleaseManifest({ productId: current.productId, productSlug: current.product.slug, versionId: current.id, version: current.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: current.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) })));
         const signatureEvidence = evidence?.verificationEvidence.some((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
-        const malwareEvidence = evidence?.verificationEvidence.some((v) => v.kind === "MALWARE_SCAN" && v.result === "CLEAN" && v.artifactHash === artifactHash) ?? false;
+        const malwareEvidence = hasCurrentCleanMalwareEvidence(current.artifacts, (evidence?.verificationEvidence ?? []).filter((v) => v.kind === "MALWARE_SCAN"), artifactHash);
         const complete = Boolean(signatureEvidence && evidence?.dependencyVerified && evidence.sbomReference && evidence.provenanceStatus === "VERIFIED" && malwareEvidence && current.backupEvidence && current.complianceEvidence && current.migrationEvidence && pendingCompliance === 0);
         if (!complete) throw new Error("RELEASE_EVIDENCE_INCOMPLETE");
         const prior = current.approvals[0];

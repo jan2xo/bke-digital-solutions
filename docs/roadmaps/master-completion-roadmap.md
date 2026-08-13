@@ -34,6 +34,9 @@ Status: planning baseline; Phase 3 certified PASS (2026-08-13). This reconciles 
 2. **Release and artifact lifecycle** — product/version/release states, immutable artifact identity, safe deletion, and canonical eligible-release resolution. Implemented and Phase 2 certified; deployment evidence pending.
 3. **Supply-chain evidence** — SBOM, provenance, signatures, malware scanner evidence, dependency integrity. Gates implemented; production keys/scanner pending.
 4. **Administrator plane** — MFA, audit, provider credentials, compliance, supply-chain, backup, monitoring, scheduler controls. Implemented; operational certification pending.
+
+Phase 4 malware/artifact security pipeline: repository implementation complete;
+ClamAV provisioning and production certification remain pending.
 5. **Subscription lifecycle** — renewal, expiration, grace, trials, refunds, idempotent provider events. Implemented; PayMongo evidence remains.
 6. **Commercial lease lifecycle** — activation, refresh, renewal, transfer, revocation, replacement, key rotation. Implemented in Digital Solutions; Agent runtime certification remains.
 7. **Device identity and limits** — commercial eligibility versus Agent binding. Implemented foundation; product/Agent evidence remains.

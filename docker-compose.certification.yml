@@ -1,5 +1,14 @@
 services:
   app:
+    environment:
+      - MALWARE_SCANNER_PROVIDER=clamav
+      - MALWARE_SCANNER_VERSION=certification
+      - MALWARE_SCANNER_HOST=clamav
+      - MALWARE_SCANNER_PORT=3310
+      - MALWARE_SCANNER_TIMEOUT_MS=30000
+      - MALWARE_SCANNER_MAX_BYTES=262144000
+    depends_on:
+      clamav: { condition: service_healthy }
   scheduler:
   backup-worker:
   migrate:
@@ -61,6 +70,17 @@ services:
       - ./Caddyfile.certification:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+  clamav:
+    image: clamav/clamav:1.4
+    platform: linux/amd64
+    networks: [private]
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --ping 1 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
 
 networks:
   certification-host:
