@@ -270,3 +270,16 @@ remaining failure/mutation/aggregation scenarios remain pending.
 ### Phase 4 multi-artifact workflow
 
 Administrator artifact addition is supported at `POST /api/admin/versions/:id/artifacts`. The operation uploads to private storage, computes SHA-256 server-side, invalidates release integrity state, and records an audit event. Current malware publication requires matching CLEAN evidence for every active artifact.
+### Phase 5 Admin Control Plane
+
+Phase 5 implementation adds a release detail control surface with artifact add/remove controls, current release-readiness reporting, evidence visibility, and a restricted commercial signing-key registry view. Server-side release predicates and security boundaries remain authoritative; deployment secrets and private keys remain outside Admin.
+Phase 5 continuation adds read-only subscription and scanner status surfaces, explicit restore/delete confirmations, and safer guided license transfer/reveal controls. Backup operations remain durable-worker authoritative; UI work does not expose deployment secrets or private keys.
+
+Phase 5 certification closure passed in the rebuilt certification environment: the
+Docker stack was healthy, live/readiness endpoints returned 200, certification
+Vitest completed with 187 passed and 6 credential-gated skips, the Phase 5
+control-plane Playwright checks passed 2/2, and TypeScript, ESLint, Prisma
+validation, security hygiene, and `git diff --check` passed. The scanner page now
+uses a live ClamAV health probe rather than inferring availability from historical
+evidence. Production provider credentials, VPS deployment, and production scanner
+provisioning remain external work.

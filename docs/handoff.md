@@ -201,3 +201,14 @@ provisioning remain pending.
 Phase 3 certification passed on 2026-08-13, including live signing, mutation
 invalidation, re-signing, idempotency, and authorization checks. Phase 4 is not
 started.
+## Phase 5 control-plane additions
+
+Use `/admin/releases/:id` for release readiness, artifact operations, evidence inspection, scanning, signing, and promotion. The commercial signing-key registry is read-only in the Admin surface; rotation/private-key provisioning remains deployment-level.
+Phase 5 continuation: `/admin/subscriptions` is read-only status, `/admin/scanner` reports safe scanner evidence health, and backup restore/delete controls retain explicit confirmations. Provider, Docker, ClamAV, key provisioning, and VPS operations remain deployment-level.
+
+Phase 5 certification closure was verified against the rebuilt certification stack:
+all required containers were healthy, `/api/health/live` and `/api/health/ready`
+returned 200, the certification Vitest suite passed 187 tests with 6 credential-
+gated skips, and the Phase 5 Playwright control-plane checks passed 2/2. Static,
+Prisma, hygiene, and diff checks also passed. This is local certification evidence,
+not VPS or live-provider certification.

@@ -6,6 +6,9 @@ import { apiError } from "@/lib/http";
 import { requestBackupOperation } from "@/lib/backups/service";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { clientIp } from "@/lib/security/request";
+import { db } from "@/lib/db";
+
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) { try { await requireRecentAdmin(); const operations = await db.backupOperation.findMany({ where: { backupId: (await params).id }, orderBy: { createdAt: "desc" }, take: 10 }); return NextResponse.json({ operations }); } catch (error) { return apiError(error); } }
 
 const schema = z.object({
   action: z.enum(["VERIFY", "SIMULATE_RESTORE", "RESTORE_ISOLATED", "DELETE_EXPIRED"]),

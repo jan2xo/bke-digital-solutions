@@ -262,3 +262,7 @@ gates. Production scanner provisioning and live certification remain pending.
 Certification evidence now includes a real disposable admin/API CLEAN scan and
 standard EICAR INFECTED scan through certification Caddy, MinIO, the app, and
 ClamAV. ClamAV NUL-terminated response text was sanitized before persistence.
+### Phase 5 — Admin control plane
+
+Added a release detail/readiness surface, supported multi-artifact controls, evidence inspection, and read-only commercial signing-key registry visibility. No schema migration or production data change was required.
+Phase 5 completion pass added subscription visibility, scanner status visibility, confirmation hardening, and guided transfer/reveal controls without schema changes.

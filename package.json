@@ -35,7 +35,7 @@
     "certification:compose": "node scripts/certification-compose.mjs",
     "licensing:keys": "node scripts/generate-license-signing-keys.mjs",
     "certification:test:all": "node scripts/certification-host-command.mjs npm test",
-    "certification:test:e2e": "node scripts/certification-host-command.mjs npm run test:e2e",
+    "certification:test:e2e": "node scripts/certification-e2e.mjs",
     "certification:db:status": "node scripts/certification-host-command.mjs npx prisma migrate status",
     "certification:db:smoke": "node scripts/certification-host-command.mjs npm run db:smoke",
     "health:check": "tsx scripts/health-check.ts",
