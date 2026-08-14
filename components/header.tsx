@@ -6,7 +6,7 @@ export async function Header() {
   const user = await currentUser();
   return <header className="site-header">
     <div className="shell flex min-h-20 items-center justify-between gap-6">
-      <Link href="/" className="brand-lockup"><span className="brand-mark" aria-hidden="true"><i/><i/><i/><i/><i/><i/></span><span><b>BKE</b><strong>Digital</strong></span></Link>
+      <Link href="/" className="brand-lockup"><span className="brand-mark" aria-hidden="true">BKE</span><span>Digital Solutions</span></Link>
       <nav aria-label="Main navigation" className="site-nav">
         <Link href="/products">Products</Link><Link href="/licensing">Licensing</Link><Link href="/products#pricing">Pricing</Link><Link href="/licensing">How it works</Link>
         {user ? <><Link className="button button-yellow" href={user.role === "ADMIN" ? "/admin" : "/dashboard"}>{user.role === "ADMIN" ? "Admin" : "Dashboard"}</Link><LogoutButton/></> : <><Link href="/login">Sign in</Link><Link className="button button-yellow" href="/register">Get started</Link></>}

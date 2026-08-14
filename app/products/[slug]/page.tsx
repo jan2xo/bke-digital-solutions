@@ -24,9 +24,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   if (!product?.active) notFound();
 
   return <section className="shell py-16">
-    <p className="font-bold text-[#0b7197]">{product.type}</p>
+    <p className="font-bold text-[#ffd15a]">{product.type}</p>
     <h1 className="mt-2 text-5xl font-black">{product.name}</h1>
-    <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600">{product.description}</p>
+    <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>
     <div className="mt-12 grid gap-8">{product.editions.map((edition) => {
       const plans = edition.purchasePlans
         .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
@@ -46,13 +46,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       return <article className="card grid gap-8 p-8 lg:grid-cols-[1fr_1.1fr]" key={edition.id}>
         <div>
           <p className="text-sm font-bold uppercase text-[#3D75A7]">{edition.name} Edition</p>
-          <p className="mt-3 text-slate-600">{edition.description}</p>
+          <p className="mt-3 text-[#a8b5c4]">{edition.description}</p>
           <h2 className="mt-6 text-lg font-black">Included capabilities</h2>
-          <ul className="mt-3 list-disc pl-5 text-sm text-slate-700">{Array.isArray(edition.features) && edition.features.map((feature) => <li key={String(feature)}>{String(feature)}</li>)}</ul>
+          <ul className="mt-3 list-disc pl-5 text-sm text-[#d5dbe5]">{Array.isArray(edition.features) && edition.features.map((feature) => <li key={String(feature)}>{String(feature)}</li>)}</ul>
           <p className="mt-5 text-sm">Up to {edition.maxUsers} authorized user(s), {edition.maxDevicesPerUser} device(s) each.</p>
-          <p className="mt-1 text-sm text-slate-600">Updates: {edition.updatePolicy.replaceAll("_", " ").toLowerCase()}</p>
+          <p className="mt-1 text-sm text-[#a8b5c4]">Updates: {edition.updatePolicy.replaceAll("_", " ").toLowerCase()}</p>
         </div>
-        <div><div className="mb-5 rounded-xl border border-[#3D75A7]/30 bg-[#3D75A7]/5 p-4"><p className="mb-3 text-sm font-semibold">Try this edition free for 7 days. Each account is eligible for one trial per product per calendar year.</p><TrialStartButton editionId={edition.id} accounts={accounts.map((account) => ({ id: account.id, name: account.displayName }))}/></div><PurchasePlanSelector plans={plans} signedIn={Boolean(user)} /></div>
+        <div><div className="mb-5 rounded-xl border border-[#3d75a7]/50 bg-[#213a53]/60 p-4"><p className="mb-3 text-sm font-semibold">Try this edition free for 7 days. Each account is eligible for one trial per product per calendar year.</p><TrialStartButton editionId={edition.id} accounts={accounts.map((account) => ({ id: account.id, name: account.displayName }))}/></div><PurchasePlanSelector plans={plans} signedIn={Boolean(user)} /></div>
       </article>;
     })}</div>
   </section>;
