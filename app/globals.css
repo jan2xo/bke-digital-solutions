@@ -18,6 +18,11 @@
   --yellow: #ffd15a;
   --dark: #0a0c13;
   --dark-soft: #10131e;
+  --motion-duration-fast: 140ms;
+  --motion-duration-standard: 220ms;
+  --motion-duration-slow: 360ms;
+  --motion-ease-standard: cubic-bezier(.2,.75,.25,1);
+  --motion-ease-emphasis: cubic-bezier(.16,1,.3,1);
 }
 
 .legal-content { line-height: 1.75; color: var(--text-muted); }
@@ -33,9 +38,12 @@
 body { margin: 0; color: var(--text); background: var(--background); font-family: Arial, Helvetica, sans-serif; }
 .site-header { position: relative; z-index: 10; border-bottom: 1px solid #252938; background: var(--dark); color: #9ba2b9; }
 .brand-lockup { display: inline-flex; align-items: center; gap: .75rem; color: #f1f2f7; font-size: 1.25rem; letter-spacing: -.04em; font-weight: 900; }
-.brand-mark { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: .75rem; background: #092f47; color: #fff; font-size: .82rem; letter-spacing: -.04em; }
-.site-nav { display: flex; align-items: center; gap: clamp(1rem, 3vw, 3.2rem); font-size: .95rem; font-weight: 600; }.site-nav a { transition: color .2s; }.site-nav a:hover { color: #fff; }
-.site-footer { border-top: 1px solid #252938; background: var(--dark); padding: 2rem 0; }
+.brand-mark { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: .75rem; background: #092f47; color: #fff; font-size: .82rem; letter-spacing: -.04em; transition: transform var(--motion-duration-standard) var(--motion-ease-emphasis), background-color var(--motion-duration-standard) var(--motion-ease-standard); }
+.brand-lockup { transition: color var(--motion-duration-standard) var(--motion-ease-standard); }
+.brand-lockup:hover { color: var(--yellow); }.brand-lockup:hover .brand-mark { transform: translateY(-2px) rotate(-3deg); background: #123f5d; }
+.site-nav { display: flex; align-items: center; gap: clamp(1rem, 3vw, 3.2rem); font-size: .95rem; font-weight: 600; }.site-nav a { transition: color var(--motion-duration-fast) var(--motion-ease-standard), opacity var(--motion-duration-fast) var(--motion-ease-standard); }.site-nav a:hover { color: #fff; }
+.site-nav a:focus-visible, .site-footer a:focus-visible, .text-link:focus-visible { outline: 2px solid var(--yellow); outline-offset: 4px; border-radius: .25rem; }
+.site-footer { border-top: 1px solid #252938; background: var(--dark); padding: 2rem 0; }.site-footer a { transition: color var(--motion-duration-fast) var(--motion-ease-standard); }.site-footer a:hover { color: #fff; }
 .hero-section { position: relative; overflow: hidden; min-height: 730px; color: #f4f5f9; background: radial-gradient(circle at 50% 35%, #151829 0, var(--dark) 42%, #090b11 100%); }.hero-glow { position:absolute; inset:0; opacity:.22; background: radial-gradient(ellipse at 50% 15%, #303653 0, transparent 48%); }.hero-inner { position:relative; display:flex; flex-direction:column; align-items:center; padding: 7rem 1rem 5rem; text-align:center; }.hero-product-icon { position:relative; display:grid; place-items:center; width:9.5rem; height:9.5rem; margin-bottom:2.5rem; border-radius:2rem; background:#171b2a; box-shadow:0 20px 60px #0008; }.hero-play { position:absolute; z-index:2; font-size:2.7rem; color:#4387e6; transform:translateX(.2rem); }.hero-blocks { position:absolute; inset:1.7rem 2rem; clip-path:polygon(0 0,100% 50%,0 100%); background:linear-gradient(90deg,#3888e8 0 25%,#ffd15a 25% 45%,#41c993 45% 70%,#9865dd 70%); opacity:.95; }.hero-blocks i { position:relative; display:inline-block; width:1.5rem; height:1rem; margin:.18rem; border-radius:.14rem; background:#121522; }.eyebrow { color:#8790ae; font-size:.76rem; font-weight:800; letter-spacing:.24em; }.eyebrow-yellow { color:var(--yellow); }.hero-section h1 { max-width: 1050px; margin: 0; font-size: clamp(3.4rem, 7vw, 6.7rem); line-height: .98; letter-spacing: -.065em; font-weight: 900; }.hero-section h1 em { color: var(--yellow); font-style:normal; }.hero-copy { max-width: 780px; margin:2.2rem 0 0; color:#9ca4bd; font-size:clamp(1rem,1.4vw,1.25rem); line-height:1.8; }.hero-actions { display:flex; gap:1rem; margin-top:2.5rem; }.button-yellow { background:var(--yellow)!important; color:#141620!important; border:1px solid var(--yellow); padding:1rem 1.8rem; border-radius:1rem; }.button-yellow:hover { background:#ffe28a!important; }.button-outline { border:1px solid #30364d; background:transparent; color:#f1f2f7; padding:1rem 1.8rem; border-radius:1rem; }.button-outline:hover { border-color:#68718f; background:#171b2a; }.hero-tagline { margin-top:2.6rem; color:#727b9c; font-size:.75rem; font-weight:800; letter-spacing:.28em; }
 .solutions-section { background:var(--dark-soft); color:#f4f5f9; padding:7rem 0; }.section-heading { display:flex; align-items:end; justify-content:space-between; gap:2rem; }.section-heading h2 { margin:.7rem 0 0; font-size:clamp(2.5rem,5vw,4.5rem); line-height:.98; letter-spacing:-.06em; }.section-heading h2 span { color:var(--yellow); }.text-link { color:var(--yellow); font-weight:700; }.text-link span { font-size:1.3rem; }.solution-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin-top:3rem; }.solution-card { position:relative; min-height:270px; padding:2rem; border:1px solid #292e41; border-radius:1.3rem; background:#141725; transition:transform .2s,border-color .2s,background .2s; }.solution-card:hover { transform:translateY(-5px); border-color:#5b6381; background:#191d2d; }.solution-number { color:#555d78; font-size:.8rem; font-weight:800; }.solution-type { margin-top:2rem; color:var(--yellow); font-size:.7rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }.solution-card h3 { margin:.6rem 0; font-size:1.7rem; }.solution-card p:not(.solution-type) { color:#929ab3; line-height:1.65; }.solution-card strong { position:absolute; right:2rem; bottom:2rem; color:#f5f6fa; }.solution-card strong span { color:var(--yellow); margin-left:.4rem; }
 @media (max-width: 760px) { .site-nav a:not(.button) { display:none; }.hero-inner { padding-top:5rem; }.hero-section { min-height:680px; }.hero-actions { flex-direction:column; width:min(100%,20rem); }.solution-grid { grid-template-columns:1fr; }.section-heading { align-items:start; flex-direction:column; } }
@@ -56,6 +64,35 @@ body { margin: 0; color: var(--text); background: var(--background); font-family
 .legal-consent-panel { border: 1px solid #46617a; border-radius: .85rem; background: #172432; padding: 1rem; }
 .legal-consent-panel[data-invalid="true"] { border-color: #dc2626; background: #351d25; box-shadow: 0 0 0 1px #dc2626; }
 
+/* Shared public-route motion. The animation is intentionally CSS-only so it
+   works in server components and never changes navigation or interaction. */
+@keyframes public-fade-up { from { opacity: 0; transform: translateY(1rem); } to { opacity: 1; transform: translateY(0); } }
+.motion-fade-up { animation: public-fade-up .55s cubic-bezier(.22,1,.36,1) both; }
+.motion-stagger > * { opacity: 0; animation: public-fade-up .55s cubic-bezier(.22,1,.36,1) both; }
+.motion-stagger > *:nth-child(1) { animation-delay: .05s; }
+.motion-stagger > *:nth-child(2) { animation-delay: .12s; }
+.motion-stagger > *:nth-child(3) { animation-delay: .19s; }
+.motion-stagger > *:nth-child(4) { animation-delay: .26s; }
+.motion-stagger > *:nth-child(5) { animation-delay: .33s; }
+@media (prefers-reduced-motion: reduce) {
+  .motion-fade-up, .motion-stagger > * { animation: none; opacity: 1; transform: none; }
+}
+
+/* Keep hover affordances, but remove decorative movement for users who request less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .solution-card:hover,
+  .card:hover {
+    transform: none !important;
+  }
+}
+
 /* Keep authentication, legal, informational, and status pages on the same canvas. */
 main { min-height: calc(100vh - 10rem); background: var(--background); }
 main > section:not(.hero-section):not(.solutions-section) { color: var(--text); }
@@ -67,3 +104,25 @@ main > section .bg-emerald-50 { background: #123328; color: #b7f7d0; }
 main > section .text-red-700 { color: #fca5a5; }
 main > section .text-green-700 { color: #86efac; }
 .legal-content strong { color: var(--text); }
+
+/* Public controls and cards share one interaction language. Admin controls
+   intentionally keep their existing rules above. */
+.site-header .button-yellow,
+.hero-section .button-yellow { transition: transform var(--motion-duration-standard) var(--motion-ease-emphasis), background-color var(--motion-duration-fast) var(--motion-ease-standard), box-shadow var(--motion-duration-standard) var(--motion-ease-standard); }
+.site-header .button-yellow:hover,
+.hero-section .button-yellow:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgb(255 209 90 / .2); }
+.site-header .button-yellow:active,
+.hero-section .button-yellow:active { transform: translateY(0); }
+.hero-section .button-outline { transition: transform var(--motion-duration-standard) var(--motion-ease-emphasis), border-color var(--motion-duration-fast) var(--motion-ease-standard), background-color var(--motion-duration-fast) var(--motion-ease-standard); }
+.hero-section .button-outline:hover { transform: translateY(-2px); }
+.solution-card { transition: transform var(--motion-duration-standard) var(--motion-ease-emphasis), border-color var(--motion-duration-standard) var(--motion-ease-standard), background-color var(--motion-duration-standard) var(--motion-ease-standard), box-shadow var(--motion-duration-standard) var(--motion-ease-standard); }
+.solution-card:focus-visible { outline: 2px solid var(--yellow); outline-offset: 5px; }
+.solution-card:hover { box-shadow: 0 16px 32px rgb(0 0 0 / .2); }
+
+/* Motion is attached to layout wrappers, never to editable legal content. */
+.motion-reveal { animation: legal-reveal .45s ease-out both; }
+.motion-reveal-delay-1 { animation-delay: .07s; }
+.motion-reveal-delay-2 { animation-delay: .14s; }
+.motion-reveal-delay-3 { animation-delay: .21s; }
+@keyframes legal-reveal { from { opacity: 0; transform: translateY(.65rem); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .motion-reveal, .motion-reveal-delay-1, .motion-reveal-delay-2, .motion-reveal-delay-3 { animation: none; } }

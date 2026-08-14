@@ -9,10 +9,10 @@ export default async function ProductsPage() {
     where: { active: true },
     include: { editions: { where: { active: true }, include: { purchasePlans: { where: { active: true }, include: { monthlySource: true } } } } },
   });
-  return <section className="shell py-16">
+  return <section className="shell py-16 motion-fade-up">
     <p className="font-bold text-[#ffd15a]">Product catalog</p>
     <h1 className="mt-2 text-5xl font-black">Software for work that matters.</h1>
-    <div className="mt-12 grid gap-6 md:grid-cols-2">{products.map((product) => {
+    <div className="mt-12 grid gap-6 md:grid-cols-2 motion-stagger">{products.map((product) => {
       const plans = product.editions.flatMap((edition) => edition.purchasePlans);
       const starting = plans.map((plan) => resolvePurchasePlan(plan).amountMinor).sort((a, b) => a - b)[0];
       return <article className="card p-8" key={product.id}>

@@ -23,11 +23,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   ]);
   if (!product?.active) notFound();
 
-  return <section className="shell py-16">
+  return <section className="shell py-16 motion-fade-up">
     <p className="font-bold text-[#ffd15a]">{product.type}</p>
     <h1 className="mt-2 text-5xl font-black">{product.name}</h1>
     <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>
-    <div className="mt-12 grid gap-8">{product.editions.map((edition) => {
+    <div className="mt-12 grid gap-8 motion-stagger">{product.editions.map((edition) => {
       const plans = edition.purchasePlans
         .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
         .map((plan) => {
