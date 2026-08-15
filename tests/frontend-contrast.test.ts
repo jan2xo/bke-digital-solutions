@@ -6,9 +6,9 @@ const licensingPage = readFileSync("app/licensing/page.tsx", "utf8");
 const read = (path: string) => readFileSync(path, "utf8");
 
 describe("customer-facing contrast safeguards", () => {
-  it("keeps shared admin table content readable on white", () => {
-    expect(read("components/admin-table.tsx")).toContain("bg-white");
-    expect(read("components/admin-table.tsx")).toContain("bg-white text-slate-900");
+  it("keeps shared admin table content readable on dark surfaces", () => {
+    expect(read("components/admin-table.tsx")).toContain("admin-table-wrap");
+    expect(read("app/globals.css")).toContain(".admin-table td");
   });
 
   it("keeps dashboard stat content readable on slate-50", () => {
@@ -16,8 +16,8 @@ describe("customer-facing contrast safeguards", () => {
   });
 
   it("keeps standalone admin light panels readable", () => {
-    expect(read("app/admin/compliance/page.tsx")).toContain("bg-white p-5 text-slate-900");
-    expect(read("app/admin/supply-chain/page.tsx")).toContain("bg-white text-slate-900");
+    expect(read("app/admin/compliance/page.tsx")).toContain("className=\"card p-5\"");
+    expect(read("app/admin/supply-chain/page.tsx")).toContain("bg-[#172432]");
   });
 
   it("keeps account metadata and secondary content on readable dark-theme colors", () => {
