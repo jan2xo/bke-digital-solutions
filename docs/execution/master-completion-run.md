@@ -237,3 +237,30 @@ Outstanding:
 - Implement the missing repository-controlled organization-management application boundary and its browser workflows, or provide an existing approved route boundary. This is required before Phase 6.9 can pass.
 - Do not reconcile or execute quarantined Phase 6.10 support work until Phase 6.9 passes.
 - External certification remains pending as previously recorded.
+
+## 2026-08-15T19:36:00Z — Push checkpoint verification
+Phase: 6.9 browser evidence checkpoint
+Branch: `swarm/digital-solutions`
+HEAD: `104faef` before this log-only checkpoint
+Working tree: clean before append
+Coordinator response: Verified the current swarm checkpoint for GitHub publication. `middleware.ts` is absent and `proxy.ts` is the sole Next.js interception boundary. The production application image build passed inside the supported private certification Compose network, including compilation, TypeScript, route collection, and optimized image export. The duplicate concurrent Compose-up attempts later encountered container-name conflicts while recreating already-running certification services; this did not invalidate the completed application image build. Host build attempts were additionally blocked by absent protected environment values and stale local `.next` output, so no host-side success is claimed.
+Workers involved:
+- tulip: middleware/proxy consolidation and certification browser runtime support.
+- coordinator: branch, file-boundary, build, typecheck, lint, proxy/security/observability, deployment, and diff verification.
+Commits:
+- `f05e621` certification browser runtime fix.
+- `104faef` Phase 6.9 browser gate log.
+Verification:
+- Current branch confirmed `swarm/digital-solutions`.
+- `middleware.ts`: absent.
+- `proxy.ts`: present and tracked as the sole interception boundary.
+- Private certification app image build: passed through optimized route collection and image export.
+- TypeScript and ESLint: passed in the prior focused checkpoint; current host rerun requires protected env loading.
+- Proxy, security, and observability tests: passed in the prior focused checkpoint.
+- Deployment manifest verification: passed.
+- `git diff --check`: passed.
+Gate:
+- READY TO PUSH this swarm checkpoint.
+Outstanding:
+- Phase 6.9 remains blocked on missing organization-management application routes/UI as recorded above.
+- No production action performed.
