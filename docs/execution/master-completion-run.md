@@ -292,3 +292,33 @@ Gate:
 Outstanding:
 - VPS operator must pull this checkpoint, recreate the app/operational services, and verify effective runtime environment presence by variable name plus app health without exposing values.
 - Phase 6.9 remains blocked on missing customer-facing organization-management routes/UI, as previously recorded.
+
+## 2026-08-15T20:02:00Z — VPS Caddy execution regression remediated
+Phase: 6.11 production deployment / operational validation
+Branch: `swarm/digital-solutions`
+HEAD: `d1dba49` before this log-only checkpoint
+Working tree: clean before append
+Coordinator response: Reproduced the VPS Caddy restart-loop cause as the hardened Caddy service lacking the low-port bind capability. The official Caddy image could not execute under the effective hardened runtime and the public HTTPS boundary failed. Added the smallest service-specific compatibility exception: Caddy retains no-new-privileges, read-only root, tmpfs `/tmp`, persistent `/data` and `/config`, PID limit, and cap_drop ALL, with only NET_BIND_SERVICE added. PostgreSQL, Valkey, and MinIO remain private and unchanged.
+Workers involved:
+- bug: implemented `d1dba49` and deployment regression coverage.
+- bird: independent security review and effective Compose/runtime verification.
+- bat: independent recheck found no residual gap.
+Commits:
+- `d1dba49` Fix hardened Caddy bind capability.
+Verification:
+- Deployment manifest tests passed: 16/16, including Caddy capability, ports, hardening, and private dependency assertions.
+- Restart-policy tests passed: 5/5.
+- Caddy logging tests passed: 2/2.
+- TypeScript passed.
+- ESLint passed with one existing non-blocking unused-variable warning in the Phase 6.9 browser fixture.
+- Layered production plus certification Compose config passed.
+- Certification stack recreated successfully; app healthy, Caddy running, PostgreSQL/Valkey/MinIO healthy, scheduler and backup worker running.
+- Caddy effective runtime retained read-only root, no-new-privileges, cap_drop ALL, and only NET_BIND_SERVICE capability.
+- Correct-SNI HTTPS requests through Caddy returned 200 for `/api/health/live` and `/api/health/ready`, with `Via: 1.1 Caddy`.
+- `git diff --check` passed.
+Gate:
+- IMPLEMENTATION COMPLETE for the repository-controlled Caddy execution regression.
+- VPS runtime certification remains pending until the operator pulls this checkpoint and recreates Caddy on the production VPS.
+Outstanding:
+- Push this checkpoint to `origin/swarm/digital-solutions`.
+- VPS operator must pull, rebuild/recreate Caddy, and verify public HTTPS/Cloudflare 521 resolution.
