@@ -207,3 +207,33 @@ Outstanding:
 - Add or execute real browser workflow evidence for organization creation, invitations, role boundaries, owner transfer, and account switching before declaring Phase 6.9 fully passed.
 - Keep `5285176` customer-support work PREMATURE / UNGATED until Phase 6.9 passes.
 - External certification remains pending where previously recorded.
+
+## 2026-08-15T19:25:00Z — Phase 6.9 browser evidence checkpoint
+Phase: 6.9 acceptance gate
+Branch: `swarm/digital-solutions`
+HEAD: `f05e621` before this log-only checkpoint
+Working tree: log append pending commit
+Coordinator response: Added and independently verified the certification browser runtime support. The certification test service remains private and read-only, with certification-only writable tmpfs paths for Next development output and Playwright results, and Chromium installed in the operations image. Duplicate Next middleware/proxy handling was consolidated into `proxy.ts` so the certification browser server starts without the Next 16 duplicate-entrypoint failure. The real browser test executed against the real application routes and private certification PostgreSQL, and passed owner/member visibility plus cross-account isolation.
+Workers involved:
+- hibiscus: browser acceptance coverage, commit `f80562a`.
+- tulip: certification browser runtime remediation, commit `f05e621`.
+- coordinator independent verification: reviewed runtime, proxy correlation-ID behavior, route usage, and test execution.
+Commits:
+- `f80562a` test: add Phase 6.9 organization browser acceptance.
+- `f05e621` test: fix certification browser runtime.
+Verification:
+- Targeted private browser test passed: 1 test.
+- Browser logs confirmed real `/login`, `/api/auth/login`, `/dashboard`, and `/dashboard/accounts/[id]` requests and outsider isolation redirect.
+- Private DB-backed Phase 6.9 tests passed: 12/12.
+- TypeScript passed.
+- ESLint passed with one non-blocking unused-variable warning in the browser fixture.
+- Deployment manifest verification passed.
+- `git diff --check` passed.
+Gate:
+- Browser runtime remediation: PASS.
+- Browser evidence: PARTIAL PASS for real-route owner/member visibility and cross-account isolation.
+- Phase 6.9 full acceptance: BLOCKED / NOT COMPLETE. The repository contains no customer-facing organization-management routes or UI for organization creation, invitation send/accept/replay, expiry/revocation, role administration, owner transfer, last-owner controls, suspension/closure actions, account switching, or billing/license visibility administration. The browser spec therefore cannot honestly claim those workflows; it uses only existing dashboard/account routes and real database setup.
+Outstanding:
+- Implement the missing repository-controlled organization-management application boundary and its browser workflows, or provide an existing approved route boundary. This is required before Phase 6.9 can pass.
+- Do not reconcile or execute quarantined Phase 6.10 support work until Phase 6.9 passes.
+- External certification remains pending as previously recorded.
