@@ -1,10 +1,10 @@
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
-import { AccountAuthorizationError, assertLastOwnerPreserved, requireAccountCapability, requireAccountAccess, type AccountRole } from "@/lib/authorization";
+import { AccountAuthorizationError, assertLastOwnerPreserved, requireAccountCapability, requireAccountAccess, type AccountRole, type AccountCapability } from "@/lib/authorization";
 
 export class OrganizationError extends Error {
-  constructor(public readonly code: "ACCOUNT_NOT_ORGANIZATION" | "INVITATION_NOT_FOUND" | "INVITATION_NOT_PENDING" | "INVITATION_EXPIRED" | "INVITATION_EMAIL_MISMATCH" | "OWNER_CANNOT_LEAVE" | "CLOSED_ACCOUNT" | "SUSPENDED_ACCOUNT" | "LAST_OWNER_REQUIRED") { super(code); }
+  constructor(public readonly code: "ACCOUNT_NOT_ORGANIZATION" | "INVITATION_NOT_FOUND" | "INVITATION_NOT_PENDING" | "INVITATION_EXPIRED" | "INVITATION_EMAIL_MISMATCH" | "OWNER_CANNOT_LEAVE" | "CLOSED_ACCOUNT" | "SUSPENDED_ACCOUNT" | "LAST_OWNER_REQUIRED" | "MEMBER_NOT_FOUND") { super(code); }
 }
 
 type Tx = typeof db;
@@ -24,9 +24,17 @@ async function requireMutableOrganization(userId: string, accountId: string) {
   return account;
 }
 
+async function requireOrganizationCapability(userId: string, accountId: string, capability: AccountCapability) {
+  const account = await requireAccountCapability(userId, accountId, capability);
+  if (account.type !== "ORGANIZATION") throw new OrganizationError("ACCOUNT_NOT_ORGANIZATION");
+  if (account.lifecycleState === "CLOSED" || account.lifecycleState === "CLOSURE_REQUESTED") throw new OrganizationError("CLOSED_ACCOUNT");
+  if (account.lifecycleState === "SUSPENDED") throw new OrganizationError("SUSPENDED_ACCOUNT");
+  return account;
+}
+
 export async function listSwitchableAccounts(userId: string) {
   return db.customerAccount.findMany({
-    where: { lifecycleState: { not: "CLOSED" }, OR: [{ ownerId: userId }, { memberships: { some: { userId } } }] },
+    where: { lifecycleState: "ACTIVE", OR: [{ ownerId: userId }, { memberships: { some: { userId } } }] },
     include: { organization: true, memberships: { where: { userId }, take: 1 } },
     orderBy: [{ type: "asc" }, { createdAt: "asc" }],
   });
@@ -44,7 +52,11 @@ export async function createOrganizationAccount(input: { actorId: string; displa
 }
 
 export async function updateOrganizationProfile(input: { actorId: string; accountId: string; displayName?: string; legalName?: string; billingEmail?: string; registrationNumber?: string | null; taxId?: string | null }) {
-  await requireMutableOrganization(input.actorId, input.accountId);
+  const organizationFieldsChanged = input.displayName !== undefined || input.legalName !== undefined || input.registrationNumber !== undefined;
+  const billingFieldsChanged = input.billingEmail !== undefined || input.taxId !== undefined;
+  if (organizationFieldsChanged) await requireOrganizationCapability(input.actorId, input.accountId, "MANAGE_MEMBERS");
+  if (billingFieldsChanged) await requireOrganizationCapability(input.actorId, input.accountId, "VIEW_PAYMENTS");
+  if (!organizationFieldsChanged && !billingFieldsChanged) await requireMutableOrganization(input.actorId, input.accountId);
   return db.$transaction(async (tx) => {
     const account = await tx.customerAccount.update({ where: { id: input.accountId }, data: { displayName: input.displayName, billingEmail: input.billingEmail, taxId: input.taxId, organization: { update: { legalName: input.legalName, registrationNumber: input.registrationNumber } } }, include: { organization: true } });
     await audit(tx as Tx, { actorId: input.actorId, accountId: input.accountId, action: "ORGANIZATION_PROFILE_UPDATED", targetType: "CustomerAccount", targetId: input.accountId });
@@ -75,23 +87,47 @@ export async function revokeOrganizationInvitation(input: { actorId: string; inv
   const existing = await db.invitation.findUnique({ where: { id: input.invitationId } });
   if (!existing) throw new OrganizationError("INVITATION_NOT_FOUND");
   await requireMutableOrganization(input.actorId, existing.accountId);
-  const invitation = await db.invitation.update({ where: { id: existing.id }, data: { status: "REVOKED" } });
+  if (existing.status !== "PENDING") throw new OrganizationError("INVITATION_NOT_PENDING");
+  const claimed = await db.invitation.updateMany({ where: { id: existing.id, status: "PENDING" }, data: { status: "REVOKED" } });
+  if (claimed.count !== 1) throw new OrganizationError("INVITATION_NOT_PENDING");
+  const invitation = await db.invitation.findUniqueOrThrow({ where: { id: existing.id } });
   await audit(db, { actorId: input.actorId, accountId: existing.accountId, action: "ORGANIZATION_INVITATION_REVOKED", targetType: "Invitation", targetId: existing.id });
   return invitation;
 }
 
 export async function expirePendingOrganizationInvitations(now = new Date()) {
-  return db.invitation.updateMany({ where: { status: "PENDING", expiresAt: { lte: now } }, data: { status: "EXPIRED" } });
+  return db.$transaction(async (tx) => {
+    const expired = await tx.invitation.findMany({ where: { status: "PENDING", expiresAt: { lte: now } }, select: { id: true, accountId: true } });
+    let count = 0;
+    for (const invitation of expired) {
+      const result = await tx.invitation.updateMany({ where: { id: invitation.id, status: "PENDING" }, data: { status: "EXPIRED" } });
+      if (result.count === 1) {
+        count += 1;
+        await audit(tx as Tx, { accountId: invitation.accountId, action: "ORGANIZATION_INVITATION_EXPIRED", targetType: "Invitation", targetId: invitation.id });
+      }
+    }
+    return { count };
+  });
 }
 
 export async function acceptOrganizationInvitation(input: { userId: string; email: string; token: string }) {
-  const invitation = await db.invitation.findUnique({ where: { tokenHash: tokenHash(input.token) } });
-  if (!invitation) throw new OrganizationError("INVITATION_NOT_FOUND");
-  if (invitation.status !== "PENDING") throw new OrganizationError("INVITATION_NOT_PENDING");
-  if (invitation.expiresAt <= new Date()) throw new OrganizationError("INVITATION_EXPIRED");
-  if (invitation.email !== input.email.toLowerCase()) throw new OrganizationError("INVITATION_EMAIL_MISMATCH");
+  const hashedToken = tokenHash(input.token);
+  const email = input.email.toLowerCase();
+  const now = new Date();
   return db.$transaction(async (tx) => {
-    await tx.invitation.update({ where: { id: invitation.id }, data: { status: "ACCEPTED" } });
+    const claimed = await tx.invitation.updateMany({ where: { tokenHash: hashedToken, status: "PENDING", expiresAt: { gt: now }, email }, data: { status: "ACCEPTED" } });
+    if (claimed.count !== 1) {
+      const existing = await tx.invitation.findUnique({ where: { tokenHash: hashedToken } });
+      if (!existing) throw new OrganizationError("INVITATION_NOT_FOUND");
+      if (existing.status !== "PENDING") throw new OrganizationError("INVITATION_NOT_PENDING");
+      if (existing.expiresAt <= now) throw new OrganizationError("INVITATION_EXPIRED");
+      if (existing.email !== email) throw new OrganizationError("INVITATION_EMAIL_MISMATCH");
+      throw new OrganizationError("INVITATION_NOT_PENDING");
+    }
+    const invitation = await tx.invitation.findUniqueOrThrow({ where: { tokenHash: hashedToken }, include: { account: true } });
+    if (invitation.account.type !== "ORGANIZATION") throw new OrganizationError("ACCOUNT_NOT_ORGANIZATION");
+    if (invitation.account.lifecycleState === "CLOSED" || invitation.account.lifecycleState === "CLOSURE_REQUESTED") throw new OrganizationError("CLOSED_ACCOUNT");
+    if (invitation.account.lifecycleState === "SUSPENDED") throw new OrganizationError("SUSPENDED_ACCOUNT");
     const membership = await tx.membership.upsert({ where: { accountId_userId: { accountId: invitation.accountId, userId: input.userId } }, update: { role: invitation.role }, create: { accountId: invitation.accountId, userId: input.userId, role: invitation.role } });
     await audit(tx as Tx, { actorId: input.userId, accountId: invitation.accountId, action: "ORGANIZATION_INVITATION_ACCEPTED", targetType: "Membership", targetId: input.userId, metadata: { invitationId: invitation.id, role: invitation.role } });
     return membership;
@@ -110,9 +146,12 @@ export async function updateOrganizationMemberRole(input: { actorId: string; acc
 export async function transferOrganizationOwnership(input: { actorId: string; accountId: string; newOwnerUserId: string }) {
   await requireMutableOrganization(input.actorId, input.accountId);
   return db.$transaction(async (tx) => {
-    await tx.membership.upsert({ where: { accountId_userId: { accountId: input.accountId, userId: input.newOwnerUserId } }, update: { role: "OWNER" }, create: { accountId: input.accountId, userId: input.newOwnerUserId, role: "OWNER" } });
+    const current = await tx.customerAccount.findUniqueOrThrow({ where: { id: input.accountId }, select: { ownerId: true } });
+    const member = await tx.membership.findUnique({ where: { accountId_userId: { accountId: input.accountId, userId: input.newOwnerUserId } } });
+    if (!member) throw new OrganizationError("MEMBER_NOT_FOUND");
+    await tx.membership.update({ where: { accountId_userId: { accountId: input.accountId, userId: input.newOwnerUserId } }, data: { role: "OWNER" } });
     const account = await tx.customerAccount.update({ where: { id: input.accountId }, data: { ownerId: input.newOwnerUserId } });
-    await audit(tx as Tx, { actorId: input.actorId, accountId: input.accountId, action: "ORGANIZATION_OWNER_TRANSFERRED", targetType: "CustomerAccount", targetId: input.accountId, metadata: { to: input.newOwnerUserId } });
+    await audit(tx as Tx, { actorId: input.actorId, accountId: input.accountId, action: "ORGANIZATION_OWNER_TRANSFERRED", targetType: "CustomerAccount", targetId: input.accountId, metadata: { from: current.ownerId, to: input.newOwnerUserId, previousRole: member.role, nextRole: "OWNER" } });
     return account;
   });
 }
