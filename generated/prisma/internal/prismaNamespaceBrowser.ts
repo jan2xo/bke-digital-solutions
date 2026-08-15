@@ -103,6 +103,7 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
+  SiteContent: 'SiteContent',
   ComplianceRequirement: 'ComplianceRequirement',
   ComplianceEvidence: 'ComplianceEvidence',
   JobRun: 'JobRun',
@@ -1057,6 +1058,19 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const SiteContentScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  group: 'group',
+  value: 'value',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteContentScalarFieldEnum = (typeof SiteContentScalarFieldEnum)[keyof typeof SiteContentScalarFieldEnum]
+
+
 export const ComplianceRequirementScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -1233,6 +1247,9 @@ export const EmailOutboxScalarFieldEnum = {
   lastError: 'lastError',
   createdAt: 'createdAt',
   sentAt: 'sentAt',
+  claimedBy: 'claimedBy',
+  claimedAt: 'claimedAt',
+  claimExpiresAt: 'claimExpiresAt',
   deduplicationKey: 'deduplicationKey'
 } as const
 

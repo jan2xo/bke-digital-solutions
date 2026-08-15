@@ -358,6 +358,7 @@ model User {
   memberships                     Membership[]
   assignments                     LicenseAssignment[]
   auditLogs                       AuditLog[]                      @relation("AuditActor")
+  siteContentEdits                SiteContent[]                   @relation("SiteContentEditor")
   createdOffers                   DiscountOffer[]                 @relation("OfferCreator")
   administratorMfa                AdministratorMfaMethod?
   recoveryCodes                   AdministratorRecoveryCode[]
@@ -1414,6 +1415,19 @@ model AuditLog {
 
   @@index([accountId, createdAt])
   @@index([actorId, createdAt])
+}
+
+model SiteContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  group     String
+  value     String
+  updatedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  editor    User?    @relation("SiteContentEditor", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([group])
 }
 
 model ComplianceRequirement {

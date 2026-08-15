@@ -449,6 +449,7 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
+  SiteContent: 'SiteContent',
   ComplianceRequirement: 'ComplianceRequirement',
   ComplianceEvidence: 'ComplianceEvidence',
   JobRun: 'JobRun',
@@ -475,7 +476,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4327,6 +4328,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SiteContent: {
+      payload: Prisma.$SiteContentPayload<ExtArgs>
+      fields: Prisma.SiteContentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SiteContentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SiteContentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>
+        }
+        findFirst: {
+          args: Prisma.SiteContentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SiteContentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>
+        }
+        findMany: {
+          args: Prisma.SiteContentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>[]
+        }
+        create: {
+          args: Prisma.SiteContentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>
+        }
+        createMany: {
+          args: Prisma.SiteContentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SiteContentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>[]
+        }
+        delete: {
+          args: Prisma.SiteContentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>
+        }
+        update: {
+          args: Prisma.SiteContentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>
+        }
+        deleteMany: {
+          args: Prisma.SiteContentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SiteContentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SiteContentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>[]
+        }
+        upsert: {
+          args: Prisma.SiteContentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteContentPayload>
+        }
+        aggregate: {
+          args: Prisma.SiteContentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSiteContent>
+        }
+        groupBy: {
+          args: Prisma.SiteContentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteContentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SiteContentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteContentCountAggregateOutputType> | number
+        }
+      }
+    }
     ComplianceRequirement: {
       payload: Prisma.$ComplianceRequirementPayload<ExtArgs>
       fields: Prisma.ComplianceRequirementFieldRefs
@@ -6105,6 +6180,19 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const SiteContentScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  group: 'group',
+  value: 'value',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteContentScalarFieldEnum = (typeof SiteContentScalarFieldEnum)[keyof typeof SiteContentScalarFieldEnum]
+
+
 export const ComplianceRequirementScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -6281,6 +6369,9 @@ export const EmailOutboxScalarFieldEnum = {
   lastError: 'lastError',
   createdAt: 'createdAt',
   sentAt: 'sentAt',
+  claimedBy: 'claimedBy',
+  claimedAt: 'claimedAt',
+  claimExpiresAt: 'claimExpiresAt',
   deduplicationKey: 'deduplicationKey'
 } as const
 
@@ -7275,6 +7366,7 @@ export type GlobalOmitConfig = {
   downloadGrant?: Prisma.DownloadGrantOmit
   licenseEvent?: Prisma.LicenseEventOmit
   auditLog?: Prisma.AuditLogOmit
+  siteContent?: Prisma.SiteContentOmit
   complianceRequirement?: Prisma.ComplianceRequirementOmit
   complianceEvidence?: Prisma.ComplianceEvidenceOmit
   jobRun?: Prisma.JobRunOmit

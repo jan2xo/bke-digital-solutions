@@ -302,6 +302,11 @@ export type LicenseEvent = Prisma.LicenseEventModel
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
+ * Model SiteContent
+ *
+ */
+export type SiteContent = Prisma.SiteContentModel
+/**
  * Model ComplianceRequirement
  *
  */

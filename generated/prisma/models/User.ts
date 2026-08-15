@@ -268,6 +268,7 @@ export type UserWhereInput = {
   memberships?: Prisma.MembershipListRelationFilter
   assignments?: Prisma.LicenseAssignmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  siteContentEdits?: Prisma.SiteContentListRelationFilter
   createdOffers?: Prisma.DiscountOfferListRelationFilter
   administratorMfa?: Prisma.XOR<Prisma.AdministratorMfaMethodNullableScalarRelationFilter, Prisma.AdministratorMfaMethodWhereInput> | null
   recoveryCodes?: Prisma.AdministratorRecoveryCodeListRelationFilter
@@ -316,6 +317,7 @@ export type UserOrderByWithRelationInput = {
   memberships?: Prisma.MembershipOrderByRelationAggregateInput
   assignments?: Prisma.LicenseAssignmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  siteContentEdits?: Prisma.SiteContentOrderByRelationAggregateInput
   createdOffers?: Prisma.DiscountOfferOrderByRelationAggregateInput
   administratorMfa?: Prisma.AdministratorMfaMethodOrderByWithRelationInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeOrderByRelationAggregateInput
@@ -367,6 +369,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   memberships?: Prisma.MembershipListRelationFilter
   assignments?: Prisma.LicenseAssignmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  siteContentEdits?: Prisma.SiteContentListRelationFilter
   createdOffers?: Prisma.DiscountOfferListRelationFilter
   administratorMfa?: Prisma.XOR<Prisma.AdministratorMfaMethodNullableScalarRelationFilter, Prisma.AdministratorMfaMethodWhereInput> | null
   recoveryCodes?: Prisma.AdministratorRecoveryCodeListRelationFilter
@@ -457,6 +460,7 @@ export type UserCreateInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -505,6 +509,7 @@ export type UserUncheckedCreateInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -553,6 +558,7 @@ export type UserUpdateInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -601,6 +607,7 @@ export type UserUncheckedUpdateInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1093,6 +1100,22 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutSiteContentEditsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSiteContentEditsInput, Prisma.UserUncheckedCreateWithoutSiteContentEditsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSiteContentEditsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSiteContentEditsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSiteContentEditsInput, Prisma.UserUncheckedCreateWithoutSiteContentEditsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSiteContentEditsInput
+  upsert?: Prisma.UserUpsertWithoutSiteContentEditsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSiteContentEditsInput, Prisma.UserUpdateWithoutSiteContentEditsInput>, Prisma.UserUncheckedUpdateWithoutSiteContentEditsInput>
+}
+
 export type UserCreateNestedOneWithoutComplianceEvidenceRecordedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutComplianceEvidenceRecordedInput, Prisma.UserUncheckedCreateWithoutComplianceEvidenceRecordedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutComplianceEvidenceRecordedInput
@@ -1236,6 +1259,7 @@ export type UserCreateWithoutCredentialInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -1283,6 +1307,7 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1346,6 +1371,7 @@ export type UserUpdateWithoutCredentialInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -1393,6 +1419,7 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1440,6 +1467,7 @@ export type UserCreateWithoutSessionsInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -1487,6 +1515,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1550,6 +1579,7 @@ export type UserUpdateWithoutSessionsInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -1597,6 +1627,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1645,6 +1676,7 @@ export type UserCreateWithoutAdministratorMfaInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
@@ -1692,6 +1724,7 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
@@ -1755,6 +1788,7 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
@@ -1802,6 +1836,7 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
@@ -1849,6 +1884,7 @@ export type UserCreateWithoutRecoveryCodesInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
@@ -1896,6 +1932,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
@@ -1959,6 +1996,7 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
@@ -2006,6 +2044,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
@@ -2053,6 +2092,7 @@ export type UserCreateWithoutMfaChallengesInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -2100,6 +2140,7 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -2163,6 +2204,7 @@ export type UserUpdateWithoutMfaChallengesInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -2210,6 +2252,7 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2257,6 +2300,7 @@ export type UserCreateWithoutEmergencyMfaAuthorizationsInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -2304,6 +2348,7 @@ export type UserUncheckedCreateWithoutEmergencyMfaAuthorizationsInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -2367,6 +2412,7 @@ export type UserUpdateWithoutEmergencyMfaAuthorizationsInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -2414,6 +2460,7 @@ export type UserUncheckedUpdateWithoutEmergencyMfaAuthorizationsInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2461,6 +2508,7 @@ export type UserCreateWithoutSecurityEventsInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -2508,6 +2556,7 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -2571,6 +2620,7 @@ export type UserUpdateWithoutSecurityEventsInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -2618,6 +2668,7 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2664,6 +2715,7 @@ export type UserCreateWithoutOwnedAccountsInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -2711,6 +2763,7 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -2774,6 +2827,7 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -2821,6 +2875,7 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2869,6 +2924,7 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -2916,6 +2972,7 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -2979,6 +3036,7 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -3026,6 +3084,7 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -3073,6 +3132,7 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -3120,6 +3180,7 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -3183,6 +3244,7 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -3230,6 +3292,7 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -3276,6 +3339,7 @@ export type UserCreateWithoutMembershipsInput = {
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -3323,6 +3387,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -3386,6 +3451,7 @@ export type UserUpdateWithoutMembershipsInput = {
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -3433,6 +3499,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -3481,6 +3548,7 @@ export type UserCreateWithoutReleaseApprovalsCreatedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -3528,6 +3596,7 @@ export type UserUncheckedCreateWithoutReleaseApprovalsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -3580,6 +3649,7 @@ export type UserCreateWithoutReleaseApprovalsReviewedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -3627,6 +3697,7 @@ export type UserUncheckedCreateWithoutReleaseApprovalsReviewedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -3679,6 +3750,7 @@ export type UserCreateWithoutReleaseApprovalsApprovedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -3726,6 +3798,7 @@ export type UserUncheckedCreateWithoutReleaseApprovalsApprovedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -3789,6 +3862,7 @@ export type UserUpdateWithoutReleaseApprovalsCreatedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -3836,6 +3910,7 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -3894,6 +3969,7 @@ export type UserUpdateWithoutReleaseApprovalsReviewedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -3941,6 +4017,7 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -3999,6 +4076,7 @@ export type UserUpdateWithoutReleaseApprovalsApprovedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -4046,6 +4124,7 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -4093,6 +4172,7 @@ export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -4140,6 +4220,7 @@ export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -4203,6 +4284,7 @@ export type UserUpdateWithoutStorageCleanupJobsCreatedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -4250,6 +4332,7 @@ export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -4297,6 +4380,7 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -4344,6 +4428,7 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -4407,6 +4492,7 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -4454,6 +4540,7 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -4501,6 +4588,7 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -4548,6 +4636,7 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -4611,6 +4700,7 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -4658,6 +4748,7 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -4705,6 +4796,7 @@ export type UserCreateWithoutReconciliationsRunInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -4752,6 +4844,7 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -4804,6 +4897,7 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -4851,6 +4945,7 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -4914,6 +5009,7 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -4961,6 +5057,7 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -5019,6 +5116,7 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -5066,6 +5164,7 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -5113,6 +5212,7 @@ export type UserCreateWithoutCreatedOffersInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
@@ -5160,6 +5260,7 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
@@ -5223,6 +5324,7 @@ export type UserUpdateWithoutCreatedOffersInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
@@ -5270,6 +5372,7 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
@@ -5316,6 +5419,7 @@ export type UserCreateWithoutAssignmentsInput = {
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -5363,6 +5467,7 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -5426,6 +5531,7 @@ export type UserUpdateWithoutAssignmentsInput = {
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -5473,6 +5579,7 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -5520,6 +5627,7 @@ export type UserCreateWithoutAuditLogsInput = {
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -5567,6 +5675,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -5630,6 +5739,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -5677,6 +5787,215 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserCreateWithoutSiteContentEditsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutSiteContentEditsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutSiteContentEditsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSiteContentEditsInput, Prisma.UserUncheckedCreateWithoutSiteContentEditsInput>
+}
+
+export type UserUpsertWithoutSiteContentEditsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSiteContentEditsInput, Prisma.UserUncheckedUpdateWithoutSiteContentEditsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSiteContentEditsInput, Prisma.UserUncheckedCreateWithoutSiteContentEditsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSiteContentEditsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSiteContentEditsInput, Prisma.UserUncheckedUpdateWithoutSiteContentEditsInput>
+}
+
+export type UserUpdateWithoutSiteContentEditsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSiteContentEditsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -5725,6 +6044,7 @@ export type UserCreateWithoutComplianceEvidenceRecordedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -5772,6 +6092,7 @@ export type UserUncheckedCreateWithoutComplianceEvidenceRecordedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -5835,6 +6156,7 @@ export type UserUpdateWithoutComplianceEvidenceRecordedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -5882,6 +6204,7 @@ export type UserUncheckedUpdateWithoutComplianceEvidenceRecordedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -5929,6 +6252,7 @@ export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -5976,6 +6300,7 @@ export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -6039,6 +6364,7 @@ export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -6086,6 +6412,7 @@ export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -6133,6 +6460,7 @@ export type UserCreateWithoutBackupOperationsRequestedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -6180,6 +6508,7 @@ export type UserUncheckedCreateWithoutBackupOperationsRequestedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -6243,6 +6572,7 @@ export type UserUpdateWithoutBackupOperationsRequestedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -6290,6 +6620,7 @@ export type UserUncheckedUpdateWithoutBackupOperationsRequestedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -6337,6 +6668,7 @@ export type UserCreateWithoutObservabilityAlertsAcknowledgedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -6384,6 +6716,7 @@ export type UserUncheckedCreateWithoutObservabilityAlertsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -6436,6 +6769,7 @@ export type UserCreateWithoutObservabilityAlertsResolvedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -6483,6 +6817,7 @@ export type UserUncheckedCreateWithoutObservabilityAlertsResolvedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -6546,6 +6881,7 @@ export type UserUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -6593,6 +6929,7 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -6651,6 +6988,7 @@ export type UserUpdateWithoutObservabilityAlertsResolvedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -6698,6 +7036,7 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsResolvedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -6745,6 +7084,7 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -6792,6 +7132,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -6844,6 +7185,7 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -6891,6 +7233,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -6954,6 +7297,7 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -7001,6 +7345,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -7059,6 +7404,7 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -7106,6 +7452,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -7153,6 +7500,7 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
@@ -7200,6 +7548,7 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
   createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
@@ -7263,6 +7612,7 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
@@ -7310,6 +7660,7 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
   createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
   administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -7346,6 +7697,7 @@ export type UserCountOutputType = {
   memberships: number
   assignments: number
   auditLogs: number
+  siteContentEdits: number
   createdOffers: number
   recoveryCodes: number
   mfaChallenges: number
@@ -7377,6 +7729,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   memberships?: boolean | UserCountOutputTypeCountMembershipsArgs
   assignments?: boolean | UserCountOutputTypeCountAssignmentsArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  siteContentEdits?: boolean | UserCountOutputTypeCountSiteContentEditsArgs
   createdOffers?: boolean | UserCountOutputTypeCountCreatedOffersArgs
   recoveryCodes?: boolean | UserCountOutputTypeCountRecoveryCodesArgs
   mfaChallenges?: boolean | UserCountOutputTypeCountMfaChallengesArgs
@@ -7445,6 +7798,13 @@ export type UserCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Type
  */
 export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSiteContentEditsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SiteContentWhereInput
 }
 
 /**
@@ -7631,6 +7991,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   assignments?: boolean | Prisma.User$assignmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  siteContentEdits?: boolean | Prisma.User$siteContentEditsArgs<ExtArgs>
   createdOffers?: boolean | Prisma.User$createdOffersArgs<ExtArgs>
   administratorMfa?: boolean | Prisma.User$administratorMfaArgs<ExtArgs>
   recoveryCodes?: boolean | Prisma.User$recoveryCodesArgs<ExtArgs>
@@ -7720,6 +8081,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   assignments?: boolean | Prisma.User$assignmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  siteContentEdits?: boolean | Prisma.User$siteContentEditsArgs<ExtArgs>
   createdOffers?: boolean | Prisma.User$createdOffersArgs<ExtArgs>
   administratorMfa?: boolean | Prisma.User$administratorMfaArgs<ExtArgs>
   recoveryCodes?: boolean | Prisma.User$recoveryCodesArgs<ExtArgs>
@@ -7758,6 +8120,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     memberships: Prisma.$MembershipPayload<ExtArgs>[]
     assignments: Prisma.$LicenseAssignmentPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    siteContentEdits: Prisma.$SiteContentPayload<ExtArgs>[]
     createdOffers: Prisma.$DiscountOfferPayload<ExtArgs>[]
     administratorMfa: Prisma.$AdministratorMfaMethodPayload<ExtArgs> | null
     recoveryCodes: Prisma.$AdministratorRecoveryCodePayload<ExtArgs>[]
@@ -8199,6 +8562,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   memberships<T extends Prisma.User$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignments<T extends Prisma.User$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  siteContentEdits<T extends Prisma.User$siteContentEditsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$siteContentEditsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SiteContentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdOffers<T extends Prisma.User$createdOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiscountOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   administratorMfa<T extends Prisma.User$administratorMfaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$administratorMfaArgs<ExtArgs>>): Prisma.Prisma__AdministratorMfaMethodClient<runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   recoveryCodes<T extends Prisma.User$recoveryCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recoveryCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdministratorRecoveryCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8796,6 +9160,30 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.siteContentEdits
+ */
+export type User$siteContentEditsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SiteContent
+   */
+  select?: Prisma.SiteContentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SiteContent
+   */
+  omit?: Prisma.SiteContentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SiteContentInclude<ExtArgs> | null
+  where?: Prisma.SiteContentWhereInput
+  orderBy?: Prisma.SiteContentOrderByWithRelationInput | Prisma.SiteContentOrderByWithRelationInput[]
+  cursor?: Prisma.SiteContentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SiteContentScalarFieldEnum | Prisma.SiteContentScalarFieldEnum[]
 }
 
 /**
