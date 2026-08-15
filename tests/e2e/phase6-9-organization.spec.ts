@@ -38,6 +38,7 @@ test("organization membership is visible in the browser and isolated across acco
   await db.membership.create({ data: { accountId: organization.id, userId: limited.id, role: "MEMBER" } });
 
   await login(page, ownerEmail, password);
+  await expect((await page.request.get("/api/organizations")).status()).toBe(200);
   await expect(page.getByText(organization.displayName)).toBeVisible();
   await page.goto(`/dashboard/accounts/${organization.id}`);
   await expect(page.getByRole("heading", { name: organization.displayName })).toBeVisible();
@@ -59,6 +60,8 @@ test("organization membership is visible in the browser and isolated across acco
 
   await page.getByRole("button", { name: "Log out" }).click();
   await login(page, outsiderEmail, password);
+  const outsiderApi = await page.request.get(`/api/organizations/${organization.id}`);
+  expect([403, 404]).toContain(outsiderApi.status());
   await page.goto(`/dashboard/accounts/${organization.id}`);
   await expect(page).toHaveURL(/dashboard$/);
   await expect(page.getByText(organization.displayName)).not.toBeVisible();

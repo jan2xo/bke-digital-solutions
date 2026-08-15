@@ -21,15 +21,8 @@ import {
 } from "@/lib/organizations";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
-let dbAvailable = false;
-
 beforeAll(async () => {
-  try {
-    await db.$queryRaw`SELECT 1`;
-    dbAvailable = true;
-  } catch {
-    dbAvailable = false;
-  }
+  await db.$queryRaw`SELECT 1`;
 });
 
 afterAll(async () => {
@@ -42,7 +35,6 @@ async function user(email: string) {
 
 describe("Phase 6.9 private DB organization acceptance", () => {
   it("covers invitation lifecycle, acceptance isolation, role changes, ownership, self-exit, and audit history", async () => {
-    if (!dbAvailable) return;
     const suffix = Date.now().toString(36);
     const owner = await user(`phase69-db-owner-${suffix}@bke.test`);
     const billing = await user(`phase69-db-billing-${suffix}@bke.test`);
@@ -90,7 +82,6 @@ describe("Phase 6.9 private DB organization acceptance", () => {
   });
 
   it("enforces suspended and closed organization mutation boundaries", async () => {
-    if (!dbAvailable) return;
     const suffix = `${Date.now().toString(36)}-lifecycle`;
     const owner = await user(`phase69-db-owner-${suffix}@bke.test`);
     const account = await createOrganizationAccount({ actorId: owner.id, displayName: `Phase 6.9 Lifecycle ${suffix}`, legalName: `Phase 6.9 Lifecycle Legal ${suffix}`, billingEmail: owner.email });
