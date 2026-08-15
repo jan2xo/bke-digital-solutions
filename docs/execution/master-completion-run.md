@@ -372,3 +372,31 @@ Gate:
 Outstanding:
 - Rebuild certification application image and exercise the exact organization API/browser paths through the supported private runtime.
 - Independent review must verify route authorization, cross-organization isolation, and no stale image is being tested.
+
+## 2026-08-15T21:03:10Z — Phase 6.9 runtime 404 retest checkpoint
+Phase: 6.9 organization and membership management
+Branch: `swarm/digital-solutions`
+HEAD: `5e59646`
+Working tree: clean before this log append.
+Coordinator response: Rebuilt the supported private certification test image and reran the Phase 6.9 organization boundary checks. The prior organization API 404 was not reproduced against the rebuilt application boundary. The repository now includes the organization API routes and customer organization creation page, and the browser workflow exercised the real login, dashboard, account detail, authorization redirect, and cross-account isolation paths.
+Workers involved:
+- certification runtime: rebuilt the operations/test image and ran against private PostgreSQL, Valkey, and MinIO services.
+- independent Phase 6.9 reviewer: review in progress; no files modified.
+Commits:
+- `50123e5` Add customer organization management boundary.
+- `67dfd6a` test phase 6.9 organization workflows.
+- `5e59646` docs: reconcile recovered phase 6.9 checkpoint.
+Verification:
+- Private DB organization/auth/integration tests: 12/12 passed.
+- Browser organization acceptance: 1/1 passed in 17.5 seconds against rebuilt certification runtime.
+- Organization boundary route tests: 2/2 passed.
+- Organization private DB tests: 2/2 passed on host test invocation.
+- TypeScript: passed.
+- ESLint: passed.
+- `git diff --check`: passed.
+- Certification runtime logs show `/login`, `/api/auth/login`, `/dashboard`, `/dashboard/accounts/:id`, and authorization redirect behavior through `proxy.ts`.
+Gate:
+- Phase 6.9: RUNTIME 404 FINDING NOT REPRODUCED AFTER REBUILD; FINAL INDEPENDENT REVIEW PENDING.
+Outstanding:
+- Complete independent review of the route boundary and acceptance evidence.
+- Do not begin Phase 6.10 until the Phase 6.9 gate is formally closed.
