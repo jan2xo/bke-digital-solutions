@@ -45,7 +45,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         });
       return <article className="card grid gap-8 p-8 lg:grid-cols-[1fr_1.1fr]" key={edition.id}>
         <div>
-          <p className="text-sm font-bold uppercase text-[#3D75A7]">{edition.name} Edition</p>
+          <p className="text-sm font-bold uppercase text-[#8cc8f5]">{edition.name} Edition</p>
           <p className="mt-3 text-[#a8b5c4]">{edition.description}</p>
           <h2 className="mt-6 text-lg font-black">Included capabilities</h2>
           <ul className="mt-3 list-disc pl-5 text-sm text-[#d5dbe5]">{Array.isArray(edition.features) && edition.features.map((feature) => <li key={String(feature)}>{String(feature)}</li>)}</ul>

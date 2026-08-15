@@ -53,9 +53,9 @@ export function CustomerLicenseCard({ license }: Props) {
       <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold">{license.activations.filter((activation) => activation.active).length}/{license.maxDevices} devices</span>
     </div>
     {key
-      ? <div className="mt-4 rounded-lg bg-amber-50 p-4"><p className="text-xs font-bold uppercase">License key</p><code className="mt-2 block break-all">{key}</code></div>
+      ? <div className="mt-4 rounded-lg bg-amber-50 p-4 text-amber-950"><p className="text-xs font-bold uppercase">License key</p><code className="mt-2 block break-all">{key}</code></div>
       : <button className="button secondary mt-4" onClick={reveal}>Reveal license key</button>}
-    <div className="mt-5 grid gap-2">{license.activations.map((activation) => <div className="flex items-center justify-between rounded-lg bg-slate-50 p-3 text-sm" key={activation.id}><span>{activation.label ?? "Authorized device"} · {activation.active ? "Active" : "Deactivated"}</span>{activation.active && <button className="font-bold text-red-700" onClick={() => deactivate(activation.id)}>Deactivate</button>}</div>)}</div>
+    <div className="mt-5 grid gap-2">{license.activations.map((activation) => <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3 text-sm text-slate-100" key={activation.id}><span>{activation.label ?? "Authorized device"} · {activation.active ? "Active" : "Deactivated"}</span>{activation.active && <button className="font-bold text-red-700" onClick={() => deactivate(activation.id)}>Deactivate</button>}</div>)}</div>
     <div className="mt-5 flex flex-wrap gap-2">{license.downloads.map((download) => <a className="button" href={`/api/downloads/${download.id}`} key={download.id}>Download {download.version}</a>)}</div>
     {message && <p role="alert" className="mt-3 text-sm text-red-700">{message}</p>}
   </article>;
