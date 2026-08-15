@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseEnvironment } from "@/lib/config/environment";
 
@@ -14,6 +15,8 @@ const base = {
   LICENSE_SIGNING_PUBLIC_KEY: "u".repeat(64),
   LICENSE_SIGNING_KEY_ID: "test-license-ed25519-v1",
   SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: "supply-chain-private-test-material-" + "s".repeat(64),
+  ADMIN_OWNER_RECOVERY_KEY: "owner-recovery-key-" + "o".repeat(64),
+  ADMIN_OWNER_RECOVERY_KEY_VERSION: "3",
   CRON_SECRET: "c".repeat(64),
   REDIS_URL: "redis://valkey:6379",
   REDIS_KEY_PREFIX: "bke-production",
@@ -29,7 +32,36 @@ const base = {
   SUPPORT_EMAIL: "support@bke.example",
 };
 
+const productionRuntimeEnvironment = () => {
+  const compose = readFileSync("docker-compose.production.yml", "utf8");
+  const match = compose.match(/^x-runtime-environment: &runtime-environment\n((?:  - .+\n)+)/m);
+  expect(match).not.toBeNull();
+  return match![1].trim().split("\n").map((line) => line.replace(/^\s*- /, ""));
+};
+
+const validatedProductionRuntimeNames = [
+  "ADMIN_OWNER_RECOVERY_KEY",
+  "ADMIN_OWNER_RECOVERY_KEY_VERSION",
+  "SESSION_SECRET",
+  "MFA_ENCRYPTION_KEY",
+  "LICENSE_PEPPER",
+  "CRON_SECRET",
+  "PROVIDER_CREDENTIALS_ENCRYPTION_KEY",
+  "PAYMONGO_SECRET_KEY",
+  "PAYMONGO_WEBHOOK_SECRET",
+  "RESEND_API_KEY",
+  "S3_ACCESS_KEY_ID",
+  "S3_SECRET_ACCESS_KEY",
+];
+
 describe("deployment environment validation", () => {
+  it("wires validated production runtime variable names through Compose without secret values", () => {
+    const names = productionRuntimeEnvironment();
+    expect(names).toEqual(expect.arrayContaining(validatedProductionRuntimeNames));
+    expect(names).toContain("ADMIN_OWNER_RECOVERY_KEY");
+    expect(names).toContain("ADMIN_OWNER_RECOVERY_KEY_VERSION");
+    expect(names.every((name) => /^[A-Z0-9_]+$/.test(name))).toBe(true);
+  });
   it("accepts an isolated production configuration", () => expect(parseEnvironment(base)).toMatchObject({ DEPLOYMENT_ENV: "production", PAYMENT_PROVIDER: "paymongo", EMAIL_PROVIDER: "resend" }));
   it("rejects insecure production origins and mock providers", () => expect(() => parseEnvironment({ ...base, APP_URL: "http://commerce.bke.example", PAYMENT_PROVIDER: "mock" })).toThrow(/APP_URL|PAYMENT_PROVIDER/));
   it("rejects paths on the canonical origin", () => expect(() => parseEnvironment({ ...base, APP_URL: "https://commerce.bke.example/app" })).toThrow("APP_URL"));
