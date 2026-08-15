@@ -380,6 +380,8 @@ model User {
   observabilityAlertsAcknowledged ObservabilityAlert[]            @relation("ObservabilityAlertAcknowledger")
   observabilityAlertsResolved     ObservabilityAlert[]            @relation("ObservabilityAlertResolver")
   complianceEvidenceRecorded      ComplianceEvidence[]
+  privacyRequests                 PrivacyRequest[]            @relation("PrivacyRequestUser")
+  privacyRequestsReviewed         PrivacyRequest[]            @relation("PrivacyRequestReviewer")
   releaseApprovalsCreated         ReleaseApproval[] @relation("ReleaseApprovalCreator")
   releaseApprovalsReviewed        ReleaseApproval[] @relation("ReleaseApprovalReviewer")
   releaseApprovalsApproved        ReleaseApproval[] @relation("ReleaseApprovalApprover")
@@ -557,6 +559,7 @@ model CustomerAccount {
   offers             DiscountOffer[]
   offerRedemptions   OfferRedemption[]
   legalAcceptances   LegalAcceptance[]
+  privacyRequests    PrivacyRequest[]
 
   @@index([ownerId])
   @@index([lifecycleState])
@@ -624,6 +627,31 @@ model LegalAcceptance {
   @@index([userId, acceptedAt])
   @@index([customerAccountId, acceptedAt])
   @@index([documentVersionId, acceptedAt])
+}
+
+model PrivacyRequest {
+  id                String           @id @default(cuid())
+  userId            String
+  customerAccountId String?
+  requestType       String
+  status            String           @default("OPEN")
+  summary           String
+  responseSummary   String?
+  ipAddress         String?
+  userAgent         String?
+  reviewedById      String?
+  reviewedAt        DateTime?
+  closedAt          DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  user              User             @relation("PrivacyRequestUser", fields: [userId], references: [id], onDelete: Restrict)
+  customerAccount   CustomerAccount? @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  reviewedBy        User?            @relation("PrivacyRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([customerAccountId, createdAt])
+  @@index([status, createdAt])
+  @@index([requestType, status])
 }
 
 model OrganizationProfile {

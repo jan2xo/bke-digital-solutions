@@ -88,6 +88,11 @@ export type LegalDocumentVersion = Prisma.LegalDocumentVersionModel
  */
 export type LegalAcceptance = Prisma.LegalAcceptanceModel
 /**
+ * Model PrivacyRequest
+ *
+ */
+export type PrivacyRequest = Prisma.PrivacyRequestModel
+/**
  * Model OrganizationProfile
  *
  */

@@ -290,6 +290,8 @@ export type UserWhereInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertListRelationFilter
   observabilityAlertsResolved?: Prisma.ObservabilityAlertListRelationFilter
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceListRelationFilter
+  privacyRequests?: Prisma.PrivacyRequestListRelationFilter
+  privacyRequestsReviewed?: Prisma.PrivacyRequestListRelationFilter
   releaseApprovalsCreated?: Prisma.ReleaseApprovalListRelationFilter
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalListRelationFilter
   releaseApprovalsApproved?: Prisma.ReleaseApprovalListRelationFilter
@@ -339,6 +341,8 @@ export type UserOrderByWithRelationInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertOrderByRelationAggregateInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertOrderByRelationAggregateInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceOrderByRelationAggregateInput
+  privacyRequests?: Prisma.PrivacyRequestOrderByRelationAggregateInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestOrderByRelationAggregateInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
@@ -391,6 +395,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertListRelationFilter
   observabilityAlertsResolved?: Prisma.ObservabilityAlertListRelationFilter
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceListRelationFilter
+  privacyRequests?: Prisma.PrivacyRequestListRelationFilter
+  privacyRequestsReviewed?: Prisma.PrivacyRequestListRelationFilter
   releaseApprovalsCreated?: Prisma.ReleaseApprovalListRelationFilter
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalListRelationFilter
   releaseApprovalsApproved?: Prisma.ReleaseApprovalListRelationFilter
@@ -482,6 +488,8 @@ export type UserCreateInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -531,6 +539,8 @@ export type UserUncheckedCreateInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -580,6 +590,8 @@ export type UserUpdateInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -629,6 +641,8 @@ export type UserUncheckedUpdateInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -918,6 +932,36 @@ export type UserUpdateOneRequiredWithoutLegalAcceptancesNestedInput = {
   upsert?: Prisma.UserUpsertWithoutLegalAcceptancesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLegalAcceptancesInput, Prisma.UserUpdateWithoutLegalAcceptancesInput>, Prisma.UserUncheckedUpdateWithoutLegalAcceptancesInput>
+}
+
+export type UserCreateNestedOneWithoutPrivacyRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPrivacyRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutPrivacyRequestsReviewedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsReviewedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPrivacyRequestsReviewedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPrivacyRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPrivacyRequestsInput
+  upsert?: Prisma.UserUpsertWithoutPrivacyRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPrivacyRequestsInput, Prisma.UserUpdateWithoutPrivacyRequestsInput>, Prisma.UserUncheckedUpdateWithoutPrivacyRequestsInput>
+}
+
+export type UserUpdateOneWithoutPrivacyRequestsReviewedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsReviewedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPrivacyRequestsReviewedInput
+  upsert?: Prisma.UserUpsertWithoutPrivacyRequestsReviewedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPrivacyRequestsReviewedInput, Prisma.UserUpdateWithoutPrivacyRequestsReviewedInput>, Prisma.UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput>
 }
 
 export type UserCreateNestedOneWithoutMembershipsInput = {
@@ -1281,6 +1325,8 @@ export type UserCreateWithoutCredentialInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -1329,6 +1375,8 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -1393,6 +1441,8 @@ export type UserUpdateWithoutCredentialInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -1441,6 +1491,8 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -1489,6 +1541,8 @@ export type UserCreateWithoutSessionsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -1537,6 +1591,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -1601,6 +1657,8 @@ export type UserUpdateWithoutSessionsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -1649,6 +1707,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -1697,6 +1757,8 @@ export type UserCreateWithoutAdministratorMfaInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -1745,6 +1807,8 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -1809,6 +1873,8 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -1857,6 +1923,8 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -1905,6 +1973,8 @@ export type UserCreateWithoutRecoveryCodesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -1953,6 +2023,8 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -2017,6 +2089,8 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -2065,6 +2139,8 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -2113,6 +2189,8 @@ export type UserCreateWithoutMfaChallengesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -2161,6 +2239,8 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -2225,6 +2305,8 @@ export type UserUpdateWithoutMfaChallengesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -2273,6 +2355,8 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -2321,6 +2405,8 @@ export type UserCreateWithoutEmergencyMfaAuthorizationsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -2369,6 +2455,8 @@ export type UserUncheckedCreateWithoutEmergencyMfaAuthorizationsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -2433,6 +2521,8 @@ export type UserUpdateWithoutEmergencyMfaAuthorizationsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -2481,6 +2571,8 @@ export type UserUncheckedUpdateWithoutEmergencyMfaAuthorizationsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -2529,6 +2621,8 @@ export type UserCreateWithoutSecurityEventsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -2577,6 +2671,8 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -2641,6 +2737,8 @@ export type UserUpdateWithoutSecurityEventsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -2689,6 +2787,8 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -2737,6 +2837,8 @@ export type UserCreateWithoutOwnedAccountsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -2785,6 +2887,8 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -2849,6 +2953,8 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -2897,6 +3003,8 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -2945,6 +3053,8 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -2993,6 +3103,8 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -3057,6 +3169,8 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -3105,6 +3219,8 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -3153,6 +3269,8 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -3201,6 +3319,8 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -3265,6 +3385,8 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -3313,6 +3435,440 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserCreateWithoutPrivacyRequestsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutPrivacyRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsInput>
+}
+
+export type UserCreateWithoutPrivacyRequestsReviewedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutPrivacyRequestsReviewedInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutPrivacyRequestsReviewedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsReviewedInput>
+}
+
+export type UserUpsertWithoutPrivacyRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPrivacyRequestsInput, Prisma.UserUncheckedUpdateWithoutPrivacyRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPrivacyRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPrivacyRequestsInput, Prisma.UserUncheckedUpdateWithoutPrivacyRequestsInput>
+}
+
+export type UserUpdateWithoutPrivacyRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserUpsertWithoutPrivacyRequestsReviewedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPrivacyRequestsReviewedInput, Prisma.UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPrivacyRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutPrivacyRequestsReviewedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPrivacyRequestsReviewedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPrivacyRequestsReviewedInput, Prisma.UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput>
+}
+
+export type UserUpdateWithoutPrivacyRequestsReviewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -3361,6 +3917,8 @@ export type UserCreateWithoutMembershipsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -3409,6 +3967,8 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -3473,6 +4033,8 @@ export type UserUpdateWithoutMembershipsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -3521,6 +4083,8 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -3570,6 +4134,8 @@ export type UserCreateWithoutReleaseApprovalsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
 }
@@ -3618,6 +4184,8 @@ export type UserUncheckedCreateWithoutReleaseApprovalsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
 }
@@ -3671,6 +4239,8 @@ export type UserCreateWithoutReleaseApprovalsReviewedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
 }
@@ -3719,6 +4289,8 @@ export type UserUncheckedCreateWithoutReleaseApprovalsReviewedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
 }
@@ -3772,6 +4344,8 @@ export type UserCreateWithoutReleaseApprovalsApprovedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
 }
@@ -3820,6 +4394,8 @@ export type UserUncheckedCreateWithoutReleaseApprovalsApprovedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
 }
@@ -3884,6 +4460,8 @@ export type UserUpdateWithoutReleaseApprovalsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
 }
@@ -3932,6 +4510,8 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
 }
@@ -3991,6 +4571,8 @@ export type UserUpdateWithoutReleaseApprovalsReviewedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
 }
@@ -4039,6 +4621,8 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
 }
@@ -4098,6 +4682,8 @@ export type UserUpdateWithoutReleaseApprovalsApprovedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
 }
@@ -4146,6 +4732,8 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
 }
@@ -4193,6 +4781,8 @@ export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -4241,6 +4831,8 @@ export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -4305,6 +4897,8 @@ export type UserUpdateWithoutStorageCleanupJobsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -4353,6 +4947,8 @@ export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -4401,6 +4997,8 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -4449,6 +5047,8 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -4513,6 +5113,8 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -4561,6 +5163,8 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -4609,6 +5213,8 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -4657,6 +5263,8 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -4721,6 +5329,8 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -4769,6 +5379,8 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -4817,6 +5429,8 @@ export type UserCreateWithoutReconciliationsRunInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -4865,6 +5479,8 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -4918,6 +5534,8 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -4966,6 +5584,8 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5030,6 +5650,8 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -5078,6 +5700,8 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5137,6 +5761,8 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -5185,6 +5811,8 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5233,6 +5861,8 @@ export type UserCreateWithoutCreatedOffersInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -5281,6 +5911,8 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5345,6 +5977,8 @@ export type UserUpdateWithoutCreatedOffersInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -5393,6 +6027,8 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5441,6 +6077,8 @@ export type UserCreateWithoutAssignmentsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -5489,6 +6127,8 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5553,6 +6193,8 @@ export type UserUpdateWithoutAssignmentsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -5601,6 +6243,8 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5649,6 +6293,8 @@ export type UserCreateWithoutAuditLogsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -5697,6 +6343,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5761,6 +6409,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -5809,6 +6459,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5857,6 +6509,8 @@ export type UserCreateWithoutSiteContentEditsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -5905,6 +6559,8 @@ export type UserUncheckedCreateWithoutSiteContentEditsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5969,6 +6625,8 @@ export type UserUpdateWithoutSiteContentEditsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -6017,6 +6675,8 @@ export type UserUncheckedUpdateWithoutSiteContentEditsInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -6065,6 +6725,8 @@ export type UserCreateWithoutComplianceEvidenceRecordedInput = {
   backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -6113,6 +6775,8 @@ export type UserUncheckedCreateWithoutComplianceEvidenceRecordedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -6177,6 +6841,8 @@ export type UserUpdateWithoutComplianceEvidenceRecordedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -6225,6 +6891,8 @@ export type UserUncheckedUpdateWithoutComplianceEvidenceRecordedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -6273,6 +6941,8 @@ export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -6321,6 +6991,8 @@ export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -6385,6 +7057,8 @@ export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -6433,6 +7107,8 @@ export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -6481,6 +7157,8 @@ export type UserCreateWithoutBackupOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -6529,6 +7207,8 @@ export type UserUncheckedCreateWithoutBackupOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -6593,6 +7273,8 @@ export type UserUpdateWithoutBackupOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -6641,6 +7323,8 @@ export type UserUncheckedUpdateWithoutBackupOperationsRequestedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -6689,6 +7373,8 @@ export type UserCreateWithoutObservabilityAlertsAcknowledgedInput = {
   backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -6737,6 +7423,8 @@ export type UserUncheckedCreateWithoutObservabilityAlertsAcknowledgedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -6790,6 +7478,8 @@ export type UserCreateWithoutObservabilityAlertsResolvedInput = {
   backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -6838,6 +7528,8 @@ export type UserUncheckedCreateWithoutObservabilityAlertsResolvedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -6902,6 +7594,8 @@ export type UserUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -6950,6 +7644,8 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -7009,6 +7705,8 @@ export type UserUpdateWithoutObservabilityAlertsResolvedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -7057,6 +7755,8 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsResolvedInput = {
   backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -7105,6 +7805,8 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -7153,6 +7855,8 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -7206,6 +7910,8 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -7254,6 +7960,8 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -7318,6 +8026,8 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -7366,6 +8076,8 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -7425,6 +8137,8 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -7473,6 +8187,8 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -7521,6 +8237,8 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
@@ -7569,6 +8287,8 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
@@ -7633,6 +8353,8 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
@@ -7681,6 +8403,8 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
   releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
   releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -7718,6 +8442,8 @@ export type UserCountOutputType = {
   observabilityAlertsAcknowledged: number
   observabilityAlertsResolved: number
   complianceEvidenceRecorded: number
+  privacyRequests: number
+  privacyRequestsReviewed: number
   releaseApprovalsCreated: number
   releaseApprovalsReviewed: number
   releaseApprovalsApproved: number
@@ -7750,6 +8476,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   observabilityAlertsAcknowledged?: boolean | UserCountOutputTypeCountObservabilityAlertsAcknowledgedArgs
   observabilityAlertsResolved?: boolean | UserCountOutputTypeCountObservabilityAlertsResolvedArgs
   complianceEvidenceRecorded?: boolean | UserCountOutputTypeCountComplianceEvidenceRecordedArgs
+  privacyRequests?: boolean | UserCountOutputTypeCountPrivacyRequestsArgs
+  privacyRequestsReviewed?: boolean | UserCountOutputTypeCountPrivacyRequestsReviewedArgs
   releaseApprovalsCreated?: boolean | UserCountOutputTypeCountReleaseApprovalsCreatedArgs
   releaseApprovalsReviewed?: boolean | UserCountOutputTypeCountReleaseApprovalsReviewedArgs
   releaseApprovalsApproved?: boolean | UserCountOutputTypeCountReleaseApprovalsApprovedArgs
@@ -7950,6 +8678,20 @@ export type UserCountOutputTypeCountComplianceEvidenceRecordedArgs<ExtArgs exten
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountPrivacyRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrivacyRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPrivacyRequestsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrivacyRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountReleaseApprovalsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReleaseApprovalWhereInput
 }
@@ -8013,6 +8755,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   observabilityAlertsAcknowledged?: boolean | Prisma.User$observabilityAlertsAcknowledgedArgs<ExtArgs>
   observabilityAlertsResolved?: boolean | Prisma.User$observabilityAlertsResolvedArgs<ExtArgs>
   complianceEvidenceRecorded?: boolean | Prisma.User$complianceEvidenceRecordedArgs<ExtArgs>
+  privacyRequests?: boolean | Prisma.User$privacyRequestsArgs<ExtArgs>
+  privacyRequestsReviewed?: boolean | Prisma.User$privacyRequestsReviewedArgs<ExtArgs>
   releaseApprovalsCreated?: boolean | Prisma.User$releaseApprovalsCreatedArgs<ExtArgs>
   releaseApprovalsReviewed?: boolean | Prisma.User$releaseApprovalsReviewedArgs<ExtArgs>
   releaseApprovalsApproved?: boolean | Prisma.User$releaseApprovalsApprovedArgs<ExtArgs>
@@ -8103,6 +8847,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   observabilityAlertsAcknowledged?: boolean | Prisma.User$observabilityAlertsAcknowledgedArgs<ExtArgs>
   observabilityAlertsResolved?: boolean | Prisma.User$observabilityAlertsResolvedArgs<ExtArgs>
   complianceEvidenceRecorded?: boolean | Prisma.User$complianceEvidenceRecordedArgs<ExtArgs>
+  privacyRequests?: boolean | Prisma.User$privacyRequestsArgs<ExtArgs>
+  privacyRequestsReviewed?: boolean | Prisma.User$privacyRequestsReviewedArgs<ExtArgs>
   releaseApprovalsCreated?: boolean | Prisma.User$releaseApprovalsCreatedArgs<ExtArgs>
   releaseApprovalsReviewed?: boolean | Prisma.User$releaseApprovalsReviewedArgs<ExtArgs>
   releaseApprovalsApproved?: boolean | Prisma.User$releaseApprovalsApprovedArgs<ExtArgs>
@@ -8142,6 +8888,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     observabilityAlertsAcknowledged: Prisma.$ObservabilityAlertPayload<ExtArgs>[]
     observabilityAlertsResolved: Prisma.$ObservabilityAlertPayload<ExtArgs>[]
     complianceEvidenceRecorded: Prisma.$ComplianceEvidencePayload<ExtArgs>[]
+    privacyRequests: Prisma.$PrivacyRequestPayload<ExtArgs>[]
+    privacyRequestsReviewed: Prisma.$PrivacyRequestPayload<ExtArgs>[]
     releaseApprovalsCreated: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
     releaseApprovalsReviewed: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
     releaseApprovalsApproved: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
@@ -8584,6 +9332,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   observabilityAlertsAcknowledged<T extends Prisma.User$observabilityAlertsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$observabilityAlertsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ObservabilityAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   observabilityAlertsResolved<T extends Prisma.User$observabilityAlertsResolvedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$observabilityAlertsResolvedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ObservabilityAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   complianceEvidenceRecorded<T extends Prisma.User$complianceEvidenceRecordedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$complianceEvidenceRecordedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ComplianceEvidencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  privacyRequests<T extends Prisma.User$privacyRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacyRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  privacyRequestsReviewed<T extends Prisma.User$privacyRequestsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacyRequestsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   releaseApprovalsCreated<T extends Prisma.User$releaseApprovalsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$releaseApprovalsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   releaseApprovalsReviewed<T extends Prisma.User$releaseApprovalsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$releaseApprovalsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   releaseApprovalsApproved<T extends Prisma.User$releaseApprovalsApprovedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$releaseApprovalsApprovedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9683,6 +10433,54 @@ export type User$complianceEvidenceRecordedArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.ComplianceEvidenceScalarFieldEnum | Prisma.ComplianceEvidenceScalarFieldEnum[]
+}
+
+/**
+ * User.privacyRequests
+ */
+export type User$privacyRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrivacyRequest
+   */
+  select?: Prisma.PrivacyRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrivacyRequest
+   */
+  omit?: Prisma.PrivacyRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrivacyRequestInclude<ExtArgs> | null
+  where?: Prisma.PrivacyRequestWhereInput
+  orderBy?: Prisma.PrivacyRequestOrderByWithRelationInput | Prisma.PrivacyRequestOrderByWithRelationInput[]
+  cursor?: Prisma.PrivacyRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrivacyRequestScalarFieldEnum | Prisma.PrivacyRequestScalarFieldEnum[]
+}
+
+/**
+ * User.privacyRequestsReviewed
+ */
+export type User$privacyRequestsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrivacyRequest
+   */
+  select?: Prisma.PrivacyRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrivacyRequest
+   */
+  omit?: Prisma.PrivacyRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrivacyRequestInclude<ExtArgs> | null
+  where?: Prisma.PrivacyRequestWhereInput
+  orderBy?: Prisma.PrivacyRequestOrderByWithRelationInput | Prisma.PrivacyRequestOrderByWithRelationInput[]
+  cursor?: Prisma.PrivacyRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrivacyRequestScalarFieldEnum | Prisma.PrivacyRequestScalarFieldEnum[]
 }
 
 /**

@@ -65,6 +65,7 @@ export const ModelName = {
   LegalDocument: 'LegalDocument',
   LegalDocumentVersion: 'LegalDocumentVersion',
   LegalAcceptance: 'LegalAcceptance',
+  PrivacyRequest: 'PrivacyRequest',
   OrganizationProfile: 'OrganizationProfile',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -360,6 +361,26 @@ export const LegalAcceptanceScalarFieldEnum = {
 } as const
 
 export type LegalAcceptanceScalarFieldEnum = (typeof LegalAcceptanceScalarFieldEnum)[keyof typeof LegalAcceptanceScalarFieldEnum]
+
+
+export const PrivacyRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  customerAccountId: 'customerAccountId',
+  requestType: 'requestType',
+  status: 'status',
+  summary: 'summary',
+  responseSummary: 'responseSummary',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  closedAt: 'closedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
 
 
 export const OrganizationProfileScalarFieldEnum = {
