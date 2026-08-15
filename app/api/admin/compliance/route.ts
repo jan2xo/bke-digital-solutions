@@ -5,9 +5,10 @@ import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { apiError } from "@/lib/http";
 import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
+import { COMPLIANCE_STATUSES } from "@/lib/compliance";
 
 const schema = z.discriminatedUnion("action", [
-  z.object({ action: z.literal("STATUS"), id: z.string().min(1), status: z.enum(["IMPLEMENTED", "PENDING_OWNER_DECISION", "PENDING_LAWYER_REVIEW", "PENDING_ACCOUNTANT_REVIEW", "PENDING_DPO_REVIEW", "PENDING_REGULATORY_APPROVAL"]) }),
+  z.object({ action: z.literal("STATUS"), id: z.string().min(1), status: z.enum(COMPLIANCE_STATUSES) }),
   z.object({ action: z.literal("EVIDENCE"), id: z.string().min(1), kind: z.string().trim().min(1).max(80), summary: z.string().trim().min(1).max(500), reference: z.string().trim().max(300).optional() }),
 ]);
 
@@ -24,7 +25,6 @@ export async function POST(request: Request) {
     const input = schema.parse(await request.json());
     if (!(await db.complianceRequirement.findUnique({ where: { id: input.id } }))) throw new Error("NOT_FOUND");
     if (input.action === "STATUS") {
-      if (input.status === "IMPLEMENTED") throw new Error("COMPLIANCE_PROFESSIONAL_REVIEW_REQUIRED");
       await db.complianceRequirement.update({ where: { id: input.id }, data: { status: input.status, reviewedAt: null } });
       await db.auditLog.create({ data: { actorId: admin.id, action: "COMPLIANCE_STATUS_CHANGED", targetType: "ComplianceRequirement", targetId: input.id, metadata: { status: input.status } } });
     } else {
