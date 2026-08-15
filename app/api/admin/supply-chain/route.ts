@@ -13,7 +13,7 @@ import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { downloadObject } from "@/lib/storage";
 
-const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "VERIFY_SIGNATURE"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional() });
+const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
 
 export async function GET() { try { await requireAdmin(); return NextResponse.json(await db.supplyChainEvidence.findMany({ include: { verificationEvidence: true, version: { include: { product: { select: { name: true } }, artifacts: { select: { name: true, sha256: true, sizeBytes: true } } } } }, orderBy: { builtAt: "desc" } })); } catch (e) { return apiError(e); } }
@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       const prior = existing.verificationEvidence.find((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === signed.payloadHash && v.signerKeyId === signed.keyId);
       if (!prior) {
         await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "SIGNATURE", artifactHash: signed.payloadHash, signerKeyId: signed.keyId, result: "VERIFIED", reference: signed.canonicalPayload, metadata: { algorithm: signed.algorithm, manifest: signed.manifest } } });
+        await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "CHECKSUM", artifactHash: signed.payloadHash, signerKeyId: signed.keyId, result: "VERIFIED", reference: signed.payloadHash, metadata: { algorithm: "SHA-256", artifacts: signed.manifest.artifacts.map((artifact) => ({ id: artifact.id, sha256: artifact.sha256, sizeBytes: artifact.sizeBytes })) } } });
         await db.supplyChainEvidence.update({ where: { id: existing.id }, data: { canonicalPayloadHash: signed.payloadHash, signatureAlgorithm: signed.algorithm, signatureKeyId: signed.keyId, signedAt: new Date(), signatureVerified: true, manifestSignature: signed.signature, manifestJson: signed.manifest } });
       }
       await db.auditLog.create({ data: { actorId: admin.id, action: "SUPPLY_CHAIN_SIGNED", targetType: "SupplyChainEvidence", targetId: existing.id, metadata: { keyId: signed.keyId, payloadHash: signed.payloadHash } } });
@@ -42,6 +43,16 @@ export async function POST(request: Request) {
       const valid = verify(null, Buffer.from(canonicalPayloadHash), publicKey(signerKeyId), Buffer.from(input.signature, "base64"));
       await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "SIGNATURE", artifactHash: canonicalPayloadHash, signerKeyId, result: valid ? "VERIFIED" : "FAILED", failureReason: valid ? undefined : "SIGNATURE_MISMATCH", metadata: { algorithm: "Ed25519" } } });
       if (!valid) throw new Error("SIGNATURE_INVALID"); await db.supplyChainEvidence.update({ where: { id: existing.id }, data: { signatureVerified: true, manifestSignature: input.signature } });
+    }
+    if (input.action === "RESCAN") input.action = "RECORD_SCAN";
+    if (["QUARANTINE", "EMERGENCY_REVOKE", "MARK_COMPROMISED"].includes(input.action ?? "")) {
+      if (!input.reason) throw new Error("SUPPLY_CHAIN_REASON_REQUIRED");
+      const kind = input.action === "EMERGENCY_REVOKE" ? "EMERGENCY_REVOCATION" : input.action === "MARK_COMPROMISED" ? "COMPROMISE" : "QUARANTINE";
+      const result = input.action === "MARK_COMPROMISED" ? "COMPROMISED" : "ACTIVE";
+      await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash, result, failureReason: input.reason, metadata: { reason: input.reason, actorId: admin.id } } });
+      await db.supplyChainEvidence.update({ where: { id: existing.id }, data: input.action === "QUARANTINE" || input.action === "MARK_COMPROMISED" ? { malwareStatus: "INFECTED", signatureVerified: false } : { certificateStatus: "REVOKED", signatureVerified: false } });
+      await db.auditLog.create({ data: { actorId: admin.id, action: `SUPPLY_CHAIN_${input.action}`, targetType: "SupplyChainEvidence", targetId: existing.id, metadata: { reason: input.reason, payloadHash: canonicalPayloadHash } } });
+      return NextResponse.json({ ok: true, status: result });
     }
     if (input.action === "RECORD_SCAN") {
       const results = [];

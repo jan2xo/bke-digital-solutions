@@ -12,6 +12,7 @@ export type ReleaseGateInput = {
   priorCreatedById?: string | null;
   approvingAdminId: string;
   breakGlassAllowed?: boolean;
+  supplyChainSafe?: boolean;
 };
 
 export type ReleaseGateResult = {
@@ -32,6 +33,7 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
     compliance: input.complianceEvidencePresent && input.pendingComplianceCount === 0,
     migration: input.migrationEvidencePresent,
     approvalSeparation: Boolean(input.breakGlassAllowed || (input.reviewedById && input.reviewedById !== input.approvingAdminId && input.priorCreatedById !== input.approvingAdminId)),
+    supplyChainSafe: input.supplyChainSafe ?? true,
   };
   const failures = Object.entries(checks).filter(([, passed]) => !passed).map(([name]) => name);
   return { ready: failures.length === 0, checks, failures };

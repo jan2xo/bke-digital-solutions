@@ -178,7 +178,7 @@ Added `ComplianceRequirement` and immutable `ComplianceEvidence` records, seeded
 
 ## Phase 6.8 — Secure software supply chain
 
-Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence`, artifact hash manifests, administrator visibility at `/admin/supply-chain`, and audited status updates. Signing keys/certificates and malware scanning remain explicitly pending.
+Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence`, artifact hash manifests, administrator visibility at `/admin/supply-chain`, and audited status updates. Repository-controlled Phase 6.8 controls now include fail-closed publication evaluation for current signatures, checksums, per-artifact malware scan history, quarantine markers, emergency revocation, compromised-release markers, and audit timestamps. The admin supply-chain endpoint can rescan current private artifact bytes and record quarantine, emergency revocation, and compromise evidence without touching external certificates or production ClamAV. Production signing certificates and live ClamAV certification remain pending external provisioning.
 
 ## Phase 6.9 — Production release management
 

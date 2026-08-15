@@ -8,6 +8,7 @@ import { apiError } from "@/lib/http";
 import { env } from "@/lib/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { hasCurrentCleanMalwareEvidence } from "@/lib/supply-chain/malware-gate";
+import { evaluateSupplyChainSecurity } from "@/lib/supply-chain/controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
@@ -27,8 +28,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const artifactHash = manifestHash(canonicalizeManifest(buildReleaseManifest({ productId: current.productId, productSlug: current.product.slug, versionId: current.id, version: current.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: current.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) })));
         const signatureEvidence = evidence?.verificationEvidence.some((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
         const malwareEvidence = hasCurrentCleanMalwareEvidence(current.artifacts, (evidence?.verificationEvidence ?? []).filter((v) => v.kind === "MALWARE_SCAN"), artifactHash);
+        const supplyChainSecurity = evaluateSupplyChainSecurity({ currentHash: artifactHash, artifacts: current.artifacts, evidence: evidence?.verificationEvidence ?? [], certificateStatus: evidence?.certificateStatus, malwareStatus: evidence?.malwareStatus });
         const prior = current.approvals[0];
-        const gate = evaluateReleaseGate({ signatureVerified: signatureEvidence, dependenciesVerified: Boolean(evidence?.dependencyVerified), sbomPresent: Boolean(evidence?.sbomReference), provenanceVerified: evidence?.provenanceStatus === "VERIFIED", malwareClean: malwareEvidence, backupEvidencePresent: Boolean(current.backupEvidence), complianceEvidencePresent: Boolean(current.complianceEvidence), migrationEvidencePresent: Boolean(current.migrationEvidence), pendingComplianceCount: pendingCompliance, reviewedById: prior?.reviewedById, priorCreatedById: prior?.createdById, approvingAdminId: admin.id, breakGlassAllowed: input.breakGlass && env.ALLOW_BREAK_GLASS === "true" });
+        const gate = evaluateReleaseGate({ signatureVerified: signatureEvidence && supplyChainSecurity.integrityVerified, dependenciesVerified: Boolean(evidence?.dependencyVerified), sbomPresent: Boolean(evidence?.sbomReference), provenanceVerified: evidence?.provenanceStatus === "VERIFIED", malwareClean: malwareEvidence && supplyChainSecurity.scanCurrent, backupEvidencePresent: Boolean(current.backupEvidence), complianceEvidencePresent: Boolean(current.complianceEvidence), migrationEvidencePresent: Boolean(current.migrationEvidence), pendingComplianceCount: pendingCompliance, reviewedById: prior?.reviewedById, priorCreatedById: prior?.createdById, approvingAdminId: admin.id, breakGlassAllowed: input.breakGlass && env.ALLOW_BREAK_GLASS === "true", supplyChainSafe: supplyChainSecurity.releasable });
         if (!gate.ready) throw new Error(gate.failures.includes("approvalSeparation") ? "RELEASE_SEPARATION_REQUIRED" : "RELEASE_EVIDENCE_INCOMPLETE");
       }
     }
