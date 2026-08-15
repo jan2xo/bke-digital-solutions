@@ -175,3 +175,35 @@ Outstanding:
 - Re-run migrations, organization concurrency/isolation tests, browser workflows, and acceptance checks inside the private certification network.
 - Do not mark Phase 6.9 PASS or begin later phase implementation until runtime evidence is obtained.
 - External certification remains separate and pending.
+
+## 2026-08-15T19:11:00Z — CORRECTION: private certification runtime remediated and Phase 6.9 evidence rerun
+Phase: 6.9 acceptance evidence
+Branch: `swarm/digital-solutions`
+HEAD: `5c7d983` before this log-only checkpoint
+Working tree: log append pending commit
+Coordinator response: Remediated the repository-controlled certification runtime regression without publishing PostgreSQL, Valkey, or MinIO ports. PostgreSQL and Valkey now retain no-new-privileges and cap_drop ALL with narrowly scoped official-entrypoint capability exceptions. The certification test harness now runs inside the private Compose network using service DNS rather than host-local ports. This corrects the earlier 6.9 evidence blocker.
+Workers involved:
+- cactus / certification dependency hardening: implemented `b23f967`.
+- cactus / private certification test harness: implemented `5c7d983`.
+- independent coordinator verification: reviewed both diffs and deployment verifier coverage.
+Commits:
+- `b23f967` Fix certification dependency hardening.
+- `5c7d983` Run certification tests inside private Compose network.
+Verification:
+- Certification PostgreSQL, Valkey, and MinIO healthy with private container-only ports.
+- Certification migration path passed; 40 migrations found and no pending migrations.
+- Post-migration database smoke check passed.
+- Deployment manifest verifier passed.
+- Deployment and supply-chain regression tests passed: 14 tests.
+- Private Phase 6.9 organization/auth/integration tests passed: 12 tests across 3 files, including concurrent invitation acceptance, replay rejection, suspended organization behavior, owner transfer, profile authorization, suspended switching, and authorization boundaries.
+- TypeScript passed.
+- ESLint passed.
+- `git diff --check` passed.
+Gate:
+- Runtime remediation: PASS.
+- Phase 6.9 repository implementation: REMEDIATED and technically verified.
+- Phase 6.9 full acceptance gate: REVIEW/ACCEPTANCE EVIDENCE PENDING, not falsely marked PASS. The repository currently has no dedicated browser organization/membership workflow suite, and no browser evidence was produced in this checkpoint. Existing organization tests provide database-backed acceptance evidence inside the private network.
+Outstanding:
+- Add or execute real browser workflow evidence for organization creation, invitations, role boundaries, owner transfer, and account switching before declaring Phase 6.9 fully passed.
+- Keep `5285176` customer-support work PREMATURE / UNGATED until Phase 6.9 passes.
+- External certification remains pending where previously recorded.
