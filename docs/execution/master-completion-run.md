@@ -264,3 +264,31 @@ Gate:
 Outstanding:
 - Phase 6.9 remains blocked on missing organization-management application routes/UI as recorded above.
 - No production action performed.
+
+## 2026-08-15T19:51:00Z — CORRECTION: VPS production recovery environment wiring remediated
+Phase: 6.11 production deployment / operational validation
+Branch: `swarm/digital-solutions`
+HEAD: `f3b01e3` before this log-only checkpoint
+Working tree: clean before append
+Coordinator response: Reconciled the VPS report that the production app container lacked ADMIN_OWNER_RECOVERY_KEY despite the VPS environment file containing it. The repository fix explicitly wires ADMIN_OWNER_RECOVERY_KEY and ADMIN_OWNER_RECOVERY_KEY_VERSION through the shared production runtime environment anchor consumed by the app and operational runtime services. No production values were read, printed, hardcoded, or committed. A repository regression test now verifies the validated production environment contract is represented by variable names in the production Compose runtime anchor.
+Workers involved:
+- maple: read-only audit confirmed the runtime anchor contains every environment schema key and no required validation references are missing.
+- seedling: implemented `f3b01e3` and added contract regression coverage.
+- evergreen: independent secret-boundary review completed with no reported unresolved high-risk finding.
+Commits:
+- `f3b01e3` Wire admin recovery env into production compose.
+Verification:
+- Effective production Compose configuration rendered successfully with `.env.production.example`; no secret values were recorded.
+- Effective app, scheduler, and backup-worker environment key sets include ADMIN_OWNER_RECOVERY_KEY and ADMIN_OWNER_RECOVERY_KEY_VERSION.
+- Environment regression tests passed: 21/21.
+- TypeScript passed.
+- ESLint passed with one existing non-blocking unused-variable warning in the Phase 6.9 browser fixture.
+- Deployment manifest verification passed.
+- `git diff --check` passed.
+- Production application image build had already passed in the private certification Compose build path at the prior checkpoint; this remediation changes only Compose environment wiring and regression coverage.
+Gate:
+- IMPLEMENTATION COMPLETE for repository-controlled production environment wiring.
+- VPS runtime blocker remediated; production restart/health evidence remains owner-controlled and was not fabricated.
+Outstanding:
+- VPS operator must pull this checkpoint, recreate the app/operational services, and verify effective runtime environment presence by variable name plus app health without exposing values.
+- Phase 6.9 remains blocked on missing customer-facing organization-management routes/UI, as previously recorded.
