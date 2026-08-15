@@ -110,6 +110,8 @@ Open `/admin/observability` for the consolidated platform state. Use `/api/healt
 
 Before exposing a deployment, verify production security headers over HTTPS, secure SameSite cookies, provider credential key versions, and route-specific limits for authentication, checkout, webhooks, downloads, scheduler, backup, and observability. Keep containers non-root with read-only/no-new-privileges settings and use isolated restore targets. Never place secrets, raw webhook bodies, license keys, or signed download URLs in tickets or logs.
 
+For host controls, follow [SSH and firewall hardening](security/ssh-firewall-hardening.md) and run the read-only evidence collector with `npm run security:audit-host` on the VPS. For suspected compromise, credential exposure, payment abuse, malware, or data loss, follow [the incident response runbook](runbooks/incident-response.md). Neither local checks nor repository inspection certifies a real VPS or incident drill.
+
 Configure versioned Ed25519 lease keys and trusted supply-chain verification keys only through protected environment configuration. Stable/LTS promotion must remain blocked until independently verified evidence exists.
 ### Certification lease signing
 

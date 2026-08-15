@@ -45,6 +45,7 @@
     "backups:create": "NODE_OPTIONS=--conditions=react-server tsx scripts/request-backup.ts",
     "backups:certify-local": "NODE_OPTIONS=--conditions=react-server tsx scripts/certify-backup-local.ts",
     "security:hygiene": "node scripts/repository-hygiene.mjs",
+    "security:audit-host": "bash scripts/audit-host-security.sh",
     "supplychain:sbom": "node scripts/generate-sbom.mjs",
     "supplychain:provenance": "node scripts/generate-provenance.mjs",
     "deployment:verify-restart": "node scripts/verify-compose-restart-policies.mjs",
