@@ -24,7 +24,7 @@ test("organization membership is visible in the browser and isolated across acco
   const memberEmail = `phase69-member-${suffix}@bke.test`;
   const outsiderEmail = `phase69-outsider-${suffix}@bke.test`;
   const passwordHash = await argon2.hash(password);
-  const [owner, member, outsider] = await Promise.all([
+  const [owner, member] = await Promise.all([
     db.user.create({ data: { email: ownerEmail, emailVerified: new Date(), credential: { create: { passwordHash } } } }),
     db.user.create({ data: { email: memberEmail, emailVerified: new Date(), credential: { create: { passwordHash } } } }),
     db.user.create({ data: { email: outsiderEmail, emailVerified: new Date(), credential: { create: { passwordHash } } } }),
