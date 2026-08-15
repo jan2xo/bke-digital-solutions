@@ -53,6 +53,7 @@ services:
     read_only: true
     tmpfs:
       - /tmp:size=256m,mode=1777
+      - /app/.next:size=512m,mode=1777
       - /app/node_modules/.vite-temp:size=64m,mode=1777
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
@@ -73,6 +74,8 @@ services:
       BKE_DISABLE_EXTERNAL_EMAIL: "true"
       TMPDIR: /tmp
       XDG_CACHE_HOME: /tmp/.cache
+      PLAYWRIGHT_OUTPUT_DIR: /tmp/test-results
+      PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/chromium-browser
       npm_config_cache: /tmp/.npm
       PAYMONGO_SECRET_KEY: ""
       PAYMONGO_WEBHOOK_SECRET: ""
