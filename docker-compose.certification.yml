@@ -37,6 +37,47 @@ services:
     networks: [private]
     restart: "no"
     security_opt: ["no-new-privileges:true"]
+  certification-tests:
+    build:
+      context: .
+      target: operations
+    command: ["npm", "run", "certification:vitest"]
+    env_file: ${BKE_ENV_FILE:-.env.certification}
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      valkey: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+    networks: [private]
+    restart: "no"
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+      - /app/node_modules/.vite-temp:size=64m,mode=1777
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 256
+    environment:
+      NODE_ENV: test
+      DEPLOYMENT_ENV: test
+      LOCAL_PRODUCTION_SIMULATION: "false"
+      APP_URL: http://127.0.0.1:3000
+      INTERNAL_APP_URL: ""
+      PUBLIC_WEBHOOK_ORIGIN: ""
+      TRUSTED_ORIGINS: http://127.0.0.1:3000
+      DIRECT_DATABASE_URL: ""
+      REDIS_URL: redis://valkey:6379
+      S3_ENDPOINT: http://minio:9000
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: log
+      BKE_DISABLE_EXTERNAL_EMAIL: "true"
+      TMPDIR: /tmp
+      XDG_CACHE_HOME: /tmp/.cache
+      npm_config_cache: /tmp/.npm
+      PAYMONGO_SECRET_KEY: ""
+      PAYMONGO_WEBHOOK_SECRET: ""
+      RESEND_API_KEY: ""
+      RESEND_SANDBOX_TO: ""
   minio:
     profiles: ["self-hosted-storage"]
     networks: [private]
