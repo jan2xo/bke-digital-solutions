@@ -96,6 +96,9 @@ export const ModelName = {
   DiscountOffer: 'DiscountOffer',
   OfferRedemption: 'OfferRedemption',
   License: 'License',
+  SupportTicket: 'SupportTicket',
+  SupportTicketMessage: 'SupportTicketMessage',
+  SupportTicketEvent: 'SupportTicketEvent',
   LicenseLeaseRecord: 'LicenseLeaseRecord',
   CommercialLeaseOperation: 'CommercialLeaseOperation',
   CommercialSigningKey: 'CommercialSigningKey',
@@ -950,6 +953,56 @@ export const LicenseScalarFieldEnum = {
 } as const
 
 export type LicenseScalarFieldEnum = (typeof LicenseScalarFieldEnum)[keyof typeof LicenseScalarFieldEnum]
+
+
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  createdById: 'createdById',
+  accountId: 'accountId',
+  orderId: 'orderId',
+  licenseId: 'licenseId',
+  category: 'category',
+  state: 'state',
+  priority: 'priority',
+  subject: 'subject',
+  safeContext: 'safeContext',
+  securityReport: 'securityReport',
+  assignedToId: 'assignedToId',
+  escalatedAt: 'escalatedAt',
+  resolvedAt: 'resolvedAt',
+  closedAt: 'closedAt',
+  lastCustomerReplyAt: 'lastCustomerReplyAt',
+  lastAdminReplyAt: 'lastAdminReplyAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
+export const SupportTicketMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  authorId: 'authorId',
+  body: 'body',
+  visibility: 'visibility',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportTicketMessageScalarFieldEnum = (typeof SupportTicketMessageScalarFieldEnum)[keyof typeof SupportTicketMessageScalarFieldEnum]
+
+
+export const SupportTicketEventScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  actorId: 'actorId',
+  eventType: 'eventType',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportTicketEventScalarFieldEnum = (typeof SupportTicketEventScalarFieldEnum)[keyof typeof SupportTicketEventScalarFieldEnum]
 
 
 export const LicenseLeaseRecordScalarFieldEnum = {

@@ -267,6 +267,21 @@ export type OfferRedemption = Prisma.OfferRedemptionModel
  */
 export type License = Prisma.LicenseModel
 /**
+ * Model SupportTicket
+ *
+ */
+export type SupportTicket = Prisma.SupportTicketModel
+/**
+ * Model SupportTicketMessage
+ *
+ */
+export type SupportTicketMessage = Prisma.SupportTicketMessageModel
+/**
+ * Model SupportTicketEvent
+ *
+ */
+export type SupportTicketEvent = Prisma.SupportTicketEventModel
+/**
  * Model LicenseLeaseRecord
  *
  */

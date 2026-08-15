@@ -336,6 +336,41 @@ enum ProviderValidationStatus {
   INVALID
 }
 
+enum SupportTicketCategory {
+  ACCOUNT
+  PAYMENT
+  REFUND
+  INVOICE
+  LICENSE
+  DEVICE
+  DOWNLOAD
+  SECURITY
+  FEATURE_REQUEST
+  OTHER
+}
+
+enum SupportTicketState {
+  OPEN
+  TRIAGED
+  WAITING_ON_CUSTOMER
+  WAITING_ON_SUPPORT
+  ESCALATED
+  RESOLVED
+  CLOSED
+}
+
+enum SupportTicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupportMessageVisibility {
+  PUBLIC
+  INTERNAL
+}
+
 model User {
   id                              String                          @id @default(cuid())
   email                           String                          @unique
@@ -386,6 +421,10 @@ model User {
   releaseApprovalsCreated         ReleaseApproval[] @relation("ReleaseApprovalCreator")
   releaseApprovalsReviewed        ReleaseApproval[] @relation("ReleaseApprovalReviewer")
   releaseApprovalsApproved        ReleaseApproval[] @relation("ReleaseApprovalApprover")
+  supportTicketsCreated           SupportTicket[]   @relation("SupportTicketCreator")
+  supportTicketsAssigned          SupportTicket[]   @relation("SupportTicketAssignee")
+  supportMessages                 SupportTicketMessage[] @relation("SupportMessageAuthor")
+  supportEvents                   SupportTicketEvent[] @relation("SupportEventActor")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -561,6 +600,7 @@ model CustomerAccount {
   offerRedemptions   OfferRedemption[]
   legalAcceptances   LegalAcceptance[]
   privacyRequests    PrivacyRequest[]
+  supportTickets     SupportTicket[]
 
   @@index([ownerId])
   @@index([lifecycleState])
@@ -1000,6 +1040,7 @@ model Order {
   webhookEvents         WebhookEvent[]
   refundOperations      RefundOperation[]
   reconciliations       PaymentReconciliation[]
+  supportTickets        SupportTicket[]
 
   @@index([accountId, createdAt])
   @@index([renewalSubscriptionId])
@@ -1308,9 +1349,75 @@ model License {
   leaseHistory      LicenseLeaseRecord[]
   leaseOperations   CommercialLeaseOperation[]
   trialGrant        TrialGrant?
+  supportTickets    SupportTicket[]
 
   @@unique([orderItemId])
   @@index([accountId, status])
+}
+
+model SupportTicket {
+  id              String                @id @default(cuid())
+  publicId        String                @unique
+  createdById     String
+  accountId       String
+  orderId         String?
+  licenseId       String?
+  category        SupportTicketCategory
+  state           SupportTicketState    @default(OPEN)
+  priority        SupportTicketPriority @default(NORMAL)
+  subject         String
+  safeContext     Json                  @default("{}")
+  securityReport  Boolean               @default(false)
+  assignedToId    String?
+  escalatedAt     DateTime?
+  resolvedAt      DateTime?
+  closedAt        DateTime?
+  lastCustomerReplyAt DateTime?
+  lastAdminReplyAt    DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  createdBy       User                  @relation("SupportTicketCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  account         CustomerAccount       @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  order           Order?                @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  license         License?              @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  assignedTo      User?                 @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  messages        SupportTicketMessage[]
+  events          SupportTicketEvent[]
+
+  @@index([createdById, createdAt])
+  @@index([accountId, createdAt])
+  @@index([state, priority, createdAt])
+  @@index([assignedToId, state])
+  @@index([securityReport, state])
+}
+
+model SupportTicketMessage {
+  id          String                   @id @default(cuid())
+  ticketId    String
+  authorId    String
+  body        String
+  visibility  SupportMessageVisibility @default(PUBLIC)
+  createdAt   DateTime                 @default(now())
+  ticket      SupportTicket            @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  author      User                     @relation("SupportMessageAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, createdAt])
+  @@index([authorId, createdAt])
+}
+
+model SupportTicketEvent {
+  id        String        @id @default(cuid())
+  ticketId  String
+  actorId   String?
+  eventType String
+  metadata  Json          @default("{}")
+  createdAt DateTime      @default(now())
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  actor     User?         @relation("SupportEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+  @@index([actorId, createdAt])
+  @@index([eventType, createdAt])
 }
 
 model LicenseLeaseRecord {
