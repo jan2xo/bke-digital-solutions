@@ -33,6 +33,9 @@ test("organization membership is visible in the browser and isolated across acco
   const token = `phase69-${suffix}`;
   await db.invitation.create({ data: { accountId: organization.id, email: memberEmail, role: "LICENSE_MANAGER", tokenHash: createHash("sha256").update(token).digest("hex"), expiresAt: new Date(Date.now() + 86_400_000) } });
   await db.membership.create({ data: { accountId: organization.id, userId: member.id, role: "LICENSE_MANAGER" } });
+  const limitedEmail = `phase69-limited-${suffix}@bke.test`;
+  const limited = await db.user.create({ data: { email: limitedEmail, emailVerified: new Date(), credential: { create: { passwordHash } } } });
+  await db.membership.create({ data: { accountId: organization.id, userId: limited.id, role: "MEMBER" } });
 
   await login(page, ownerEmail, password);
   await expect(page.getByText(organization.displayName)).toBeVisible();
@@ -45,6 +48,14 @@ test("organization membership is visible in the browser and isolated across acco
   await page.goto(`/dashboard/accounts/${organization.id}`);
   await expect(page.getByRole("heading", { name: organization.displayName })).toBeVisible();
   await expect(page.getByText("ORGANIZATION · LICENSE_MANAGER")).toBeVisible();
+
+  await page.getByRole("button", { name: "Log out" }).click();
+  await login(page, limitedEmail, password);
+  await expect(page.getByText("Limited member access. Billing and licensing records are hidden.")).toBeVisible();
+  await page.goto(`/dashboard/accounts/${organization.id}`);
+  await expect(page.getByText("ORGANIZATION · MEMBER")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Order history" })).not.toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscriptions" })).not.toBeVisible();
 
   await page.getByRole("button", { name: "Log out" }).click();
   await login(page, outsiderEmail, password);
