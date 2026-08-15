@@ -423,3 +423,24 @@ Gate:
 - Phase 6.9: repository-controlled acceptance evidence remediation PASS for this finding; final phase gate remains subject to complete acceptance matrix review.
 Outstanding:
 - Complete the remaining Phase 6.9 acceptance matrix before advancing to Phase 6.10.
+
+## 2026-08-15T21:04:45Z — CORRECTION: Phase 6.9 acceptance remediation commit hashes
+Phase: 6.9 organization and membership management
+Branch: `swarm/digital-solutions`
+HEAD: `bfb0be5`
+Working tree: clean before this log append.
+Coordinator response: The preceding entry used literal shell-substitution text in its HEAD and commit fields. This correction records the actual commits. The test remediation commit is `1292c20`; the execution-log commit is `bfb0be5`.
+Workers involved:
+- fox: independent review.
+- coordinator: test remediation and verification.
+Commits:
+- `1292c20` test: close phase 6.9 acceptance gaps.
+- `bfb0be5` docs: record phase 6.9 acceptance remediation.
+Verification:
+- Private DB and route tests: 4/4 passed with PostgreSQL available in the private certification runtime.
+- Browser acceptance: 1/1 passed; owner API returned 200 and outsider API returned 404.
+- TypeScript, ESLint, and `git diff --check`: passed.
+Gate:
+- Phase 6.9: final gate remains open pending the complete acceptance matrix review.
+Outstanding:
+- Do not advance to Phase 6.10 until the remaining organization acceptance criteria are evidenced.
