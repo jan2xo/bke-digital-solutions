@@ -10,6 +10,9 @@ export function verifyTopology(compose, caddyfile, dockerfile) {
   for (const name of required) {
     if (!services[name]) throw new Error(`Deployment topology is incomplete: missing ${name}`);
     if (!["unless-stopped", "always"].includes(services[name].restart)) throw new Error(`${name} must restart after host/process failure`);
+    if (!Array.isArray(services[name].cap_drop) || !services[name].cap_drop.includes("ALL")) throw new Error(`${name} must drop all Linux capabilities`);
+    if (services[name].pids_limit === undefined) throw new Error(`${name} must define a PID limit`);
+    if (!services[name].security_opt?.includes("no-new-privileges:true")) throw new Error(`${name} must enable no-new-privileges`);
   }
   if (services.migrate && services.migrate.restart !== "no") throw new Error("migrate must be a one-shot service with restart=no");
   const caddy = services.caddy;
@@ -24,7 +27,7 @@ export function verifyTopology(compose, caddyfile, dockerfile) {
   if (!/reverse_proxy\s+app:3000\b/.test(caddyfile)) throw new Error("Caddy must reverse proxy to app:3000");
   if (!/\$\{APP_DOMAIN\}/.test(caddyfile)) throw new Error("Caddy must configure the deployment application domain");
   if (!dockerfile.includes("HEALTHCHECK")) throw new Error("Application image must declare a healthcheck");
-  return { required, checks: ["restart-policies", "one-shot-migrations", "https-proxy", "healthy-proxy-upstream", "shared-proxy-network", "healthchecks"] };
+  return { required, checks: ["restart-policies", "one-shot-migrations", "https-proxy", "healthy-proxy-upstream", "shared-proxy-network", "healthchecks", "capability-drop", "pid-limits", "no-new-privileges"] };
 }
 
 export function loadAndVerify({ composePath = composeFile, environmentPath = envFile, caddyPath = "Caddyfile", dockerfilePath = "Dockerfile" } = {}) {

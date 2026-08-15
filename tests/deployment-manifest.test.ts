@@ -3,19 +3,19 @@ import { verifyTopology } from "../scripts/verify-deployment-manifest.mjs";
 
 const baseCompose = {
   services: {
-    app: { restart: "unless-stopped", healthcheck: {}, networks: ["private", "egress"] },
-    scheduler: { restart: "unless-stopped" },
-    "backup-worker": { restart: "unless-stopped" },
-    postgres: { restart: "unless-stopped" },
-    valkey: { restart: "unless-stopped" },
-    minio: { restart: "unless-stopped" },
+    app: { restart: "unless-stopped", healthcheck: {}, networks: ["private", "egress"], cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    scheduler: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    "backup-worker": { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    postgres: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    valkey: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    minio: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
     migrate: { restart: "no" },
     caddy: {
       restart: "unless-stopped",
       depends_on: { app: { condition: "service_healthy" } },
       ports: [{ published: 443, target: 443 }],
       volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro"],
-      networks: ["private", "egress"],
+      networks: ["private", "egress"], cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"],
     },
   },
 };
