@@ -39,17 +39,15 @@ services:
     security_opt: ["no-new-privileges:true"]
   minio:
     profiles: ["self-hosted-storage"]
-    networks: [private, certification-host]
+    networks: [private]
     ports: !override
-      - "127.0.0.1:59000:9000"
+      []
   postgres:
-    networks: [private, certification-host]
-    ports:
-      - "127.0.0.1:55432:5432"
+    networks: [private]
+    ports: []
   valkey:
-    networks: [private, certification-host]
-    ports:
-      - "127.0.0.1:56379:6379"
+    networks: [private]
+    ports: []
   minio-init:
     environment:
       - MINIO_ROOT_USER
@@ -61,6 +59,7 @@ services:
       - S3_SECRET_ACCESS_KEY
       - S3_FORCE_PATH_STYLE
       - DEPLOYMENT_ENV
+      - MC_CONFIG_DIR=/tmp/.mc
     volumes:
       - ./scripts/minio-init.sh:/usr/local/bin/minio-init.sh:ro
   caddy:
@@ -82,5 +81,4 @@ services:
     restart: unless-stopped
     security_opt: ["no-new-privileges:true"]
 
-networks:
-  certification-host:
+networks: {}

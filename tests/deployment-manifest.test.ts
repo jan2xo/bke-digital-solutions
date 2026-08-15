@@ -6,8 +6,8 @@ const baseCompose = {
     app: { restart: "unless-stopped", healthcheck: {}, networks: ["private", "egress"], cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
     scheduler: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
     "backup-worker": { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
-    postgres: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
-    valkey: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    postgres: { restart: "unless-stopped", cap_drop: ["ALL"], cap_add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
+    valkey: { restart: "unless-stopped", cap_drop: ["ALL"], cap_add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
     minio: { restart: "unless-stopped", cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"] },
     migrate: { restart: "no" },
     caddy: {
@@ -28,7 +28,15 @@ function composeWith(change: Record<string, unknown>) {
 
 describe("deployment manifest topology verifier", () => {
   it("accepts the effective production topology", () => {
-    expect(verifyTopology(baseCompose, caddyfile, dockerfile).checks).toContain("healthy-proxy-upstream");
+    expect(verifyTopology(baseCompose, caddyfile, dockerfile).checks).toContain("narrow-capability-exceptions");
+  });
+
+  it.each([
+    ["missing postgres entrypoint capability", composeWith({ postgres: { ...baseCompose.services.postgres, cap_add: ["CHOWN", "SETGID", "SETUID"] } })],
+    ["extra valkey capability", composeWith({ valkey: { ...baseCompose.services.valkey, cap_add: ["CHOWN", "NET_BIND_SERVICE", "SETGID", "SETUID"] } })],
+    ["published postgres port", composeWith({ postgres: { ...baseCompose.services.postgres, ports: ["5432:5432"] } })],
+  ])("rejects %s", (_label, compose) => {
+    expect(() => verifyTopology(compose, caddyfile, dockerfile)).toThrow(/unsupported Linux capability exceptions|must remain private/);
   });
 
   it.each([

@@ -4,16 +4,30 @@ import { existsSync, readFileSync } from "node:fs";
 const composeFile = process.env.DEPLOYMENT_COMPOSE_FILE ?? "docker-compose.production.yml";
 const envFile = process.env.DEPLOYMENT_ENV_FILE ?? ".env.production.example";
 
+const allowedCapabilityAdds = {
+  postgres: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"],
+  valkey: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"],
+};
+
+function normalizedList(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(String).sort();
+}
+
 export function verifyTopology(compose, caddyfile, dockerfile) {
   const services = compose.services ?? {};
   const required = ["app", "scheduler", "backup-worker", "postgres", "valkey", "minio", "caddy"];
-  for (const name of required) {
-    if (!services[name]) throw new Error(`Deployment topology is incomplete: missing ${name}`);
-    if (!["unless-stopped", "always"].includes(services[name].restart)) throw new Error(`${name} must restart after host/process failure`);
-    if (!Array.isArray(services[name].cap_drop) || !services[name].cap_drop.includes("ALL")) throw new Error(`${name} must drop all Linux capabilities`);
-    if (services[name].pids_limit === undefined) throw new Error(`${name} must define a PID limit`);
-    if (!services[name].security_opt?.includes("no-new-privileges:true")) throw new Error(`${name} must enable no-new-privileges`);
-  }
+	for (const name of required) {
+	  if (!services[name]) throw new Error(`Deployment topology is incomplete: missing ${name}`);
+	  if (!["unless-stopped", "always"].includes(services[name].restart)) throw new Error(`${name} must restart after host/process failure`);
+	  if (!Array.isArray(services[name].cap_drop) || !services[name].cap_drop.includes("ALL")) throw new Error(`${name} must drop all Linux capabilities`);
+	  const expectedCapAdd = normalizedList(allowedCapabilityAdds[name]);
+	  const actualCapAdd = normalizedList(services[name].cap_add);
+	  if (JSON.stringify(actualCapAdd) !== JSON.stringify(expectedCapAdd)) throw new Error(`${name} has unsupported Linux capability exceptions`);
+	  if (services[name].pids_limit === undefined) throw new Error(`${name} must define a PID limit`);
+	  if (!services[name].security_opt?.includes("no-new-privileges:true")) throw new Error(`${name} must enable no-new-privileges`);
+	  if (["postgres", "valkey", "minio"].includes(name) && services[name].ports?.length) throw new Error(`${name} must remain private without published ports`);
+	}
   if (services.migrate && services.migrate.restart !== "no") throw new Error("migrate must be a one-shot service with restart=no");
   const caddy = services.caddy;
   const app = services.app;
@@ -27,7 +41,7 @@ export function verifyTopology(compose, caddyfile, dockerfile) {
   if (!/reverse_proxy\s+app:3000\b/.test(caddyfile)) throw new Error("Caddy must reverse proxy to app:3000");
   if (!/\$\{APP_DOMAIN\}/.test(caddyfile)) throw new Error("Caddy must configure the deployment application domain");
   if (!dockerfile.includes("HEALTHCHECK")) throw new Error("Application image must declare a healthcheck");
-  return { required, checks: ["restart-policies", "one-shot-migrations", "https-proxy", "healthy-proxy-upstream", "shared-proxy-network", "healthchecks", "capability-drop", "pid-limits", "no-new-privileges"] };
+	return { required, checks: ["restart-policies", "one-shot-migrations", "https-proxy", "healthy-proxy-upstream", "shared-proxy-network", "healthchecks", "capability-drop", "narrow-capability-exceptions", "private-dependencies", "pid-limits", "no-new-privileges"] };
 }
 
 export function loadAndVerify({ composePath = composeFile, environmentPath = envFile, caddyPath = "Caddyfile", dockerfilePath = "Dockerfile" } = {}) {

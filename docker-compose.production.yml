@@ -187,6 +187,7 @@ services:
       retries: 10
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"]
     pids_limit: 256
     logging: *default-logging
 
@@ -203,6 +204,7 @@ services:
       retries: 10
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"]
     pids_limit: 128
     logging: *default-logging
 
@@ -238,6 +240,7 @@ services:
       - S3_SECRET_ACCESS_KEY
       - S3_FORCE_PATH_STYLE
       - DEPLOYMENT_ENV
+      - MC_CONFIG_DIR=/tmp/.mc
     depends_on:
       minio: { condition: service_healthy }
     volumes:
