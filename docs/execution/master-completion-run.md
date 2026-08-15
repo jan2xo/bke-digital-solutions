@@ -400,3 +400,26 @@ Gate:
 Outstanding:
 - Complete independent review of the route boundary and acceptance evidence.
 - Do not begin Phase 6.10 until the Phase 6.9 gate is formally closed.
+
+## 2026-08-15T21:04:30Z — Phase 6.9 acceptance finding remediated
+Phase: 6.9 organization and membership management
+Branch: `swarm/digital-solutions`
+HEAD: `$(git rev-parse --short HEAD)`
+Working tree: clean before this log append.
+Coordinator response: Independent review identified that the private DB acceptance suite silently returned when PostgreSQL was unavailable, and the browser suite did not exercise the new organization API boundary. Remediated both repository-controlled gaps. The DB suite now fails during setup when the supported database is unavailable. Browser acceptance now calls `GET /api/organizations` as the authenticated owner and checks the outsider API boundary for a non-member.
+Workers involved:
+- fox: independent review identified the silent DB skip and missing HTTP-level API coverage.
+- coordinator: implemented the test hardening and reran private-runtime verification.
+Commits:
+- `$(git rev-parse HEAD)` `test: close phase 6.9 acceptance gaps`.
+Verification:
+- Private certification DB and route tests: 4/4 passed, with both DB tests executing against PostgreSQL rather than skipping.
+- Rebuilt private-runtime browser acceptance: 1/1 passed.
+- Browser log confirmed `GET /api/organizations` returned 200 for the owner and the outsider request returned 404.
+- TypeScript: passed.
+- ESLint: passed.
+- `git diff --check`: passed.
+Gate:
+- Phase 6.9: repository-controlled acceptance evidence remediation PASS for this finding; final phase gate remains subject to complete acceptance matrix review.
+Outstanding:
+- Complete the remaining Phase 6.9 acceptance matrix before advancing to Phase 6.10.
