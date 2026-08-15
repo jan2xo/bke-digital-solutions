@@ -5,7 +5,7 @@ const run = (args) => {
   const result = spawnSync("node", ["scripts/certification-host-command.mjs", "npx", "playwright", "test", ...args], { stdio: "inherit", env: process.env });
   if (result.status !== 0) process.exit(result.status ?? 1);
 };
-run(["admin-product.spec.ts", "backups.spec.ts", "commerce.spec.ts", "legal.spec.ts", "provider-settings.spec.ts", "public.spec.ts", "scheduler.spec.ts", "security-dashboard.spec.ts"]);
+run(["admin-product.spec.ts", "backups.spec.ts", "commerce.spec.ts", "legal.spec.ts", "provider-settings.spec.ts", "public.spec.ts", "scheduler.spec.ts", "security-dashboard.spec.ts", "phase6-9-organization.spec.ts"]);
 run(["--config=playwright.phase4.config.ts", "tests/e2e/phase4-malware.spec.ts"]);
 for (let attempt = 0; attempt < 40; attempt += 1) {
   const state = execFileSync("docker", ["inspect", "--format", "{{.State.Health.Status}}", "bke-certification-clamav-1"], { encoding: "utf8" }).trim();
