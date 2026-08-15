@@ -3,7 +3,7 @@ import { extname } from "node:path";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { audit } from "@/lib/audit";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { apiError } from "@/lib/http";
@@ -19,7 +19,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   let uploaded: { objectKey: string; productId: string; actorId: string } | null = null;
   try {
     assertSameOrigin(request);
-    const admin = await requireAdmin();
     const { id } = await params;
     const form = await request.formData();
     const file = form.get("installer");
@@ -28,6 +27,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const extension = extname(file.name).toLowerCase();
     if (!allowed.has(extension)) throw new Error("INVALID_FILE_TYPE");
     const input = fields.parse(Object.fromEntries([...form.entries()].filter(([key]) => key !== "installer")));
+    const admin = input.publish === "true" ? await requireRecentAdmin() : await requireAdmin();
+    if (input.publish === "true") throw new Error("RELEASE_EVIDENCE_INCOMPLETE");
     const product = await db.product.findUnique({ where: { id } });
     if (!product) throw new Error("NOT_FOUND");
     const bytes = new Uint8Array(await file.arrayBuffer());

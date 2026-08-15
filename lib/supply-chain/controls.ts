@@ -30,6 +30,10 @@ export type SupplyChainSecurityEvaluation = {
   failures: string[];
 };
 
+function artifactIdFor(item: SupplyChainEvidenceEvent): string {
+  return typeof item.metadata === "object" && item.metadata && "artifactId" in item.metadata ? String((item.metadata as { artifactId: unknown }).artifactId) : "";
+}
+
 function metadataFlag(metadata: unknown, key: string): boolean {
   return Boolean(typeof metadata === "object" && metadata && key in metadata && (metadata as Record<string, unknown>)[key]);
 }
@@ -42,6 +46,7 @@ function latestResult(evidence: SupplyChainEvidenceEvent[], kinds: string[]): Su
 
 export function evaluateSupplyChainSecurity(state: SupplyChainSecurityState): SupplyChainSecurityEvaluation {
   const current = state.evidence.filter((item) => item.artifactHash === state.currentHash);
+  const failedMalwareStatus = state.malwareStatus === "FAILED";
   const quarantined = state.malwareStatus === "INFECTED" || current.some((item) => item.result === "INFECTED" || item.kind === "QUARANTINE" || metadataFlag(item.metadata, "quarantined"));
   const revocation = latestResult(state.evidence, ["REVOCATION", "EMERGENCY_REVOCATION"]);
   const revoked = Boolean(revocation && revocation.result !== "RESOLVED");
@@ -50,8 +55,13 @@ export function evaluateSupplyChainSecurity(state: SupplyChainSecurityState): Su
     current.some((item) => item.kind === "SIGNATURE" && item.result === "VERIFIED") &&
     current.some((item) => item.kind === "CHECKSUM" && item.result === "VERIFIED")
   );
-  const cleanArtifactIds = new Set(current.filter((item) => item.kind === "MALWARE_SCAN" && item.result === "CLEAN").map((item) => typeof item.metadata === "object" && item.metadata && "artifactId" in item.metadata ? String((item.metadata as { artifactId: unknown }).artifactId) : ""));
-  const scanCurrent = state.artifacts.length > 0 && cleanArtifactIds.size === state.artifacts.length && state.artifacts.every((artifact) => cleanArtifactIds.has(artifact.id));
+  const latestScanByArtifact = new Map<string, SupplyChainEvidenceEvent>();
+  for (const item of current.filter((event) => event.kind === "MALWARE_SCAN")) {
+    const artifactId = artifactIdFor(item);
+    const existing = latestScanByArtifact.get(artifactId);
+    if (!existing || new Date(item.verifiedAt ?? 0).getTime() >= new Date(existing.verifiedAt ?? 0).getTime()) latestScanByArtifact.set(artifactId, item);
+  }
+  const scanCurrent = !failedMalwareStatus && state.artifacts.length > 0 && state.artifacts.every((artifact) => latestScanByArtifact.get(artifact.id)?.result === "CLEAN");
   const auditTrailPresent = state.evidence.some((item) => ["SIGNATURE", "CHECKSUM", "MALWARE_SCAN"].includes(item.kind) && item.artifactHash === state.currentHash) && state.evidence.every((item) => Boolean(item.verifiedAt));
   const failures = [
     !integrityVerified && "integrity",
@@ -60,6 +70,7 @@ export function evaluateSupplyChainSecurity(state: SupplyChainSecurityState): Su
     revoked && "revocation",
     compromised && "compromise",
     !auditTrailPresent && "auditTrail",
+    failedMalwareStatus && "malwareScanFailed",
     state.certificateStatus === "REVOKED" && "certificateRevoked",
   ].filter(Boolean) as string[];
   return { releasable: failures.length === 0, quarantined, revoked, compromised, integrityVerified, scanCurrent, auditTrailPresent, failures };

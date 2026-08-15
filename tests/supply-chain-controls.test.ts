@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { evaluateSupplyChainSecurity, type SupplyChainEvidenceEvent } from "@/lib/supply-chain/controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
 
@@ -28,6 +29,22 @@ describe("Phase 6.8 supply-chain security controls", () => {
     const compromised = [...cleanEvidence, { kind: "COMPROMISE", result: "COMPROMISED", artifactHash: hash, verifiedAt: at, failureReason: "stolen token" }];
     expect(evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: infected, malwareStatus: "INFECTED" })).toMatchObject({ releasable: false, quarantined: true });
     expect(evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: compromised }).failures).toContain("compromise");
+  });
+
+  it("fails closed when a later malware scan fails after historical clean evidence", () => {
+    const failedAfterClean = [
+      ...cleanEvidence,
+      { kind: "MALWARE_SCAN", result: "FAILED", artifactHash: hash, verifiedAt: new Date("2026-08-15T01:00:00.000Z"), metadata: { artifactId: "a1" }, failureReason: "scanner timeout" },
+    ];
+    const state = evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: failedAfterClean, malwareStatus: "FAILED" });
+    expect(state).toMatchObject({ releasable: false, scanCurrent: false });
+    expect(state.failures).toEqual(expect.arrayContaining(["currentScan", "malwareScanFailed"]));
+  });
+
+  it("does not let installer upload publish=true bypass recent auth or the release evidence gate", () => {
+    const route = readFileSync("app/api/admin/products/[id]/versions/route.ts", "utf8");
+    expect(route).toContain("input.publish === \"true\" ? await requireRecentAdmin() : await requireAdmin()");
+    expect(route.indexOf("if (input.publish === \"true\") throw new Error(\"RELEASE_EVIDENCE_INCOMPLETE\")")).toBeLessThan(route.indexOf("await uploadObject"));
   });
 
   it("honors emergency revocation until explicit resolution and feeds the release gate", () => {
