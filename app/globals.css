@@ -49,6 +49,9 @@ body { margin: 0; color: var(--text); background: var(--background); font-family
 @media (max-width: 760px) { .site-nav a:not(.button) { display:none; }.hero-inner { padding-top:5rem; }.hero-section { min-height:680px; }.hero-actions { flex-direction:column; width:min(100%,20rem); }.solution-grid { grid-template-columns:1fr; }.section-heading { align-items:start; flex-direction:column; } }
 .shell { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
 .card { border: 1px solid #2d3850; border-radius: 1.1rem; background: var(--surface); box-shadow: 0 12px 35px rgb(0 0 0 / .2); }
+.info-surface { border: 1px solid #9fc5df; border-radius: .85rem; background: #eaf4fb; color: #17324a; }
+.info-surface strong, .info-surface a { color: #123f63; }
+.account-stat-card { border: 1px solid #dbe5ee; background: #fff; color: #14202b; box-shadow: 0 3px 10px rgb(16 22 30 / .08); }
 .hero-portal-card { border: 1px solid rgb(61 117 167 / .75); border-radius: 1.25rem; background: linear-gradient(145deg, #213a53, #10161e); box-shadow: 0 24px 65px rgb(16 22 30 / .42), inset 0 1px rgb(245 247 250 / .08); }
 .hero-portal-row { border: 1px solid rgb(61 117 167 / .45); border-radius: .85rem; background: rgb(20 32 43 / .72); }
 .button { display: inline-flex; align-items: center; justify-content: center; border-radius: .7rem; padding: .72rem 1rem; font-weight: 700; background: var(--navy); color: white; transition: .2s; }
@@ -67,6 +70,11 @@ body { margin: 0; color: var(--text); background: var(--background); font-family
 .admin-table-empty { padding: 2rem 1rem !important; text-align: center; color: var(--text-muted) !important; }
 .admin-status { display: inline-flex; align-items: center; border: 1px solid; border-radius: 999px; padding: .18rem .55rem; font-size: .68rem; font-weight: 800; line-height: 1.2; letter-spacing: .04em; text-transform: uppercase; }
 .admin-status-success { border-color: #268a56; background: #123328; color: #9aefbd; }.admin-status-warning { border-color: #a66b15; background: #382a12; color: #fbd38d; }.admin-status-danger { border-color: #a8444f; background: #3a1d25; color: #fda4af; }.admin-status-info { border-color: #3677a9; background: #122b40; color: #a8d8ff; }.admin-status-neutral { border-color: #536579; background: #202d3a; color: #c4d0dc; }
+.admin-info-surface { --admin-info-background: #1b3147; --admin-info-foreground: #e8f3ff; --admin-info-muted: #c2d8eb; border: 1px solid #4d84b2; border-radius: .85rem; background: var(--admin-info-background); color: var(--admin-info-foreground); padding: 1rem 1.1rem; box-shadow: inset 0 1px rgb(245 247 250 / .06); }
+.admin-info-surface-title { margin: 0 0 .35rem; color: var(--admin-info-foreground); font-size: .8rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.admin-info-surface-body { color: var(--admin-info-muted); font-size: .875rem; line-height: 1.55; }
+.admin-info-surface-body :where(strong, a) { color: var(--admin-info-foreground); font-weight: 750; }
+.admin-info-surface-body a { text-decoration: underline; text-underline-offset: .15em; }
 .admin-field { display: grid; gap: .4rem; font-size: .875rem; }.admin-field-label { color: #dce8f4; font-weight: 750; }.admin-field-hint { color: var(--text-muted); font-size: .75rem; }.admin-input { width: 100%; border: 1px solid #3b5872; border-radius: .55rem; background: #111c28; padding: .62rem .72rem; color: var(--text); outline: none; transition: border-color .14s, box-shadow .14s; }.admin-input::placeholder { color: #718399; }.admin-input:focus { border-color: #76b7e8; box-shadow: 0 0 0 3px rgb(61 117 167 / .25); }.admin-select { appearance: auto; }
 .admin-sidebar { position: sticky; z-index: 20; top: 0; width: 100%; border-bottom: 1px solid #2d5579; background: #10161e; }
 .admin-sidebar-header { display: flex; align-items: center; justify-content: space-between; width: min(1180px, calc(100% - 2rem)); min-height: 4rem; margin-inline: auto; }
@@ -132,6 +140,12 @@ main > section .text-slate-400 { color: #8796a8; }
 main > section .border-slate-200, main > section .border-slate-300 { border-color: #2d3f52; }
 main > section .bg-slate-50, main > section .bg-slate-100 { background: #172432; }
 main > section .bg-emerald-50 { background: #123328; color: #b7f7d0; }
+/* Authentication notices use Tailwind's light utility backgrounds. Keep their
+   foreground explicit so they remain readable on the public dark canvas and
+   when a light surface is rendered by a route-specific shell. */
+main > section .bg-blue-50 { background: #dbeafe; color: #172554; }
+main > section .bg-amber-50 { background: #fef3c7; color: #78350f; }
+main > section .bg-emerald-50 { color: #065f46; }
 main > section .text-red-700 { color: #fca5a5; }
 main > section .text-green-700 { color: #86efac; }
 .legal-content strong { color: var(--text); }

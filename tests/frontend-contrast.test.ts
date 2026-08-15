@@ -12,7 +12,7 @@ describe("customer-facing contrast safeguards", () => {
   });
 
   it("keeps dashboard stat content readable on slate-50", () => {
-    expect(read("app/dashboard/page.tsx")).toContain("bg-slate-50 p-3 text-slate-900");
+    expect(read("app/dashboard/page.tsx")).toContain("account-stat-card rounded-lg p-3");
   });
 
   it("keeps standalone admin light panels readable", () => {
@@ -30,5 +30,17 @@ describe("customer-facing contrast safeguards", () => {
 
   it("keeps licensing explanatory copy on the shared muted text token", () => {
     expect(licensingPage).toContain("text-[#a8b5c4]");
+  });
+
+  it("keeps authentication notices readable on light utility surfaces", () => {
+    const styles = read("app/globals.css");
+    const mfaPage = read("app/login/mfa/page.tsx");
+    const magicLink = read("components/magic-link-form.tsx");
+    expect(styles).toContain("main > section .bg-blue-50");
+    expect(styles).toContain("main > section .bg-amber-50");
+    expect(styles).toContain("main > section .bg-emerald-50");
+    expect(mfaPage).toContain("text-blue-950");
+    expect(mfaPage).toContain("text-amber-950");
+    expect(magicLink).toContain("text-emerald-950");
   });
 });
