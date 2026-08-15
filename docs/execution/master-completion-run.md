@@ -154,3 +154,24 @@ Gate:
 - STOPPED at Phase 6.9 acceptance evidence gate.
 Outstanding:
 - Commit this append-only execution-log reconciliation, push the current swarm branch, verify remote parity, then wait for explicit authorization for the next run.
+
+## 2026-08-15T18:56:00Z — CORRECTION: Docker certification runtime is not healthy
+Phase: 6.9 acceptance evidence
+Branch: `swarm/digital-solutions`
+HEAD: `4ab803c` before this log-only checkpoint
+Working tree: Execution log append pending commit.
+Coordinator response: Applied the owner-provided Docker-runtime rule. The existing certification stack was inspected and started without publishing internal services beyond its documented loopback certification bindings. The effective Compose stack rebuilt its migration image, but PostgreSQL and Valkey are restarting and unhealthy. PostgreSQL logs report `chmod: /var/lib/postgresql/data: Operation not permitted` and permission-denied data-directory access; Valkey reports the same permission-denied pattern for its data directory. The failure is in the current certification runtime path, not evidence that host-local PostgreSQL is required. The application and Caddy containers from the prior stack remain healthy, while the refreshed dependency containers are not. No internal service isolation was weakened and no production system was touched.
+Workers involved:
+- Docker certification runtime: dependency startup diagnosis.
+Verification:
+- Existing certification Compose config was inspected.
+- Existing `certification-compose.mjs` orchestration was used.
+- PostgreSQL/Valkey remained unhealthy after the supported `up` path.
+- The failure reproduces from current production Compose hardening (`cap_drop: ALL`, `no-new-privileges`) combined with the database image entrypoint's initialization permission operations.
+Gate:
+- Phase 6.9: BLOCKED FOR ACCEPTANCE EVIDENCE by an unhealthy supported certification runtime.
+Outstanding:
+- Fix or provide an approved local certification-runtime compatibility change that preserves production least-privilege intent while allowing dependency initialization.
+- Re-run migrations, organization concurrency/isolation tests, browser workflows, and acceptance checks inside the private certification network.
+- Do not mark Phase 6.9 PASS or begin later phase implementation until runtime evidence is obtained.
+- External certification remains separate and pending.
