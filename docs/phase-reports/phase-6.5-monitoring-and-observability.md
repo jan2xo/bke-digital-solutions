@@ -1,6 +1,6 @@
 # Phase 6.5 — Monitoring and Observability
 
-Status: implemented in the uncommitted working tree; owner review required.
+Status: implementation complete in the repository; production/runtime certification remains pending.
 
 ## Delivered
 
@@ -32,3 +32,4 @@ The certification Compose smoke command could not run because the migrations-onl
 - Complete a certification operations-image smoke run and the previously pending Phase 6.4 recovery drill.
 - External notification providers and infrastructure-level CPU/memory/TLS exporters remain deferred to a later operations integration.
 - The endpoint remains a repository-owned signal feed, not proof of VPS uptime, TLS, provider delivery, restore RPO/RTO, or external Licensing Agent authorization. Those require owner-controlled production evidence.
+- Current checkpoint adds request correlation propagation, no-store metrics responses, and recursive operational-log redaction for secrets, payloads, and email identifiers.
