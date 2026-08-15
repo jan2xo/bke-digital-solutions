@@ -15,7 +15,7 @@ const baseCompose = {
       depends_on: { app: { condition: "service_healthy" } },
       ports: [{ published: 443, target: 443 }],
       volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro"],
-      networks: ["private", "egress"], cap_drop: ["ALL"], pids_limit: 1, security_opt: ["no-new-privileges:true"],
+      networks: ["private", "egress"], cap_drop: ["ALL"], cap_add: ["NET_BIND_SERVICE"], pids_limit: 1, security_opt: ["no-new-privileges:true"],
     },
   },
 };
@@ -29,6 +29,7 @@ function composeWith(change: Record<string, unknown>) {
 describe("deployment manifest topology verifier", () => {
   it("accepts the effective production topology", () => {
     expect(verifyTopology(baseCompose, caddyfile, dockerfile).checks).toContain("narrow-capability-exceptions");
+    expect(verifyTopology(baseCompose, caddyfile, dockerfile).checks).toEqual(expect.arrayContaining(["caddy-executable", "caddy-bind-ports", "restart-policies"]));
   });
 
   it.each([
@@ -43,6 +44,9 @@ describe("deployment manifest topology verifier", () => {
     ["a proxy without a healthy dependency", composeWith({ caddy: { ...baseCompose.services.caddy, depends_on: { app: { condition: "service_started" } } } }), "healthy application"],
     ["a proxy isolated from the app", composeWith({ caddy: { ...baseCompose.services.caddy, networks: ["public"] } }), "share a network"],
     ["a proxy without the Caddyfile mount", composeWith({ caddy: { ...baseCompose.services.caddy, volumes: [] } }), "Caddyfile must be mounted"],
+    ["a proxy without the Caddy bind capability", composeWith({ caddy: { ...baseCompose.services.caddy, cap_add: [] } }), "unsupported Linux capability exceptions"],
+    ["a proxy overriding the image executable", composeWith({ caddy: { ...baseCompose.services.caddy, command: ["sleep", "infinity"] } }), "image executable entrypoint"],
+    ["a proxy without restart policy", composeWith({ caddy: { ...baseCompose.services.caddy, restart: "no" } }), "caddy must restart"],
     ["a Caddyfile targeting the wrong upstream", baseCompose, "reverse proxy to app:3000"],
   ])("rejects %s", (_label, compose, message) => {
     const config = _label === "a Caddyfile targeting the wrong upstream" ? "${APP_DOMAIN} { reverse_proxy wrong:3000 }" : caddyfile;

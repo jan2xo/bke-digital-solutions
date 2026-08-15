@@ -23,6 +23,7 @@ describe("compose recovery policy verifier", () => {
     ["missing scheduler healthcheck", { scheduler: { restart: "unless-stopped" } }, "scheduler: missing healthcheck"],
     ["missing application healthcheck", { app: { restart: "unless-stopped" } }, "app: missing healthcheck"],
     ["restartable migration", { migrate: { restart: "always" } }, "migrate must remain one-shot"],
+    ["missing caddy restart policy", { caddy: { restart: "no" } }, "caddy: missing long-running restart policy"],
   ])("rejects %s", (_label, change, message) => {
     const services = { ...compose.services, ...change };
     expect(() => verifyRestartPolicies({ services })).toThrow(message);
