@@ -257,6 +257,7 @@ export type PrivacyRequestWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   customerAccount?: Prisma.XOR<Prisma.CustomerAccountNullableScalarRelationFilter, Prisma.CustomerAccountWhereInput> | null
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  events?: Prisma.PrivacyRequestEventListRelationFilter
 }
 
 export type PrivacyRequestOrderByWithRelationInput = {
@@ -277,6 +278,7 @@ export type PrivacyRequestOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   customerAccount?: Prisma.CustomerAccountOrderByWithRelationInput
   reviewedBy?: Prisma.UserOrderByWithRelationInput
+  events?: Prisma.PrivacyRequestEventOrderByRelationAggregateInput
 }
 
 export type PrivacyRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -300,6 +302,7 @@ export type PrivacyRequestWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   customerAccount?: Prisma.XOR<Prisma.CustomerAccountNullableScalarRelationFilter, Prisma.CustomerAccountWhereInput> | null
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  events?: Prisma.PrivacyRequestEventListRelationFilter
 }, "id">
 
 export type PrivacyRequestOrderByWithAggregationInput = {
@@ -357,6 +360,7 @@ export type PrivacyRequestCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutPrivacyRequestsInput
   customerAccount?: Prisma.CustomerAccountCreateNestedOneWithoutPrivacyRequestsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutPrivacyRequestsReviewedInput
+  events?: Prisma.PrivacyRequestEventCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestUncheckedCreateInput = {
@@ -374,6 +378,7 @@ export type PrivacyRequestUncheckedCreateInput = {
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestUpdateInput = {
@@ -391,6 +396,7 @@ export type PrivacyRequestUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPrivacyRequestsNestedInput
   customerAccount?: Prisma.CustomerAccountUpdateOneWithoutPrivacyRequestsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutPrivacyRequestsReviewedNestedInput
+  events?: Prisma.PrivacyRequestEventUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateInput = {
@@ -408,6 +414,7 @@ export type PrivacyRequestUncheckedUpdateInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestCreateManyInput = {
@@ -517,6 +524,11 @@ export type PrivacyRequestMinOrderByAggregateInput = {
   closedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type PrivacyRequestScalarRelationFilter = {
+  is?: Prisma.PrivacyRequestWhereInput
+  isNot?: Prisma.PrivacyRequestWhereInput
 }
 
 export type PrivacyRequestCreateNestedManyWithoutUserInput = {
@@ -645,6 +657,20 @@ export type PrivacyRequestUncheckedUpdateManyWithoutCustomerAccountNestedInput =
   deleteMany?: Prisma.PrivacyRequestScalarWhereInput | Prisma.PrivacyRequestScalarWhereInput[]
 }
 
+export type PrivacyRequestCreateNestedOneWithoutEventsInput = {
+  create?: Prisma.XOR<Prisma.PrivacyRequestCreateWithoutEventsInput, Prisma.PrivacyRequestUncheckedCreateWithoutEventsInput>
+  connectOrCreate?: Prisma.PrivacyRequestCreateOrConnectWithoutEventsInput
+  connect?: Prisma.PrivacyRequestWhereUniqueInput
+}
+
+export type PrivacyRequestUpdateOneRequiredWithoutEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.PrivacyRequestCreateWithoutEventsInput, Prisma.PrivacyRequestUncheckedCreateWithoutEventsInput>
+  connectOrCreate?: Prisma.PrivacyRequestCreateOrConnectWithoutEventsInput
+  upsert?: Prisma.PrivacyRequestUpsertWithoutEventsInput
+  connect?: Prisma.PrivacyRequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PrivacyRequestUpdateToOneWithWhereWithoutEventsInput, Prisma.PrivacyRequestUpdateWithoutEventsInput>, Prisma.PrivacyRequestUncheckedUpdateWithoutEventsInput>
+}
+
 export type PrivacyRequestCreateWithoutUserInput = {
   id?: string
   requestType: string
@@ -659,6 +685,7 @@ export type PrivacyRequestCreateWithoutUserInput = {
   updatedAt?: Date | string
   customerAccount?: Prisma.CustomerAccountCreateNestedOneWithoutPrivacyRequestsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutPrivacyRequestsReviewedInput
+  events?: Prisma.PrivacyRequestEventCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestUncheckedCreateWithoutUserInput = {
@@ -675,6 +702,7 @@ export type PrivacyRequestUncheckedCreateWithoutUserInput = {
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestCreateOrConnectWithoutUserInput = {
@@ -701,6 +729,7 @@ export type PrivacyRequestCreateWithoutReviewedByInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPrivacyRequestsInput
   customerAccount?: Prisma.CustomerAccountCreateNestedOneWithoutPrivacyRequestsInput
+  events?: Prisma.PrivacyRequestEventCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestUncheckedCreateWithoutReviewedByInput = {
@@ -717,6 +746,7 @@ export type PrivacyRequestUncheckedCreateWithoutReviewedByInput = {
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestCreateOrConnectWithoutReviewedByInput = {
@@ -795,6 +825,7 @@ export type PrivacyRequestCreateWithoutCustomerAccountInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPrivacyRequestsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutPrivacyRequestsReviewedInput
+  events?: Prisma.PrivacyRequestEventCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestUncheckedCreateWithoutCustomerAccountInput = {
@@ -811,6 +842,7 @@ export type PrivacyRequestUncheckedCreateWithoutCustomerAccountInput = {
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutPrivacyRequestInput
 }
 
 export type PrivacyRequestCreateOrConnectWithoutCustomerAccountInput = {
@@ -837,6 +869,90 @@ export type PrivacyRequestUpdateWithWhereUniqueWithoutCustomerAccountInput = {
 export type PrivacyRequestUpdateManyWithWhereWithoutCustomerAccountInput = {
   where: Prisma.PrivacyRequestScalarWhereInput
   data: Prisma.XOR<Prisma.PrivacyRequestUpdateManyMutationInput, Prisma.PrivacyRequestUncheckedUpdateManyWithoutCustomerAccountInput>
+}
+
+export type PrivacyRequestCreateWithoutEventsInput = {
+  id?: string
+  requestType: string
+  status?: string
+  summary: string
+  responseSummary?: string | null
+  ipAddress?: string | null
+  userAgent?: string | null
+  reviewedAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPrivacyRequestsInput
+  customerAccount?: Prisma.CustomerAccountCreateNestedOneWithoutPrivacyRequestsInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutPrivacyRequestsReviewedInput
+}
+
+export type PrivacyRequestUncheckedCreateWithoutEventsInput = {
+  id?: string
+  userId: string
+  customerAccountId?: string | null
+  requestType: string
+  status?: string
+  summary: string
+  responseSummary?: string | null
+  ipAddress?: string | null
+  userAgent?: string | null
+  reviewedById?: string | null
+  reviewedAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PrivacyRequestCreateOrConnectWithoutEventsInput = {
+  where: Prisma.PrivacyRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.PrivacyRequestCreateWithoutEventsInput, Prisma.PrivacyRequestUncheckedCreateWithoutEventsInput>
+}
+
+export type PrivacyRequestUpsertWithoutEventsInput = {
+  update: Prisma.XOR<Prisma.PrivacyRequestUpdateWithoutEventsInput, Prisma.PrivacyRequestUncheckedUpdateWithoutEventsInput>
+  create: Prisma.XOR<Prisma.PrivacyRequestCreateWithoutEventsInput, Prisma.PrivacyRequestUncheckedCreateWithoutEventsInput>
+  where?: Prisma.PrivacyRequestWhereInput
+}
+
+export type PrivacyRequestUpdateToOneWithWhereWithoutEventsInput = {
+  where?: Prisma.PrivacyRequestWhereInput
+  data: Prisma.XOR<Prisma.PrivacyRequestUpdateWithoutEventsInput, Prisma.PrivacyRequestUncheckedUpdateWithoutEventsInput>
+}
+
+export type PrivacyRequestUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  requestType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  responseSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPrivacyRequestsNestedInput
+  customerAccount?: Prisma.CustomerAccountUpdateOneWithoutPrivacyRequestsNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutPrivacyRequestsReviewedNestedInput
+}
+
+export type PrivacyRequestUncheckedUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  responseSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PrivacyRequestCreateManyUserInput = {
@@ -885,6 +1001,7 @@ export type PrivacyRequestUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customerAccount?: Prisma.CustomerAccountUpdateOneWithoutPrivacyRequestsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutPrivacyRequestsReviewedNestedInput
+  events?: Prisma.PrivacyRequestEventUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateWithoutUserInput = {
@@ -901,6 +1018,7 @@ export type PrivacyRequestUncheckedUpdateWithoutUserInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateManyWithoutUserInput = {
@@ -933,6 +1051,7 @@ export type PrivacyRequestUpdateWithoutReviewedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPrivacyRequestsNestedInput
   customerAccount?: Prisma.CustomerAccountUpdateOneWithoutPrivacyRequestsNestedInput
+  events?: Prisma.PrivacyRequestEventUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateWithoutReviewedByInput = {
@@ -949,6 +1068,7 @@ export type PrivacyRequestUncheckedUpdateWithoutReviewedByInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateManyWithoutReviewedByInput = {
@@ -997,6 +1117,7 @@ export type PrivacyRequestUpdateWithoutCustomerAccountInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPrivacyRequestsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutPrivacyRequestsReviewedNestedInput
+  events?: Prisma.PrivacyRequestEventUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateWithoutCustomerAccountInput = {
@@ -1013,6 +1134,7 @@ export type PrivacyRequestUncheckedUpdateWithoutCustomerAccountInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutPrivacyRequestNestedInput
 }
 
 export type PrivacyRequestUncheckedUpdateManyWithoutCustomerAccountInput = {
@@ -1031,6 +1153,35 @@ export type PrivacyRequestUncheckedUpdateManyWithoutCustomerAccountInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type PrivacyRequestCountOutputType
+ */
+
+export type PrivacyRequestCountOutputType = {
+  events: number
+}
+
+export type PrivacyRequestCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  events?: boolean | PrivacyRequestCountOutputTypeCountEventsArgs
+}
+
+/**
+ * PrivacyRequestCountOutputType without action
+ */
+export type PrivacyRequestCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrivacyRequestCountOutputType
+   */
+  select?: Prisma.PrivacyRequestCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PrivacyRequestCountOutputType without action
+ */
+export type PrivacyRequestCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrivacyRequestEventWhereInput
+}
 
 
 export type PrivacyRequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1051,6 +1202,8 @@ export type PrivacyRequestSelect<ExtArgs extends runtime.Types.Extensions.Intern
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   customerAccount?: boolean | Prisma.PrivacyRequest$customerAccountArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.PrivacyRequest$reviewedByArgs<ExtArgs>
+  events?: boolean | Prisma.PrivacyRequest$eventsArgs<ExtArgs>
+  _count?: boolean | Prisma.PrivacyRequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["privacyRequest"]>
 
 export type PrivacyRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1115,6 +1268,8 @@ export type PrivacyRequestInclude<ExtArgs extends runtime.Types.Extensions.Inter
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   customerAccount?: boolean | Prisma.PrivacyRequest$customerAccountArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.PrivacyRequest$reviewedByArgs<ExtArgs>
+  events?: boolean | Prisma.PrivacyRequest$eventsArgs<ExtArgs>
+  _count?: boolean | Prisma.PrivacyRequestCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PrivacyRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1133,6 +1288,7 @@ export type $PrivacyRequestPayload<ExtArgs extends runtime.Types.Extensions.Inte
     user: Prisma.$UserPayload<ExtArgs>
     customerAccount: Prisma.$CustomerAccountPayload<ExtArgs> | null
     reviewedBy: Prisma.$UserPayload<ExtArgs> | null
+    events: Prisma.$PrivacyRequestEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1546,6 +1702,7 @@ export interface Prisma__PrivacyRequestClient<T, Null = never, ExtArgs extends r
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customerAccount<T extends Prisma.PrivacyRequest$customerAccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PrivacyRequest$customerAccountArgs<ExtArgs>>): Prisma.Prisma__CustomerAccountClient<runtime.Types.Result.GetResult<Prisma.$CustomerAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reviewedBy<T extends Prisma.PrivacyRequest$reviewedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PrivacyRequest$reviewedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  events<T extends Prisma.PrivacyRequest$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PrivacyRequest$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2025,6 +2182,30 @@ export type PrivacyRequest$reviewedByArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * PrivacyRequest.events
+ */
+export type PrivacyRequest$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrivacyRequestEvent
+   */
+  select?: Prisma.PrivacyRequestEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrivacyRequestEvent
+   */
+  omit?: Prisma.PrivacyRequestEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrivacyRequestEventInclude<ExtArgs> | null
+  where?: Prisma.PrivacyRequestEventWhereInput
+  orderBy?: Prisma.PrivacyRequestEventOrderByWithRelationInput | Prisma.PrivacyRequestEventOrderByWithRelationInput[]
+  cursor?: Prisma.PrivacyRequestEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrivacyRequestEventScalarFieldEnum | Prisma.PrivacyRequestEventScalarFieldEnum[]
 }
 
 /**

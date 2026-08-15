@@ -4,6 +4,8 @@ import { clientIp } from "@/lib/security/request";
 
 export const PRIVACY_REQUEST_TYPES = ["ACCESS", "CORRECTION", "EXPORT", "DELETION", "RESTRICTION", "OBJECTION", "BREACH_REPORT"] as const;
 export type PrivacyRequestType = typeof PRIVACY_REQUEST_TYPES[number];
+export const PRIVACY_REQUEST_STATUSES = ["OPEN", "IN_REVIEW", "FULFILLED", "REJECTED", "CANCELLED"] as const;
+export type PrivacyRequestStatus = typeof PRIVACY_REQUEST_STATUSES[number];
 
 export function normalizePrivacyRequestType(value: string): PrivacyRequestType {
   if ((PRIVACY_REQUEST_TYPES as readonly string[]).includes(value)) return value as PrivacyRequestType;
@@ -31,17 +33,19 @@ export async function createPrivacyRequest(input: { userId: string; accountId?: 
         userAgent: network.userAgent,
       },
     });
+    await tx.privacyRequestEvent.create({ data: { privacyRequestId: privacyRequest.id, actorId: input.userId, eventType: "CREATED", toStatus: "OPEN", metadata: { requestType: input.requestType } } });
     await tx.auditLog.create({ data: { actorId: input.userId, accountId: input.accountId ?? undefined, action: "PRIVACY_REQUEST_CREATED", targetType: "PrivacyRequest", targetId: privacyRequest.id, metadata: { requestType: input.requestType } } });
     return privacyRequest;
   });
 }
 
-export async function transitionPrivacyRequest(input: { actorId: string; requestId: string; status: "IN_REVIEW" | "FULFILLED" | "REJECTED" | "CANCELLED"; responseSummary: string }) {
+export async function transitionPrivacyRequest(input: { actorId: string; requestId: string; status: Exclude<PrivacyRequestStatus, "OPEN">; responseSummary: string }) {
   return db.$transaction(async (tx) => {
     const current = await tx.privacyRequest.findUniqueOrThrow({ where: { id: input.requestId } });
     if (["FULFILLED", "REJECTED", "CANCELLED"].includes(current.status)) throw new Error("PRIVACY_REQUEST_CLOSED");
     if (input.status === "FULFILLED" && input.responseSummary.trim().length < 10) throw new Error("PRIVACY_RESPONSE_REQUIRED");
     const updated = await tx.privacyRequest.update({ where: { id: input.requestId }, data: { status: input.status, responseSummary: input.responseSummary.slice(0, 2_000), reviewedById: input.actorId, reviewedAt: new Date(), closedAt: ["FULFILLED", "REJECTED", "CANCELLED"].includes(input.status) ? new Date() : null } });
+    await tx.privacyRequestEvent.create({ data: { privacyRequestId: input.requestId, actorId: input.actorId, eventType: "STATUS_CHANGED", fromStatus: current.status, toStatus: input.status, metadata: { responseSummaryLength: input.responseSummary.trim().length } } });
     await tx.auditLog.create({ data: { actorId: input.actorId, accountId: current.customerAccountId ?? undefined, action: "PRIVACY_REQUEST_STATUS_CHANGED", targetType: "PrivacyRequest", targetId: input.requestId, metadata: { from: current.status, to: input.status } } });
     return updated;
   });

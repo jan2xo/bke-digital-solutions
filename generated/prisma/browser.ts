@@ -93,6 +93,11 @@ export type LegalAcceptance = Prisma.LegalAcceptanceModel
  */
 export type PrivacyRequest = Prisma.PrivacyRequestModel
 /**
+ * Model PrivacyRequestEvent
+ *
+ */
+export type PrivacyRequestEvent = Prisma.PrivacyRequestEventModel
+/**
  * Model OrganizationProfile
  *
  */

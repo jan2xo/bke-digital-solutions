@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
+import { requireAccountAccess } from "@/lib/authorization";
 import { db } from "@/lib/db";
 import { apiError } from "@/lib/http";
 import { createPrivacyRequest, normalizePrivacyRequestType, PRIVACY_REQUEST_TYPES } from "@/lib/privacy/requests";
@@ -22,8 +23,7 @@ export async function POST(request: Request) {
     const user = await requireUser();
     const input = schema.parse(await request.json());
     if (input.accountId) {
-      const account = await db.customerAccount.findFirst({ where: { id: input.accountId, OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id } } }] }, select: { id: true } });
-      if (!account) throw new Error("NOT_FOUND");
+      await requireAccountAccess(user.id, input.accountId);
     }
     const created = await createPrivacyRequest({ userId: user.id, accountId: input.accountId, requestType: normalizePrivacyRequestType(input.requestType), summary: input.summary, request });
     return NextResponse.json({ id: created.id, status: created.status }, { status: 201 });

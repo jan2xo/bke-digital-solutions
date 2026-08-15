@@ -382,6 +382,7 @@ model User {
   complianceEvidenceRecorded      ComplianceEvidence[]
   privacyRequests                 PrivacyRequest[]            @relation("PrivacyRequestUser")
   privacyRequestsReviewed         PrivacyRequest[]            @relation("PrivacyRequestReviewer")
+  privacyRequestEvents            PrivacyRequestEvent[]       @relation("PrivacyRequestEventActor")
   releaseApprovalsCreated         ReleaseApproval[] @relation("ReleaseApprovalCreator")
   releaseApprovalsReviewed        ReleaseApproval[] @relation("ReleaseApprovalReviewer")
   releaseApprovalsApproved        ReleaseApproval[] @relation("ReleaseApprovalApprover")
@@ -647,11 +648,28 @@ model PrivacyRequest {
   user              User             @relation("PrivacyRequestUser", fields: [userId], references: [id], onDelete: Restrict)
   customerAccount   CustomerAccount? @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
   reviewedBy        User?            @relation("PrivacyRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  events            PrivacyRequestEvent[]
 
   @@index([userId, createdAt])
   @@index([customerAccountId, createdAt])
   @@index([status, createdAt])
   @@index([requestType, status])
+}
+
+model PrivacyRequestEvent {
+  id               String         @id @default(cuid())
+  privacyRequestId String
+  actorId          String?
+  eventType        String
+  fromStatus       String?
+  toStatus         String?
+  metadata         Json           @default("{}")
+  createdAt        DateTime       @default(now())
+  privacyRequest   PrivacyRequest @relation(fields: [privacyRequestId], references: [id], onDelete: Restrict)
+  actor            User?          @relation("PrivacyRequestEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([privacyRequestId, createdAt])
+  @@index([actorId, createdAt])
 }
 
 model OrganizationProfile {

@@ -412,6 +412,7 @@ export const ModelName = {
   LegalDocumentVersion: 'LegalDocumentVersion',
   LegalAcceptance: 'LegalAcceptance',
   PrivacyRequest: 'PrivacyRequest',
+  PrivacyRequestEvent: 'PrivacyRequestEvent',
   OrganizationProfile: 'OrganizationProfile',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -477,7 +478,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1588,6 +1589,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PrivacyRequestCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PrivacyRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    PrivacyRequestEvent: {
+      payload: Prisma.$PrivacyRequestEventPayload<ExtArgs>
+      fields: Prisma.PrivacyRequestEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PrivacyRequestEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PrivacyRequestEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>
+        }
+        findFirst: {
+          args: Prisma.PrivacyRequestEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PrivacyRequestEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>
+        }
+        findMany: {
+          args: Prisma.PrivacyRequestEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>[]
+        }
+        create: {
+          args: Prisma.PrivacyRequestEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>
+        }
+        createMany: {
+          args: Prisma.PrivacyRequestEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PrivacyRequestEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>[]
+        }
+        delete: {
+          args: Prisma.PrivacyRequestEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>
+        }
+        update: {
+          args: Prisma.PrivacyRequestEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.PrivacyRequestEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PrivacyRequestEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PrivacyRequestEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.PrivacyRequestEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestEventPayload>
+        }
+        aggregate: {
+          args: Prisma.PrivacyRequestEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivacyRequestEvent>
+        }
+        groupBy: {
+          args: Prisma.PrivacyRequestEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrivacyRequestEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PrivacyRequestEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrivacyRequestEventCountAggregateOutputType> | number
         }
       }
     }
@@ -5579,6 +5654,20 @@ export const PrivacyRequestScalarFieldEnum = {
 export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
 
 
+export const PrivacyRequestEventScalarFieldEnum = {
+  id: 'id',
+  privacyRequestId: 'privacyRequestId',
+  actorId: 'actorId',
+  eventType: 'eventType',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type PrivacyRequestEventScalarFieldEnum = (typeof PrivacyRequestEventScalarFieldEnum)[keyof typeof PrivacyRequestEventScalarFieldEnum]
+
+
 export const OrganizationProfileScalarFieldEnum = {
   accountId: 'accountId',
   legalName: 'legalName',
@@ -7424,6 +7513,7 @@ export type GlobalOmitConfig = {
   legalDocumentVersion?: Prisma.LegalDocumentVersionOmit
   legalAcceptance?: Prisma.LegalAcceptanceOmit
   privacyRequest?: Prisma.PrivacyRequestOmit
+  privacyRequestEvent?: Prisma.PrivacyRequestEventOmit
   organizationProfile?: Prisma.OrganizationProfileOmit
   membership?: Prisma.MembershipOmit
   invitation?: Prisma.InvitationOmit

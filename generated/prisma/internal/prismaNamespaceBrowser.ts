@@ -66,6 +66,7 @@ export const ModelName = {
   LegalDocumentVersion: 'LegalDocumentVersion',
   LegalAcceptance: 'LegalAcceptance',
   PrivacyRequest: 'PrivacyRequest',
+  PrivacyRequestEvent: 'PrivacyRequestEvent',
   OrganizationProfile: 'OrganizationProfile',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -381,6 +382,20 @@ export const PrivacyRequestScalarFieldEnum = {
 } as const
 
 export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
+
+
+export const PrivacyRequestEventScalarFieldEnum = {
+  id: 'id',
+  privacyRequestId: 'privacyRequestId',
+  actorId: 'actorId',
+  eventType: 'eventType',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type PrivacyRequestEventScalarFieldEnum = (typeof PrivacyRequestEventScalarFieldEnum)[keyof typeof PrivacyRequestEventScalarFieldEnum]
 
 
 export const OrganizationProfileScalarFieldEnum = {
