@@ -5,5 +5,6 @@ const components = Object.entries(lock.packages ?? {}).filter(([name]) => name &
 const bom = { bomFormat: "CycloneDX", specVersion: "1.5", version: 1, metadata: { timestamp: new Date().toISOString(), component: { type: "application", name: "bke-digital-solutions", version: process.env.RELEASE_VERSION ?? "unreleased" } }, components };
 await mkdir(".supply-chain", { recursive: true });
 const output = process.env.SBOM_OUTPUT ?? ".supply-chain/sbom.cdx.json";
-await writeFile(output, JSON.stringify(bom, null, 2) + "\n");
-console.log(JSON.stringify({ output, sha256: createHash("sha256").update(JSON.stringify(bom)).digest("hex"), components: components.length }));
+const serialized = JSON.stringify(bom, null, 2) + "\n";
+await writeFile(output, serialized);
+console.log(JSON.stringify({ output, sha256: createHash("sha256").update(serialized).digest("hex"), components: components.length }));
