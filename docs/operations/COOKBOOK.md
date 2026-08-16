@@ -38,6 +38,11 @@ For the historical expanded production-certification sequence, see the
 [manual/diagnostic equivalent](RELEASE-SHIPPING.md#manual--diagnostic-equivalent);
 it is not the default operator path.
 
+**Generate dependency evidence:** run
+`npm run supplychain:dependencies -- <release-version> [output-file]`; inspect
+the machine-readable result and ingest only a successful document through the
+authenticated supply-chain workflow.
+
 **Restore:** follow DISASTER-RECOVERY and BACKUP-RESTORE using an isolated target.
 
 **Backup verification:** use the authenticated `/admin/backups` VERIFY and

@@ -653,3 +653,12 @@ The scheduler now uses a private Node probe of `/api/health/scheduler`. That
 route evaluates persisted scheduler windows, recent job execution, failures,
 and retry backlog, so the check detects stale/dead scheduling state rather than
 merely proving a process exists. No public port or production data was changed.
+### 2026-08-16 — Dependency evidence workflow
+
+Added `npm run supplychain:dependencies -- <release-version> [output-file]`.
+It records package-lock hash/format, lock consistency, resolved dependency
+state, and production audit output in a machine-readable document. Local lock
+consistency and resolution passed; npm audit was environment-blocked because
+the registry was not resolvable. The document must not be ingested as VERIFIED
+until audit succeeds. Production was not mutated and MIGRATION certification
+was not started.

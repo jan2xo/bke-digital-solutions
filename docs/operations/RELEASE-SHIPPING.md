@@ -24,6 +24,19 @@ after current evidence is present, and never store private keys in Git/
 PostgreSQL. Artifact mutation invalidates payload-bound evidence and requires
 affected checks again.
 
+Generate dependency evidence with:
+
+```bash
+npm run supplychain:dependencies -- 1.0.0 .supply-chain/1.0.0/dependencies.json
+```
+
+The machine-readable result records package-lock SHA-256/format, `npm ci
+--dry-run` lock consistency, resolved `npm ls` state, and production `npm
+audit` output. A non-zero result means dependency certification is incomplete;
+do not record it as VERIFIED. Ingestion remains an authenticated admin action:
+submit the file bytes with `action=RECORD_DEPENDENCIES`, a durable reference,
+and the current server-computed payload hash.
+
 ## Manual / diagnostic equivalent
 
 **MANUAL / DIAGNOSTIC EQUIVALENT — NOT THE DEFAULT OPERATOR PATH**
