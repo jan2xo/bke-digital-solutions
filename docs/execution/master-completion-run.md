@@ -513,3 +513,12 @@ Verification: trusted-release focused Vitest 18/18, TypeScript, ESLint,
 security hygiene, and `git diff --check` passed. Production ClamAV and
 commercial signing material remain OWNER/VPS ACTIONS; no production resources
 were touched.
+
+### Production scanner deployment contract — 2026-08-16
+
+Production Compose was missing the runtime corresponding to its configured
+ClamAV TCP scanner. It now declares a private `clamav` service, health-gates
+the app on ClamAV readiness, publishes no scanner port, and preserves the
+existing fail-closed CLEAN/INFECTED/FAILED semantics. Certification Compose
+continues to override the same service. VPS provisioning and production
+scanner certification remain owner/VPS actions.

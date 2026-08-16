@@ -131,6 +131,5 @@ services:
       timeout: 5s
       retries: 30
     restart: unless-stopped
-    security_opt: ["no-new-privileges:true"]
 
 networks: {}

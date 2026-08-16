@@ -187,6 +187,11 @@ Added release lifecycle stages, forward-only transition enforcement, approval re
 Phase 6.12 remediation implements repository-side signed lease issuance, cryptographic supply-chain evidence, fail-closed release gates, separation of duties, grant retry recovery, and discoverable Compliance/Supply Chain administration. External Agent compatibility, production credentials, legal review, recovery certification, and Phase 6.10 remain pending.
 
 Phase 4 malware/artifact security pipeline is implemented at the repository boundary: current private artifact bytes are scanned, per-artifact evidence is bound to the canonical manifest hash, failures are fail-closed, and multi-artifact releases require every artifact to be CLEAN. ClamAV deployment and live production certification remain operational follow-up work.
+
+Production Compose now includes a private, health-gated ClamAV service with no
+published scanner port. The application uses the configured `clamav` TCP
+adapter and bounded timeout semantics; VPS provisioning and production
+CLEAN/INFECTED certification remain owner actions.
 ## Current status synchronization (RM5)
 
 RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4

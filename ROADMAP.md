@@ -4,7 +4,7 @@ Cross-repository master plan: [docs/roadmaps/master-completion-roadmap.md](docs/
 
 Last synchronized: August 10, 2026
 
-Phase 2 release/latest resolution correction is implemented. Phase 3 Product Verification & Supply-Chain Signing is **PASS (certified 2026-08-13)**. Phase 4's malware/artifact security pipeline is implemented and has certification evidence for real ClamAV CLEAN, INFECTED, unavailable, timeout, mutation/rescan, and multi-artifact behavior; production ClamAV provisioning and production certification remain incomplete.
+Phase 2 release/latest resolution correction is implemented. Phase 3 Product Verification & Supply-Chain Signing is **PASS (certified 2026-08-13)**. Phase 4's malware/artifact security pipeline is implemented and has certification evidence for real ClamAV CLEAN, INFECTED, unavailable, timeout, mutation/rescan, and multi-artifact behavior. Production Compose now declares a private health-gated ClamAV service; VPS provisioning and production certification remain incomplete.
 
 Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.
 

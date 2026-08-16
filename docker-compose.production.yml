@@ -103,6 +103,7 @@ services:
       postgres: { condition: service_healthy }
       minio-init: { condition: service_completed_successfully }
       valkey: { condition: service_healthy }
+      clamav: { condition: service_healthy }
     networks: [private, egress]
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
@@ -115,6 +116,18 @@ services:
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
     pids_limit: 256
+    logging: *default-logging
+
+  clamav:
+    image: clamav/clamav:1.4
+    networks: [private]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --ping 1 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    security_opt: ["no-new-privileges:true"]
     logging: *default-logging
 
   scheduler:
