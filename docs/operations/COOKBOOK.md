@@ -41,7 +41,8 @@ it is not the default operator path.
 **Generate dependency evidence:** run
 `npm run supplychain:dependencies -- <release-version> [output-file]`; inspect
 the machine-readable result and ingest only a successful document through the
-authenticated supply-chain workflow.
+authenticated supply-chain workflow. The command never installs into the
+checkout; it creates and removes a temporary manifest-only workspace.
 
 **Restore:** follow DISASTER-RECOVERY and BACKUP-RESTORE using an isolated target.
 

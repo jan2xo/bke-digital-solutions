@@ -30,9 +30,11 @@ Generate dependency evidence with:
 npm run supplychain:dependencies -- 1.0.0 .supply-chain/1.0.0/dependencies.json
 ```
 
-The machine-readable result records package-lock SHA-256/format, `npm ci
---dry-run` lock consistency, resolved `npm ls` state, and production `npm
-audit` output. A non-zero result means dependency certification is incomplete;
+The command copies only `package.json` and `package-lock.json` into a disposable
+temporary workspace, runs `npm ci --ignore-scripts`, then runs `npm ls` and
+production `npm audit` against that isolated installation. The machine-readable
+result records package-lock SHA-256/format, resolved state, and audit output. A
+non-zero result means dependency certification is incomplete;
 do not record it as VERIFIED. Ingestion remains an authenticated admin action:
 submit the file bytes with `action=RECORD_DEPENDENCIES`, a durable reference,
 and the current server-computed payload hash.

@@ -656,9 +656,10 @@ merely proving a process exists. No public port or production data was changed.
 ### 2026-08-16 — Dependency evidence workflow
 
 Added `npm run supplychain:dependencies -- <release-version> [output-file]`.
-It records package-lock hash/format, lock consistency, resolved dependency
-state, and production audit output in a machine-readable document. Local lock
-consistency and resolution passed; npm audit was environment-blocked because
-the registry was not resolvable. The document must not be ingested as VERIFIED
-until audit succeeds. Production was not mutated and MIGRATION certification
-was not started.
+It copies only package manifests into a disposable workspace, runs `npm ci`,
+then resolution and production audit there, and removes the workspace. The
+previous production failure was caused by host `node_modules` absence; this
+workflow no longer depends on checkout installation state. Local audit remains
+environment-blocked when the npm registry is unavailable, so evidence must not
+be ingested as VERIFIED until all checks succeed. Production was not mutated and
+MIGRATION certification was not started.
