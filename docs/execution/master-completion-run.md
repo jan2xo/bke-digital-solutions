@@ -497,3 +497,19 @@ proves those values are the same before `AuthorizationDecision=ALLOW`.
 Activation/device IDs, lease IDs, signer key IDs, and version fields are
 otherwise structurally compatible. This identity-establishment gap is a
 launch-safety blocker for a real first sale, not a PayMongo blocker.
+
+### Trusted release download gate — 2026-08-16
+
+The repository audit found that `resolveEligibleReleaseForArtifact` enforced
+customer lifecycle, product, and artifact state but did not evaluate the
+canonical trusted-release readiness gate. A published release could therefore
+reach the download route without current signature, malware, SBOM, provenance,
+backup, compliance, migration, and approval evidence. The resolver now loads
+the complete release evidence graph and requires `releaseReadiness(...).publishable`
+before granting an artifact download. This preserves fail-closed stale-evidence
+invalidation and keeps private storage access behind the existing route.
+
+Verification: trusted-release focused Vitest 18/18, TypeScript, ESLint,
+security hygiene, and `git diff --check` passed. Production ClamAV and
+commercial signing material remain OWNER/VPS ACTIONS; no production resources
+were touched.

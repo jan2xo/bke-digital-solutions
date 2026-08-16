@@ -21,7 +21,7 @@ signature → canonical manifest → publication eligibility → private downloa
 grant. Repository implementation and local certification are distinct from
 production scanner/key provisioning and production certification.
 
-Status: planning baseline; Phase 3 certified PASS (2026-08-13). This reconciles both repositories; it does not authorize deployment or Phase 4.
+Status: repository gate implemented and focused-tested; Phase 3 certified PASS (2026-08-13). Production scanner/key provisioning and commercial signing material remain owner/VPS actions; this does not authorize deployment.
 
 ## Ownership and invariants
 
