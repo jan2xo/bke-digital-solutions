@@ -595,3 +595,13 @@ Focused supply-chain tests, Prisma validation/generation, TypeScript, ESLint,
 security hygiene, and `git diff --check` passed. Production re-ingestion still
 requires an authenticated admin workflow using the actual SBOM/provenance bytes;
 no production data was changed in this checkpoint.
+### 2026-08-16 — Operator cookbook baseline
+
+Shipping certification is paused pending operator documentation. Added the
+master `docs/operations/COOKBOOK.md` and linked runbooks for fresh VPS bootstrap,
+production deployment, disaster recovery, backup restore, release shipping,
+signing-key recovery, and troubleshooting. Commands were reconciled against
+the production Compose file, package scripts, migration tooling, health checks,
+backup engine, and existing VPS/restore runbooks. No production data or secrets
+were changed. Dependency certification must not resume until this baseline is
+reviewed.

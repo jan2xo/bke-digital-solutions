@@ -8,7 +8,7 @@ Phase 2 release/latest resolution correction is implemented. Phase 3 is **PASS (
 
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
-Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling plus authenticated current-payload ingestion are implemented. Evidence documents are now stored in private durable object storage, hashed server-side, included in encrypted backups, and checked during isolated restore. No production candidate evidence or signing material is claimed.
+Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling plus authenticated current-payload ingestion are implemented. Evidence documents are now stored in private durable object storage, hashed server-side, included in encrypted backups, and checked during isolated restore. Shipping certification is paused pending review of `docs/operations/COOKBOOK.md`; no production candidate evidence or signing material is claimed.
 
 Phase 6.9 release lifecycle and approval tracking are present in the Release Center. Stable/LTS promotions require approval records; production readiness remains blocked by pending signing, malware, recovery, compliance, and deployment gates.
 Pushed Git baseline: current `main` commit; historical hashes below are retained for provenance.
