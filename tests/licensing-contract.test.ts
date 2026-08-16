@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-Object.assign(process.env, { APP_URL: "http://localhost:3000", DATABASE_URL: "postgresql://test:test@127.0.0.1:5432/test", SESSION_SECRET: "test-session-secret-abcdefghijklmnopqrstuvwxyz-123456", LICENSE_PEPPER: "test-license-pepper-abcdefghijklmnopqrstuvwxyz-123456", CRON_SECRET: "test-cron-secret-abcdefghijklmnopqrstuvwxyz-123456", S3_BUCKET: "test-bucket", EMAIL_FROM: "test@example.com", NODE_ENV: "test" });
+Object.assign(process.env, { APP_URL: "http://localhost:3000", DATABASE_URL: "postgresql://test:test@postgres:5432/test", SESSION_SECRET: "test-session-secret-abcdefghijklmnopqrstuvwxyz-123456", LICENSE_PEPPER: "test-license-pepper-abcdefghijklmnopqrstuvwxyz-123456", CRON_SECRET: "test-cron-secret-abcdefghijklmnopqrstuvwxyz-123456", S3_BUCKET: "test-bucket", EMAIL_FROM: "test@example.com", NODE_ENV: "test" });
 
 describe("Digital Solutions identity and Cloud-Agent contract", () => {
   it("derives stable commercial device identity without exposing raw storage semantics", async () => {
