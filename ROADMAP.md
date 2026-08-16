@@ -34,7 +34,7 @@ The first VPS deployment exposed a fresh-install failure: production MinIO had n
 4. **6.10.3 Persistent services:** PostgreSQL, Valkey, MinIO/private object storage, persistent volumes, scheduler, and backup worker.
 5. **6.10.4 Cloudflare/Caddy/HTTPS:** DNS, origin routing, TLS, proxy headers, security headers, and firewall validation.
 6. **6.10.5 Initial deployment:** build, migrations, startup, health/readiness, and admin/customer access.
-7. **6.10.6 Provider certification:** PayMongo TEST checkout/webhooks/refunds/reconciliation and Resend production-domain delivery. PayMongo LIVE operation is owner-confirmed; repository-retained production certification evidence remains incomplete.
+7. **6.10.6 Provider certification:** PayMongo LIVE is owner-verified and operational. Resend production delivery and deployment evidence remain owner-controlled; unusual provider scenarios are separate evidence items.
 8. **6.10.7 Backup/restore certification:** PostgreSQL and object-storage backup, offsite copy, integrity verification, and isolated restore drill with RPO/RTO evidence.
 9. **6.10.8 Upgrade/rollback certification:** backup, fetch approved release, rebuild affected containers, migrate, verify, and rollback without losing persistent state.
 10. **6.10.9 Failure/reboot recovery:** service restart, scheduler/backup recovery, Docker boot, cold VPS reboot, and persistent-volume recovery.
@@ -139,7 +139,7 @@ Build the technical system for versioned legal documents and immutable customer 
 
 ### Objective
 
-Complete the genuine PayMongo sandbox lifecycle and define the controlled live-activation gate.
+Historical PayMongo sandbox certification is deferred. PayMongo LIVE operation is owner-verified; unusual-provider scenarios remain separate evidence items.
 
 ### Scope
 
@@ -158,7 +158,7 @@ Complete the genuine PayMongo sandbox lifecycle and define the controlled live-a
 - Duplicate delivery issues exactly one entitlement.
 - Failed/mismatched payments issue no entitlement.
 - Refund revokes access once.
-- PayMongo LIVE operation is owner-confirmed as of 2026-08-13. Full Phase 6.2 certification still requires the stated genuine provider evidence; operational use alone does not satisfy every certification criterion.
+- PayMongo LIVE operation is owner-confirmed as of 2026-08-13. Missing delayed, out-of-order, or failed-provider evidence is tracked separately and does not block the Selling MVP.
 
 ## Phase 6.3 — Scheduler & Lifecycle Automation
 

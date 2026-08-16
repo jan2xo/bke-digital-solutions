@@ -10,7 +10,7 @@ export class MockPaymentProvider implements PaymentProvider {
     return { externalId: `mock_${input.idempotencyKey}`, checkoutUrl: `${env.APP_URL}/checkout/mock?order=${encodeURIComponent(input.orderId)}&attempt=${encodeURIComponent(input.idempotencyKey)}` };
   }
   async verifyAndParseWebhook(raw: Buffer, headers: Headers): Promise<PaymentEvent> {
-    if (env.NODE_ENV === "production") throw new Error("Mock provider is disabled in production");
+    if (process.env.NODE_ENV === "production") throw new Error("Mock provider is disabled in production");
     const signature = headers.get("x-mock-signature") ?? "";
     const expected = createHmac("sha256", env.SESSION_SECRET).update(raw).digest("hex");
     if (signature !== expected) throw new PaymentLifecycleError("PAYMENT_SIGNATURE_INVALID");

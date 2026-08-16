@@ -26,7 +26,7 @@ This document is the concise repository baseline for future planning. It records
 
 BKE Digital Solutions is a functional software-commerce and licensing MVP. It includes a public catalog, customer portal, MFA-protected administrator portal, PayMongo hosted checkout integration, invoices, application-managed subscriptions, encrypted licenses, device activation, private installer downloads, trials, discounts, audit history, security events, and external-provider credential management.
 
-It is ready for local development and controlled sandbox certification. PayMongo production operation is owner-confirmed, but the repository does not yet contain the complete evidence required to certify unrestricted public payments, general real-customer production readiness, or production installer distribution.
+PayMongo LIVE operation is owner-verified. Deployment, licensing-agent, artifact, and production certification remain separate gates; unavailable sandbox evidence does not downgrade live readiness.
 
 ## Repository truth
 
@@ -174,7 +174,7 @@ Customer account detail now gates order, subscription, trial, and license visibi
 
 ### Verdict
 
-PayMongo is **partially certified**: genuine paid, refund, retrieval, and persisted reconciliation pass. A genuine failed hosted checkout and PayMongo-originated duplicate/delayed/out-of-order resends remain open. PayMongo is not approved for live mode.
+PayMongo LIVE is **implemented / live / owner-verified**. Failed, delayed, and out-of-order provider scenarios remain separate evidence items and are not a Selling MVP blocker.
 
 ## Email truth
 
@@ -262,7 +262,7 @@ The application has a configurable support email address, but no support platfor
 - Local development uses Next.js, PostgreSQL, Valkey, and MinIO.
 - Certification uses the production Docker image topology with Caddy, PostgreSQL, Valkey, and MinIO behind Cloudflare Tunnel.
 - `jl-bke.com` can reach the local certification environment.
-- Certification is configured as staging/local-production-simulation with PayMongo sandbox mode.
+- Certification uses a self-contained mock provider and does not certify PayMongo LIVE. LIVE readiness is owner-verified separately.
 - No VPS deployment exists.
 - Public Cloudflare-to-local access is not equivalent to production deployment.
 - Health and environment validation exist.

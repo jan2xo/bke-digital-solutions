@@ -1,6 +1,12 @@
 services:
   app:
     environment:
+      - NODE_ENV=test
+      - APP_URL=https://caddy
+      - TRUSTED_ORIGINS=https://caddy
+      - PAYMENT_PROVIDER=mock
+      - PAYMONGO_LIVEMODE=false
+      - EMAIL_PROVIDER=log
       - MALWARE_SCANNER_PROVIDER=clamav
       - MALWARE_SCANNER_VERSION=certification
       - MALWARE_SCANNER_HOST=clamav

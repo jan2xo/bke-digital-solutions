@@ -483,3 +483,17 @@ Gate: Browser certification pending. No SOL final certification performed.
 - Remediation: certification execution now inherits the certification `DATABASE_URL`; certification, Phase 4, and Phase 5 Playwright configs select `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`; the certification Caddy matcher accepts both the private service hostname (`caddy`) and the named certification hostname without changing production routing.
 - Evidence: fresh run `cert-browser-20260816-120536` at HEAD `0b72a42` used PostgreSQL service DNS but stopped before browser execution because the bundled-browser path was absent. Fresh run `cert-browser-fix-20260816-120811` used the system Chromium and reached the real application, proving the database/browser wiring correction; the commerce fixture then remained on `/register` after account creation and requires separate fixture diagnosis. No current run used `127.0.0.1:5432`.
 - Gate: browser certification remains pending due to the independent registration-flow failure above; MinIO, private-container Vitest, TypeScript, migration status, and DB smoke remain previously certified. No production resources were touched.
+### Launch-critical contract audit — 2026-08-16
+
+PayMongo LIVE remains owner-verified; mock-provider browser failures are not
+PayMongo certification. The server and Agent agree on product identity,
+Ed25519 envelope fields, lease generation/revision, timestamps, revocation,
+supersession, version checks, and fail-closed authorization reasons.
+
+Launch blocker found: Digital Solutions accepts a caller-supplied
+`installationId` and embeds it in the lease, while the Agent derives/loads its
+installation identity locally. No certified enrollment exchange currently
+proves those values are the same before `AuthorizationDecision=ALLOW`.
+Activation/device IDs, lease IDs, signer key IDs, and version fields are
+otherwise structurally compatible. This identity-establishment gap is a
+launch-safety blocker for a real first sale, not a PayMongo blocker.
