@@ -471,3 +471,10 @@ Remediation: `certification:vitest` excludes only the Docker-backed MinIO file; 
 Verification: TypeScript passed. Focused licensing and MinIO contract tests passed 10/10. Dedicated MinIO Docker integration passed 5/5. Corrected private-container Vitest passed 276 tests with 6 skipped. The earlier failed run was reproduced as the stale `certification:test:all` command invoking `npm test`, and was corrected rather than classified as external. Browser certification, migration status, DB smoke, and deployment hygiene remain to be rerun after this checkpoint.
 Gate: Certification architecture remediation is implemented and focused/private Vitest evidence is green. Browser acceptance remains pending. Stop before SOL final certification.
 
+## 2026-08-16 — Browser certification topology follow-up
+Phase: Certification runtime architecture
+Commits: `93be807`, `0e6f6bc`
+Verification: Migration status reported 40 migrations and an up-to-date schema. Private DB smoke passed. The first browser rerun no longer hit Turbopack ENOSPC, but exposed host-local `127.0.0.1:5432` leakage in Playwright's direct runner. The runner was moved back into the private Compose network, with explicit `postgres` database wiring, Caddy service routing, and `/tmp/test-results` output. A subsequent run confirmed the effective container environment carries `DATABASE_URL=postgresql://postgres:postgres@postgres:5432/bke_certification`, but the retained Playwright failure artifact still reported the prior 127.0.0.1 path, so browser acceptance is not yet certified and requires a fresh isolated result path or further env-load investigation.
+Gate: Browser certification pending. No SOL final certification performed.
+
+
