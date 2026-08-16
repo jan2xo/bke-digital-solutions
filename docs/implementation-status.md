@@ -192,6 +192,10 @@ Production Compose now includes a private, health-gated ClamAV service with no
 published scanner port. The application uses the configured `clamav` TCP
 adapter and bounded timeout semantics; VPS provisioning and production
 CLEAN/INFECTED certification remain owner actions.
+
+Trusted-release readiness now requires current payload-hash-bound SBOM and
+provenance verification evidence, not merely non-null metadata fields. Real
+shipping-candidate generation and commercial signing remain owner/VPS actions.
 ## Current status synchronization (RM5)
 
 RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4

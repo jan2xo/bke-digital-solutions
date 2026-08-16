@@ -36,4 +36,19 @@ describe("customer release eligibility", () => {
     expect(readiness.publishable).toBe(false);
     expect(readiness.items.filter((item) => item.status === "BLOCKED").map((item) => item.key)).toEqual(expect.arrayContaining(["signature", "malware", "sbom", "provenance"]));
   });
+
+  it("rejects SBOM and provenance fields without current hash-bound evidence", () => {
+    const readiness = releaseReadiness({
+      id: "version-2", productId: "product-1", version: "1.0.1", product: { slug: "product" },
+      artifacts: [{ id: "artifact-1", objectKey: "artifacts/a.bin", sha256: "a".repeat(64), sizeBytes: 1n, contentType: "application/octet-stream" }],
+      supplyChainEvidence: { signatureVerified: true, signatureKeyId: "supply-test", sbomReference: "sbom.json", provenanceStatus: "VERIFIED", dependencyVerified: true, malwareStatus: "CLEAN", verificationEvidence: [
+        { kind: "SIGNATURE", result: "VERIFIED", artifactHash: "old".repeat(16), metadata: {} },
+        { kind: "SBOM", result: "VERIFIED", artifactHash: "old".repeat(16), metadata: {} },
+        { kind: "PROVENANCE", result: "VERIFIED", artifactHash: "old".repeat(16), metadata: {} },
+      ] },
+      backupEvidence: "backup", complianceEvidence: "compliance", migrationEvidence: "migration", approvals: [{ approvedAt: new Date(), reviewedById: "reviewer" }],
+    });
+    expect(readiness.publishable).toBe(false);
+    expect(readiness.items.filter((item) => item.key === "sbom" || item.key === "provenance").every((item) => item.status === "BLOCKED")).toBe(true);
+  });
 });

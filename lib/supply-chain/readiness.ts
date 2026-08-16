@@ -10,8 +10,8 @@ export function releaseReadiness(version: { id?: string; productId: string; vers
   const items: ReadinessItem[] = [
     { key: "signature", label: "Signature", status: current("SIGNATURE", "VERIFIED") ? "PASS" : "BLOCKED", detail: evidence?.signatureKeyId ?? "Missing current signature" },
     { key: "malware", label: "Malware", status: malware ? "PASS" : "BLOCKED", detail: malware ? "All current artifacts CLEAN" : evidence?.malwareStatus ?? "Missing current evidence" },
-    { key: "sbom", label: "SBOM", status: evidence?.sbomReference ? "PASS" : "BLOCKED", detail: evidence?.sbomReference ?? "Missing" },
-    { key: "provenance", label: "Provenance", status: evidence?.provenanceStatus === "VERIFIED" ? "PASS" : "BLOCKED", detail: evidence?.provenanceStatus ?? "Missing" },
+    { key: "sbom", label: "SBOM", status: current("SBOM", "VERIFIED") && Boolean(evidence?.sbomReference) ? "PASS" : "BLOCKED", detail: current("SBOM", "VERIFIED") ? evidence?.sbomReference ?? "Missing" : "Missing current evidence" },
+    { key: "provenance", label: "Provenance", status: current("PROVENANCE", "VERIFIED") && evidence?.provenanceStatus === "VERIFIED" ? "PASS" : "BLOCKED", detail: current("PROVENANCE", "VERIFIED") ? evidence?.provenanceStatus ?? "Missing" : "Missing current evidence" },
     { key: "dependencies", label: "Dependencies", status: evidence?.dependencyVerified ? "PASS" : "BLOCKED", detail: evidence?.dependencyVerified ? "Verified" : "Missing" },
     { key: "backup", label: "Backup", status: version.backupEvidence ? "PASS" : "BLOCKED", detail: version.backupEvidence ?? "Missing" },
     { key: "compliance", label: "Compliance", status: version.complianceEvidence ? "PASS" : "BLOCKED", detail: version.complianceEvidence ?? "Missing" },

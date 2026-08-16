@@ -523,6 +523,17 @@ existing fail-closed CLEAN/INFECTED/FAILED semantics. Certification Compose
 continues to override the same service. VPS provisioning and production
 scanner certification remain owner/VPS actions.
 
+### Shipping-candidate evidence audit — 2026-08-16
+
+The SBOM/provenance generators produce CycloneDX and build metadata, but the
+readiness gate previously accepted only non-null SBOM/provenance fields. That
+allowed stale evidence to satisfy a current release. Readiness now requires
+`SBOM/VERIFIED` and `PROVENANCE/VERIFIED` verification-evidence records bound
+to the current canonical payload hash, in addition to the existing references
+and provenance status. Focused supply-chain/release tests cover stale-evidence
+rejection. A production shipping candidate and real owner-provisioned signing
+material were not fabricated; those remain VPS actions.
+
 ### Production artifact object-integrity remediation — 2026-08-16
 
 Production scan failures were traced to a missing primary MinIO object, not
