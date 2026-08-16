@@ -74,4 +74,17 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(lifecycle).toContain('currentEvidence("COMPLIANCE")');
     expect(lifecycle).toContain('currentEvidence("MIGRATION")');
   });
+
+  it("requires server-verified durable evidence documents and makes replay storage idempotent", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain("documentBase64");
+    expect(route).toContain('createHash("sha256").update(document)');
+    expect(route).toContain("documentObjectKey");
+    expect(route).toContain("assertObjectExists(objectKey)");
+    expect(route).toContain("existing.verificationEvidence.find");
+    expect(route).toContain("EVIDENCE_REFERENCE_NOT_DURABLE");
+    const backup = readFileSync("lib/backups/engine.ts", "utf8");
+    expect(backup).toContain("evidenceDocuments");
+    expect(backup).toContain("verifyRestoredEvidenceObjects");
+  });
 });

@@ -581,3 +581,17 @@ logging. Lifecycle approval still separately requires all global compliance
 requirements to be implemented and reviewer/approver separation. Artifact
 mutation clears these gate fields and current evidence. Focused trusted-release
 tests passed 22/22.
+### 2026-08-16 — Durable trusted-release evidence checkpoint
+
+Trusted-release evidence documents are now ingested as server-verified bytes,
+stored under private collision-resistant object keys, and persisted with their
+document SHA-256 and current canonical payload binding. SBOM, provenance,
+dependency, backup, compliance, and migration references are included in the
+encrypted backup source-object inventory. Isolated restore validates restored
+evidence object presence and hashes against the restored database. The additive
+Prisma migration is `20260816193000_durable_supply_chain_evidence`.
+
+Focused supply-chain tests, Prisma validation/generation, TypeScript, ESLint,
+security hygiene, and `git diff --check` passed. Production re-ingestion still
+requires an authenticated admin workflow using the actual SBOM/provenance bytes;
+no production data was changed in this checkpoint.

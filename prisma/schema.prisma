@@ -909,11 +909,14 @@ model SupplyChainVerificationEvidence {
   scannerVersion    String?
   result            String
   reference         String?
+  documentObjectKey String?
+  documentSha256    String?
   failureReason     String?
   verifiedAt        DateTime @default(now())
   metadata          Json     @default("{}")
   evidence          SupplyChainEvidence @relation(fields: [evidenceId], references: [id], onDelete: Restrict)
   @@index([evidenceId, kind, verifiedAt])
+  @@index([documentObjectKey])
 }
 
 model LicensePolicy {

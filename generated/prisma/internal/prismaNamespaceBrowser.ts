@@ -571,6 +571,8 @@ export const SupplyChainVerificationEvidenceScalarFieldEnum = {
   scannerVersion: 'scannerVersion',
   result: 'result',
   reference: 'reference',
+  documentObjectKey: 'documentObjectKey',
+  documentSha256: 'documentSha256',
   failureReason: 'failureReason',
   verifiedAt: 'verifiedAt',
   metadata: 'metadata'

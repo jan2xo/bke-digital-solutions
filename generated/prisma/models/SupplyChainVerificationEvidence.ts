@@ -34,6 +34,8 @@ export type SupplyChainVerificationEvidenceMinAggregateOutputType = {
   scannerVersion: string | null
   result: string | null
   reference: string | null
+  documentObjectKey: string | null
+  documentSha256: string | null
   failureReason: string | null
   verifiedAt: Date | null
 }
@@ -48,6 +50,8 @@ export type SupplyChainVerificationEvidenceMaxAggregateOutputType = {
   scannerVersion: string | null
   result: string | null
   reference: string | null
+  documentObjectKey: string | null
+  documentSha256: string | null
   failureReason: string | null
   verifiedAt: Date | null
 }
@@ -62,6 +66,8 @@ export type SupplyChainVerificationEvidenceCountAggregateOutputType = {
   scannerVersion: number
   result: number
   reference: number
+  documentObjectKey: number
+  documentSha256: number
   failureReason: number
   verifiedAt: number
   metadata: number
@@ -79,6 +85,8 @@ export type SupplyChainVerificationEvidenceMinAggregateInputType = {
   scannerVersion?: true
   result?: true
   reference?: true
+  documentObjectKey?: true
+  documentSha256?: true
   failureReason?: true
   verifiedAt?: true
 }
@@ -93,6 +101,8 @@ export type SupplyChainVerificationEvidenceMaxAggregateInputType = {
   scannerVersion?: true
   result?: true
   reference?: true
+  documentObjectKey?: true
+  documentSha256?: true
   failureReason?: true
   verifiedAt?: true
 }
@@ -107,6 +117,8 @@ export type SupplyChainVerificationEvidenceCountAggregateInputType = {
   scannerVersion?: true
   result?: true
   reference?: true
+  documentObjectKey?: true
+  documentSha256?: true
   failureReason?: true
   verifiedAt?: true
   metadata?: true
@@ -195,6 +207,8 @@ export type SupplyChainVerificationEvidenceGroupByOutputType = {
   scannerVersion: string | null
   result: string
   reference: string | null
+  documentObjectKey: string | null
+  documentSha256: string | null
   failureReason: string | null
   verifiedAt: Date
   metadata: runtime.JsonValue
@@ -231,6 +245,8 @@ export type SupplyChainVerificationEvidenceWhereInput = {
   scannerVersion?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   result?: Prisma.StringFilter<"SupplyChainVerificationEvidence"> | string
   reference?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentObjectKey?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentSha256?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   failureReason?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   verifiedAt?: Prisma.DateTimeFilter<"SupplyChainVerificationEvidence"> | Date | string
   metadata?: Prisma.JsonFilter<"SupplyChainVerificationEvidence">
@@ -247,6 +263,8 @@ export type SupplyChainVerificationEvidenceOrderByWithRelationInput = {
   scannerVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   result?: Prisma.SortOrder
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentObjectKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentSha256?: Prisma.SortOrderInput | Prisma.SortOrder
   failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -266,6 +284,8 @@ export type SupplyChainVerificationEvidenceWhereUniqueInput = Prisma.AtLeast<{
   scannerVersion?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   result?: Prisma.StringFilter<"SupplyChainVerificationEvidence"> | string
   reference?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentObjectKey?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentSha256?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   failureReason?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   verifiedAt?: Prisma.DateTimeFilter<"SupplyChainVerificationEvidence"> | Date | string
   metadata?: Prisma.JsonFilter<"SupplyChainVerificationEvidence">
@@ -282,6 +302,8 @@ export type SupplyChainVerificationEvidenceOrderByWithAggregationInput = {
   scannerVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   result?: Prisma.SortOrder
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentObjectKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentSha256?: Prisma.SortOrderInput | Prisma.SortOrder
   failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -303,6 +325,8 @@ export type SupplyChainVerificationEvidenceScalarWhereWithAggregatesInput = {
   scannerVersion?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainVerificationEvidence"> | string | null
   result?: Prisma.StringWithAggregatesFilter<"SupplyChainVerificationEvidence"> | string
   reference?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentObjectKey?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentSha256?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainVerificationEvidence"> | string | null
   failureReason?: Prisma.StringNullableWithAggregatesFilter<"SupplyChainVerificationEvidence"> | string | null
   verifiedAt?: Prisma.DateTimeWithAggregatesFilter<"SupplyChainVerificationEvidence"> | Date | string
   metadata?: Prisma.JsonWithAggregatesFilter<"SupplyChainVerificationEvidence">
@@ -317,6 +341,8 @@ export type SupplyChainVerificationEvidenceCreateInput = {
   scannerVersion?: string | null
   result: string
   reference?: string | null
+  documentObjectKey?: string | null
+  documentSha256?: string | null
   failureReason?: string | null
   verifiedAt?: Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -333,6 +359,8 @@ export type SupplyChainVerificationEvidenceUncheckedCreateInput = {
   scannerVersion?: string | null
   result: string
   reference?: string | null
+  documentObjectKey?: string | null
+  documentSha256?: string | null
   failureReason?: string | null
   verifiedAt?: Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -347,6 +375,8 @@ export type SupplyChainVerificationEvidenceUpdateInput = {
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -363,6 +393,8 @@ export type SupplyChainVerificationEvidenceUncheckedUpdateInput = {
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -378,6 +410,8 @@ export type SupplyChainVerificationEvidenceCreateManyInput = {
   scannerVersion?: string | null
   result: string
   reference?: string | null
+  documentObjectKey?: string | null
+  documentSha256?: string | null
   failureReason?: string | null
   verifiedAt?: Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -392,6 +426,8 @@ export type SupplyChainVerificationEvidenceUpdateManyMutationInput = {
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -407,6 +443,8 @@ export type SupplyChainVerificationEvidenceUncheckedUpdateManyInput = {
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -432,6 +470,8 @@ export type SupplyChainVerificationEvidenceCountOrderByAggregateInput = {
   scannerVersion?: Prisma.SortOrder
   result?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  documentObjectKey?: Prisma.SortOrder
+  documentSha256?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -447,6 +487,8 @@ export type SupplyChainVerificationEvidenceMaxOrderByAggregateInput = {
   scannerVersion?: Prisma.SortOrder
   result?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  documentObjectKey?: Prisma.SortOrder
+  documentSha256?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
 }
@@ -461,6 +503,8 @@ export type SupplyChainVerificationEvidenceMinOrderByAggregateInput = {
   scannerVersion?: Prisma.SortOrder
   result?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  documentObjectKey?: Prisma.SortOrder
+  documentSha256?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
 }
@@ -516,6 +560,8 @@ export type SupplyChainVerificationEvidenceCreateWithoutEvidenceInput = {
   scannerVersion?: string | null
   result: string
   reference?: string | null
+  documentObjectKey?: string | null
+  documentSha256?: string | null
   failureReason?: string | null
   verifiedAt?: Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -530,6 +576,8 @@ export type SupplyChainVerificationEvidenceUncheckedCreateWithoutEvidenceInput =
   scannerVersion?: string | null
   result: string
   reference?: string | null
+  documentObjectKey?: string | null
+  documentSha256?: string | null
   failureReason?: string | null
   verifiedAt?: Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -574,6 +622,8 @@ export type SupplyChainVerificationEvidenceScalarWhereInput = {
   scannerVersion?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   result?: Prisma.StringFilter<"SupplyChainVerificationEvidence"> | string
   reference?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentObjectKey?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
+  documentSha256?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   failureReason?: Prisma.StringNullableFilter<"SupplyChainVerificationEvidence"> | string | null
   verifiedAt?: Prisma.DateTimeFilter<"SupplyChainVerificationEvidence"> | Date | string
   metadata?: Prisma.JsonFilter<"SupplyChainVerificationEvidence">
@@ -588,6 +638,8 @@ export type SupplyChainVerificationEvidenceCreateManyEvidenceInput = {
   scannerVersion?: string | null
   result: string
   reference?: string | null
+  documentObjectKey?: string | null
+  documentSha256?: string | null
   failureReason?: string | null
   verifiedAt?: Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -602,6 +654,8 @@ export type SupplyChainVerificationEvidenceUpdateWithoutEvidenceInput = {
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -616,6 +670,8 @@ export type SupplyChainVerificationEvidenceUncheckedUpdateWithoutEvidenceInput =
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -630,6 +686,8 @@ export type SupplyChainVerificationEvidenceUncheckedUpdateManyWithoutEvidenceInp
   scannerVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   result?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentObjectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -647,6 +705,8 @@ export type SupplyChainVerificationEvidenceSelect<ExtArgs extends runtime.Types.
   scannerVersion?: boolean
   result?: boolean
   reference?: boolean
+  documentObjectKey?: boolean
+  documentSha256?: boolean
   failureReason?: boolean
   verifiedAt?: boolean
   metadata?: boolean
@@ -663,6 +723,8 @@ export type SupplyChainVerificationEvidenceSelectCreateManyAndReturn<ExtArgs ext
   scannerVersion?: boolean
   result?: boolean
   reference?: boolean
+  documentObjectKey?: boolean
+  documentSha256?: boolean
   failureReason?: boolean
   verifiedAt?: boolean
   metadata?: boolean
@@ -679,6 +741,8 @@ export type SupplyChainVerificationEvidenceSelectUpdateManyAndReturn<ExtArgs ext
   scannerVersion?: boolean
   result?: boolean
   reference?: boolean
+  documentObjectKey?: boolean
+  documentSha256?: boolean
   failureReason?: boolean
   verifiedAt?: boolean
   metadata?: boolean
@@ -695,12 +759,14 @@ export type SupplyChainVerificationEvidenceSelectScalar = {
   scannerVersion?: boolean
   result?: boolean
   reference?: boolean
+  documentObjectKey?: boolean
+  documentSha256?: boolean
   failureReason?: boolean
   verifiedAt?: boolean
   metadata?: boolean
 }
 
-export type SupplyChainVerificationEvidenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "evidenceId" | "kind" | "artifactHash" | "signerKeyId" | "scannerId" | "scannerVersion" | "result" | "reference" | "failureReason" | "verifiedAt" | "metadata", ExtArgs["result"]["supplyChainVerificationEvidence"]>
+export type SupplyChainVerificationEvidenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "evidenceId" | "kind" | "artifactHash" | "signerKeyId" | "scannerId" | "scannerVersion" | "result" | "reference" | "documentObjectKey" | "documentSha256" | "failureReason" | "verifiedAt" | "metadata", ExtArgs["result"]["supplyChainVerificationEvidence"]>
 export type SupplyChainVerificationEvidenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   evidence?: boolean | Prisma.SupplyChainEvidenceDefaultArgs<ExtArgs>
 }
@@ -726,6 +792,8 @@ export type $SupplyChainVerificationEvidencePayload<ExtArgs extends runtime.Type
     scannerVersion: string | null
     result: string
     reference: string | null
+    documentObjectKey: string | null
+    documentSha256: string | null
     failureReason: string | null
     verifiedAt: Date
     metadata: runtime.JsonValue
@@ -1162,6 +1230,8 @@ export interface SupplyChainVerificationEvidenceFieldRefs {
   readonly scannerVersion: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'String'>
   readonly result: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'String'>
   readonly reference: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'String'>
+  readonly documentObjectKey: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'String'>
+  readonly documentSha256: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'String'>
   readonly failureReason: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'String'>
   readonly verifiedAt: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'DateTime'>
   readonly metadata: Prisma.FieldRef<"SupplyChainVerificationEvidence", 'Json'>

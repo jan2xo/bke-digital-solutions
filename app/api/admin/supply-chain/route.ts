@@ -1,4 +1,4 @@
-import { createPublicKey, verify } from "node:crypto";
+import { createHash, createPublicKey, randomUUID, verify } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
@@ -11,9 +11,9 @@ import { scanArtifact } from "@/lib/supply-chain/scanner";
 import { resolveTrustedSupplyChainKey } from "@/lib/supply-chain/keyring";
 import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { downloadObject } from "@/lib/storage";
+import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage";
 
-const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
+const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
 
 export async function GET() { try { await requireAdmin(); return NextResponse.json(await db.supplyChainEvidence.findMany({ include: { verificationEvidence: true, version: { include: { product: { select: { name: true } }, artifacts: { select: { name: true, sha256: true, sizeBytes: true } } } } }, orderBy: { builtAt: "desc" } })); } catch (e) { return apiError(e); } }
@@ -29,13 +29,22 @@ export async function POST(request: Request) {
     const canonicalPayloadHash = manifestHash(canonicalizeManifest(signedManifest));
     if (["RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION"].includes(input.action ?? "")) {
       if (!input.reference) throw new Error("EVIDENCE_REFERENCE_REQUIRED");
+      if (!input.documentBase64) throw new Error("EVIDENCE_DOCUMENT_REQUIRED");
       if (input.evidenceHash && input.evidenceHash !== canonicalPayloadHash) throw new Error("EVIDENCE_HASH_MISMATCH");
+      let document: Buffer;
+      if (!/^[A-Za-z0-9+/]*={0,2}$/.test(input.documentBase64) || input.documentBase64.length % 4 === 1) throw new Error("EVIDENCE_DOCUMENT_INVALID");
+      try { document = Buffer.from(input.documentBase64, "base64"); } catch { throw new Error("EVIDENCE_DOCUMENT_INVALID"); }
+      if (!document.length) throw new Error("EVIDENCE_DOCUMENT_INVALID");
+      const documentSha256 = createHash("sha256").update(document).digest("hex");
+      if (/^(?:file:|[A-Za-z]:[\\/]|\/|\.\.?\/|.*(?:^|\/)tmp(?:\/|$)|.*(?:^|\/)\.supply-chain(?:\/|$))/i.test(input.reference)) throw new Error("EVIDENCE_REFERENCE_NOT_DURABLE");
       const kind = input.action === "RECORD_SBOM" ? "SBOM" : input.action === "RECORD_PROVENANCE" ? "PROVENANCE" : input.action === "RECORD_DEPENDENCIES" ? "DEPENDENCIES" : input.action === "RECORD_BACKUP" ? "BACKUP" : input.action === "RECORD_COMPLIANCE" ? "COMPLIANCE" : "MIGRATION";
+      const prior = existing.verificationEvidence.find((item) => item.kind === kind && item.artifactHash === canonicalPayloadHash && item.documentSha256 === documentSha256 && item.result === "VERIFIED");
+      const objectKey = prior?.documentObjectKey ?? `evidence/${existing.version.id}/${kind.toLowerCase()}/${randomUUID()}.json`;
+      if (!prior) { await uploadObject(objectKey, document, "application/json"); await assertObjectExists(objectKey); }
       await db.$transaction(async (tx) => {
-        const prior = await tx.supplyChainVerificationEvidence.findFirst({ where: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash }, orderBy: { verifiedAt: "desc" } });
-        const metadata = { reference: input.reference, payloadHash: canonicalPayloadHash };
-        if (prior) await tx.supplyChainVerificationEvidence.update({ where: { id: prior.id }, data: { result: "VERIFIED", reference: input.reference, failureReason: null, metadata } });
-        else await tx.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash, result: "VERIFIED", reference: input.reference, metadata } });
+        const metadata = { reference: input.reference, payloadHash: canonicalPayloadHash, documentSha256 };
+        if (prior) await tx.supplyChainVerificationEvidence.update({ where: { id: prior.id }, data: { result: "VERIFIED", reference: input.reference, failureReason: null, metadata, documentObjectKey: objectKey, documentSha256 } });
+        else await tx.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash, result: "VERIFIED", reference: input.reference, documentObjectKey: objectKey, documentSha256, metadata } });
         await tx.supplyChainEvidence.update({ where: { id: existing.id }, data: kind === "SBOM" ? { sbomReference: input.reference } : kind === "PROVENANCE" ? { provenanceStatus: "VERIFIED" } : kind === "DEPENDENCIES" ? { dependencyVerified: true } : {} });
         if (kind !== "SBOM" && kind !== "PROVENANCE" && kind !== "DEPENDENCIES") await tx.productVersion.update({ where: { id: existing.version.id }, data: kind === "BACKUP" ? { backupEvidence: input.reference } : kind === "COMPLIANCE" ? { complianceEvidence: input.reference } : { migrationEvidence: input.reference } });
         await tx.auditLog.create({ data: { actorId: admin.id, action: `SUPPLY_CHAIN_${kind}_RECORDED`, targetType: "SupplyChainEvidence", targetId: existing.id, metadata: { payloadHash: canonicalPayloadHash, reference: input.reference } } });

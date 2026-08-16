@@ -8,7 +8,7 @@ Phase 2 release/latest resolution correction is implemented. Phase 3 Product Ver
 
 Phase 6.7 Legal/Tax/Compliance Review is implemented technically with an administrator compliance register, but professional legal, DPO/privacy, accountant/BIR, and regulatory approvals remain pending.
 
-Phase 6.8 Secure Software Supply Chain is technically implemented with SBOM/provenance generation, authenticated current-payload evidence ingestion, and release evidence tracking. Production candidate evidence and signing material remain owner/VPS actions.
+Phase 6.8 Secure Software Supply Chain is technically implemented with SBOM/provenance generation, authenticated current-payload evidence ingestion, durable private evidence objects, encrypted-backup inclusion, and restore-time evidence checksum verification. Production candidate evidence and signing material remain owner/VPS actions.
 
 Phase 6.9 Production Release Management is technically implemented with controlled lifecycle transitions and approval evidence. It does not imply release signing, malware clearance, or production deployment approval.
 
