@@ -1,11 +1,13 @@
+import "dotenv/config";
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "tests/e2e",
+  outputDir: process.env.PLAYWRIGHT_OUTPUT_DIR ?? "/tmp/test-results",
   workers: 1,
   fullyParallel: false,
   use: {
-    baseURL: "https://jl-bke.localhost:8443",
+    baseURL: "https://caddy",
     ignoreHTTPSErrors: true,
     trace: "on-first-retry",
   },

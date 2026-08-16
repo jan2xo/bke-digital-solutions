@@ -48,6 +48,8 @@ services:
       postgres: { condition: service_healthy }
       valkey: { condition: service_healthy }
       minio-init: { condition: service_completed_successfully }
+      app: { condition: service_healthy }
+      caddy: { condition: service_started }
     networks: [private]
     restart: "no"
     read_only: true
@@ -62,11 +64,12 @@ services:
       NODE_ENV: test
       DEPLOYMENT_ENV: test
       LOCAL_PRODUCTION_SIMULATION: "false"
-      APP_URL: http://127.0.0.1:3000
+      APP_URL: https://caddy
       INTERNAL_APP_URL: ""
       PUBLIC_WEBHOOK_ORIGIN: ""
-      TRUSTED_ORIGINS: http://127.0.0.1:3000
+      TRUSTED_ORIGINS: https://caddy
       DIRECT_DATABASE_URL: ""
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/bke_certification
       REDIS_URL: redis://valkey:6379
       S3_ENDPOINT: http://minio:9000
       PAYMENT_PROVIDER: mock

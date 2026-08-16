@@ -21,6 +21,8 @@ const executableArgs = [
   "run",
   "--rm",
   "--build",
+  "-e",
+  "DATABASE_URL=postgresql://postgres:postgres@postgres:5432/bke_certification",
   "certification-tests",
   command,
   ...args,

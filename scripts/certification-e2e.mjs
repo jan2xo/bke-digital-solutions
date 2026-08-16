@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { execFileSync } from "node:child_process";
 
 const run = (args) => {
-  const result = spawnSync("npx", ["playwright", "test", ...args], { stdio: "inherit", env: process.env });
+  const result = spawnSync("node", ["scripts/certification-host-command.mjs", "npx", "playwright", "test", ...args], { stdio: "inherit", env: process.env });
   if (result.status !== 0) process.exit(result.status ?? 1);
 };
 run(["--config=playwright.certification.config.ts", "admin-product.spec.ts", "backups.spec.ts", "commerce.spec.ts", "legal.spec.ts", "provider-settings.spec.ts", "public.spec.ts", "scheduler.spec.ts", "security-dashboard.spec.ts", "phase6-9-organization.spec.ts"]);
@@ -24,7 +24,7 @@ run(["--config=playwright.phase5.config.ts", "tests/e2e/phase5-control-plane.spe
 
 const scannerTest = (expected) => {
   const env = { ...process.env, PHASE5_SCANNER_EXPECTED: expected };
-  const result = spawnSync("npx", ["playwright", "test", "--config=playwright.phase5.config.ts", "tests/e2e/phase5-control-plane.spec.ts", "--grep", "scanner page reports"], { stdio: "inherit", env });
+  const result = spawnSync("node", ["scripts/certification-host-command.mjs", "npx", "playwright", "test", "--config=playwright.phase5.config.ts", "tests/e2e/phase5-control-plane.spec.ts", "--grep", "scanner page reports"], { stdio: "inherit", env });
   return result.status === 0;
 };
 
