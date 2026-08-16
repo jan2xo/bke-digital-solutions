@@ -29,6 +29,9 @@ on any health or migration failure.
 **Generate release evidence:** run `npm run supplychain:evidence -- <release-version>`
 and follow RELEASE-SHIPPING for authenticated ingestion; the command only
 creates local evidence files and never approves or signs a release.
+For the historical expanded production-certification sequence, see the
+[manual/diagnostic equivalent](RELEASE-SHIPPING.md#manual--diagnostic-equivalent);
+it is not the default operator path.
 
 **Restore:** follow DISASTER-RECOVERY and BACKUP-RESTORE using an isolated target.
 

@@ -17,3 +17,9 @@ Standard repository separately. Recommended technology-neutral requirements:
    payload-bound, and recoverable after infrastructure loss.
 7. Treat operational reproducibility as part of feature completion, not a
    post-release documentation task.
+8. Operational commands used during real deployment, certification, restore,
+   shipping, and recovery must be captured either as an authoritative
+   automation task or as a documented manual equivalent. AI chat history and
+   shell history must never be the only record. One-off exploratory searches or
+   debugging commands need not be recorded unless they become a known
+   troubleshooting procedure.
