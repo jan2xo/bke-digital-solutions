@@ -523,6 +523,18 @@ existing fail-closed CLEAN/INFECTED/FAILED semantics. Certification Compose
 continues to override the same service. VPS provisioning and production
 scanner certification remain owner/VPS actions.
 
+### Production artifact object-integrity remediation — 2026-08-16
+
+Production scan failures were traced to a missing primary MinIO object, not
+ClamAV: `products/cmsocy9hv00000vqiqjpr9qpi/replacements/6cacf812-4a3f-48d3-bef4-bdbb5182011c.zip` returned `HeadObject` 404 while the active
+`ProductArtifact` row still referenced it. The replacement path now verifies
+the uploaded object with `HeadObject` before committing the database pointer,
+invalidates the complete trusted-release evidence graph in the same transaction,
+and cleanup workers refuse to delete any object still referenced by an active
+artifact. Failed uploads retain the previous pointer and queue only abandoned
+objects for retryable cleanup. Existing production rows require owner-approved
+repair; no production data was changed here.
+
 ### Production admin mutation route audit — 2026-08-16
 
 Production evidence reported `404` for POST `/api/admin/supply-chain` and
