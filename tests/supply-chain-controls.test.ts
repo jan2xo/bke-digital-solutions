@@ -60,7 +60,18 @@ describe("Phase 6.8 supply-chain security controls", () => {
     const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
     expect(route).toContain('"RECORD_SBOM", "RECORD_PROVENANCE"');
     expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
-    expect(route).toContain("kind === \"SBOM\" ? { sbomReference: input.reference } : { provenanceStatus: \"VERIFIED\" }");
+    expect(route).toContain('kind === "SBOM" ? { sbomReference: input.reference } : kind === "PROVENANCE"');
     expect(readFileSync("app/api/admin/versions/[id]/route.ts", "utf8")).toContain("provenanceVerified: evidence?.provenanceStatus === \"VERIFIED\"");
+  });
+
+  it("records the remaining release gates only as current verified evidence", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain('"RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION"');
+    expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
+    const lifecycle = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
+    expect(lifecycle).toContain('currentEvidence("DEPENDENCIES")');
+    expect(lifecycle).toContain('currentEvidence("BACKUP")');
+    expect(lifecycle).toContain('currentEvidence("COMPLIANCE")');
+    expect(lifecycle).toContain('currentEvidence("MIGRATION")');
   });
 });

@@ -12,10 +12,10 @@ export function releaseReadiness(version: { id?: string; productId: string; vers
     { key: "malware", label: "Malware", status: malware ? "PASS" : "BLOCKED", detail: malware ? "All current artifacts CLEAN" : evidence?.malwareStatus ?? "Missing current evidence" },
     { key: "sbom", label: "SBOM", status: current("SBOM", "VERIFIED") && Boolean(evidence?.sbomReference) ? "PASS" : "BLOCKED", detail: current("SBOM", "VERIFIED") ? evidence?.sbomReference ?? "Missing" : "Missing current evidence" },
     { key: "provenance", label: "Provenance", status: current("PROVENANCE", "VERIFIED") && evidence?.provenanceStatus === "VERIFIED" ? "PASS" : "BLOCKED", detail: current("PROVENANCE", "VERIFIED") ? evidence?.provenanceStatus ?? "Missing" : "Missing current evidence" },
-    { key: "dependencies", label: "Dependencies", status: evidence?.dependencyVerified ? "PASS" : "BLOCKED", detail: evidence?.dependencyVerified ? "Verified" : "Missing" },
-    { key: "backup", label: "Backup", status: version.backupEvidence ? "PASS" : "BLOCKED", detail: version.backupEvidence ?? "Missing" },
-    { key: "compliance", label: "Compliance", status: version.complianceEvidence ? "PASS" : "BLOCKED", detail: version.complianceEvidence ?? "Missing" },
-    { key: "migration", label: "Migration", status: version.migrationEvidence ? "PASS" : "BLOCKED", detail: version.migrationEvidence ?? "Missing" },
+    { key: "dependencies", label: "Dependencies", status: evidence?.dependencyVerified === true && current("DEPENDENCIES", "VERIFIED") ? "PASS" : "BLOCKED", detail: evidence?.dependencyVerified && current("DEPENDENCIES", "VERIFIED") ? "Verified" : "Missing current evidence" },
+    { key: "backup", label: "Backup", status: Boolean(version.backupEvidence) && current("BACKUP", "VERIFIED") ? "PASS" : "BLOCKED", detail: version.backupEvidence && current("BACKUP", "VERIFIED") ? version.backupEvidence : "Missing current evidence" },
+    { key: "compliance", label: "Compliance", status: Boolean(version.complianceEvidence) && current("COMPLIANCE", "VERIFIED") ? "PASS" : "BLOCKED", detail: version.complianceEvidence && current("COMPLIANCE", "VERIFIED") ? version.complianceEvidence : "Missing current evidence" },
+    { key: "migration", label: "Migration", status: Boolean(version.migrationEvidence) && current("MIGRATION", "VERIFIED") ? "PASS" : "BLOCKED", detail: version.migrationEvidence && current("MIGRATION", "VERIFIED") ? version.migrationEvidence : "Missing current evidence" },
     { key: "approval", label: "Approval", status: version.approvals[0]?.approvedAt && version.approvals[0].reviewedById ? "PASS" : "BLOCKED", detail: version.approvals[0]?.approvedAt ? "Approved" : "Pending" },
   ]; return { items, publishable: items.every((item) => item.status === "PASS"), payloadHash };
 }

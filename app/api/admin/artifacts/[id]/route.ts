@@ -37,7 +37,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           const evidence = await tx.supplyChainEvidence.findUnique({ where: { versionId: current.versionId } });
           if (evidence) {
             const artifacts = await tx.productArtifact.findMany({ where: { versionId: current.versionId, active: true, removedAt: null }, orderBy: { createdAt: "asc" } });
-            await tx.supplyChainEvidence.update({ where: { id: evidence.id }, data: { manifestJson: { artifacts: artifacts.map((item) => ({ id: item.id, name: item.name, objectKey: item.objectKey, sha256: item.sha256, sizeBytes: Number(item.sizeBytes), contentType: item.contentType })) }, sbomReference: null, provenanceStatus: "RECORDED", signatureVerified: false, manifestSignature: null, canonicalPayloadHash: null, signatureKeyId: null, signatureAlgorithm: null, signedAt: null, malwareStatus: "PENDING_SCAN" } });
+            await tx.supplyChainEvidence.update({ where: { id: evidence.id }, data: { manifestJson: { artifacts: artifacts.map((item) => ({ id: item.id, name: item.name, objectKey: item.objectKey, sha256: item.sha256, sizeBytes: Number(item.sizeBytes), contentType: item.contentType })) }, sbomReference: null, provenanceStatus: "RECORDED", dependencyVerified: false, signatureVerified: false, manifestSignature: null, canonicalPayloadHash: null, signatureKeyId: null, signatureAlgorithm: null, signedAt: null, malwareStatus: "PENDING_SCAN" } });
           }
         }
         const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, current.objectKey);

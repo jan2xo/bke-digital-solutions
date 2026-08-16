@@ -570,3 +570,14 @@ safety policy and is not route packaging loss. The new
 production build. The local build directory was removed by a failed ENOTEMPTY
 build cleanup and Docker API access was unavailable, so image-level verification
 remains owner/VPS execution.
+
+### Remaining release-gate ingestion checkpoint — 2026-08-16
+
+Added current-payload-bound authenticated recording for dependencies, backup,
+compliance, and migration evidence through the existing admin supply-chain
+workflow. Each action requires recent admin authentication, same-origin,
+rate limiting, server-computed hash equality, transactional upsert, and audit
+logging. Lifecycle approval still separately requires all global compliance
+requirements to be implemented and reviewer/approver separation. Artifact
+mutation clears these gate fields and current evidence. Focused trusted-release
+tests passed 22/22.
