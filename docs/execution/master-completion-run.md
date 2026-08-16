@@ -605,3 +605,12 @@ the production Compose file, package scripts, migration tooling, health checks,
 backup engine, and existing VPS/restore runbooks. No production data or secrets
 were changed. Dependency certification must not resume until this baseline is
 reviewed.
+### 2026-08-16 — Operational reproducibility hardening
+
+Audited the external Engineering Standard and the Digital Solutions cookbook.
+Added `scripts/generate-release-evidence.mjs` and the
+`supplychain:evidence` package task so SBOM/provenance generation is a
+version-controlled, transparent operation that reports hashes without making
+approval or signing decisions. Added a proposed generalized standard-upgrade
+report; the external standard was not modified in this task. Shipping
+certification remains paused.

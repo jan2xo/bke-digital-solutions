@@ -49,6 +49,7 @@
     "security:audit-host": "bash scripts/audit-host-security.sh",
     "supplychain:sbom": "node scripts/generate-sbom.mjs",
     "supplychain:provenance": "node scripts/generate-provenance.mjs",
+    "supplychain:evidence": "node scripts/generate-release-evidence.mjs",
     "deployment:verify-restart": "node scripts/verify-compose-restart-policies.mjs",
     "deployment:verify-manifest": "node scripts/verify-deployment-manifest.mjs",
     "deployment:verify-routes": "node scripts/verify-production-routes.mjs"

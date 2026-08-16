@@ -26,6 +26,10 @@ on any health or migration failure.
 
 **Ship a release:** follow RELEASE-SHIPPING; never bypass readiness.
 
+**Generate release evidence:** run `npm run supplychain:evidence -- <release-version>`
+and follow RELEASE-SHIPPING for authenticated ingestion; the command only
+creates local evidence files and never approves or signs a release.
+
 **Restore:** follow DISASTER-RECOVERY and BACKUP-RESTORE using an isolated target.
 
 **Release blocked:** inspect current payload hash and malware, SBOM, provenance,
