@@ -47,5 +47,10 @@ queue preflight. RESTORE_ISOLATED is an explicit owner-authorized mutation.
 **Release blocked:** inspect current payload hash and malware, SBOM, provenance,
 dependency, backup, compliance, migration, signature, and approval evidence.
 
+**Scheduler unhealthy:** inspect `docker compose ... ps scheduler`, scheduler
+logs, and the private `/api/health/scheduler` contract. The health state is
+derived from durable job heartbeats/windows and must not be bypassed with a
+process-only check.
+
 **Licensing service down:** verify Agent endpoint, installation identity,
 lease-key configuration, and TLS/network path; never bypass Agent verification.

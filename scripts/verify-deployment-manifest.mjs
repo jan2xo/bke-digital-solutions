@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 
 const composeFile = process.env.DEPLOYMENT_COMPOSE_FILE ?? "docker-compose.production.yml";
 const envFile = process.env.DEPLOYMENT_ENV_FILE ?? ".env.production.example";
@@ -73,4 +74,4 @@ export function loadAndVerify({ composePath = composeFile, environmentPath = env
   return verifyTopology(compose, readFileSync(caddyPath, "utf8"), readFileSync(dockerfilePath, "utf8"));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) console.log(JSON.stringify({ ok: true, composeFile, ...loadAndVerify() }));
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) console.log(JSON.stringify({ ok: true, composeFile, ...loadAndVerify() }));

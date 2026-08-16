@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { verifyRestartPolicies } from "../scripts/verify-compose-restart-policies.mjs";
 
 const compose = {
@@ -15,6 +16,15 @@ const compose = {
 };
 
 describe("compose recovery policy verifier", () => {
+  it("production scheduler healthcheck uses the durable scheduler contract", () => {
+    const composeFile = readFileSync("docker-compose.production.yml", "utf8");
+    expect(composeFile).toContain("http://app:3000/api/health/scheduler");
+    expect(composeFile).not.toContain("target: scheduler\n    healthcheck: NONE");
+  });
+  it("does not require a fabricated backup-worker probe", () => {
+    const services = { ...compose.services, "backup-worker": { restart: "unless-stopped" } };
+    expect(() => verifyRestartPolicies({ services })).not.toThrow();
+  });
   it("accepts long-running services with healthchecks and a one-shot migration", () => {
     expect(verifyRestartPolicies(compose)).toMatchObject({ ok: true, migration: "no" });
   });

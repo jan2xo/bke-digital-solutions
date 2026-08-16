@@ -142,6 +142,12 @@ services:
       app: { condition: service_healthy }
       valkey: { condition: service_healthy }
     networks: [private]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://app:3000/api/health/scheduler').then(async r=>{const b=await r.json();if(!r.ok||b.status!=='healthy')process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     read_only: true
     tmpfs: ["/tmp:size=32m,mode=1777"]
     security_opt: ["no-new-privileges:true"]

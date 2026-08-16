@@ -36,3 +36,14 @@ an operational stop condition; inspect service health/logs and do not publish.
 For self-hosted MinIO, start `minio minio-init` before app. Review logs without
 printing environment values. Roll back only to an approved schema-compatible
 commit; never delete persistent volumes during an incident.
+
+The scheduler healthcheck is semantic: it queries the private app scheduler
+health route, which evaluates persisted job definitions, recent execution
+windows, failures, and retry backlog. A healthy scheduler therefore means the
+worker process is running and durable scheduler state is not stale. If it is
+unhealthy, inspect scheduler/app logs and the `/api/health/scheduler` response;
+do not replace the check with a process-only probe.
+
+The backup worker intentionally has no fabricated HTTP healthcheck. Its
+recovery contract is `restart: unless-stopped` plus durable `BackupOperation`
+state and worker logs; verify those through the backup runbook after deploy.

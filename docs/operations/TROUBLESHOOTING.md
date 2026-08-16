@@ -13,6 +13,8 @@
 | canonical hash mismatch | evidence belongs to old artifact set | recompute and re-ingest | fail closed |
 | deployment preflight fails | Compose/topology/restart policy mismatch | run `npm run ops:validate -- .env.vps`, correct config, and rerun | stop deployment |
 | health check fails | service or dependency is unhealthy | run `npm run ops:health -- https://production-host`, then inspect Compose health/logs | stop traffic |
+| scheduler healthcheck fails | scheduler process stopped, app route unavailable, or durable job state is stale | inspect scheduler logs and `/api/health/scheduler`; restore dependencies and let the worker recover | stop relying on scheduler |
+| backup worker recovery is uncertain | worker has no HTTP health contract; durable operation state or restart is unhealthy | inspect `BackupOperation`, worker logs, and restart policy; do not add a fake probe | stop backup claims |
 | manifest validator rejects Caddy domain | verifier expected one obsolete token spelling | run current `npm run ops:validate -- .env.production`; validator accepts supported environment-token wiring | fixed |
 
 For compromise, payment abuse, credential exposure, or data loss, follow

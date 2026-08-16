@@ -640,3 +640,16 @@ The validators now enforce those semantic contracts without changing
 production. The live health command could not be network-verified from this
 workspace because `jl-bke.com` was not resolvable; the production operator must
 rerun it after deploying this checkpoint.
+
+The restart verifier also distinguishes scheduler health (durable app-backed
+heartbeat contract) from backup-worker recovery (restart policy, durable
+`BackupOperation` state, and logs). It does not require a fabricated backup
+HTTP probe.
+### 2026-08-16 — Scheduler recovery health hardening
+
+The restart-policy validator correctly requires a scheduler healthcheck, but
+the production Compose service had explicitly disabled it (`HEALTHCHECK NONE`).
+The scheduler now uses a private Node probe of `/api/health/scheduler`. That
+route evaluates persisted scheduler windows, recent job execution, failures,
+and retry backlog, so the check detects stale/dead scheduling state rather than
+merely proving a process exists. No public port or production data was changed.
