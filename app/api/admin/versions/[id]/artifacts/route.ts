@@ -33,7 +33,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       const created = await tx.productArtifact.create({ data: { productId: version.productId, versionId, name: file.name, objectKey, sha256, sizeBytes: file.size, contentType: file.type || "application/octet-stream", active: true } });
       if (version.supplyChainEvidence) {
         const artifacts = [...version.artifacts, created].map((item) => ({ id: item.id, name: item.name, objectKey: item.objectKey, sha256: item.sha256, sizeBytes: Number(item.sizeBytes), contentType: item.contentType }));
-        await tx.supplyChainEvidence.update({ where: { versionId }, data: { manifestJson: { artifacts }, signatureVerified: false, manifestSignature: null, canonicalPayloadHash: null, signatureKeyId: null, signatureAlgorithm: null, signedAt: null, malwareStatus: "PENDING_SCAN" } });
+        await tx.supplyChainEvidence.update({ where: { versionId }, data: { manifestJson: { artifacts }, sbomReference: null, provenanceStatus: "RECORDED", signatureVerified: false, manifestSignature: null, canonicalPayloadHash: null, signatureKeyId: null, signatureAlgorithm: null, signedAt: null, malwareStatus: "PENDING_SCAN" } });
       }
       return created;
     });

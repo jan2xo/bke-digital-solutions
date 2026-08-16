@@ -41,7 +41,7 @@ Status: repository gate implemented and focused-tested; Phase 3 certified PASS (
 | `bke.licensing.v1` | Frozen in Digital Solutions | Synchronize/certify in Agent repository |
 | Agent verification/binding/authorization | Separate repository | Cross-repository certification |
 | Products, releases, artifacts, safe deletion | Implemented | Deployment evidence pending |
-| SBOM, provenance, signatures, malware evidence | Implemented gates | Production scanner/certificates pending |
+| SBOM, provenance, signatures, malware evidence | Implemented gates and authenticated evidence ingestion | Production candidate evidence/signing material pending |
 | Legal Center/consent history | Implemented | Professional review pending |
 | Scheduler/lifecycle jobs | Implemented | Operational deployment evidence pending |
 | Backup/DR | Implemented | CREATE, VERIFY, SIMULATE_RESTORE, RESTORE_ISOLATED passed in certification; production RPO/RTO pending |

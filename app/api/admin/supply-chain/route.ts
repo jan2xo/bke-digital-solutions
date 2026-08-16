@@ -13,7 +13,7 @@ import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { downloadObject } from "@/lib/storage";
 
-const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
+const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
 
 export async function GET() { try { await requireAdmin(); return NextResponse.json(await db.supplyChainEvidence.findMany({ include: { verificationEvidence: true, version: { include: { product: { select: { name: true } }, artifacts: { select: { name: true, sha256: true, sizeBytes: true } } } } }, orderBy: { builtAt: "desc" } })); } catch (e) { return apiError(e); } }
@@ -27,6 +27,20 @@ export async function POST(request: Request) {
     if (!existing) throw new Error("NOT_FOUND");
     const signedManifest = buildReleaseManifest({ productId: existing.version.productId, productSlug: existing.version.product.slug, versionId: existing.version.id, version: existing.version.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: existing.version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });
     const canonicalPayloadHash = manifestHash(canonicalizeManifest(signedManifest));
+    if (["RECORD_SBOM", "RECORD_PROVENANCE"].includes(input.action ?? "")) {
+      if (!input.reference) throw new Error("EVIDENCE_REFERENCE_REQUIRED");
+      if (input.evidenceHash && input.evidenceHash !== canonicalPayloadHash) throw new Error("EVIDENCE_HASH_MISMATCH");
+      const kind = input.action === "RECORD_SBOM" ? "SBOM" : "PROVENANCE";
+      await db.$transaction(async (tx) => {
+        const prior = await tx.supplyChainVerificationEvidence.findFirst({ where: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash }, orderBy: { verifiedAt: "desc" } });
+        const metadata = { reference: input.reference, payloadHash: canonicalPayloadHash };
+        if (prior) await tx.supplyChainVerificationEvidence.update({ where: { id: prior.id }, data: { result: "VERIFIED", reference: input.reference, failureReason: null, metadata } });
+        else await tx.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash, result: "VERIFIED", reference: input.reference, metadata } });
+        await tx.supplyChainEvidence.update({ where: { id: existing.id }, data: kind === "SBOM" ? { sbomReference: input.reference } : { provenanceStatus: "VERIFIED" } });
+        await tx.auditLog.create({ data: { actorId: admin.id, action: `SUPPLY_CHAIN_${kind}_RECORDED`, targetType: "SupplyChainEvidence", targetId: existing.id, metadata: { payloadHash: canonicalPayloadHash, reference: input.reference } } });
+      });
+      return NextResponse.json({ ok: true, status: "VERIFIED", kind, payloadHash: canonicalPayloadHash });
+    }
     if (input.action === "SIGN") {
       const signed = signReleaseManifest({ productId: existing.version.productId, productSlug: existing.version.product.slug, versionId: existing.version.id, version: existing.version.version, artifacts: existing.version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });
       const prior = existing.verificationEvidence.find((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === signed.payloadHash && v.signerKeyId === signed.keyId);

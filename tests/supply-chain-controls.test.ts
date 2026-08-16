@@ -55,4 +55,12 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(gate.ready).toBe(false);
     expect(gate.failures).toContain("supplyChainSafe");
   });
+
+  it("keeps SBOM and provenance recording scoped to the current canonical payload", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain('"RECORD_SBOM", "RECORD_PROVENANCE"');
+    expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
+    expect(route).toContain("kind === \"SBOM\" ? { sbomReference: input.reference } : { provenanceStatus: \"VERIFIED\" }");
+    expect(readFileSync("app/api/admin/versions/[id]/route.ts", "utf8")).toContain("provenanceVerified: evidence?.provenanceStatus === \"VERIFIED\"");
+  });
 });

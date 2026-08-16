@@ -196,6 +196,11 @@ CLEAN/INFECTED certification remain owner actions.
 Trusted-release readiness now requires current payload-hash-bound SBOM and
 provenance verification evidence, not merely non-null metadata fields. Real
 shipping-candidate generation and commercial signing remain owner/VPS actions.
+
+The admin supply-chain workflow now supports `RECORD_SBOM` and
+`RECORD_PROVENANCE` with recent-auth, same-origin, rate-limit, server-hash,
+transactional upsert, and audit controls. Artifact mutation clears these
+records and references together with signature and malware state.
 ## Current status synchronization (RM5)
 
 RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4

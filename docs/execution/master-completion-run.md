@@ -523,6 +523,16 @@ existing fail-closed CLEAN/INFECTED/FAILED semantics. Certification Compose
 continues to override the same service. VPS provisioning and production
 scanner certification remain owner/VPS actions.
 
+### SBOM/provenance ingestion checkpoint — 2026-08-16
+
+Added `RECORD_SBOM` and `RECORD_PROVENANCE` to the existing authenticated
+admin supply-chain workflow. Both actions require recent admin authentication,
+same-origin validation, rate limiting, server-computed canonical payload hash,
+and optional client hash equality. Evidence is transactionally upserted as
+current `VERIFIED` records with sanitized references; artifact add/replace
+invalidates both fields and their evidence. Focused trusted-release tests
+passed 20/20. Production data was not modified.
+
 ### Shipping-candidate evidence audit — 2026-08-16
 
 The SBOM/provenance generators produce CycloneDX and build metadata, but the
