@@ -149,9 +149,14 @@ export async function transferOrganizationOwnership(input: { actorId: string; ac
     const current = await tx.customerAccount.findUniqueOrThrow({ where: { id: input.accountId }, select: { ownerId: true } });
     const member = await tx.membership.findUnique({ where: { accountId_userId: { accountId: input.accountId, userId: input.newOwnerUserId } } });
     if (!member) throw new OrganizationError("MEMBER_NOT_FOUND");
+    if (input.newOwnerUserId === current.ownerId) throw new OrganizationError("MEMBER_NOT_FOUND");
     await tx.membership.update({ where: { accountId_userId: { accountId: input.accountId, userId: input.newOwnerUserId } }, data: { role: "OWNER" } });
     const account = await tx.customerAccount.update({ where: { id: input.accountId }, data: { ownerId: input.newOwnerUserId } });
-    await audit(tx as Tx, { actorId: input.actorId, accountId: input.accountId, action: "ORGANIZATION_OWNER_TRANSFERRED", targetType: "CustomerAccount", targetId: input.accountId, metadata: { from: current.ownerId, to: input.newOwnerUserId, previousRole: member.role, nextRole: "OWNER" } });
+    if (current.ownerId !== input.newOwnerUserId) {
+      await tx.membership.updateMany({ where: { accountId: input.accountId, userId: current.ownerId, role: "OWNER" }, data: { role: "BILLING" } });
+      await audit(tx as Tx, { actorId: input.actorId, accountId: input.accountId, action: "ORGANIZATION_OWNER_DEMOTED", targetType: "Membership", targetId: current.ownerId, metadata: { from: "OWNER", to: "BILLING", reason: "OWNERSHIP_TRANSFERRED" } });
+    }
+    await audit(tx as Tx, { actorId: input.actorId, accountId: input.accountId, action: "ORGANIZATION_OWNER_TRANSFERRED", targetType: "CustomerAccount", targetId: input.accountId, metadata: { from: current.ownerId, to: input.newOwnerUserId, previousRole: member.role, nextRole: "OWNER", previousOwnerDemoted: current.ownerId !== input.newOwnerUserId } });
     return account;
   });
 }

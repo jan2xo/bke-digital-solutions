@@ -444,3 +444,20 @@ Gate:
 - Phase 6.9: final gate remains open pending the complete acceptance matrix review.
 Outstanding:
 - Do not advance to Phase 6.10 until the remaining organization acceptance criteria are evidenced.
+
+## 2026-08-16 — Laguna provider interruption; Luna engineering continuation
+Phase: Laguna findings remediation, Phase C
+Branch: `swarm/digital-solutions`
+HEAD at reconciliation: `9dd129d`
+Working tree: Laguna left six uncommitted engineering paths. They are an interrupted checkpoint and are not trusted without Luna review.
+Coordinator response: Laguna was interrupted by provider rate limits during Phase C. The authoritative audit and normalized findings remain `1e39faf` and `9dd129d`. Engineering switched to Luna without restarting Phase A or Phase B. Luna must independently classify, correct, test, and commit the partial work.
+Verification: Source-level organization boundary tests passed and TypeScript passed. A host-local DB test attempted `127.0.0.1:5432` and failed; this is explicitly superseded by the required private Docker certification path.
+Gate: Phase C remediation remains IN PROGRESS. Stop before SOL final certification.
+
+## 2026-08-16 — Luna remediation checkpoint for Laguna findings
+Phase: Laguna Phase C remediation
+Branch: `swarm/digital-solutions`
+HEAD before implementation commit: `9dd129d`
+Working tree: Luna reviewed all six interrupted Laguna changes. F-001 through F-004, F-011, and F-014 are implemented and regression-covered. `BILLING` was independently selected as the prior-owner handoff role because the authorization matrix grants billing commerce access but not member management or closure authority.
+Verification: Local handler/boundary tests 11 passed; TypeScript passed. Private Docker focused organization certification passed 14/14, including DB-backed ownership authority assertions. Full private-container Vitest reached 276 passed and 6 skipped, with 4 unrelated MinIO tests unable to invoke Docker from inside the test container. Browser certification was attempted but encountered repeated `ENOSPC` Turbopack failures; browser acceptance is unresolved.
+Gate: Findings remediation is implementation-complete and DB/API verified. Browser acceptance and broad MinIO Docker integration remain environment-gated. Stop before SOL final certification.

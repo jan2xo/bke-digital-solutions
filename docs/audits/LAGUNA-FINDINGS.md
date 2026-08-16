@@ -17,7 +17,7 @@ Findings are listed with the fields required by the run: ID, severity, confidenc
 - **Existing coverage:** `tests/organization-boundary-routes.test.ts` (string-only; does not assert omitted fields). None assert serialized body.
 - **Expected behavior:** Account-detail response omits `tokenHash` (and redundant `accountId`).
 - **Remediation constraints:** Repository-controlled; no production/data impact. Minimum coherent fix: add `select` omitting `tokenHash`.
-- **Status:** OPEN
+- **Status:** FIXED (Luna-reviewed and verified)
 
 ## F-002 — Authorization: ownership transfer leaves prior owner as full OWNER
 - **Severity:** HIGH
@@ -29,7 +29,7 @@ Findings are listed with the fields required by the run: ID, severity, confidenc
 - **Existing coverage:** `tests/integration/organizations.test.ts`, `tests/organization-private-db.test.ts` assert `ownerId` changed and audit metadata; none assert prior owner lost capability.
 - **Expected behavior:** Prior owner's `Membership.role` is demoted to a non-OWNER role (e.g., `BILLING`) on transfer, preserving `assertLastOwnerPreserved` semantics.
 - **Remediation constraints:** Repo-controlled; preserve last-owner protection (do not drop the final OWNER). Transactionally update.
-- **Status:** OPEN
+- **Status:** FIXED (Luna-reviewed and verified)
 
 ## F-003 — Contract: organization creation bypasses email verification & legal clearance
 - **Severity:** LOW–MEDIUM
@@ -41,7 +41,7 @@ Findings are listed with the fields required by the run: ID, severity, confidenc
 - **Existing coverage:** `tests/organization-boundary-routes.test.ts` (string-only). None assert `emailVerified`/legal on creation.
 - **Expected behavior:** Creation rejects unverified/pending-reacceptance users with `FORBIDDEN`.
 - **Remediation constraints:** Repo-controlled; align with existing commerce guards.
-- **Status:** OPEN
+- **Status:** FIXED (Luna-reviewed and verified)
 
 ## F-004 — Auth: customer license-key reveal lacks recent authentication
 - **Severity:** MEDIUM
@@ -53,7 +53,7 @@ Findings are listed with the fields required by the run: ID, severity, confidenc
 - **Existing coverage:** None asserting recent-auth gating on reveal.
 - **Expected behavior:** `requireRecentUser()` for reveal.
 - **Remediation constraints:** Repo-controlled; do not weaken other auth. May require browser test fixture refresh if reveal timing exceeds 15 min (acceptance runs under that).
-- **Status:** OPEN
+- **Status:** FIXED (Luna-reviewed and verified)
 
 ## F-011 — Test gap: new organization HTTP routes are not exercised as HTTP handlers
 - **Severity:** MEDIUM
@@ -64,7 +64,7 @@ Findings are listed with the fields required by the run: ID, severity, confidenc
 - **Existing coverage:** Service-layer coverage in `tests/organization-private-db.test.ts`; no HTTP-boundary coverage.
 - **Expected behavior:** Add handler-level tests for the organization routes.
 - **Remediation constraints:** Repo-controlled.
-- **Status:** OPEN
+- **Status:** FIXED (Luna-reviewed and verified)
 
 ## F-014 — Documentation drift: TRUTHCHECK member-visibility concern is stale
 - **Severity:** INFO
@@ -75,4 +75,4 @@ Findings are listed with the fields required by the run: ID, severity, confidenc
 - **Existing coverage:** N/A.
 - **Expected behavior:** Update the known-concerns block to reflect capability-gated visibility and residual gaps.
 - **Remediation constraints:** Documentation-only.
-- **Status:** OPEN
+- **Status:** FIXED (Luna-reviewed and verified)

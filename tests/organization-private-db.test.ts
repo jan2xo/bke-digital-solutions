@@ -19,6 +19,7 @@ import {
   updateOrganizationMemberRole,
   updateOrganizationProfile,
 } from "@/lib/organizations";
+import { requireAccountAccess } from "@/lib/authorization";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 beforeAll(async () => {
@@ -94,5 +95,27 @@ describe("Phase 6.9 private DB organization acceptance", () => {
     await closeOrganization({ actorId: closedOwner.id, accountId: closed.id });
     await expect(updateOrganizationProfile({ actorId: closedOwner.id, accountId: closed.id, displayName: "closed mutation" })).rejects.toThrow("CLOSED_ACCOUNT");
     await expect(listSwitchableAccounts(closedOwner.id)).resolves.not.toEqual(expect.arrayContaining([expect.objectContaining({ id: closed.id })]));
+  });
+
+  it("prior owner loses OWNER authority after ownership transfer (F-002)", async () => {
+    const suffix = `${Date.now().toString(36)}-f02`;
+    const owner = await user(`f02-owner-${suffix}@bke.test`);
+    const newOwner = await user(`f02-newowner-${suffix}@bke.test`);
+    const account = await createOrganizationAccount({ actorId: owner.id, displayName: `F02 ${suffix}`, legalName: `F02 Legal ${suffix}`, billingEmail: owner.email });
+
+    const invite = await inviteOrganizationMember({ actorId: owner.id, accountId: account.id, email: newOwner.email, role: "MEMBER" });
+    await acceptOrganizationInvitation({ userId: newOwner.id, email: newOwner.email, token: invite.token });
+    await updateOrganizationMemberRole({ actorId: owner.id, accountId: account.id, userId: newOwner.id, role: "OWNER" });
+    await transferOrganizationOwnership({ actorId: owner.id, accountId: account.id, newOwnerUserId: newOwner.id });
+
+    const accountRow = await db.customerAccount.findUniqueOrThrow({ where: { id: account.id }, select: { ownerId: true } });
+    expect(accountRow.ownerId).toBe(newOwner.id);
+
+    const access = await requireAccountAccess(newOwner.id, account.id, "MANAGE_MEMBERS");
+    expect(access).toHaveProperty("effectiveRole", "OWNER");
+
+    await expect(requireAccountAccess(owner.id, account.id, "MANAGE_MEMBERS")).rejects.toThrow("ACCOUNT_ROLE_FORBIDDEN");
+    await expect(requireAccountAccess(owner.id, account.id, "CLOSE_ACCOUNT")).rejects.toThrow("ACCOUNT_ROLE_FORBIDDEN");
+    await expect(transferOrganizationOwnership({ actorId: owner.id, accountId: account.id, newOwnerUserId: newOwner.id })).rejects.toThrow();
   });
 });

@@ -107,7 +107,7 @@ The first sandbox-restricted Vitest execution could not reach local PostgreSQL. 
 
 ### Known authorization concern
 
-A plain `MEMBER` can currently open the account detail and see broad order, invoice, license, subscription, trial, and download information. More sensitive mutations use stronger owner/billing/license-manager checks, but visibility does not yet match a formally approved role matrix.
+Customer account detail now gates order, subscription, trial, and license visibility by the capability matrix. Plain `MEMBER` users receive limited account metadata and do not see the Order history or Subscriptions panels. Remaining authorization work is tracked in the Laguna findings and requires acceptance-level API coverage for every organization boundary route.
 
 ## Authentication and security truth
 
@@ -126,7 +126,6 @@ A plain `MEMBER` can currently open the account detail and see broad order, invo
 ### Known authentication gaps
 
 - Customer license-key reveal is repeatable while ciphertext exists.
-- Customer license reveal does not currently require recent authentication.
 - Customer sessions have no self-service session inventory equivalent to the admin security page.
 - Password reset records an administrator security event but does not send a dedicated password-changed notification.
 

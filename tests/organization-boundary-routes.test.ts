@@ -33,4 +33,26 @@ describe("customer-facing organization boundary routes", () => {
     expect(read("app/api/organizations/[id]/route.ts")).toMatch(/VIEW_PAYMENTS|VIEW_LICENSES/);
     expect(read("lib/http.ts")).toMatch(/INVITATION_EXPIRED: 410|LAST_OWNER_REQUIRED: 409/);
   });
+
+  it("does not leak invitation token hashes from account detail (F-001)", () => {
+    const source = read("app/api/organizations/[id]/route.ts");
+    expect(source).toMatch(/invitations:.*select:\s*\{[^}]*\}/);
+    expect(source).toMatch(/id:\s*true,\s*email:\s*true,\s*role:\s*true,\s*status:\s*true,\s*expiresAt:\s*true,\s*createdAt:\s*true/);
+    expect(source).not.toMatch(/\.include\s*:\s*[^}]*invitations[^}]*select:\s*\{[^}]*tokenHash/);
+    expect(read("app/api/organizations/[id]/route.ts")).not.toContain("tokenHash");
+  });
+
+  it("requires recent authentication for license reveal (F-004)", () => {
+    const source = read("app/api/licenses/[id]/reveal/route.ts");
+    expect(source).toContain("requireRecentUser");
+    expect(source).toMatch(/RECENT_AUTH_REQUIRED|requireRecentUser/);
+  });
+
+  it("requires verified email and legal acceptance for organization creation (F-003)", () => {
+    const source = read("app/api/organizations/route.ts");
+    expect(source).toContain("EMAIL_NOT_VERIFIED");
+    expect(source).toContain("assertLegalAcceptanceCurrent");
+    const reveal = read("app/api/licenses/[id]/reveal/route.ts");
+    expect(reveal).toContain("assertLegalAcceptanceCurrent");
+  });
 });
