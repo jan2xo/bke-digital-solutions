@@ -522,3 +522,18 @@ the app on ClamAV readiness, publishes no scanner port, and preserves the
 existing fail-closed CLEAN/INFECTED/FAILED semantics. Certification Compose
 continues to override the same service. VPS provisioning and production
 scanner certification remain owner/VPS actions.
+
+### Production admin mutation route audit — 2026-08-16
+
+Production evidence reported `404` for POST `/api/admin/supply-chain` and
+DELETE `/api/admin/artifacts/:id`. Source inspection and the existing build
+manifest showed both route modules are included in the standalone Next output;
+the POST path is therefore consistent with a stale production image or a
+deployment that did not rebuild from the approved checkpoint. DELETE has an
+intentional production proxy guard returning `404` while
+`ALLOW_DESTRUCTIVE_ADMIN=false`; this preserves the default destructive-admin
+safety policy and is not route packaging loss. The new
+`deployment:verify-routes` check fails clearly if either route is absent from a
+production build. The local build directory was removed by a failed ENOTEMPTY
+build cleanup and Docker API access was unavailable, so image-level verification
+remains owner/VPS execution.

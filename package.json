@@ -50,7 +50,8 @@
     "supplychain:sbom": "node scripts/generate-sbom.mjs",
     "supplychain:provenance": "node scripts/generate-provenance.mjs",
     "deployment:verify-restart": "node scripts/verify-compose-restart-policies.mjs",
-    "deployment:verify-manifest": "node scripts/verify-deployment-manifest.mjs"
+    "deployment:verify-manifest": "node scripts/verify-deployment-manifest.mjs",
+    "deployment:verify-routes": "node scripts/verify-production-routes.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",
