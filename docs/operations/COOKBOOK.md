@@ -24,6 +24,11 @@ access, and signing-key custody remain owner/provider actions.
 **New empty VPS:** follow FRESH-VPS-BOOTSTRAP, then PRODUCTION-DEPLOYMENT; stop
 on any health or migration failure.
 
+The read-only preflight is `npm run ops:validate -- .env.vps`; it validates the
+merged Compose configuration, topology, and restart policies without starting
+or changing services. After deployment, run
+`npm run ops:health -- https://production-host`.
+
 **Ship a release:** follow RELEASE-SHIPPING; never bypass readiness.
 
 **Generate release evidence:** run `npm run supplychain:evidence -- <release-version>`
@@ -34,6 +39,10 @@ For the historical expanded production-certification sequence, see the
 it is not the default operator path.
 
 **Restore:** follow DISASTER-RECOVERY and BACKUP-RESTORE using an isolated target.
+
+**Backup verification:** use the authenticated `/admin/backups` VERIFY and
+SIMULATE_RESTORE workflow; `npm run backups:create -- --dry-run` is the safe
+queue preflight. RESTORE_ISOLATED is an explicit owner-authorized mutation.
 
 **Release blocked:** inspect current payload hash and malware, SBOM, provenance,
 dependency, backup, compliance, migration, signature, and approval evidence.

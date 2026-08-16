@@ -614,3 +614,12 @@ version-controlled, transparent operation that reports hashes without making
 approval or signing decisions. Added a proposed generalized standard-upgrade
 report; the external standard was not modified in this task. Shipping
 certification remains paused.
+### 2026-08-16 — Operational automation hardening checkpoint
+
+Applied the operational reproducibility baseline from Engineering Standard
+commit `c83e38d`. Added read-only `ops:validate` and `ops:health` commands for
+production preflight and post-deploy verification, and linked them from the
+cookbook/runbooks. Mutating deployment, migration, evidence ingestion, signing,
+approval, lifecycle transition, backup restore, and publication remain explicit
+operator actions with documented safety boundaries. Dependencies certification
+remains paused.

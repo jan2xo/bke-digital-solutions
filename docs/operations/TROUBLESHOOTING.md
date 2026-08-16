@@ -11,6 +11,8 @@
 | ephemeral evidence reference | local path/filename is not proof | submit document bytes through ingestion | rejected |
 | readiness missing/stale | current payload lacks evidence | run affected evidence workflow | fail closed |
 | canonical hash mismatch | evidence belongs to old artifact set | recompute and re-ingest | fail closed |
+| deployment preflight fails | Compose/topology/restart policy mismatch | run `npm run ops:validate -- .env.vps`, correct config, and rerun | stop deployment |
+| health check fails | service or dependency is unhealthy | run `npm run ops:health -- https://production-host`, then inspect Compose health/logs | stop traffic |
 
 For compromise, payment abuse, credential exposure, or data loss, follow
 [incident response](../runbooks/incident-response.md). Do not delete volumes,

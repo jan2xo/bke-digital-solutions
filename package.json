@@ -50,6 +50,8 @@
     "supplychain:sbom": "node scripts/generate-sbom.mjs",
     "supplychain:provenance": "node scripts/generate-provenance.mjs",
     "supplychain:evidence": "node scripts/generate-release-evidence.mjs",
+    "ops:validate": "node scripts/ops-validate-production.mjs",
+    "ops:health": "node scripts/ops-health.mjs",
     "deployment:verify-restart": "node scripts/verify-compose-restart-policies.mjs",
     "deployment:verify-manifest": "node scripts/verify-deployment-manifest.mjs",
     "deployment:verify-routes": "node scripts/verify-production-routes.mjs"

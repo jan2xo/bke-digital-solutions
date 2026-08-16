@@ -6,6 +6,11 @@ Use the authenticated admin workflow for one ProductVersion. The gate is:
 → backup → compliance → signature → reviewer/separate approver → STABLE →
 private authenticated download`.
 
+The automation/read-only boundary is deliberate: `supplychain:evidence` only
+generates bytes, and `ops:health`/`ops:validate` only verify deployment state.
+Authenticated evidence ingestion, signing, reviewer approval, lifecycle
+transitions, and publication remain explicit operator/admin actions.
+
 Generate both documents reproducibly with
 `npm run supplychain:evidence -- <release-version> [output-directory]`. The
 command writes a version-scoped local evidence directory and reports the exact
