@@ -10,5 +10,6 @@ export default defineConfig({
     baseURL: "https://caddy",
     ignoreHTTPSErrors: true,
     trace: "on-first-retry",
+    launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH },
   },
 });
