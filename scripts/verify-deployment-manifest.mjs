@@ -60,7 +60,7 @@ export function verifyTopology(compose, caddyfile, dockerfile) {
   if (![...appNetworks].some((network) => caddyNetworks.has(network))) throw new Error("Proxy and application must share a network");
   if (!mountTargets(caddy.volumes).includes("/etc/caddy/Caddyfile")) throw new Error("Caddyfile must be mounted into the proxy container");
   if (!/reverse_proxy\s+app:3000\b/.test(caddyfile)) throw new Error("Caddy must reverse proxy to app:3000");
-  if (!/\$\{APP_DOMAIN\}/.test(caddyfile)) throw new Error("Caddy must configure the deployment application domain");
+  if (!/(?:\$\{APP_DOMAIN\}|\{\$APP_DOMAIN\})/.test(caddyfile)) throw new Error("Caddy must configure the deployment application domain");
   if (!dockerfile.includes("HEALTHCHECK")) throw new Error("Application image must declare a healthcheck");
   return { required, checks: ["restart-policies", "one-shot-migrations", "https-proxy", "caddy-executable", "caddy-bind-ports", "healthy-proxy-upstream", "shared-proxy-network", "healthchecks", "capability-drop", "narrow-capability-exceptions", "private-dependencies", "pid-limits", "no-new-privileges"] };
 }

@@ -623,3 +623,20 @@ cookbook/runbooks. Mutating deployment, migration, evidence ingestion, signing,
 approval, lifecycle transition, backup restore, and publication remain explicit
 operator actions with documented safety boundaries. Dependencies certification
 remains paused.
+### 2026-08-16 — Production ops validator contract correction
+
+The production VPS exposed two validator drift defects. Caddy uses the valid
+`{$APP_DOMAIN}` token form, while the verifier only accepted `${APP_DOMAIN}`.
+The health wrapper accepted `ok`/`healthy`, while the authoritative routes
+return `alive` and `ready` with all readiness dependencies required to be `up`.
+The verifier now checks those semantic contracts without changing production.
+### 2026-08-16 — Ops validator contract correction
+
+The production VPS exposed two validator drift defects. Caddy uses the valid
+`{$APP_DOMAIN}` token form while the verifier only accepted `${APP_DOMAIN}`.
+The health wrapper accepted `ok`/`healthy`, while the authoritative routes
+return `alive` and `ready` with all readiness dependencies required to be `up`.
+The validators now enforce those semantic contracts without changing
+production. The live health command could not be network-verified from this
+workspace because `jl-bke.com` was not resolvable; the production operator must
+rerun it after deploying this checkpoint.

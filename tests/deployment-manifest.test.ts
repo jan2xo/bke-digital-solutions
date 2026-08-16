@@ -19,7 +19,7 @@ const baseCompose = {
     },
   },
 };
-const caddyfile = "${APP_DOMAIN} { reverse_proxy app:3000 }";
+const caddyfile = "{$APP_DOMAIN} { reverse_proxy app:3000 }";
 const dockerfile = "HEALTHCHECK CMD node health.js";
 
 function composeWith(change: Record<string, unknown>) {
@@ -30,6 +30,10 @@ describe("deployment manifest topology verifier", () => {
   it("accepts the effective production topology", () => {
     expect(verifyTopology(baseCompose, caddyfile, dockerfile).checks).toContain("narrow-capability-exceptions");
     expect(verifyTopology(baseCompose, caddyfile, dockerfile).checks).toEqual(expect.arrayContaining(["caddy-executable", "caddy-bind-ports", "restart-policies"]));
+  });
+
+  it("accepts both supported Caddy environment-token forms", () => {
+    expect(() => verifyTopology(baseCompose, "${APP_DOMAIN} { reverse_proxy app:3000 }", dockerfile)).not.toThrow();
   });
 
   it.each([
