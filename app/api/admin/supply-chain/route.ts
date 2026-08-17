@@ -15,8 +15,16 @@ import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage"
 
 const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
+function validateEvidenceDocument(kind: string, document: Buffer) {
+  const text = document.toString("utf8");
+  if (kind === "MIGRATION" && !/database schema is up to date/i.test(text)) throw new Error("MIGRATION_EVIDENCE_NOT_CURRENT");
+  if (["SBOM", "PROVENANCE", "DEPENDENCIES"].includes(kind)) {
+    try { const parsed = JSON.parse(text); if (!parsed || typeof parsed !== "object") throw new Error("invalid"); }
+    catch { throw new Error(`${kind}_EVIDENCE_INVALID`); }
+  }
+}
 
-export async function GET() { try { await requireAdmin(); return NextResponse.json(await db.supplyChainEvidence.findMany({ include: { verificationEvidence: true, version: { include: { product: { select: { name: true } }, artifacts: { select: { name: true, sha256: true, sizeBytes: true } } } } }, orderBy: { builtAt: "desc" } })); } catch (e) { return apiError(e); } }
+export async function GET() { try { await requireAdmin(); const rows = await db.supplyChainEvidence.findMany({ include: { verificationEvidence: true, version: { include: { product: { select: { name: true } }, artifacts: { select: { name: true, sha256: true, sizeBytes: true } } } } }, orderBy: { builtAt: "desc" } }); return NextResponse.json(rows.map((row) => ({ ...row, version: { ...row.version, artifacts: row.version.artifacts.map((artifact) => ({ ...artifact, sizeBytes: artifact.sizeBytes.toString() })) } }))); } catch (e) { return apiError(e); } }
 
 export async function POST(request: Request) {
   try {
@@ -38,6 +46,7 @@ export async function POST(request: Request) {
       const documentSha256 = createHash("sha256").update(document).digest("hex");
       if (/^(?:file:|[A-Za-z]:[\\/]|\/|\.\.?\/|.*(?:^|\/)tmp(?:\/|$)|.*(?:^|\/)\.supply-chain(?:\/|$))/i.test(input.reference)) throw new Error("EVIDENCE_REFERENCE_NOT_DURABLE");
       const kind = input.action === "RECORD_SBOM" ? "SBOM" : input.action === "RECORD_PROVENANCE" ? "PROVENANCE" : input.action === "RECORD_DEPENDENCIES" ? "DEPENDENCIES" : input.action === "RECORD_BACKUP" ? "BACKUP" : input.action === "RECORD_COMPLIANCE" ? "COMPLIANCE" : "MIGRATION";
+      validateEvidenceDocument(kind, document);
       const prior = existing.verificationEvidence.find((item) => item.kind === kind && item.artifactHash === canonicalPayloadHash && item.documentSha256 === documentSha256 && item.result === "VERIFIED");
       const objectKey = prior?.documentObjectKey ?? `evidence/${existing.version.id}/${kind.toLowerCase()}/${randomUUID()}.json`;
       if (!prior) { await uploadObject(objectKey, document, "application/json"); await assertObjectExists(objectKey); }

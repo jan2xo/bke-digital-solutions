@@ -11,6 +11,14 @@ generates bytes, and `ops:health`/`ops:validate` only verify deployment state.
 Authenticated evidence ingestion, signing, reviewer approval, lifecycle
 transitions, and publication remain explicit operator/admin actions.
 
+The normal operator path is the Admin Release Readiness page at
+`/admin/releases/<version-id>`. It displays current payload-bound readiness and
+provides server-backed scan/sign actions plus evidence-document upload for
+Backup, Compliance, and Migration. The server computes the payload hash,
+verifies and durably stores document bytes, and refreshes readiness; operators
+do not need DevTools, PostgreSQL queries, or manually supplied `evidenceHash`.
+Approval remains an explicit human action and cannot be fabricated by upload.
+
 Generate both documents reproducibly with
 `npm run supplychain:evidence -- <release-version> [output-directory]`. The
 command writes a version-scoped local evidence directory and reports the exact

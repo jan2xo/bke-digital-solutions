@@ -663,3 +663,12 @@ workflow no longer depends on checkout installation state. Local audit remains
 environment-blocked when the npm registry is unavailable, so evidence must not
 be ingested as VERIFIED until all checks succeed. Production was not mutated and
 MIGRATION certification was not started.
+### 2026-08-17 — Admin release certification workflow
+
+Added the normal Release Readiness operator path at `/admin/releases/<version-id>`.
+The UI exposes existing protected scan/sign actions and server-backed upload for
+Backup, Compliance, and Migration evidence. Evidence bytes are verified and
+stored durably by the existing supply-chain API; payload binding and audit
+semantics remain server-authoritative. Approval remains an explicit human gate.
+Also fixed supply-chain GET serialization by converting ProductArtifact
+`sizeBytes` BigInt values to decimal strings. No production state was changed.

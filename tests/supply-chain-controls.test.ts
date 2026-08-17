@@ -83,8 +83,26 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain("assertObjectExists(objectKey)");
     expect(route).toContain("existing.verificationEvidence.find");
     expect(route).toContain("EVIDENCE_REFERENCE_NOT_DURABLE");
+    expect(route).toContain("validateEvidenceDocument");
+    expect(route).toContain("MIGRATION_EVIDENCE_NOT_CURRENT");
     const backup = readFileSync("lib/backups/engine.ts", "utf8");
     expect(backup).toContain("evidenceDocuments");
     expect(backup).toContain("verifyRestoredEvidenceObjects");
+  });
+
+  it("serializes supply-chain artifact BigInt fields for JSON responses without changing hashing", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain("artifact.sizeBytes.toString()");
+    expect(route).toContain("version: { ...row.version");
+    expect(readFileSync("lib/supply-chain/manifest.ts", "utf8")).toContain("sizeBytes: number");
+  });
+
+  it("exposes evidence recording from the release readiness UI", () => {
+    const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
+    const component = readFileSync("components/release-evidence-controls.tsx", "utf8");
+    expect(page).toContain("ReleaseEvidenceControls");
+    expect(component).toContain("RECORD_${kind}");
+    expect(component).toContain("documentBase64");
+    expect(component).toContain("router.refresh");
   });
 });
