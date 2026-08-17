@@ -13,4 +13,17 @@ describe("dependency evidence operations", () => {
     expect(script).toContain("sourceNodeModulesUsed: false");
     expect(script).toContain("finally");
   });
+
+  it("provides a fail-closed first-class evidence package generator", () => {
+    const script = readFileSync("scripts/generate-supply-chain-evidence.mjs", "utf8");
+    expect(readFileSync("package.json", "utf8")).toContain('"supplychain:generate"');
+    expect(script).toContain("generate-sbom.mjs");
+    expect(script).toContain("generate-provenance.mjs");
+    expect(script).toContain("generate-dependency-evidence.mjs");
+    expect(script).toContain('"prisma", "migrate", "status"');
+    expect(script).toContain("database schema is up to date");
+    expect(script).toContain("process.exitCode = 1");
+    expect(script).toContain('createHash("sha256")');
+    expect(script).not.toContain("RECORD_");
+  });
 });

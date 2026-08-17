@@ -38,6 +38,18 @@ that installed tree. It must not rely on pre-existing checkout `node_modules`.
 Do not record dependency evidence as VERIFIED unless lock consistency,
 resolution, and audit all pass.
 
+Generate the complete release evidence package with:
+
+```bash
+npm run supplychain:generate -- <version-id> [output-directory]
+```
+
+The command creates SBOM, provenance, dependency, and migration-status files
+from real repository/tool output and fails closed if required analysis or the
+target database is unavailable. It only generates local documents. Upload each
+file through the Admin Release Readiness page; it never ingests, signs,
+approves, publishes, or changes production state.
+
 ### Ingest dependency evidence (production)
 
 After generation reports `lockConsistency=PASS`, `resolution=PASS`, and

@@ -19,6 +19,20 @@ verifies and durably stores document bytes, and refreshes readiness; operators
 do not need DevTools, PostgreSQL queries, or manually supplied `evidenceHash`.
 Approval remains an explicit human action and cannot be fabricated by upload.
 
+Generate the complete local evidence package with:
+
+```bash
+npm run supplychain:generate -- <version-id> [output-directory]
+```
+
+This fail-closed command produces `sbom.cdx.json`, `provenance.json`,
+`dependencies.json`, and `migration-status.txt`. It reuses the existing
+generators, runs real dependency analysis, executes `prisma migrate status`,
+and reports exact document hashes. It never ingests evidence or changes
+readiness. Upload the generated files from the Admin Release Readiness page.
+Backup and Compliance remain independently evidence-driven; Approval remains a
+human authorization.
+
 Generate both documents reproducibly with
 `npm run supplychain:evidence -- <release-version> [output-directory]`. The
 command writes a version-scoped local evidence directory and reports the exact
