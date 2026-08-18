@@ -45,6 +45,7 @@
     "backups:worker": "NODE_OPTIONS=--conditions=react-server tsx scripts/backup-worker.ts",
     "backups:create": "NODE_OPTIONS=--conditions=react-server tsx scripts/request-backup.ts",
     "backups:certify-local": "NODE_OPTIONS=--conditions=react-server tsx scripts/certify-backup-local.ts",
+    "supplychain:backup-evidence": "NODE_OPTIONS=--conditions=react-server tsx scripts/export-backup-evidence.ts",
     "security:hygiene": "node scripts/repository-hygiene.mjs",
     "security:audit-host": "bash scripts/audit-host-security.sh",
     "supplychain:sbom": "node scripts/generate-sbom.mjs",

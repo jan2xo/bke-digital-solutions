@@ -33,6 +33,20 @@ readiness. Upload the generated files from the Admin Release Readiness page.
 Backup and Compliance remain independently evidence-driven; Approval remains a
 human authorization.
 
+For Backup certification, complete the real backup, `VERIFY`, and
+`SIMULATE_RESTORE` workflow first, then export the truthful release-bound
+document with:
+
+```bash
+npm run supplychain:backup-evidence -- <version-id> <backup-id>
+```
+
+This exporter only reads existing archive/operation/release records. It fails
+closed unless the selected archive is `VERIFIED`, has zero missing objects and
+required checksums/references, and has successful CREATE, VERIFY, and
+SIMULATE_RESTORE operations belonging to that archive. Upload the result using
+the Admin Release Readiness BACKUP control.
+
 Generate both documents reproducibly with
 `npm run supplychain:evidence -- <release-version> [output-directory]`. The
 command writes a version-scoped local evidence directory and reports the exact

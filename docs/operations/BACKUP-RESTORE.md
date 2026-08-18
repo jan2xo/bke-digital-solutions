@@ -14,3 +14,17 @@ isolation errors; never restore over production automatically.
 
 Queue commands are `npm run backups:create -- --dry-run`,
 `npm run backups:create`, and `npm run backups:worker`.
+
+After a real backup reaches `VERIFIED` and its `VERIFY` and
+`SIMULATE_RESTORE` operations both succeed, export the release-bound
+certification document without changing backup state:
+
+```bash
+npm run supplychain:backup-evidence -- <version-id> <backup-id>
+```
+
+The exporter is read-only and fails closed unless the selected archive has a
+successful CREATE, VERIFY, and SIMULATE_RESTORE history for the same backup,
+zero missing objects, required checksums/references, and `VERIFIED` archive
+status. Upload the generated file through Admin → Release Readiness → Upload
+BACKUP. It does not run or queue backup operations.

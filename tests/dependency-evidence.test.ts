@@ -26,4 +26,18 @@ describe("dependency evidence operations", () => {
     expect(script).toContain('createHash("sha256")');
     expect(script).not.toContain("RECORD_");
   });
+
+  it("provides a read-only backup certification exporter", () => {
+    const script = readFileSync("scripts/export-backup-evidence.ts", "utf8");
+    expect(readFileSync("package.json", "utf8")).toContain('"supplychain:backup-evidence"');
+    expect(script).toContain('"bke.backup-certification.v1"');
+    expect(script).toContain('operation.type === "CREATE"');
+    expect(script).toContain('operation.type === "VERIFY"');
+    expect(script).toContain('operation.type === "SIMULATE_RESTORE"');
+    expect(script).toContain("BACKUP_ARCHIVE_NOT_CERTIFIABLE");
+    expect(script).toContain("BACKUP_CREATE_NOT_SUCCEEDED");
+    expect(script).not.toContain("db.$transaction");
+    expect(script).not.toContain("RECORD_BACKUP");
+    expect(script).not.toContain("update({");
+  });
 });
