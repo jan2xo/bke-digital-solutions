@@ -60,6 +60,14 @@ after current evidence is present, and never store private keys in Git/
 PostgreSQL. Artifact mutation invalidates payload-bound evidence and requires
 affected checks again.
 
+For BACKUP certification, first complete one genuine backup followed by
+VERIFY and SIMULATE_RESTORE. Then open the target release's Admin Release
+Readiness page, select an archive whose status is `VERIFIED`, and choose
+**Certify Backup for Release**. The server reconstructs the certification
+document from persisted archive/operation facts, binds it to the current
+payload, and records durable BACKUP evidence. The CLI exporter remains a
+read-only diagnostic alternative.
+
 Generate dependency evidence with:
 
 ```bash

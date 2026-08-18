@@ -30,14 +30,35 @@ describe("dependency evidence operations", () => {
   it("provides a read-only backup certification exporter", () => {
     const script = readFileSync("scripts/export-backup-evidence.ts", "utf8");
     expect(readFileSync("package.json", "utf8")).toContain('"supplychain:backup-evidence"');
-    expect(script).toContain('"bke.backup-certification.v1"');
-    expect(script).toContain('operation.type === "CREATE"');
-    expect(script).toContain('operation.type === "VERIFY"');
-    expect(script).toContain('operation.type === "SIMULATE_RESTORE"');
-    expect(script).toContain("BACKUP_ARCHIVE_NOT_CERTIFIABLE");
-    expect(script).toContain("BACKUP_CREATE_NOT_SUCCEEDED");
+    const builder = readFileSync("lib/supply-chain/backup-certification.ts", "utf8");
+    expect(builder).toContain('"bke.backup-certification.v1"');
+    expect(builder).toContain('operation.type === "CREATE"');
+    expect(builder).toContain('operation.type === "VERIFY"');
+    expect(builder).toContain('operation.type === "SIMULATE_RESTORE"');
+    expect(builder).toContain("BACKUP_ARCHIVE_NOT_CERTIFIABLE");
+    expect(builder).toContain("BACKUP_CREATE_NOT_SUCCEEDED");
     expect(script).not.toContain("db.$transaction");
     expect(script).not.toContain("RECORD_BACKUP");
     expect(script).not.toContain("update({");
+  });
+
+  it("provides an Admin-native server-authoritative backup certification path", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    const builder = readFileSync("lib/supply-chain/backup-certification.ts", "utf8");
+    const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
+    const controls = readFileSync("components/release-evidence-controls.tsx", "utf8");
+    expect(route).toContain('"CERTIFY_BACKUP"');
+    expect(route).toContain("buildBackupCertificationDocument");
+    expect(route).toContain("SUPPLY_CHAIN_BACKUP_RECORDED");
+    expect(builder).toContain('archive.status !== "VERIFIED"');
+    expect(builder).toContain("missingObjectCount !== 0");
+    expect(builder).toContain('operation.type === "CREATE"');
+    expect(builder).toContain('operation.type === "VERIFY"');
+    expect(builder).toContain('operation.type === "SIMULATE_RESTORE"');
+    expect(builder).toContain("manifestHash(canonicalizeManifest(buildReleaseManifest");
+    expect(controls).toContain('action: "CERTIFY_BACKUP"');
+    expect(controls).toContain("backupOptions");
+    expect(page).toContain("backupArchive.findMany");
+    expect(page).toContain('status: "VERIFIED"');
   });
 });

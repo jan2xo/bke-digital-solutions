@@ -15,6 +15,15 @@ isolation errors; never restore over production automatically.
 Queue commands are `npm run backups:create -- --dry-run`,
 `npm run backups:create`, and `npm run backups:worker`.
 
+For release certification, the normal Admin-native path is: queue one genuine
+backup through the backup-worker, run VERIFY and SIMULATE_RESTORE from
+`/admin/backups`, then open the target release's Release Readiness page, select
+an archive whose status is VERIFIED, and choose **Certify Backup for Release**.
+The server rebuilds the certification document from persisted archive and
+operation facts, binds it to the current release payload, and records durable
+BACKUP evidence. The CLI exporter below remains a read-only diagnostic/export
+alternative; it is not required for the Admin workflow.
+
 After a real backup reaches `VERIFIED` and its `VERIFY` and
 `SIMULATE_RESTORE` operations both succeed, export the release-bound
 certification document without changing backup state:

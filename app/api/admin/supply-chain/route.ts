@@ -12,8 +12,9 @@ import { resolveTrustedSupplyChainKey } from "@/lib/supply-chain/keyring";
 import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage";
+import { buildBackupCertificationDocument } from "@/lib/supply-chain/backup-certification";
 
-const schema = z.object({ versionId: z.string().min(1), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
+const schema = z.object({ versionId: z.string().min(1), backupId: z.string().min(1).optional(), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "CERTIFY_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
 function validateEvidenceDocument(kind: string, document: Buffer) {
   const text = document.toString("utf8");
@@ -33,6 +34,22 @@ export async function POST(request: Request) {
     const input = schema.parse(await request.json());
     const existing = await db.supplyChainEvidence.findUnique({ where: { versionId: input.versionId }, include: { version: { include: { product: true, artifacts: true } }, verificationEvidence: true } });
     if (!existing) throw new Error("NOT_FOUND");
+    if (input.action === "CERTIFY_BACKUP") {
+      if (!input.backupId) throw new Error("BACKUP_ID_REQUIRED");
+      const archive = await db.backupArchive.findUnique({ where: { id: input.backupId }, include: { operations: { orderBy: { createdAt: "asc" } } } });
+      const generated = buildBackupCertificationDocument(existing.version, archive);
+      const prior = existing.verificationEvidence.find((item) => item.kind === "BACKUP" && item.artifactHash === generated.payloadBinding && item.documentSha256 === generated.documentSha256 && item.result === "VERIFIED");
+      const objectKey = prior?.documentObjectKey ?? `evidence/${existing.version.id}/backup/${randomUUID()}.json`;
+      if (!prior) { await uploadObject(objectKey, Buffer.from(generated.serialized), "application/json"); await assertObjectExists(objectKey); }
+      await db.$transaction(async (tx) => {
+        const metadata = { payloadHash: generated.payloadBinding, documentSha256: generated.documentSha256, backupId: input.backupId };
+        if (prior) await tx.supplyChainVerificationEvidence.update({ where: { id: prior.id }, data: { reference: objectKey, documentObjectKey: objectKey, documentSha256: generated.documentSha256, metadata, result: "VERIFIED", failureReason: null } });
+        else await tx.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "BACKUP", artifactHash: generated.payloadBinding, result: "VERIFIED", reference: objectKey, documentObjectKey: objectKey, documentSha256: generated.documentSha256, metadata } });
+        await tx.productVersion.update({ where: { id: existing.version.id }, data: { backupEvidence: objectKey } });
+        await tx.auditLog.create({ data: { actorId: admin.id, action: "SUPPLY_CHAIN_BACKUP_RECORDED", targetType: "SupplyChainEvidence", targetId: existing.id, metadata } });
+      });
+      return NextResponse.json({ ok: true, status: "VERIFIED", kind: "BACKUP", payloadHash: generated.payloadBinding });
+    }
     const signedManifest = buildReleaseManifest({ productId: existing.version.productId, productSlug: existing.version.product.slug, versionId: existing.version.id, version: existing.version.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: existing.version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });
     const canonicalPayloadHash = manifestHash(canonicalizeManifest(signedManifest));
     if (["RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION"].includes(input.action ?? "")) {
