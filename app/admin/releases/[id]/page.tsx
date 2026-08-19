@@ -10,9 +10,10 @@ import { complianceLegalReferencesCurrent, isCommercialComplianceEvidence } from
 
 export default async function ReleaseDetail({ params }: { params: Promise<{ id: string }> }) {
   const versionId = (await params).id;
-  const [version, backups] = await Promise.all([
+  const [version, backups, pendingComplianceCount] = await Promise.all([
     db.productVersion.findUnique({ where: { id: versionId }, include: { product: { include: { editions: { include: { purchasePlans: { where: { active: true }, select: { type: true } } } } } }, artifacts: true, approvals: { orderBy: { createdAt: "desc" }, take: 50 }, supplyChainEvidence: { include: { verificationEvidence: true } } } }),
     db.backupArchive.findMany({ where: { status: "VERIFIED" }, select: { id: true, verifiedAt: true }, orderBy: { verifiedAt: "desc" }, take: 25 }),
+    db.complianceRequirement.count({ where: { status: { not: "IMPLEMENTED" } } }),
   ]);
   if (!version) notFound();
   const requiredTypes = [...REGISTRATION_LEGAL_TYPES, ...CHECKOUT_LEGAL_TYPES, ...(version.product.editions.some((edition) => edition.purchasePlans.some((plan) => plan.type === "MONTHLY" || plan.type === "ANNUAL")) ? SUBSCRIPTION_LEGAL_TYPES : [])];
@@ -21,7 +22,7 @@ export default async function ReleaseDetail({ params }: { params: Promise<{ id: 
   const payloadHash = releaseReadiness(version).payloadHash;
   const complianceEvidence = version.supplyChainEvidence?.verificationEvidence.find((item) => isCommercialComplianceEvidence(item, version.id, payloadHash));
   const complianceCurrent = legalDocuments.length === new Set(requiredTypes).size && !!complianceEvidence && complianceLegalReferencesCurrent(complianceEvidence.metadata, currentLegal);
-  const readiness = releaseReadiness(version, { complianceCurrent });
+  const readiness = releaseReadiness(version, { complianceCurrent, pendingComplianceCount });
   const objectiveReady = readiness.items.filter((item) => item.key !== "approval").every((item) => item.status === "PASS");
   const currentApproval = version.approvals.find((approval) => approval.payloadHash === readiness.payloadHash);
   const blocked = readiness.items.filter((item) => item.status !== "PASS" && ["sbom", "provenance", "dependencies", "backup", "compliance", "migration"].includes(item.key)).map((item) => item.key.toUpperCase() as "SBOM" | "PROVENANCE" | "DEPENDENCIES" | "BACKUP" | "COMPLIANCE" | "MIGRATION");

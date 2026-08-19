@@ -32,4 +32,9 @@ describe("repository release gate", () => {
     expect(result.ready).toBe(false);
     expect(result.failures).toContain("approval");
   });
+
+  it("treats supply-chain safety and compliance-register state as explicit gates", () => {
+    const result = evaluateReleaseGate({ ...complete, supplyChainSafe: false });
+    expect(result.failures).toContain("supplyChainSafe");
+  });
 });
