@@ -34,6 +34,15 @@ reviewer identities, and complete required assertions. `MOCK` evidence is
 retained for testing but never satisfies commercial readiness. The server
 validates structure, binding, and classification, not the legal merits.
 
+For the normal Admin-native commercial workflow, open `/admin/releases/<version-id>`,
+enter the reviewer identity, role, and review scope, acknowledge the required
+assertions, and select **Certify Compliance**. The server resolves the active
+published legal-document versions, computes the current payload hash, stores the
+validated document in private object storage, and records an audit event. This is
+an explicit human attestation; it is not legal advice or an automatic legal
+approval. A later legal-version or artifact change makes the prior evidence
+ineligible until recertified.
+
 Generate the complete local evidence package with:
 
 ```bash

@@ -672,3 +672,14 @@ stored durably by the existing supply-chain API; payload binding and audit
 semantics remain server-authoritative. Approval remains an explicit human gate.
 Also fixed supply-chain GET serialization by converting ProductArtifact
 `sizeBytes` BigInt values to decimal strings. No production state was changed.
+
+### 2026-08-19 — Admin-native commercial compliance certification
+
+Added a protected **Certify Compliance** action to Release Readiness. It requires
+recent administrator authentication, same-origin and rate-limit protections, an
+explicit reviewer identity/role/scope and acknowledgement, then server-resolves
+the current published legal versions and current canonical payload before writing
+structured `bke.compliance-certification.v1` evidence to private durable storage.
+Legacy opaque and MOCK evidence remain historical and cannot satisfy commercial
+readiness, approval, promotion, or publication. Legal-version and artifact
+changes make prior evidence stale; no production state was changed.

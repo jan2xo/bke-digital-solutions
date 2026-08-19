@@ -392,3 +392,9 @@ RM7H implementation adds source-predecessor transfer lifecycle, material refresh
 comparison, bounded prepared-renewal recovery, immutable rotation replay checks,
 and atomic rotation audit evidence. Runtime retry certification remains pending
 where full database/browser evidence is unavailable.
+
+# Current truth
+
+Admin-native commercial compliance certification is implemented with explicit
+human attestation, current legal-version binding, and current release-payload
+binding. Legacy and MOCK evidence remain in history but are not commercial proof.

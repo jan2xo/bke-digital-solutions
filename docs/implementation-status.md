@@ -315,3 +315,10 @@ preserved the password and role; recorded sanitized operator/reason evidence;
 and forced fresh MFA enrollment. Unknown-admin rejection and repository
 validation passed. The command is deployment-only and is not an authentication
 bypass.
+
+# Compliance certification update
+
+Release Readiness now provides a protected Admin-native commercial compliance
+attestation workflow. Evidence is server-generated from current published legal
+versions and the current canonical payload; legacy and MOCK evidence cannot pass
+commercial readiness.

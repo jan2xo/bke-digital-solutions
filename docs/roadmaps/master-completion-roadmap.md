@@ -107,3 +107,8 @@ PASS — deployment-only emergency MFA reset certified against disposable
 certification data. State invalidation, password/role preservation, sanitized
 operator audit evidence, unknown-target rejection, and forced re-enrollment
 were verified. No public bypass or `ALLOW_BREAK_GLASS` reuse was introduced.
+
+# Compliance certification milestone
+
+Admin-native commercial compliance certification is complete at repository level,
+with explicit reviewer attestation and server-side legal/payload binding.

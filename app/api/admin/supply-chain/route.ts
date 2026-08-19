@@ -14,8 +14,9 @@ import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/
 import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage";
 import { buildBackupCertificationDocument } from "@/lib/supply-chain/backup-certification";
 import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
+import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
 
-const schema = z.object({ versionId: z.string().min(1), backupId: z.string().min(1).optional(), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "CERTIFY_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional() });
+const schema = z.object({ versionId: z.string().min(1), backupId: z.string().min(1).optional(), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "CERTIFY_BACKUP", "CERTIFY_COMPLIANCE", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional(), reviewerIdentity: z.string().trim().min(1).max(200).optional(), reviewerRole: z.string().trim().min(1).max(120).optional(), scope: z.string().trim().min(1).max(2000).optional(), attestation: z.literal(true).optional(), notes: z.string().trim().max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
 function validateEvidenceDocument(kind: string, document: Buffer) {
   const text = document.toString("utf8");
@@ -53,6 +54,29 @@ export async function POST(request: Request) {
     }
     const signedManifest = buildReleaseManifest({ productId: existing.version.productId, productSlug: existing.version.product.slug, versionId: existing.version.id, version: existing.version.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: existing.version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });
     const canonicalPayloadHash = manifestHash(canonicalizeManifest(signedManifest));
+    if (input.action === "CERTIFY_COMPLIANCE") {
+      if (!input.reviewerIdentity || !input.reviewerRole || !input.scope || input.attestation !== true) throw new Error("COMPLIANCE_ATTESTATION_REQUIRED");
+      const product = await db.product.findUnique({ where: { id: existing.version.productId }, include: { editions: { include: { purchasePlans: { where: { active: true }, select: { type: true } } } } } });
+      if (!product) throw new Error("NOT_FOUND");
+      const requiredTypes = [...REGISTRATION_LEGAL_TYPES, ...CHECKOUT_LEGAL_TYPES, ...(product.editions.some((edition) => edition.purchasePlans.some((plan) => plan.type === "MONTHLY" || plan.type === "ANNUAL")) ? SUBSCRIPTION_LEGAL_TYPES : [])];
+      const legalDocuments = await db.legalDocument.findMany({ where: { status: "ACTIVE", documentType: { in: requiredTypes }, currentPublishedVersionId: { not: null } }, include: { currentPublishedVersion: true } });
+      if (legalDocuments.length !== new Set(requiredTypes).size || legalDocuments.some((document) => !document.currentPublishedVersion || document.currentPublishedVersion.status !== "PUBLISHED")) throw new Error("COMPLIANCE_LEGAL_DOCUMENTS_UNAVAILABLE");
+      const evidence = { format: "bke.compliance-certification.v1", classification: "COMMERCIAL", versionId: existing.version.id, releaseVersion: existing.version.version, payloadHash: canonicalPayloadHash, scope: input.scope, legalDocuments: legalDocuments.map((document) => ({ type: document.documentType, versionId: document.currentPublishedVersion!.id, contentHash: document.currentPublishedVersion!.contentHash })), assertions: { legalReviewed: true, privacyReviewed: true, taxReviewed: true, retentionDecided: true }, reviewers: [{ role: input.reviewerRole, identity: input.reviewerIdentity }], certifyingAdmin: { id: admin.id }, notes: input.notes ?? null, certifiedAt: new Date().toISOString() };
+      const serialized = JSON.stringify(evidence, null, 2) + "\n";
+      const documentSha256 = createHash("sha256").update(serialized).digest("hex");
+      const prior = existing.verificationEvidence.find((item) => item.kind === "COMPLIANCE" && item.result === "VERIFIED" && item.artifactHash === canonicalPayloadHash && typeof item.metadata === "object" && item.metadata && (item.metadata as { reviewerIdentity?: string }).reviewerIdentity === input.reviewerIdentity && (item.metadata as { reviewerRole?: string }).reviewerRole === input.reviewerRole && (item.metadata as { scope?: string }).scope === input.scope);
+      const objectKey = prior?.documentObjectKey ?? `evidence/${existing.version.id}/compliance/${randomUUID()}.json`;
+      if (!prior) { await uploadObject(objectKey, Buffer.from(serialized), "application/json"); await assertObjectExists(objectKey); }
+      const validated = validateComplianceCertification(Buffer.from(serialized), existing.version.id, canonicalPayloadHash);
+      await db.$transaction(async (tx) => {
+        const metadata = { ...validated, documentObjectKey: objectKey, documentSha256, reviewerIdentity: input.reviewerIdentity, reviewerRole: input.reviewerRole, scope: input.scope };
+        if (prior) await tx.supplyChainVerificationEvidence.update({ where: { id: prior.id }, data: { documentObjectKey: objectKey, documentSha256, metadata, result: "VERIFIED" } });
+        else await tx.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "COMPLIANCE", artifactHash: canonicalPayloadHash, result: "VERIFIED", reference: objectKey, documentObjectKey: objectKey, documentSha256, metadata } });
+        await tx.productVersion.update({ where: { id: existing.version.id }, data: { complianceEvidence: objectKey } });
+        await tx.auditLog.create({ data: { actorId: admin.id, action: "SUPPLY_CHAIN_COMPLIANCE_CERTIFIED", targetType: "SupplyChainEvidence", targetId: existing.id, metadata: { payloadHash: canonicalPayloadHash, reviewerIdentity: input.reviewerIdentity, reviewerRole: input.reviewerRole, scope: input.scope, legalVersionIds: validated.legalDocuments.map((item) => item.versionId) } } });
+      });
+      return NextResponse.json({ ok: true, status: "VERIFIED", kind: "COMPLIANCE", payloadHash: canonicalPayloadHash, legalVersionCount: validated.legalDocuments.length });
+    }
     if (["RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION"].includes(input.action ?? "")) {
       if (!input.reference) throw new Error("EVIDENCE_REFERENCE_REQUIRED");
       if (!input.documentBase64) throw new Error("EVIDENCE_DOCUMENT_REQUIRED");
@@ -67,8 +91,8 @@ export async function POST(request: Request) {
       validateEvidenceDocument(kind, document);
       const compliance = kind === "COMPLIANCE" ? validateComplianceCertification(document, existing.version.id, canonicalPayloadHash) : null;
       if (compliance?.classification === "COMMERCIAL") {
-        const legalVersions = await db.legalDocumentVersion.findMany({ where: { id: { in: compliance.legalDocuments.map((item) => item.versionId) }, status: "PUBLISHED" }, select: { id: true, contentHash: true } });
-        if (legalVersions.length !== compliance.legalDocuments.length || compliance.legalDocuments.some((item) => !legalVersions.some((version) => version.id === item.versionId && version.contentHash === item.contentHash))) throw new Error("COMPLIANCE_LEGAL_REFERENCE_INVALID");
+        const legalVersions = await db.legalDocumentVersion.findMany({ where: { id: { in: compliance.legalDocuments.map((item) => item.versionId) }, status: "PUBLISHED" }, include: { currentForDocument: { select: { currentPublishedVersionId: true, documentType: true } } } });
+        if (legalVersions.length !== compliance.legalDocuments.length || compliance.legalDocuments.some((item) => !legalVersions.some((version) => version.id === item.versionId && version.contentHash === item.contentHash && version.currentForDocument?.currentPublishedVersionId === version.id && version.currentForDocument.documentType === item.type))) throw new Error("COMPLIANCE_LEGAL_REFERENCE_INVALID");
       }
       const evidenceResult = compliance?.classification === "MOCK" ? "MOCK" : "VERIFIED";
       const prior = existing.verificationEvidence.find((item) => item.kind === kind && item.artifactHash === canonicalPayloadHash && item.documentSha256 === documentSha256 && item.result === "VERIFIED");

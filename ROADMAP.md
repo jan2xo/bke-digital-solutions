@@ -679,3 +679,9 @@ Current work corrects durable lease lifecycle progression, prevents break-glass
 from bypassing integrity evidence, and separates supply-chain signer identity
 from commercial licensing keys. Status: committed; static verification passes,
 while database, Docker, and browser execution remains environment-dependent.
+
+# Current shipping control note
+
+Commercial compliance certification is now available from the Admin Release
+Readiness page. It requires explicit reviewer attestation; the server binds the
+structured evidence to the current payload and currently published legal versions.
