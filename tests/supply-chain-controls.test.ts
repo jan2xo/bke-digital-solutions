@@ -117,6 +117,8 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Review Release");
     expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Approve Release");
     expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Publish Release");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("body={{ approve: true, published: true }}");
+    expect(route).toContain("input.lifecycle !== current.lifecycle");
   });
 
   it("requires structured compliance certification and preserves mock classification", () => {

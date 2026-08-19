@@ -29,7 +29,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (input.approve && !input.reviewed && !payloadApproval?.reviewedAt) throw new Error("RELEASE_REVIEW_REQUIRED");
     if (input.lifecycle || input.published === true) {
       const from = stages.indexOf(current.lifecycle as typeof stages[number]); const to = stages.indexOf((input.lifecycle ?? current.lifecycle) as typeof stages[number]);
-      if (input.lifecycle && to !== from + 1 && !(input.lifecycle === "DEPRECATED" && from >= stages.indexOf("STABLE")) && !(input.lifecycle === "ARCHIVED" && current.lifecycle === "DEPRECATED")) throw new Error("INVALID_RELEASE_TRANSITION");
+      if (input.lifecycle && input.lifecycle !== current.lifecycle && to !== from + 1 && !(input.lifecycle === "DEPRECATED" && from >= stages.indexOf("STABLE")) && !(input.lifecycle === "ARCHIVED" && current.lifecycle === "DEPRECATED")) throw new Error("INVALID_RELEASE_TRANSITION");
       if (to >= stages.indexOf("STABLE")) {
         if (!input.approve) throw new Error("RELEASE_APPROVAL_REQUIRED");
         const evidence = current.supplyChainEvidence;
