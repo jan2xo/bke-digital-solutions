@@ -30,7 +30,7 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
 
   it("validates the exact signed lease envelope and strict payload", async () => {
     const { leaseEnvelopeSchema, leasePayloadSchema, parseLeaseEnvelope } = await import("@/lib/licensing/cloud-agent-contract");
-    const payload = JSON.stringify({ lease_id: "l1", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519", revoked: false, superseded_by: null });
+    const payload = JSON.stringify({ license_id: "lic-1", lease_id: "l1", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519", revoked: false, superseded_by: null });
     const envelope = { payload, signature: "sig", key_id: "k1", algorithm: "Ed25519" };
     expect(parseLeaseEnvelope(envelope)).toEqual(envelope);
     expect(() => leaseEnvelopeSchema.parse({ ...envelope, authorization: { allowed: true } })).toThrow();
@@ -39,8 +39,8 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
 
   it("enforces the versioned cloud boundary and lifecycle request rules", async () => {
     const { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, cloudAgentRequestSchema, validateLifecycleRequest, CloudAgentProtocolError } = await import("@/lib/licensing/cloud-agent-contract");
-    expect(CLOUD_AGENT_PROTOCOL_VERSION).toBe("bke.licensing.v1");
-    expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v2" } }))).toThrow("UNSUPPORTED_PROTOCOL_VERSION");
+    expect(CLOUD_AGENT_PROTOCOL_VERSION).toBe("bke.licensing.v2");
+    expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v3" } }))).toThrow("UNSUPPORTED_PROTOCOL_VERSION");
     const request = cloudAgentRequestSchema.parse({ licenseKey: "BKE-" + "A".repeat(40), installationId: "i".repeat(32), deviceId: "d".repeat(16), operationId: "operation-1", action: "TRANSFER", predecessorLeaseId: "lease-1" });
     expect(() => validateLifecycleRequest(request)).not.toThrow();
     expect(() => validateLifecycleRequest({ ...request, predecessorLeaseId: undefined })).toThrowError(CloudAgentProtocolError);
@@ -48,7 +48,7 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
 
   it("self-verifies newly issued signed leases", async () => {
     const { issueSignedLease, verifySignedLease } = await import("@/lib/licensing-agent");
-    const payload = { lease_id: "l-self", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519" as const, revoked: false, superseded_by: null };
+    const payload = { license_id: "license-self", lease_id: "l-self", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519" as const, revoked: false, superseded_by: null };
     const lease = issueSignedLease(payload);
     expect(verifySignedLease(lease)).toBe(true);
     expect(verifySignedLease({ ...lease, payload: lease.payload.replace("l-self", "l-other") })).toBe(false);

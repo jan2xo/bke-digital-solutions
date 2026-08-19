@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /** Digital Solutions-owned wire types. Runtime verification remains Agent-owned. */
-export const CLOUD_AGENT_PROTOCOL_VERSION = "bke.licensing.v1" as const;
+export const CLOUD_AGENT_PROTOCOL_VERSION = "bke.licensing.v2" as const;
 export const CLOUD_AGENT_PROTOCOL_HEADER = "x-bke-licensing-version" as const;
 
 export class CloudAgentProtocolError extends Error {
@@ -17,7 +17,7 @@ export function requireCloudAgentVersion(request: Request): void {
 }
 
 export const leasePayloadSchema = z.object({
-  lease_id: z.string().min(1), generation: z.number().int().positive(), server_revision: z.number().int().positive(),
+  license_id: z.string().min(1), lease_id: z.string().min(1), generation: z.number().int().positive(), server_revision: z.number().int().positive(),
   product_id: z.string().min(1), installation_id: z.string().min(1), device_id: z.string().min(1), version: z.string().min(1),
   issuer: z.string().min(1), issued_at: z.string().datetime(), not_before: z.string().datetime(), expires_at: z.string().datetime(),
   key_id: z.string().min(1), algorithm: z.literal("Ed25519"), revoked: z.boolean(), superseded_by: z.string().min(1).nullable(),
