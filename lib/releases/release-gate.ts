@@ -32,7 +32,7 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
     backup: input.backupEvidencePresent,
     compliance: input.complianceEvidencePresent && input.pendingComplianceCount === 0,
     migration: input.migrationEvidencePresent,
-    approvalSeparation: Boolean(input.breakGlassAllowed || (input.reviewedById && input.reviewedById !== input.approvingAdminId && input.priorCreatedById !== input.approvingAdminId)),
+    approval: Boolean(input.reviewedById),
     supplyChainSafe: input.supplyChainSafe ?? true,
   };
   const failures = Object.entries(checks).filter(([, passed]) => !passed).map(([name]) => name);

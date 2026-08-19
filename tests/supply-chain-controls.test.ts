@@ -112,7 +112,7 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain("RELEASE_PUBLICATION_REQUIRES_STABLE");
     expect(route).toContain("admin-release-lifecycle:");
     expect(route).toContain("payloadHash");
-    expect(route).toContain("RELEASE_SEPARATION_REQUIRED");
+    expect(route).toContain("RELEASE_REVIEW_REQUIRED");
   });
 
   it("requires structured compliance certification and preserves mock classification", () => {

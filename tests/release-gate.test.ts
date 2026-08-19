@@ -22,14 +22,14 @@ describe("repository release gate", () => {
     expect(result.failures).toEqual(expect.arrayContaining(["malware", "sbom", "compliance"]));
   });
 
-  it("enforces reviewer and approver separation", () => {
+  it("allows the sole owner to review and approve", () => {
     const result = evaluateReleaseGate({ ...complete, reviewedById: "approver" });
-    expect(result.ready).toBe(false);
-    expect(result.failures).toContain("approvalSeparation");
+    expect(result.ready).toBe(true);
   });
 
-  it("allows explicitly configured break-glass evidence", () => {
+  it("does not bypass missing owner approval with break-glass configuration", () => {
     const result = evaluateReleaseGate({ ...complete, reviewedById: null, priorCreatedById: null, breakGlassAllowed: true });
-    expect(result.ready).toBe(true);
+    expect(result.ready).toBe(false);
+    expect(result.failures).toContain("approval");
   });
 });

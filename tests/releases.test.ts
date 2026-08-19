@@ -54,11 +54,11 @@ describe("customer release eligibility", () => {
     expect(readiness.items.filter((item) => item.key === "sbom" || item.key === "provenance").every((item) => item.status === "BLOCKED")).toBe(true);
   });
 
-  it("accepts only a separated review and approval for the current payload", () => {
+  it("accepts owner review and approval for the current payload", () => {
     const payloadHash = "a".repeat(64);
     const valid = currentApproval([{ payloadHash, createdById: "reviewer", reviewedById: "reviewer", reviewedAt: new Date(), approvedById: "approver", approvedAt: new Date() }], payloadHash);
     expect(valid.valid).toBe(true);
-    expect(currentApproval([{ payloadHash, createdById: "reviewer", reviewedById: "reviewer", reviewedAt: new Date(), approvedById: "reviewer", approvedAt: new Date() }], payloadHash).valid).toBe(false);
+    expect(currentApproval([{ payloadHash, createdById: "owner", reviewedById: "owner", reviewedAt: new Date(), approvedById: "owner", approvedAt: new Date() }], payloadHash).valid).toBe(true);
     expect(currentApproval([{ payloadHash: "b".repeat(64), createdById: "reviewer", reviewedById: "reviewer", reviewedAt: new Date(), approvedById: "approver", approvedAt: new Date() }], payloadHash).valid).toBe(false);
   });
 

@@ -7,9 +7,8 @@ export type ApprovalRecord = {
   createdById?: string;
 };
 
-export function currentApproval(approvals: ApprovalRecord[], payloadHash: string, approvingAdminId?: string, breakGlass = false) {
+export function currentApproval(approvals: ApprovalRecord[], payloadHash: string) {
   const current = approvals.find((approval) => approval.payloadHash === payloadHash && approval.reviewedById && approval.approvedById && approval.reviewedAt && approval.approvedAt);
   if (!current) return { valid: false, approval: undefined };
-  const separated = current.reviewedById !== current.approvedById && current.reviewedById !== approvingAdminId;
-  return { valid: separated || breakGlass, approval: current };
+  return { valid: true, approval: current };
 }

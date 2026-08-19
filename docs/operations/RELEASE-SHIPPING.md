@@ -19,6 +19,14 @@ verifies and durably stores document bytes, and refreshes readiness; operators
 do not need DevTools, PostgreSQL queries, or manually supplied `evidenceHash`.
 Approval remains an explicit human action and cannot be fabricated by upload.
 
+BKE Digital Solutions 1.0 operates under a sole-owner authority model. The
+authenticated owner/admin may review and approve the same release; a second
+administrator is not required. This authority satisfies only the human Approval
+gate. All machine-enforced readiness, payload, legal-version, malware, signing,
+and supply-chain controls remain mandatory and are independently revalidated at
+promotion and publication. Multi-authority separation is future governance work,
+not a current launch prerequisite.
+
 Approval and publication are payload-bound. A reviewer records review for the
 current canonical payload, then a different recent-authenticated administrator
 records approval for that same payload. Historical approvals without a payload
