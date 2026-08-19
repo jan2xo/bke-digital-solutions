@@ -66,12 +66,16 @@ export async function POST(request: Request) {
       const kind = input.action === "RECORD_SBOM" ? "SBOM" : input.action === "RECORD_PROVENANCE" ? "PROVENANCE" : input.action === "RECORD_DEPENDENCIES" ? "DEPENDENCIES" : input.action === "RECORD_BACKUP" ? "BACKUP" : input.action === "RECORD_COMPLIANCE" ? "COMPLIANCE" : "MIGRATION";
       validateEvidenceDocument(kind, document);
       const compliance = kind === "COMPLIANCE" ? validateComplianceCertification(document, existing.version.id, canonicalPayloadHash) : null;
+      if (compliance?.classification === "COMMERCIAL") {
+        const legalVersions = await db.legalDocumentVersion.findMany({ where: { id: { in: compliance.legalDocuments.map((item) => item.versionId) }, status: "PUBLISHED" }, select: { id: true, contentHash: true } });
+        if (legalVersions.length !== compliance.legalDocuments.length || compliance.legalDocuments.some((item) => !legalVersions.some((version) => version.id === item.versionId && version.contentHash === item.contentHash))) throw new Error("COMPLIANCE_LEGAL_REFERENCE_INVALID");
+      }
       const evidenceResult = compliance?.classification === "MOCK" ? "MOCK" : "VERIFIED";
       const prior = existing.verificationEvidence.find((item) => item.kind === kind && item.artifactHash === canonicalPayloadHash && item.documentSha256 === documentSha256 && item.result === "VERIFIED");
       const objectKey = prior?.documentObjectKey ?? `evidence/${existing.version.id}/${kind.toLowerCase()}/${randomUUID()}.json`;
       if (!prior) { await uploadObject(objectKey, document, "application/json"); await assertObjectExists(objectKey); }
       await db.$transaction(async (tx) => {
-        const metadata = { reference: input.reference, payloadHash: canonicalPayloadHash, documentSha256, classification: compliance?.classification ?? "STANDARD" };
+        const metadata = { reference: input.reference, documentSha256, ...(compliance ?? { classification: "STANDARD" }), payloadHash: canonicalPayloadHash };
         if (prior) await tx.supplyChainVerificationEvidence.update({ where: { id: prior.id }, data: { result: evidenceResult, reference: input.reference, failureReason: null, metadata, documentObjectKey: objectKey, documentSha256 } });
         else await tx.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind, artifactHash: canonicalPayloadHash, result: evidenceResult, reference: input.reference, documentObjectKey: objectKey, documentSha256, metadata: { ...metadata, classification: compliance?.classification ?? "STANDARD" } } });
         await tx.supplyChainEvidence.update({ where: { id: existing.id }, data: kind === "SBOM" ? { sbomReference: input.reference } : kind === "PROVENANCE" ? { provenanceStatus: "VERIFIED" } : kind === "DEPENDENCIES" ? { dependencyVerified: true } : {} });

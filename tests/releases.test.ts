@@ -3,7 +3,7 @@ import { vi } from "vitest";
 import { isCustomerReleaseEligible } from "@/lib/releases/eligibility";
 import { releaseReadiness } from "@/lib/supply-chain/readiness";
 import { currentApproval } from "@/lib/releases/approval";
-import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
+import { isCommercialComplianceEvidence, validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 
 vi.mock("@/lib/env", () => ({ env: { SUPPLY_CHAIN_SIGNING_KEY_ID: "supply-test" } }));
 
@@ -68,5 +68,13 @@ describe("customer release eligibility", () => {
     expect(() => validateComplianceCertification(Buffer.from("not-json"), "version-1", payloadHash)).toThrow("COMPLIANCE_EVIDENCE_INVALID");
     expect(() => validateComplianceCertification(Buffer.from(JSON.stringify({ ...base, classification: "MOCK" })), "version-1", payloadHash)).not.toThrow();
     expect(validateComplianceCertification(Buffer.from(JSON.stringify({ ...base, classification: "COMMERCIAL" })), "version-1", payloadHash).classification).toBe("COMMERCIAL");
+    expect(isCommercialComplianceEvidence({ kind: "COMPLIANCE", result: "VERIFIED", artifactHash: payloadHash, metadata: { ...base, classification: "MOCK" } }, "version-1", payloadHash)).toBe(false);
+    expect(isCommercialComplianceEvidence({ kind: "COMPLIANCE", result: "VERIFIED", artifactHash: payloadHash, metadata: { ...base, classification: "COMMERCIAL" } }, "version-1", payloadHash)).toBe(true);
+    expect(isCommercialComplianceEvidence({ kind: "COMPLIANCE", result: "VERIFIED", artifactHash: payloadHash, metadata: { reference: "Codex Image Aug 18, 2026, 03_53_39 PM.png" } }, "version-1", payloadHash)).toBe(false);
+  });
+
+  it("does not let legacy current-hash compliance rows satisfy readiness", () => {
+    const version = { id: "version-legacy", productId: "product-1", version: "1.0.0", product: { slug: "product" }, artifacts: [{ id: "artifact-1", objectKey: "artifacts/a.bin", sha256: "a".repeat(64), sizeBytes: 1n, contentType: "application/octet-stream" }], supplyChainEvidence: { signatureVerified: false, signatureKeyId: null, sbomReference: null, provenanceStatus: "RECORDED", dependencyVerified: false, malwareStatus: "PENDING_SCAN", verificationEvidence: [{ kind: "COMPLIANCE", result: "VERIFIED", artifactHash: "0".repeat(64), metadata: { reference: "Codex Image Aug 18, 2026, 03_53_39 PM.png" } }] }, backupEvidence: null, complianceEvidence: "Codex Image Aug 18, 2026, 03_53_39 PM.png", migrationEvidence: null, approvals: [] };
+    expect(releaseReadiness(version).items.find((item) => item.key === "compliance")?.status).toBe("BLOCKED");
   });
 });

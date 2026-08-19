@@ -71,7 +71,7 @@ describe("Phase 6.8 supply-chain security controls", () => {
     const lifecycle = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
     expect(lifecycle).toContain('currentEvidence("DEPENDENCIES")');
     expect(lifecycle).toContain('currentEvidence("BACKUP")');
-    expect(lifecycle).toContain('currentEvidence("COMPLIANCE")');
+    expect(lifecycle).toContain("complianceCurrent");
     expect(lifecycle).toContain('currentEvidence("MIGRATION")');
   });
 

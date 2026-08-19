@@ -12,6 +12,14 @@ const schema = z.object({
   certifiedAt: z.string().datetime(),
 }).strict();
 
+export type ComplianceCertification = z.infer<typeof schema>;
+
+export function isCommercialComplianceEvidence(item: { kind: string; result: string; artifactHash: string; metadata: unknown }, versionId: string, payloadHash: string) {
+  if (item.kind !== "COMPLIANCE" || item.result !== "VERIFIED" || item.artifactHash !== payloadHash || !item.metadata || typeof item.metadata !== "object") return false;
+  const metadata = item.metadata as Record<string, unknown>;
+  return metadata.format === "bke.compliance-certification.v1" && metadata.classification === "COMMERCIAL" && metadata.versionId === versionId && metadata.payloadHash === payloadHash && Array.isArray(metadata.legalDocuments) && Array.isArray(metadata.reviewers) && metadata.assertions && typeof metadata.assertions === "object" && Object.values(metadata.assertions as Record<string, unknown>).every((value) => value === true);
+}
+
 export function validateComplianceCertification(document: Buffer, versionId: string, payloadHash: string) {
   let parsed: unknown;
   try { parsed = JSON.parse(document.toString("utf8")); } catch { throw new Error("COMPLIANCE_EVIDENCE_INVALID"); }
