@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { evaluateSupplyChainSecurity, type SupplyChainEvidenceEvent } from "@/lib/supply-chain/controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
 import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
+import { validateTechnicalEvidence } from "@/lib/supply-chain/technical-evidence";
 
 const hash = "h".repeat(64);
 const artifacts = [{ id: "a1", sha256: "a".repeat(64) }, { id: "a2", sha256: "b".repeat(64) }];
@@ -66,6 +67,14 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
     expect(route).toContain('kind === "SBOM" ? { sbomReference: input.reference } : kind === "PROVENANCE"');
     expect(readFileSync("app/api/admin/versions/[id]/route.ts", "utf8")).toContain("provenanceVerified: evidence?.provenanceStatus === \"VERIFIED\"");
+  });
+
+  it("rejects opaque technical uploads and accepts only generated evidence shapes", () => {
+    expect(() => validateTechnicalEvidence("SBOM", Buffer.from("{}"), "1.0.0")).toThrow("SBOM_EVIDENCE_INVALID");
+    expect(() => validateTechnicalEvidence("PROVENANCE", Buffer.from(JSON.stringify({ releaseIdentifier: "1.0.0" })), "1.0.0")).toThrow("PROVENANCE_EVIDENCE_INVALID");
+    expect(() => validateTechnicalEvidence("DEPENDENCIES", Buffer.from(JSON.stringify({ format: "bke.dependency-evidence.v1", releaseVersion: "1.0.0" })), "1.0.0")).toThrow("DEPENDENCIES_EVIDENCE_INVALID");
+    const sbom = { bomFormat: "CycloneDX", specVersion: "1.5", components: [], metadata: { component: { version: "1.0.0" } } };
+    expect(validateTechnicalEvidence("SBOM", Buffer.from(JSON.stringify(sbom)), "1.0.0")).toEqual(sbom);
   });
 
   it("records the remaining release gates only as current verified evidence", () => {

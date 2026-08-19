@@ -75,9 +75,12 @@ This fail-closed command produces `sbom.cdx.json`, `provenance.json`,
 `dependencies.json`, and `migration-status.txt`. It reuses the existing
 generators, runs real dependency analysis, executes `prisma migrate status`,
 and reports exact document hashes. It never ingests evidence or changes
-readiness. Upload the generated files from the Admin Release Readiness page.
-Backup and Compliance remain independently evidence-driven; Approval remains a
-human authorization.
+readiness. Upload the generated files from the Admin Release Readiness page. The
+server accepts only the repository-owned SBOM, provenance, and dependency evidence
+shapes, checks their release identity and required PASS/format fields, and binds
+persisted evidence to the server-computed current payload. An arbitrary filename
+or opaque document is not technical proof. Backup and Compliance remain
+independently evidence-driven; Approval remains a human authorization.
 
 For Backup certification, complete the real backup, `VERIFY`, and
 `SIMULATE_RESTORE` workflow first, then export the truthful release-bound
