@@ -29,13 +29,13 @@ current approval; `published=true` alone is not a publication bypass.
 
 Commercial compliance evidence must use the structured
 `bke.compliance-certification.v1` envelope with `classification: "COMMERCIAL"`,
-the target version and current payload hash, legal-document references,
-reviewer identities, and complete required assertions. `MOCK` evidence is
+the target version and current payload hash, legal-document references, the
+authenticated certifying administrator, and complete required assertions. `MOCK` evidence is
 retained for testing but never satisfies commercial readiness. The server
 validates structure, binding, and classification, not the legal merits.
 
 For the normal Admin-native commercial workflow, open `/admin/releases/<version-id>`,
-enter the reviewer identity, role, and review scope, acknowledge the required
+review the authenticated certifier identity, optionally enter a review scope, and acknowledge the required
 assertions, and select **Certify Compliance**. The server resolves the active
 published legal-document versions, computes the current payload hash, stores the
 validated document in private object storage, and records an audit event. This is

@@ -19,11 +19,12 @@ describe("Admin-native commercial compliance certification", () => {
 
   it("offers an explicit human attestation without DevTools", () => {
     expect(controls).toContain("CERTIFY_COMPLIANCE");
-    expect(controls).toContain('aria-label="Compliance reviewer"');
-    expect(controls).toContain('aria-label="Compliance role"');
     expect(controls).toContain('aria-label="Compliance scope"');
+    expect(controls).toContain("scope (optional)");
+    expect(controls).not.toContain('aria-label="Compliance reviewer"');
+    expect(controls).not.toContain('aria-label="Compliance role"');
     expect(controls).toContain("attestation: true");
-    expect(controls).toContain("human attestation");
+    expect(controls).toContain("authenticated administrator");
   });
 
   it("passes the current legal state into readiness rendering", () => {

@@ -6,7 +6,7 @@ const schema = z.object({
   versionId: z.string().min(1),
   releaseVersion: z.string().min(1).optional(),
   payloadHash: z.string().regex(/^[a-f0-9]{64}$/),
-  scope: z.string().trim().min(1).max(2000),
+  scope: z.string().trim().max(2000).optional(),
   legalDocuments: z.array(z.object({ type: z.string().min(1), versionId: z.string().min(1), contentHash: z.string().regex(/^[a-f0-9]{64}$/) })).min(1),
   assertions: z.object({ legalReviewed: z.boolean(), privacyReviewed: z.boolean(), taxReviewed: z.boolean(), retentionDecided: z.boolean() }),
   reviewers: z.array(z.object({ role: z.string().min(1), identity: z.string().min(1) })).min(1),
