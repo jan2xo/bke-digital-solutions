@@ -49,4 +49,11 @@ describe("Phase 6.7 compliance mutation boundaries", () => {
     expect(controls).toContain("Mark Implemented");
     expect(controls).toContain("confirmation: true");
   });
+
+  it("supports explicit audited reopening without mutating evidence history", () => {
+    expect(route).toContain('action: z.literal("REOPEN")');
+    expect(route).toContain("COMPLIANCE_REOPEN_REQUIRES_IMPLEMENTED");
+    expect(route).toContain("COMPLIANCE_REQUIREMENT_REOPENED");
+    expect(controls).toContain("Reopen Review");
+  });
 });

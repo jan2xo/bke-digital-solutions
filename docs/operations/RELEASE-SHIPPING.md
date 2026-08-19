@@ -33,6 +33,14 @@ confirms the review or owner decision. Evidence alone never completes a
 requirement; the completion action is recent-authenticated, same-origin,
 rate-limited, audited, idempotent, and reduces the release gate's pending count.
 
+Once all objective readiness items are green, the Release page exposes the
+sole-owner sequence **Review Release** → **Approve Release** → **Publish Release**.
+Review and approval are separate explicit actions but may be performed by the
+same authenticated Owner/Admin. The current canonical payload is recomputed for
+each action; artifact changes make prior review/approval stale. Publish remains
+separate and revalidates Stable/LTS lifecycle, all machine gates, compliance
+register completion, and current payload-bound approval.
+
 Approval and publication are payload-bound. A reviewer records review for the
 current canonical payload, then a different recent-authenticated administrator
 records approval for that same payload. Historical approvals without a payload

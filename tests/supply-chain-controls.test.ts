@@ -113,6 +113,9 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain("admin-release-lifecycle:");
     expect(route).toContain("payloadHash");
     expect(route).toContain("RELEASE_REVIEW_REQUIRED");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Review Release");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Approve Release");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Publish Release");
   });
 
   it("requires structured compliance certification and preserves mock classification", () => {
