@@ -6017,6 +6017,8 @@ export const ReleaseApprovalScalarFieldEnum = {
   reviewedById: 'reviewedById',
   approvedById: 'approvedById',
   approvedAt: 'approvedAt',
+  reviewedAt: 'reviewedAt',
+  payloadHash: 'payloadHash',
   notes: 'notes',
   createdAt: 'createdAt'
 } as const

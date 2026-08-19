@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { vi } from "vitest";
 import { isCustomerReleaseEligible } from "@/lib/releases/eligibility";
 import { releaseReadiness } from "@/lib/supply-chain/readiness";
+import { currentApproval } from "@/lib/releases/approval";
+import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 
 vi.mock("@/lib/env", () => ({ env: { SUPPLY_CHAIN_SIGNING_KEY_ID: "supply-test" } }));
 
@@ -50,5 +52,21 @@ describe("customer release eligibility", () => {
     });
     expect(readiness.publishable).toBe(false);
     expect(readiness.items.filter((item) => item.key === "sbom" || item.key === "provenance").every((item) => item.status === "BLOCKED")).toBe(true);
+  });
+
+  it("accepts only a separated review and approval for the current payload", () => {
+    const payloadHash = "a".repeat(64);
+    const valid = currentApproval([{ payloadHash, createdById: "reviewer", reviewedById: "reviewer", reviewedAt: new Date(), approvedById: "approver", approvedAt: new Date() }], payloadHash);
+    expect(valid.valid).toBe(true);
+    expect(currentApproval([{ payloadHash, createdById: "reviewer", reviewedById: "reviewer", reviewedAt: new Date(), approvedById: "reviewer", approvedAt: new Date() }], payloadHash).valid).toBe(false);
+    expect(currentApproval([{ payloadHash: "b".repeat(64), createdById: "reviewer", reviewedById: "reviewer", reviewedAt: new Date(), approvedById: "approver", approvedAt: new Date() }], payloadHash).valid).toBe(false);
+  });
+
+  it("requires structured commercial compliance and rejects mock or arbitrary bytes", () => {
+    const payloadHash = "a".repeat(64);
+    const base = { format: "bke.compliance-certification.v1", versionId: "version-1", payloadHash, scope: "release", legalDocuments: [{ type: "TERMS_OF_SERVICE", versionId: "legal-1", contentHash: "b".repeat(64) }], assertions: { legalReviewed: true, privacyReviewed: true, taxReviewed: true, retentionDecided: true }, reviewers: [{ role: "legal", identity: "counsel" }], certifiedAt: "2026-08-19T00:00:00.000Z" };
+    expect(() => validateComplianceCertification(Buffer.from("not-json"), "version-1", payloadHash)).toThrow("COMPLIANCE_EVIDENCE_INVALID");
+    expect(() => validateComplianceCertification(Buffer.from(JSON.stringify({ ...base, classification: "MOCK" })), "version-1", payloadHash)).not.toThrow();
+    expect(validateComplianceCertification(Buffer.from(JSON.stringify({ ...base, classification: "COMMERCIAL" })), "version-1", payloadHash).classification).toBe("COMMERCIAL");
   });
 });

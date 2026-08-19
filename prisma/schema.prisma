@@ -861,6 +861,8 @@ model ReleaseApproval {
   reviewedById String?
   approvedById String?
   approvedAt  DateTime?
+  reviewedAt  DateTime?
+  payloadHash String?
   notes       String?
   createdAt   DateTime      @default(now())
   version     ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)

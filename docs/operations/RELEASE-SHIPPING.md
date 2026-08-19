@@ -19,6 +19,21 @@ verifies and durably stores document bytes, and refreshes readiness; operators
 do not need DevTools, PostgreSQL queries, or manually supplied `evidenceHash`.
 Approval remains an explicit human action and cannot be fabricated by upload.
 
+Approval and publication are payload-bound. A reviewer records review for the
+current canonical payload, then a different recent-authenticated administrator
+records approval for that same payload. Historical approvals without a payload
+hash are stale. Artifact mutation invalidates the approval through the payload
+comparison; historical rows remain for audit. Every request that publishes or
+promotes to STABLE/LTS recomputes all readiness gates server-side and requires
+current approval; `published=true` alone is not a publication bypass.
+
+Commercial compliance evidence must use the structured
+`bke.compliance-certification.v1` envelope with `classification: "COMMERCIAL"`,
+the target version and current payload hash, legal-document references,
+reviewer identities, and complete required assertions. `MOCK` evidence is
+retained for testing but never satisfies commercial readiness. The server
+validates structure, binding, and classification, not the legal merits.
+
 Generate the complete local evidence package with:
 
 ```bash

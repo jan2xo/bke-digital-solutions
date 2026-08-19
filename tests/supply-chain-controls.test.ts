@@ -105,4 +105,23 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(component).toContain("documentBase64");
     expect(component).toContain("router.refresh");
   });
+
+  it("guards every publication mutation and binds approval to payload state", () => {
+    const route = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
+    expect(route).toContain('input.published === true && !input.approve');
+    expect(route).toContain("RELEASE_PUBLICATION_REQUIRES_STABLE");
+    expect(route).toContain("admin-release-lifecycle:");
+    expect(route).toContain("payloadHash");
+    expect(route).toContain("RELEASE_SEPARATION_REQUIRED");
+  });
+
+  it("requires structured compliance certification and preserves mock classification", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    const helper = readFileSync("lib/supply-chain/compliance-certification.ts", "utf8");
+    expect(route).toContain("validateComplianceCertification");
+    expect(route).toContain('classification: compliance?.classification');
+    expect(helper).toContain('bke.compliance-certification.v1');
+    expect(helper).toContain('classification: z.enum(["COMMERCIAL", "MOCK"])');
+    expect(helper).toContain("COMPLIANCE_ASSERTIONS_INCOMPLETE");
+  });
 });

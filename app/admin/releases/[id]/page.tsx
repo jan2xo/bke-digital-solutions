@@ -8,7 +8,7 @@ import { ReleaseEvidenceControls } from "@/components/release-evidence-controls"
 
 export default async function ReleaseDetail({ params }: { params: Promise<{ id: string }> }) {
   const versionId = (await params).id;
-  const [version, backups] = await Promise.all([db.productVersion.findUnique({ where: { id: versionId }, include: { product: true, artifacts: true, approvals: { orderBy: { createdAt: "desc" }, take: 1 }, supplyChainEvidence: { include: { verificationEvidence: true } } } }), db.backupArchive.findMany({ where: { status: "VERIFIED" }, select: { id: true, verifiedAt: true }, orderBy: { verifiedAt: "desc" }, take: 25 })]);
+  const [version, backups] = await Promise.all([db.productVersion.findUnique({ where: { id: versionId }, include: { product: true, artifacts: true, approvals: { orderBy: { createdAt: "desc" }, take: 50 }, supplyChainEvidence: { include: { verificationEvidence: true } } } }), db.backupArchive.findMany({ where: { status: "VERIFIED" }, select: { id: true, verifiedAt: true }, orderBy: { verifiedAt: "desc" }, take: 25 })]);
   if (!version) notFound();
   const readiness = releaseReadiness(version);
   const blocked = readiness.items.filter((item) => item.status !== "PASS" && ["sbom", "provenance", "dependencies", "backup", "compliance", "migration"].includes(item.key)).map((item) => item.key.toUpperCase() as "SBOM" | "PROVENANCE" | "DEPENDENCIES" | "BACKUP" | "COMPLIANCE" | "MIGRATION");
