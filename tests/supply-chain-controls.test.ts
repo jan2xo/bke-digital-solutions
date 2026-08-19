@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { evaluateSupplyChainSecurity, type SupplyChainEvidenceEvent } from "@/lib/supply-chain/controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
+import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
 
 const hash = "h".repeat(64);
 const artifacts = [{ id: "a1", sha256: "a".repeat(64) }, { id: "a2", sha256: "b".repeat(64) }];
@@ -126,5 +127,24 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(helper).toContain('bke.compliance-certification.v1');
     expect(helper).toContain('classification: z.enum(["COMMERCIAL", "MOCK"])');
     expect(helper).toContain("COMPLIANCE_ASSERTIONS_INCOMPLETE");
+  });
+
+  it("self-heals signature/checksum partial states independently", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain("const priorSignature");
+    expect(route).toContain("const priorChecksum");
+    expect(route).toContain("plan.createSignature");
+    expect(route).toContain("plan.createChecksum");
+    expect(route).toContain('kind: "CHECKSUM"');
+    expect(route).toContain("signed.payloadHash");
+  });
+
+  it.each([
+    [false, false, true, true],
+    [true, false, false, true],
+    [false, true, true, false],
+    [true, true, false, false],
+  ])("plans only missing integrity evidence (%s, %s)", (signature, checksum, createSignature, createChecksum) => {
+    expect(integrityEvidencePlan(signature, checksum)).toEqual({ createSignature, createChecksum });
   });
 });

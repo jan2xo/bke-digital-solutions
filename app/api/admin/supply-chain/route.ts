@@ -15,6 +15,7 @@ import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage"
 import { buildBackupCertificationDocument } from "@/lib/supply-chain/backup-certification";
 import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
+import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
 
 const schema = z.object({ versionId: z.string().min(1), backupId: z.string().min(1).optional(), action: z.enum(["SIGN", "RECORD_SCAN", "RECORD_SBOM", "RECORD_PROVENANCE", "RECORD_DEPENDENCIES", "RECORD_BACKUP", "CERTIFY_BACKUP", "CERTIFY_COMPLIANCE", "RECORD_COMPLIANCE", "RECORD_MIGRATION", "VERIFY_SIGNATURE", "QUARANTINE", "RESCAN", "EMERGENCY_REVOKE", "MARK_COMPROMISED"]).optional(), signature: z.string().min(16).optional(), signerKeyId: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional(), reference: z.string().trim().min(1).max(512).optional(), documentBase64: z.string().max(14_000_000).optional(), evidenceHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), reason: z.string().trim().min(8).max(2000).optional(), scope: z.string().trim().max(2000).optional(), attestation: z.literal(true).optional(), notes: z.string().trim().max(2000).optional() });
 function publicKey(keyId: string) { const resolved = resolveTrustedSupplyChainKey(env.SUPPLY_CHAIN_TRUSTED_KEYS, env.SUPPLY_CHAIN_SIGNING_KEY_ID, env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY, keyId); const raw = resolved.key.includes("BEGIN") ? resolved.key : Buffer.from(resolved.key, "base64").toString("utf8"); return createPublicKey(raw); }
@@ -110,12 +111,12 @@ export async function POST(request: Request) {
     }
     if (input.action === "SIGN") {
       const signed = signReleaseManifest({ productId: existing.version.productId, productSlug: existing.version.product.slug, versionId: existing.version.id, version: existing.version.version, artifacts: existing.version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });
-      const prior = existing.verificationEvidence.find((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === signed.payloadHash && v.signerKeyId === signed.keyId);
-      if (!prior) {
-        await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "SIGNATURE", artifactHash: signed.payloadHash, signerKeyId: signed.keyId, result: "VERIFIED", reference: signed.canonicalPayload, metadata: { algorithm: signed.algorithm, manifest: signed.manifest } } });
-        await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "CHECKSUM", artifactHash: signed.payloadHash, signerKeyId: signed.keyId, result: "VERIFIED", reference: signed.payloadHash, metadata: { algorithm: "SHA-256", artifacts: signed.manifest.artifacts.map((artifact) => ({ id: artifact.id, sha256: artifact.sha256, sizeBytes: artifact.sizeBytes })) } } });
-        await db.supplyChainEvidence.update({ where: { id: existing.id }, data: { canonicalPayloadHash: signed.payloadHash, signatureAlgorithm: signed.algorithm, signatureKeyId: signed.keyId, signedAt: new Date(), signatureVerified: true, manifestSignature: signed.signature, manifestJson: signed.manifest } });
-      }
+      const priorSignature = existing.verificationEvidence.find((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === signed.payloadHash && v.signerKeyId === signed.keyId);
+      const priorChecksum = existing.verificationEvidence.find((v) => v.kind === "CHECKSUM" && v.result === "VERIFIED" && v.artifactHash === signed.payloadHash && v.signerKeyId === signed.keyId);
+      const plan = integrityEvidencePlan(Boolean(priorSignature), Boolean(priorChecksum));
+      if (plan.createSignature) await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "SIGNATURE", artifactHash: signed.payloadHash, signerKeyId: signed.keyId, result: "VERIFIED", reference: signed.canonicalPayload, metadata: { algorithm: signed.algorithm, manifest: signed.manifest } } });
+      if (plan.createChecksum) await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "CHECKSUM", artifactHash: signed.payloadHash, signerKeyId: signed.keyId, result: "VERIFIED", reference: signed.payloadHash, metadata: { algorithm: "SHA-256", artifacts: signed.manifest.artifacts.map((artifact) => ({ id: artifact.id, sha256: artifact.sha256, sizeBytes: artifact.sizeBytes })) } } });
+      if (plan.createSignature) await db.supplyChainEvidence.update({ where: { id: existing.id }, data: { canonicalPayloadHash: signed.payloadHash, signatureAlgorithm: signed.algorithm, signatureKeyId: signed.keyId, signedAt: new Date(), signatureVerified: true, manifestSignature: signed.signature, manifestJson: signed.manifest } });
       await db.auditLog.create({ data: { actorId: admin.id, action: "SUPPLY_CHAIN_SIGNED", targetType: "SupplyChainEvidence", targetId: existing.id, metadata: { keyId: signed.keyId, payloadHash: signed.payloadHash } } });
       return NextResponse.json({ ok: true, status: "VERIFIED", keyId: signed.keyId, algorithm: signed.algorithm, payloadHash: signed.payloadHash });
     }
