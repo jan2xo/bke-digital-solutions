@@ -5,6 +5,7 @@ import { COMPLIANCE_STATUSES, isMutableComplianceStatus } from "@/lib/compliance
 const route = readFileSync("app/api/admin/compliance/route.ts", "utf8");
 const migration = readFileSync("prisma/migrations/20260815152000_compliance_boundaries/migration.sql", "utf8");
 const page = readFileSync("app/admin/compliance/page.tsx", "utf8");
+const controls = readFileSync("components/compliance-admin-controls.tsx", "utf8");
 
 describe("Phase 6.7 compliance mutation boundaries", () => {
   it("keeps admin mutations behind recent auth, same-origin, rate limit, and audit logging", () => {
@@ -38,5 +39,14 @@ describe("Phase 6.7 compliance mutation boundaries", () => {
   it("provides an administrator control surface without changing legal semantics", () => {
     expect(page).toContain("ComplianceAdminControls");
     expect(page).toContain("No entry on this page represents legal, tax, privacy, or regulatory approval");
+  });
+
+  it("keeps evidence recording separate from explicit owner completion", () => {
+    expect(route).toContain('action: z.literal("COMPLETE")');
+    expect(route).toContain("COMPLIANCE_REQUIREMENT_IMPLEMENTED");
+    expect(route).toContain('status: "IMPLEMENTED"');
+    expect(route).toContain("COMPLIANCE_IMPLEMENTED_IMMUTABLE");
+    expect(controls).toContain("Mark Implemented");
+    expect(controls).toContain("confirmation: true");
   });
 });

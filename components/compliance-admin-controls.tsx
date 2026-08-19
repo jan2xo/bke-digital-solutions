@@ -28,6 +28,7 @@ export function ComplianceAdminControls({ requirementId, currentStatus }: { requ
     <form className="space-y-2" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); void post({ action: "STATUS", id: requirementId, status: form.get("status") }); }}>
       <label className="block text-xs font-bold uppercase text-slate-500">Review state</label>
       <select name="status" defaultValue={currentStatus} className="w-full rounded-xl border px-3 py-2 text-sm" disabled={busy}>
+        {currentStatus === "IMPLEMENTED" && <option value="IMPLEMENTED">Implemented</option>}
         {COMPLIANCE_STATUSES.map((status) => <option key={status} value={status}>{COMPLIANCE_STATUS_LABELS[status]}</option>)}
       </select>
       <button className="rounded-xl bg-[#3d75a7] px-3 py-2 text-sm font-bold text-white disabled:opacity-50" disabled={busy}>Save review state</button>
@@ -39,6 +40,7 @@ export function ComplianceAdminControls({ requirementId, currentStatus }: { requ
       <input name="reference" className="w-full rounded-xl border px-3 py-2 text-sm" maxLength={300} placeholder="Reference URL or ticket" disabled={busy} />
       <button className="rounded-xl bg-[#3d75a7] px-3 py-2 text-sm font-bold text-white disabled:opacity-50" disabled={busy}>Record evidence</button>
     </form>
+    {currentStatus !== "IMPLEMENTED" && <form className="space-y-2" onSubmit={(event) => { event.preventDefault(); if (!window.confirm("Confirm that the required review or owner decision has been received and accepted for this requirement?")) return; void post({ action: "COMPLETE", id: requirementId, confirmation: true }); }}><label className="block text-xs font-bold uppercase text-slate-500">Owner acceptance</label><p className="text-xs text-slate-600">Evidence remains separate. This explicit action records the authenticated Owner/Admin decision.</p><button type="submit" className="rounded-xl bg-[#213a53] px-3 py-2 text-sm font-bold text-white disabled:opacity-50" disabled={busy}>Mark Implemented</button></form>}
     {message && <p className="md:col-span-2 text-sm font-bold text-slate-600">{message}</p>}
   </div>;
 }

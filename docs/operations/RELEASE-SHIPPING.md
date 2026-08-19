@@ -27,6 +27,12 @@ and supply-chain controls remain mandatory and are independently revalidated at
 promotion and publication. Multi-authority separation is future governance work,
 not a current launch prerequisite.
 
+The Compliance Register has a separate owner-completion step: record immutable
+evidence first, then use **Mark Implemented** after the authenticated Owner/Admin
+confirms the review or owner decision. Evidence alone never completes a
+requirement; the completion action is recent-authenticated, same-origin,
+rate-limited, audited, idempotent, and reduces the release gate's pending count.
+
 Approval and publication are payload-bound. A reviewer records review for the
 current canonical payload, then a different recent-authenticated administrator
 records approval for that same payload. Historical approvals without a payload
