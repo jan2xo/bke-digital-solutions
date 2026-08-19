@@ -44,8 +44,11 @@ describe("Phase 6.8 supply-chain security controls", () => {
 
   it("does not let installer upload publish=true bypass recent auth or the release evidence gate", () => {
     const route = readFileSync("app/api/admin/products/[id]/versions/route.ts", "utf8");
-    expect(route).toContain("input.publish === \"true\" ? await requireRecentAdmin() : await requireAdmin()");
-    expect(route.indexOf("if (input.publish === \"true\") throw new Error(\"RELEASE_EVIDENCE_INCOMPLETE\")")).toBeLessThan(route.indexOf("await uploadObject"));
+    expect(route).toContain(".strict()");
+    expect(route).toContain('lifecycle: "DRAFT"');
+    expect(route).toContain("active: false");
+    expect(route).toContain("publishedAt: null");
+    expect(route).toContain("isLatest: false");
   });
 
   it("honors emergency revocation until explicit resolution and feeds the release gate", () => {
@@ -139,6 +142,19 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain("plan.createChecksum");
     expect(route).toContain('kind: "CHECKSUM"');
     expect(route).toContain("signed.payloadHash");
+  });
+
+  it("keeps Product Admin uploads in the governed draft workflow", () => {
+    const route = readFileSync("app/api/admin/products/[id]/versions/route.ts", "utf8");
+    const manager = readFileSync("components/admin-product-manager.tsx", "utf8");
+    expect(route).toContain('lifecycle: "DRAFT"');
+    expect(route).toContain("active: false");
+    expect(route).toContain("isLatest: false");
+    expect(route).toContain(".strict()");
+    expect(manager).not.toContain("Publish now");
+    expect(manager).not.toContain('name="publish"');
+    expect(manager).not.toContain('name="latest"');
+    expect(manager).toContain("Upload version as DRAFT");
   });
 
   it.each([

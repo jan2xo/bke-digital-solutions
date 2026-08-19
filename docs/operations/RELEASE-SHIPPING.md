@@ -165,3 +165,8 @@ The relationship is:
   `npm run supplychain:evidence -- <release-version> [output-directory]`
 - **MANUAL/DIAGNOSTIC EXPANSION:** the explicit environment-variable and
   generator sequence above.
+
+Product Admin version upload creates only a DRAFT release with inactive artifact
+state, no publication timestamp, and `isLatest = false`. The operator must use
+Release Center for evidence, lifecycle promotion, owner approval, and governed
+STABLE/LTS publication. Product catalog publication remains a separate action.
