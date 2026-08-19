@@ -22,6 +22,7 @@
     "db:status": "prisma migrate status",
     "db:smoke": "tsx scripts/post-migration-smoke.ts",
     "db:seed": "tsx prisma/seed.ts",
+    "agent:demo:seed": "tsx scripts/seed-agent-demo.ts",
     "admin:create": "tsx scripts/create-admin.ts",
     "admin:recover-mfa": "tsx scripts/recover-admin.ts",
     "payments:reconcile": "tsx scripts/reconcile-payments.ts",
