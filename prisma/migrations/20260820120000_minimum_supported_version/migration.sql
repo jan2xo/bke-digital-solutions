@@ -1,0 +1,1 @@
+ALTER TABLE "ProductVersion" ADD COLUMN "minimumSupportedVersion" TEXT;
