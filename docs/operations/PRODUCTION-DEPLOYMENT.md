@@ -1,49 +1,77 @@
 # Production Deployment
 
-Use the approved commit and `.env.vps`. Validate, build, migrate, then start
-services in dependency order. The detailed existing procedure is
-[vps-production-deployment.md](../vps-production-deployment.md).
+Deploy only an approved, checked-out commit. Source acquisition and deployment
+are separate operations; this procedure never performs an implicit pull.
 
-Run the read-only preflight first:
-
-```bash
-npm run ops:validate -- .env.vps
-```
-
-It does not start or mutate services. A successful result reports Compose,
-topology, and restart-policy checks. A failure means stop and correct the
-configuration or approved commit before deployment.
+The canonical operator path is:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml config --quiet
-docker compose --env-file .env.vps -f docker-compose.production.yml build app scheduler backup-worker migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile operations run --rm migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app scheduler backup-worker caddy
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
-curl --fail https://<production-host>/api/health/live
-curl --fail https://<production-host>/api/health/ready
+git pull --ff-only origin main
+BKE_HEALTH_URL=https://<canonical-production-health-host> npm run deploy
 ```
 
-The deterministic post-deploy check is:
+The script defaults to `.env.production` and
+`docker-compose.production.yml`. An explicit environment or Compose file may
+be supplied as positional arguments:
 
 ```bash
-npm run ops:health -- https://<production-host>
+BKE_HEALTH_URL=https://<canonical-production-health-host> \
+  npm run deploy -- /absolute/path/.env.production /absolute/path/docker-compose.production.yml
 ```
 
-Both health endpoints must return 2xx with a healthy/ok status. Any failure is
-an operational stop condition; inspect service health/logs and do not publish.
+`BKE_HEALTH_URL` is required because this repository does not define a single
+canonical production hostname. The script verifies that the environment file
+exists but never reads or prints its values.
 
-For self-hosted MinIO, start `minio minio-init` before app. Review logs without
-printing environment values. Roll back only to an approved schema-compatible
-commit; never delete persistent volumes during an incident.
+The script performs, in order:
 
-The scheduler healthcheck is semantic: it queries the private app scheduler
-health route, which evaluates persisted job definitions, recent execution
-windows, failures, and retry backlog. A healthy scheduler therefore means the
-worker process is running and durable scheduler state is not stale. If it is
-unhealthy, inspect scheduler/app logs and the `/api/health/scheduler` response;
-do not replace the check with a process-only probe.
+1. Verify the working tree is clean and display the branch and exact commit.
+2. Run `npm run ops:validate` as the read-only production preflight.
+3. Validate the effective Compose configuration.
+4. Build `app`, `scheduler`, `backup-worker`, and `migrate`.
+5. Run the one-shot `migrate` service through the `operations` profile.
+6. Start `app`, `scheduler`, `backup-worker`, and `caddy`; Compose dependency
+   conditions govern PostgreSQL, Valkey, MinIO initialization, and ClamAV.
+7. Show Compose service status.
+8. Run `npm run ops:health -- <health-url>`, which verifies both live and ready
+   contracts and all ready dependencies.
 
-The backup worker intentionally has no fabricated HTTP healthcheck. Its
-recovery contract is `restart: unless-stopped` plus durable `BackupOperation`
-state and worker logs; verify those through the backup runbook after deploy.
+Every mandatory command fails the deployment immediately. The script prints only
+non-secret status and the deployed Git SHA.
+
+## Troubleshooting and recovery reference
+
+Equivalent manual commands, for diagnosis or recovery only:
+
+```bash
+DEPLOYMENT_ENV_FILE=/absolute/path/.env.production \
+DEPLOYMENT_COMPOSE_FILE=/absolute/path/docker-compose.production.yml \
+npm run ops:validate
+
+docker compose --env-file /absolute/path/.env.production \
+  -f /absolute/path/docker-compose.production.yml config --quiet
+
+docker compose --env-file /absolute/path/.env.production \
+  -f /absolute/path/docker-compose.production.yml build app scheduler backup-worker migrate
+
+docker compose --env-file /absolute/path/.env.production \
+  -f /absolute/path/docker-compose.production.yml --profile operations run --rm migrate
+
+docker compose --env-file /absolute/path/.env.production \
+  -f /absolute/path/docker-compose.production.yml up -d app scheduler backup-worker caddy
+
+docker compose --env-file /absolute/path/.env.production \
+  -f /absolute/path/docker-compose.production.yml ps
+
+npm run ops:health -- https://<canonical-production-health-host>
+```
+
+Review service logs without printing environment values. For self-hosted MinIO,
+ensure `minio-init` completes before application readiness. Roll back only to
+an approved schema-compatible commit; never delete persistent volumes during an
+incident.
+
+Any feature that changes production topology, migration requirements, service
+dependencies, initialization, deployment ordering, readiness semantics, backup
+requirements, or post-deployment verification must update this canonical
+production deployment automation in the same change.
