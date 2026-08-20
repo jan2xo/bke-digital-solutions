@@ -10,4 +10,4 @@ Implemented on feat/universal-updater-integration:
 - Policy is bke.update-policy.v1 and is signed with the active commercial Ed25519 key.
 - No private key or object-store credential is returned.
 
-Important certification limitation: the current schema has no independent minimum-supported-version field. This checkpoint therefore emits the eligible target version as minimum_supported_version, making the returned update mandatory. A future additive release-policy field must be introduced and migrated before optional-update/deadline semantics can be certified. No claim of optional offline behavior is made here.
+The ProductVersion model now persists minimumSupportedVersion through migration 20260820120000_minimum_supported_version. The API uses that value and falls back to the target version only when the field is unset. Optional/offline deadline behavior still requires local certification fixtures.
