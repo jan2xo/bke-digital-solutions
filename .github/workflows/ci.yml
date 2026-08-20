@@ -28,14 +28,7 @@ jobs:
         env:
           DEPLOYMENT_ENV: test
       - run: npm run db:generate
-      - name: Capture generated Prisma client
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-prisma-${{ github.run_id }}
-          path: generated/prisma
       - run: git diff --exit-code -- generated/prisma
-        continue-on-error: true
       - run: npx prisma validate
       - run: npm run db:deploy
       - run: npm run db:status
