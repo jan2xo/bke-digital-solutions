@@ -4,35 +4,25 @@ import { createPrivateKey, sign } from "node:crypto";
 import { db } from "@/lib/db";
 import { hashLicenseKey, hashToken, randomToken } from "@/lib/security/crypto";
 import { resolveCurrentCustomerRelease } from "@/lib/releases/resolution";
+import { compareSemanticVersions, parseSemanticVersion } from "@/lib/releases/versioning";
 import { activeCommercialSigningKey, ensureCommercialSigningKey } from "@/lib/licensing/signing-registry";
 
 const requestSchema=z.object({license_key:z.string().min(8).max(512),product_id:z.string().min(1).max(128),current_version:z.string().min(1).max(64),platform:z.string().min(1).max(64),architecture:z.string().min(1).max(64),channel:z.enum(["stable","lts"]).default("stable")});
 function canonical(value:Record<string,unknown>) { return JSON.stringify(Object.fromEntries(Object.entries(value).sort(([left],[right]) => left < right ? -1 : left > right ? 1 : 0))); }
-function versionParts(value:string):number[] {
-  const match=/^(\d+)\.(\d+)\.(\d+)(?:[-+][0-9A-Za-z.-]+)?$/.exec(value);
-  if(!match) throw new Error("invalid version");
-  return [Number(match[1]),Number(match[2]),Number(match[3])];
-}
-function compareVersions(left:string,right:string):number {
-  const a=versionParts(left), b=versionParts(right);
-  for(let index=0; index<3; index+=1) if(a[index]!==b[index]) return a[index]-b[index];
-  return 0;
-}
-
 export async function POST(request:Request) {
   try {
     const input=requestSchema.parse(await request.json());
-    versionParts(input.current_version);
+    parseSemanticVersion(input.current_version);
     const license=await db.license.findFirst({where:{keyHash:hashLicenseKey(input.license_key),productId:input.product_id,status:"ACTIVE",account:{lifecycleState:"ACTIVE"}},include:{edition:true,purchasePlan:true,subscription:true}});
     if(!license || (license.expiresAt && license.expiresAt<new Date())) return NextResponse.json({error:"NOT_ENTITLED"},{status:403});
     const updatePolicy=license.edition?.updatePolicy ?? "LIFETIME";
     if(updatePolicy==="ACTIVE_TERM" && (!license.expiresAt || license.expiresAt<new Date() || (license.subscription && license.subscription.status!=="ACTIVE"))) return NextResponse.json({error:"UPDATE_NOT_ENTITLED"},{status:403});
     const release=await resolveCurrentCustomerRelease(input.product_id,input.platform,input.architecture,input.channel);
     if(!release) return NextResponse.json({error:"NO_ELIGIBLE_RELEASE"},{status:404});
-    versionParts(release.version);
+    parseSemanticVersion(release.version);
     const minimum=release.minimumSupportedVersion ?? release.version;
-    if(compareVersions(minimum,release.version)>0) return NextResponse.json({error:"POLICY_GENERATION_FAILED"},{status:500});
-    if(updatePolicy==="MAJOR_VERSION" && versionParts(input.current_version)[0]!==versionParts(release.version)[0]) return NextResponse.json({error:"UPDATE_NOT_ENTITLED"},{status:403});
+    if(compareSemanticVersions(minimum,release.version)>0) return NextResponse.json({error:"POLICY_GENERATION_FAILED"},{status:500});
+    if(updatePolicy==="MAJOR_VERSION" && parseSemanticVersion(input.current_version)[0]!==parseSemanticVersion(release.version)[0]) return NextResponse.json({error:"UPDATE_NOT_ENTITLED"},{status:403});
     const artifact=release.artifacts.find(item=>item.active && !item.removedAt && item.sha256 && Number(item.sizeBytes)>=0);
     if(!artifact) return NextResponse.json({error:"ARTIFACT_UNAVAILABLE"},{status:503});
     await ensureCommercialSigningKey(); const key=await activeCommercialSigningKey();
