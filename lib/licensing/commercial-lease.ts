@@ -56,7 +56,7 @@ export async function issueCommercialLease(input: { licenseKey: string; installa
         return { lease };
       }, { isolationLevel: "Serializable" });
     } catch (error) {
-      if (attempt === 0 && error instanceof Error && /P20(00|01|02)/.test(error.message)) continue;
+      if (attempt === 0 && error instanceof Error && /P20(00|01|02|34)/.test(error.message)) continue;
       throw error;
     }
   }
