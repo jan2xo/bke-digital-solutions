@@ -32,6 +32,8 @@ export type ReleaseApprovalMinAggregateOutputType = {
   reviewedById: string | null
   approvedById: string | null
   approvedAt: Date | null
+  reviewedAt: Date | null
+  payloadHash: string | null
   notes: string | null
   createdAt: Date | null
 }
@@ -44,6 +46,8 @@ export type ReleaseApprovalMaxAggregateOutputType = {
   reviewedById: string | null
   approvedById: string | null
   approvedAt: Date | null
+  reviewedAt: Date | null
+  payloadHash: string | null
   notes: string | null
   createdAt: Date | null
 }
@@ -56,6 +60,8 @@ export type ReleaseApprovalCountAggregateOutputType = {
   reviewedById: number
   approvedById: number
   approvedAt: number
+  reviewedAt: number
+  payloadHash: number
   notes: number
   createdAt: number
   _all: number
@@ -70,6 +76,8 @@ export type ReleaseApprovalMinAggregateInputType = {
   reviewedById?: true
   approvedById?: true
   approvedAt?: true
+  reviewedAt?: true
+  payloadHash?: true
   notes?: true
   createdAt?: true
 }
@@ -82,6 +90,8 @@ export type ReleaseApprovalMaxAggregateInputType = {
   reviewedById?: true
   approvedById?: true
   approvedAt?: true
+  reviewedAt?: true
+  payloadHash?: true
   notes?: true
   createdAt?: true
 }
@@ -94,6 +104,8 @@ export type ReleaseApprovalCountAggregateInputType = {
   reviewedById?: true
   approvedById?: true
   approvedAt?: true
+  reviewedAt?: true
+  payloadHash?: true
   notes?: true
   createdAt?: true
   _all?: true
@@ -179,6 +191,8 @@ export type ReleaseApprovalGroupByOutputType = {
   reviewedById: string | null
   approvedById: string | null
   approvedAt: Date | null
+  reviewedAt: Date | null
+  payloadHash: string | null
   notes: string | null
   createdAt: Date
   _count: ReleaseApprovalCountAggregateOutputType | null
@@ -212,6 +226,8 @@ export type ReleaseApprovalWhereInput = {
   reviewedById?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   approvedById?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"ReleaseApproval"> | Date | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"ReleaseApproval"> | Date | string | null
+  payloadHash?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   notes?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReleaseApproval"> | Date | string
   version?: Prisma.XOR<Prisma.ProductVersionScalarRelationFilter, Prisma.ProductVersionWhereInput>
@@ -228,6 +244,8 @@ export type ReleaseApprovalOrderByWithRelationInput = {
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  payloadHash?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   version?: Prisma.ProductVersionOrderByWithRelationInput
@@ -247,6 +265,8 @@ export type ReleaseApprovalWhereUniqueInput = Prisma.AtLeast<{
   reviewedById?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   approvedById?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"ReleaseApproval"> | Date | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"ReleaseApproval"> | Date | string | null
+  payloadHash?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   notes?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReleaseApproval"> | Date | string
   version?: Prisma.XOR<Prisma.ProductVersionScalarRelationFilter, Prisma.ProductVersionWhereInput>
@@ -263,6 +283,8 @@ export type ReleaseApprovalOrderByWithAggregationInput = {
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  payloadHash?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ReleaseApprovalCountOrderByAggregateInput
@@ -281,6 +303,8 @@ export type ReleaseApprovalScalarWhereWithAggregatesInput = {
   reviewedById?: Prisma.StringNullableWithAggregatesFilter<"ReleaseApproval"> | string | null
   approvedById?: Prisma.StringNullableWithAggregatesFilter<"ReleaseApproval"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ReleaseApproval"> | Date | string | null
+  reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ReleaseApproval"> | Date | string | null
+  payloadHash?: Prisma.StringNullableWithAggregatesFilter<"ReleaseApproval"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"ReleaseApproval"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ReleaseApproval"> | Date | string
 }
@@ -289,6 +313,8 @@ export type ReleaseApprovalCreateInput = {
   id?: string
   stage: $Enums.ReleaseLifecycle
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
   version: Prisma.ProductVersionCreateNestedOneWithoutApprovalsInput
@@ -305,6 +331,8 @@ export type ReleaseApprovalUncheckedCreateInput = {
   reviewedById?: string | null
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -313,6 +341,8 @@ export type ReleaseApprovalUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stage?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   version?: Prisma.ProductVersionUpdateOneRequiredWithoutApprovalsNestedInput
@@ -329,6 +359,8 @@ export type ReleaseApprovalUncheckedUpdateInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,6 +373,8 @@ export type ReleaseApprovalCreateManyInput = {
   reviewedById?: string | null
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -349,6 +383,8 @@ export type ReleaseApprovalUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stage?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -361,6 +397,8 @@ export type ReleaseApprovalUncheckedUpdateManyInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -383,6 +421,8 @@ export type ReleaseApprovalCountOrderByAggregateInput = {
   reviewedById?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  payloadHash?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -395,6 +435,8 @@ export type ReleaseApprovalMaxOrderByAggregateInput = {
   reviewedById?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  payloadHash?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -407,6 +449,8 @@ export type ReleaseApprovalMinOrderByAggregateInput = {
   reviewedById?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  payloadHash?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -583,6 +627,8 @@ export type ReleaseApprovalCreateWithoutCreatedByInput = {
   id?: string
   stage: $Enums.ReleaseLifecycle
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
   version: Prisma.ProductVersionCreateNestedOneWithoutApprovalsInput
@@ -597,6 +643,8 @@ export type ReleaseApprovalUncheckedCreateWithoutCreatedByInput = {
   reviewedById?: string | null
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -615,6 +663,8 @@ export type ReleaseApprovalCreateWithoutReviewedByInput = {
   id?: string
   stage: $Enums.ReleaseLifecycle
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
   version: Prisma.ProductVersionCreateNestedOneWithoutApprovalsInput
@@ -629,6 +679,8 @@ export type ReleaseApprovalUncheckedCreateWithoutReviewedByInput = {
   createdById: string
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -647,6 +699,8 @@ export type ReleaseApprovalCreateWithoutApprovedByInput = {
   id?: string
   stage: $Enums.ReleaseLifecycle
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
   version: Prisma.ProductVersionCreateNestedOneWithoutApprovalsInput
@@ -661,6 +715,8 @@ export type ReleaseApprovalUncheckedCreateWithoutApprovedByInput = {
   createdById: string
   reviewedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -702,6 +758,8 @@ export type ReleaseApprovalScalarWhereInput = {
   reviewedById?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   approvedById?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"ReleaseApproval"> | Date | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"ReleaseApproval"> | Date | string | null
+  payloadHash?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   notes?: Prisma.StringNullableFilter<"ReleaseApproval"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReleaseApproval"> | Date | string
 }
@@ -742,6 +800,8 @@ export type ReleaseApprovalCreateWithoutVersionInput = {
   id?: string
   stage: $Enums.ReleaseLifecycle
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutReleaseApprovalsCreatedInput
@@ -756,6 +816,8 @@ export type ReleaseApprovalUncheckedCreateWithoutVersionInput = {
   reviewedById?: string | null
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -793,6 +855,8 @@ export type ReleaseApprovalCreateManyCreatedByInput = {
   reviewedById?: string | null
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -804,6 +868,8 @@ export type ReleaseApprovalCreateManyReviewedByInput = {
   createdById: string
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -815,6 +881,8 @@ export type ReleaseApprovalCreateManyApprovedByInput = {
   createdById: string
   reviewedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -823,6 +891,8 @@ export type ReleaseApprovalUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stage?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   version?: Prisma.ProductVersionUpdateOneRequiredWithoutApprovalsNestedInput
@@ -837,6 +907,8 @@ export type ReleaseApprovalUncheckedUpdateWithoutCreatedByInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -848,6 +920,8 @@ export type ReleaseApprovalUncheckedUpdateManyWithoutCreatedByInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -856,6 +930,8 @@ export type ReleaseApprovalUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stage?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   version?: Prisma.ProductVersionUpdateOneRequiredWithoutApprovalsNestedInput
@@ -870,6 +946,8 @@ export type ReleaseApprovalUncheckedUpdateWithoutReviewedByInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -881,6 +959,8 @@ export type ReleaseApprovalUncheckedUpdateManyWithoutReviewedByInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -889,6 +969,8 @@ export type ReleaseApprovalUpdateWithoutApprovedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stage?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   version?: Prisma.ProductVersionUpdateOneRequiredWithoutApprovalsNestedInput
@@ -903,6 +985,8 @@ export type ReleaseApprovalUncheckedUpdateWithoutApprovedByInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -914,6 +998,8 @@ export type ReleaseApprovalUncheckedUpdateManyWithoutApprovedByInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -925,6 +1011,8 @@ export type ReleaseApprovalCreateManyVersionInput = {
   reviewedById?: string | null
   approvedById?: string | null
   approvedAt?: Date | string | null
+  reviewedAt?: Date | string | null
+  payloadHash?: string | null
   notes?: string | null
   createdAt?: Date | string
 }
@@ -933,6 +1021,8 @@ export type ReleaseApprovalUpdateWithoutVersionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stage?: Prisma.EnumReleaseLifecycleFieldUpdateOperationsInput | $Enums.ReleaseLifecycle
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReleaseApprovalsCreatedNestedInput
@@ -947,6 +1037,8 @@ export type ReleaseApprovalUncheckedUpdateWithoutVersionInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -958,6 +1050,8 @@ export type ReleaseApprovalUncheckedUpdateManyWithoutVersionInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payloadHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -972,6 +1066,8 @@ export type ReleaseApprovalSelect<ExtArgs extends runtime.Types.Extensions.Inter
   reviewedById?: boolean
   approvedById?: boolean
   approvedAt?: boolean
+  reviewedAt?: boolean
+  payloadHash?: boolean
   notes?: boolean
   createdAt?: boolean
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
@@ -988,6 +1084,8 @@ export type ReleaseApprovalSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   reviewedById?: boolean
   approvedById?: boolean
   approvedAt?: boolean
+  reviewedAt?: boolean
+  payloadHash?: boolean
   notes?: boolean
   createdAt?: boolean
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
@@ -1004,6 +1102,8 @@ export type ReleaseApprovalSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   reviewedById?: boolean
   approvedById?: boolean
   approvedAt?: boolean
+  reviewedAt?: boolean
+  payloadHash?: boolean
   notes?: boolean
   createdAt?: boolean
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
@@ -1020,11 +1120,13 @@ export type ReleaseApprovalSelectScalar = {
   reviewedById?: boolean
   approvedById?: boolean
   approvedAt?: boolean
+  reviewedAt?: boolean
+  payloadHash?: boolean
   notes?: boolean
   createdAt?: boolean
 }
 
-export type ReleaseApprovalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "versionId" | "stage" | "createdById" | "reviewedById" | "approvedById" | "approvedAt" | "notes" | "createdAt", ExtArgs["result"]["releaseApproval"]>
+export type ReleaseApprovalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "versionId" | "stage" | "createdById" | "reviewedById" | "approvedById" | "approvedAt" | "reviewedAt" | "payloadHash" | "notes" | "createdAt", ExtArgs["result"]["releaseApproval"]>
 export type ReleaseApprovalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   version?: boolean | Prisma.ProductVersionDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1060,6 +1162,8 @@ export type $ReleaseApprovalPayload<ExtArgs extends runtime.Types.Extensions.Int
     reviewedById: string | null
     approvedById: string | null
     approvedAt: Date | null
+    reviewedAt: Date | null
+    payloadHash: string | null
     notes: string | null
     createdAt: Date
   }, ExtArgs["result"]["releaseApproval"]>
@@ -1496,6 +1600,8 @@ export interface ReleaseApprovalFieldRefs {
   readonly reviewedById: Prisma.FieldRef<"ReleaseApproval", 'String'>
   readonly approvedById: Prisma.FieldRef<"ReleaseApproval", 'String'>
   readonly approvedAt: Prisma.FieldRef<"ReleaseApproval", 'DateTime'>
+  readonly reviewedAt: Prisma.FieldRef<"ReleaseApproval", 'DateTime'>
+  readonly payloadHash: Prisma.FieldRef<"ReleaseApproval", 'String'>
   readonly notes: Prisma.FieldRef<"ReleaseApproval", 'String'>
   readonly createdAt: Prisma.FieldRef<"ReleaseApproval", 'DateTime'>
 }

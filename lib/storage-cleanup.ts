@@ -52,6 +52,10 @@ export async function processStorageCleanupJob(id: string, removeObject: (object
   if (claimed.count !== 1) return { claimed: false as const };
   const job = await db.storageCleanupJob.findUniqueOrThrow({ where: { id } });
   try {
+    if (["ARTIFACT_REPLACEMENT", "ARTIFACT_REMOVAL"].includes(job.type)) {
+      const activeReference = await db.productArtifact.findFirst({ where: { objectKey: job.objectKey, active: true, removedAt: null } });
+      if (activeReference) throw new Error("ACTIVE_ARTIFACT_REFERENCE");
+    }
     await removeObject(job.objectKey);
     await db.$transaction([
       db.storageCleanupJob.update({ where: { id }, data: { status: "SUCCEEDED", completedAt: new Date(), lastErrorCode: null } }),

@@ -1,7 +1,9 @@
 import "dotenv/config";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { applyLegalVariables, legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
 import { checkoutLegalTypes } from "@/lib/legal/service";
+import { normalizePrivacyRequestType, PRIVACY_REQUEST_STATUSES, publicPrivacyRequestSnapshot } from "@/lib/privacy/requests";
 
 const variables = {
   company_name: "BKE Digital Solutions",
@@ -19,16 +21,19 @@ describe("legal document rendering", () => {
   });
 
   it("escapes HTML and neutralizes unsafe links", () => {
-    const html = renderLegalMarkdown('<script>alert("x")</script> [bad](javascript:alert(1))', variables);
+    const html = renderLegalMarkdown('<script>alert("x")</script> [bad](javascript:alert(1)) [ok](https://example.com)', variables);
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;");
     expect(html).not.toContain('href="javascript:');
+    expect(html).toContain('href="#"');
+    expect(html).toContain('href="https://example.com/"');
   });
 
   it("produces stable hashes of the exact rendered acceptance content", () => {
     const html = renderLegalMarkdown("# Terms", variables);
     expect(legalContentHash(html)).toMatch(/^[a-f0-9]{64}$/);
     expect(legalContentHash(html)).toBe(legalContentHash(html));
+    expect(legalContentHash(html)).not.toBe(legalContentHash("# Terms"));
   });
 });
 
@@ -40,5 +45,37 @@ describe("legal checkout requirements", () => {
   it("also requires subscription terms for recurring plans", () => {
     expect(checkoutLegalTypes("MONTHLY")).toContain("SUBSCRIPTION_TERMS");
     expect(checkoutLegalTypes("ANNUAL")).toHaveLength(3);
+  });
+});
+
+describe("privacy request workflow helpers", () => {
+  it("accepts only repository-controlled privacy request types", () => {
+    expect(normalizePrivacyRequestType("ACCESS")).toBe("ACCESS");
+    expect(() => normalizePrivacyRequestType("APPROVED_BY_DPO")).toThrow("INVALID_PRIVACY_REQUEST_TYPE");
+  });
+
+  it("captures bounded request metadata for audit without deciding legal merits", () => {
+    const request = new Request("https://example.test/api/privacy/requests", { headers: { "user-agent": "a".repeat(600), "x-forwarded-for": "203.0.113.10" } });
+    const snapshot = publicPrivacyRequestSnapshot(request);
+    expect(snapshot.ipAddress).toBe("203.0.113.10");
+    expect(snapshot.userAgent).toHaveLength(500);
+  });
+
+  it("keeps repository status constants aligned with DB constraints and append-only event history", () => {
+    expect(PRIVACY_REQUEST_STATUSES).toEqual(["OPEN", "IN_REVIEW", "FULFILLED", "REJECTED", "CANCELLED"]);
+    const migration = readFileSync("prisma/migrations/20260815161000_phase_6_7_privacy_legal_guards/migration.sql", "utf8");
+    for (const status of PRIVACY_REQUEST_STATUSES) expect(migration).toContain(`'${status}'`);
+    expect(migration).toContain("PrivacyRequest_requestType_valid");
+    expect(migration).toContain("PrivacyRequest_status_valid");
+    expect(migration).toContain("CREATE TABLE \"PrivacyRequestEvent\"");
+    expect(migration).toContain("PrivacyRequestEvent_immutable_update");
+    expect(migration).toContain("PrivacyRequestEvent_immutable_delete");
+  });
+
+  it("backfills legal content hashes before enforcing sha256 compatibility", () => {
+    const migration = readFileSync("prisma/migrations/20260815161000_phase_6_7_privacy_legal_guards/migration.sql", "utf8");
+    expect(migration.indexOf("UPDATE \"LegalDocumentVersion\"")).toBeLessThan(migration.indexOf("LegalDocumentVersion_contentHash_sha256_hex"));
+    expect(migration).toContain("COALESCE(\"renderedHtml\", \"markdownContent\", '')");
+    expect(migration).toContain("ALTER COLUMN \"contentHash\" SET NOT NULL");
   });
 });

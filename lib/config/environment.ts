@@ -140,6 +140,7 @@ export const environmentSchema = z.object({
       if (!configured || configured.length < 48 || placeholder.test(configured)) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
     }
     if (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY && (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY.length < 48 || placeholder.test(value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY))) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "must be at least 48 characters and not a placeholder" });
+    if (!value.ADMIN_OWNER_RECOVERY_KEY || value.ADMIN_OWNER_RECOVERY_KEY.length < 48 || placeholder.test(value.ADMIN_OWNER_RECOVERY_KEY)) context.addIssue({ code: "custom", path: ["ADMIN_OWNER_RECOVERY_KEY"], message: "must be configured, at least 48 characters, and not a placeholder" });
     for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"] as const) {
       if (value[key] && placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must not be a placeholder" });
     }

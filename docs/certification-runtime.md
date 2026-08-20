@@ -15,13 +15,16 @@ npm run certification:compose -- smoke
 npm run certification:compose -- status
 npm run certification:compose -- logs
 npm run certification:test:all
+npm run certification:minio
 npm run certification:test:e2e
 npm run certification:compose -- down
 ```
 
 `up` starts PostgreSQL, Valkey, and MinIO; initializes storage; applies migrations; runs the idempotent seed; then rebuilds and force-recreates the application and Caddy. `refresh` migrates first and then rebuilds and force-recreates the serving containers so an old application image cannot remain active. Readiness, not liveness alone, gates the application container.
 
-Certification exposes PostgreSQL on `127.0.0.1:55432`, Valkey on `127.0.0.1:56379`, MinIO on `127.0.0.1:59000`, and Caddy on `127.0.0.1:8080`. These loopback bindings exist only in the certification override. The services retain the private internal network used by production and also join a certification-only bridge required for host tests.
+Certification keeps PostgreSQL, Valkey, and MinIO private to the Compose network and exposes Caddy on `127.0.0.1:8443` for browser acceptance. Browser certification targets the already-built production app through Caddy and never starts `next dev` or Turbopack in the constrained test container.
+
+`certification:vitest` is the in-container deterministic suite. The live MinIO bootstrap tests in `tests/minio-bootstrap.test.ts` intentionally create isolated Docker networks and containers, so they run separately with `certification:minio` from a Docker-capable host job. They are not silently skipped and are not run through nested Docker inside `certification-tests`.
 
 The host test wrapper parses `.env.certification` without printing it, translates internal container endpoints to the loopback ports, forces mock payment and log email for ordinary suites, and removes real provider credentials from child environments. Use the dedicated credential-gated commands for genuine provider checks; never mix genuine provider credentials into the deterministic full regression suite.
 

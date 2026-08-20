@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { apiError } from "@/lib/http";
 import { assertSameOrigin } from "@/lib/security/request";
-import { deleteObject, uploadObject } from "@/lib/storage";
+import { assertObjectExists, deleteObject, uploadObject } from "@/lib/storage";
 import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 
 const allowed = new Set([".dmg", ".pkg", ".exe", ".msi", ".zip", ".deb", ".rpm", ".appimage"]);
@@ -28,10 +28,18 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const sha256 = createHash("sha256").update(bytes).digest("hex");
     const objectKey = `products/${current.productId}/replacements/${randomUUID()}${ext}`;
     await uploadObject(objectKey, bytes, file.type || "application/octet-stream");
+    await assertObjectExists(objectKey);
     let artifact;
     try {
       artifact = await db.$transaction(async (tx) => {
         const updated = await tx.productArtifact.update({ where: { id }, data: { name: file.name, objectKey, sha256, sizeBytes: file.size, contentType: file.type || "application/octet-stream", active: true, removedAt: null } });
+        if (current.versionId) {
+          const evidence = await tx.supplyChainEvidence.findUnique({ where: { versionId: current.versionId } });
+          if (evidence) {
+            const artifacts = await tx.productArtifact.findMany({ where: { versionId: current.versionId, active: true, removedAt: null }, orderBy: { createdAt: "asc" } });
+            await tx.supplyChainEvidence.update({ where: { id: evidence.id }, data: { manifestJson: { artifacts: artifacts.map((item) => ({ id: item.id, name: item.name, objectKey: item.objectKey, sha256: item.sha256, sizeBytes: Number(item.sizeBytes), contentType: item.contentType })) }, sbomReference: null, provenanceStatus: "RECORDED", dependencyVerified: false, signatureVerified: false, manifestSignature: null, canonicalPayloadHash: null, signatureKeyId: null, signatureAlgorithm: null, signedAt: null, malwareStatus: "PENDING_SCAN" } });
+          }
+        }
         const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, current.objectKey);
         await tx.storageCleanupJob.upsert({ where: { idempotencyKey }, update: {}, create: { type: "ARTIFACT_REPLACEMENT", targetType: "ProductArtifact", targetId: id, objectKey: current.objectKey, idempotencyKey, correlationId: randomUUID(), productId: current.productId, artifactId: id, createdByAdminId: admin.id } });
         await tx.auditLog.create({ data: { actorId: admin.id, action: "ARTIFACT_CLEANUP_QUEUED", targetType: "ProductArtifact", targetId: id, metadata: { reason: "REPLACEMENT" } } });

@@ -1,0 +1,177 @@
+import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { evaluateSupplyChainSecurity, type SupplyChainEvidenceEvent } from "@/lib/supply-chain/controls";
+import { evaluateReleaseGate } from "@/lib/releases/release-gate";
+import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
+import { validateTechnicalEvidence } from "@/lib/supply-chain/technical-evidence";
+
+const hash = "h".repeat(64);
+const artifacts = [{ id: "a1", sha256: "a".repeat(64) }, { id: "a2", sha256: "b".repeat(64) }];
+const at = new Date("2026-08-15T00:00:00.000Z");
+const cleanEvidence: SupplyChainEvidenceEvent[] = [
+  { kind: "SIGNATURE", result: "VERIFIED", artifactHash: hash, verifiedAt: at, signerKeyId: "supply-active" },
+  { kind: "CHECKSUM", result: "VERIFIED", artifactHash: hash, verifiedAt: at, reference: hash },
+  { kind: "MALWARE_SCAN", result: "CLEAN", artifactHash: hash, verifiedAt: at, metadata: { artifactId: "a1" } },
+  { kind: "MALWARE_SCAN", result: "CLEAN", artifactHash: hash, verifiedAt: at, metadata: { artifactId: "a2" } },
+];
+
+describe("Phase 6.8 supply-chain security controls", () => {
+  it("allows publication only with integrity, checksum, current scan history, and audit timestamps", () => {
+    const state = evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: cleanEvidence, certificateStatus: "PENDING_PROVISIONING", malwareStatus: "CLEAN" });
+    expect(state).toMatchObject({ releasable: true, integrityVerified: true, scanCurrent: true, auditTrailPresent: true });
+  });
+
+  it("fails closed when checksum/signing metadata is missing or scan evidence is stale", () => {
+    expect(evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: cleanEvidence.filter((item) => item.kind !== "CHECKSUM") }).failures).toContain("integrity");
+    expect(evaluateSupplyChainSecurity({ currentHash: "new-hash", artifacts, evidence: cleanEvidence }).failures).toEqual(expect.arrayContaining(["integrity", "currentScan"]));
+  });
+
+  it("quarantines infected artifacts and blocks compromised releases", () => {
+    const infected = [...cleanEvidence, { kind: "MALWARE_SCAN", result: "INFECTED", artifactHash: hash, verifiedAt: at, metadata: { artifactId: "a1", quarantined: true } }];
+    const compromised = [...cleanEvidence, { kind: "COMPROMISE", result: "COMPROMISED", artifactHash: hash, verifiedAt: at, failureReason: "stolen token" }];
+    expect(evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: infected, malwareStatus: "INFECTED" })).toMatchObject({ releasable: false, quarantined: true });
+    expect(evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: compromised }).failures).toContain("compromise");
+  });
+
+  it("fails closed when a later malware scan fails after historical clean evidence", () => {
+    const failedAfterClean = [
+      ...cleanEvidence,
+      { kind: "MALWARE_SCAN", result: "FAILED", artifactHash: hash, verifiedAt: new Date("2026-08-15T01:00:00.000Z"), metadata: { artifactId: "a1" }, failureReason: "scanner timeout" },
+    ];
+    const state = evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: failedAfterClean, malwareStatus: "FAILED" });
+    expect(state).toMatchObject({ releasable: false, scanCurrent: false });
+    expect(state.failures).toEqual(expect.arrayContaining(["currentScan", "malwareScanFailed"]));
+  });
+
+  it("does not let installer upload publish=true bypass recent auth or the release evidence gate", () => {
+    const route = readFileSync("app/api/admin/products/[id]/versions/route.ts", "utf8");
+    expect(route).toContain(".strict()");
+    expect(route).toContain('lifecycle: "DRAFT"');
+    expect(route).toContain("active: false");
+    expect(route).toContain("publishedAt: null");
+    expect(route).toContain("isLatest: false");
+  });
+
+  it("honors emergency revocation until explicit resolution and feeds the release gate", () => {
+    const revoked = [...cleanEvidence, { kind: "EMERGENCY_REVOCATION", result: "ACTIVE", artifactHash: hash, verifiedAt: at, failureReason: "compromised signing key" }];
+    const state = evaluateSupplyChainSecurity({ currentHash: hash, artifacts, evidence: revoked, certificateStatus: "REVOKED" });
+    expect(state.failures).toEqual(expect.arrayContaining(["revocation", "certificateRevoked"]));
+    const gate = evaluateReleaseGate({ signatureVerified: true, dependenciesVerified: true, sbomPresent: true, provenanceVerified: true, malwareClean: true, backupEvidencePresent: true, complianceEvidencePresent: true, migrationEvidencePresent: true, pendingComplianceCount: 0, reviewedById: "reviewer", priorCreatedById: "author", approvingAdminId: "approver", supplyChainSafe: state.releasable });
+    expect(gate.ready).toBe(false);
+    expect(gate.failures).toContain("supplyChainSafe");
+  });
+
+  it("keeps SBOM and provenance recording scoped to the current canonical payload", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain('"RECORD_SBOM", "RECORD_PROVENANCE"');
+    expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
+    expect(route).toContain('kind === "SBOM" ? { sbomReference: input.reference } : kind === "PROVENANCE"');
+    expect(readFileSync("app/api/admin/versions/[id]/route.ts", "utf8")).toContain("provenanceVerified: evidence?.provenanceStatus === \"VERIFIED\"");
+  });
+
+  it("rejects opaque technical uploads and accepts only generated evidence shapes", () => {
+    expect(() => validateTechnicalEvidence("SBOM", Buffer.from("{}"), "1.0.0")).toThrow("SBOM_EVIDENCE_INVALID");
+    expect(() => validateTechnicalEvidence("PROVENANCE", Buffer.from(JSON.stringify({ releaseIdentifier: "1.0.0" })), "1.0.0")).toThrow("PROVENANCE_EVIDENCE_INVALID");
+    expect(() => validateTechnicalEvidence("DEPENDENCIES", Buffer.from(JSON.stringify({ format: "bke.dependency-evidence.v1", releaseVersion: "1.0.0" })), "1.0.0")).toThrow("DEPENDENCIES_EVIDENCE_INVALID");
+    const sbom = { bomFormat: "CycloneDX", specVersion: "1.5", components: [], metadata: { component: { version: "1.0.0" } } };
+    expect(validateTechnicalEvidence("SBOM", Buffer.from(JSON.stringify(sbom)), "1.0.0")).toEqual(sbom);
+  });
+
+  it("records the remaining release gates only as current verified evidence", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain('"RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION"');
+    expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
+    const lifecycle = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
+    expect(lifecycle).toContain('currentEvidence("DEPENDENCIES")');
+    expect(lifecycle).toContain('currentEvidence("BACKUP")');
+    expect(lifecycle).toContain("complianceCurrent");
+    expect(lifecycle).toContain('currentEvidence("MIGRATION")');
+  });
+
+  it("requires server-verified durable evidence documents and makes replay storage idempotent", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain("documentBase64");
+    expect(route).toContain('createHash("sha256").update(document)');
+    expect(route).toContain("documentObjectKey");
+    expect(route).toContain("assertObjectExists(objectKey)");
+    expect(route).toContain("existing.verificationEvidence.find");
+    expect(route).toContain("EVIDENCE_REFERENCE_NOT_DURABLE");
+    expect(route).toContain("validateEvidenceDocument");
+    expect(route).toContain("MIGRATION_EVIDENCE_NOT_CURRENT");
+    const backup = readFileSync("lib/backups/engine.ts", "utf8");
+    expect(backup).toContain("evidenceDocuments");
+    expect(backup).toContain("verifyRestoredEvidenceObjects");
+  });
+
+  it("serializes supply-chain artifact BigInt fields for JSON responses without changing hashing", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain("artifact.sizeBytes.toString()");
+    expect(route).toContain("version: { ...row.version");
+    expect(readFileSync("lib/supply-chain/manifest.ts", "utf8")).toContain("sizeBytes: number");
+  });
+
+  it("exposes evidence recording from the release readiness UI", () => {
+    const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
+    const component = readFileSync("components/release-evidence-controls.tsx", "utf8");
+    expect(page).toContain("ReleaseEvidenceControls");
+    expect(component).toContain("RECORD_${kind}");
+    expect(component).toContain("documentBase64");
+    expect(component).toContain("router.refresh");
+  });
+
+  it("guards every publication mutation and binds approval to payload state", () => {
+    const route = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
+    expect(route).toContain('input.published === true && !input.approve');
+    expect(route).toContain("RELEASE_PUBLICATION_REQUIRES_STABLE");
+    expect(route).toContain("admin-release-lifecycle:");
+    expect(route).toContain("payloadHash");
+    expect(route).toContain("RELEASE_REVIEW_REQUIRED");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Review Release");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Approve Release");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("Publish Release");
+    expect(readFileSync("app/admin/releases/[id]/page.tsx", "utf8")).toContain("body={{ approve: true, published: true }}");
+    expect(route).toContain("input.lifecycle !== current.lifecycle");
+  });
+
+  it("requires structured compliance certification and preserves mock classification", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    const helper = readFileSync("lib/supply-chain/compliance-certification.ts", "utf8");
+    expect(route).toContain("validateComplianceCertification");
+    expect(route).toContain('classification: compliance?.classification');
+    expect(helper).toContain('bke.compliance-certification.v1');
+    expect(helper).toContain('classification: z.enum(["COMMERCIAL", "MOCK"])');
+    expect(helper).toContain("COMPLIANCE_ASSERTIONS_INCOMPLETE");
+  });
+
+  it("self-heals signature/checksum partial states independently", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    expect(route).toContain("const priorSignature");
+    expect(route).toContain("const priorChecksum");
+    expect(route).toContain("plan.createSignature");
+    expect(route).toContain("plan.createChecksum");
+    expect(route).toContain('kind: "CHECKSUM"');
+    expect(route).toContain("signed.payloadHash");
+  });
+
+  it("keeps Product Admin uploads in the governed draft workflow", () => {
+    const route = readFileSync("app/api/admin/products/[id]/versions/route.ts", "utf8");
+    const manager = readFileSync("components/admin-product-manager.tsx", "utf8");
+    expect(route).toContain('lifecycle: "DRAFT"');
+    expect(route).toContain("active: false");
+    expect(route).toContain("isLatest: false");
+    expect(route).toContain(".strict()");
+    expect(manager).not.toContain("Publish now");
+    expect(manager).not.toContain('name="publish"');
+    expect(manager).not.toContain('name="latest"');
+    expect(manager).toContain("Upload version as DRAFT");
+  });
+
+  it.each([
+    [false, false, true, true],
+    [true, false, false, true],
+    [false, true, true, false],
+    [true, true, false, false],
+  ])("plans only missing integrity evidence (%s, %s)", (signature, checksum, createSignature, createChecksum) => {
+    expect(integrityEvidencePlan(signature, checksum)).toEqual({ createSignature, createChecksum });
+  });
+});

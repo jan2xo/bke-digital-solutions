@@ -61,6 +61,6 @@ export function editionBody(fields: FormData) {
   };
 }
 
-function PlanToggle({ name, label, checked, children }: { name: string; label: string; checked: boolean; children: React.ReactNode }) { return <fieldset className="rounded-lg bg-slate-50 p-4"><label className="mb-3 flex items-center gap-2 font-black"><input type="checkbox" name={name} defaultChecked={checked}/> {label}</label><div className="grid gap-2">{children}</div></fieldset>; }
+function PlanToggle({ name, label, checked, children }: { name: string; label: string; checked: boolean; children: React.ReactNode }) { return <fieldset className="rounded-lg bg-slate-800 p-4 text-slate-100"><label className="mb-3 flex items-center gap-2 font-black"><input type="checkbox" name={name} defaultChecked={checked}/> {label}</label><div className="grid gap-2">{children}</div></fieldset>; }
 function Field({ name, label, value, type = "text" }: { name: string; label: string; value: string; type?: string }) { return <label className="label">{label}<input className="input" name={name} type={type} defaultValue={value} min={type === "number" ? "1" : undefined} step={type === "number" ? "1" : undefined} required/></label>; }
 function money(minor: number) { return new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(minor / 100); }

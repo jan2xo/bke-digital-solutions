@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/lib/auth";
+import { requireRecentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { decryptLicenseKey } from "@/lib/security/crypto";
 import { assertSameOrigin } from "@/lib/security/request";
@@ -9,7 +9,7 @@ import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     assertSameOrigin(request);
-    const user = await requireUser();
+    const user = await requireRecentUser();
     await assertLegalAcceptanceCurrent(user.id);
     const { id } = await params;
     const license = await db.license.findFirst({

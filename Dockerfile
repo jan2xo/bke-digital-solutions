@@ -23,7 +23,7 @@ CMD ["npx", "prisma", "migrate", "deploy"]
 
 FROM dependencies AS operations
 RUN addgroup --system --gid 1003 operations && adduser --system --uid 1003 operations
-RUN apk add --no-cache postgresql17-client
+RUN apk add --no-cache chromium postgresql17-client
 COPY --chown=operations:operations . .
 RUN DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build npm run db:generate
 ENV NODE_ENV=production

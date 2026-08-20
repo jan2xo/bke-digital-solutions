@@ -1,11 +1,15 @@
 import "server-only";
 import { env } from "@/lib/env";
+import { redact } from "@/lib/redaction";
 
 type Context = Record<string, unknown>;
-const sensitiveKey = /(password|secret|token|cookie|authorization|signature|licensekey|checkouturl|payload|body|email)/i;
-
+function redactLogEmails(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(redactLogEmails);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, nested]) => [key, key.toLowerCase().includes("email") ? "[REDACTED]" : redactLogEmails(nested)]));
+  return value;
+}
 function safeContext(context: Context) {
-  return Object.fromEntries(Object.entries(context).map(([key, value]) => [key, sensitiveKey.test(key) ? "[REDACTED]" : value]));
+  return redactLogEmails(redact(context)) as Context;
 }
 
 export function operationalLog(level: "info" | "warn" | "error", operation: string, context: Context = {}) {

@@ -1,10 +1,9 @@
-import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { apiError } from "@/lib/http";
-import { renderLegalMarkdown } from "@/lib/legal/render";
+import { legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
 import { assertSameOrigin } from "@/lib/security/request";
 
 const schema = z.object({ markdownContent: z.string().min(1).max(200_000).optional(), changeSummary: z.string().trim().min(2).max(500), requiresReacceptance: z.boolean().default(false), duplicateVersionId: z.string().cuid().optional() }).strict();
@@ -18,7 +17,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       const markdownContent = input.markdownContent ?? duplicate?.markdownContent;
       if (!markdownContent) throw new Error("LEGAL_CONTENT_REQUIRED");
       const renderedHtml = renderLegalMarkdown(markdownContent);
-      const created = await tx.legalDocumentVersion.create({ data: { documentId: id, versionNumber: (document.versions[0]?.versionNumber ?? 0) + 1, markdownContent, renderedHtml, contentHash: createHash("sha256").update(markdownContent).digest("hex"), changeSummary: input.changeSummary, requiresReacceptance: input.requiresReacceptance, authorId: admin.id } });
+      const created = await tx.legalDocumentVersion.create({ data: { documentId: id, versionNumber: (document.versions[0]?.versionNumber ?? 0) + 1, markdownContent, renderedHtml, contentHash: legalContentHash(renderedHtml), changeSummary: input.changeSummary, requiresReacceptance: input.requiresReacceptance, authorId: admin.id } });
       await tx.auditLog.create({ data: { actorId: admin.id, action: input.duplicateVersionId ? "LEGAL_VERSION_DUPLICATED" : "LEGAL_DRAFT_CREATED", targetType: "LegalDocumentVersion", targetId: created.id, metadata: { documentId: id, versionNumber: created.versionNumber } } });
       return created;
     }, { isolationLevel: "Serializable" });

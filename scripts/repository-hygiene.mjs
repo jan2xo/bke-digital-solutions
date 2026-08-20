@@ -9,6 +9,10 @@ const secretPatterns = [
   /\bre_(?:live|test)_[A-Za-z0-9]{12,}\b/,
   /\bwhsec_[A-Za-z0-9]{16,}\b/,
   /\bAKIA[0-9A-Z]{16}\b/,
+  /\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9_]{20,}\b/,
+  /\bgithub_pat_[A-Za-z0-9_]{20,}\b/,
+  /\bnpm_[A-Za-z0-9]{30,}\b/,
+  /\bAIza[0-9A-Za-z_-]{30,}\b/,
 ];
 const secretFiles = [];
 const unsafeLogs = [];

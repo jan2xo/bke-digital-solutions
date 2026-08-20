@@ -28,7 +28,7 @@ async function checkValkey() {
   try { await client.connect(); await client.ping(); } finally { if (client.isOpen) await client.quit(); }
 }
 
-export async function readiness() {
+export async function readiness(correlationId?: string) {
   const checks: Record<Dependency, "up" | "down"> = { postgresql: "down", valkey: "down", objectStorage: "down", providers: "down" };
   const operations: Array<[Dependency, () => Promise<unknown>]> = [
     ["postgresql", () => db.$queryRaw`SELECT 1`],
@@ -41,7 +41,7 @@ export async function readiness() {
   ];
   await Promise.all(operations.map(async ([name, operation]) => {
     try { await withinTimeout(operation); checks[name] = "up"; }
-    catch { operationalLog("warn", "readiness_dependency_failed", { dependency: name, errorCode: "DEPENDENCY_UNAVAILABLE" }); }
+    catch { operationalLog("warn", "readiness_dependency_failed", { dependency: name, errorCode: "DEPENDENCY_UNAVAILABLE", ...(correlationId ? { correlationId } : {}) }); }
   }));
   return { ready: Object.values(checks).every((status) => status === "up"), checks };
 }

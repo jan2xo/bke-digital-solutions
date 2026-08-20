@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { CUSTOMER_RELEASE_LIFECYCLES } from "@/lib/releases/eligibility";
 import { compareSemanticVersions, parseSemanticVersion } from "@/lib/releases/versioning";
+import { releaseReadiness } from "@/lib/supply-chain/readiness";
 
 export function selectEligibleRelease<T extends { version: string }>(candidates: T[], updatePolicy: string, currentVersion?: string): T | null {
   let eligible = candidates.filter((candidate) => {
@@ -40,12 +41,24 @@ export async function resolveCurrentCustomerRelease(
 }
 
 export async function resolveEligibleReleaseForArtifact(artifactId: string) {
-  return db.productArtifact.findFirst({
+  const artifact = await db.productArtifact.findFirst({
     where: {
       id: artifactId, active: true, removedAt: null,
       version: { active: true, publishedAt: { not: null }, lifecycle: { in: [...CUSTOMER_RELEASE_LIFECYCLES] } },
       product: { active: true, archivedAt: null },
     },
-    include: { version: true },
+    include: {
+      version: {
+        include: {
+          product: true,
+          artifacts: { where: { active: true, removedAt: null } },
+          supplyChainEvidence: { include: { verificationEvidence: true } },
+          approvals: true,
+        },
+      },
+    },
   });
+  if (!artifact?.version) return null;
+  const readiness = releaseReadiness(artifact.version);
+  return readiness.publishable ? artifact : null;
 }

@@ -1,10 +1,9 @@
-import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { apiError } from "@/lib/http";
-import { renderLegalMarkdown } from "@/lib/legal/render";
+import { legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
 import { assertSameOrigin } from "@/lib/security/request";
 
 const schema = z.discriminatedUnion("action", [
@@ -22,14 +21,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       if (input.action === "EDIT") {
         if (current.status !== "DRAFT") throw new Error("LEGAL_VERSION_IMMUTABLE");
         const renderedHtml = renderLegalMarkdown(input.markdownContent);
-        const updated = await tx.legalDocumentVersion.update({ where: { id }, data: { markdownContent: input.markdownContent, renderedHtml, contentHash: createHash("sha256").update(input.markdownContent).digest("hex"), changeSummary: input.changeSummary, requiresReacceptance: input.requiresReacceptance } });
+        const updated = await tx.legalDocumentVersion.update({ where: { id }, data: { markdownContent: input.markdownContent, renderedHtml, contentHash: legalContentHash(renderedHtml), changeSummary: input.changeSummary, requiresReacceptance: input.requiresReacceptance } });
         await tx.auditLog.create({ data: { actorId: admin.id, action: "LEGAL_DRAFT_UPDATED", targetType: "LegalDocumentVersion", targetId: id, metadata: { documentId: current.documentId } } }); return updated;
       }
       if (input.action === "PUBLISH") {
         if (current.status !== "DRAFT") throw new Error("LEGAL_VERSION_IMMUTABLE");
         const now = new Date();
         if (current.document.currentPublishedVersionId) await tx.legalDocumentVersion.update({ where: { id: current.document.currentPublishedVersionId }, data: { status: "ARCHIVED", archivedAt: now } });
-        const updated = await tx.legalDocumentVersion.update({ where: { id }, data: { status: "PUBLISHED", publishedAt: now, effectiveAt: input.effectiveAt ? new Date(input.effectiveAt) : now } });
+        const renderedHtml = current.renderedHtml ?? renderLegalMarkdown(current.markdownContent);
+        const updated = await tx.legalDocumentVersion.update({ where: { id }, data: { status: "PUBLISHED", renderedHtml, contentHash: legalContentHash(renderedHtml), publishedAt: now, effectiveAt: input.effectiveAt ? new Date(input.effectiveAt) : now } });
         await tx.legalDocument.update({ where: { id: current.documentId }, data: { currentPublishedVersionId: id, status: "ACTIVE" } });
         await tx.auditLog.create({ data: { actorId: admin.id, action: "LEGAL_VERSION_PUBLISHED", targetType: "LegalDocumentVersion", targetId: id, metadata: { documentId: current.documentId, versionNumber: current.versionNumber, requiresReacceptance: current.requiresReacceptance } } }); return updated;
       }

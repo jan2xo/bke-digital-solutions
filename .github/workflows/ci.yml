@@ -1,5 +1,8 @@
 name: CI
 on: [push, pull_request]
+
+permissions:
+  contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -54,5 +57,7 @@ jobs:
       - run: git diff --check
       - run: npm run security:hygiene
       - run: npm audit --omit=dev --audit-level=critical
+      - run: npm run deployment:verify-restart
+      - run: npm run deployment:verify-manifest
       - run: docker compose --env-file .env.production.example -f docker-compose.production.yml config --quiet
       - run: docker build --target runner -t bke-digital-solutions:ci .

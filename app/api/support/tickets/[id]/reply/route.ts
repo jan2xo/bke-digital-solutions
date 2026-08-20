@@ -1,0 +1,19 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { requireUser } from "@/lib/auth";
+import { assertSameOrigin, clientIp } from "@/lib/security/request";
+import { rateLimit } from "@/lib/security/rate-limit";
+import { apiError } from "@/lib/http";
+import { customerReply } from "@/lib/support";
+
+const schema = z.object({ body: z.string().trim().min(1).max(8000) });
+
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    assertSameOrigin(request);
+    const user = await requireUser();
+    if (!(await rateLimit(`support-reply:${user.id}:${clientIp(request)}`, 20, 3600)).allowed) throw new Error("RATE_LIMITED");
+    const input = schema.parse(await request.json());
+    return NextResponse.json(await customerReply({ userId: user.id, ticketId: (await params).id, body: input.body }), { headers: { "cache-control": "no-store" } });
+  } catch (error) { return apiError(error); }
+}
