@@ -17,7 +17,7 @@ export async function POST(request:Request) {
     if(!license || (license.expiresAt && license.expiresAt<new Date())) return NextResponse.json({error:"NOT_ENTITLED"},{status:403});
     const updatePolicy=license.edition?.updatePolicy ?? "LIFETIME";
     if(updatePolicy==="ACTIVE_TERM" && (!license.expiresAt || license.expiresAt<new Date() || (license.subscription && license.subscription.status!=="ACTIVE"))) return NextResponse.json({error:"UPDATE_NOT_ENTITLED"},{status:403});
-    const release=await resolveCurrentCustomerRelease(input.product_id,input.platform,input.architecture,input.channel);
+    const release=await resolveCurrentCustomerRelease(input.product_id,input.platform,input.architecture,input.channel,updatePolicy,input.current_version);
     if(!release) return NextResponse.json({error:"NO_ELIGIBLE_RELEASE"},{status:404});
     parseSemanticVersion(release.version);
     const minimum=release.minimumSupportedVersion ?? release.version;
