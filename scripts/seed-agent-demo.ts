@@ -29,7 +29,7 @@ async function main() {
   const license = existing
     ? await db.license.update({ where: { id: existing.id }, data: { keyHash: hashLicenseKey(licenseKey), keyLastFour: licenseKey.slice(-4), keyCiphertext: encryptLicenseKey(licenseKey), status: "ACTIVE", expiresAt: null, maxSeats: 1, maxDevicesPerSeat: 10 } })
     : await db.license.create({ data: { publicId: `agent-demo-license-${product.id}`, keyHash: hashLicenseKey(licenseKey), keyLastFour: licenseKey.slice(-4), keyCiphertext: encryptLicenseKey(licenseKey), accountId: account.id, orderId: order.id, orderItemId: item.id, productId: product.id, editionId: edition.id, purchasePlanId: plan.id, status: "ACTIVE", maxSeats: 1, maxDevicesPerSeat: 2 } });
-  console.info(JSON.stringify({ testOnly: true, productId: product.id, productSlug: product.slug, versionId: version.id, version: version.version, licenseId: license.id, keyLastFour: licenseKey.slice(-4) }));
+  console.info(JSON.stringify({ testOnly: true, productId: product.id, productSlug: product.slug, versionId: version.id, version: version.version, licenseId: license.id }));
 }
 
 main().catch((error) => { console.error(error instanceof Error ? error.message : "SEED_FAILED"); process.exitCode = 1; }).finally(() => db.$disconnect());
