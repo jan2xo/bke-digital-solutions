@@ -2,6 +2,18 @@ import { db } from "@/lib/db";
 import { CUSTOMER_RELEASE_LIFECYCLES } from "@/lib/releases/eligibility";
 import { compareSemanticVersions, parseSemanticVersion } from "@/lib/releases/versioning";
 
+export function selectEligibleRelease<T extends { version: string }>(candidates: T[], updatePolicy: string, currentVersion?: string): T | null {
+  let eligible = candidates.filter((candidate) => {
+    try { parseSemanticVersion(candidate.version); return true; } catch { return false; }
+  });
+  if (updatePolicy === "MAJOR_VERSION" && currentVersion) {
+    const entitledMajor = parseSemanticVersion(currentVersion)[0];
+    eligible = eligible.filter((candidate) => parseSemanticVersion(candidate.version)[0] === entitledMajor);
+  }
+  eligible.sort((left, right) => compareSemanticVersions(right.version, left.version));
+  return eligible[0] ?? null;
+}
+
 export async function resolveCurrentCustomerRelease(
   productId: string,
   platform?: string,
@@ -23,22 +35,8 @@ export async function resolveCurrentCustomerRelease(
     include: { artifacts: { where: { active: true, removedAt: null } } },
   });
 
-  let eligible = candidates.filter((candidate) => {
-    try {
-      parseSemanticVersion(candidate.version);
-      return candidate.artifacts.some((artifact) => artifact.active && !artifact.removedAt && artifact.sha256 && Number(artifact.sizeBytes) >= 0);
-    } catch {
-      return false;
-    }
-  });
-
-  if (updatePolicy === "MAJOR_VERSION" && currentVersion) {
-    const entitledMajor = parseSemanticVersion(currentVersion)[0];
-    eligible = eligible.filter((candidate) => parseSemanticVersion(candidate.version)[0] === entitledMajor);
-  }
-
-  eligible.sort((left, right) => compareSemanticVersions(right.version, left.version));
-  return eligible[0] ?? null;
+  const withArtifacts = candidates.filter((candidate) => candidate.artifacts.some((artifact) => artifact.active && !artifact.removedAt && artifact.sha256 && Number(artifact.sizeBytes) >= 0));
+  return selectEligibleRelease(withArtifacts, updatePolicy, currentVersion);
 }
 
 export async function resolveEligibleReleaseForArtifact(artifactId: string) {
