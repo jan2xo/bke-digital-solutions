@@ -16,7 +16,7 @@ const requestSchema=z.object({
 });
 
 function canonical(value:Record<string,unknown>) {
-  return JSON.stringify(Object.fromEntries(Object.entries(value).sort(([left],[right]) => left.localeCompare(right))));
+  return JSON.stringify(Object.fromEntries(Object.entries(value).sort(([left],[right]) => left < right ? -1 : left > right ? 1 : 0)));
 }
 
 export async function POST(request:Request) {
