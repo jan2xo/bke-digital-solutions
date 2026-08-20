@@ -28,6 +28,7 @@ jobs:
         run: |
           openssl genpkey -algorithm ED25519 -out /tmp/bke-ci-private.pem 2>/dev/null
           openssl pkey -in /tmp/bke-ci-private.pem -pubout -out /tmp/bke-ci-public.pem 2>/dev/null
+          while IFS= read -r line; do echo "::add-mask::$line"; done < /tmp/bke-ci-private.pem
           {
             echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_SIGNING_EOF'
             cat /tmp/bke-ci-private.pem
