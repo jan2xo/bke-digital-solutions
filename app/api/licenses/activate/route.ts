@@ -13,8 +13,8 @@ export async function POST(request: Request) {
     if (!(await rateLimit(`activate:${clientIp(request)}:${input.licenseKey.slice(-4)}`, 20, 3600)).allowed) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
     return NextResponse.json(await issueCommercialLease({ ...input, action: "ACTIVATION" }), { status: 201 });
   } catch (error) {
-    console.error("activation failure", error);\n    const message = error instanceof Error ? error.message : "";
+    const message = error instanceof Error ? error.message : "";
     const code = ["ACTIVATION_LIMIT", "INVALID_LICENSE_VERSION", "COMMERCIAL_OPERATION_REQUIRED"].includes(message) ? message : "INVALID_LICENSE";
-    return NextResponse.json({ error: code }, { status: code === "INVALID_LICENSE" ? 400 : 409 });
+    return NextResponse.json({ error: code, ...(process.env.NODE_ENV === "test" ? { detail: message } : {}) }, { status: code === "INVALID_LICENSE" ? 400 : 409 });
   }
 }
