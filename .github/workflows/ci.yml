@@ -15,14 +15,6 @@ jobs:
       DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_test
       SESSION_SECRET: ci-session-secret-with-at-least-32-chars
       LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
-      LICENSE_SIGNING_PRIVATE_KEY: |-
-        -----BEGIN PRIVATE KEY-----
-        MC4CAQAwBQYDK2VwBCIEIJZkrb1K0GMxltlOEXL9lqi/lh4yS9Bs6OvxPI3afMpG
-        -----END PRIVATE KEY-----
-      LICENSE_SIGNING_PUBLIC_KEY: |-
-        -----BEGIN PUBLIC KEY-----
-        MCowBQYDK2VwAyEAnICUAUwDbbhcqzXZzEIs3KTjSRiAOW5y49oeSWZ+jo4=
-        -----END PUBLIC KEY-----
       PAYMENT_PROVIDER: mock
       EMAIL_FROM: test@example.com
       S3_BUCKET: test
@@ -32,6 +24,18 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - name: Generate disposable test signing key
+        run: |
+          openssl genpkey -algorithm ED25519 -out /tmp/bke-ci-private.pem 2>/dev/null
+          openssl pkey -in /tmp/bke-ci-private.pem -pubout -out /tmp/bke-ci-public.pem 2>/dev/null
+          {
+            echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_SIGNING_EOF'
+            cat /tmp/bke-ci-private.pem
+            echo 'BKE_SIGNING_EOF'
+            echo 'LICENSE_SIGNING_PUBLIC_KEY<<BKE_SIGNING_EOF'
+            cat /tmp/bke-ci-public.pem
+            echo 'BKE_SIGNING_EOF'
+          } >> "$GITHUB_ENV"
       - run: npm run config:validate
         env:
           DEPLOYMENT_ENV: test
