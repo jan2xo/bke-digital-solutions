@@ -4,7 +4,7 @@ import { createPrivateKey, sign } from "node:crypto";
 import { db } from "@/lib/db";
 import { hashLicenseKey, hashToken, randomToken } from "@/lib/security/crypto";
 import { resolveCurrentCustomerRelease } from "@/lib/releases/resolution";
-import { activeCommercialSigningKey } from "@/lib/licensing/signing-registry";
+import { activeCommercialSigningKey, ensureCommercialSigningKey } from "@/lib/licensing/signing-registry";
 
 const requestSchema=z.object({
   license_key:z.string().min(8).max(512),
@@ -30,6 +30,7 @@ export async function POST(request:Request) {
     if(!release || release.channel.toLowerCase()!==input.channel) return NextResponse.json({error:"NO_ELIGIBLE_RELEASE"},{status:404});
     const artifact=release.artifacts.find(item=>item.active && !item.removedAt && item.sha256 && Number(item.sizeBytes)>=0);
     if(!artifact) return NextResponse.json({error:"ARTIFACT_UNAVAILABLE"},{status:503});
+    await ensureCommercialSigningKey();
     const key=await activeCommercialSigningKey();
     const policy={
       schema:"bke.update-policy.v1",product_id:input.product_id,current_version:input.current_version,
