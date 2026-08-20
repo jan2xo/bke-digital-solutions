@@ -753,6 +753,7 @@ model ProductVersion {
   operatingSystem String
   architecture    String
   isLatest        Boolean           @default(false)
+  minimumSupportedVersion String?
   publishedAt     DateTime?
   releasedAt      DateTime          @default(now())
   product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
