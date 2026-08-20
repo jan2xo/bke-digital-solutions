@@ -37,6 +37,7 @@ export type ProductVersionMinAggregateOutputType = {
   operatingSystem: string | null
   architecture: string | null
   isLatest: boolean | null
+  minimumSupportedVersion?: string | null;
   publishedAt: Date | null
   releasedAt: Date | null
   backupEvidence: string | null
@@ -57,6 +58,7 @@ export type ProductVersionMaxAggregateOutputType = {
   operatingSystem: string | null
   architecture: string | null
   isLatest: boolean | null
+  minimumSupportedVersion?: string | null;
   publishedAt: Date | null
   releasedAt: Date | null
   backupEvidence: string | null
@@ -77,6 +79,7 @@ export type ProductVersionCountAggregateOutputType = {
   operatingSystem: number
   architecture: number
   isLatest: number
+  minimumSupportedVersion?: string | null;
   publishedAt: number
   releasedAt: number
   backupEvidence: number
@@ -99,6 +102,7 @@ export type ProductVersionMinAggregateInputType = {
   operatingSystem?: true
   architecture?: true
   isLatest?: true
+  minimumSupportedVersion?: string | null;
   publishedAt?: true
   releasedAt?: true
   backupEvidence?: true
@@ -119,6 +123,7 @@ export type ProductVersionMaxAggregateInputType = {
   operatingSystem?: true
   architecture?: true
   isLatest?: true
+  minimumSupportedVersion?: string | null;
   publishedAt?: true
   releasedAt?: true
   backupEvidence?: true
@@ -139,6 +144,7 @@ export type ProductVersionCountAggregateInputType = {
   operatingSystem?: true
   architecture?: true
   isLatest?: true
+  minimumSupportedVersion?: string | null;
   publishedAt?: true
   releasedAt?: true
   backupEvidence?: true
@@ -232,6 +238,7 @@ export type ProductVersionGroupByOutputType = {
   operatingSystem: string
   architecture: string
   isLatest: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt: Date | null
   releasedAt: Date
   backupEvidence: string | null
@@ -273,6 +280,7 @@ export type ProductVersionWhereInput = {
   operatingSystem?: Prisma.StringFilter<"ProductVersion"> | string
   architecture?: Prisma.StringFilter<"ProductVersion"> | string
   isLatest?: Prisma.BoolFilter<"ProductVersion"> | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeFilter<"ProductVersion"> | Date | string
   backupEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
@@ -297,6 +305,7 @@ export type ProductVersionOrderByWithRelationInput = {
   operatingSystem?: Prisma.SortOrder
   architecture?: Prisma.SortOrder
   isLatest?: Prisma.SortOrder
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
   backupEvidence?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -325,6 +334,7 @@ export type ProductVersionWhereUniqueInput = Prisma.AtLeast<{
   operatingSystem?: Prisma.StringFilter<"ProductVersion"> | string
   architecture?: Prisma.StringFilter<"ProductVersion"> | string
   isLatest?: Prisma.BoolFilter<"ProductVersion"> | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeFilter<"ProductVersion"> | Date | string
   backupEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
@@ -349,6 +359,7 @@ export type ProductVersionOrderByWithAggregationInput = {
   operatingSystem?: Prisma.SortOrder
   architecture?: Prisma.SortOrder
   isLatest?: Prisma.SortOrder
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
   backupEvidence?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -375,6 +386,7 @@ export type ProductVersionScalarWhereWithAggregatesInput = {
   operatingSystem?: Prisma.StringWithAggregatesFilter<"ProductVersion"> | string
   architecture?: Prisma.StringWithAggregatesFilter<"ProductVersion"> | string
   isLatest?: Prisma.BoolWithAggregatesFilter<"ProductVersion"> | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeWithAggregatesFilter<"ProductVersion"> | Date | string
   backupEvidence?: Prisma.StringNullableWithAggregatesFilter<"ProductVersion"> | string | null
@@ -394,6 +406,7 @@ export type ProductVersionCreateInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -418,6 +431,7 @@ export type ProductVersionUncheckedCreateInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -440,6 +454,7 @@ export type ProductVersionUpdateInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -464,6 +479,7 @@ export type ProductVersionUncheckedUpdateInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -487,6 +503,7 @@ export type ProductVersionCreateManyInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -506,6 +523,7 @@ export type ProductVersionUpdateManyMutationInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -526,6 +544,7 @@ export type ProductVersionUncheckedUpdateManyInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -561,6 +580,7 @@ export type ProductVersionCountOrderByAggregateInput = {
   operatingSystem?: Prisma.SortOrder
   architecture?: Prisma.SortOrder
   isLatest?: Prisma.SortOrder
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
   backupEvidence?: Prisma.SortOrder
@@ -581,6 +601,7 @@ export type ProductVersionMaxOrderByAggregateInput = {
   operatingSystem?: Prisma.SortOrder
   architecture?: Prisma.SortOrder
   isLatest?: Prisma.SortOrder
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
   backupEvidence?: Prisma.SortOrder
@@ -601,6 +622,7 @@ export type ProductVersionMinOrderByAggregateInput = {
   operatingSystem?: Prisma.SortOrder
   architecture?: Prisma.SortOrder
   isLatest?: Prisma.SortOrder
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.SortOrder
   releasedAt?: Prisma.SortOrder
   backupEvidence?: Prisma.SortOrder
@@ -724,6 +746,7 @@ export type ProductVersionCreateWithoutProductInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -746,6 +769,7 @@ export type ProductVersionUncheckedCreateWithoutProductInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -798,6 +822,7 @@ export type ProductVersionScalarWhereInput = {
   operatingSystem?: Prisma.StringFilter<"ProductVersion"> | string
   architecture?: Prisma.StringFilter<"ProductVersion"> | string
   isLatest?: Prisma.BoolFilter<"ProductVersion"> | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.DateTimeNullableFilter<"ProductVersion"> | Date | string | null
   releasedAt?: Prisma.DateTimeFilter<"ProductVersion"> | Date | string
   backupEvidence?: Prisma.StringNullableFilter<"ProductVersion"> | string | null
@@ -817,6 +842,7 @@ export type ProductVersionCreateWithoutApprovalsInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -840,6 +866,7 @@ export type ProductVersionUncheckedCreateWithoutApprovalsInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -877,6 +904,7 @@ export type ProductVersionUpdateWithoutApprovalsInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -900,6 +928,7 @@ export type ProductVersionUncheckedUpdateWithoutApprovalsInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -921,6 +950,7 @@ export type ProductVersionCreateWithoutSupplyChainEvidenceInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -944,6 +974,7 @@ export type ProductVersionUncheckedCreateWithoutSupplyChainEvidenceInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -981,6 +1012,7 @@ export type ProductVersionUpdateWithoutSupplyChainEvidenceInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1004,6 +1036,7 @@ export type ProductVersionUncheckedUpdateWithoutSupplyChainEvidenceInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1025,6 +1058,7 @@ export type ProductVersionCreateWithoutArtifactsInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -1048,6 +1082,7 @@ export type ProductVersionUncheckedCreateWithoutArtifactsInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -1085,6 +1120,7 @@ export type ProductVersionUpdateWithoutArtifactsInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1108,6 +1144,7 @@ export type ProductVersionUncheckedUpdateWithoutArtifactsInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1129,6 +1166,7 @@ export type ProductVersionCreateManyProductInput = {
   operatingSystem: string
   architecture: string
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Date | string | null
   releasedAt?: Date | string
   backupEvidence?: string | null
@@ -1148,6 +1186,7 @@ export type ProductVersionUpdateWithoutProductInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1170,6 +1209,7 @@ export type ProductVersionUncheckedUpdateWithoutProductInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1192,6 +1232,7 @@ export type ProductVersionUncheckedUpdateManyWithoutProductInput = {
   operatingSystem?: Prisma.StringFieldUpdateOperationsInput | string
   architecture?: Prisma.StringFieldUpdateOperationsInput | string
   isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   releasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   backupEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1252,6 +1293,7 @@ export type ProductVersionSelect<ExtArgs extends runtime.Types.Extensions.Intern
   operatingSystem?: boolean
   architecture?: boolean
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: boolean
   releasedAt?: boolean
   backupEvidence?: boolean
@@ -1277,6 +1319,7 @@ export type ProductVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   operatingSystem?: boolean
   architecture?: boolean
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: boolean
   releasedAt?: boolean
   backupEvidence?: boolean
@@ -1298,6 +1341,7 @@ export type ProductVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   operatingSystem?: boolean
   architecture?: boolean
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: boolean
   releasedAt?: boolean
   backupEvidence?: boolean
@@ -1319,6 +1363,7 @@ export type ProductVersionSelectScalar = {
   operatingSystem?: boolean
   architecture?: boolean
   isLatest?: boolean
+  minimumSupportedVersion?: string | null;
   publishedAt?: boolean
   releasedAt?: boolean
   backupEvidence?: boolean
@@ -1362,6 +1407,7 @@ export type $ProductVersionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     operatingSystem: string
     architecture: string
     isLatest: boolean
+    minimumSupportedVersion?: string | null;
     publishedAt: Date | null
     releasedAt: Date
     backupEvidence: string | null
