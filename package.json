@@ -58,7 +58,8 @@
     "ops:health": "node scripts/ops-health.mjs",
     "deployment:verify-restart": "node scripts/verify-compose-restart-policies.mjs",
     "deployment:verify-manifest": "node scripts/verify-deployment-manifest.mjs",
-    "deployment:verify-routes": "node scripts/verify-production-routes.mjs"
+    "deployment:verify-routes": "node scripts/verify-production-routes.mjs",
+    "deploy": "bash scripts/deploy-production.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",
