@@ -467,6 +467,7 @@ export const ProductVersionScalarFieldEnum = {
   operatingSystem: 'operatingSystem',
   architecture: 'architecture',
   isLatest: 'isLatest',
+  minimumSupportedVersion: 'minimumSupportedVersion',
   publishedAt: 'publishedAt',
   releasedAt: 'releasedAt',
   backupEvidence: 'backupEvidence',
