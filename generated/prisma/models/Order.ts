@@ -288,6 +288,7 @@ export type OrderWhereInput = {
   webhookEvents?: Prisma.WebhookEventListRelationFilter
   refundOperations?: Prisma.RefundOperationListRelationFilter
   reconciliations?: Prisma.PaymentReconciliationListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -315,6 +316,7 @@ export type OrderOrderByWithRelationInput = {
   webhookEvents?: Prisma.WebhookEventOrderByRelationAggregateInput
   refundOperations?: Prisma.RefundOperationOrderByRelationAggregateInput
   reconciliations?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
+  supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -345,6 +347,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   webhookEvents?: Prisma.WebhookEventListRelationFilter
   refundOperations?: Prisma.RefundOperationListRelationFilter
   reconciliations?: Prisma.PaymentReconciliationListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
 }, "id" | "number">
 
 export type OrderOrderByWithAggregationInput = {
@@ -408,6 +411,7 @@ export type OrderCreateInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -433,6 +437,7 @@ export type OrderUncheckedCreateInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -458,6 +463,7 @@ export type OrderUpdateInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -483,6 +489,7 @@ export type OrderUncheckedUpdateInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -833,6 +840,22 @@ export type OrderUpdateOneRequiredWithoutLicensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutLicensesInput, Prisma.OrderUpdateWithoutLicensesInput>, Prisma.OrderUncheckedUpdateWithoutLicensesInput>
 }
 
+export type OrderCreateNestedOneWithoutSupportTicketsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutSupportTicketsInput, Prisma.OrderUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutSupportTicketsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutSupportTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutSupportTicketsInput, Prisma.OrderUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutSupportTicketsInput
+  upsert?: Prisma.OrderUpsertWithoutSupportTicketsInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutSupportTicketsInput, Prisma.OrderUpdateWithoutSupportTicketsInput>, Prisma.OrderUncheckedUpdateWithoutSupportTicketsInput>
+}
+
 export type OrderCreateWithoutAccountInput = {
   id?: string
   number: string
@@ -855,6 +878,7 @@ export type OrderCreateWithoutAccountInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutAccountInput = {
@@ -879,6 +903,7 @@ export type OrderUncheckedCreateWithoutAccountInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutAccountInput = {
@@ -947,6 +972,7 @@ export type OrderCreateWithoutItemsInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutItemsInput = {
@@ -971,6 +997,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutItemsInput = {
@@ -1011,6 +1038,7 @@ export type OrderUpdateWithoutItemsInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -1035,6 +1063,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPaymentsInput = {
@@ -1059,6 +1088,7 @@ export type OrderCreateWithoutPaymentsInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPaymentsInput = {
@@ -1083,6 +1113,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPaymentsInput = {
@@ -1123,6 +1154,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPaymentsInput = {
@@ -1147,6 +1179,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutAttemptsInput = {
@@ -1171,6 +1204,7 @@ export type OrderCreateWithoutAttemptsInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutAttemptsInput = {
@@ -1195,6 +1229,7 @@ export type OrderUncheckedCreateWithoutAttemptsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutAttemptsInput = {
@@ -1235,6 +1270,7 @@ export type OrderUpdateWithoutAttemptsInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutAttemptsInput = {
@@ -1259,6 +1295,7 @@ export type OrderUncheckedUpdateWithoutAttemptsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutWebhookEventsInput = {
@@ -1283,6 +1320,7 @@ export type OrderCreateWithoutWebhookEventsInput = {
   offerRedemption?: Prisma.OfferRedemptionCreateNestedOneWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutWebhookEventsInput = {
@@ -1307,6 +1345,7 @@ export type OrderUncheckedCreateWithoutWebhookEventsInput = {
   offerRedemption?: Prisma.OfferRedemptionUncheckedCreateNestedOneWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutWebhookEventsInput = {
@@ -1347,6 +1386,7 @@ export type OrderUpdateWithoutWebhookEventsInput = {
   offerRedemption?: Prisma.OfferRedemptionUpdateOneWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutWebhookEventsInput = {
@@ -1371,6 +1411,7 @@ export type OrderUncheckedUpdateWithoutWebhookEventsInput = {
   offerRedemption?: Prisma.OfferRedemptionUncheckedUpdateOneWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutRefundOperationsInput = {
@@ -1395,6 +1436,7 @@ export type OrderCreateWithoutRefundOperationsInput = {
   offerRedemption?: Prisma.OfferRedemptionCreateNestedOneWithoutOrderInput
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutRefundOperationsInput = {
@@ -1419,6 +1461,7 @@ export type OrderUncheckedCreateWithoutRefundOperationsInput = {
   offerRedemption?: Prisma.OfferRedemptionUncheckedCreateNestedOneWithoutOrderInput
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutRefundOperationsInput = {
@@ -1459,6 +1502,7 @@ export type OrderUpdateWithoutRefundOperationsInput = {
   offerRedemption?: Prisma.OfferRedemptionUpdateOneWithoutOrderNestedInput
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutRefundOperationsInput = {
@@ -1483,6 +1527,7 @@ export type OrderUncheckedUpdateWithoutRefundOperationsInput = {
   offerRedemption?: Prisma.OfferRedemptionUncheckedUpdateOneWithoutOrderNestedInput
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReconciliationsInput = {
@@ -1507,6 +1552,7 @@ export type OrderCreateWithoutReconciliationsInput = {
   offerRedemption?: Prisma.OfferRedemptionCreateNestedOneWithoutOrderInput
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReconciliationsInput = {
@@ -1531,6 +1577,7 @@ export type OrderUncheckedCreateWithoutReconciliationsInput = {
   offerRedemption?: Prisma.OfferRedemptionUncheckedCreateNestedOneWithoutOrderInput
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReconciliationsInput = {
@@ -1571,6 +1618,7 @@ export type OrderUpdateWithoutReconciliationsInput = {
   offerRedemption?: Prisma.OfferRedemptionUpdateOneWithoutOrderNestedInput
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReconciliationsInput = {
@@ -1595,6 +1643,7 @@ export type OrderUncheckedUpdateWithoutReconciliationsInput = {
   offerRedemption?: Prisma.OfferRedemptionUncheckedUpdateOneWithoutOrderNestedInput
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutInvoiceInput = {
@@ -1619,6 +1668,7 @@ export type OrderCreateWithoutInvoiceInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutInvoiceInput = {
@@ -1643,6 +1693,7 @@ export type OrderUncheckedCreateWithoutInvoiceInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutInvoiceInput = {
@@ -1683,6 +1734,7 @@ export type OrderUpdateWithoutInvoiceInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutInvoiceInput = {
@@ -1707,6 +1759,7 @@ export type OrderUncheckedUpdateWithoutInvoiceInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutSubscriptionsInput = {
@@ -1731,6 +1784,7 @@ export type OrderCreateWithoutSubscriptionsInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutSubscriptionsInput = {
@@ -1755,6 +1809,7 @@ export type OrderUncheckedCreateWithoutSubscriptionsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutSubscriptionsInput = {
@@ -1784,6 +1839,7 @@ export type OrderCreateWithoutRenewalSubscriptionInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutRenewalSubscriptionInput = {
@@ -1808,6 +1864,7 @@ export type OrderUncheckedCreateWithoutRenewalSubscriptionInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutRenewalSubscriptionInput = {
@@ -1853,6 +1910,7 @@ export type OrderUpdateWithoutSubscriptionsInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1877,6 +1935,7 @@ export type OrderUncheckedUpdateWithoutSubscriptionsInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUpsertWithWhereUniqueWithoutRenewalSubscriptionInput = {
@@ -1917,6 +1976,7 @@ export type OrderCreateWithoutOfferRedemptionInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutOfferRedemptionInput = {
@@ -1941,6 +2001,7 @@ export type OrderUncheckedCreateWithoutOfferRedemptionInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutOfferRedemptionInput = {
@@ -1981,6 +2042,7 @@ export type OrderUpdateWithoutOfferRedemptionInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutOfferRedemptionInput = {
@@ -2005,6 +2067,7 @@ export type OrderUncheckedUpdateWithoutOfferRedemptionInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutLicensesInput = {
@@ -2029,6 +2092,7 @@ export type OrderCreateWithoutLicensesInput = {
   webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutLicensesInput = {
@@ -2053,6 +2117,7 @@ export type OrderUncheckedCreateWithoutLicensesInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
   refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutLicensesInput = {
@@ -2093,6 +2158,7 @@ export type OrderUpdateWithoutLicensesInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutLicensesInput = {
@@ -2112,6 +2178,123 @@ export type OrderUncheckedUpdateWithoutLicensesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   attempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutOrderNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutOrderNestedInput
+  offerRedemption?: Prisma.OfferRedemptionUncheckedUpdateOneWithoutOrderNestedInput
+  webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
+  refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
+  reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutSupportTicketsInput = {
+  id?: string
+  number: string
+  status?: $Enums.OrderStatus
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  billingSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  paidAt?: Date | string | null
+  account: Prisma.CustomerAccountCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  attempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutOrderInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutOrderInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutOrderInput
+  renewalSubscription?: Prisma.SubscriptionCreateNestedOneWithoutRenewalOrdersInput
+  offerRedemption?: Prisma.OfferRedemptionCreateNestedOneWithoutOrderInput
+  webhookEvents?: Prisma.WebhookEventCreateNestedManyWithoutOrderInput
+  refundOperations?: Prisma.RefundOperationCreateNestedManyWithoutOrderInput
+  reconciliations?: Prisma.PaymentReconciliationCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutSupportTicketsInput = {
+  id?: string
+  number: string
+  accountId: string
+  status?: $Enums.OrderStatus
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  billingSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  paidAt?: Date | string | null
+  renewalSubscriptionId?: string | null
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  attempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutOrderInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutOrderInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutOrderInput
+  offerRedemption?: Prisma.OfferRedemptionUncheckedCreateNestedOneWithoutOrderInput
+  webhookEvents?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutOrderInput
+  refundOperations?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutOrderInput
+  reconciliations?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutSupportTicketsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutSupportTicketsInput, Prisma.OrderUncheckedCreateWithoutSupportTicketsInput>
+}
+
+export type OrderUpsertWithoutSupportTicketsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutSupportTicketsInput, Prisma.OrderUncheckedUpdateWithoutSupportTicketsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutSupportTicketsInput, Prisma.OrderUncheckedCreateWithoutSupportTicketsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutSupportTicketsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutSupportTicketsInput, Prisma.OrderUncheckedUpdateWithoutSupportTicketsInput>
+}
+
+export type OrderUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  billingSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  account?: Prisma.CustomerAccountUpdateOneRequiredWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  attempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutOrderNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutOrderNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutOrderNestedInput
+  renewalSubscription?: Prisma.SubscriptionUpdateOneWithoutRenewalOrdersNestedInput
+  offerRedemption?: Prisma.OfferRedemptionUpdateOneWithoutOrderNestedInput
+  webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
+  refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
+  reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  billingSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  renewalSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  attempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutOrderNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutOrderNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutOrderNestedInput
   offerRedemption?: Prisma.OfferRedemptionUncheckedUpdateOneWithoutOrderNestedInput
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
@@ -2155,6 +2338,7 @@ export type OrderUpdateWithoutAccountInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutAccountInput = {
@@ -2179,6 +2363,7 @@ export type OrderUncheckedUpdateWithoutAccountInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutAccountInput = {
@@ -2231,6 +2416,7 @@ export type OrderUpdateWithoutRenewalSubscriptionInput = {
   webhookEvents?: Prisma.WebhookEventUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutRenewalSubscriptionInput = {
@@ -2255,6 +2441,7 @@ export type OrderUncheckedUpdateWithoutRenewalSubscriptionInput = {
   webhookEvents?: Prisma.WebhookEventUncheckedUpdateManyWithoutOrderNestedInput
   refundOperations?: Prisma.RefundOperationUncheckedUpdateManyWithoutOrderNestedInput
   reconciliations?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutOrderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutRenewalSubscriptionInput = {
@@ -2285,6 +2472,7 @@ export type OrderCountOutputType = {
   webhookEvents: number
   refundOperations: number
   reconciliations: number
+  supportTickets: number
 }
 
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2296,6 +2484,7 @@ export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   webhookEvents?: boolean | OrderCountOutputTypeCountWebhookEventsArgs
   refundOperations?: boolean | OrderCountOutputTypeCountRefundOperationsArgs
   reconciliations?: boolean | OrderCountOutputTypeCountReconciliationsArgs
+  supportTickets?: boolean | OrderCountOutputTypeCountSupportTicketsArgs
 }
 
 /**
@@ -2364,6 +2553,13 @@ export type OrderCountOutputTypeCountReconciliationsArgs<ExtArgs extends runtime
   where?: Prisma.PaymentReconciliationWhereInput
 }
 
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountSupportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2390,6 +2586,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   webhookEvents?: boolean | Prisma.Order$webhookEventsArgs<ExtArgs>
   refundOperations?: boolean | Prisma.Order$refundOperationsArgs<ExtArgs>
   reconciliations?: boolean | Prisma.Order$reconciliationsArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.Order$supportTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -2456,6 +2653,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   webhookEvents?: boolean | Prisma.Order$webhookEventsArgs<ExtArgs>
   refundOperations?: boolean | Prisma.Order$refundOperationsArgs<ExtArgs>
   reconciliations?: boolean | Prisma.Order$reconciliationsArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.Order$supportTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2482,6 +2680,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     webhookEvents: Prisma.$WebhookEventPayload<ExtArgs>[]
     refundOperations: Prisma.$RefundOperationPayload<ExtArgs>[]
     reconciliations: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
+    supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2902,6 +3101,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   webhookEvents<T extends Prisma.Order$webhookEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$webhookEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WebhookEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refundOperations<T extends Prisma.Order$refundOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$refundOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reconciliations<T extends Prisma.Order$reconciliationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reconciliationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportTickets<T extends Prisma.Order$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3590,6 +3790,30 @@ export type Order$reconciliationsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.PaymentReconciliationScalarFieldEnum | Prisma.PaymentReconciliationScalarFieldEnum[]
+}
+
+/**
+ * Order.supportTickets
+ */
+export type Order$supportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
 }
 
 /**

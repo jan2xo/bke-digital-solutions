@@ -1,0 +1,64 @@
+import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+
+describe("dependency evidence operations", () => {
+  it("uses lockfile, resolution, and audit checks and emits a versioned document", () => {
+    const script = readFileSync("scripts/generate-dependency-evidence.mjs", "utf8");
+    expect(script).toContain('"npm", ["ci", "--ignore-scripts"]');
+    expect(script).toContain('"npm", ["ls", "--all", "--json"]');
+    expect(script).toContain('"npm", ["audit", "--json", "--omit=dev"]');
+    expect(script).toContain("bke.dependency-evidence.v1");
+    expect(readFileSync("package.json", "utf8")).toContain('"supplychain:dependencies"');
+    expect(script).toContain("mkdtemp(join(tmpdir(), \"bke-dependencies-\")");
+    expect(script).toContain("sourceNodeModulesUsed: false");
+    expect(script).toContain("finally");
+  });
+
+  it("provides a fail-closed first-class evidence package generator", () => {
+    const script = readFileSync("scripts/generate-supply-chain-evidence.mjs", "utf8");
+    expect(readFileSync("package.json", "utf8")).toContain('"supplychain:generate"');
+    expect(script).toContain("generate-sbom.mjs");
+    expect(script).toContain("generate-provenance.mjs");
+    expect(script).toContain("generate-dependency-evidence.mjs");
+    expect(script).toContain('"prisma", "migrate", "status"');
+    expect(script).toContain("database schema is up to date");
+    expect(script).toContain("process.exitCode = 1");
+    expect(script).toContain('createHash("sha256")');
+    expect(script).not.toContain("RECORD_");
+  });
+
+  it("provides a read-only backup certification exporter", () => {
+    const script = readFileSync("scripts/export-backup-evidence.ts", "utf8");
+    expect(readFileSync("package.json", "utf8")).toContain('"supplychain:backup-evidence"');
+    const builder = readFileSync("lib/supply-chain/backup-certification.ts", "utf8");
+    expect(builder).toContain('"bke.backup-certification.v1"');
+    expect(builder).toContain('operation.type === "CREATE"');
+    expect(builder).toContain('operation.type === "VERIFY"');
+    expect(builder).toContain('operation.type === "SIMULATE_RESTORE"');
+    expect(builder).toContain("BACKUP_ARCHIVE_NOT_CERTIFIABLE");
+    expect(builder).toContain("BACKUP_CREATE_NOT_SUCCEEDED");
+    expect(script).not.toContain("db.$transaction");
+    expect(script).not.toContain("RECORD_BACKUP");
+    expect(script).not.toContain("update({");
+  });
+
+  it("provides an Admin-native server-authoritative backup certification path", () => {
+    const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
+    const builder = readFileSync("lib/supply-chain/backup-certification.ts", "utf8");
+    const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
+    const controls = readFileSync("components/release-evidence-controls.tsx", "utf8");
+    expect(route).toContain('"CERTIFY_BACKUP"');
+    expect(route).toContain("buildBackupCertificationDocument");
+    expect(route).toContain("SUPPLY_CHAIN_BACKUP_RECORDED");
+    expect(builder).toContain('archive.status !== "VERIFIED"');
+    expect(builder).toContain("missingObjectCount !== 0");
+    expect(builder).toContain('operation.type === "CREATE"');
+    expect(builder).toContain('operation.type === "VERIFY"');
+    expect(builder).toContain('operation.type === "SIMULATE_RESTORE"');
+    expect(builder).toContain("manifestHash(canonicalizeManifest(buildReleaseManifest");
+    expect(controls).toContain('action: "CERTIFY_BACKUP"');
+    expect(controls).toContain("backupOptions");
+    expect(page).toContain("backupArchive.findMany");
+    expect(page).toContain('status: "VERIFIED"');
+  });
+});

@@ -1,5 +1,8 @@
 name: CI
 on: [push, pull_request]
+
+permissions:
+  contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -19,6 +22,7 @@ jobs:
       EMAIL_FROM: test@example.com
       S3_BUCKET: test
       CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+      LICENSE_SIGNING_KEY_ID: ci-license-signing-key
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,6 +37,18 @@ jobs:
       - run: npm run db:deploy
       - run: npm run db:status
       - run: npm run db:smoke
+      - run: npm run db:seed
+      - name: Generate disposable test signing keys
+        run: |
+          npm run licensing:keys .certification-secrets
+          {
+            echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_PRIVATE_KEY'
+            cat .certification-secrets/license-signing-private.pem
+            echo 'BKE_PRIVATE_KEY'
+            echo 'LICENSE_SIGNING_PUBLIC_KEY<<BKE_PUBLIC_KEY'
+            cat .certification-secrets/license-signing-public.pem
+            echo 'BKE_PUBLIC_KEY'
+          } >> "$GITHUB_ENV"
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
@@ -40,5 +56,7 @@ jobs:
       - run: git diff --check
       - run: npm run security:hygiene
       - run: npm audit --omit=dev --audit-level=critical
+      - run: npm run deployment:verify-restart
+      - run: npm run deployment:verify-manifest
       - run: docker compose --env-file .env.production.example -f docker-compose.production.yml config --quiet
       - run: docker build --target runner -t bke-digital-solutions:ci .

@@ -4,17 +4,17 @@ Cross-repository planning baseline: [docs/roadmaps/master-completion-roadmap.md]
 
 Baseline updated: August 13, 2026
 
-Phase 2 release/latest resolution correction is implemented. Phase 3 is **PASS (certified 2026-08-13)** for live signing, independent verification, mutation invalidation, re-signing, idempotency, authorization, and private-key non-exposure. Phase 4 has not started.
+Phase 2 release/latest resolution correction is implemented. Phase 3 is **PASS (certified 2026-08-13)** for live signing, independent verification, mutation invalidation, re-signing, idempotency, authorization, and private-key non-exposure. Phase 4's malware/artifact pipeline is implemented and certified in the repository/certification environment; production Compose now declares a private health-gated ClamAV service, while VPS provisioning and certification remain incomplete.
 
 Phase 6.7 technical compliance tracking is present at `/admin/compliance`. It records implemented controls and explicitly pending owner, lawyer, accountant/BIR, DPO/privacy, and regulatory review. It is not evidence of professional approval.
 
-Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling are available. No production signing certificate or malware certification is claimed.
+Phase 6.8 supply-chain evidence is present at `/admin/supply-chain`; CycloneDX SBOM and provenance tooling plus authenticated current-payload ingestion are implemented. Evidence documents are now stored in private durable object storage, hashed server-side, included in encrypted backups, and checked during isolated restore. Shipping certification is paused pending review of `docs/operations/COOKBOOK.md`; no production candidate evidence or signing material is claimed.
 
 Phase 6.9 release lifecycle and approval tracking are present in the Release Center. Stable/LTS promotions require approval records; production readiness remains blocked by pending signing, malware, recovery, compliance, and deployment gates.
 Pushed Git baseline: current `main` commit; historical hashes below are retained for provenance.
 Latest committed roadmap phases: Phase 6.0 — Runtime Parity, Phase 6.1 — Data Integrity and Safe Deletion, Phase 6.1A — Legal Document Management, the Phase 6.2 payment lifecycle implementation, and Phase 6.3 Scheduler & Lifecycle Automation
 
-Current truth: Phases 6.4 through 6.12 repository controls are implemented. Certification backup CREATE, VERIFY, SIMULATE_RESTORE, and RESTORE_ISOLATED passed; production RPO/RTO, Phase 6.10 infrastructure, and live-provider evidence remain deferred.
+Current truth: Phases 6.4 through 6.12 repository controls are implemented. Certification backup CREATE, VERIFY, SIMULATE_RESTORE, and RESTORE_ISOLATED passed. The project owner confirmed on 2026-08-13 that the production VPS exists and PayMongo is live and operational there. Repository-retained evidence still does not certify the complete Phase 6.10 infrastructure sequence, production RPO/RTO, cold reboot, deployed commit, or every live-provider lifecycle scenario.
 
 Phase 6.1A, legal-consent hardening, and administrator password-plus-email-code verification are committed and pushed. The seeded legal text remains explicitly placeholder content and does not satisfy professional legal, privacy, tax, or BIR review.
 
@@ -26,7 +26,7 @@ This document is the concise repository baseline for future planning. It records
 
 BKE Digital Solutions is a functional software-commerce and licensing MVP. It includes a public catalog, customer portal, MFA-protected administrator portal, PayMongo hosted checkout integration, invoices, application-managed subscriptions, encrypted licenses, device activation, private installer downloads, trials, discounts, audit history, security events, and external-provider credential management.
 
-It is ready for local development and controlled sandbox certification. It is not ready for unrestricted public payments, real-customer production use, or production installer distribution.
+PayMongo LIVE operation is owner-verified. Deployment, licensing-agent, artifact, and production certification remain separate gates; unavailable sandbox evidence does not downgrade live readiness.
 
 ## Repository truth
 
@@ -107,7 +107,7 @@ The first sandbox-restricted Vitest execution could not reach local PostgreSQL. 
 
 ### Known authorization concern
 
-A plain `MEMBER` can currently open the account detail and see broad order, invoice, license, subscription, trial, and download information. More sensitive mutations use stronger owner/billing/license-manager checks, but visibility does not yet match a formally approved role matrix.
+Customer account detail now gates order, subscription, trial, and license visibility by the capability matrix. Plain `MEMBER` users receive limited account metadata and do not see the Order history or Subscriptions panels. Remaining authorization work is tracked in the Laguna findings and requires acceptance-level API coverage for every organization boundary route.
 
 ## Authentication and security truth
 
@@ -126,7 +126,6 @@ A plain `MEMBER` can currently open the account detail and see broad order, invo
 ### Known authentication gaps
 
 - Customer license-key reveal is repeatable while ciphertext exists.
-- Customer license reveal does not currently require recent authentication.
 - Customer sessions have no self-service session inventory equivalent to the admin security page.
 - Password reset records an administrator security event but does not send a dedicated password-changed notification.
 
@@ -175,7 +174,7 @@ A plain `MEMBER` can currently open the account detail and see broad order, invo
 
 ### Verdict
 
-PayMongo is **partially certified**: genuine paid, refund, retrieval, and persisted reconciliation pass. A genuine failed hosted checkout and PayMongo-originated duplicate/delayed/out-of-order resends remain open. PayMongo is not approved for live mode.
+PayMongo LIVE is **implemented / live / owner-verified**. Failed, delayed, and out-of-order provider scenarios remain separate evidence items and are not a Selling MVP blocker.
 
 ## Email truth
 
@@ -263,7 +262,7 @@ The application has a configurable support email address, but no support platfor
 - Local development uses Next.js, PostgreSQL, Valkey, and MinIO.
 - Certification uses the production Docker image topology with Caddy, PostgreSQL, Valkey, and MinIO behind Cloudflare Tunnel.
 - `jl-bke.com` can reach the local certification environment.
-- Certification is configured as staging/local-production-simulation with PayMongo sandbox mode.
+- Certification uses a self-contained mock provider and does not certify PayMongo LIVE. LIVE readiness is owner-verified separately.
 - No VPS deployment exists.
 - Public Cloudflare-to-local access is not equivalent to production deployment.
 - Health and environment validation exist.
@@ -393,3 +392,9 @@ RM7H implementation adds source-predecessor transfer lifecycle, material refresh
 comparison, bounded prepared-renewal recovery, immutable rotation replay checks,
 and atomic rotation audit evidence. Runtime retry certification remains pending
 where full database/browser evidence is unavailable.
+
+# Current truth
+
+Admin-native commercial compliance certification is implemented with explicit
+human attestation, current legal-version binding, and current release-payload
+binding. Legacy and MOCK evidence remain in history but are not commercial proof.

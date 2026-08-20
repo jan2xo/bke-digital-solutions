@@ -1,6 +1,27 @@
 # BKE Digital Solutions + BKE Licensing Agent — Master Completion Roadmap
 
-Status: planning baseline; Phase 3 certified PASS (2026-08-13). This reconciles both repositories; it does not authorize deployment or Phase 4.
+## SELLING MVP — GO-LIVE CRITICAL PATH
+
+PayMongo LIVE is implemented, live, and owner-verified; sandbox credentials are
+not a launch prerequisite. The launch path is: payment → webhook settlement →
+entitlement/license issuance → trusted release publication gate (hash, current
+CLEAN evidence, SBOM/provenance, signature, canonical manifest) → secure
+download → installation → activation → Agent Active License Binding → signed
+lease → AuthorizationDecision → restart/offline verification → update
+authorization. Repository controls are implemented/local-certified where
+recorded; production provisioning and VPS certification remain owner-controlled.
+The current certification mock browser failure is classified as repository
+test/runtime evidence only and does not downgrade PayMongo LIVE.
+
+### TRUSTED RELEASE PUBLICATION GATE
+
+The canonical release invariant is: artifact hash → current CLEAN malware
+evidence → stale-evidence invalidation on mutation → SBOM/provenance → release
+signature → canonical manifest → publication eligibility → private download
+grant. Repository implementation and local certification are distinct from
+production scanner/key provisioning and production certification.
+
+Status: repository gate implemented and focused-tested; Phase 3 certified PASS (2026-08-13). Production scanner/key provisioning and commercial signing material remain owner/VPS actions; this does not authorize deployment.
 
 ## Ownership and invariants
 
@@ -20,7 +41,7 @@ Status: planning baseline; Phase 3 certified PASS (2026-08-13). This reconciles 
 | `bke.licensing.v1` | Frozen in Digital Solutions | Synchronize/certify in Agent repository |
 | Agent verification/binding/authorization | Separate repository | Cross-repository certification |
 | Products, releases, artifacts, safe deletion | Implemented | Deployment evidence pending |
-| SBOM, provenance, signatures, malware evidence | Implemented gates | Production scanner/certificates pending |
+| SBOM, provenance, signatures, malware evidence | Implemented gates and authenticated evidence ingestion | Production candidate evidence/signing material pending |
 | Legal Center/consent history | Implemented | Professional review pending |
 | Scheduler/lifecycle jobs | Implemented | Operational deployment evidence pending |
 | Backup/DR | Implemented | CREATE, VERIFY, SIMULATE_RESTORE, RESTORE_ISOLATED passed in certification; production RPO/RTO pending |
@@ -86,3 +107,8 @@ PASS — deployment-only emergency MFA reset certified against disposable
 certification data. State invalidation, password/role preservation, sanitized
 operator audit evidence, unknown-target rejection, and forced re-enrollment
 were verified. No public bypass or `ALLOW_BREAK_GLASS` reuse was introduced.
+
+# Compliance certification milestone
+
+Admin-native commercial compliance certification is complete at repository level,
+with explicit reviewer attestation and server-side legal/payload binding.

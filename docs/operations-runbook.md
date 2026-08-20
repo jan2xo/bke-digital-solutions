@@ -110,7 +110,27 @@ Open `/admin/observability` for the consolidated platform state. Use `/api/healt
 
 Before exposing a deployment, verify production security headers over HTTPS, secure SameSite cookies, provider credential key versions, and route-specific limits for authentication, checkout, webhooks, downloads, scheduler, backup, and observability. Keep containers non-root with read-only/no-new-privileges settings and use isolated restore targets. Never place secrets, raw webhook bodies, license keys, or signed download URLs in tickets or logs.
 
+For host controls, follow [SSH and firewall hardening](security/ssh-firewall-hardening.md) and run the read-only evidence collector with `npm run security:audit-host` on the VPS. For suspected compromise, credential exposure, payment abuse, malware, or data loss, follow [the incident response runbook](runbooks/incident-response.md). Neither local checks nor repository inspection certifies a real VPS or incident drill.
+
 Configure versioned Ed25519 lease keys and trusted supply-chain verification keys only through protected environment configuration. Stable/LTS promotion must remain blocked until independently verified evidence exists.
+
+### Clean-VPS recovery of trusted-release evidence
+
+1. Provision a new private PostgreSQL and object-storage target; never restore
+   over the source or production bucket.
+2. Restore the encrypted database and application objects from one verified
+   backup archive, preserving the offline `BACKUP_ENCRYPTION_KEY` separately.
+3. Run Prisma migrations, then the normal backup VERIFY and SIMULATE_RESTORE
+   operations. RESTORE_ISOLATED additionally checks every persisted evidence
+   object key and document SHA-256 against the restored database and manifest.
+4. Confirm current artifact hashes and the SBOM/provenance/dependency/backup/
+   compliance/migration evidence rows all point to existing private objects and
+   the current canonical payload hash. Do not re-record evidence solely because
+   containers were recreated; re-ingest only after a payload mutation or failed
+   integrity check.
+5. Recreate the app/worker with the same protected signing and storage
+   configuration, verify health, and perform a private authenticated download
+   only after readiness is green.
 ### Certification lease signing
 
 Protected environments fail closed unless `LICENSE_SIGNING_PRIVATE_KEY`,

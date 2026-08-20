@@ -13,15 +13,23 @@ const local = new Map<string, { count: number; reset: number }>();
 export async function rateLimit(key: string, limit: number, windowSeconds: number) {
   const bucket = `${env.REDIS_KEY_PREFIX}:rl:${key}:${Math.floor(Date.now() / (windowSeconds * 1000))}`;
   if (redis) {
-    const count = await redis.incr(bucket);
-    if (count === 1) await redis.expire(bucket, windowSeconds + 1);
-    return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
+    try {
+      const count = await redis.incr(bucket);
+      if (count === 1) await redis.expire(bucket, windowSeconds + 1);
+      return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
+    } catch {
+      return { allowed: false, remaining: 0 };
+    }
   }
   if (localRedis) {
-    if (!localRedis.isOpen) await localRedis.connect();
-    const count = await localRedis.incr(bucket);
-    if (count === 1) await localRedis.expire(bucket, windowSeconds + 1);
-    return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
+    try {
+      if (!localRedis.isOpen) await localRedis.connect();
+      const count = await localRedis.incr(bucket);
+      if (count === 1) await localRedis.expire(bucket, windowSeconds + 1);
+      return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
+    } catch {
+      return { allowed: false, remaining: 0 };
+    }
   }
   if (env.NODE_ENV === "production") throw new Error("Distributed rate limiter is not configured");
   const now = Date.now();

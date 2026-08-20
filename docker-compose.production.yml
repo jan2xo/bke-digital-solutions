@@ -29,6 +29,8 @@ x-runtime-environment: &runtime-environment
   - SUPPLY_CHAIN_SIGNING_PUBLIC_KEY
   - SUPPLY_CHAIN_TRUSTED_KEYS
   - ALLOW_BREAK_GLASS
+  - ADMIN_OWNER_RECOVERY_KEY
+  - ADMIN_OWNER_RECOVERY_KEY_VERSION
   - MALWARE_SCANNER_PROVIDER
   - MALWARE_SCANNER_VERSION
   - MALWARE_SCANNER_HOST
@@ -101,6 +103,7 @@ services:
       postgres: { condition: service_healthy }
       minio-init: { condition: service_completed_successfully }
       valkey: { condition: service_healthy }
+      clamav: { condition: service_healthy }
     networks: [private, egress]
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
@@ -110,6 +113,20 @@ services:
       retries: 3
     read_only: true
     tmpfs: ["/tmp:size=64m,mode=1777"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 256
+    logging: *default-logging
+
+  clamav:
+    image: clamav/clamav:1.4
+    networks: [private]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --ping 1 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     security_opt: ["no-new-privileges:true"]
     logging: *default-logging
 
@@ -125,9 +142,17 @@ services:
       app: { condition: service_healthy }
       valkey: { condition: service_healthy }
     networks: [private]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://app:3000/api/health/scheduler').then(async r=>{const b=await r.json();if(!r.ok||b.status!=='healthy')process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     read_only: true
     tmpfs: ["/tmp:size=32m,mode=1777"]
     security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 128
     logging: *default-logging
 
   backup-worker:
@@ -145,6 +170,8 @@ services:
     read_only: true
     tmpfs: ["/tmp:size=1g,mode=1777"]
     security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 256
     logging: *default-logging
 
   migrate:
@@ -158,6 +185,8 @@ services:
     networks: [private]
     restart: "no"
     security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 128
     read_only: true
     tmpfs: ["/tmp:size=32m,mode=1777"]
     logging: *default-logging
@@ -177,6 +206,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"]
+    pids_limit: 256
     logging: *default-logging
 
   valkey:
@@ -190,6 +223,10 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"]
+    pids_limit: 128
     logging: *default-logging
 
   minio:
@@ -206,6 +243,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 256
     logging: *default-logging
 
   minio-init:
@@ -221,6 +261,7 @@ services:
       - S3_SECRET_ACCESS_KEY
       - S3_FORCE_PATH_STYLE
       - DEPLOYMENT_ENV
+      - MC_CONFIG_DIR=/tmp/.mc
     depends_on:
       minio: { condition: service_healthy }
     volumes:
@@ -228,6 +269,8 @@ services:
     networks: [private]
     restart: "no"
     security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 64
     logging: *default-logging
 
   caddy:
@@ -247,6 +290,9 @@ services:
     read_only: true
     tmpfs: ["/tmp:size=32m,mode=1777"]
     security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    cap_add: ["NET_BIND_SERVICE"]
+    pids_limit: 256
     logging: *default-logging
 
 networks:

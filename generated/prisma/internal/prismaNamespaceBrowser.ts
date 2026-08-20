@@ -65,6 +65,8 @@ export const ModelName = {
   LegalDocument: 'LegalDocument',
   LegalDocumentVersion: 'LegalDocumentVersion',
   LegalAcceptance: 'LegalAcceptance',
+  PrivacyRequest: 'PrivacyRequest',
+  PrivacyRequestEvent: 'PrivacyRequestEvent',
   OrganizationProfile: 'OrganizationProfile',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -94,6 +96,9 @@ export const ModelName = {
   DiscountOffer: 'DiscountOffer',
   OfferRedemption: 'OfferRedemption',
   License: 'License',
+  SupportTicket: 'SupportTicket',
+  SupportTicketMessage: 'SupportTicketMessage',
+  SupportTicketEvent: 'SupportTicketEvent',
   LicenseLeaseRecord: 'LicenseLeaseRecord',
   CommercialLeaseOperation: 'CommercialLeaseOperation',
   CommercialSigningKey: 'CommercialSigningKey',
@@ -103,6 +108,7 @@ export const ModelName = {
   DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
+  SiteContent: 'SiteContent',
   ComplianceRequirement: 'ComplianceRequirement',
   ComplianceEvidence: 'ComplianceEvidence',
   JobRun: 'JobRun',
@@ -361,6 +367,40 @@ export const LegalAcceptanceScalarFieldEnum = {
 export type LegalAcceptanceScalarFieldEnum = (typeof LegalAcceptanceScalarFieldEnum)[keyof typeof LegalAcceptanceScalarFieldEnum]
 
 
+export const PrivacyRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  customerAccountId: 'customerAccountId',
+  requestType: 'requestType',
+  status: 'status',
+  summary: 'summary',
+  responseSummary: 'responseSummary',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  closedAt: 'closedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
+
+
+export const PrivacyRequestEventScalarFieldEnum = {
+  id: 'id',
+  privacyRequestId: 'privacyRequestId',
+  actorId: 'actorId',
+  eventType: 'eventType',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type PrivacyRequestEventScalarFieldEnum = (typeof PrivacyRequestEventScalarFieldEnum)[keyof typeof PrivacyRequestEventScalarFieldEnum]
+
+
 export const OrganizationProfileScalarFieldEnum = {
   accountId: 'accountId',
   legalName: 'legalName',
@@ -485,6 +525,8 @@ export const ReleaseApprovalScalarFieldEnum = {
   reviewedById: 'reviewedById',
   approvedById: 'approvedById',
   approvedAt: 'approvedAt',
+  reviewedAt: 'reviewedAt',
+  payloadHash: 'payloadHash',
   notes: 'notes',
   createdAt: 'createdAt'
 } as const
@@ -531,6 +573,8 @@ export const SupplyChainVerificationEvidenceScalarFieldEnum = {
   scannerVersion: 'scannerVersion',
   result: 'result',
   reference: 'reference',
+  documentObjectKey: 'documentObjectKey',
+  documentSha256: 'documentSha256',
   failureReason: 'failureReason',
   verifiedAt: 'verifiedAt',
   metadata: 'metadata'
@@ -915,6 +959,56 @@ export const LicenseScalarFieldEnum = {
 export type LicenseScalarFieldEnum = (typeof LicenseScalarFieldEnum)[keyof typeof LicenseScalarFieldEnum]
 
 
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  createdById: 'createdById',
+  accountId: 'accountId',
+  orderId: 'orderId',
+  licenseId: 'licenseId',
+  category: 'category',
+  state: 'state',
+  priority: 'priority',
+  subject: 'subject',
+  safeContext: 'safeContext',
+  securityReport: 'securityReport',
+  assignedToId: 'assignedToId',
+  escalatedAt: 'escalatedAt',
+  resolvedAt: 'resolvedAt',
+  closedAt: 'closedAt',
+  lastCustomerReplyAt: 'lastCustomerReplyAt',
+  lastAdminReplyAt: 'lastAdminReplyAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
+export const SupportTicketMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  authorId: 'authorId',
+  body: 'body',
+  visibility: 'visibility',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportTicketMessageScalarFieldEnum = (typeof SupportTicketMessageScalarFieldEnum)[keyof typeof SupportTicketMessageScalarFieldEnum]
+
+
+export const SupportTicketEventScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  actorId: 'actorId',
+  eventType: 'eventType',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportTicketEventScalarFieldEnum = (typeof SupportTicketEventScalarFieldEnum)[keyof typeof SupportTicketEventScalarFieldEnum]
+
+
 export const LicenseLeaseRecordScalarFieldEnum = {
   id: 'id',
   licenseId: 'licenseId',
@@ -1055,6 +1149,19 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const SiteContentScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  group: 'group',
+  value: 'value',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteContentScalarFieldEnum = (typeof SiteContentScalarFieldEnum)[keyof typeof SiteContentScalarFieldEnum]
 
 
 export const ComplianceRequirementScalarFieldEnum = {
@@ -1233,6 +1340,9 @@ export const EmailOutboxScalarFieldEnum = {
   lastError: 'lastError',
   createdAt: 'createdAt',
   sentAt: 'sentAt',
+  claimedBy: 'claimedBy',
+  claimedAt: 'claimedAt',
+  claimExpiresAt: 'claimExpiresAt',
   deduplicationKey: 'deduplicationKey'
 } as const
 

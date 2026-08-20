@@ -23,6 +23,27 @@ These defaults are configuration, not a legal retention decision. Phase 6.7 must
 
 Never put `BACKUP_ENCRYPTION_KEY`, storage secrets, or restore credentials in source control, manifests, logs, or database metadata. Store the encryption key separately from the archive and include it in the offline recovery key ceremony.
 
+## Trusted-release evidence durability
+
+SBOM, provenance, dependency, backup, compliance, and migration documents are
+ingested through the authenticated supply-chain workflow as byte content. The
+server hashes the received bytes, stores them under collision-resistant private
+object keys (`evidence/<version>/<kind>/<uuid>.json`), and persists the object
+key, SHA-256, evidence kind, and canonical payload hash in
+`SupplyChainVerificationEvidence`. Local paths, `/tmp` references, filenames,
+and client-asserted digests are not proof. Replaying identical current bytes is
+idempotent; changing artifact bytes invalidates the payload-bound evidence.
+
+The backup worker includes every referenced evidence object in the encrypted
+source-object inventory. Isolated restore decrypts and checksum-validates those
+objects, then compares restored database references and persisted document
+hashes to the backup manifest before reporting success. On a clean VPS, restore
+PostgreSQL and the private object bucket from the same verified archive, retain
+the offline backup-encryption key, run migrations, and execute VERIFY followed
+by SIMULATE_RESTORE/RESTORE_ISOLATED. Re-run the evidence integrity check before
+promoting a release; an infrastructure restart with unchanged artifact bytes
+does not require recertification.
+
 ## Certification backup consistency closeout — 2026-08-12
 
 The certification database contained twelve archived, inactive `delete-*` products

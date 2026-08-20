@@ -93,7 +93,7 @@ Final certification: MinIO integration 5/5, certification Vitest 178 passed with
 - Lifecycle code and migration 19 are committed at `a43cfc5`; the commit message overstated completion.
 - Genuine Test Mode checkout, signed paid settlement, payment retrieval, persisted reconciliation, full refund, signed refund settlement, and transactional access revocation pass.
 - Deterministic PostgreSQL integration tests cover failed payment, duplicate/conflicting replay, delayed occurrence, out-of-order settlement, duplicate refund, mismatch rejection, and idempotent effects.
-- Genuine failed hosted checkout and PayMongo Dashboard resend evidence for duplicate, delayed, and out-of-order deliveries remain open. Live payments remain disabled.
+- PayMongo LIVE is owner-verified and operational. Unusual failed, delayed, and out-of-order provider scenarios remain separate evidence items. The certification mock path is repository-only and does not gate the Selling MVP.
 - Caddy access logs now delete `Paymongo-Signature`; raw webhook bodies and provider credentials are not retained.
 - Genuine duplicate `payment.paid` and `payment.refunded` dashboard redeliveries returned HTTP 200 and produced no duplicate payment, invoice, entitlement, email, or audit effects.
 - Genuine failed, delayed, out-of-order, and raw-fixture cases remain explicitly not provider-certified; deterministic integration coverage remains.
@@ -178,7 +178,7 @@ Added `ComplianceRequirement` and immutable `ComplianceEvidence` records, seeded
 
 ## Phase 6.8 — Secure software supply chain
 
-Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence`, artifact hash manifests, administrator visibility at `/admin/supply-chain`, and audited status updates. Signing keys/certificates and malware scanning remain explicitly pending.
+Added CycloneDX SBOM and provenance scripts, release-linked `SupplyChainEvidence`, artifact hash manifests, administrator visibility at `/admin/supply-chain`, and audited status updates. Repository-controlled Phase 6.8 controls now include fail-closed publication evaluation for current signatures, checksums, per-artifact malware scan history, quarantine markers, emergency revocation, compromised-release markers, and audit timestamps. The admin supply-chain endpoint can rescan current private artifact bytes and record quarantine, emergency revocation, and compromise evidence without touching external certificates or production ClamAV. Production signing certificates and live ClamAV certification remain pending external provisioning.
 
 ## Phase 6.9 — Production release management
 
@@ -187,6 +187,20 @@ Added release lifecycle stages, forward-only transition enforcement, approval re
 Phase 6.12 remediation implements repository-side signed lease issuance, cryptographic supply-chain evidence, fail-closed release gates, separation of duties, grant retry recovery, and discoverable Compliance/Supply Chain administration. External Agent compatibility, production credentials, legal review, recovery certification, and Phase 6.10 remain pending.
 
 Phase 4 malware/artifact security pipeline is implemented at the repository boundary: current private artifact bytes are scanned, per-artifact evidence is bound to the canonical manifest hash, failures are fail-closed, and multi-artifact releases require every artifact to be CLEAN. ClamAV deployment and live production certification remain operational follow-up work.
+
+Production Compose now includes a private, health-gated ClamAV service with no
+published scanner port. The application uses the configured `clamav` TCP
+adapter and bounded timeout semantics; VPS provisioning and production
+CLEAN/INFECTED certification remain owner actions.
+
+Trusted-release readiness now requires current payload-hash-bound SBOM and
+provenance verification evidence, not merely non-null metadata fields. Real
+shipping-candidate generation and commercial signing remain owner/VPS actions.
+
+The admin supply-chain workflow now supports `RECORD_SBOM` and
+`RECORD_PROVENANCE` with recent-auth, same-origin, rate-limit, server-hash,
+transactional upsert, and audit controls. Artifact mutation clears these
+records and references together with signature and malware state.
 ## Current status synchronization (RM5)
 
 RM1 licensing, RM2 supply-chain controls, RM3 release governance, and RM4
@@ -301,3 +315,10 @@ preserved the password and role; recorded sanitized operator/reason evidence;
 and forced fresh MFA enrollment. Unknown-admin rejection and repository
 validation passed. The command is deployment-only and is not an authentication
 bypass.
+
+# Compliance certification update
+
+Release Readiness now provides a protected Admin-native commercial compliance
+attestation workflow. Evidence is server-generated from current published legal
+versions and the current canonical payload; legacy and MOCK evidence cannot pass
+commercial readiness.

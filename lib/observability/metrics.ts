@@ -18,10 +18,18 @@ export async function collectObservability() {
   const scheduler = await schedulerHealth();
   const schedulerRetryBacklog = scheduler.jobs.reduce((sum, job) => sum + job.retryBacklog, 0);
   const schedulerFailures = scheduler.jobs.reduce((sum, job) => sum + job.consecutiveFailures, 0);
-  const backup = await db.backupArchive.findFirst({ orderBy: { createdAt: "desc" }, select: { status: true, sizeBytes: true, durationMs: true, missingObjectCount: true, verifiedAt: true, completedAt: true } });
-  const openAlerts = await db.observabilityAlert.count({ where: { status: { in: ["OPEN", "ACKNOWLEDGED"] } } });
-  const failedEmail = await db.emailOutbox.count({ where: { status: { in: ["FAILED", "RETRYING"] } } });
-  const failedWebhooks = await db.webhookEvent.count({ where: { status: { in: ["FAILED", "RETRYING"] } } }).catch(() => 0);
+  const [backup, openAlerts, failedEmail, pendingEmail, failedWebhooks, openReconciliation, pendingPayments, pendingLeaseOperations, failedLeaseOperations, expiringLicenses] = await Promise.all([
+    db.backupArchive.findFirst({ orderBy: { createdAt: "desc" }, select: { status: true, sizeBytes: true, durationMs: true, missingObjectCount: true, verifiedAt: true, completedAt: true } }),
+    db.observabilityAlert.count({ where: { status: { in: ["OPEN", "ACKNOWLEDGED"] } } }),
+    db.emailOutbox.count({ where: { status: { in: ["FAILED", "RETRYING"] } } }),
+    db.emailOutbox.count({ where: { status: "PENDING" } }),
+    db.webhookEvent.count({ where: { status: { in: ["FAILED", "RETRYING"] } } }).catch(() => 0),
+    db.paymentReconciliation.count({ where: { status: "OPEN" } }),
+    db.paymentAttempt.count({ where: { status: { in: ["PENDING", "OPEN", "RETRYING"] } } }),
+    db.commercialLeaseOperation.count({ where: { status: { in: ["PENDING", "PROCESSING"] } } }),
+    db.commercialLeaseOperation.count({ where: { status: { in: ["FAILED", "REJECTED"] } } }),
+    db.license.count({ where: { status: "ACTIVE", expiresAt: { not: null, lte: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } } }),
+  ]);
   const appState = stateFor(true);
   const dependencyState = stateFor(readinessResult.ready, Object.values(readinessResult.checks).some((value) => value === "down"));
   const schedulerState: HealthState = scheduler.status === "healthy" ? "HEALTHY" : scheduler.status === "degraded" ? "WARNING" : "CRITICAL";
@@ -33,9 +41,9 @@ export async function collectObservability() {
     { key: "storage", label: "Storage", state: stateFor(readinessResult.checks.objectStorage === "up"), summary: readinessResult.checks.objectStorage === "up" ? "Object storage reachable" : "Object storage unavailable", metrics: [metric("object_storage", readinessResult.checks.objectStorage, stateFor(readinessResult.checks.objectStorage === "up"))] },
     { key: "scheduler", label: "Scheduler", state: schedulerState, summary: `${scheduler.registeredJobs} registered jobs`, metrics: [metric("registered_jobs", scheduler.registeredJobs, schedulerState), metric("retry_backlog", schedulerRetryBacklog, schedulerState), metric("failed_jobs", schedulerFailures, schedulerState)] },
     { key: "backups", label: "Backups", state: backupState, summary: backup ? `${backup.status} · ${backup.missingObjectCount} missing objects` : "No archive recorded", metrics: [metric("last_status", backup?.status ?? null, backupState), metric("missing_objects", backup?.missingObjectCount ?? null, backupState), metric("duration_ms", backup?.durationMs ?? null, backupState, "ms")] },
-    { key: "payments", label: "Payments", state: stateFor(failedWebhooks === 0, failedWebhooks > 0), summary: `${failedWebhooks} retryable webhook failures`, metrics: [metric("webhook_failures", failedWebhooks, failedWebhooks ? "WARNING" : "HEALTHY")] },
-    { key: "licensing", label: "Licensing", state: "HEALTHY", summary: "Platform issuance metrics available", metrics: [metric("source", "commerce_platform", "HEALTHY")] },
-    { key: "email", label: "Email", state: stateFor(failedEmail === 0, failedEmail > 0), summary: `${failedEmail} failed or retrying messages`, metrics: [metric("failed_or_retrying", failedEmail, failedEmail ? "WARNING" : "HEALTHY")] },
+    { key: "payments", label: "Payments", state: stateFor(failedWebhooks === 0 && openReconciliation === 0, failedWebhooks > 0 || openReconciliation > 0), summary: `${failedWebhooks} webhook failures · ${openReconciliation} open reconciliations`, metrics: [metric("webhook_failures", failedWebhooks, failedWebhooks ? "WARNING" : "HEALTHY"), metric("open_reconciliations", openReconciliation, openReconciliation ? "WARNING" : "HEALTHY"), metric("pending_attempts", pendingPayments, pendingPayments ? "WARNING" : "HEALTHY")] },
+    { key: "licensing", label: "Licensing", state: stateFor(failedLeaseOperations === 0 && expiringLicenses === 0, failedLeaseOperations > 0 || expiringLicenses > 0), summary: `${pendingLeaseOperations} lease operations pending · ${failedLeaseOperations} failed`, metrics: [metric("pending_lease_operations", pendingLeaseOperations, pendingLeaseOperations ? "WARNING" : "HEALTHY"), metric("failed_lease_operations", failedLeaseOperations, failedLeaseOperations ? "WARNING" : "HEALTHY"), metric("licenses_expiring_30d", expiringLicenses, expiringLicenses ? "WARNING" : "HEALTHY"), metric("source", "commerce_platform", "HEALTHY")] },
+    { key: "email", label: "Email", state: stateFor(failedEmail === 0, failedEmail > 0), summary: `${failedEmail} failed or retrying messages · ${pendingEmail} pending`, metrics: [metric("failed_or_retrying", failedEmail, failedEmail ? "WARNING" : "HEALTHY"), metric("pending", pendingEmail, pendingEmail ? "WARNING" : "HEALTHY")] },
     { key: "security", label: "Security", state: stateFor(openAlerts === 0, openAlerts > 0), summary: `${openAlerts} open alerts`, metrics: [metric("open_alerts", openAlerts, openAlerts ? "WARNING" : "HEALTHY")] },
     { key: "infrastructure", label: "Infrastructure", state: dependencyState, summary: "Container-level metrics supplied by deployment runtime", metrics: [metric("runtime", process.release.name, dependencyState)] },
   ];

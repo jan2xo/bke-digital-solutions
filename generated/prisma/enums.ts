@@ -465,3 +465,50 @@ export const ProviderValidationStatus = {
 } as const
 
 export type ProviderValidationStatus = (typeof ProviderValidationStatus)[keyof typeof ProviderValidationStatus]
+
+
+export const SupportTicketCategory = {
+  ACCOUNT: 'ACCOUNT',
+  PAYMENT: 'PAYMENT',
+  REFUND: 'REFUND',
+  INVOICE: 'INVOICE',
+  LICENSE: 'LICENSE',
+  DEVICE: 'DEVICE',
+  DOWNLOAD: 'DOWNLOAD',
+  SECURITY: 'SECURITY',
+  FEATURE_REQUEST: 'FEATURE_REQUEST',
+  OTHER: 'OTHER'
+} as const
+
+export type SupportTicketCategory = (typeof SupportTicketCategory)[keyof typeof SupportTicketCategory]
+
+
+export const SupportTicketState = {
+  OPEN: 'OPEN',
+  TRIAGED: 'TRIAGED',
+  WAITING_ON_CUSTOMER: 'WAITING_ON_CUSTOMER',
+  WAITING_ON_SUPPORT: 'WAITING_ON_SUPPORT',
+  ESCALATED: 'ESCALATED',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type SupportTicketState = (typeof SupportTicketState)[keyof typeof SupportTicketState]
+
+
+export const SupportTicketPriority = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type SupportTicketPriority = (typeof SupportTicketPriority)[keyof typeof SupportTicketPriority]
+
+
+export const SupportMessageVisibility = {
+  PUBLIC: 'PUBLIC',
+  INTERNAL: 'INTERNAL'
+} as const
+
+export type SupportMessageVisibility = (typeof SupportMessageVisibility)[keyof typeof SupportMessageVisibility]

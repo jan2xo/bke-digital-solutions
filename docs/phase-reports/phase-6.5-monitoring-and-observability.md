@@ -1,6 +1,6 @@
 # Phase 6.5 — Monitoring and Observability
 
-Status: implemented in the uncommitted working tree; owner review required.
+Status: implementation complete in the repository; production/runtime certification remains pending.
 
 ## Delivered
 
@@ -9,6 +9,7 @@ Status: implemented in the uncommitted working tree; owner review required.
 - `/admin/observability` administrator dashboard with health cards and drill-down metrics.
 - Durable `ObservabilityAlert` model with severity, acknowledgement, resolution, timestamps, deduplication fingerprints, and audit events.
 - Explicit preservation of the external Licensing Agent boundary: the platform reports lease issuance only.
+- Payment, licensing, and email signals now include durable queue/reconciliation counts rather than only provider webhook or generic availability state.
 
 ## Verification status
 
@@ -30,3 +31,5 @@ The certification Compose smoke command could not run because the migrations-onl
 - The dashboard requires an authenticated administrator session for browser-level visual verification; the route was included and compiled, while API/runtime checks passed.
 - Complete a certification operations-image smoke run and the previously pending Phase 6.4 recovery drill.
 - External notification providers and infrastructure-level CPU/memory/TLS exporters remain deferred to a later operations integration.
+- The endpoint remains a repository-owned signal feed, not proof of VPS uptime, TLS, provider delivery, restore RPO/RTO, or external Licensing Agent authorization. Those require owner-controlled production evidence.
+- Current checkpoint adds request correlation propagation, no-store metrics responses, and recursive operational-log redaction for secrets, payloads, and email identifiers.

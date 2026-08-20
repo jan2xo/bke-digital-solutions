@@ -8,5 +8,5 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (session.user.role !== "ADMIN") redirect("/dashboard");
   if (!session.user.administratorMfa?.enabledAt) redirect("/security/mfa");
   if (!session.mfaVerifiedAt) redirect("/login");
-  return <><AdminNav/>{children}</>;
+  return <div className="admin-layout"><AdminNav/><div className="admin-content">{children}</div></div>;
 }

@@ -2,7 +2,7 @@
 	admin off
 }
 
-https://jl-bke.localhost {
+https://jl-bke.localhost, https://caddy {
 	tls internal
 	encode zstd gzip
 

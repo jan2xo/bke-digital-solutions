@@ -88,6 +88,16 @@ export type LegalDocumentVersion = Prisma.LegalDocumentVersionModel
  */
 export type LegalAcceptance = Prisma.LegalAcceptanceModel
 /**
+ * Model PrivacyRequest
+ *
+ */
+export type PrivacyRequest = Prisma.PrivacyRequestModel
+/**
+ * Model PrivacyRequestEvent
+ *
+ */
+export type PrivacyRequestEvent = Prisma.PrivacyRequestEventModel
+/**
  * Model OrganizationProfile
  *
  */
@@ -233,6 +243,21 @@ export type OfferRedemption = Prisma.OfferRedemptionModel
  */
 export type License = Prisma.LicenseModel
 /**
+ * Model SupportTicket
+ *
+ */
+export type SupportTicket = Prisma.SupportTicketModel
+/**
+ * Model SupportTicketMessage
+ *
+ */
+export type SupportTicketMessage = Prisma.SupportTicketMessageModel
+/**
+ * Model SupportTicketEvent
+ *
+ */
+export type SupportTicketEvent = Prisma.SupportTicketEventModel
+/**
  * Model LicenseLeaseRecord
  *
  */
@@ -277,6 +302,11 @@ export type LicenseEvent = Prisma.LicenseEventModel
  *
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model SiteContent
+ *
+ */
+export type SiteContent = Prisma.SiteContentModel
 /**
  * Model ComplianceRequirement
  *
