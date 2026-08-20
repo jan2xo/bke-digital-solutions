@@ -33,7 +33,7 @@ export async function POST(request:Request) {
     const key=await activeCommercialSigningKey();
     const policy={
       schema:"bke.update-policy.v1",product_id:input.product_id,current_version:input.current_version,
-      latest_version:release.version,minimum_supported_version:release.version,channel:input.channel,
+      latest_version:release.version,minimum_supported_version:release.minimumSupportedVersion ?? release.version,channel:input.channel,
       platform:input.platform,architecture:input.architecture,release_id:release.id,artifact_id:artifact.id,
       artifact_sha256:artifact.sha256.toLowerCase(),artifact_size:Number(artifact.sizeBytes),content_type:artifact.contentType,
       published_at:release.publishedAt?.toISOString(),issued_at:new Date().toISOString(),revision:release.releasedAt.getTime(),
