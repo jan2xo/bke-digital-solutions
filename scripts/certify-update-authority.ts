@@ -27,6 +27,6 @@ async function main() {
   const storage = new S3Client({ region: process.env.S3_REGION ?? "us-east-1", endpoint: process.env.S3_ENDPOINT, forcePathStyle: true, credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID!, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY! } });
   try { await storage.send(new CreateBucketCommand({ Bucket: process.env.S3_BUCKET! })); } catch {}
   await storage.send(new PutObjectCommand({ Bucket: process.env.S3_BUCKET!, Key: artifact.objectKey, Body: body, ContentType: artifact.contentType }));
-  console.log(JSON.stringify({ licenseKey, productId: product.id, artifactId: artifact.id, sha256, size: body.length }));
+  process.stdout.write(JSON.stringify({ licenseKey, productId: product.id, artifactId: artifact.id, sha256, size: body.length }) + "\n");
 }
 main().catch((error) => { console.error(error); process.exitCode = 1; }).finally(() => db.$disconnect());
