@@ -41,7 +41,7 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
     const { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, cloudAgentRequestSchema, validateLifecycleRequest, CloudAgentProtocolError } = await import("@/lib/licensing/cloud-agent-contract");
     expect(CLOUD_AGENT_PROTOCOL_VERSION).toBe("bke.licensing.v2");
     expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v3" } }))).toThrow("UNSUPPORTED_PROTOCOL_VERSION");
-    const request = cloudAgentRequestSchema.parse({ licenseKey: "BKE-" + "A".repeat(40), installationId: "i".repeat(32), deviceId: "d".repeat(16), operationId: "operation-1", action: "TRANSFER", predecessorLeaseId: "lease-1" });
+    const request = cloudAgentRequestSchema.parse({ licenseKey: "BKE-" + "A".repeat(40), installationId: "i".repeat(32), deviceId: "d".repeat(16), operationId: "operation-1", productVersion: "1.0.0", action: "TRANSFER", predecessorLeaseId: "lease-1" });
     expect(() => validateLifecycleRequest(request)).not.toThrow();
     expect(() => validateLifecycleRequest({ ...request, predecessorLeaseId: undefined })).toThrowError(CloudAgentProtocolError);
   });

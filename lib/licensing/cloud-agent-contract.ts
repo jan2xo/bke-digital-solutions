@@ -26,6 +26,7 @@ export const leaseEnvelopeSchema = z.object({ payload: z.string().min(1), signat
 export const cloudAgentActionSchema = z.enum(["ACTIVATION", "REFRESH", "RENEWAL", "TRANSFER", "REPLACEMENT", "REVOCATION_REPLACEMENT", "KEY_ROTATION"]);
 export const cloudAgentRequestSchema = z.object({
   licenseKey: z.string().min(1), installationId: z.string().min(32).max(256), deviceId: z.string().min(16).max(256), operationId: z.string().min(8).max(128),
+  productVersion: z.string().min(1).regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/),
   action: cloudAgentActionSchema.default("ACTIVATION"), label: z.string().trim().max(100).optional(), operatingSystem: z.string().trim().max(80).optional(), architecture: z.string().trim().max(80).optional(), predecessorLeaseId: z.string().min(1).optional(),
 }).strict();
 export const cloudAgentRefreshRequestSchema = cloudAgentRequestSchema.extend({ currentLeaseId: z.string().uuid() }).strict();

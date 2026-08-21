@@ -5930,6 +5930,8 @@ export const ProductScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
   productId: 'productId',
+  minimumAcceptedVersion: 'minimumAcceptedVersion',
+  maximumAcceptedVersion: 'maximumAcceptedVersion',
   name: 'name',
   summary: 'summary',
   description: 'description',
