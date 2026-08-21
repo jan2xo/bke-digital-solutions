@@ -38,6 +38,8 @@ export async function issueCommercialLease(input: { licenseKey: string; installa
           if (!transferable?.transferable) throw new Error("TRANSFER_NOT_ALLOWED");
         }
         const version = requireProductVersion(license.product.versions[0]?.version);
+        const productId = license.product.productId;
+        if (!productId) throw new Error("PRODUCT_ID_NOT_CONFIGURED");
         const identity = deviceIdentity(input.deviceId);
         const deviceHash = identity.deviceHash;
         const existingDevice = await tx.deviceActivation.findUnique({ where: { licenseId_deviceHash: { licenseId: license.id, deviceHash } } });
@@ -51,7 +53,7 @@ export async function issueCommercialLease(input: { licenseKey: string; installa
           : await tx.licenseLeaseRecord.findFirst({ where: { licenseId: license.id, installationId: input.installationId, deviceId: input.deviceId }, orderBy: [{ generation: "desc" }, { serverRevision: "desc" }] });
         const lifecycle = nextLeaseLifecycle(previous);
         const leaseId = randomUUID(); const now = new Date(); const expiresAt = license.expiresAt ?? new Date(now.getTime() + 30 * 86400000);
-        const lease = issueSignedLease({ license_id: license.id, lease_id: leaseId, generation: lifecycle.generation, server_revision: lifecycle.serverRevision, product_id: license.productId, installation_id: input.installationId, device_id: input.deviceId, version, issuer: "BKE Digital Solutions", issued_at: now.toISOString(), not_before: now.toISOString(), expires_at: expiresAt.toISOString(), key_id: signingKey.keyId, algorithm: "Ed25519", revoked: false, superseded_by: null }, signingKey.privateKey);
+        const lease = issueSignedLease({ license_id: license.id, lease_id: leaseId, generation: lifecycle.generation, server_revision: lifecycle.serverRevision, product_id: productId, installation_id: input.installationId, device_id: input.deviceId, version, issuer: "BKE Digital Solutions", issued_at: now.toISOString(), not_before: now.toISOString(), expires_at: expiresAt.toISOString(), key_id: signingKey.keyId, algorithm: "Ed25519", revoked: false, superseded_by: null }, signingKey.privateKey);
         const record = await tx.licenseLeaseRecord.create({ data: { licenseId: license.id, leaseId, generation: lifecycle.generation, serverRevision: lifecycle.serverRevision, installationId: input.installationId, deviceId: input.deviceId, version, status: "ACTIVE", action, operationId: input.operationId, signerKeyId: signingKey.keyId, expiresAt, leasePayload: lease.payload, leaseSignature: lease.signature, issuedAt: now } });
         if (previous) await tx.licenseLeaseRecord.update({ where: { id: previous.id }, data: { status: "SUPERSEDED", supersededById: record.id } });
         await tx.commercialLeaseOperation.update({ where: { operationId: input.operationId }, data: { status: "COMPLETED", resultLeaseId: leaseId, completedAt: now } });

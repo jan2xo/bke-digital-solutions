@@ -27,6 +27,7 @@ export type AggregateProduct = {
 export type ProductMinAggregateOutputType = {
   id: string | null
   slug: string | null
+  productId: string | null
   name: string | null
   summary: string | null
   description: string | null
@@ -46,6 +47,7 @@ export type ProductMinAggregateOutputType = {
 export type ProductMaxAggregateOutputType = {
   id: string | null
   slug: string | null
+  productId: string | null
   name: string | null
   summary: string | null
   description: string | null
@@ -65,6 +67,7 @@ export type ProductMaxAggregateOutputType = {
 export type ProductCountAggregateOutputType = {
   id: number
   slug: number
+  productId: number
   name: number
   summary: number
   description: number
@@ -87,6 +90,7 @@ export type ProductCountAggregateOutputType = {
 export type ProductMinAggregateInputType = {
   id?: true
   slug?: true
+  productId?: true
   name?: true
   summary?: true
   description?: true
@@ -106,6 +110,7 @@ export type ProductMinAggregateInputType = {
 export type ProductMaxAggregateInputType = {
   id?: true
   slug?: true
+  productId?: true
   name?: true
   summary?: true
   description?: true
@@ -125,6 +130,7 @@ export type ProductMaxAggregateInputType = {
 export type ProductCountAggregateInputType = {
   id?: true
   slug?: true
+  productId?: true
   name?: true
   summary?: true
   description?: true
@@ -218,6 +224,7 @@ export type ProductGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type ProductGroupByOutputType = {
   id: string
   slug: string
+  productId: string | null
   name: string
   summary: string
   description: string
@@ -259,6 +266,7 @@ export type ProductWhereInput = {
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   id?: Prisma.StringFilter<"Product"> | string
   slug?: Prisma.StringFilter<"Product"> | string
+  productId?: Prisma.StringNullableFilter<"Product"> | string | null
   name?: Prisma.StringFilter<"Product"> | string
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
@@ -289,6 +297,7 @@ export type ProductWhereInput = {
 export type ProductOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  productId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -319,6 +328,7 @@ export type ProductOrderByWithRelationInput = {
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   slug?: string
+  productId?: string
   AND?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   OR?: Prisma.ProductWhereInput[]
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
@@ -347,11 +357,12 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
   cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
-}, "id" | "slug">
+}, "id" | "slug" | "productId">
 
 export type ProductOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  productId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -378,6 +389,7 @@ export type ProductScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ProductScalarWhereWithAggregatesInput | Prisma.ProductScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Product"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  productId?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Product"> | string
   summary?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
@@ -398,6 +410,7 @@ export type ProductScalarWhereWithAggregatesInput = {
 export type ProductCreateInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -428,6 +441,7 @@ export type ProductCreateInput = {
 export type ProductUncheckedCreateInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -458,6 +472,7 @@ export type ProductUncheckedCreateInput = {
 export type ProductUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -488,6 +503,7 @@ export type ProductUpdateInput = {
 export type ProductUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -518,6 +534,7 @@ export type ProductUncheckedUpdateInput = {
 export type ProductCreateManyInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -538,6 +555,7 @@ export type ProductCreateManyInput = {
 export type ProductUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -558,6 +576,7 @@ export type ProductUpdateManyMutationInput = {
 export type ProductUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -586,6 +605,7 @@ export type StringNullableListFilter<$PrismaModel = never> = {
 export type ProductCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -606,6 +626,7 @@ export type ProductCountOrderByAggregateInput = {
 export type ProductMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -625,6 +646,7 @@ export type ProductMaxOrderByAggregateInput = {
 export type ProductMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -811,6 +833,7 @@ export type ProductUpdateOneRequiredWithoutTrialsNestedInput = {
 export type ProductCreateWithoutEditionsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -840,6 +863,7 @@ export type ProductCreateWithoutEditionsInput = {
 export type ProductUncheckedCreateWithoutEditionsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -885,6 +909,7 @@ export type ProductUpdateToOneWithWhereWithoutEditionsInput = {
 export type ProductUpdateWithoutEditionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -914,6 +939,7 @@ export type ProductUpdateWithoutEditionsInput = {
 export type ProductUncheckedUpdateWithoutEditionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -943,6 +969,7 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
 export type ProductCreateWithoutVersionsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -972,6 +999,7 @@ export type ProductCreateWithoutVersionsInput = {
 export type ProductUncheckedCreateWithoutVersionsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1017,6 +1045,7 @@ export type ProductUpdateToOneWithWhereWithoutVersionsInput = {
 export type ProductUpdateWithoutVersionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1046,6 +1075,7 @@ export type ProductUpdateWithoutVersionsInput = {
 export type ProductUncheckedUpdateWithoutVersionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1075,6 +1105,7 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
 export type ProductCreateWithoutPoliciesInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1104,6 +1135,7 @@ export type ProductCreateWithoutPoliciesInput = {
 export type ProductUncheckedCreateWithoutPoliciesInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1149,6 +1181,7 @@ export type ProductUpdateToOneWithWhereWithoutPoliciesInput = {
 export type ProductUpdateWithoutPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1178,6 +1211,7 @@ export type ProductUpdateWithoutPoliciesInput = {
 export type ProductUncheckedUpdateWithoutPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1207,6 +1241,7 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
 export type ProductCreateWithoutPricesInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1236,6 +1271,7 @@ export type ProductCreateWithoutPricesInput = {
 export type ProductUncheckedCreateWithoutPricesInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1281,6 +1317,7 @@ export type ProductUpdateToOneWithWhereWithoutPricesInput = {
 export type ProductUpdateWithoutPricesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1310,6 +1347,7 @@ export type ProductUpdateWithoutPricesInput = {
 export type ProductUncheckedUpdateWithoutPricesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1339,6 +1377,7 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
 export type ProductCreateWithoutArtifactsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1368,6 +1407,7 @@ export type ProductCreateWithoutArtifactsInput = {
 export type ProductUncheckedCreateWithoutArtifactsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1413,6 +1453,7 @@ export type ProductUpdateToOneWithWhereWithoutArtifactsInput = {
 export type ProductUpdateWithoutArtifactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1442,6 +1483,7 @@ export type ProductUpdateWithoutArtifactsInput = {
 export type ProductUncheckedUpdateWithoutArtifactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1471,6 +1513,7 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
 export type ProductCreateWithoutCleanupJobsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1500,6 +1543,7 @@ export type ProductCreateWithoutCleanupJobsInput = {
 export type ProductUncheckedCreateWithoutCleanupJobsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1545,6 +1589,7 @@ export type ProductUpdateToOneWithWhereWithoutCleanupJobsInput = {
 export type ProductUpdateWithoutCleanupJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1574,6 +1619,7 @@ export type ProductUpdateWithoutCleanupJobsInput = {
 export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1603,6 +1649,7 @@ export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
 export type ProductCreateWithoutSubscriptionsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1632,6 +1679,7 @@ export type ProductCreateWithoutSubscriptionsInput = {
 export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1677,6 +1725,7 @@ export type ProductUpdateToOneWithWhereWithoutSubscriptionsInput = {
 export type ProductUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1706,6 +1755,7 @@ export type ProductUpdateWithoutSubscriptionsInput = {
 export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1735,6 +1785,7 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
 export type ProductCreateWithoutOffersInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1764,6 +1815,7 @@ export type ProductCreateWithoutOffersInput = {
 export type ProductUncheckedCreateWithoutOffersInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1809,6 +1861,7 @@ export type ProductUpdateToOneWithWhereWithoutOffersInput = {
 export type ProductUpdateWithoutOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1838,6 +1891,7 @@ export type ProductUpdateWithoutOffersInput = {
 export type ProductUncheckedUpdateWithoutOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1867,6 +1921,7 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
 export type ProductCreateWithoutLicensesInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1896,6 +1951,7 @@ export type ProductCreateWithoutLicensesInput = {
 export type ProductUncheckedCreateWithoutLicensesInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -1941,6 +1997,7 @@ export type ProductUpdateToOneWithWhereWithoutLicensesInput = {
 export type ProductUpdateWithoutLicensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1970,6 +2027,7 @@ export type ProductUpdateWithoutLicensesInput = {
 export type ProductUncheckedUpdateWithoutLicensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1999,6 +2057,7 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
 export type ProductCreateWithoutTrialsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -2028,6 +2087,7 @@ export type ProductCreateWithoutTrialsInput = {
 export type ProductUncheckedCreateWithoutTrialsInput = {
   id?: string
   slug: string
+  productId?: string | null
   name: string
   summary: string
   description: string
@@ -2073,6 +2133,7 @@ export type ProductUpdateToOneWithWhereWithoutTrialsInput = {
 export type ProductUpdateWithoutTrialsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2102,6 +2163,7 @@ export type ProductUpdateWithoutTrialsInput = {
 export type ProductUncheckedUpdateWithoutTrialsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2243,6 +2305,7 @@ export type ProductCountOutputTypeCountCleanupJobsArgs<ExtArgs extends runtime.T
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  productId?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2274,6 +2337,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  productId?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2294,6 +2358,7 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  productId?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2314,6 +2379,7 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ProductSelectScalar = {
   id?: boolean
   slug?: boolean
+  productId?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2331,7 +2397,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "productId" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
   editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
@@ -2365,6 +2431,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     slug: string
+    productId: string | null
     name: string
     summary: string
     description: string
@@ -2815,6 +2882,7 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
 export interface ProductFieldRefs {
   readonly id: Prisma.FieldRef<"Product", 'String'>
   readonly slug: Prisma.FieldRef<"Product", 'String'>
+  readonly productId: Prisma.FieldRef<"Product", 'String'>
   readonly name: Prisma.FieldRef<"Product", 'String'>
   readonly summary: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>

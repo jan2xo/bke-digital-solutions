@@ -437,6 +437,7 @@ export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof
 export const ProductScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  productId: 'productId',
   name: 'name',
   summary: 'summary',
   description: 'description',

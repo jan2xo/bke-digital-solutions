@@ -748,6 +748,7 @@ model Invitation {
 model Product {
   id                  String              @id @default(cuid())
   slug                String              @unique
+  productId           String?             @unique
   name                String
   summary             String
   description         String
