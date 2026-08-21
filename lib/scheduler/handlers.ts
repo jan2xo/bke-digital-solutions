@@ -137,7 +137,7 @@ export async function paymentOperations(context: JobContext): Promise<JobSummary
 
 /** Retries prepared renewal lease issuance without re-extending entitlement. */
 export async function preparedRenewalRecovery(context: JobContext): Promise<JobSummary> {
-  const operations = await db.commercialLeaseOperation.findMany({ where: { action: "RENEWAL", status: "PREPARED" }, orderBy: { createdAt: "asc" }, take: 20, include: { license: { select: { keyCiphertext: true, activations: { where: { active: true }, select: { deviceHash: true } }, leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true } } } } } });
+  const operations = await db.commercialLeaseOperation.findMany({ where: { action: "RENEWAL", status: "PREPARED" }, orderBy: { createdAt: "asc" }, take: 20, include: { license: { select: { keyCiphertext: true, activations: { where: { active: true }, select: { deviceHash: true } }, leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true, version: true } } } } } });
   if (context.dryRun) return { candidates: operations.length };
   let completed = 0, failed = 0;
   for (const operation of operations) {
@@ -145,7 +145,7 @@ export async function preparedRenewalRecovery(context: JobContext): Promise<JobS
     const activation = operation.license?.activations.find((a) => a.deviceHash === String(metadata.deviceHash ?? ""));
     const binding = operation.license?.leaseHistory.find((lease) => activation && sha256(lease.deviceId) === activation.deviceHash);
     if (!operation.license?.keyCiphertext || !binding) { failed++; continue; }
-    try { await issueCommercialLease({ licenseKey: decryptLicenseKey(operation.license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: operation.operationId, action: "RENEWAL" }); completed++; }
+    try { await issueCommercialLease({ licenseKey: decryptLicenseKey(operation.license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: operation.operationId, productVersion: binding.version, action: "RENEWAL" }); completed++; }
     catch { failed++; }
   }
   return { candidates: operations.length, completed, failed };

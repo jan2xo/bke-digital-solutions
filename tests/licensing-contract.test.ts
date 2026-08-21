@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 
 Object.assign(process.env, { APP_URL: "http://localhost:3000", DATABASE_URL: "postgresql://test:test@postgres:5432/test", SESSION_SECRET: "test-session-secret-abcdefghijklmnopqrstuvwxyz-123456", LICENSE_PEPPER: "test-license-pepper-abcdefghijklmnopqrstuvwxyz-123456", CRON_SECRET: "test-cron-secret-abcdefghijklmnopqrstuvwxyz-123456", S3_BUCKET: "test-bucket", EMAIL_FROM: "test@example.com", NODE_ENV: "test" });
 
@@ -39,11 +40,19 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
 
   it("enforces the versioned cloud boundary and lifecycle request rules", async () => {
     const { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, cloudAgentRequestSchema, validateLifecycleRequest, CloudAgentProtocolError } = await import("@/lib/licensing/cloud-agent-contract");
-    expect(CLOUD_AGENT_PROTOCOL_VERSION).toBe("bke.licensing.v2");
-    expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v3" } }))).toThrow("UNSUPPORTED_PROTOCOL_VERSION");
+    expect(CLOUD_AGENT_PROTOCOL_VERSION).toBe("bke.licensing.v3");
+    expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v2" } }))).toThrow("UNSUPPORTED_PROTOCOL_VERSION");
+    expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v3" } }))).not.toThrow();
     const request = cloudAgentRequestSchema.parse({ licenseKey: "BKE-" + "A".repeat(40), installationId: "i".repeat(32), deviceId: "d".repeat(16), operationId: "operation-1", productVersion: "1.0.0", action: "TRANSFER", predecessorLeaseId: "lease-1" });
     expect(() => validateLifecycleRequest(request)).not.toThrow();
     expect(() => validateLifecycleRequest({ ...request, predecessorLeaseId: undefined })).toThrowError(CloudAgentProtocolError);
+  });
+
+  it("requires direct lease issuance to receive an explicit requested version", () => {
+    const source = readFileSync("lib/licensing/commercial-lease.ts", "utf8");
+    expect(source).toContain("productVersion: string;");
+    expect(source).toContain("requireProductVersion(input.productVersion)");
+    expect(source).not.toContain("input.productVersion ?? license.product.versions[0]?.version");
   });
 
   it("self-verifies newly issued signed leases", async () => {

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /** Digital Solutions-owned wire types. Runtime verification remains Agent-owned. */
-export const CLOUD_AGENT_PROTOCOL_VERSION = "bke.licensing.v2" as const;
+export const CLOUD_AGENT_PROTOCOL_VERSION = "bke.licensing.v3" as const;
 export const CLOUD_AGENT_PROTOCOL_HEADER = "x-bke-licensing-version" as const;
 
 export class CloudAgentProtocolError extends Error {
