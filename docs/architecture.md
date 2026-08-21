@@ -6,6 +6,15 @@ Before VPS deployment, the production runner is exercised as `Cloudflare HTTPS -
 
 ## Platform administration relationships
 
+Products have three separate identities: `Product.id` is the internal relational
+database key, `Product.slug` is the human/web catalog and routing identifier,
+and `Product.productId` is the explicit stable software/licensing identity
+shared with manifests, license issuance, signed leases, and installed products.
+New admin products must provide `productId`; legacy rows may remain unassigned
+until explicitly mapped. Lease issuance fails closed for an unassigned product.
+Once a product is published or has release, order, subscription, or license
+history, its `productId` cannot be changed.
+
 ```text
 Administrator session
         |

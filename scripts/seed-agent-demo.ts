@@ -7,13 +7,14 @@ import { decryptLicenseKey, encryptLicenseKey, hashLicenseKey } from "../lib/sec
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const PRODUCT_SLUG = "bke-agent-integration-test-product";
 const PRODUCT_ID = "agent-demo-product";
+const CANONICAL_PRODUCT_ID = "bke-trial-product";
 const TEST_EMAIL = "agent-demo-owner@local.test";
 
 async function main() {
   const product = await db.product.upsert({
     where: { slug: PRODUCT_SLUG },
-    update: { name: "BKE Agent Integration Test Product", active: true, archivedAt: null },
-    create: { id: PRODUCT_ID, slug: PRODUCT_SLUG, name: "BKE Agent Integration Test Product", summary: "Local Agent integration fixture", description: "TEST ONLY", type: "SOFTWARE", active: true },
+    update: { productId: CANONICAL_PRODUCT_ID, name: "BKE Agent Integration Test Product", active: true, archivedAt: null },
+    create: { id: PRODUCT_ID, productId: CANONICAL_PRODUCT_ID, slug: PRODUCT_SLUG, name: "BKE Agent Integration Test Product", summary: "Local Agent integration fixture", description: "TEST ONLY", type: "SOFTWARE", active: true },
   });
   const user = await db.user.upsert({ where: { email: TEST_EMAIL }, update: { lifecycleState: "ACTIVE", emailVerified: new Date() }, create: { email: TEST_EMAIL, name: "Local Agent Demo", emailVerified: new Date(), lifecycleState: "ACTIVE" } });
   const account = await db.customerAccount.upsert({ where: { id: `agent-demo-account-${product.id}` }, update: { lifecycleState: "ACTIVE", ownerId: user.id }, create: { id: `agent-demo-account-${product.id}`, type: "INDIVIDUAL", displayName: "BKE Agent Demo Account", billingEmail: TEST_EMAIL, ownerId: user.id, lifecycleState: "ACTIVE" } });

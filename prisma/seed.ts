@@ -10,6 +10,7 @@ const catalog = [
   { slug: "bke-cloudops", name: "BKE CloudOps", summary: "Shared SaaS operations with annual access.", description: "A secure hosted workspace for teams that need visibility, accountability, and reliable operational records.", type: "SAAS" as const, policy: { name: "Professional", maxSeats: 5, maxDevicesPerSeat: 3, validityDays: 365 }, price: { name: "Annual team plan", amountMinor: 299900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "team", name: "Team", features: ["Shared workspace", "Operational audit trail", "Team reporting"], maxUsers: 5, maxDevicesPerUser: 3, updatePolicy: "ACTIVE_TERM" as const, perpetual: null, monthly: 29900, annualDiscountBps: 1000 } },
   { slug: "bke-institution-suite", name: "BKE Institution Suite", summary: "Flexible deployment for organizations and institutions.", description: "Organization licensing with authorized users, managed devices, and a central customer portal.", type: "HYBRID" as const, policy: { name: "Institution 25", maxSeats: 25, maxDevicesPerSeat: 2, validityDays: 365 }, price: { name: "Annual organization license", amountMinor: 1199900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "institution", name: "Institution", features: ["25 authorized users", "Managed devices", "Central license portal"], maxUsers: 25, maxDevicesPerUser: 2, updatePolicy: "ACTIVE_TERM" as const, perpetual: 1199900, monthly: 109900, annualDiscountBps: 900 } },
 ];
+const canonicalProductIds: Record<string, string> = { "bke-deskflow": "bke-deskflow", "bke-cloudops": "bke-cloudops", "bke-institution-suite": "bke-institution-suite" };
 const legalTemplates = [
   ["TERMS_OF_SERVICE", "Terms of Service", "terms"],
   ["PRIVACY_POLICY", "Privacy Policy", "privacy"],
@@ -26,8 +27,8 @@ async function main() {
   for (const item of catalog) {
     const product = await db.product.upsert({
       where: { slug: item.slug },
-      update: { name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, archivedAt: null },
-      create: { slug: item.slug, name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, publishedAt: new Date() },
+      update: { productId: canonicalProductIds[item.slug], name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, archivedAt: null },
+      create: { productId: canonicalProductIds[item.slug], slug: item.slug, name: item.name, summary: item.summary, description: item.description, type: item.type, active: true, publishedAt: new Date() },
     });
     let policy = await db.licensePolicy.findFirst({ where: { productId: product.id, name: item.policy.name } });
     policy ??= await db.licensePolicy.create({ data: { productId: product.id, ...item.policy } });
