@@ -32,10 +32,7 @@ jobs:
         env:
           DEPLOYMENT_ENV: test
       - run: npm run db:generate
-      - name: Verify generated Prisma client is committed
-        run: |
-          git diff -- generated/prisma
-          git diff --exit-code -- generated/prisma
+      - run: git diff --exit-code -- generated/prisma
       - run: npx prisma validate
       - run: npm run db:deploy
       - run: npm run db:status
