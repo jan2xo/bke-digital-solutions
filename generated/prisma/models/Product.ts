@@ -28,6 +28,8 @@ export type ProductMinAggregateOutputType = {
   id: string | null
   slug: string | null
   productId: string | null
+  minimumAcceptedVersion: string | null
+  maximumAcceptedVersion: string | null
   name: string | null
   summary: string | null
   description: string | null
@@ -48,6 +50,8 @@ export type ProductMaxAggregateOutputType = {
   id: string | null
   slug: string | null
   productId: string | null
+  minimumAcceptedVersion: string | null
+  maximumAcceptedVersion: string | null
   name: string | null
   summary: string | null
   description: string | null
@@ -68,6 +72,8 @@ export type ProductCountAggregateOutputType = {
   id: number
   slug: number
   productId: number
+  minimumAcceptedVersion: number
+  maximumAcceptedVersion: number
   name: number
   summary: number
   description: number
@@ -91,6 +97,8 @@ export type ProductMinAggregateInputType = {
   id?: true
   slug?: true
   productId?: true
+  minimumAcceptedVersion?: true
+  maximumAcceptedVersion?: true
   name?: true
   summary?: true
   description?: true
@@ -111,6 +119,8 @@ export type ProductMaxAggregateInputType = {
   id?: true
   slug?: true
   productId?: true
+  minimumAcceptedVersion?: true
+  maximumAcceptedVersion?: true
   name?: true
   summary?: true
   description?: true
@@ -131,6 +141,8 @@ export type ProductCountAggregateInputType = {
   id?: true
   slug?: true
   productId?: true
+  minimumAcceptedVersion?: true
+  maximumAcceptedVersion?: true
   name?: true
   summary?: true
   description?: true
@@ -225,6 +237,8 @@ export type ProductGroupByOutputType = {
   id: string
   slug: string
   productId: string | null
+  minimumAcceptedVersion: string | null
+  maximumAcceptedVersion: string | null
   name: string
   summary: string
   description: string
@@ -267,6 +281,8 @@ export type ProductWhereInput = {
   id?: Prisma.StringFilter<"Product"> | string
   slug?: Prisma.StringFilter<"Product"> | string
   productId?: Prisma.StringNullableFilter<"Product"> | string | null
+  minimumAcceptedVersion?: Prisma.StringNullableFilter<"Product"> | string | null
+  maximumAcceptedVersion?: Prisma.StringNullableFilter<"Product"> | string | null
   name?: Prisma.StringFilter<"Product"> | string
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
@@ -298,6 +314,8 @@ export type ProductOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   productId?: Prisma.SortOrderInput | Prisma.SortOrder
+  minimumAcceptedVersion?: Prisma.SortOrderInput | Prisma.SortOrder
+  maximumAcceptedVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -332,6 +350,8 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   OR?: Prisma.ProductWhereInput[]
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
+  minimumAcceptedVersion?: Prisma.StringNullableFilter<"Product"> | string | null
+  maximumAcceptedVersion?: Prisma.StringNullableFilter<"Product"> | string | null
   name?: Prisma.StringFilter<"Product"> | string
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
@@ -363,6 +383,8 @@ export type ProductOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   productId?: Prisma.SortOrderInput | Prisma.SortOrder
+  minimumAcceptedVersion?: Prisma.SortOrderInput | Prisma.SortOrder
+  maximumAcceptedVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -390,6 +412,8 @@ export type ProductScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Product"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Product"> | string
   productId?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  minimumAcceptedVersion?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  maximumAcceptedVersion?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Product"> | string
   summary?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
@@ -411,6 +435,8 @@ export type ProductCreateInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -442,6 +468,8 @@ export type ProductUncheckedCreateInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -473,6 +501,8 @@ export type ProductUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -504,6 +534,8 @@ export type ProductUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -535,6 +567,8 @@ export type ProductCreateManyInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -556,6 +590,8 @@ export type ProductUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -577,6 +613,8 @@ export type ProductUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -606,6 +644,8 @@ export type ProductCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  minimumAcceptedVersion?: Prisma.SortOrder
+  maximumAcceptedVersion?: Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -627,6 +667,8 @@ export type ProductMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  minimumAcceptedVersion?: Prisma.SortOrder
+  maximumAcceptedVersion?: Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -647,6 +689,8 @@ export type ProductMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  minimumAcceptedVersion?: Prisma.SortOrder
+  maximumAcceptedVersion?: Prisma.SortOrder
   name?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -834,6 +878,8 @@ export type ProductCreateWithoutEditionsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -864,6 +910,8 @@ export type ProductUncheckedCreateWithoutEditionsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -910,6 +958,8 @@ export type ProductUpdateWithoutEditionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -940,6 +990,8 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -970,6 +1022,8 @@ export type ProductCreateWithoutVersionsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1000,6 +1054,8 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1046,6 +1102,8 @@ export type ProductUpdateWithoutVersionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1076,6 +1134,8 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1106,6 +1166,8 @@ export type ProductCreateWithoutPoliciesInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1136,6 +1198,8 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1182,6 +1246,8 @@ export type ProductUpdateWithoutPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1212,6 +1278,8 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1242,6 +1310,8 @@ export type ProductCreateWithoutPricesInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1272,6 +1342,8 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1318,6 +1390,8 @@ export type ProductUpdateWithoutPricesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1348,6 +1422,8 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1378,6 +1454,8 @@ export type ProductCreateWithoutArtifactsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1408,6 +1486,8 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1454,6 +1534,8 @@ export type ProductUpdateWithoutArtifactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1484,6 +1566,8 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1514,6 +1598,8 @@ export type ProductCreateWithoutCleanupJobsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1544,6 +1630,8 @@ export type ProductUncheckedCreateWithoutCleanupJobsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1590,6 +1678,8 @@ export type ProductUpdateWithoutCleanupJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1620,6 +1710,8 @@ export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1650,6 +1742,8 @@ export type ProductCreateWithoutSubscriptionsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1680,6 +1774,8 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1726,6 +1822,8 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1756,6 +1854,8 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1786,6 +1886,8 @@ export type ProductCreateWithoutOffersInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1816,6 +1918,8 @@ export type ProductUncheckedCreateWithoutOffersInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1862,6 +1966,8 @@ export type ProductUpdateWithoutOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1892,6 +1998,8 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1922,6 +2030,8 @@ export type ProductCreateWithoutLicensesInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1952,6 +2062,8 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -1998,6 +2110,8 @@ export type ProductUpdateWithoutLicensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2028,6 +2142,8 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2058,6 +2174,8 @@ export type ProductCreateWithoutTrialsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -2088,6 +2206,8 @@ export type ProductUncheckedCreateWithoutTrialsInput = {
   id?: string
   slug: string
   productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
   name: string
   summary: string
   description: string
@@ -2134,6 +2254,8 @@ export type ProductUpdateWithoutTrialsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2164,6 +2286,8 @@ export type ProductUncheckedUpdateWithoutTrialsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2306,6 +2430,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   slug?: boolean
   productId?: boolean
+  minimumAcceptedVersion?: boolean
+  maximumAcceptedVersion?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2338,6 +2464,8 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   slug?: boolean
   productId?: boolean
+  minimumAcceptedVersion?: boolean
+  maximumAcceptedVersion?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2359,6 +2487,8 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   slug?: boolean
   productId?: boolean
+  minimumAcceptedVersion?: boolean
+  maximumAcceptedVersion?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2380,6 +2510,8 @@ export type ProductSelectScalar = {
   id?: boolean
   slug?: boolean
   productId?: boolean
+  minimumAcceptedVersion?: boolean
+  maximumAcceptedVersion?: boolean
   name?: boolean
   summary?: boolean
   description?: boolean
@@ -2397,7 +2529,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "productId" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "productId" | "minimumAcceptedVersion" | "maximumAcceptedVersion" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
   editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
@@ -2432,6 +2564,8 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     slug: string
     productId: string | null
+    minimumAcceptedVersion: string | null
+    maximumAcceptedVersion: string | null
     name: string
     summary: string
     description: string
@@ -2883,6 +3017,8 @@ export interface ProductFieldRefs {
   readonly id: Prisma.FieldRef<"Product", 'String'>
   readonly slug: Prisma.FieldRef<"Product", 'String'>
   readonly productId: Prisma.FieldRef<"Product", 'String'>
+  readonly minimumAcceptedVersion: Prisma.FieldRef<"Product", 'String'>
+  readonly maximumAcceptedVersion: Prisma.FieldRef<"Product", 'String'>
   readonly name: Prisma.FieldRef<"Product", 'String'>
   readonly summary: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>

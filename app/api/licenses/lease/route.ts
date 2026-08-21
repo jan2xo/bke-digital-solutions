@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     return NextResponse.json(await issueCommercialLease({ ...input, action: input.action ?? "ACTIVATION" }), { status: 201, headers: { "x-bke-licensing-version": CLOUD_AGENT_PROTOCOL_VERSION } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
-    const code = ["ACTIVATION_LIMIT", "TRANSFER_NOT_ALLOWED", "INVALID_LICENSE_VERSION"].includes(message) ? message : "INVALID_LICENSE";
+    const code = ["ACTIVATION_LIMIT", "TRANSFER_NOT_ALLOWED", "INVALID_LICENSE_VERSION", "VERSION_NOT_ACCEPTED"].includes(message) ? message : "INVALID_LICENSE";
     return NextResponse.json({ error: code }, { status: code === "INVALID_LICENSE" ? 400 : 409 });
   }
 }

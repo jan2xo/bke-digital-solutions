@@ -6,10 +6,12 @@ import { assertSameOrigin } from "@/lib/security/request";
 import { audit } from "@/lib/audit";
 import { apiError } from "@/lib/http";
 import { createEdition, editionPlanSchema } from "@/lib/edition-plans";
-import { productIdSchema } from "@/lib/product-identity";
+import { acceptedVersionSchema, productIdSchema, validateAcceptedVersionRange } from "@/lib/product-identity";
 
 const schema = z.object({
   productId: productIdSchema,
+  minimumAcceptedVersion: acceptedVersionSchema.nullable().optional(),
+  maximumAcceptedVersion: acceptedVersionSchema.nullable().optional(),
   slug: z.string().regex(/^[a-z0-9-]+$/).max(80),
   name: z.string().trim().min(2).max(120),
   summary: z.string().trim().min(10).max(240),
@@ -35,8 +37,9 @@ export async function POST(request: Request) {
     assertSameOrigin(request);
     const admin = await requireAdmin();
     const input = schema.parse(await request.json());
+    validateAcceptedVersionRange(input.minimumAcceptedVersion, input.maximumAcceptedVersion);
     const product = await db.$transaction(async (tx) => {
-      const created = await tx.product.create({ data: { productId: input.productId, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
+      const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
       await createEdition(tx, created.id, input.edition);
       return created;
     });

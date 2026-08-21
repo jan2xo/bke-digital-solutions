@@ -5,6 +5,7 @@ import { issueSignedLease } from "@/lib/licensing-agent";
 import { nextLeaseLifecycle, requireProductVersion, type CommercialLeaseAction } from "@/lib/licensing/lifecycle";
 import { activeCommercialSigningKey, ensureCommercialSigningKey } from "@/lib/licensing/signing-registry";
 import { deviceIdentity } from "@/lib/licensing/product-identity";
+import { isVersionAccepted } from "@/lib/product-identity";
 
 export async function issueCommercialLease(input: { licenseKey: string; installationId: string; deviceId: string; operationId: string; action?: CommercialLeaseAction; label?: string; operatingSystem?: string; architecture?: string; predecessorLeaseId?: string }) {
   await ensureCommercialSigningKey();
@@ -38,6 +39,7 @@ export async function issueCommercialLease(input: { licenseKey: string; installa
           if (!transferable?.transferable) throw new Error("TRANSFER_NOT_ALLOWED");
         }
         const version = requireProductVersion(license.product.versions[0]?.version);
+        if (!isVersionAccepted(version, license.product.minimumAcceptedVersion, license.product.maximumAcceptedVersion)) throw new Error("VERSION_NOT_ACCEPTED");
         const productId = license.product.productId;
         if (!productId) throw new Error("PRODUCT_ID_NOT_CONFIGURED");
         const identity = deviceIdentity(input.deviceId);

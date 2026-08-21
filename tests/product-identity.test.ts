@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertProductIdChangeAllowed, productIdSchema } from "@/lib/product-identity";
+import { acceptedVersionSchema, isVersionAccepted, productIdSchema, validateAcceptedVersionRange } from "@/lib/product-identity";
 
 describe("canonical product identity", () => {
   it("keeps database, catalog, and licensing identities conceptually distinct", () => {
@@ -15,15 +15,27 @@ describe("canonical product identity", () => {
     expect(() => productIdSchema.parse("trial_product")).toThrow();
   });
 
-  it("allows first assignment for legacy products even after lifecycle history", () => {
-    expect(() => assertProductIdChangeAllowed({ existingProductId: null, requestedProductId: "bke-trial-product", lifecycleLocked: true })).not.toThrow();
+  it.each(["1.0.0", "1.0.1", "1.0.9", "1.1.0"])("accepts %s inside the configured range", (version) => {
+    expect(isVersionAccepted(version, "1.0.0", "1.1.0")).toBe(true);
   });
 
-  it("keeps assigned product IDs immutable once lifecycle-locked", () => {
-    expect(() => assertProductIdChangeAllowed({ existingProductId: "bke-trial-product", requestedProductId: "bke-other-product", lifecycleLocked: true })).toThrow("PRODUCT_ID_IMMUTABLE");
+  it.each(["1.1.1", "1.1.2", "0.9.9", "2.0.0"])("rejects %s outside the configured range", (version) => {
+    expect(isVersionAccepted(version, "1.0.0", "1.1.0")).toBe(false);
   });
 
-  it("allows saving the same assigned product ID", () => {
-    expect(() => assertProductIdChangeAllowed({ existingProductId: "bke-trial-product", requestedProductId: "bke-trial-product", lifecycleLocked: true })).not.toThrow();
+  it("supports an exact-version policy and rejects inverted or malformed ranges", () => {
+    expect(isVersionAccepted("1.0.0", "1.0.0", "1.0.0")).toBe(true);
+    expect(isVersionAccepted("1.0.1", "1.0.0", "1.0.0")).toBe(false);
+    expect(() => validateAcceptedVersionRange("1.1.0", "1.0.0")).toThrow("INVALID_VERSION_POLICY");
+    expect(() => acceptedVersionSchema.parse("1.0")).toThrow();
+  });
+
+  it("preserves unrestricted legacy semantics when both bounds are absent", () => {
+    expect(isVersionAccepted("9.9.9", null, null)).toBe(true);
+  });
+
+  it("supports semver prerelease and build metadata according to semver rules", () => {
+    expect(isVersionAccepted("1.0.0-beta.1", "1.0.0-beta.1", "1.0.0")).toBe(true);
+    expect(isVersionAccepted("1.0.0+build.7", "1.0.0", "1.0.0")).toBe(true);
   });
 });

@@ -749,6 +749,8 @@ model Product {
   id                  String              @id @default(cuid())
   slug                String              @unique
   productId           String?             @unique
+  minimumAcceptedVersion String?
+  maximumAcceptedVersion String?
   name                String
   summary             String
   description         String

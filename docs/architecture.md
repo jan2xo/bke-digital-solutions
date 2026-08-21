@@ -15,6 +15,16 @@ until explicitly mapped. Lease issuance fails closed for an unassigned product.
 Once a product is published or has release, order, subscription, or license
 history, its `productId` cannot be changed.
 
+Product licensing policy is also product-owned. `minimumAcceptedVersion` and
+`maximumAcceptedVersion` are inclusive semantic-version bounds evaluated before
+commercial lease signing; they are separate from published release state. A
+draft or candidate release therefore does not become licensable merely because
+it exists. Both bounds `NULL` preserve the historical unrestricted behavior;
+an explicitly configured malformed or inverted range fails closed. License
+records remain entitlements and do not duplicate the normal product-wide range.
+The License Center consumes the resulting lease/authorization boundary and
+does not edit this policy.
+
 ```text
 Administrator session
         |
