@@ -22,3 +22,18 @@ export function buildBackupCertificationDocument(version: CertificationVersion, 
   const serialized = JSON.stringify(evidence, null, 2) + "\n";
   return { evidence, serialized, documentSha256: createHash("sha256").update(serialized).digest("hex"), payloadBinding };
 }
+
+/** Select a backup only when the current release has exactly one fully verified candidate. */
+export function selectUniqueVerifiedBackup<T extends CertificationArchive>(version: CertificationVersion, candidates: T[]): T {
+  const eligible = candidates.filter((candidate) => {
+    try {
+      buildBackupCertificationDocument(version, candidate);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+  if (eligible.length === 0) throw new Error("NO_UNAMBIGUOUS_VERIFIED_BACKUP");
+  if (eligible.length > 1) throw new Error("AMBIGUOUS_VERIFIED_BACKUP");
+  return eligible[0];
+}

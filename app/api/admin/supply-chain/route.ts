@@ -12,7 +12,7 @@ import { resolveTrustedSupplyChainKey } from "@/lib/supply-chain/keyring";
 import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage";
-import { buildBackupCertificationDocument } from "@/lib/supply-chain/backup-certification";
+import { buildBackupCertificationDocument, selectUniqueVerifiedBackup } from "@/lib/supply-chain/backup-certification";
 import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
 import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
@@ -35,8 +35,10 @@ export async function POST(request: Request) {
     const existing = await db.supplyChainEvidence.findUnique({ where: { versionId: input.versionId }, include: { version: { include: { product: true, artifacts: true } }, verificationEvidence: true } });
     if (!existing) throw new Error("NOT_FOUND");
     if (input.action === "CERTIFY_BACKUP") {
-      if (!input.backupId) throw new Error("BACKUP_ID_REQUIRED");
-      const archive = await db.backupArchive.findUnique({ where: { id: input.backupId }, include: { operations: { orderBy: { createdAt: "asc" } } } });
+      const candidates = input.backupId
+        ? [await db.backupArchive.findUnique({ where: { id: input.backupId }, include: { operations: { orderBy: { createdAt: "asc" } } } })].filter((item): item is NonNullable<typeof item> => Boolean(item))
+        : await db.backupArchive.findMany({ where: { status: "VERIFIED", missingObjectCount: 0 }, include: { operations: { orderBy: { createdAt: "asc" } } }, orderBy: { verifiedAt: "desc" } });
+      const archive = selectUniqueVerifiedBackup(existing.version, candidates);
       const generated = buildBackupCertificationDocument(existing.version, archive);
       const prior = existing.verificationEvidence.find((item) => item.kind === "BACKUP" && item.artifactHash === generated.payloadBinding && item.documentSha256 === generated.documentSha256 && item.result === "VERIFIED");
       const objectKey = prior?.documentObjectKey ?? `evidence/${existing.version.id}/backup/${randomUUID()}.json`;
