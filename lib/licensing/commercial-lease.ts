@@ -5,14 +5,15 @@ import { issueSignedLease } from "@/lib/licensing-agent";
 import { nextLeaseLifecycle, requireProductVersion, type CommercialLeaseAction } from "@/lib/licensing/lifecycle";
 import { activeCommercialSigningKey, ensureCommercialSigningKey } from "@/lib/licensing/signing-registry";
 import { deviceIdentity } from "@/lib/licensing/product-identity";
+import { isVersionAccepted } from "@/lib/product-identity";
 
-export async function issueCommercialLease(input: { licenseKey: string; installationId: string; deviceId: string; operationId: string; action?: CommercialLeaseAction; label?: string; operatingSystem?: string; architecture?: string; predecessorLeaseId?: string }) {
+export async function issueCommercialLease(input: { licenseKey: string; installationId: string; deviceId: string; operationId: string; productVersion: string; action?: CommercialLeaseAction; label?: string; operatingSystem?: string; architecture?: string; predecessorLeaseId?: string }) {
   await ensureCommercialSigningKey();
   const signingKey = await activeCommercialSigningKey();
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
       return await db.$transaction(async (tx) => {
-        const license = await tx.license.findUnique({ where: { keyHash: hashLicenseKey(input.licenseKey) }, include: { product: { include: { versions: { where: { active: true, lifecycle: { in: ["STABLE", "LTS"] } }, orderBy: { releasedAt: "desc" }, take: 1, select: { version: true } } } }, account: { select: { lifecycleState: true } }, subscription: { select: { status: true } } } });
+        const license = await tx.license.findUnique({ where: { keyHash: hashLicenseKey(input.licenseKey) }, include: { product: { include: { versions: { where: { version: input.productVersion, active: true, lifecycle: { in: ["STABLE", "LTS"] } }, take: 1, select: { version: true } } } }, account: { select: { lifecycleState: true } }, subscription: { select: { status: true } } } });
         if (!license || license.account.lifecycleState !== "ACTIVE" || license.status !== "ACTIVE" || (license.expiresAt && license.expiresAt < new Date())) throw new Error("INVALID_LICENSE");
         const operation = await tx.commercialLeaseOperation.findUnique({ where: { operationId: input.operationId } });
         if (!operation) {
@@ -37,7 +38,9 @@ export async function issueCommercialLease(input: { licenseKey: string; installa
           const transferable = item?.policyId === transferPolicyId ? await tx.licensePolicy.findUnique({ where: { id: item.policyId }, select: { transferable: true } }) : null;
           if (!transferable?.transferable) throw new Error("TRANSFER_NOT_ALLOWED");
         }
-        const version = requireProductVersion(license.product.versions[0]?.version);
+        const version = requireProductVersion(input.productVersion);
+        if (license.product.versions.length === 0) throw new Error("VERSION_NOT_ELIGIBLE");
+        if (!isVersionAccepted(version, license.product.minimumAcceptedVersion, license.product.maximumAcceptedVersion)) throw new Error("VERSION_NOT_ACCEPTED");
         const productId = license.product.productId;
         if (!productId) throw new Error("PRODUCT_ID_NOT_CONFIGURED");
         const identity = deviceIdentity(input.deviceId);

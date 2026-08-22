@@ -107,13 +107,13 @@ async function processVerifiedEvent(event: PaymentEvent) {
         select: {
           keyCiphertext: true,
           activations: { where: { active: true }, select: { deviceHash: true } },
-          leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true } },
+          leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true, version: true } },
         },
       });
       const activation = license.activations.find((candidate) => candidate.deviceHash === request.deviceHash);
       const binding = license.leaseHistory.find((candidate) => activation && sha256(candidate.deviceId) === activation.deviceHash);
       if (!license.keyCiphertext || !activation || !binding) continue;
-      await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: request.operationId, action: "RENEWAL" });
+      await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: request.operationId, productVersion: binding.version, action: "RENEWAL" });
     } catch { /* payment remains settled; prepared operation is retryable */ }
   }
   await dispatchEmailOutbox().catch(() => undefined);
