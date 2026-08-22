@@ -5,7 +5,7 @@
 
 {$S3_UPLOAD_DOMAIN} {
 	request_body {
-		max_size 250MB
+		max_size 550MB
 	}
 	header {
 		Access-Control-Allow-Origin "https://{$APP_DOMAIN}"
