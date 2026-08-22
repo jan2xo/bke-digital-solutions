@@ -1,13 +1,13 @@
 # Production topology
 
-This document is the canonical engineering map of the BKE Digital Solutions production runtime. Keep it synchronized with `docker-compose.production.yml`, `Caddyfile`, deployment automation, and operations runbooks. It describes topology and ownership boundaries; it must not contain credentials or secret values.
+This is the canonical engineering map of the BKE Digital Solutions production runtime. Keep it synchronized with `docker-compose.production.yml`, `Caddyfile`, deployment automation, migrations, and the detailed operations runbooks. It must not contain credentials or secret values.
 
 ## Runtime overview
 
 ```text
 Internet
    |
-   | HTTPS :443 / HTTP :80
+   | HTTP :80 / HTTPS :443
    v
 Caddy
    |
@@ -33,43 +33,41 @@ Operational one-shot containers:
 - operations
 ```
 
-Production is defined by `docker-compose.production.yml`. Caddy is the only service that publishes host network ports. Application and data services communicate through Compose networks.
+`docker-compose.production.yml` defines the production topology. Caddy is the only service that publishes host network ports. Application and data services communicate through Compose networks.
 
 ## Services and responsibility
 
 | Service | Responsibility | Persistent state | Network boundary |
 | --- | --- | --- | --- |
-| `caddy` | TLS termination, public reverse proxy, fixed Licensing Agent binary delivery | `caddy_data`, `caddy_config` | Public `80`, `443`, `443/udp`; private + egress networks |
-| `app` | Next.js application and HTTP API | No container-local durable state | private + egress |
-| `scheduler` | Scheduled application jobs | No container-local durable state | private |
-| `backup-worker` | Backup processing | No container-local durable state | private + egress |
-| `postgres` | Canonical relational application state | `postgres_data` | private only |
-| `valkey` | Cache/coordination state with AOF persistence | `valkey_data` | private only |
-| `minio` | Object/artifact storage | `object_data` | private only |
-| `minio-init` | Idempotent MinIO initialization | None | private only; exits after completion |
-| `clamav` | Malware scanning | No application durable state | private only |
-| `migrate` | Explicit database migration operation | Writes through PostgreSQL | operations profile; private only |
-| `operations` | Explicit operator CLI tasks such as grace control | Writes only through approved application/database interfaces | operations profile; private only |
+| `caddy` | TLS termination, reverse proxy, fixed Licensing Agent binary delivery | `caddy_data`, `caddy_config` | public 80/443/443-udp; private + egress |
+| `app` | Next.js application and HTTP API | no container-local durable state | private + egress |
+| `scheduler` | scheduled application jobs | no container-local durable state | private |
+| `backup-worker` | backup processing | no container-local durable state | private + egress |
+| `postgres` | canonical relational application and licensing state | `postgres_data` | private only |
+| `valkey` | cache/coordination with AOF persistence | `valkey_data` | private only |
+| `minio` | object/artifact storage | `object_data` | private only |
+| `minio-init` | idempotent MinIO initialization | none | private only; exits after completion |
+| `clamav` | malware scanning | no application durable state | private only |
+| `migrate` | explicit database migration operation | writes through PostgreSQL | operations profile; private only |
+| `operations` | explicit operator CLI tasks such as grace control | writes through approved application/database interfaces | operations profile; private only |
 
-The `private` network is marked `internal: true`. Services that require outbound connectivity additionally join the `egress` network.
+The `private` network is `internal: true`. Services that need outbound connectivity additionally join `egress`.
 
 ## Durable-state boundary
 
-The following Docker volumes are persistent production state and must not be casually deleted during rebuilds or deployments:
+Persistent production state includes:
 
 - `postgres_data` — relational application and licensing state.
 - `object_data` — MinIO object/artifact storage.
 - `valkey_data` — Valkey persistence.
 - `caddy_data` — Caddy runtime/TLS state.
-- `caddy_config` — Caddy configuration state managed by Caddy.
+- `caddy_config` — Caddy-managed configuration state.
 
-Application, scheduler, backup-worker, migration, operations, and ClamAV containers are replaceable runtime compute. Their container filesystems are not the canonical durable store.
+Application, scheduler, backup-worker, migration, operations, and ClamAV containers are replaceable compute. Their container filesystems are not the canonical durable store.
 
-A normal application rebuild or `docker compose up -d` must preserve the named volumes above. Destructive volume operations such as `docker compose down -v`, manual volume deletion, or host-storage deletion are not normal deployment steps.
+Normal deployment must preserve the named volumes above. `docker compose down -v`, manual volume deletion, and host-storage deletion are not normal deployment operations.
 
 ## Public ingress
-
-Caddy is the public ingress boundary:
 
 ```text
 Internet
@@ -79,19 +77,16 @@ Internet
    +-- :443/udp ---+
                          |
                          +--> Next.js app:3000
-                         |
-                         +--> fixed Licensing Agent downloads
+                         `--> fixed Licensing Agent downloads
 ```
 
-No PostgreSQL, Valkey, MinIO, ClamAV, scheduler, backup-worker, migration, or operations port is published directly to the host by the production Compose topology.
-
-Caddy forwards normal web traffic to `app:3000` and supplies the expected forwarded host/protocol/client-IP headers.
+PostgreSQL, Valkey, MinIO, ClamAV, scheduler, backup-worker, migration, and operations do not publish public host ports in the production Compose topology.
 
 ## Licensing Agent distribution
 
-The Licensing Agent is shared infrastructure, not a commercial Product. Its detailed runbook is `docs/operations/licensing-agent-distribution.md`.
+The Licensing Agent is shared infrastructure, not a commercial Product. Detailed operations live in `docs/operations/licensing-agent-distribution.md`.
 
-Canonical customer page:
+Canonical page:
 
 ```text
 https://jl-bke.com/licensing-agent
@@ -114,34 +109,66 @@ Host storage:
 └── linux/BKELicensingAgentSetup.deb
 ```
 
-`LICENSING_AGENT_STORAGE_PATH` may override the host-side source path; the container-side path remains `/opt/bkes/licensing-agent`.
+`LICENSING_AGENT_STORAGE_PATH` may override the host-side source path. Only Caddy requires the installer host mount. The Next.js landing page renders the three permanent platform links and does not inspect installer storage.
 
-The directory is mounted read-only into both `app` and `caddy`:
+Caddy mounts installer storage read-only and serves only the three explicitly mapped files. Installer artifacts are external to Git. After the one-time distribution deployment, atomic installer replacement requires no Git commit, application rebuild, database migration, application restart, or Caddy restart.
 
-- `app` observes whether each fixed installer exists so the dynamic landing page can expose accurate availability.
-- `caddy` serves only the three explicitly mapped installer paths.
+## Operational grace control
 
-Installer files are external deployment artifacts and are never committed to this repository. Routine atomic replacement of a current installer requires no Git commit, application rebuild, database migration, application restart, or Caddy restart.
+Air Stack and Render Dock operational grace is PostgreSQL-backed and changed only through the `operations` CLI/service. It is not an Admin UX and there is no public write API.
+
+Public read endpoints:
+
+```text
+/api/graceperiod/airstack
+/api/graceperiod/renderdock
+```
+
+Current production operator invocation:
+
+```bash
+cd /root/bke-digital-solutions
+
+docker compose \
+  --env-file .env.production \
+  -f docker-compose.production.yml \
+  --profile operations \
+  run --rm \
+  -e NODE_OPTIONS=--conditions=react-server \
+  operations \
+  npm run grace:set -- renderdock true
+```
+
+Change `renderdock` to `airstack` for Air Stack, and change `true` to `false` to revoke the override. Verify through the public read endpoint after every mutation:
+
+```bash
+curl -fsS https://jl-bke.com/api/graceperiod/renderdock
+echo
+```
+
+The CLI write is audited. Missing state and read failures fail closed to `false`. The operational slugs `airstack` and `renderdock` are intentionally distinct from canonical licensing Product IDs `bke-air-stack` and `bke-render-dock`.
+
+A grace mutation must not require an application rebuild or runtime restart. The `operations` image must already exist for a no-build routine invocation; pruning that image can force Compose to rebuild the one-shot operations image before the command runs.
 
 ## Security and filesystem boundaries
 
-Production services use a least-privilege baseline where practical:
+Production uses least-privilege controls where practical:
 
 - application containers use read-only root filesystems;
 - writable temporary space is explicit `tmpfs`;
 - `no-new-privileges` is enabled;
 - Linux capabilities are dropped and selectively restored only where required;
 - process limits are explicit;
-- installer storage is read-only inside application/Caddy containers;
-- the Licensing Agent distribution exposes fixed files, not arbitrary `/opt` browsing;
+- Licensing Agent storage is read-only inside Caddy;
+- no generic `/opt` file browsing or directory listing is exposed;
 - Caddy admin API is disabled;
 - sensitive PayMongo signature headers are removed from access logs.
 
-Do not introduce a new public port, writable host mount, public file browser, upload path, or direct database/cache/object-store exposure without an explicit architecture and security review.
+Do not add public ports, writable host mounts, public file browsers, upload routes, or direct database/cache/object-store exposure without explicit architecture and security review.
 
 ## Deployment flow
 
-The repository's deployment runbook and scripts are authoritative for command-level procedure. Conceptually, production deployment is:
+Conceptually:
 
 ```text
 GitHub canonical main
@@ -152,58 +179,28 @@ clean production checkout
         +--> validate topology/configuration
         +--> build replaceable application images
         +--> run explicit database migrations
-        +--> start/reconcile runtime services
+        +--> reconcile runtime services
         +--> verify live + ready health contracts
         `--> verify production behavior
 ```
 
-A deployment must not replace or destroy persistent named volumes. Database schema changes are applied through the explicit migration service rather than by recreating PostgreSQL state.
-
-The Licensing Agent installer replacement workflow is intentionally separate from application deployment after its one-time distribution topology has been installed.
+Database schema changes are applied through the explicit migration service rather than by recreating PostgreSQL state. Licensing Agent installer replacement and grace mutation are routine operations separate from application deployment.
 
 ## Health and dependency model
 
-The application exposes separate liveness and readiness contracts:
+Primary health contracts:
 
 ```text
 /api/health/live
 /api/health/ready
-```
-
-The scheduler has its own health contract:
-
-```text
 /api/health/scheduler
 ```
 
-`app` waits on healthy PostgreSQL, Valkey, ClamAV, and successful MinIO initialization. `scheduler` waits on a healthy app and Valkey. Caddy waits on a healthy app before normal startup reconciliation.
-
-A container being `Up` is not by itself proof that production is healthy; use the repository health verification tooling and HTTPS production endpoints.
-
-## Operational grace control
-
-Air Stack and Render Dock operational grace is stored in PostgreSQL and changed only through the approved operations CLI/service. It is not an Admin UX or public write API.
-
-Public read endpoints remain:
-
-```text
-/api/graceperiod/airstack
-/api/graceperiod/renderdock
-```
-
-The operational slugs are intentionally distinct from canonical licensing Product IDs (`bke-air-stack`, `bke-render-dock`). Do not couple grace routing to commercial product identity without an explicit migration design.
+`app` waits on healthy PostgreSQL, Valkey, ClamAV, and successful MinIO initialization. `scheduler` waits on a healthy app and Valkey. Caddy depends on a healthy app. A container being `Up` alone is not proof that production is healthy.
 
 ## Backup and recovery boundary
 
-Backups and restore procedures are documented separately in the operations runbooks. This topology document does not redefine retention, restore certification, or offsite policy.
-
-At minimum, disaster recovery planning must account for:
-
-- PostgreSQL durable state;
-- MinIO/object durable state;
-- required production environment configuration and secrets held outside Git;
-- Caddy/TLS state where appropriate;
-- external Licensing Agent installer artifacts or the ability to restore known-good installers.
+Detailed backup and restore procedure belongs in the dedicated operations runbooks. Disaster recovery planning must account for PostgreSQL, MinIO/object state, required production environment configuration and secrets held outside Git, relevant Caddy/TLS state, and known-good Licensing Agent installer artifacts.
 
 Never treat a Git checkout or Docker image as a backup of production data.
 
@@ -216,8 +213,8 @@ For engineering/runtime truth:
 3. This topology document and detailed repository operations runbooks.
 4. Production verification evidence.
 
-External planning/documentation systems may summarize this architecture, but should link back here instead of becoming a conflicting executable source of truth.
+Notion and other planning systems may summarize and navigate this architecture, but GitHub remains the executable engineering source of truth.
 
 ## Change rule
 
-Any change that materially alters production service ownership, public ingress, persistent state, networks, host mounts, deployment sequencing, or recovery boundaries must update this document in the same engineering change or explicitly explain why no topology documentation change is required.
+Any change that materially alters service ownership, public ingress, persistent state, networks, host mounts, deployment sequencing, grace operations, or recovery boundaries must update this document in the same engineering change or explicitly explain why no topology documentation change is required.
