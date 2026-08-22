@@ -65,7 +65,6 @@ export async function createArtifactUploadUrl(
     Bucket: env.S3_BUCKET,
     Key: objectKey,
     ContentType: contentType,
-    ContentLength: contentLength,
   });
   return getSignedUrl(publicUploadClient(), command, { expiresIn });
 }
