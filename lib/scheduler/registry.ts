@@ -1,9 +1,10 @@
 import "server-only";
 import type { ScheduledJob } from "@/lib/scheduler/types";
-import { commerceLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, preparedRenewalRecovery, renewalReminders, securityCleanup, storageLifecycle } from "@/lib/scheduler/handlers";
+import { commerceLifecycle, commissioningLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, preparedRenewalRecovery, renewalReminders, securityCleanup, storageLifecycle } from "@/lib/scheduler/handlers";
 import { backupCreation, backupRetention } from "@/lib/backups/scheduler";
 
 const jobs = [
+  { key: "commissioning.evidence", name: "BKE artifact commissioning", description: "Classifies canonical artifacts and generates BKE-owned technical evidence with bounded, retry-safe processing.", category: "COMMISSIONING", cadenceSeconds: 60, timeoutSeconds: 240, lockSeconds: 300, maxAttempts: 5, dryRunSupported: true, healthThresholdSeconds: 900, auditPolicy: "ALL", handler: commissioningLifecycle },
   { key: "storage.lifecycle", name: "Storage cleanup and deletion", description: "Recovers and processes private-storage cleanup, abandoned uploads, and completed product deletion.", category: "STORAGE", cadenceSeconds: 300, timeoutSeconds: 240, lockSeconds: 300, maxAttempts: 5, dryRunSupported: true, healthThresholdSeconds: 1800, auditPolicy: "FAILURES", handler: storageLifecycle },
   { key: "email.outbox", name: "Transactional email outbox", description: "Delivers pending mail, retries transient failures, and marks terminal failures.", category: "EMAIL", cadenceSeconds: 60, timeoutSeconds: 50, lockSeconds: 60, maxAttempts: 5, dryRunSupported: true, healthThresholdSeconds: 300, auditPolicy: "FAILURES", handler: emailLifecycle },
   { key: "subscriptions.renewal-reminders", name: "Subscription renewal reminders", description: "Queues deduplicated 14, 7, and 1 day customer-authorized renewal reminders.", category: "ENTITLEMENTS", cadenceSeconds: 3600, timeoutSeconds: 300, lockSeconds: 360, maxAttempts: 4, dryRunSupported: true, healthThresholdSeconds: 10800, auditPolicy: "FAILURES", handler: renewalReminders },

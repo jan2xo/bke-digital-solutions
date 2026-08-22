@@ -9,8 +9,14 @@ import { retryStoredWebhook } from "@/lib/webhooks";
 import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import type { JobContext, JobSummary } from "@/lib/scheduler/types";
+import { processPendingCommissioning } from "@/lib/commissioning/service";
 
 const DAY = 86_400_000;
+
+export async function commissioningLifecycle(context: JobContext): Promise<JobSummary> {
+  if (context.dryRun) return { pending: await db.commissioningRun.count({ where: { status: { in: ["PENDING", "FAILED"] } } }) };
+  return processPendingCommissioning(10);
+}
 
 export async function storageLifecycle(context: JobContext): Promise<JobSummary> {
   const due = await db.storageCleanupJob.count({ where: { status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: context.now } } });
