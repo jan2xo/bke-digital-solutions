@@ -22,6 +22,8 @@ describe("trusted key discovery and release UI", () => {
     expect(controls).toContain("Awaiting human approval");
     expect(controls).toContain("does not constitute compliance approval");
     expect(controls).not.toContain("Upload SBOM");
+    expect(controls).toContain("{approvalStatus}");
+    expect(controls).toContain("{machineBlocked.length ?");
   });
   it("renders the supplied approval state and separates compliance from machine evidence", () => {
     expect(releaseEvidenceSummary([], "Approved")).toEqual({ evidence: "Evidence verified", approval: "Approved" });
