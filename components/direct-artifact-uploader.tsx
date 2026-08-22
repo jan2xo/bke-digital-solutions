@@ -8,7 +8,7 @@ export async function uploadArtifact(versionId: string, file: File, report?: (me
   if (!init.ok) throw new Error((await init.json()).error ?? "Upload authorization failed");
   const session = await init.json();
   report?.("Uploading directly to object storage…");
-  const put = await fetch(session.uploadUrl, { method: "PUT", headers: { "content-type": session.contentType, "content-length": String(file.size) }, body: file });
+  const put = await fetch(session.uploadUrl, { method: "PUT", headers: { "content-type": session.contentType }, body: file });
   if (!put.ok) throw new Error("Object-storage upload failed");
   report?.("Verifying and scanning stored bytes…");
   const complete = await fetch(`/api/admin/versions/${versionId}/artifacts/uploads/${session.uploadId}/complete`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
