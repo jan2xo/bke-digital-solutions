@@ -112,6 +112,8 @@ services:
       start_period: 20s
       retries: 3
     read_only: true
+    volumes:
+      - ${LICENSING_AGENT_STORAGE_PATH:-/opt/bkes/licensing-agent}:/opt/bkes/licensing-agent:ro
     tmpfs: ["/tmp:size=64m,mode=1777"]
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
