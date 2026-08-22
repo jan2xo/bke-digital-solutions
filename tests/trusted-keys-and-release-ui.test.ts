@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
+import { releaseEvidenceSummary } from "../lib/supply-chain/release-ui-state";
 
 describe("trusted key discovery and release UI", () => {
   it("exposes the Agent-compatible root route without authentication", () => {
@@ -21,5 +22,16 @@ describe("trusted key discovery and release UI", () => {
     expect(controls).toContain("Awaiting human approval");
     expect(controls).toContain("does not constitute compliance approval");
     expect(controls).not.toContain("Upload SBOM");
+  });
+  it("renders the supplied approval state and separates compliance from machine evidence", () => {
+    expect(releaseEvidenceSummary([], "Approved")).toEqual({ evidence: "Evidence verified", approval: "Approved" });
+    expect(releaseEvidenceSummary(["COMPLIANCE"], "Awaiting human approval")).toEqual({ evidence: "Evidence verified", approval: "Awaiting human approval" });
+    expect(releaseEvidenceSummary(["SBOM"], "Awaiting human review")).toEqual({ evidence: "Waiting for automated evidence", approval: "Awaiting human review" });
+  });
+  it("keeps human compliance outside the emergency fallback disclosure", () => {
+    const controls = readFileSync("components/release-evidence-controls.tsx", "utf8");
+    expect(controls.indexOf("Human compliance review")).toBeGreaterThan(-1);
+    expect(controls.indexOf("Human compliance review")).toBeLessThan(controls.indexOf("Manual fallback / emergency recovery"));
+    expect(controls).toContain("does not bypass verification, compliance, or approval gates");
   });
 });
