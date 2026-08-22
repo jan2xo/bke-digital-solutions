@@ -27,6 +27,7 @@ export const environmentSchema = z.object({
   SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
   SUPPLY_CHAIN_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-supply-chain-ed25519-v1"),
   SUPPLY_CHAIN_TRUSTED_KEYS: z.preprocess(optional, z.string().optional()),
+  RELEASE_EVIDENCE_INGESTION_TOKEN: z.preprocess(optional, secret.optional()),
   MALWARE_SCANNER_PROVIDER: z.preprocess(optional, z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional()),
   MALWARE_SCANNER_VERSION: z.preprocess(optional, z.string().max(128).optional()),
   MALWARE_SCANNER_HOST: z.preprocess(optional, z.string().min(1).optional()),
