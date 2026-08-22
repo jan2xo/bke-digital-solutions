@@ -12,8 +12,9 @@ describe("release evidence contract", () => {
   it("rejects artifact and evidence tampering before persistence", () => { const value = fixture(); value.artifacts[0].bytesBase64 = Buffer.from("bad").toString("base64"); expect(() => validateReleaseEvidence(value)).toThrow("ARTIFACT_HASH_MISMATCH"); });
   it("rejects provenance from a different source sha", () => {
     const value = fixture();
-    const provenance = value.evidence.find((item) => item.kind === "PROVENANCE")!;
     const mismatched = { format: "bke.provenance.v1", releaseIdentifier: "1.0.0", commitHash: "b".repeat(40), buildEnvironment: "github", builderIdentity: "github-actions", builtAt: "2026-08-23T00:00:00Z" };
+    const evidence = value.evidence as Array<{ kind: string; reference: string; documentBase64: string; documentSha256: string }>;
+    const provenance = evidence.find((item) => item.kind === "PROVENANCE")!;
     Object.assign(provenance, doc(mismatched));
     expect(() => validateReleaseEvidence(value)).toThrow("PROVENANCE_SOURCE_MISMATCH");
   });
