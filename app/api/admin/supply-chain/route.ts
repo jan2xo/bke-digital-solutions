@@ -7,11 +7,11 @@ import { apiError } from "@/lib/http";
 import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { env } from "@/lib/env";
-import { scanArtifact } from "@/lib/supply-chain/scanner";
+import { scanArtifactStream } from "@/lib/supply-chain/scanner";
 import { resolveTrustedSupplyChainKey } from "@/lib/supply-chain/keyring";
 import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { assertObjectExists, downloadObject, uploadObject } from "@/lib/storage";
+import { assertObjectExists, streamObject, uploadObject } from "@/lib/storage";
 import { buildBackupCertificationDocument, selectUniqueVerifiedBackup } from "@/lib/supply-chain/backup-certification";
 import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
       const results = [];
       for (const artifact of existing.version.artifacts) {
         let scan;
-        try { scan = await scanArtifact(await downloadObject(artifact.objectKey)); }
+        try { scan = await scanArtifactStream(await streamObject(artifact.objectKey), Number(artifact.sizeBytes)); }
         catch (error) { scan = { scannerId: env.MALWARE_SCANNER_PROVIDER ?? "storage", scannerVersion: env.MALWARE_SCANNER_VERSION ?? "unknown", result: "FAILED" as const, failureReason: error instanceof Error ? "OBJECT_READ_FAILED" : "OBJECT_READ_FAILED" }; }
         results.push(scan);
         await db.supplyChainVerificationEvidence.create({ data: { evidenceId: existing.id, kind: "MALWARE_SCAN", artifactHash: canonicalPayloadHash, scannerId: scan.scannerId, scannerVersion: scan.scannerVersion, result: scan.result, reference: scan.reference, failureReason: scan.failureReason, metadata: { artifactId: artifact.id, objectKey: artifact.objectKey, artifactSha256: artifact.sha256 } } });
