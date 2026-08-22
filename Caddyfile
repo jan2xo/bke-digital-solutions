@@ -8,6 +8,30 @@
 	request_body {
 		max_size 550MB
 	}
+	handle /licensing-agent/windows/download {
+		root * /opt/bkes/licensing-agent
+		@windows file /windows/BKELicensingAgentSetup.exe
+		rewrite @windows /windows/BKELicensingAgentSetup.exe
+		header @windows Content-Disposition "attachment; filename=BKELicensingAgentSetup.exe"
+		header Cache-Control "no-store"
+		file_server
+	}
+	handle /licensing-agent/macos/download {
+		root * /opt/bkes/licensing-agent
+		@macos file /macos/BKELicensingAgentSetup.pkg
+		rewrite @macos /macos/BKELicensingAgentSetup.pkg
+		header @macos Content-Disposition "attachment; filename=BKELicensingAgentSetup.pkg"
+		header Cache-Control "no-store"
+		file_server
+	}
+	handle /licensing-agent/linux/download {
+		root * /opt/bkes/licensing-agent
+		@linux file /linux/BKELicensingAgentSetup.deb
+		rewrite @linux /linux/BKELicensingAgentSetup.deb
+		header @linux Content-Disposition "attachment; filename=BKELicensingAgentSetup.deb"
+		header Cache-Control "no-store"
+		file_server
+	}
 	reverse_proxy app:3000 {
 		header_up X-Forwarded-Host {host}
 		header_up X-Forwarded-Proto {scheme}
