@@ -133,6 +133,11 @@ export type PurchasePlan = Prisma.PurchasePlanModel
  */
 export type ProductVersion = Prisma.ProductVersionModel
 /**
+ * Model ArtifactUploadSession
+ *
+ */
+export type ArtifactUploadSession = Prisma.ArtifactUploadSessionModel
+/**
  * Model ReleaseApproval
  *
  */

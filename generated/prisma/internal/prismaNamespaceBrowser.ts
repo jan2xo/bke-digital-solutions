@@ -74,6 +74,7 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
+  ArtifactUploadSession: 'ArtifactUploadSession',
   ReleaseApproval: 'ReleaseApproval',
   SupplyChainEvidence: 'SupplyChainEvidence',
   SupplyChainVerificationEvidence: 'SupplyChainVerificationEvidence',
@@ -519,6 +520,29 @@ export const ProductVersionScalarFieldEnum = {
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
+
+
+export const ArtifactUploadSessionScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  versionId: 'versionId',
+  objectKey: 'objectKey',
+  originalFilename: 'originalFilename',
+  extension: 'extension',
+  contentType: 'contentType',
+  expectedSize: 'expectedSize',
+  expectedSha256: 'expectedSha256',
+  state: 'state',
+  createdById: 'createdById',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  failedAt: 'failedAt',
+  failureReason: 'failureReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArtifactUploadSessionScalarFieldEnum = (typeof ArtifactUploadSessionScalarFieldEnum)[keyof typeof ArtifactUploadSessionScalarFieldEnum]
 
 
 export const ReleaseApprovalScalarFieldEnum = {
