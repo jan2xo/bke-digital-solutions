@@ -301,6 +301,7 @@ services:
     ports: ["80:80", "443:443", "443:443/udp"]
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${LICENSING_AGENT_STORAGE_PATH:-/opt/bkes/licensing-agent}:/opt/bkes/licensing-agent:ro
       - caddy_data:/data
       - caddy_config:/config
     networks: [private, egress]
