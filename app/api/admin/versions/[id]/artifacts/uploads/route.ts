@@ -29,8 +29,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (!allowedExtensions.has(extension)) throw new Error("INVALID_FILE_TYPE");
     if (/[/\\\u0000-\u001f]/.test(input.filename)) throw new Error("INVALID_FILENAME");
 
-    const version = await db.productVersion.findUniqueOrThrow({ where: { id: versionId }, select: { id: true, productId: true, version: true, active: true, lifecycle: true } });
-    if (!version.active || version.lifecycle === "ARCHIVED" || version.lifecycle === "DEPRECATED") throw new Error("VERSION_NOT_ELIGIBLE");
+    const version = await db.productVersion.findUniqueOrThrow({ where: { id: versionId }, select: { id: true, productId: true, version: true, lifecycle: true } });
+    if (version.lifecycle === "ARCHIVED" || version.lifecycle === "DEPRECATED") throw new Error("VERSION_NOT_ELIGIBLE");
 
     const uploadId = randomUUID();
     const objectKey = `products/${version.productId}/versions/${version.id}/uploads/${uploadId}${extension}`;
