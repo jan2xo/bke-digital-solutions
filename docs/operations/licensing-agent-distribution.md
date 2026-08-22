@@ -12,7 +12,7 @@ The current installer for each platform is served from a fixed URL:
 | macOS | `/licensing-agent/macos/download` | `BKELicensingAgentSetup.pkg` |
 | Linux | `/licensing-agent/linux/download` | `BKELicensingAgentSetup.deb` |
 
-The Caddy container maps only these three paths to the read-only host directory `/opt/bkes/licensing-agent`. There is no directory listing or arbitrary filesystem route. A missing file returns an unavailable download; the page says “Coming soon” until an installer is actually placed there. Installer binaries are never committed to Git.
+The landing page always presents the three fixed platform links. It has no installer-availability state and does not inspect the filesystem. Caddy maps only these three paths to the read-only host directory `/opt/bkes/licensing-agent`. There is no directory listing or arbitrary filesystem route. If a platform file is absent, its stable URL returns the existing controlled unavailable response. Installer binaries are never committed to Git.
 
 ## One-time deployment
 
