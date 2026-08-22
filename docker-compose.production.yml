@@ -191,6 +191,23 @@ services:
     tmpfs: ["/tmp:size=32m,mode=1777"]
     logging: *default-logging
 
+  operations:
+    build:
+      context: .
+      target: operations
+    environment: *runtime-environment
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [private]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    pids_limit: 128
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    logging: *default-logging
+
   postgres:
     image: postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
     environment:
