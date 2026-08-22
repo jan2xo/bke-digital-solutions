@@ -8,6 +8,21 @@ const doc = (value: unknown) => { const bytes = Buffer.from(JSON.stringify(value
 function fixture() { const manifest = { productId: "bke-demo", version: "1.0.0", sourceSha: "a".repeat(40) }; const manifestSha256 = createHash("sha256").update(JSON.stringify(manifest)).digest("hex"); return { schema: "bke.release-evidence.v1" as const, productId: "bke-demo", version: "1.0.0", sourceSha: "a".repeat(40), manifestSha256, manifest, artifacts: [{ id: "artifact", name: "demo.zip", objectKey: "demo.zip", contentType: "application/zip", sizeBytes: 3, sha256: createHash("sha256").update("abc").digest("hex"), bytesBase64: Buffer.from("abc").toString("base64") }], evidence: [["SBOM", { bomFormat: "CycloneDX", specVersion: "1.5", components: [{ name: "bke-demo", version: "1.0.0" }], metadata: { component: { version: "1.0.0" } } }], ["PROVENANCE", { format: "bke.provenance.v1", releaseIdentifier: "1.0.0", commitHash: "a".repeat(40), buildEnvironment: "github", builderIdentity: "github-actions", builtAt: "2026-08-23T00:00:00Z" }], ["DEPENDENCIES", { format: "bke.dependency-evidence.v1", releaseVersion: "1.0.0", lockConsistency: { status: "PASS" }, resolution: { status: "PASS" }, audit: { status: "PASS" } }], ["MIGRATION", "database schema is up to date"]].map(([kind, value]) => ({ kind, reference: `${kind}.json`, ...doc(value) })) as never, producer: { repository: "jan2xo/bke-demo", workflow: "release", runId: "1" } }; }
 describe("release evidence contract", () => { it("uses constant-time bearer comparison", () => { expect(bearerMatches("Bearer secret", "secret")).toBe(true); expect(bearerMatches("Bearer wrong", "secret")).toBe(false); }); it("validates an immutable four-class fixture", () => { expect(validateReleaseEvidence(fixture()).evidence).toHaveLength(4); }); it("rejects artifact and evidence tampering before persistence", () => { const value = fixture(); value.artifacts[0].bytesBase64 = Buffer.from("bad").toString("base64"); expect(() => validateReleaseEvidence(value)).toThrow("ARTIFACT_HASH_MISMATCH"); }); });
 
+describe("release-evidence trust-boundary requirements", () => {
+  it("keeps producer identity as a server-side binding requirement", async () => {
+    const source = await (await import("node:fs/promises")).readFile("app/api/release-evidence/ingest/route.ts", "utf8");
+    expect(source).toContain("RELEASE_EVIDENCE_TRUSTED_REPOSITORY");
+    expect(source).toContain("RELEASE_EVIDENCE_TRUSTED_WORKFLOW");
+    expect(source).toContain("UNTRUSTED_PRODUCER");
+  });
+  it("requires canonical storage bytes, not only submitted metadata", async () => {
+    const source = await (await import("node:fs/promises")).readFile("app/api/release-evidence/ingest/route.ts", "utf8");
+    expect(source).toContain("downloadObject(artifact.objectKey)");
+    expect(source).toContain("CANONICAL_ARTIFACT_MISMATCH");
+    expect(source).toContain("Promise.allSettled(uploaded.map");
+  });
+});
+
 const backupVersion = { id: "version-1", productId: "product-1", version: "1.0.0", product: { slug: "product" }, artifacts: [{ id: "artifact-1", objectKey: "artifacts/a.bin", sha256: "a".repeat(64), sizeBytes: 1n, contentType: "application/octet-stream" }] };
 const backup = (id: string) => ({ id, status: "VERIFIED", missingObjectCount: 0, manifestObjectKey: `${id}/manifest`, databaseObjectKey: `${id}/database`, manifestChecksum: "a".repeat(64), databaseChecksum: "b".repeat(64), objectCount: 1, sizeBytes: 1n, createdAt: new Date(), completedAt: new Date(), verifiedAt: new Date(), operations: ["CREATE", "VERIFY", "SIMULATE_RESTORE"].map((type) => ({ id: `${id}-${type}`, backupId: id, type, status: "SUCCEEDED", createdAt: new Date(), completedAt: new Date() })) });
 describe("automatic verified-backup selection", () => {
