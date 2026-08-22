@@ -20,16 +20,18 @@ describe("Licensing Agent distribution", () => {
   it("does not expose a generic static filesystem or binaries in Git", () => {
     expect((caddy.match(/file_server/g) ?? []).length).toBe(3);
     expect(page).toContain("Licensing Agent");
-    expect(page).toContain("Coming soon");
-    expect(page).toContain("© 2026 BKES Digital Solutions. All rights reserved.");
+    expect(page).not.toContain("Coming soon");
+    expect(page).not.toContain("Required by Air Stack");
+    expect(page).not.toContain("BKES Digital Solutions");
+    expect(page).not.toContain("© 2026");
   });
 
-  it("derives visible availability from the fixed runtime paths", () => {
-    expect(page).toContain('export const dynamic = "force-dynamic"');
-    expect(page).toContain("/opt/bkes/licensing-agent/windows/BKELicensingAgentSetup.exe");
-    expect(page).toContain("/opt/bkes/licensing-agent/macos/BKELicensingAgentSetup.pkg");
-    expect(page).toContain("/opt/bkes/licensing-agent/linux/BKELicensingAgentSetup.deb");
-    expect(page).toContain("access(path)");
-    expect(page).not.toContain("process.cwd()");
+  it("renders permanent platform entry points without filesystem detection", () => {
+    expect(page).toContain("[\"Windows\", \"/licensing-agent/windows/download\"]");
+    expect(page).toContain("[\"macOS\", \"/licensing-agent/macos/download\"]");
+    expect(page).toContain("[\"Linux\", \"/licensing-agent/linux/download\"]");
+    expect(page).toContain("Licensing Agent installers will be published here as they become available.");
+    expect(page).not.toContain("node:fs");
+    expect(page).not.toContain("/opt/bkes/licensing-agent");
   });
 });
