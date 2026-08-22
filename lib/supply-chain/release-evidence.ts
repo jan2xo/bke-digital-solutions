@@ -30,8 +30,10 @@ export function validateReleaseEvidence(input: unknown): ReleaseEvidenceEnvelope
     if (kinds.has(item.kind)) throw new Error("CONFLICTING_EVIDENCE"); kinds.add(item.kind);
     const bytes = Buffer.from(item.documentBase64, "base64");
     if (createHash("sha256").update(bytes).digest("hex") !== item.documentSha256) throw new Error("EVIDENCE_HASH_MISMATCH");
-    if (item.kind !== "MIGRATION") validateTechnicalEvidence(item.kind, bytes, value.version);
-    else if (!/database schema is up to date/i.test(bytes.toString("utf8"))) throw new Error("MIGRATION_EVIDENCE_NOT_CURRENT");
+    if (item.kind !== "MIGRATION") {
+      const technical = validateTechnicalEvidence(item.kind, bytes, value.version);
+      if (item.kind === "PROVENANCE" && technical.commitHash !== value.sourceSha) throw new Error("PROVENANCE_SOURCE_MISMATCH");
+    } else if (!/database schema is up to date/i.test(bytes.toString("utf8"))) throw new Error("MIGRATION_EVIDENCE_NOT_CURRENT");
   }
   for (const kind of ["SBOM", "PROVENANCE", "DEPENDENCIES", "MIGRATION"]) if (!kinds.has(kind)) throw new Error("MISSING_EVIDENCE");
   return value;
