@@ -25,6 +25,8 @@
     "agent:demo:seed": "NODE_OPTIONS=--conditions=react-server tsx scripts/seed-agent-demo.ts",
     "admin:create": "tsx scripts/create-admin.ts",
     "admin:recover-mfa": "tsx scripts/recover-admin.ts",
+    "grace:status": "tsx scripts/grace-period.ts status",
+    "grace:set": "tsx scripts/grace-period.ts set",
     "payments:reconcile": "tsx scripts/reconcile-payments.ts",
     "test:paymongo": "vitest run tests/sandbox/paymongo.sandbox.test.ts",
     "test:resend": "vitest run tests/sandbox/resend.sandbox.test.ts",
