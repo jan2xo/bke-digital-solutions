@@ -6,6 +6,10 @@ export type EvidenceResult = "COMPLETE" | "PARTIAL" | "NOT_APPLICABLE" | "UNDETE
 
 export type ArtifactDescriptor = { id: string; name: string; objectKey: string; sha256: string; sizeBytes: bigint; contentType: string; productId: string; versionId: string; version: string };
 export type CommissioningEvidence = { schema: string; result: EvidenceResult; artifactSha256: string; artifactId: string; generatedAt: string; generator: string; method: string; components?: unknown[]; dependencies?: unknown[]; classification?: ArtifactClassification; limitations: string[] };
+export type AnalyzerMatch = { matched: boolean; confidence: "HIGH" | "MEDIUM" | "LOW" };
+export type AnalysisContext = { artifact: Readonly<ArtifactDescriptor>; bytes: AsyncIterable<Uint8Array>; commissioningRunId: string };
+export type ArtifactAnalysis = { classification: ArtifactClassification; sbom: CommissioningEvidence; dependencies: CommissioningEvidence; limitations: string[] };
+export interface ArtifactAnalyzer { readonly id: string; readonly version: string; canAnalyze(artifact: Readonly<ArtifactDescriptor>): Promise<AnalyzerMatch>; analyze(context: AnalysisContext): Promise<ArtifactAnalysis>; }
 
 export function classifyArtifact(name: string, contentType: string): ArtifactClassification {
   const lower = name.toLowerCase();
