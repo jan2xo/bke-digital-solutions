@@ -50,6 +50,7 @@ export const environmentSchema = z.object({
   UPSTASH_REDIS_REST_URL: z.preprocess(optional, z.url().optional()),
   UPSTASH_REDIS_REST_TOKEN: z.preprocess(optional, z.string().min(1).optional()),
   S3_ENDPOINT: z.preprocess(optional, z.url().optional()),
+  S3_PUBLIC_UPLOAD_ENDPOINT: z.preprocess(optional, z.url().optional()),
   S3_REGION: z.string().default("auto"),
   S3_BUCKET: z.string().min(3),
   S3_ACCESS_KEY_ID: z.preprocess(optional, z.string().min(1).optional()),
@@ -102,6 +103,8 @@ export const environmentSchema = z.object({
     const privateMinio = value.S3_ENDPOINT === "http://minio:9000";
     if (storageEndpoint.protocol !== "https:" && !privateMinio) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS unless using the private Docker-network MinIO service" });
   }
+  if (protectedEnvironment && value.S3_PUBLIC_UPLOAD_ENDPOINT && new URL(value.S3_PUBLIC_UPLOAD_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must use HTTPS in protected environments" });
+  if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === value.S3_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must be the externally reachable upload endpoint, not the private storage endpoint" });
   if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (protectedEnvironment && !value.REDIS_KEY_PREFIX.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["REDIS_KEY_PREFIX"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   const environmentCredentialsRequired = value.NODE_ENV !== "test" && (value.PROVIDER_CONFIG_SOURCE === "environment" || value.PROVIDER_CONFIG_ALLOW_ENV_FALLBACK);
