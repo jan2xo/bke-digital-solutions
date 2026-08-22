@@ -9,7 +9,7 @@ describe("trusted key discovery and release UI", () => {
     expect(source).toContain("keys:");
     expect(source).toContain("key_id");
     expect(source).toContain("public_key");
-    expect(source).toContain('algorithm: "Ed25519"');
+    expect(source).toContain('key.algorithm === "Ed25519"');
     expect(source).toContain('status === "ACTIVE"');
     expect(source).toContain("INVALID_SIGNING_KEY_REGISTRY");
     expect(source).not.toContain("privateKeyReference");
