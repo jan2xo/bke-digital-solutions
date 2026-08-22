@@ -3,6 +3,31 @@
 	admin off
 }
 
+{$S3_UPLOAD_DOMAIN} {
+	request_body {
+		max_size 550MB
+	}
+	header {
+		Access-Control-Allow-Origin "https://{$APP_DOMAIN}"
+		Access-Control-Allow-Methods "PUT, OPTIONS"
+		Access-Control-Allow-Headers "Content-Type, x-amz-content-sha256, x-amz-date, x-amz-security-token"
+		Access-Control-Max-Age "600"
+		Vary Origin
+	}
+	@preflight method OPTIONS
+	respond @preflight 204
+	@put method PUT
+	handle @put {
+		reverse_proxy minio:9000 {
+			transport http {
+				read_timeout 10m
+				write_timeout 10m
+			}
+		}
+	}
+	respond 405
+}
+
 {$APP_DOMAIN} {
 	encode zstd gzip
 	request_body {

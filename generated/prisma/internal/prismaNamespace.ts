@@ -420,6 +420,7 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
+  ArtifactUploadSession: 'ArtifactUploadSession',
   ReleaseApproval: 'ReleaseApproval',
   SupplyChainEvidence: 'SupplyChainEvidence',
   SupplyChainVerificationEvidence: 'SupplyChainVerificationEvidence',
@@ -482,7 +483,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "artifactUploadSession" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2185,6 +2186,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductVersionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductVersionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ArtifactUploadSession: {
+      payload: Prisma.$ArtifactUploadSessionPayload<ExtArgs>
+      fields: Prisma.ArtifactUploadSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ArtifactUploadSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ArtifactUploadSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.ArtifactUploadSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ArtifactUploadSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
+        }
+        findMany: {
+          args: Prisma.ArtifactUploadSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>[]
+        }
+        create: {
+          args: Prisma.ArtifactUploadSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
+        }
+        createMany: {
+          args: Prisma.ArtifactUploadSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ArtifactUploadSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.ArtifactUploadSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
+        }
+        update: {
+          args: Prisma.ArtifactUploadSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ArtifactUploadSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ArtifactUploadSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ArtifactUploadSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ArtifactUploadSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.ArtifactUploadSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateArtifactUploadSession>
+        }
+        groupBy: {
+          args: Prisma.ArtifactUploadSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArtifactUploadSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ArtifactUploadSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArtifactUploadSessionCountAggregateOutputType> | number
         }
       }
     }
@@ -6087,6 +6162,29 @@ export const ProductVersionScalarFieldEnum = {
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
 
 
+export const ArtifactUploadSessionScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  versionId: 'versionId',
+  objectKey: 'objectKey',
+  originalFilename: 'originalFilename',
+  extension: 'extension',
+  contentType: 'contentType',
+  expectedSize: 'expectedSize',
+  expectedSha256: 'expectedSha256',
+  state: 'state',
+  createdById: 'createdById',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  failedAt: 'failedAt',
+  failureReason: 'failureReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArtifactUploadSessionScalarFieldEnum = (typeof ArtifactUploadSessionScalarFieldEnum)[keyof typeof ArtifactUploadSessionScalarFieldEnum]
+
+
 export const ReleaseApprovalScalarFieldEnum = {
   id: 'id',
   versionId: 'versionId',
@@ -7339,6 +7437,34 @@ export type ListEnumReleaseLifecycleFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+
+
+
+/**
+ * Reference to a field of type 'ArtifactUploadState'
+ */
+export type EnumArtifactUploadStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArtifactUploadState'>
+
+
+
+/**
+ * Reference to a field of type 'ArtifactUploadState[]'
+ */
+export type ListEnumArtifactUploadStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArtifactUploadState[]'>
+
+
+
+/**
  * Reference to a field of type 'BillingType'
  */
 export type EnumBillingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingType'>
@@ -7363,20 +7489,6 @@ export type EnumIntervalUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'IntervalUnit[]'
  */
 export type ListEnumIntervalUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IntervalUnit[]'>
-
-
-
-/**
- * Reference to a field of type 'BigInt'
- */
-export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-
-
-
-/**
- * Reference to a field of type 'BigInt[]'
- */
-export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
 
 
 
@@ -7945,6 +8057,7 @@ export type GlobalOmitConfig = {
   edition?: Prisma.EditionOmit
   purchasePlan?: Prisma.PurchasePlanOmit
   productVersion?: Prisma.ProductVersionOmit
+  artifactUploadSession?: Prisma.ArtifactUploadSessionOmit
   releaseApproval?: Prisma.ReleaseApprovalOmit
   supplyChainEvidence?: Prisma.SupplyChainEvidenceOmit
   supplyChainVerificationEvidence?: Prisma.SupplyChainVerificationEvidenceOmit

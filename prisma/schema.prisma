@@ -43,6 +43,15 @@ enum StorageCleanupStatus {
   CANCELLED
 }
 
+enum ArtifactUploadState {
+  PENDING
+  UPLOADED
+  VERIFYING
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
 enum ScheduledJobRunStatus {
   QUEUED
   RUNNING
@@ -400,6 +409,7 @@ model User {
   mfaChallenges                   MfaChallenge[]
   emergencyMfaAuthorizations     EmergencyMfaEnrollmentAuthorization[]
   securityEvents                  SecurityEvent[]
+  artifactUploadSessions          ArtifactUploadSession[]          @relation("ArtifactUploadCreator")
   providerConfigurationsCreated   ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
   providerConfigurationsUpdated   ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
   providerCredentialsCreated      ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
@@ -771,6 +781,7 @@ model Product {
   prices              Price[]
   policies            LicensePolicy[]
   artifacts           ProductArtifact[]
+  artifactUploadSessions ArtifactUploadSession[]
   licenses            License[]
   subscriptions       Subscription[]
   trials              TrialGrant[]
@@ -847,6 +858,7 @@ model ProductVersion {
   releasedAt      DateTime          @default(now())
   product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
   artifacts       ProductArtifact[]
+  artifactUploadSessions ArtifactUploadSession[]
   supplyChainEvidence SupplyChainEvidence?
   approvals       ReleaseApproval[]
   backupEvidence  String?
@@ -854,6 +866,32 @@ model ProductVersion {
   migrationEvidence String?
 
   @@unique([productId, version])
+}
+
+model ArtifactUploadSession {
+  id               String              @id @default(cuid())
+  productId        String
+  versionId        String
+  objectKey        String              @unique
+  originalFilename String
+  extension        String
+  contentType      String
+  expectedSize     BigInt
+  expectedSha256   String?
+  state            ArtifactUploadState  @default(PENDING)
+  createdById      String
+  expiresAt        DateTime
+  completedAt      DateTime?
+  failedAt         DateTime?
+  failureReason    String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  product          Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version          ProductVersion      @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  createdBy        User                @relation("ArtifactUploadCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([versionId, state])
+  @@index([expiresAt, state])
 }
 
 model ReleaseApproval {

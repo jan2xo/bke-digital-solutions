@@ -1,57 +1,14 @@
-import { createHash, randomUUID } from "node:crypto";
-import { extname } from "node:path";
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { audit } from "@/lib/audit";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { env } from "@/lib/env";
 import { apiError } from "@/lib/http";
 import { assertSameOrigin } from "@/lib/security/request";
-import { assertObjectExists, deleteObject, uploadObject } from "@/lib/storage";
-import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
+import { storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 
-const allowed = new Set([".dmg", ".pkg", ".exe", ".msi", ".zip", ".deb", ".rpm", ".appimage"]);
-const MAX = env.MAX_ARTIFACT_BYTES;
-
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    assertSameOrigin(request);
-    const admin = await requireRecentAdmin();
-    const { id } = await params;
-    const form = await request.formData();
-    const file = form.get("installer");
-    if (!(file instanceof File) || file.size < 1 || file.size > MAX) throw new Error("INVALID_FILE_SIZE");
-    const ext = extname(file.name).toLowerCase();
-    if (!allowed.has(ext)) throw new Error("INVALID_FILE_TYPE");
-    const current = await db.productArtifact.findUniqueOrThrow({ where: { id } });
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    const sha256 = createHash("sha256").update(bytes).digest("hex");
-    const objectKey = `products/${current.productId}/replacements/${randomUUID()}${ext}`;
-    await uploadObject(objectKey, bytes, file.type || "application/octet-stream");
-    await assertObjectExists(objectKey);
-    let artifact;
-    try {
-      artifact = await db.$transaction(async (tx) => {
-        const updated = await tx.productArtifact.update({ where: { id }, data: { name: file.name, objectKey, sha256, sizeBytes: file.size, contentType: file.type || "application/octet-stream", active: true, removedAt: null } });
-        if (current.versionId) {
-          const evidence = await tx.supplyChainEvidence.findUnique({ where: { versionId: current.versionId } });
-          if (evidence) {
-            const artifacts = await tx.productArtifact.findMany({ where: { versionId: current.versionId, active: true, removedAt: null }, orderBy: { createdAt: "asc" } });
-            await tx.supplyChainEvidence.update({ where: { id: evidence.id }, data: { manifestJson: { artifacts: artifacts.map((item) => ({ id: item.id, name: item.name, objectKey: item.objectKey, sha256: item.sha256, sizeBytes: Number(item.sizeBytes), contentType: item.contentType })) }, sbomReference: null, provenanceStatus: "RECORDED", dependencyVerified: false, signatureVerified: false, manifestSignature: null, canonicalPayloadHash: null, signatureKeyId: null, signatureAlgorithm: null, signedAt: null, malwareStatus: "PENDING_SCAN" } });
-          }
-        }
-        const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, current.objectKey);
-        await tx.storageCleanupJob.upsert({ where: { idempotencyKey }, update: {}, create: { type: "ARTIFACT_REPLACEMENT", targetType: "ProductArtifact", targetId: id, objectKey: current.objectKey, idempotencyKey, correlationId: randomUUID(), productId: current.productId, artifactId: id, createdByAdminId: admin.id } });
-        await tx.auditLog.create({ data: { actorId: admin.id, action: "ARTIFACT_CLEANUP_QUEUED", targetType: "ProductArtifact", targetId: id, metadata: { reason: "REPLACEMENT" } } });
-        return updated;
-      });
-    } catch (error) {
-      await deleteObject(objectKey).catch(async () => { await queueStorageCleanup({ type: "ABANDONED_UPLOAD", targetType: "ProductArtifact", targetId: id, objectKey, productId: current.productId, actorId: admin.id }); });
-      throw error;
-    }
-    await audit({ actorId: admin.id, action: "ARTIFACT_REPLACED", targetType: "ProductArtifact", targetId: id, metadata: { sha256, sizeBytes: file.size, cleanupPending: true } });
-    return NextResponse.json({ id: artifact.id, sha256, cleanupPending: true });
-  } catch (error) { return apiError(error); }
+export async function PATCH() {
+  return NextResponse.json({ error: "DIRECT_ARTIFACT_UPLOAD_REQUIRED", uploadEndpoint: "POST /api/admin/versions/:id/artifacts/uploads" }, { status: 410 });
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -66,6 +23,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       await tx.storageCleanupJob.upsert({ where: { idempotencyKey }, update: {}, create: { type: "ARTIFACT_REMOVAL", targetType: "ProductArtifact", targetId: id, objectKey: current.objectKey, idempotencyKey, correlationId: randomUUID(), productId: current.productId, artifactId: id, createdByAdminId: admin.id } });
       await tx.auditLog.create({ data: { actorId: admin.id, action: "ARTIFACT_CLEANUP_QUEUED", targetType: "ProductArtifact", targetId: id, metadata: { reason: "REMOVAL" } } });
     });
+    await audit({ actorId: admin.id, action: "ARTIFACT_REMOVED", targetType: "ProductArtifact", targetId: id, metadata: { cleanupPending: true } });
     return NextResponse.json({ ok: true, cleanupPending: true });
   } catch (error) { return apiError(error); }
 }
