@@ -309,6 +309,7 @@ export type ProductWhereInput = {
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
   cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
+  commissioningRuns?: Prisma.CommissioningRunListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -343,6 +344,7 @@ export type ProductOrderByWithRelationInput = {
   trials?: Prisma.TrialGrantOrderByRelationAggregateInput
   offers?: Prisma.DiscountOfferOrderByRelationAggregateInput
   cleanupJobs?: Prisma.StorageCleanupJobOrderByRelationAggregateInput
+  commissioningRuns?: Prisma.CommissioningRunOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -380,6 +382,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
   cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
+  commissioningRuns?: Prisma.CommissioningRunListRelationFilter
 }, "id" | "slug" | "productId">
 
 export type ProductOrderByWithAggregationInput = {
@@ -466,6 +469,7 @@ export type ProductCreateInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -500,6 +504,7 @@ export type ProductUncheckedCreateInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -534,6 +539,7 @@ export type ProductUpdateInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -568,6 +574,7 @@ export type ProductUncheckedUpdateInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -821,6 +828,20 @@ export type ProductUpdateOneRequiredWithoutArtifactsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutArtifactsInput, Prisma.ProductUpdateWithoutArtifactsInput>, Prisma.ProductUncheckedUpdateWithoutArtifactsInput>
 }
 
+export type ProductCreateNestedOneWithoutCommissioningRunsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCommissioningRunsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutCommissioningRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCommissioningRunsInput
+  upsert?: Prisma.ProductUpsertWithoutCommissioningRunsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutCommissioningRunsInput, Prisma.ProductUpdateWithoutCommissioningRunsInput>, Prisma.ProductUncheckedUpdateWithoutCommissioningRunsInput>
+}
+
 export type ProductCreateNestedOneWithoutCleanupJobsInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCleanupJobsInput
@@ -926,6 +947,7 @@ export type ProductCreateWithoutEditionsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutEditionsInput = {
@@ -959,6 +981,7 @@ export type ProductUncheckedCreateWithoutEditionsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutEditionsInput = {
@@ -1008,6 +1031,7 @@ export type ProductUpdateWithoutEditionsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutEditionsInput = {
@@ -1041,6 +1065,7 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutVersionsInput = {
@@ -1074,6 +1099,7 @@ export type ProductCreateWithoutVersionsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutVersionsInput = {
@@ -1107,6 +1133,7 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutVersionsInput = {
@@ -1156,6 +1183,7 @@ export type ProductUpdateWithoutVersionsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutVersionsInput = {
@@ -1189,6 +1217,7 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutArtifactUploadSessionsInput = {
@@ -1222,6 +1251,7 @@ export type ProductCreateWithoutArtifactUploadSessionsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutArtifactUploadSessionsInput = {
@@ -1255,6 +1285,7 @@ export type ProductUncheckedCreateWithoutArtifactUploadSessionsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutArtifactUploadSessionsInput = {
@@ -1304,6 +1335,7 @@ export type ProductUpdateWithoutArtifactUploadSessionsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutArtifactUploadSessionsInput = {
@@ -1337,6 +1369,7 @@ export type ProductUncheckedUpdateWithoutArtifactUploadSessionsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPoliciesInput = {
@@ -1370,6 +1403,7 @@ export type ProductCreateWithoutPoliciesInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPoliciesInput = {
@@ -1403,6 +1437,7 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPoliciesInput = {
@@ -1452,6 +1487,7 @@ export type ProductUpdateWithoutPoliciesInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPoliciesInput = {
@@ -1485,6 +1521,7 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPricesInput = {
@@ -1518,6 +1555,7 @@ export type ProductCreateWithoutPricesInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPricesInput = {
@@ -1551,6 +1589,7 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPricesInput = {
@@ -1600,6 +1639,7 @@ export type ProductUpdateWithoutPricesInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPricesInput = {
@@ -1633,6 +1673,7 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutArtifactsInput = {
@@ -1666,6 +1707,7 @@ export type ProductCreateWithoutArtifactsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutArtifactsInput = {
@@ -1699,6 +1741,7 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutArtifactsInput = {
@@ -1748,6 +1791,7 @@ export type ProductUpdateWithoutArtifactsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutArtifactsInput = {
@@ -1775,6 +1819,159 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
+  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutCommissioningRunsInput = {
+  id?: string
+  slug: string
+  productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
+  offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutCommissioningRunsInput = {
+  id?: string
+  slug: string
+  productId?: string | null
+  minimumAcceptedVersion?: string | null
+  maximumAcceptedVersion?: string | null
+  name: string
+  summary: string
+  description: string
+  type: $Enums.ProductType
+  category?: string
+  licenseType?: string
+  featured?: boolean
+  imageKey?: string | null
+  tags?: Prisma.ProductCreatetagsInput | string[]
+  active?: boolean
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletionRequestedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
+  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
+  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
+  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
+  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
+  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
+  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
+  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutCommissioningRunsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
+}
+
+export type ProductUpsertWithoutCommissioningRunsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutCommissioningRunsInput, Prisma.ProductUncheckedUpdateWithoutCommissioningRunsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutCommissioningRunsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutCommissioningRunsInput, Prisma.ProductUncheckedUpdateWithoutCommissioningRunsInput>
+}
+
+export type ProductUpdateWithoutCommissioningRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
+  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
+  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
+  offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutCommissioningRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.ProductUpdatetagsInput | string[]
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
+  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
+  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
+  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
+  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
   artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
@@ -1814,6 +2011,7 @@ export type ProductCreateWithoutCleanupJobsInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutCleanupJobsInput = {
@@ -1847,6 +2045,7 @@ export type ProductUncheckedCreateWithoutCleanupJobsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutCleanupJobsInput = {
@@ -1896,6 +2095,7 @@ export type ProductUpdateWithoutCleanupJobsInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
@@ -1929,6 +2129,7 @@ export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutSubscriptionsInput = {
@@ -1962,6 +2163,7 @@ export type ProductCreateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutSubscriptionsInput = {
@@ -1995,6 +2197,7 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutSubscriptionsInput = {
@@ -2044,6 +2247,7 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
@@ -2077,6 +2281,7 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutOffersInput = {
@@ -2110,6 +2315,7 @@ export type ProductCreateWithoutOffersInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutOffersInput = {
@@ -2143,6 +2349,7 @@ export type ProductUncheckedCreateWithoutOffersInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutOffersInput = {
@@ -2192,6 +2399,7 @@ export type ProductUpdateWithoutOffersInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutOffersInput = {
@@ -2225,6 +2433,7 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutLicensesInput = {
@@ -2258,6 +2467,7 @@ export type ProductCreateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutLicensesInput = {
@@ -2291,6 +2501,7 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutLicensesInput = {
@@ -2340,6 +2551,7 @@ export type ProductUpdateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutLicensesInput = {
@@ -2373,6 +2585,7 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutTrialsInput = {
@@ -2406,6 +2619,7 @@ export type ProductCreateWithoutTrialsInput = {
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutTrialsInput = {
@@ -2439,6 +2653,7 @@ export type ProductUncheckedCreateWithoutTrialsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutTrialsInput = {
@@ -2488,6 +2703,7 @@ export type ProductUpdateWithoutTrialsInput = {
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutTrialsInput = {
@@ -2521,6 +2737,7 @@ export type ProductUncheckedUpdateWithoutTrialsInput = {
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 
@@ -2540,6 +2757,7 @@ export type ProductCountOutputType = {
   trials: number
   offers: number
   cleanupJobs: number
+  commissioningRuns: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2554,6 +2772,7 @@ export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   trials?: boolean | ProductCountOutputTypeCountTrialsArgs
   offers?: boolean | ProductCountOutputTypeCountOffersArgs
   cleanupJobs?: boolean | ProductCountOutputTypeCountCleanupJobsArgs
+  commissioningRuns?: boolean | ProductCountOutputTypeCountCommissioningRunsArgs
 }
 
 /**
@@ -2643,6 +2862,13 @@ export type ProductCountOutputTypeCountCleanupJobsArgs<ExtArgs extends runtime.T
   where?: Prisma.StorageCleanupJobWhereInput
 }
 
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountCommissioningRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissioningRunWhereInput
+}
+
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2676,6 +2902,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.Product$offersArgs<ExtArgs>
   cleanupJobs?: boolean | Prisma.Product$cleanupJobsArgs<ExtArgs>
+  commissioningRuns?: boolean | Prisma.Product$commissioningRunsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -2761,6 +2988,7 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.Product$offersArgs<ExtArgs>
   cleanupJobs?: boolean | Prisma.Product$cleanupJobsArgs<ExtArgs>
+  commissioningRuns?: boolean | Prisma.Product$commissioningRunsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2780,6 +3008,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     trials: Prisma.$TrialGrantPayload<ExtArgs>[]
     offers: Prisma.$DiscountOfferPayload<ExtArgs>[]
     cleanupJobs: Prisma.$StorageCleanupJobPayload<ExtArgs>[]
+    commissioningRuns: Prisma.$CommissioningRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3207,6 +3436,7 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   trials<T extends Prisma.Product$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offers<T extends Prisma.Product$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiscountOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cleanupJobs<T extends Prisma.Product$cleanupJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$cleanupJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageCleanupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commissioningRuns<T extends Prisma.Product$commissioningRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$commissioningRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissioningRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3910,6 +4140,30 @@ export type Product$cleanupJobsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.StorageCleanupJobScalarFieldEnum | Prisma.StorageCleanupJobScalarFieldEnum[]
+}
+
+/**
+ * Product.commissioningRuns
+ */
+export type Product$commissioningRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissioningRun
+   */
+  select?: Prisma.CommissioningRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissioningRun
+   */
+  omit?: Prisma.CommissioningRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissioningRunInclude<ExtArgs> | null
+  where?: Prisma.CommissioningRunWhereInput
+  orderBy?: Prisma.CommissioningRunOrderByWithRelationInput | Prisma.CommissioningRunOrderByWithRelationInput[]
+  cursor?: Prisma.CommissioningRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissioningRunScalarFieldEnum | Prisma.CommissioningRunScalarFieldEnum[]
 }
 
 /**

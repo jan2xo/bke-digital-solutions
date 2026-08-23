@@ -427,6 +427,7 @@ export const ModelName = {
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
+  CommissioningRun: 'CommissioningRun',
   StorageCleanupJob: 'StorageCleanupJob',
   Cart: 'Cart',
   CartItem: 'CartItem',
@@ -483,7 +484,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "artifactUploadSession" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "artifactUploadSession" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "commissioningRun" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2704,6 +2705,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductArtifactCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductArtifactCountAggregateOutputType> | number
+        }
+      }
+    }
+    CommissioningRun: {
+      payload: Prisma.$CommissioningRunPayload<ExtArgs>
+      fields: Prisma.CommissioningRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommissioningRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommissioningRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
+        }
+        findFirst: {
+          args: Prisma.CommissioningRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommissioningRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
+        }
+        findMany: {
+          args: Prisma.CommissioningRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>[]
+        }
+        create: {
+          args: Prisma.CommissioningRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
+        }
+        createMany: {
+          args: Prisma.CommissioningRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommissioningRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>[]
+        }
+        delete: {
+          args: Prisma.CommissioningRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
+        }
+        update: {
+          args: Prisma.CommissioningRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommissioningRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommissioningRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommissioningRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommissioningRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
+        }
+        aggregate: {
+          args: Prisma.CommissioningRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommissioningRun>
+        }
+        groupBy: {
+          args: Prisma.CommissioningRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommissioningRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommissioningRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommissioningRunCountAggregateOutputType> | number
         }
       }
     }
@@ -6299,6 +6374,35 @@ export const ProductArtifactScalarFieldEnum = {
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
 
 
+export const CommissioningRunScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  versionId: 'versionId',
+  artifactId: 'artifactId',
+  artifactSha256: 'artifactSha256',
+  artifactSizeBytes: 'artifactSizeBytes',
+  payloadHash: 'payloadHash',
+  policyVersion: 'policyVersion',
+  generatorVersion: 'generatorVersion',
+  status: 'status',
+  classification: 'classification',
+  sbomStatus: 'sbomStatus',
+  dependencyStatus: 'dependencyStatus',
+  migrationCategory: 'migrationCategory',
+  migrationStatus: 'migrationStatus',
+  evidence: 'evidence',
+  limitations: 'limitations',
+  errorCode: 'errorCode',
+  attempts: 'attempts',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommissioningRunScalarFieldEnum = (typeof CommissioningRunScalarFieldEnum)[keyof typeof CommissioningRunScalarFieldEnum]
+
+
 export const StorageCleanupJobScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -7493,6 +7597,20 @@ export type ListEnumIntervalUnitFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'CommissioningStatus'
+ */
+export type EnumCommissioningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissioningStatus'>
+
+
+
+/**
+ * Reference to a field of type 'CommissioningStatus[]'
+ */
+export type ListEnumCommissioningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissioningStatus[]'>
+
+
+
+/**
  * Reference to a field of type 'StorageCleanupJobType'
  */
 export type EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupJobType'>
@@ -8064,6 +8182,7 @@ export type GlobalOmitConfig = {
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
   productArtifact?: Prisma.ProductArtifactOmit
+  commissioningRun?: Prisma.CommissioningRunOmit
   storageCleanupJob?: Prisma.StorageCleanupJobOmit
   cart?: Prisma.CartOmit
   cartItem?: Prisma.CartItemOmit

@@ -280,6 +280,7 @@ export type ProductArtifactWhereInput = {
   version?: Prisma.XOR<Prisma.ProductVersionNullableScalarRelationFilter, Prisma.ProductVersionWhereInput> | null
   grants?: Prisma.DownloadGrantListRelationFilter
   cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
+  commissioningRuns?: Prisma.CommissioningRunListRelationFilter
 }
 
 export type ProductArtifactOrderByWithRelationInput = {
@@ -299,6 +300,7 @@ export type ProductArtifactOrderByWithRelationInput = {
   version?: Prisma.ProductVersionOrderByWithRelationInput
   grants?: Prisma.DownloadGrantOrderByRelationAggregateInput
   cleanupJobs?: Prisma.StorageCleanupJobOrderByRelationAggregateInput
+  commissioningRuns?: Prisma.CommissioningRunOrderByRelationAggregateInput
 }
 
 export type ProductArtifactWhereUniqueInput = Prisma.AtLeast<{
@@ -321,6 +323,7 @@ export type ProductArtifactWhereUniqueInput = Prisma.AtLeast<{
   version?: Prisma.XOR<Prisma.ProductVersionNullableScalarRelationFilter, Prisma.ProductVersionWhereInput> | null
   grants?: Prisma.DownloadGrantListRelationFilter
   cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
+  commissioningRuns?: Prisma.CommissioningRunListRelationFilter
 }, "id" | "objectKey">
 
 export type ProductArtifactOrderByWithAggregationInput = {
@@ -376,6 +379,7 @@ export type ProductArtifactCreateInput = {
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactUncheckedCreateInput = {
@@ -393,6 +397,7 @@ export type ProductArtifactUncheckedCreateInput = {
   createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactUpdateInput = {
@@ -410,6 +415,7 @@ export type ProductArtifactUpdateInput = {
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateInput = {
@@ -427,6 +433,7 @@ export type ProductArtifactUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactCreateManyInput = {
@@ -537,14 +544,14 @@ export type ProductArtifactSumOrderByAggregateInput = {
   downloadCount?: Prisma.SortOrder
 }
 
-export type ProductArtifactNullableScalarRelationFilter = {
-  is?: Prisma.ProductArtifactWhereInput | null
-  isNot?: Prisma.ProductArtifactWhereInput | null
-}
-
 export type ProductArtifactScalarRelationFilter = {
   is?: Prisma.ProductArtifactWhereInput
   isNot?: Prisma.ProductArtifactWhereInput
+}
+
+export type ProductArtifactNullableScalarRelationFilter = {
+  is?: Prisma.ProductArtifactWhereInput | null
+  isNot?: Prisma.ProductArtifactWhereInput | null
 }
 
 export type ProductArtifactCreateNestedManyWithoutProductInput = {
@@ -631,6 +638,20 @@ export type ProductArtifactUncheckedUpdateManyWithoutVersionNestedInput = {
   deleteMany?: Prisma.ProductArtifactScalarWhereInput | Prisma.ProductArtifactScalarWhereInput[]
 }
 
+export type ProductArtifactCreateNestedOneWithoutCommissioningRunsInput = {
+  create?: Prisma.XOR<Prisma.ProductArtifactCreateWithoutCommissioningRunsInput, Prisma.ProductArtifactUncheckedCreateWithoutCommissioningRunsInput>
+  connectOrCreate?: Prisma.ProductArtifactCreateOrConnectWithoutCommissioningRunsInput
+  connect?: Prisma.ProductArtifactWhereUniqueInput
+}
+
+export type ProductArtifactUpdateOneRequiredWithoutCommissioningRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductArtifactCreateWithoutCommissioningRunsInput, Prisma.ProductArtifactUncheckedCreateWithoutCommissioningRunsInput>
+  connectOrCreate?: Prisma.ProductArtifactCreateOrConnectWithoutCommissioningRunsInput
+  upsert?: Prisma.ProductArtifactUpsertWithoutCommissioningRunsInput
+  connect?: Prisma.ProductArtifactWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductArtifactUpdateToOneWithWhereWithoutCommissioningRunsInput, Prisma.ProductArtifactUpdateWithoutCommissioningRunsInput>, Prisma.ProductArtifactUncheckedUpdateWithoutCommissioningRunsInput>
+}
+
 export type ProductArtifactCreateNestedOneWithoutCleanupJobsInput = {
   create?: Prisma.XOR<Prisma.ProductArtifactCreateWithoutCleanupJobsInput, Prisma.ProductArtifactUncheckedCreateWithoutCleanupJobsInput>
   connectOrCreate?: Prisma.ProductArtifactCreateOrConnectWithoutCleanupJobsInput
@@ -675,6 +696,7 @@ export type ProductArtifactCreateWithoutProductInput = {
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactUncheckedCreateWithoutProductInput = {
@@ -691,6 +713,7 @@ export type ProductArtifactUncheckedCreateWithoutProductInput = {
   createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactCreateOrConnectWithoutProductInput = {
@@ -751,6 +774,7 @@ export type ProductArtifactCreateWithoutVersionInput = {
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactUncheckedCreateWithoutVersionInput = {
@@ -767,6 +791,7 @@ export type ProductArtifactUncheckedCreateWithoutVersionInput = {
   createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactCreateOrConnectWithoutVersionInput = {
@@ -795,6 +820,90 @@ export type ProductArtifactUpdateManyWithWhereWithoutVersionInput = {
   data: Prisma.XOR<Prisma.ProductArtifactUpdateManyMutationInput, Prisma.ProductArtifactUncheckedUpdateManyWithoutVersionInput>
 }
 
+export type ProductArtifactCreateWithoutCommissioningRunsInput = {
+  id?: string
+  name: string
+  objectKey: string
+  sha256: string
+  sizeBytes: bigint | number
+  contentType: string
+  active?: boolean
+  downloadCount?: number
+  removedAt?: Date | string | null
+  createdAt?: Date | string
+  product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
+  version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
+  grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
+  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
+}
+
+export type ProductArtifactUncheckedCreateWithoutCommissioningRunsInput = {
+  id?: string
+  productId: string
+  versionId?: string | null
+  name: string
+  objectKey: string
+  sha256: string
+  sizeBytes: bigint | number
+  contentType: string
+  active?: boolean
+  downloadCount?: number
+  removedAt?: Date | string | null
+  createdAt?: Date | string
+  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
+}
+
+export type ProductArtifactCreateOrConnectWithoutCommissioningRunsInput = {
+  where: Prisma.ProductArtifactWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductArtifactCreateWithoutCommissioningRunsInput, Prisma.ProductArtifactUncheckedCreateWithoutCommissioningRunsInput>
+}
+
+export type ProductArtifactUpsertWithoutCommissioningRunsInput = {
+  update: Prisma.XOR<Prisma.ProductArtifactUpdateWithoutCommissioningRunsInput, Prisma.ProductArtifactUncheckedUpdateWithoutCommissioningRunsInput>
+  create: Prisma.XOR<Prisma.ProductArtifactCreateWithoutCommissioningRunsInput, Prisma.ProductArtifactUncheckedCreateWithoutCommissioningRunsInput>
+  where?: Prisma.ProductArtifactWhereInput
+}
+
+export type ProductArtifactUpdateToOneWithWhereWithoutCommissioningRunsInput = {
+  where?: Prisma.ProductArtifactWhereInput
+  data: Prisma.XOR<Prisma.ProductArtifactUpdateWithoutCommissioningRunsInput, Prisma.ProductArtifactUncheckedUpdateWithoutCommissioningRunsInput>
+}
+
+export type ProductArtifactUpdateWithoutCommissioningRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  objectKey?: Prisma.StringFieldUpdateOperationsInput | string
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
+  removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
+  version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
+  grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
+}
+
+export type ProductArtifactUncheckedUpdateWithoutCommissioningRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  versionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  objectKey?: Prisma.StringFieldUpdateOperationsInput | string
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  downloadCount?: Prisma.IntFieldUpdateOperationsInput | number
+  removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
+  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
+}
+
 export type ProductArtifactCreateWithoutCleanupJobsInput = {
   id?: string
   name: string
@@ -809,6 +918,7 @@ export type ProductArtifactCreateWithoutCleanupJobsInput = {
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   grants?: Prisma.DownloadGrantCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactUncheckedCreateWithoutCleanupJobsInput = {
@@ -825,6 +935,7 @@ export type ProductArtifactUncheckedCreateWithoutCleanupJobsInput = {
   removedAt?: Date | string | null
   createdAt?: Date | string
   grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactCreateOrConnectWithoutCleanupJobsInput = {
@@ -857,6 +968,7 @@ export type ProductArtifactUpdateWithoutCleanupJobsInput = {
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateWithoutCleanupJobsInput = {
@@ -873,6 +985,7 @@ export type ProductArtifactUncheckedUpdateWithoutCleanupJobsInput = {
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactCreateWithoutGrantsInput = {
@@ -889,6 +1002,7 @@ export type ProductArtifactCreateWithoutGrantsInput = {
   product: Prisma.ProductCreateNestedOneWithoutArtifactsInput
   version?: Prisma.ProductVersionCreateNestedOneWithoutArtifactsInput
   cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactUncheckedCreateWithoutGrantsInput = {
@@ -905,6 +1019,7 @@ export type ProductArtifactUncheckedCreateWithoutGrantsInput = {
   removedAt?: Date | string | null
   createdAt?: Date | string
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutArtifactInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutArtifactInput
 }
 
 export type ProductArtifactCreateOrConnectWithoutGrantsInput = {
@@ -937,6 +1052,7 @@ export type ProductArtifactUpdateWithoutGrantsInput = {
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateWithoutGrantsInput = {
@@ -953,6 +1069,7 @@ export type ProductArtifactUncheckedUpdateWithoutGrantsInput = {
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactCreateManyProductInput = {
@@ -983,6 +1100,7 @@ export type ProductArtifactUpdateWithoutProductInput = {
   version?: Prisma.ProductVersionUpdateOneWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateWithoutProductInput = {
@@ -999,6 +1117,7 @@ export type ProductArtifactUncheckedUpdateWithoutProductInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateManyWithoutProductInput = {
@@ -1043,6 +1162,7 @@ export type ProductArtifactUpdateWithoutVersionInput = {
   product?: Prisma.ProductUpdateOneRequiredWithoutArtifactsNestedInput
   grants?: Prisma.DownloadGrantUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateWithoutVersionInput = {
@@ -1059,6 +1179,7 @@ export type ProductArtifactUncheckedUpdateWithoutVersionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutArtifactNestedInput
   cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutArtifactNestedInput
+  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutArtifactNestedInput
 }
 
 export type ProductArtifactUncheckedUpdateManyWithoutVersionInput = {
@@ -1083,11 +1204,13 @@ export type ProductArtifactUncheckedUpdateManyWithoutVersionInput = {
 export type ProductArtifactCountOutputType = {
   grants: number
   cleanupJobs: number
+  commissioningRuns: number
 }
 
 export type ProductArtifactCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grants?: boolean | ProductArtifactCountOutputTypeCountGrantsArgs
   cleanupJobs?: boolean | ProductArtifactCountOutputTypeCountCleanupJobsArgs
+  commissioningRuns?: boolean | ProductArtifactCountOutputTypeCountCommissioningRunsArgs
 }
 
 /**
@@ -1114,6 +1237,13 @@ export type ProductArtifactCountOutputTypeCountCleanupJobsArgs<ExtArgs extends r
   where?: Prisma.StorageCleanupJobWhereInput
 }
 
+/**
+ * ProductArtifactCountOutputType without action
+ */
+export type ProductArtifactCountOutputTypeCountCommissioningRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissioningRunWhereInput
+}
+
 
 export type ProductArtifactSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1132,6 +1262,7 @@ export type ProductArtifactSelect<ExtArgs extends runtime.Types.Extensions.Inter
   version?: boolean | Prisma.ProductArtifact$versionArgs<ExtArgs>
   grants?: boolean | Prisma.ProductArtifact$grantsArgs<ExtArgs>
   cleanupJobs?: boolean | Prisma.ProductArtifact$cleanupJobsArgs<ExtArgs>
+  commissioningRuns?: boolean | Prisma.ProductArtifact$commissioningRunsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductArtifactCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productArtifact"]>
 
@@ -1190,6 +1321,7 @@ export type ProductArtifactInclude<ExtArgs extends runtime.Types.Extensions.Inte
   version?: boolean | Prisma.ProductArtifact$versionArgs<ExtArgs>
   grants?: boolean | Prisma.ProductArtifact$grantsArgs<ExtArgs>
   cleanupJobs?: boolean | Prisma.ProductArtifact$cleanupJobsArgs<ExtArgs>
+  commissioningRuns?: boolean | Prisma.ProductArtifact$commissioningRunsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductArtifactCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductArtifactIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1208,6 +1340,7 @@ export type $ProductArtifactPayload<ExtArgs extends runtime.Types.Extensions.Int
     version: Prisma.$ProductVersionPayload<ExtArgs> | null
     grants: Prisma.$DownloadGrantPayload<ExtArgs>[]
     cleanupJobs: Prisma.$StorageCleanupJobPayload<ExtArgs>[]
+    commissioningRuns: Prisma.$CommissioningRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1620,6 +1753,7 @@ export interface Prisma__ProductArtifactClient<T, Null = never, ExtArgs extends 
   version<T extends Prisma.ProductArtifact$versionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductArtifact$versionArgs<ExtArgs>>): Prisma.Prisma__ProductVersionClient<runtime.Types.Result.GetResult<Prisma.$ProductVersionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   grants<T extends Prisma.ProductArtifact$grantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductArtifact$grantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DownloadGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cleanupJobs<T extends Prisma.ProductArtifact$cleanupJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductArtifact$cleanupJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageCleanupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commissioningRuns<T extends Prisma.ProductArtifact$commissioningRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductArtifact$commissioningRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissioningRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2126,6 +2260,30 @@ export type ProductArtifact$cleanupJobsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.StorageCleanupJobScalarFieldEnum | Prisma.StorageCleanupJobScalarFieldEnum[]
+}
+
+/**
+ * ProductArtifact.commissioningRuns
+ */
+export type ProductArtifact$commissioningRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissioningRun
+   */
+  select?: Prisma.CommissioningRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissioningRun
+   */
+  omit?: Prisma.CommissioningRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissioningRunInclude<ExtArgs> | null
+  where?: Prisma.CommissioningRunWhereInput
+  orderBy?: Prisma.CommissioningRunOrderByWithRelationInput | Prisma.CommissioningRunOrderByWithRelationInput[]
+  cursor?: Prisma.CommissioningRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissioningRunScalarFieldEnum | Prisma.CommissioningRunScalarFieldEnum[]
 }
 
 /**
