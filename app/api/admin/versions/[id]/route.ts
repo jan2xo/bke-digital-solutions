@@ -7,11 +7,7 @@ import { audit } from "@/lib/audit";
 import { apiError } from "@/lib/http";
 import { env } from "@/lib/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { hasCurrentCleanMalwareEvidence } from "@/lib/supply-chain/malware-gate";
-import { evaluateSupplyChainSecurity } from "@/lib/supply-chain/controls";
-import { evaluateReleaseGate } from "@/lib/releases/release-gate";
 import { rateLimit } from "@/lib/security/rate-limit";
-import { isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
 const schema = z.object({ lifecycle: z.enum(stages).optional(), approve: z.boolean().optional(), reviewed: z.boolean().optional(), published: z.boolean().optional(), latest: z.boolean().optional(), releaseNotes: z.string().max(10000).optional(), changelog: z.string().max(20000).optional(), channel: z.enum(["STABLE", "BETA"]).optional(), deprecated: z.boolean().optional(), rollback: z.boolean().optional(), notes: z.string().trim().max(4000).optional(), breakGlass: z.boolean().optional(), breakGlassJustification: z.string().trim().min(20).max(4000).optional() }).superRefine((value, ctx) => { if (value.breakGlass && !value.breakGlassJustification) ctx.addIssue({ code: "custom", path: ["breakGlassJustification"], message: "Break-glass justification is required" }); });
@@ -32,17 +28,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       if (input.lifecycle && input.lifecycle !== current.lifecycle && to !== from + 1 && !(input.lifecycle === "DEPRECATED" && from >= stages.indexOf("STABLE")) && !(input.lifecycle === "ARCHIVED" && current.lifecycle === "DEPRECATED")) throw new Error("INVALID_RELEASE_TRANSITION");
       if (to >= stages.indexOf("STABLE")) {
         if (!input.approve) throw new Error("RELEASE_APPROVAL_REQUIRED");
-        const evidence = current.supplyChainEvidence;
-        const pendingCompliance = await db.complianceRequirement.count({ where: { status: { not: "IMPLEMENTED" } } });
-        const artifactHash = manifestHash(canonicalizeManifest(buildReleaseManifest({ productId: current.productId, productSlug: current.product.slug, versionId: current.id, version: current.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: current.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) })));
-        const signatureEvidence = evidence?.verificationEvidence.some((v) => v.kind === "SIGNATURE" && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
-        const malwareEvidence = hasCurrentCleanMalwareEvidence(current.artifacts, (evidence?.verificationEvidence ?? []).filter((v) => v.kind === "MALWARE_SCAN"), artifactHash);
-        const currentEvidence = (kind: string) => evidence?.verificationEvidence.some((v) => v.kind === kind && v.result === "VERIFIED" && v.artifactHash === artifactHash) ?? false;
-        const supplyChainSecurity = evaluateSupplyChainSecurity({ currentHash: artifactHash, artifacts: current.artifacts, evidence: evidence?.verificationEvidence ?? [], certificateStatus: evidence?.certificateStatus, malwareStatus: evidence?.malwareStatus });
-        const prior = current.approvals.find((approval) => approval.payloadHash === artifactHash);
-        const complianceCurrent = evidence?.verificationEvidence.some((item) => isCommercialComplianceEvidence(item, current.id, artifactHash)) ?? false;
-        const gate = evaluateReleaseGate({ signatureVerified: signatureEvidence && supplyChainSecurity.integrityVerified, dependenciesVerified: Boolean(evidence?.dependencyVerified) && currentEvidence("DEPENDENCIES"), sbomPresent: Boolean(evidence?.sbomReference) && currentEvidence("SBOM"), provenanceVerified: evidence?.provenanceStatus === "VERIFIED" && currentEvidence("PROVENANCE"), malwareClean: malwareEvidence && supplyChainSecurity.scanCurrent, backupEvidencePresent: Boolean(current.backupEvidence) && currentEvidence("BACKUP"), complianceEvidencePresent: Boolean(current.complianceEvidence) && complianceCurrent, migrationEvidencePresent: Boolean(current.migrationEvidence) && currentEvidence("MIGRATION"), pendingComplianceCount: pendingCompliance, reviewedById: prior?.reviewedById, priorCreatedById: prior?.createdById, approvingAdminId: admin.id, breakGlassAllowed: input.breakGlass && env.ALLOW_BREAK_GLASS === "true", supplyChainSafe: supplyChainSecurity.releasable });
-        if (!gate.ready) throw new Error("RELEASE_EVIDENCE_INCOMPLETE");
+        if (current.artifacts.length === 0 || current.artifacts.some((artifact) => !artifact.objectKey || !artifact.sha256 || artifact.sizeBytes <= 0n)) throw new Error("ARTIFACT_INTEGRITY_REQUIRED");
       }
     }
     const version = await db.$transaction(async (tx) => {

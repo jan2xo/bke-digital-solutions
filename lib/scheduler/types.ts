@@ -1,6 +1,6 @@
 import type { ScheduledJobTrigger } from "@/generated/prisma/client";
 
-export type JobCategory = "STORAGE" | "EMAIL" | "COMMERCE" | "ENTITLEMENTS" | "CUSTOMER" | "SECURITY" | "PAYMENTS" | "BACKUP" | "COMMISSIONING";
+export type JobCategory = "STORAGE" | "EMAIL" | "COMMERCE" | "ENTITLEMENTS" | "CUSTOMER" | "SECURITY" | "PAYMENTS" | "BACKUP";
 export type JobFailureClass = "TRANSIENT" | "PERMANENT" | "CONFIGURATION" | "DEPENDENCY_UNAVAILABLE" | "VALIDATION" | "CONCURRENCY_CONFLICT";
 export type JobSummary = Record<string, string | number | boolean | null>;
 export type JobContext = { now: Date; dryRun: boolean; correlationId: string };
