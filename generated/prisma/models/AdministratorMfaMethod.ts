@@ -1,4 +1,751 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛOwå:-jZ.¶›­–)Ş³P¢ò¢F†—2—26öFRvVæW&FVB'’&—6ÖâFòæ÷BVF—BF—&V7FÇ’â¢ğ¢ò¢W6Æ–çBÖF—6&ÆR¢ğ¢òò&–öÖRÖ–væ÷&RÖÆÂÆ–çC¢vVæW&FVBf–ÆP¢òòG2Öæö6†V6°¢ò ¢¢F†—2f–ÆRW‡÷'G2F†RFÖ–æ—7G&F÷$ÖfÖWF†öFÖöFVÂæB—G2&VÆFVBG—W2à¢ ¢¢	ùú"–÷R6â–×÷'BF†—2f–ÆRF—&V7FÇ’à¢¢ğ¦–×÷'BG—R¢2'VçF–ÖRg&öÒ$&—6Öö6Æ–VçB÷'VçF–ÖRö6Æ–VçB ¦–×÷'BG—R¢2DVçV×2g&öÒ"ââöVçV×2 ¦–×÷'BG—R¢2&—6Ög&öÒ"ââö–çFW&æÂ÷&—6ÖæÖW76R  ¢ò¢ ¢¢ÖöFVÂFÖ–æ—7G&F÷$ÖfÖWF†ö@¢ ¢¢ğ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖöFVÂÒ'VçF–ÖRåG—W2å&W7VÇBäFVfVÇE6VÆV7F–öãÅ&—6ÖâDFÖ–æ—7G&F÷$ÖfÖWF†öE–ÆöCà ¦W‡÷'BG—Rvw&VvFTFÖ–æ—7G&F÷$ÖfÖWF†öBÒ°¢ö6÷VçC¢FÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT÷WGWEG—RÂçVÆÀ¢öfs¢FÖ–æ—7G&F÷$ÖfÖWF†öDftvw&VvFT÷WGWEG—RÂçVÆÀ¢÷7VÓ¢FÖ–æ—7G&F÷$ÖfÖWF†öE7VÔvw&VvFT÷WGWEG—RÂçVÆÀ¢öÖ–ã¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ävw&VvFT÷WGWEG—RÂçVÆÀ¢öÖƒ¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ„vw&VvFT÷WGWEG—RÂçVÆÀ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDftvw&VvFT÷WGWEG—RÒ°¢¶W•fW'6–öã¢çVÖ&W"ÂçVÆÀ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE7VÔvw&VvFT÷WGWEG—RÒ°¢¶W•fW'6–öã¢çVÖ&W"ÂçVÆÀ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ävw&VvFT÷WGWEG—RÒ°¢–C¢7G&–ærÂçVÆÀ¢W6W$–C¢7G&–ærÂçVÆÀ¢Væ7'—FVE6V7&WC¢7G&–ærÂçVÆÀ¢¶W•fW'6–öã¢çVÖ&W"ÂçVÆÀ¢VæF–ætW‡—&W4C¢FFRÂçVÆÀ¢Væ&ÆVDC¢FFRÂçVÆÀ¢fW&–f–VDC¢FFRÂçVÆÀ¢F—6&ÆVDC¢FFRÂçVÆÀ¢7&VFVDC¢FFRÂçVÆÀ¢WFFVDC¢FFRÂçVÆÀ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖ„vw&VvFT÷WGWEG—RÒ°¢–C¢7G&–ærÂçVÆÀ¢W6W$–C¢7G&–ærÂçVÆÀ¢Væ7'—FVE6V7&WC¢7G&–ærÂçVÆÀ¢¶W•fW'6–öã¢çVÖ&W"ÂçVÆÀ¢VæF–ætW‡—&W4C¢FFRÂçVÆÀ¢Væ&ÆVDC¢FFRÂçVÆÀ¢fW&–f–VDC¢FFRÂçVÆÀ¢F—6&ÆVDC¢FFRÂçVÆÀ¢7&VFVDC¢FFRÂçVÆÀ¢WFFVDC¢FFRÂçVÆÀ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT÷WGWEG—RÒ°¢–C¢çVÖ&W ¢W6W$–C¢çVÖ&W ¢Væ7'—FVE6V7&WC¢çVÖ&W ¢¶W•fW'6–öã¢çVÖ&W ¢VæF–ætW‡—&W4C¢çVÖ&W ¢Væ&ÆVDC¢çVÖ&W ¢fW&–f–VDC¢çVÖ&W ¢F—6&ÆVDC¢çVÖ&W ¢7&VFVDC¢çVÖ&W ¢WFFVDC¢çVÖ&W ¢öÆÃ¢çVÖ&W §Ğ  ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDftvw&VvFT–çWEG—RÒ°¢¶W•fW'6–öãó¢G'VP§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE7VÔvw&VvFT–çWEG—RÒ°¢¶W•fW'6–öãó¢G'VP§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ävw&VvFT–çWEG—RÒ°¢–Có¢G'VP¢W6W$–Có¢G'VP¢Væ7'—FVE6V7&WCó¢G'VP¢¶W•fW'6–öãó¢G'VP¢VæF–ætW‡—&W4Có¢G'VP¢Væ&ÆVDCó¢G'VP¢fW&–f–VDCó¢G'VP¢F—6&ÆVDCó¢G'VP¢7&VFVDCó¢G'VP¢WFFVDCó¢G'VP§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖ„vw&VvFT–çWEG—RÒ°¢–Có¢G'VP¢W6W$–Có¢G'VP¢Væ7'—FVE6V7&WCó¢G'VP¢¶W•fW'6–öãó¢G'VP¢VæF–ætW‡—&W4Có¢G'VP¢Væ&ÆVDCó¢G'VP¢fW&–f–VDCó¢G'VP¢F—6&ÆVDCó¢G'VP¢7&VFVDCó¢G'VP¢WFFVDCó¢G'VP§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT–çWEG—RÒ°¢–Có¢G'VP¢W6W$–Có¢G'VP¢Væ7'—FVE6V7&WCó¢G'VP¢¶W•fW'6–öãó¢G'VP¢VæF–ætW‡—&W4Có¢G'VP¢Væ&ÆVDCó¢G'VP¢fW&–f–VDCó¢G'VP¢F—6&ÆVDCó¢G'VP¢7&VFVDCó¢G'VP¢WFFVDCó¢G'VP¢öÆÃó¢G'VP§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDvw&VvFT&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢ò¢ ¢¢f–ÇFW"v†–6‚FÖ–æ—7G&F÷$ÖfÖWF†öBFòvw&VvFRà¢¢ğ¢v†W&Só¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çW@¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷6÷'F–ær6÷'F–ærFö77Ğ¢ ¢¢FWFW&Ö–æRF†R÷&FW"öbFÖ–æ—7G&F÷$ÖfÖWF†öG2FòfWF6‚à¢¢ğ¢÷&FW$'“ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD÷&FW$'•v—F…&VÆF–öä–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD÷&FW$'•v—F…&VÆF–öä–çWEµĞ¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷v–æF–öâ67W'6÷"Ö&6VB×v–æF–öâ7W'6÷"Fö77Ğ¢ ¢¢6WG2F†R7F'B÷6—F–öà¢¢ğ¢7W'6÷#ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çW@¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷v–æF–öâv–æF–öâFö77Ğ¢ ¢¢F¶R+æFÖ–æ—7G&F÷$ÖfÖWF†öG2g&öÒF†R÷6—F–öâöbF†R7W'6÷"à¢¢ğ¢F¶Só¢çVÖ&W ¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷v–æF–öâv–æF–öâFö77Ğ¢ ¢¢6¶—F†Rf—'7BæFÖ–æ—7G&F÷$ÖfÖWF†öG2à¢¢ğ¢6¶—ó¢çVÖ&W ¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6÷VçB&WGW&æVBFÖ–æ—7G&F÷$ÖfÖWF†öG0¢¢¢ğ¢ö6÷VçCó¢G'VRÂFÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT–çWEG—P¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6VÆV7Bv†–6‚f–VÆG2FòfW&vP¢¢¢ğ¢öfsó¢FÖ–æ—7G&F÷$ÖfÖWF†öDftvw&VvFT–çWEG—P¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6VÆV7Bv†–6‚f–VÆG2Fò7VĞ¢¢¢ğ¢÷7VÓó¢FÖ–æ—7G&F÷$ÖfÖWF†öE7VÔvw&VvFT–çWEG—P¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6VÆV7Bv†–6‚f–VÆG2Fòf–æBF†RÖ–æ–×VÒfÇVP¢¢¢ğ¢öÖ–ãó¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ävw&VvFT–çWEG—P¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6VÆV7Bv†–6‚f–VÆG2Fòf–æBF†RÖ†–×VÒfÇVP¢¢¢ğ¢öÖƒó¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ„vw&VvFT–çWEG—P§Ğ ¦W‡÷'BG—RvWDFÖ–æ—7G&F÷$ÖfÖWF†öDvw&VvFUG—SÅBW‡FVæG2FÖ–æ—7G&F÷$ÖfÖWF†öDvw&VvFT&w3âÒ°¢µ–â¶W–öbBb¶W–öbvw&VvFTFÖ–æ—7G&F÷$ÖfÖWF†öEÓ¢W‡FVæG2uö6÷VçBrÂv6÷VçBp¢òEµÒW‡FVæG2G'VP¢òçVÖ&W ¢¢&—6ÖävWE66Æ%G—SÅEµÒÂvw&VvFTFÖ–æ—7G&F÷$ÖfÖWF†öEµÓà¢¢&—6ÖävWE66Æ%G—SÅEµÒÂvw&VvFTFÖ–æ—7G&F÷$ÖfÖWF†öEµÓà§Ğ    ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢v†W&Só¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çW@¢÷&FW$'“ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD÷&FW$'•v—F„vw&VvF–öä–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD÷&FW$'•v—F„vw&VvF–öä–çWEµĞ¢'“¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ$f–VÆDVçVÕµÒÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ$f–VÆDVçVĞ¢†f–æsó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çW@¢F¶Só¢çVÖ&W ¢6¶—ó¢çVÖ&W ¢ö6÷VçCó¢FÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT–çWEG—RÂG'VP¢öfsó¢FÖ–æ—7G&F÷$ÖfÖWF†öDftvw&VvFT–çWEG—P¢÷7VÓó¢FÖ–æ—7G&F÷$ÖfÖWF†öE7VÔvw&VvFT–çWEG—P¢öÖ–ãó¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ävw&VvFT–çWEG—P¢öÖƒó¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ„vw&VvFT–çWEG—P§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”÷WGWEG—RÒ°¢–C¢7G&–æp¢W6W$–C¢7G&–æp¢Væ7'—FVE6V7&WC¢7G&–ærÂçVÆÀ¢¶W•fW'6–öã¢çVÖ&W ¢VæF–ætW‡—&W4C¢FFRÂçVÆÀ¢Væ&ÆVDC¢FFRÂçVÆÀ¢fW&–f–VDC¢FFRÂçVÆÀ¢F—6&ÆVDC¢FFRÂçVÆÀ¢7&VFVDC¢FFP¢WFFVDC¢FFP¢ö6÷VçC¢FÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT÷WGWEG—RÂçVÆÀ¢öfs¢FÖ–æ—7G&F÷$ÖfÖWF†öDftvw&VvFT÷WGWEG—RÂçVÆÀ¢÷7VÓ¢FÖ–æ—7G&F÷$ÖfÖWF†öE7VÔvw&VvFT÷WGWEG—RÂçVÆÀ¢öÖ–ã¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ävw&VvFT÷WGWEG—RÂçVÆÀ¢öÖƒ¢FÖ–æ—7G&F÷$ÖfÖWF†öDÖ„vw&VvFT÷WGWEG—RÂçVÆÀ§Ğ ¦W‡÷'BG—RvWDFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'•–ÆöCÅBW‡FVæG2FÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”&w3âÒ&—6Öå&—6Ö&öÖ—6SÀ¢'&“À¢&—6Öå–6´VçVÖW&&ÆSÄFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”÷WGWEG—RÂE²v'’uÓâ`¢°¢µ–â‚†¶W–öbB’b†¶W–öbFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”÷WGWEG—R’•Ó¢W‡FVæG2uö6÷VçBp¢òEµÒW‡FVæG2&ööÆVà¢òçVÖ&W ¢¢&—6ÖävWE66Æ%G—SÅEµÒÂFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”÷WGWEG—UµÓà¢¢&—6ÖävWE66Æ%G—SÅEµÒÂFÖ–æ—7G&F÷$ÖfÖWF†öDw&÷W'”÷WGWEG—UµÓà¢Ğ¢à¢à   ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÒ°¢äCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWEµĞ¢õ#ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWEµĞ¢äõCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWEµĞ¢–Có¢&—6Öå7G&–ætf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–æp¢W6W$–Có¢&—6Öå7G&–ætf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6Öå7G&–ætçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–æp¢W6W#ó¢&—6Öå„õ#Å&—6ÖåW6W%66Æ%&VÆF–öäf–ÇFW"Â&—6ÖåW6W%v†W&T–çWCà§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD÷&FW$'•v—F…&VÆF–öä–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢W6W$–Có¢&—6Öå6÷'D÷&FW ¢Væ7'—FVE6V7&WCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW ¢VæF–ætW‡—&W4Có¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢Væ&ÆVDCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢fW&–f–VDCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢F—6&ÆVDCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW ¢W6W#ó¢&—6ÖåW6W$÷&FW$'•v—F…&VÆF–öä–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çWBÒ&—6ÖäDÆV7CÇ°¢–Có¢7G&–æp¢W6W$–Có¢7G&–æp¢äCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWEµĞ¢õ#ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWEµĞ¢äõCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWEµĞ¢Væ7'—FVE6V7&WCó¢&—6Öå7G&–ætçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–æp¢W6W#ó¢&—6Öå„õ#Å&—6ÖåW6W%66Æ%&VÆF–öäf–ÇFW"Â&—6ÖåW6W%v†W&T–çWCà§ÒÂ&–B"Â'W6W$–B#à ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD÷&FW$'•v—F„vw&VvF–öä–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢W6W$–Có¢&—6Öå6÷'D÷&FW ¢Væ7'—FVE6V7&WCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW ¢VæF–ætW‡—&W4Có¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢Væ&ÆVDCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢fW&–f–VDCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢F—6&ÆVDCó¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW ¢ö6÷VçCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçD÷&FW$'”vw&VvFT–çW@¢öfsó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öDft÷&FW$'”vw&VvFT–çW@¢öÖƒó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öDÖ„÷&FW$'”vw&VvFT–çW@¢öÖ–ãó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ä÷&FW$'”vw&VvFT–çW@¢÷7VÓó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE7VÔ÷&FW$'”vw&VvFT–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çWBÒ°¢äCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çWEµĞ¢õ#ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çWEµĞ¢äõCó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öE66Æ%v†W&Uv—F„vw&VvFW4–çWEµĞ¢–Có¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–æp¢W6W$–Có¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6Öå7G&–ætçVÆÆ&ÆUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çEv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäFFUF–ÖTçVÆÆ&ÆUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäFFUF–ÖTçVÆÆ&ÆUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖUv—F„vw&VvFW4f–ÇFW#Â$FÖ–æ—7G&F÷$ÖfÖWF†öB#âÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFT–çWBÒ°¢–Có¢7G&–æp¢Væ7'—FVE6V7&WCó¢7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢çVÖ&W ¢VæF–ætW‡—&W4Có¢FFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢FFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp¢W6W#¢&—6ÖåW6W$7&VFTæW7FVDöæUv—F†÷WDFÖ–æ—7G&F÷$Öf–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFT–çWBÒ°¢–Có¢7G&–æp¢W6W$–C¢7G&–æp¢Væ7'—FVE6V7&WCó¢7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢çVÖ&W ¢VæF–ætW‡—&W4Có¢FFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢FFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEWFFT–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–VÆEWFFT÷W&F–öç4–çWBÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢W6W#ó¢&—6ÖåW6W%WFFTöæU&WV—&VEv—F†÷WDFÖ–æ—7G&F÷$ÖfæW7FVD–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFT–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢W6W$–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–VÆEWFFT÷W&F–öç4–çWBÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFTÖç”–çWBÒ°¢–Có¢7G&–æp¢W6W$–C¢7G&–æp¢Væ7'—FVE6V7&WCó¢7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢çVÖ&W ¢VæF–ætW‡—&W4Có¢FFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢FFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEWFFTÖç”×WFF–öä–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–VÆEWFFT÷W&F–öç4–çWBÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFTÖç”–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢W6W$–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–VÆEWFFT÷W&F–öç4–çWBÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDçVÆÆ&ÆU66Æ%&VÆF–öäf–ÇFW"Ò°¢—3ó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂçVÆÀ¢—4æ÷Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂçVÆÀ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçD÷&FW$'”vw&VvFT–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢W6W$–Có¢&—6Öå6÷'D÷&FW ¢Væ7'—FVE6V7&WCó¢&—6Öå6÷'D÷&FW ¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW ¢VæF–ætW‡—&W4Có¢&—6Öå6÷'D÷&FW ¢Væ&ÆVDCó¢&—6Öå6÷'D÷&FW ¢fW&–f–VDCó¢&—6Öå6÷'D÷&FW ¢F—6&ÆVDCó¢&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDft÷&FW$'”vw&VvFT–çWBÒ°¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖ„÷&FW$'”vw&VvFT–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢W6W$–Có¢&—6Öå6÷'D÷&FW ¢Væ7'—FVE6V7&WCó¢&—6Öå6÷'D÷&FW ¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW ¢VæF–ætW‡—&W4Có¢&—6Öå6÷'D÷&FW ¢Væ&ÆVDCó¢&—6Öå6÷'D÷&FW ¢fW&–f–VDCó¢&—6Öå6÷'D÷&FW ¢F—6&ÆVDCó¢&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDÖ–ä÷&FW$'”vw&VvFT–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢W6W$–Có¢&—6Öå6÷'D÷&FW ¢Væ7'—FVE6V7&WCó¢&—6Öå6÷'D÷&FW ¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW ¢VæF–ætW‡—&W4Có¢&—6Öå6÷'D÷&FW ¢Væ&ÆVDCó¢&—6Öå6÷'D÷&FW ¢fW&–f–VDCó¢&—6Öå6÷'D÷&FW ¢F—6&ÆVDCó¢&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE7VÔ÷&FW$'”vw&VvFT–çWBÒ°¢¶W•fW'6–öãó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFTæW7FVDöæUv—F†÷WEW6W$–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFT÷$6öææV7Ev—F†÷WEW6W$–çW@¢6öææV7Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFTæW7FVDöæUv—F†÷WEW6W$–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFT÷$6öææV7Ev—F†÷WEW6W$–çW@¢6öææV7Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEWFFTöæUv—F†÷WEW6W$æW7FVD–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFT÷$6öææV7Ev—F†÷WEW6W$–çW@¢W6W'Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEW6W'Ev—F†÷WEW6W$–çW@¢F—66öææV7Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&ööÆVà¢FVÆWFSó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&ööÆVà¢6öææV7Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çW@¢WFFSó¢&—6Öå„õ#Å&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUFôöæUv—F…v†W&Uv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUv—F†÷WEW6W$–çWCâÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFUv—F†÷WEW6W$–çWCà§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFTöæUv—F†÷WEW6W$æW7FVD–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFT÷$6öææV7Ev—F†÷WEW6W$–çW@¢W6W'Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEW6W'Ev—F†÷WEW6W$–çW@¢F—66öææV7Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&ööÆVà¢FVÆWFSó¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çWBÂ&ööÆVà¢6öææV7Có¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çW@¢WFFSó¢&—6Öå„õ#Å&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUFôöæUv—F…v†W&Uv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUv—F†÷WEW6W$–çWCâÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFUv—F†÷WEW6W$–çWCà§Ğ ¦W‡÷'BG—R–çDf–VÆEWFFT÷W&F–öç4–çWBÒ°¢6WCó¢çVÖ&W ¢–æ7&VÖVçCó¢çVÖ&W ¢FV7&VÖVçCó¢çVÖ&W ¢×VÇF—Ç“ó¢çVÖ&W ¢F—f–FSó¢çVÖ&W §Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÒ°¢–Có¢7G&–æp¢Væ7'—FVE6V7&WCó¢7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢çVÖ&W ¢VæF–ætW‡—&W4Có¢FFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢FFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWBÒ°¢–Có¢7G&–æp¢Væ7'—FVE6V7&WCó¢7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢çVÖ&W ¢VæF–ætW‡—&W4Có¢FFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢FFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢FFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFT÷$6öææV7Ev—F†÷WEW6W$–çWBÒ°¢v†W&S¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&UVæ—VT–çW@¢7&VFS¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWCà§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEW6W'Ev—F†÷WEW6W$–çWBÒ°¢WFFS¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFUv—F†÷WEW6W$–çWCà¢7&VFS¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öD7&VFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VD7&VFUv—F†÷WEW6W$–çWCà¢v†W&Só¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çW@§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUFôöæUv—F…v†W&Uv—F†÷WEW6W$–çWBÒ°¢v†W&Só¢&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEv†W&T–çW@¢FF¢&—6Öå„õ#Å&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUv—F†÷WEW6W$–çWBÂ&—6ÖäFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFUv—F†÷WEW6W$–çWCà§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEWFFUv—F†÷WEW6W$–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–VÆEWFFT÷W&F–öç4–çWBÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öEVæ6†V6¶VEWFFUv—F†÷WEW6W$–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Væ7'—FVE6V7&WCó¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢¶W•fW'6–öãó¢&—6Öä–çDf–VÆEWFFT÷W&F–öç4–çWBÂçVÖ&W ¢VæF–ætW‡—&W4Có¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢Væ&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢fW&–f–VDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢F—6&ÆVDCó¢&—6ÖäçVÆÆ&ÆTFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ   ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE6VÆV7CÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE6VÆV7CÇ°¢–Có¢&ööÆVà¢W6W$–Có¢&ööÆVà¢Væ7'—FVE6V7&WCó¢&ööÆVà¢¶W•fW'6–öãó¢&ööÆVà¢VæF–ætW‡—&W4Có¢&ööÆVà¢Væ&ÆVDCó¢&ööÆVà¢fW&–f–VDCó¢&ööÆVà¢F—6&ÆVDCó¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà¢W6W#ó¢&ööÆVâÂ&—6ÖåW6W$FVfVÇD&w3ÄW‡D&w3à§ÒÂW‡D&w5²'&W7VÇB%Õ²&FÖ–æ—7G&F÷$ÖfÖWF†öB%Óà ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE6VÆV7D7&VFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE6VÆV7CÇ°¢–Có¢&ööÆVà¢W6W$–Có¢&ööÆVà¢Væ7'—FVE6V7&WCó¢&ööÆVà¢¶W•fW'6–öãó¢&ööÆVà¢VæF–ætW‡—&W4Có¢&ööÆVà¢Væ&ÆVDCó¢&ööÆVà¢fW&–f–VDCó¢&ööÆVà¢F—6&ÆVDCó¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà¢W6W#ó¢&ööÆVâÂ&—6ÖåW6W$FVfVÇD&w3ÄW‡D&w3à§ÒÂW‡D&w5²'&W7VÇB%Õ²&FÖ–æ—7G&F÷$ÖfÖWF†öB%Óà ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE6VÆV7EWFFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE6VÆV7CÇ°¢–Có¢&ööÆVà¢W6W$–Có¢&ööÆVà¢Væ7'—FVE6V7&WCó¢&ööÆVà¢¶W•fW'6–öãó¢&ööÆVà¢VæF–ætW‡—&W4Có¢&ööÆVà¢Væ&ÆVDCó¢&ööÆVà¢fW&–f–VDCó¢&ööÆVà¢F—6&ÆVDCó¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà¢W6W#ó¢&ööÆVâÂ&—6ÖåW6W$FVfVÇD&w3ÄW‡D&w3à§ÒÂW‡D&w5²'&W7VÇB%Õ²&FÖ–æ—7G&F÷$ÖfÖWF†öB%Óà ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öE6VÆV7E66Æ"Ò°¢–Có¢&ööÆVà¢W6W$–Có¢&ööÆVà¢Væ7'—FVE6V7&WCó¢&ööÆVà¢¶W•fW'6–öãó¢&ööÆVà¢VæF–ætW‡—&W4Có¢&ööÆVà¢Væ&ÆVDCó¢&ööÆVà¢fW&–f–VDCó¢&ööÆVà¢F—6&ÆVDCó¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDöÖ—CÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWDöÖ—CÂ&–B"Â'W6W$–B"Â&Væ7'—FVE6V7&WB"Â&¶W•fW'6–öâ"Â'VæF–ætW‡—&W4B"Â&Væ&ÆVDB"Â'fW&–f–VDB"Â&F—6&ÆVDB"Â&7&VFVDB"Â'WFFVDB"ÂW‡D&w5²'&W7VÇB%Õ²&FÖ–æ—7G&F÷$ÖfÖWF†öB%Óà¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD–æ6ÇVFSÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢W6W#ó¢&ööÆVâÂ&—6ÖåW6W$FVfVÇD&w3ÄW‡D&w3à§Ğ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD–æ6ÇVFT7&VFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢W6W#ó¢&ööÆVâÂ&—6ÖåW6W$FVfVÇD&w3ÄW‡D&w3à§Ğ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD–æ6ÇVFUWFFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢W6W#ó¢&ööÆVâÂ&—6ÖåW6W$FVfVÇD&w3ÄW‡D&w3à§Ğ ¦W‡÷'BG—RDFÖ–æ—7G&F÷$ÖfÖWF†öE–ÆöCÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢æÖS¢$FÖ–æ—7G&F÷$ÖfÖWF†öB ¢ö&¦V7G3¢°¢W6W#¢&—6ÖâEW6W%–ÆöCÄW‡D&w3à¢Ğ¢66Æ'3¢'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE–ÆöE&W7VÇCÇ°¢–C¢7G&–æp¢W6W$–C¢7G&–æp¢Væ7'—FVE6V7&WC¢7G&–ærÂçVÆÀ¢¶W•fW'6–öã¢çVÖ&W ¢VæF–ætW‡—&W4C¢FFRÂçVÆÀ¢Væ&ÆVDC¢FFRÂçVÆÀ¢fW&–f–VDC¢FFRÂçVÆÀ¢F—6&ÆVDC¢FFRÂçVÆÀ¢7&VFVDC¢FFP¢WFFVDC¢FFP¢ÒÂW‡D&w5²'&W7VÇB%Õ²&FÖ–æ—7G&F÷$ÖfÖWF†öB%Óà¢6ö×÷6—FW3¢·Ğ§Ğ ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öDvWE–ÆöCÅ2W‡FVæG2&ööÆVâÂçVÆÂÂVæFVf–æVBÂFÖ–æ—7G&F÷$ÖfÖWF†öDFVfVÇD&w3âÒ'VçF–ÖRåG—W2å&W7VÇBävWE&W7VÇCÅ&—6ÖâDFÖ–æ—7G&F÷$ÖfÖWF†öE–ÆöBÂ3à ¦W‡÷'BG—RFÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçD&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âĞ¢öÖ—CÄFÖ–æ—7G&F÷$ÖfÖWF†öDf–æDÖç”&w2Âw6VÆV7BrÂv–æ6ÇVFRrÂvF—7F–æ7BrÂvöÖ—Bsâb°¢6VÆV7Có¢FÖ–æ—7G&F÷$ÖfÖWF†öD6÷VçDvw&VvFT–çWEG—RÂG'VP¢Ğ ¦W‡÷'B–çFW&f6RFÖ–æ—7G&F÷$ÖfÖWF†öDFVÆVvFSÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w2ÂvÆö&ÄöÖ—D÷F–öç2Ò·Óâ°¢´³¢7–Ö&öÅÓ¢²G—W3¢&—6ÖåG—TÖÄW‡D&w3å²vÖöFVÂuÕ²tFÖ–æ—7G&F÷$ÖfÖWF†öBuÒÂÖWF¢²æÖS¢tFÖ–æ—7G&F÷$ÖfÖWF†öBrÒĞ¢ò¢ ¢¢f–æB¦W&ò÷"öæRFÖ–æ—7G&F÷$ÖfÖWF†öBF†BÖF6†W2F†Rf–ÇFW"à¢¢&Ò´FÖ–æ—7G&F÷$ÖfÖWF†öDf–æEVæ—VT&w7Ò&w2Ò&wVÖVçG2Fòf–æBFÖ–æ—7G&F÷$ÖfÖWF†ö@¢¢W†×ÆP¢¢òòvWBöæRFÖ–æ—7G&F÷$ÖfÖWF†ö@¢¢6öç7BFÖ–æ—7G&F÷$ÖfÖWF†öBÒv—B&—6ÖæFÖ–æ—7G&F÷$ÖfÖWF†öBæf–æEVæ—VR‡°¢¢v†W&S¢°¢¢òòâââ&÷f–FRf–ÇFW"†W&P¢¢Ğ¢¢Ò¢¢ğ¢f–æEVæ—VSÅBW‡FVæG2FÖ–æ—7G&F÷$ÖfÖWF†öDf–æEVæ—VT&w3â†&w3¢&—6Öå6VÆV7E7V'6WCÅBÂFÖ–æ—7G&F÷$ÖfÖWF†öDf–æEVæ—VT&w3ÄW‡D&w3ãâ“¢&—6Öå&—6ÖõôFÖ–æ—7G&F÷$ÖfÖWF†öD6Æ–VçCÇ'VçF–ÖRåG—W2å&W7VÇBävWE&W7VÇCÅ&—6ÖâDFÖ–æ—7G&F÷$ÖfÖWF†öE–ÆöCÄW‡D&w3âÂBÂ&f–æEVæ—VR"ÂvÆö&ÄöÖ—D÷F–öç3âÂçVÆÂÂçVÆÂÂW‡D&w2ÂvÆö&ÄöÖ—D÷F–öç3à ¢ò¢ ¢¢f–æBöæRFÖ–æ—7G&F÷$ÖfÖWF†öBF†BÖF6†W2F†Rf–ÇFW"÷"F‡&÷râW'&÷"v—F‚W'&÷"æ6öFSÒu##Rv ¢¢–bæòÖF6†W2vW&Rf÷VæBà¢¢&Ò´FÖ–æ—7G&F÷$ÖfÖWF†öDf–æEVæ—VT÷%F‡&÷t&w7Ò&w2Ò&wVÖVçG2Fòf–æBFÖ–æ—7G&F÷$ÖfÖWF†ö@¢¢W†×ÆP¢¢òòvWBöæRFÖ–æ—7G&F÷$ÖfÖWF†ö@¢¢6öç7BFÖ–æ—7G&F÷$ÖfÖWF†öBÒv—B&—6ÖæFÖ–æ—7G&F÷$ÖfÖWF†öBæf–æEVæ—VT÷%F‡&÷r‡°¢¢v†W&S¢°¢¢òòâââ&÷f–FRf–ÇFW"†W&P¢¢Ğ¢¢Ò¢¢ğ¢f–æEVæ—VT÷%F‡&÷sÅBW‡FVæG2FÖ–æ—7G&F÷$ÖfÖWF†öDf–æEVæ—VT÷%F‡&÷t&w3â†&w3¢&—6Öå6VÆV7E7V'6WCÅBÂFÖ–æ—7G&F÷$ÖfÖWF†öDf–æEVæ—VT÷%F‡&÷t&w3ÄW‡D&w3ãâ“¢&—6Öå&—6ÖõôFÖ–æ—7G&F÷$ÖfÖWF†öD6Æ–VçCÇ'VçF–ÖRåG—W2å&W7VÇBävWE&W7VÇCÅ&—6ÖâDFÖ–æ—7G&F÷$ÖfÖWF†öE–ÆöCÄW‡D&w3âÂBÂ&f–æEVæ—VT÷%F‡&÷r"ÂvÆö&ÄöÖ—D÷F–öç3âÂæWfW"ÂW‡D&w2ÂvÆö&ÄöÖ—D÷F–öç3à ¢ò¢ ¢¢f–æBF†Rf—'7BFÖ–æ—7G&F÷$ÖfÖWF†öBF†BÖF6†W2F†Rf–ÇFW"à¢¢æ÷FRÂF†B&÷f–F–ærVæFVf–æVF—2G&VFVB2F†RfÇVRæ÷B&V–ærF†W&Rà¢¢&VBÖ÷&R†W&_wæÚ$z{-®éÜj× create a AdministratorMfaMethod.
+
+/* !!! This is code generated by Prisma. Do not edit directly. !!! */
+/* eslint-disable */
+// biome-ignore-all lint: generated file
+// @ts-nocheck
+/*
+ * This file exports the `AdministratorMfaMethod` model and its related types.
+ *
+ * ğŸŸ¢ You can import this file directly.
+ */
+import type * as runtime from "@prisma/client/runtime/client"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
+
+/**
+ * Model AdministratorMfaMethod
+ *
+ */
+export type AdministratorMfaMethodModel = runtime.Types.Result.DefaultSelection<Prisma.$AdministratorMfaMethodPayload>
+
+export type AggregateAdministratorMfaMethod = {
+  _count: AdministratorMfaMethodCountAggregateOutputType | null
+  _avg: AdministratorMfaMethodAvgAggregateOutputType | null
+  _sum: AdministratorMfaMethodSumAggregateOutputType | null
+  _min: AdministratorMfaMethodMinAggregateOutputType | null
+  _max: AdministratorMfaMethodMaxAggregateOutputType | null
+}
+
+export type AdministratorMfaMethodAvgAggregateOutputType = {
+  keyVersion: number | null
+}
+
+export type AdministratorMfaMethodSumAggregateOutputType = {
+  keyVersion: number | null
+}
+
+export type AdministratorMfaMethodMinAggregateOutputType = {
+  id: string | null
+  userId: string | null
+  encryptedSecret: string | null
+  keyVersion: number | null
+  pendingExpiresAt: Date | null
+  enabledAt: Date | null
+  verifiedAt: Date | null
+  disabledAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
+}
+
+export type AdministratorMfaMethodMaxAggregateOutputType = {
+  id: string | null
+  userId: string | null
+  encryptedSecret: string | null
+  keyVersion: number | null
+  pendingExpiresAt: Date | null
+  enabledAt: Date | null
+  verifiedAt: Date | null
+  disabledAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
+}
+
+export type AdministratorMfaMethodCountAggregateOutputType = {
+  id: number
+  userId: number
+  encryptedSecret: number
+  keyVersion: number
+  pendingExpiresAt: number
+  enabledAt: number
+  verifiedAt: number
+  disabledAt: number
+  createdAt: number
+  updatedAt: number
+  _all: number
+}
+
+
+export type AdministratorMfaMethodAvgAggregateInputType = {
+  keyVersion?: true
+}
+
+export type AdministratorMfaMethodSumAggregateInputType = {
+  keyVersion?: true
+}
+
+export type AdministratorMfaMethodMinAggregateInputType = {
+  id?: true
+  userId?: true
+  encryptedSecret?: true
+  keyVersion?: true
+  pendingExpiresAt?: true
+  enabledAt?: true
+  verifiedAt?: true
+  disabledAt?: true
+  createdAt?: true
+  updatedAt?: true
+}
+
+export type AdministratorMfaMethodMaxAggregateInputType = {
+  id?: true
+  userId?: true
+  encryptedSecret?: true
+  keyVersion?: true
+  pendingExpiresAt?: true
+  enabledAt?: true
+  verifiedAt?: true
+  disabledAt?: true
+  createdAt?: true
+  updatedAt?: true
+}
+
+export type AdministratorMfaMethodCountAggregateInputType = {
+  id?: true
+  userId?: true
+  encryptedSecret?: true
+  keyVersion?: true
+  pendingExpiresAt?: true
+  enabledAt?: true
+  verifiedAt?: true
+  disabledAt?: true
+  createdAt?: true
+  updatedAt?: true
+  _all?: true
+}
+
+export type AdministratorMfaMethodAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Filter which AdministratorMfaMethod to aggregate.
+   */
+  where?: Prisma.AdministratorMfaMethodWhereInput
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+   *
+   * Determine the order of AdministratorMfaMethods to fetch.
+   */
+  orderBy?: Prisma.AdministratorMfaMethodOrderByWithRelationInput | Prisma.AdministratorMfaMethodOrderByWithRelationInput[]
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+   *
+   * Sets the start position
+   */
+  cursor?: Prisma.AdministratorMfaMethodWhereUniqueInput
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+   *
+   * Take `Â±n` AdministratorMfaMethods from the position of the cursor.
+   */
+  take?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+   *
+   * Skip the first `n` AdministratorMfaMethods.
+   */
+  skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Count returned AdministratorMfaMethods
+  **/
+  _count?: true | AdministratorMfaMethodCountAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to average
+  **/
+  _avg?: AdministratorMfaMethodAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to sum
+  **/
+  _sum?: AdministratorMfaMethodSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to find the minimum value
+  **/
+  _min?: AdministratorMfaMethodMinAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to find the maximum value
+  **/
+  _max?: AdministratorMfaMethodMaxAggregateInputType
+}
+
+export type GetAdministratorMfaMethodAggregateType<T extends AdministratorMfaMethodAggregateArgs> = {
+      [P in keyof T & keyof AggregateAdministratorMfaMethod]: P extends '_count' | 'count'
+    ? T[P] extends true
+      ? number
+      : Prisma.GetScalarType<T[P], AggregateAdministratorMfaMethod[P]>
+    : Prisma.GetScalarType<T[P], AggregateAdministratorMfaMethod[P]>
+}
+
+
+
+
+export type AdministratorMfaMethodGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdministratorMfaMethodWhereInput
+  orderBy?: Prisma.AdministratorMfaMethodOrderByWithAggregationInput | Prisma.AdministratorMfaMethodOrderByWithAggregationInput[]
+  by: Prisma.AdministratorMfaMethodScalarFieldEnum[] | Prisma.AdministratorMfaMethodScalarFieldEnum
+  having?: Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput
+  take?: number
+  skip?: number
+  _count?: AdministratorMfaMethodCountAggregateInputType | true
+  _avg?: AdministratorMfaMethodAvgAggregateInputType
+  _sum?: AdministratorMfaMethodSumAggregateInputType
+  _min?: AdministratorMfaMethodMinAggregateInputType
+  _max?: AdministratorMfaMethodMaxAggregateInputType
+}
+
+export type AdministratorMfaMethodGroupByOutputType = {
+  id: string
+  userId: string
+  encryptedSecret: string | null
+  keyVersion: number
+  pendingExpiresAt: Date | null
+  enabledAt: Date | null
+  verifiedAt: Date | null
+  disabledAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+  _count: AdministratorMfaMethodCountAggregateOutputType | null
+  _avg: AdministratorMfaMethodAvgAggregateOutputType | null
+  _sum: AdministratorMfaMethodSumAggregateOutputType | null
+  _min: AdministratorMfaMethodMinAggregateOutputType | null
+  _max: AdministratorMfaMethodMaxAggregateOutputType | null
+}
+
+export type GetAdministratorMfaMethodGroupByPayload<T extends AdministratorMfaMethodGroupByArgs> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<AdministratorMfaMethodGroupByOutputType, T['by']> &
+      {
+        [P in ((keyof T) & (keyof AdministratorMfaMethodGroupByOutputType))]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], AdministratorMfaMethodGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], AdministratorMfaMethodGroupByOutputType[P]>
+      }
+    >
+  >
+
+
+
+export type AdministratorMfaMethodWhereInput = {
+  AND?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
+  OR?: Prisma.AdministratorMfaMethodWhereInput[]
+  NOT?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
+  id?: Prisma.StringFilter<"AdministratorMfaMethod"> | string
+  userId?: Prisma.StringFilter<"AdministratorMfaMethod"> | string
+  encryptedSecret?: Prisma.StringNullableFilter<"AdministratorMfaMethod"> | string | null
+  keyVersion?: Prisma.IntFilter<"AdministratorMfaMethod"> | number
+  pendingExpiresAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  enabledAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  disabledAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"AdministratorMfaMethod"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"AdministratorMfaMethod"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+}
+
+export type AdministratorMfaMethodOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrderInput | Prisma.SortOrder
+  keyVersion?: Prisma.SortOrder
+  pendingExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  enabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
+}
+
+export type AdministratorMfaMethodWhereUniqueInput = Prisma.AtLeast<{
+  id?: string
+  userId?: string
+  AND?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
+  OR?: Prisma.AdministratorMfaMethodWhereInput[]
+  NOT?: Prisma.AdministratorMfaMethodWhereInput | Prisma.AdministratorMfaMethodWhereInput[]
+  encryptedSecret?: Prisma.StringNullableFilter<"AdministratorMfaMethod"> | string | null
+  keyVersion?: Prisma.IntFilter<"AdministratorMfaMethod"> | number
+  pendingExpiresAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  enabledAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  disabledAt?: Prisma.DateTimeNullableFilter<"AdministratorMfaMethod"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"AdministratorMfaMethod"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"AdministratorMfaMethod"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+}, "id" | "userId">
+
+export type AdministratorMfaMethodOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrderInput | Prisma.SortOrder
+  keyVersion?: Prisma.SortOrder
+  pendingExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  enabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  _count?: Prisma.AdministratorMfaMethodCountOrderByAggregateInput
+  _avg?: Prisma.AdministratorMfaMethodAvgOrderByAggregateInput
+  _max?: Prisma.AdministratorMfaMethodMaxOrderByAggregateInput
+  _min?: Prisma.AdministratorMfaMethodMinOrderByAggregateInput
+  _sum?: Prisma.AdministratorMfaMethodSumOrderByAggregateInput
+}
+
+export type AdministratorMfaMethodScalarWhereWithAggregatesInput = {
+  AND?: Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput | Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput[]
+  OR?: Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput | Prisma.AdministratorMfaMethodScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"AdministratorMfaMethod"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"AdministratorMfaMethod"> | string
+  encryptedSecret?: Prisma.StringNullableWithAggregatesFilter<"AdministratorMfaMethod"> | string | null
+  keyVersion?: Prisma.IntWithAggregatesFilter<"AdministratorMfaMethod"> | number
+  pendingExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string | null
+  enabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string | null
+  disabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AdministratorMfaMethod"> | Date | string
+}
+
+export type AdministratorMfaMethodCreateInput = {
+  id?: string
+  encryptedSecret?: string | null
+  keyVersion?: number
+  pendingExpiresAt?: Date | string | null
+  enabledAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutAdministratorMfaInput
+}
+
+export type AdministratorMfaMethodUncheckedCreateInput = {
+  id?: string
+  userId: string
+  encryptedSecret?: string | null
+  keyVersion?: number
+  pendingExpiresAt?: Date | string | null
+  enabledAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdministratorMfaMethodUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutAdministratorMfaNestedInput
+}
+
+export type AdministratorMfaMethodUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdministratorMfaMethodCreateManyInput = {
+  id?: string
+  userId: string
+  encryptedSecret?: string | null
+  keyVersion?: number
+  pendingExpiresAt?: Date | string | null
+  enabledAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdministratorMfaMethodUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdministratorMfaMethodUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdministratorMfaMethodNullableScalarRelationFilter = {
+  is?: Prisma.AdministratorMfaMethodWhereInput | null
+  isNot?: Prisma.AdministratorMfaMethodWhereInput | null
+}
+
+export type AdministratorMfaMethodCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrder
+  keyVersion?: Prisma.SortOrder
+  pendingExpiresAt?: Prisma.SortOrder
+  enabledAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type AdministratorMfaMethodAvgOrderByAggregateInput = {
+  keyVersion?: Prisma.SortOrder
+}
+
+export type AdministratorMfaMethodMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrder
+  keyVersion?: Prisma.SortOrder
+  pendingExpiresAt?: Prisma.SortOrder
+  enabledAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type AdministratorMfaMethodMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  encryptedSecret?: Prisma.SortOrder
+  keyVersion?: Prisma.SortOrder
+  pendingExpiresAt?: Prisma.SortOrder
+  enabledAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type AdministratorMfaMethodSumOrderByAggregateInput = {
+  keyVersion?: Prisma.SortOrder
+}
+
+export type AdministratorMfaMethodCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.AdministratorMfaMethodCreateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdministratorMfaMethodCreateOrConnectWithoutUserInput
+  connect?: Prisma.AdministratorMfaMethodWhereUniqueInput
+}
+
+export type AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.AdministratorMfaMethodCreateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdministratorMfaMethodCreateOrConnectWithoutUserInput
+  connect?: Prisma.AdministratorMfaMethodWhereUniqueInput
+}
+
+export type AdministratorMfaMethodUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.AdministratorMfaMethodCreateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdministratorMfaMethodCreateOrConnectWithoutUserInput
+  upsert?: Prisma.AdministratorMfaMethodUpsertWithoutUserInput
+  disconnect?: Prisma.AdministratorMfaMethodWhereInput | boolean
+  delete?: Prisma.AdministratorMfaMethodWhereInput | boolean
+  connect?: Prisma.AdministratorMfaMethodWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdministratorMfaMethodUpdateToOneWithWhereWithoutUserInput, Prisma.AdministratorMfaMethodUpdateWithoutUserInput>, Prisma.AdministratorMfaMethodUncheckedUpdateWithoutUserInput>
+}
+
+export type AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.AdministratorMfaMethodCreateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdministratorMfaMethodCreateOrConnectWithoutUserInput
+  upsert?: Prisma.AdministratorMfaMethodUpsertWithoutUserInput
+  disconnect?: Prisma.AdministratorMfaMethodWhereInput | boolean
+  delete?: Prisma.AdministratorMfaMethodWhereInput | boolean
+  connect?: Prisma.AdministratorMfaMethodWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdministratorMfaMethodUpdateToOneWithWhereWithoutUserInput, Prisma.AdministratorMfaMethodUpdateWithoutUserInput>, Prisma.AdministratorMfaMethodUncheckedUpdateWithoutUserInput>
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type AdministratorMfaMethodCreateWithoutUserInput = {
+  id?: string
+  encryptedSecret?: string | null
+  keyVersion?: number
+  pendingExpiresAt?: Date | string | null
+  enabledAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdministratorMfaMethodUncheckedCreateWithoutUserInput = {
+  id?: string
+  encryptedSecret?: string | null
+  keyVersion?: number
+  pendingExpiresAt?: Date | string | null
+  enabledAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdministratorMfaMethodCreateOrConnectWithoutUserInput = {
+  where: Prisma.AdministratorMfaMethodWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdministratorMfaMethodCreateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedCreateWithoutUserInput>
+}
+
+export type AdministratorMfaMethodUpsertWithoutUserInput = {
+  update: Prisma.XOR<Prisma.AdministratorMfaMethodUpdateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.AdministratorMfaMethodCreateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedCreateWithoutUserInput>
+  where?: Prisma.AdministratorMfaMethodWhereInput
+}
+
+export type AdministratorMfaMethodUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.AdministratorMfaMethodWhereInput
+  data: Prisma.XOR<Prisma.AdministratorMfaMethodUpdateWithoutUserInput, Prisma.AdministratorMfaMethodUncheckedUpdateWithoutUserInput>
+}
+
+export type AdministratorMfaMethodUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdministratorMfaMethodUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  encryptedSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  keyVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  pendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  enabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+
+export type AdministratorMfaMethodSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  userId?: boolean
+  encryptedSecret?: boolean
+  keyVersion?: boolean
+  pendingExpiresAt?: boolean
+  enabledAt?: boolean
+  verifiedAt?: boolean
+  disabledAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["administratorMfaMethod"]>
+
+export type AdministratorMfaMethodSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  userId?: boolean
+  encryptedSecret?: boolean
+  keyVersion?: boolean
+  pendingExpiresAt?: boolean
+  enabledAt?: boolean
+  verifiedAt?: boolean
+  disabledAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["administratorMfaMethod"]>
+
+export type AdministratorMfaMethodSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  userId?: boolean
+  encryptedSecret?: boolean
+  keyVersion?: boolean
+  pendingExpiresAt?: boolean
+  enabledAt?: boolean
+  verifiedAt?: boolean
+  disabledAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["administratorMfaMethod"]>
+
+export type AdministratorMfaMethodSelectScalar = {
+  id?: boolean
+  userId?: boolean
+  encryptedSecret?: boolean
+  keyVersion?: boolean
+  pendingExpiresAt?: boolean
+  enabledAt?: boolean
+  verifiedAt?: boolean
+  disabledAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}
+
+export type AdministratorMfaMethodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "encryptedSecret" | "keyVersion" | "pendingExpiresAt" | "enabledAt" | "verifiedAt" | "disabledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["administratorMfaMethod"]>
+export type AdministratorMfaMethodInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type AdministratorMfaMethodIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type AdministratorMfaMethodIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+
+export type $AdministratorMfaMethodPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "AdministratorMfaMethod"
+  objects: {
+    user: Prisma.$UserPayload<ExtArgs>
+  }
+  scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
+    userId: string
+    encryptedSecret: string | null
+    keyVersion: number
+    pendingExpiresAt: Date | null
+    enabledAt: Date | null
+    verifiedAt: Date | null
+    disabledAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["administratorMfaMethod"]>
+  composites: {}
+}
+
+export type AdministratorMfaMethodGetPayload<S extends boolean | null | undefined | AdministratorMfaMethodDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload, S>
+
+export type AdministratorMfaMethodCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<AdministratorMfaMethodFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: AdministratorMfaMethodCountAggregateInputType | true
+  }
+
+export interface AdministratorMfaMethodDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdministratorMfaMethod'], meta: { name: 'AdministratorMfaMethod' } }
+  /**
+   * Find zero or one AdministratorMfaMethod that matches the filter.
+   * @param {AdministratorMfaMethodFindUniqueArgs} args - Arguments to find a AdministratorMfaMethod
+   * @example
+   * // Get one AdministratorMfaMethod
+   * const administratorMfaMethod = await prisma.administratorMfaMethod.findUnique({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findUnique<T extends AdministratorMfaMethodFindUniqueArgs>(args: Prisma.SelectSubset<T, AdministratorMfaMethodFindUniqueArgs<ExtArgs>>): Prisma.Prisma__AdministratorMfaMethodClient<runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find one AdministratorMfaMethod that matches the filter or throw an error with `error.code='P2025'`
+   * if no matches were found.
+   * @param {AdministratorMfaMethodFindUniqueOrThrowArgs} args - Arguments to find a AdministratorMfaMethod
+   * @example
+   * // Get one AdministratorMfaMethod
+   * const administratorMfaMethod = await prisma.administratorMfaMethod.findUniqueOrThrow({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findUniqueOrThrow<T extends AdministratorMfaMethodFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, AdministratorMfaMethodFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__AdministratorMfaMethodClient<runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find the first AdministratorMfaMethod that matches the filter.
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * @param {AdministratorMfaMethodFindFirstArgs} args - Arguments to find a AdministratorMfaMethod
+   * @example
+   * // Get one AdministratorMfaMethod
+   * const administratorMfaMethod = await prisma.administratorMfaMethod.findFirst({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findFirst<T extends AdministratorMfaMethodFindFirstArgs>(args?: Prisma.SelectSubset<T, AdministratorMfaMethodFindFirstArgs<ExtArgs>>): Prisma.Prisma__AdministratorMfaMethodClient<runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find the first AdministratorMfaMethod that matches the filter or
+   * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * @param {AdministratorMfaMethodFindFirstOrThrowArgs} args - Arguments to find a AdministratorMfaMethod
+   * @example
+   * // Get one AdministratorMfaMethod
+   * const administratorMfaMethod = await prisma.administratorMfaMethod.findFirstOrThrow({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findFirstOrThrow<T extends AdministratorMfaMethodFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, AdministratorMfaMethodFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__AdministratorMfaMethodClient<runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find zero or more AdministratorMfaMethods that matches the filter.
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * @param {AdministratorMfaMethodFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @example
+   * // Get all AdministratorMfaMethods
+   * const administratorMfaMethods = await prisma.administratorMfaMethod.findMany()
+   *
+   * // Get first 10 AdministratorMfaMethods
+   * const administratorMfaMethods = await prisma.administratorMfaMethod.findMany({ take: 10 })
+   *
+   * // Only select the `id`
+   * const administratorMfaMethodWithIdOnly = await prisma.administratorMfaMethod.findMany({ select: { id: true } })
+   *
+   */
+  findMany<T extends AdministratorMfaMethodFindManyArgs>(args?: Prisma.SelectSubset<T, AdministratorMfaMethodFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdministratorMfaMethodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+  /**
+   * Create a AdministratorMfaMethod.
+   * @param {AdministratorMfaMethodCreateArgs} args - Arguments to create a AdministratorMfaMethod.
    * @example
    * // Create one AdministratorMfaMethod
    * const AdministratorMfaMethod = await prisma.administratorMfaMethod.create({

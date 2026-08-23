@@ -1,4 +1,853 @@
-Y™Áäx-ÆÈ‹j◊ù¢Îi∫⁄+äßj[hëÈ‹¢ÈÌ€N7ı:-jZ.∂õ≠ñ)ﬁ≥P¢Ú¢FÜó2ó26ˆFRvVÊW&FVB'í&ó6÷‚FÚÊ˜BVFóBFó&V7F«í‚¢¢Ú¢W6∆ñÁB÷Fó6&∆R¢¢ÚÚ&ñˆ÷R÷ñvÊ˜&R÷∆¬∆ñÁC¢vVÊW&FVBfñ∆P¢ÚÚG2÷Êˆ6ÜV6∞¢Ú†¢¢FÜó2fñ∆RWá˜'G2FÜRñÁfˆñ6V÷ˆFV¬ÊBóG2&V∆FVBGóW2‡¢†¢¢	˘˙"ñ˜R6‚ñ◊˜'BFÜó2fñ∆RFó&V7F«í‡¢¢¶ñ◊˜'BGóR¢2'VÁFñ÷Rg&ˆ“$&ó6÷ˆ6∆ñVÁB˜'VÁFñ÷Rˆ6∆ñVÁB ¶ñ◊˜'BGóR¢2DVÁV◊2g&ˆ“"‚‚ˆVÁV◊2 ¶ñ◊˜'BGóR¢2&ó6÷g&ˆ“"‚‚ˆñÁFW&Ê¬˜&ó6÷Ê÷W76R †¢Ú¢†¢¢÷ˆFV¬ñÁfˆñ6P¢†¢¢¶Wá˜'BGóRñÁfˆñ6T÷ˆFV¬“'VÁFñ÷RÂGóW2Â&W7V«B‰FVfV«E6V∆V7Fñˆ„≈&ó6÷‚DñÁfˆñ6Uñ∆ˆC‡†¶Wá˜'BGóRvw&VvFTñÁfˆñ6R“∞¢ˆ6˜VÁC¢ñÁfˆñ6T6˜VÁDvw&VvFT˜WGWEGóR¬ÁV∆¿¢ˆfs¢ñÁfˆñ6Tftvw&VvFT˜WGWEGóR¬ÁV∆¿¢˜7V”¢ñÁfˆñ6U7V‘vw&VvFT˜WGWEGóR¬ÁV∆¿¢ˆ÷ñ„¢ñÁfˆñ6T÷ñ‰vw&VvFT˜WGWEGóR¬ÁV∆¿¢ˆ÷É¢ñÁfˆñ6T÷Ñvw&VvFT˜WGWEGóR¬ÁV∆¿ß–†¶Wá˜'BGóRñÁfˆñ6Tftvw&VvFT˜WGWEGóR“∞¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢FÑ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿ß–†¶Wá˜'BGóRñÁfˆñ6U7V‘vw&VvFT˜WGWEGóR“∞¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢FÑ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿ß–†¶Wá˜'BGóRñÁfˆñ6T÷ñ‰vw&VvFT˜WGWEGóR“∞¢ñC¢7G&ñÊr¬ÁV∆¿¢ÁV÷&W#¢7G&ñÊr¬ÁV∆¿¢˜&FW$ñC¢7G&ñÊr¬ÁV∆¿¢7FGW3¢DVÁV◊2‰ñÁfˆñ6U7FGW2¬ÁV∆¿¢7W'&VÊ7ì¢7G&ñÊr¬ÁV∆¿¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢FÑ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢ó77VVDC¢FFR¬ÁV∆¿¢7&VFVDC¢FFR¬ÁV∆¿ß–†¶Wá˜'BGóRñÁfˆñ6T÷Ñvw&VvFT˜WGWEGóR“∞¢ñC¢7G&ñÊr¬ÁV∆¿¢ÁV÷&W#¢7G&ñÊr¬ÁV∆¿¢˜&FW$ñC¢7G&ñÊr¬ÁV∆¿¢7FGW3¢DVÁV◊2‰ñÁfˆñ6U7FGW2¬ÁV∆¿¢7W'&VÊ7ì¢7G&ñÊr¬ÁV∆¿¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢FÑ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W"¬ÁV∆¿¢ó77VVDC¢FFR¬ÁV∆¿¢7&VFVDC¢FFR¬ÁV∆¿ß–†¶Wá˜'BGóRñÁfˆñ6T6˜VÁDvw&VvFT˜WGWEGóR“∞¢ñC¢ÁV÷&W ¢ÁV÷&W#¢ÁV÷&W ¢˜&FW$ñC¢ÁV÷&W ¢7FGW3¢ÁV÷&W ¢7W7Fˆ÷W%6Ê6Ü˜C¢ÁV÷&W ¢7W'&VÊ7ì¢ÁV÷&W ¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDC¢ÁV÷&W ¢7&VFVDC¢ÁV÷&W ¢ˆ∆√¢ÁV÷&W ß–††¶Wá˜'BGóRñÁfˆñ6Tftvw&VvFTñÁWEGóR“∞¢7V'F˜Fƒ÷ñÊ˜#Û¢G'VP¢FÑ÷ñÊ˜#Û¢G'VP¢F˜Fƒ÷ñÊ˜#Û¢G'VPß–†¶Wá˜'BGóRñÁfˆñ6U7V‘vw&VvFTñÁWEGóR“∞¢7V'F˜Fƒ÷ñÊ˜#Û¢G'VP¢FÑ÷ñÊ˜#Û¢G'VP¢F˜Fƒ÷ñÊ˜#Û¢G'VPß–†¶Wá˜'BGóRñÁfˆñ6T÷ñ‰vw&VvFTñÁWEGóR“∞¢ñCÛ¢G'VP¢ÁV÷&W#Û¢G'VP¢˜&FW$ñCÛ¢G'VP¢7FGW3Û¢G'VP¢7W'&VÊ7ìÛ¢G'VP¢7V'F˜Fƒ÷ñÊ˜#Û¢G'VP¢FÑ÷ñÊ˜#Û¢G'VP¢F˜Fƒ÷ñÊ˜#Û¢G'VP¢ó77VVDCÛ¢G'VP¢7&VFVDCÛ¢G'VPß–†¶Wá˜'BGóRñÁfˆñ6T÷Ñvw&VvFTñÁWEGóR“∞¢ñCÛ¢G'VP¢ÁV÷&W#Û¢G'VP¢˜&FW$ñCÛ¢G'VP¢7FGW3Û¢G'VP¢7W'&VÊ7ìÛ¢G'VP¢7V'F˜Fƒ÷ñÊ˜#Û¢G'VP¢FÑ÷ñÊ˜#Û¢G'VP¢F˜Fƒ÷ñÊ˜#Û¢G'VP¢ó77VVDCÛ¢G'VP¢7&VFVDCÛ¢G'VPß–†¶Wá˜'BGóRñÁfˆñ6T6˜VÁDvw&VvFTñÁWEGóR“∞¢ñCÛ¢G'VP¢ÁV÷&W#Û¢G'VP¢˜&FW$ñCÛ¢G'VP¢7FGW3Û¢G'VP¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢G'VP¢7W'&VÊ7ìÛ¢G'VP¢7V'F˜Fƒ÷ñÊ˜#Û¢G'VP¢FÑ÷ñÊ˜#Û¢G'VP¢F˜Fƒ÷ñÊ˜#Û¢G'VP¢ó77VVDCÛ¢G'VP¢7&VFVDCÛ¢G'VP¢ˆ∆√Û¢G'VPß–†¶Wá˜'BGóRñÁfˆñ6Tvw&VvFT&w3ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢Ú¢†¢¢fñ«FW"vÜñ6ÇñÁfˆñ6RFÚvw&VvFR‡¢¢¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁB˜6˜'FñÊr6˜'FñÊrFˆ77–¢†¢¢FWFW&÷ñÊRFÜR˜&FW"ˆbñÁfˆñ6W2FÚfWF6Ç‡¢¢¢˜&FW$'ìÛ¢&ó6÷‰ñÁfˆñ6T˜&FW$'ïvóFÖ&V∆Fñˆ‰ñÁWB¬&ó6÷‰ñÁfˆñ6T˜&FW$'ïvóFÖ&V∆Fñˆ‰ñÁWEµ–¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁB˜vñÊFñˆ‚67W'6˜"÷&6VB◊vñÊFñˆ‚7W'6˜"Fˆ77–¢†¢¢6WG2FÜR7F'B˜6óFñˆ‡¢¢¢7W'6˜#Û¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁB˜vñÊFñˆ‚vñÊFñˆ‚Fˆ77–¢†¢¢F∂R+ÊñÁfˆñ6W2g&ˆ“FÜR˜6óFñˆ‚ˆbFÜR7W'6˜"‡¢¢¢F∂SÛ¢ÁV÷&W ¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁB˜vñÊFñˆ‚vñÊFñˆ‚Fˆ77–¢†¢¢6∂óFÜRfó'7BÊñÁfˆñ6W2‡¢¢¢6∂óÛ¢ÁV÷&W ¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁBˆvw&VvFñˆÁ2vw&VvFñˆ‚Fˆ77–¢†¢¢6˜VÁB&WGW&ÊVBñÁfˆñ6W0¢¢¢¢ˆ6˜VÁCÛ¢G'VR¬ñÁfˆñ6T6˜VÁDvw&VvFTñÁWEGóP¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁBˆvw&VvFñˆÁ2vw&VvFñˆ‚Fˆ77–¢†¢¢6V∆V7BvÜñ6ÇfñV∆G2FÚfW&vP¢¢¢¢ˆfsÛ¢ñÁfˆñ6Tftvw&VvFTñÁWEGóP¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁBˆvw&VvFñˆÁ2vw&VvFñˆ‚Fˆ77–¢†¢¢6V∆V7BvÜñ6ÇfñV∆G2FÚ7V–¢¢¢¢˜7V”Û¢ñÁfˆñ6U7V‘vw&VvFTñÁWEGóP¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁBˆvw&VvFñˆÁ2vw&VvFñˆ‚Fˆ77–¢†¢¢6V∆V7BvÜñ6ÇfñV∆G2FÚfñÊBFÜR÷ñÊñ◊V“f«VP¢¢¢¢ˆ÷ñ„Û¢ñÁfˆñ6T÷ñ‰vw&VvFTñÁWEGóP¢Ú¢†¢¢¥∆ñÊ≤áGG3¢Ú˜wwrÁ&ó6÷ÊñÚˆFˆ72ˆ6ˆÊ6WG2ˆ6ˆ◊ˆÊVÁG2˜&ó6÷÷6∆ñVÁBˆvw&VvFñˆÁ2vw&VvFñˆ‚Fˆ77–¢†¢¢6V∆V7BvÜñ6ÇfñV∆G2FÚfñÊBFÜR÷Üñ◊V“f«VP¢¢¢¢ˆ÷ÉÛ¢ñÁfˆñ6T÷Ñvw&VvFTñÁWEGóPß–†¶Wá˜'BGóRvWDñÁfˆñ6Tvw&VvFUGóS≈BWáFVÊG2ñÁfˆñ6Tvw&VvFT&w3‚“∞¢µñ‚∂WñˆbBb∂Wñˆbvw&VvFTñÁfˆñ6U”¢WáFVÊG2uˆ6˜VÁBr¬v6˜VÁBp¢ÚEµ“WáFVÊG2G'VP¢ÚÁV÷&W ¢¢&ó6÷‰vWE66∆%GóS≈Eµ“¬vw&VvFTñÁfˆñ6Uµ”‡¢¢&ó6÷‰vWE66∆%GóS≈Eµ“¬vw&VvFTñÁfˆñ6Uµ”‡ß–††††¶Wá˜'BGóRñÁfˆñ6Tw&˜W'î&w3ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@¢˜&FW$'ìÛ¢&ó6÷‰ñÁfˆñ6T˜&FW$'ïvóFÑvw&VvFñˆ‰ñÁWB¬&ó6÷‰ñÁfˆñ6T˜&FW$'ïvóFÑvw&VvFñˆ‰ñÁWEµ–¢'ì¢&ó6÷‰ñÁfˆñ6U66∆$fñV∆DVÁV’µ“¬&ó6÷‰ñÁfˆñ6U66∆$fñV∆DVÁV–¢ÜfñÊsÛ¢&ó6÷‰ñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁW@¢F∂SÛ¢ÁV÷&W ¢6∂óÛ¢ÁV÷&W ¢ˆ6˜VÁCÛ¢ñÁfˆñ6T6˜VÁDvw&VvFTñÁWEGóR¬G'VP¢ˆfsÛ¢ñÁfˆñ6Tftvw&VvFTñÁWEGóP¢˜7V”Û¢ñÁfˆñ6U7V‘vw&VvFTñÁWEGóP¢ˆ÷ñ„Û¢ñÁfˆñ6T÷ñ‰vw&VvFTñÁWEGóP¢ˆ÷ÉÛ¢ñÁfˆñ6T÷Ñvw&VvFTñÁWEGóPß–†¶Wá˜'BGóRñÁfˆñ6Tw&˜W'î˜WGWEGóR“∞¢ñC¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢˜&FW$ñC¢7G&ñÊp¢7FGW3¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢'VÁFñ÷R‰ß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDC¢FFR¬ÁV∆¿¢7&VFVDC¢FFP¢ˆ6˜VÁC¢ñÁfˆñ6T6˜VÁDvw&VvFT˜WGWEGóR¬ÁV∆¿¢ˆfs¢ñÁfˆñ6Tftvw&VvFT˜WGWEGóR¬ÁV∆¿¢˜7V”¢ñÁfˆñ6U7V‘vw&VvFT˜WGWEGóR¬ÁV∆¿¢ˆ÷ñ„¢ñÁfˆñ6T÷ñ‰vw&VvFT˜WGWEGóR¬ÁV∆¿¢ˆ÷É¢ñÁfˆñ6T÷Ñvw&VvFT˜WGWEGóR¬ÁV∆¿ß–†¶Wá˜'BGóRvWDñÁfˆñ6Tw&˜W'ïñ∆ˆC≈BWáFVÊG2ñÁfˆñ6Tw&˜W'î&w3‚“&ó6÷Â&ó6÷&ˆ÷ó6S¿¢'&ì¿¢&ó6÷Âñ6¥VÁV÷W&&∆SƒñÁfˆñ6Tw&˜W'î˜WGWEGóR¬E≤v'íu”‚`¢∞¢µñ‚ÇÜ∂WñˆbBíbÜ∂WñˆbñÁfˆñ6Tw&˜W'î˜WGWEGóRíï”¢WáFVÊG2uˆ6˜VÁBp¢ÚEµ“WáFVÊG2&ˆˆ∆V‡¢ÚÁV÷&W ¢¢&ó6÷‰vWE66∆%GóS≈Eµ“¬ñÁfˆñ6Tw&˜W'î˜WGWEGóUµ”‡¢¢&ó6÷‰vWE66∆%GóS≈Eµ“¬ñÁfˆñ6Tw&˜W'î˜WGWEGóUµ”‡¢–¢‡¢‡†††¶Wá˜'BGóRñÁfˆñ6UvÜW&TñÁWB“∞¢‰CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ó6÷‰ñÁfˆñ6UvÜW&TñÁWEµ–¢ı#Û¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWEµ–¢‰ıCÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ó6÷‰ñÁfˆñ6UvÜW&TñÁWEµ–¢ñCÛ¢&ó6÷Â7G&ñÊtfñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢˜&FW$ñCÛ¢&ó6÷Â7G&ñÊtfñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñ«FW#¬$ñÁfˆñ6R#‚¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰fñ«FW#¬$ñÁfˆñ6R#‡¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰FFUFñ÷TÁV∆∆&∆Tfñ«FW#¬$ñÁfˆñ6R#‚¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷Tfñ«FW#¬$ñÁfˆñ6R#‚¬FFR¬7G&ñÊp¢˜&FW#Û¢&ó6÷ÂÑı#≈&ó6÷‰˜&FW%66∆%&V∆Fñˆ‰fñ«FW"¬&ó6÷‰˜&FW%vÜW&TñÁWC‡¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊT∆ó7E&V∆Fñˆ‰fñ«FW ß–†¶Wá˜'BGóRñÁfˆñ6T˜&FW$'ïvóFÖ&V∆Fñˆ‰ñÁWB“∞¢ñCÛ¢&ó6÷Â6˜'D˜&FW ¢ÁV÷&W#Û¢&ó6÷Â6˜'D˜&FW ¢˜&FW$ñCÛ¢&ó6÷Â6˜'D˜&FW ¢7FGW3Û¢&ó6÷Â6˜'D˜&FW ¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷Â6˜'D˜&FW ¢7W'&VÊ7ìÛ¢&ó6÷Â6˜'D˜&FW ¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢ó77VVDCÛ¢&ó6÷Â6˜'D˜&FW$ñÁWB¬&ó6÷Â6˜'D˜&FW ¢7&VFVDCÛ¢&ó6÷Â6˜'D˜&FW ¢˜&FW#Û¢&ó6÷‰˜&FW$˜&FW$'ïvóFÖ&V∆Fñˆ‰ñÁW@¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊT˜&FW$'ï&V∆Fñˆ‰vw&VvFTñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UvÜW&UVÊóVTñÁWB“&ó6÷‰D∆V7C«∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#Û¢7G&ñÊp¢˜&FW$ñCÛ¢7G&ñÊp¢‰CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ó6÷‰ñÁfˆñ6UvÜW&TñÁWEµ–¢ı#Û¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWEµ–¢‰ıCÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ó6÷‰ñÁfˆñ6UvÜW&TñÁWEµ–¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñ«FW#¬$ñÁfˆñ6R#‚¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰fñ«FW#¬$ñÁfˆñ6R#‡¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰FFUFñ÷TÁV∆∆&∆Tfñ«FW#¬$ñÁfˆñ6R#‚¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷Tfñ«FW#¬$ñÁfˆñ6R#‚¬FFR¬7G&ñÊp¢˜&FW#Û¢&ó6÷ÂÑı#≈&ó6÷‰˜&FW%66∆%&V∆Fñˆ‰fñ«FW"¬&ó6÷‰˜&FW%vÜW&TñÁWC‡¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊT∆ó7E&V∆Fñˆ‰fñ«FW ß“¬&ñB"¬&ÁV÷&W""¬&˜&FW$ñB#‡†¶Wá˜'BGóRñÁfˆñ6T˜&FW$'ïvóFÑvw&VvFñˆ‰ñÁWB“∞¢ñCÛ¢&ó6÷Â6˜'D˜&FW ¢ÁV÷&W#Û¢&ó6÷Â6˜'D˜&FW ¢˜&FW$ñCÛ¢&ó6÷Â6˜'D˜&FW ¢7FGW3Û¢&ó6÷Â6˜'D˜&FW ¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷Â6˜'D˜&FW ¢7W'&VÊ7ìÛ¢&ó6÷Â6˜'D˜&FW ¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢ó77VVDCÛ¢&ó6÷Â6˜'D˜&FW$ñÁWB¬&ó6÷Â6˜'D˜&FW ¢7&VFVDCÛ¢&ó6÷Â6˜'D˜&FW ¢ˆ6˜VÁCÛ¢&ó6÷‰ñÁfˆñ6T6˜VÁD˜&FW$'îvw&VvFTñÁW@¢ˆfsÛ¢&ó6÷‰ñÁfˆñ6Tft˜&FW$'îvw&VvFTñÁW@¢ˆ÷ÉÛ¢&ó6÷‰ñÁfˆñ6T÷Ñ˜&FW$'îvw&VvFTñÁW@¢ˆ÷ñ„Û¢&ó6÷‰ñÁfˆñ6T÷ñ‰˜&FW$'îvw&VvFTñÁW@¢˜7V”Û¢&ó6÷‰ñÁfˆñ6U7V‘˜&FW$'îvw&VvFTñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁWB“∞¢‰CÛ¢&ó6÷‰ñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁWB¬&ó6÷‰ñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁWEµ–¢ı#Û¢&ó6÷‰ñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁWEµ–¢‰ıCÛ¢&ó6÷‰ñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁWB¬&ó6÷‰ñÁfˆñ6U66∆%vÜW&UvóFÑvw&VvFW4ñÁWEµ–¢ñCÛ¢&ó6÷Â7G&ñÊuvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊuvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢˜&FW$ñCÛ¢&ó6÷Â7G&ñÊuvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW5vóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆÂvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‡¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊuvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁEvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁEvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁEvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰FFUFñ÷TÁV∆∆&∆UvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷UvóFÑvw&VvFW4fñ«FW#¬$ñÁfˆñ6R#‚¬FFR¬7G&ñÊpß–†¶Wá˜'BGóRñÁfˆñ6T7&VFTñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊp¢˜&FW#¢&ó6÷‰˜&FW$7&VFTÊW7FVDˆÊUvóFÜ˜WDñÁfˆñ6TñÁW@¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊT7&VFTÊW7FVD÷ÁïvóFÜ˜WDñÁfˆñ6TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VD7&VFTñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢˜&FW$ñC¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊp¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊUVÊ6ÜV6∂VD7&VFTÊW7FVD÷ÁïvóFÜ˜WDñÁfˆñ6TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UWFFTñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊp¢˜&FW#Û¢&ó6÷‰˜&FW%WFFTˆÊU&WVó&VEvóFÜ˜WDñÁfˆñ6TÊW7FVDñÁW@¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊUWFFT÷ÁïvóFÜ˜WDñÁfˆñ6TÊW7FVDñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VEWFFTñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢˜&FW$ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊp¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊUVÊ6ÜV6∂VEWFFT÷ÁïvóFÜ˜WDñÁfˆñ6TÊW7FVDñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6T7&VFT÷ÁîñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢˜&FW$ñC¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊpß–†¶Wá˜'BGóRñÁfˆñ6UWFFT÷Áî◊WFFñˆ‰ñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊpß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VEWFFT÷ÁîñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢˜&FW$ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊpß–†¶Wá˜'BGóRñÁfˆñ6TÁV∆∆&∆U66∆%&V∆Fñˆ‰fñ«FW"“∞¢ó3Û¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬ÁV∆¿¢ó4Ê˜CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬ÁV∆¿ß–†¶Wá˜'BGóRñÁfˆñ6T6˜VÁD˜&FW$'îvw&VvFTñÁWB“∞¢ñCÛ¢&ó6÷Â6˜'D˜&FW ¢ÁV÷&W#Û¢&ó6÷Â6˜'D˜&FW ¢˜&FW$ñCÛ¢&ó6÷Â6˜'D˜&FW ¢7FGW3Û¢&ó6÷Â6˜'D˜&FW ¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷Â6˜'D˜&FW ¢7W'&VÊ7ìÛ¢&ó6÷Â6˜'D˜&FW ¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢ó77VVDCÛ¢&ó6÷Â6˜'D˜&FW ¢7&VFVDCÛ¢&ó6÷Â6˜'D˜&FW ß–†¶Wá˜'BGóRñÁfˆñ6Tft˜&FW$'îvw&VvFTñÁWB“∞¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ß–†¶Wá˜'BGóRñÁfˆñ6T÷Ñ˜&FW$'îvw&VvFTñÁWB“∞¢ñCÛ¢&ó6÷Â6˜'D˜&FW ¢ÁV÷&W#Û¢&ó6÷Â6˜'D˜&FW ¢˜&FW$ñCÛ¢&ó6÷Â6˜'D˜&FW ¢7FGW3Û¢&ó6÷Â6˜'D˜&FW ¢7W'&VÊ7ìÛ¢&ó6÷Â6˜'D˜&FW ¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢ó77VVDCÛ¢&ó6÷Â6˜'D˜&FW ¢7&VFVDCÛ¢&ó6÷Â6˜'D˜&FW ß–†¶Wá˜'BGóRñÁfˆñ6T÷ñ‰˜&FW$'îvw&VvFTñÁWB“∞¢ñCÛ¢&ó6÷Â6˜'D˜&FW ¢ÁV÷&W#Û¢&ó6÷Â6˜'D˜&FW ¢˜&FW$ñCÛ¢&ó6÷Â6˜'D˜&FW ¢7FGW3Û¢&ó6÷Â6˜'D˜&FW ¢7W'&VÊ7ìÛ¢&ó6÷Â6˜'D˜&FW ¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢ó77VVDCÛ¢&ó6÷Â6˜'D˜&FW ¢7&VFVDCÛ¢&ó6÷Â6˜'D˜&FW ß–†¶Wá˜'BGóRñÁfˆñ6U7V‘˜&FW$'îvw&VvFTñÁWB“∞¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢FÑ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷Â6˜'D˜&FW ß–†¶Wá˜'BGóRñÁfˆñ6U66∆%&V∆Fñˆ‰fñ«FW"“∞¢ó3Û¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@¢ó4Ê˜CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6T7&VFTÊW7FVDˆÊUvóFÜ˜WD˜&FW$ñÁWB“∞¢7&VFSÛ¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWC‡¢6ˆÊÊV7D˜$7&VFSÛ¢&ó6÷‰ñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD˜&FW$ñÁW@¢6ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VD7&VFTÊW7FVDˆÊUvóFÜ˜WD˜&FW$ñÁWB“∞¢7&VFSÛ¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWC‡¢6ˆÊÊV7D˜$7&VFSÛ¢&ó6÷‰ñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD˜&FW$ñÁW@¢6ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UWFFTˆÊUvóFÜ˜WD˜&FW$ÊW7FVDñÁWB“∞¢7&VFSÛ¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWC‡¢6ˆÊÊV7D˜$7&VFSÛ¢&ó6÷‰ñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD˜&FW$ñÁW@¢W6W'CÛ¢&ó6÷‰ñÁfˆñ6UW6W'EvóFÜ˜WD˜&FW$ñÁW@¢Fó66ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ˆˆ∆V‡¢FV∆WFSÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ˆˆ∆V‡¢6ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@¢WFFSÛ¢&ó6÷ÂÑı#≈&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUFÙˆÊUvóFÖvÜW&UvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD˜&FW$ñÁWC‚¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD˜&FW$ñÁWC‡ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VEWFFTˆÊUvóFÜ˜WD˜&FW$ÊW7FVDñÁWB“∞¢7&VFSÛ¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWC‡¢6ˆÊÊV7D˜$7&VFSÛ¢&ó6÷‰ñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD˜&FW$ñÁW@¢W6W'CÛ¢&ó6÷‰ñÁfˆñ6UW6W'EvóFÜ˜WD˜&FW$ñÁW@¢Fó66ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ˆˆ∆V‡¢FV∆WFSÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁWB¬&ˆˆ∆V‡¢6ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@¢WFFSÛ¢&ó6÷ÂÑı#≈&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUFÙˆÊUvóFÖvÜW&UvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD˜&FW$ñÁWC‚¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD˜&FW$ñÁWC‡ß–†¶Wá˜'BGóRVÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB“∞¢6WCÛ¢DVÁV◊2‰ñÁfˆñ6U7FGW0ß–†¶Wá˜'BGóRñÁfˆñ6T7&VFTÊW7FVDˆÊUvóFÜ˜WD∆ñÊW4ñÁWB“∞¢7&VFSÛ¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD∆ñÊW4ñÁWC‡¢6ˆÊÊV7D˜$7&VFSÛ¢&ó6÷‰ñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD∆ñÊW4ñÁW@¢6ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UWFFTˆÊU&WVó&VEvóFÜ˜WD∆ñÊW4ÊW7FVDñÁWB“∞¢7&VFSÛ¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD∆ñÊW4ñÁWC‡¢6ˆÊÊV7D˜$7&VFSÛ¢&ó6÷‰ñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD∆ñÊW4ñÁW@¢W6W'CÛ¢&ó6÷‰ñÁfˆñ6UW6W'EvóFÜ˜WD∆ñÊW4ñÁW@¢6ˆÊÊV7CÛ¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@¢WFFSÛ¢&ó6÷ÂÑı#≈&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUFÙˆÊUvóFÖvÜW&UvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD∆ñÊW4ñÁWC‚¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD∆ñÊW4ñÁWC‡ß–†¶Wá˜'BGóRñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊp¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊT7&VFTÊW7FVD÷ÁïvóFÜ˜WDñÁfˆñ6TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊp¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊUVÊ6ÜV6∂VD7&VFTÊW7FVD÷ÁïvóFÜ˜WDñÁfˆñ6TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD˜&FW$ñÁWB“∞¢vÜW&S¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@¢7&VFS¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWC‡ß–†¶Wá˜'BGóRñÁfˆñ6UW6W'EvóFÜ˜WD˜&FW$ñÁWB“∞¢WFFS¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD˜&FW$ñÁWC‡¢7&VFS¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD˜&FW$ñÁWC‡¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UWFFUFÙˆÊUvóFÖvÜW&UvóFÜ˜WD˜&FW$ñÁWB“∞¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@¢FF¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD˜&FW$ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD˜&FW$ñÁWC‡ß–†¶Wá˜'BGóRñÁfˆñ6UWFFUvóFÜ˜WD˜&FW$ñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊp¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊUWFFT÷ÁïvóFÜ˜WDñÁfˆñ6TÊW7FVDñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD˜&FW$ñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊp¢∆ñÊW3Û¢&ó6÷‰ñÁfˆñ6T∆ñÊUVÊ6ÜV6∂VEWFFT÷ÁïvóFÜ˜WDñÁfˆñ6TÊW7FVDñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6T7&VFUvóFÜ˜WD∆ñÊW4ñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊp¢˜&FW#¢&ó6÷‰˜&FW$7&VFTÊW7FVDˆÊUvóFÜ˜WDñÁfˆñ6TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD∆ñÊW4ñÁWB“∞¢ñCÛ¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢˜&FW$ñC¢7G&ñÊp¢7FGW3Û¢DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜C¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ì¢7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢FÑ÷ñÊ˜#¢ÁV÷&W ¢F˜Fƒ÷ñÊ˜#¢ÁV÷&W ¢ó77VVDCÛ¢FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢FFR¬7G&ñÊpß–†¶Wá˜'BGóRñÁfˆñ6T7&VFT˜$6ˆÊÊV7EvóFÜ˜WD∆ñÊW4ñÁWB“∞¢vÜW&S¢&ó6÷‰ñÁfˆñ6UvÜW&UVÊóVTñÁW@¢7&VFS¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD∆ñÊW4ñÁWC‡ß–†¶Wá˜'BGóRñÁfˆñ6UW6W'EvóFÜ˜WD∆ñÊW4ñÁWB“∞¢WFFS¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD∆ñÊW4ñÁWC‡¢7&VFS¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6T7&VFUvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VD7&VFUvóFÜ˜WD∆ñÊW4ñÁWC‡¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UWFFUFÙˆÊUvóFÖvÜW&UvóFÜ˜WD∆ñÊW4ñÁWB“∞¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6UvÜW&TñÁW@¢FF¢&ó6÷ÂÑı#≈&ó6÷‰ñÁfˆñ6UWFFUvóFÜ˜WD∆ñÊW4ñÁWB¬&ó6÷‰ñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD∆ñÊW4ñÁWC‡ß–†¶Wá˜'BGóRñÁfˆñ6UWFFUvóFÜ˜WD∆ñÊW4ñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊp¢˜&FW#Û¢&ó6÷‰˜&FW%WFFTˆÊU&WVó&VEvóFÜ˜WDñÁfˆñ6TÊW7FVDñÁW@ß–†¶Wá˜'BGóRñÁfˆñ6UVÊ6ÜV6∂VEWFFUvóFÜ˜WD∆ñÊW4ñÁWB“∞¢ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢ÁV÷&W#Û¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢˜&FW$ñCÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7FGW3Û¢&ó6÷‰VÁV‘ñÁfˆñ6U7FGW4fñV∆EWFFT˜W&FñˆÁ4ñÁWB¬DVÁV◊2‰ñÁfˆñ6U7FGW0¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ó6÷‰ß6ˆ‰ÁV∆≈f«VTñÁWB¬'VÁFñ÷R‰ñÁWDß6ˆÂf«VP¢7W'&VÊ7ìÛ¢&ó6÷Â7G&ñÊtfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬7G&ñÊp¢7V'F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢FÑ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢F˜Fƒ÷ñÊ˜#Û¢&ó6÷‰ñÁDfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬ÁV÷&W ¢ó77VVDCÛ¢&ó6÷‰ÁV∆∆&∆TFFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊr¬ÁV∆¿¢7&VFVDCÛ¢&ó6÷‰FFUFñ÷TfñV∆EWFFT˜W&FñˆÁ4ñÁWB¬FFR¬7G&ñÊpß–††¢Ú¢†¢¢6˜VÁBGóRñÁfˆñ6T6˜VÁD˜WGWEGóP¢¢†¶Wá˜'BGóRñÁfˆñ6T6˜VÁD˜WGWEGóR“∞¢∆ñÊW3¢ÁV÷&W ß–†¶Wá˜'BGóRñÁfˆñ6T6˜VÁD˜WGWEGóU6V∆V7CƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢∆ñÊW3Û¢&ˆˆ∆V‚¬ñÁfˆñ6T6˜VÁD˜WGWEGóT6˜VÁD∆ñÊW4&w0ß–†¢Ú¢†¢¢ñÁfˆñ6T6˜VÁD˜WGWEGóRvóFÜ˜WB7Fñˆ‡¢¢¶Wá˜'BGóRñÁfˆñ6T6˜VÁD˜WGWEGóTFVfV«D&w3ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢Ú¢†¢¢6V∆V7B7V6ñfñ2fñV∆G2FÚfWF6Çg&ˆ“FÜRñÁfˆñ6T6˜VÁD˜WGWEGóP¢¢¢6V∆V7CÛ¢&ó6÷‰ñÁfˆñ6T6˜VÁD˜WGWEGóU6V∆V7CƒWáD&w3‚¬ÁV∆¿ß–†¢Ú¢†¢¢ñÁfˆñ6T6˜VÁD˜WGWEGóRvóFÜ˜WB7Fñˆ‡¢¢¶Wá˜'BGóRñÁfˆñ6T6˜VÁD˜WGWEGóT6˜VÁD∆ñÊW4&w3ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢vÜW&SÛ¢&ó6÷‰ñÁfˆñ6T∆ñÊUvÜW&TñÁW@ß–††¶Wá˜'BGóRñÁfˆñ6U6V∆V7CƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰vWE6V∆V7C«∞¢ñCÛ¢&ˆˆ∆V‡¢ÁV÷&W#Û¢&ˆˆ∆V‡¢˜&FW$ñCÛ¢&ˆˆ∆V‡¢7FGW3Û¢&ˆˆ∆V‡¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ˆˆ∆V‡¢7W'&VÊ7ìÛ¢&ˆˆ∆V‡¢7V'F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢FÑ÷ñÊ˜#Û¢&ˆˆ∆V‡¢F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢ó77VVDCÛ¢&ˆˆ∆V‡¢7&VFVDCÛ¢&ˆˆ∆V‡¢˜&FW#Û¢&ˆˆ∆V‚¬&ó6÷‰˜&FW$FVfV«D&w3ƒWáD&w3‡¢∆ñÊW3Û¢&ˆˆ∆V‚¬&ó6÷‰ñÁfˆñ6RF∆ñÊW4&w3ƒWáD&w3‡¢ˆ6˜VÁCÛ¢&ˆˆ∆V‚¬&ó6÷‰ñÁfˆñ6T6˜VÁD˜WGWEGóTFVfV«D&w3ƒWáD&w3‡ß“¬WáD&w5≤'&W7V«B%’≤&ñÁfˆñ6R%”‡†¶Wá˜'BGóRñÁfˆñ6U6V∆V7D7&VFT÷ÁîÊE&WGW&„ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰vWE6V∆V7C«∞¢ñCÛ¢&ˆˆ∆V‡¢ÁV÷&W#Û¢&ˆˆ∆V‡¢˜&FW$ñCÛ¢&ˆˆ∆V‡¢7FGW3Û¢&ˆˆ∆V‡¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ˆˆ∆V‡¢7W'&VÊ7ìÛ¢&ˆˆ∆V‡¢7V'F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢FÑ÷ñÊ˜#Û¢&ˆˆ∆V‡¢F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢ó77VVDCÛ¢&ˆˆ∆V‡¢7&VFVDCÛ¢&ˆˆ∆V‡¢˜&FW#Û¢&ˆˆ∆V‚¬&ó6÷‰˜&FW$FVfV«D&w3ƒWáD&w3‡ß“¬WáD&w5≤'&W7V«B%’≤&ñÁfˆñ6R%”‡†¶Wá˜'BGóRñÁfˆñ6U6V∆V7EWFFT÷ÁîÊE&WGW&„ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰vWE6V∆V7C«∞¢ñCÛ¢&ˆˆ∆V‡¢ÁV÷&W#Û¢&ˆˆ∆V‡¢˜&FW$ñCÛ¢&ˆˆ∆V‡¢7FGW3Û¢&ˆˆ∆V‡¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ˆˆ∆V‡¢7W'&VÊ7ìÛ¢&ˆˆ∆V‡¢7V'F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢FÑ÷ñÊ˜#Û¢&ˆˆ∆V‡¢F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢ó77VVDCÛ¢&ˆˆ∆V‡¢7&VFVDCÛ¢&ˆˆ∆V‡¢˜&FW#Û¢&ˆˆ∆V‚¬&ó6÷‰˜&FW$FVfV«D&w3ƒWáD&w3‡ß“¬WáD&w5≤'&W7V«B%’≤&ñÁfˆñ6R%”‡†¶Wá˜'BGóRñÁfˆñ6U6V∆V7E66∆"“∞¢ñCÛ¢&ˆˆ∆V‡¢ÁV÷&W#Û¢&ˆˆ∆V‡¢˜&FW$ñCÛ¢&ˆˆ∆V‡¢7FGW3Û¢&ˆˆ∆V‡¢7W7Fˆ÷W%6Ê6Ü˜CÛ¢&ˆˆ∆V‡¢7W'&VÊ7ìÛ¢&ˆˆ∆V‡¢7V'F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢FÑ÷ñÊ˜#Û¢&ˆˆ∆V‡¢F˜Fƒ÷ñÊ˜#Û¢&ˆˆ∆V‡¢ó77VVDCÛ¢&ˆˆ∆V‡¢7&VFVDCÛ¢&ˆˆ∆V‡ß–†¶Wá˜'BGóRñÁfˆñ6Tˆ÷óCƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰vWDˆ÷óC¬&ñB"¬&ÁV÷&W""¬&˜&FW$ñB"¬'7FGW2"¬&7W7Fˆ÷W%6Ê6Ü˜B"¬&7W'&VÊ7í"¬'7V'F˜Fƒ÷ñÊ˜""¬'FÑ÷ñÊ˜""¬'F˜Fƒ÷ñÊ˜""¬&ó77VVDB"¬&7&VFVDB"¬WáD&w5≤'&W7V«B%’≤&ñÁfˆñ6R%”‡¶Wá˜'BGóRñÁfˆñ6TñÊ6«VFSƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢˜&FW#Û¢&ˆˆ∆V‚¬&ó6÷‰˜&FW$FVfV«D&w3ƒWáD&w3‡¢∆ñÊW3Û¢&ˆˆ∆V‚¬&ó6÷‰ñÁfˆñ6RF∆ñÊW4&w3ƒWáD&w3‡¢ˆ6˜VÁCÛ¢&ˆˆ∆V‚¬&ó6÷‰ñÁfˆñ6T6˜VÁD˜WGWEGóTFVfV«D&w3ƒWáD&w3‡ß–¶Wá˜'BGóRñÁfˆñ6TñÊ6«VFT7&VFT÷ÁîÊE&WGW&„ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢˜&FW#Û¢&ˆˆ∆V‚¬&ó6÷‰˜&FW$FVfV«D&w3ƒWáD&w3‡ß–¶Wá˜'BGóRñÁfˆñ6TñÊ6«VFUWFFT÷ÁîÊE&WGW&„ƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢˜&FW#Û¢&ˆˆ∆V‚¬&ó6÷‰˜&FW$FVfV«D&w3ƒWáD&w3‡ß–†¶Wá˜'BGóRDñÁfˆñ6Uñ∆ˆCƒWáD&w2WáFVÊG2'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰ñÁFW&Êƒ&w2“'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰FVfV«D&w3‚“∞¢Ê÷S¢$ñÁfˆñ6R ¢ˆ&¶V7G3¢∞¢˜&FW#¢&ó6÷‚D˜&FW%ñ∆ˆCƒWáD&w3‡¢∆ñÊW3¢&ó6÷‚DñÁfˆñ6T∆ñÊUñ∆ˆCƒWáD&w3Âµ–¢–¢66∆'3¢'VÁFñ÷RÂGóW2‰WáFVÁ6ñˆÁ2‰vWEñ∆ˆE&W7V«C«∞¢ñC¢7G&ñÊp¢ÁV÷&W#¢7G&ñÊp¢˜&FW$ñC¢>7ˆ⁄$z{-ÆÈ‹j◊ùqueArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+/* !!! This is code generated by Prisma. Do not edit directly. !!! */
+/* eslint-disable */
+// biome-ignore-all lint: generated file
+// @ts-nocheck
+/*
+ * This file exports the `Invoice` model and its related types.
+ *
+ * üü¢ You can import this file directly.
+ */
+import type * as runtime from "@prisma/client/runtime/client"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
+
+/**
+ * Model Invoice
+ *
+ */
+export type InvoiceModel = runtime.Types.Result.DefaultSelection<Prisma.$InvoicePayload>
+
+export type AggregateInvoice = {
+  _count: InvoiceCountAggregateOutputType | null
+  _avg: InvoiceAvgAggregateOutputType | null
+  _sum: InvoiceSumAggregateOutputType | null
+  _min: InvoiceMinAggregateOutputType | null
+  _max: InvoiceMaxAggregateOutputType | null
+}
+
+export type InvoiceAvgAggregateOutputType = {
+  subtotalMinor: number | null
+  taxMinor: number | null
+  totalMinor: number | null
+}
+
+export type InvoiceSumAggregateOutputType = {
+  subtotalMinor: number | null
+  taxMinor: number | null
+  totalMinor: number | null
+}
+
+export type InvoiceMinAggregateOutputType = {
+  id: string | null
+  number: string | null
+  orderId: string | null
+  status: $Enums.InvoiceStatus | null
+  currency: string | null
+  subtotalMinor: number | null
+  taxMinor: number | null
+  totalMinor: number | null
+  issuedAt: Date | null
+  createdAt: Date | null
+}
+
+export type InvoiceMaxAggregateOutputType = {
+  id: string | null
+  number: string | null
+  orderId: string | null
+  status: $Enums.InvoiceStatus | null
+  currency: string | null
+  subtotalMinor: number | null
+  taxMinor: number | null
+  totalMinor: number | null
+  issuedAt: Date | null
+  createdAt: Date | null
+}
+
+export type InvoiceCountAggregateOutputType = {
+  id: number
+  number: number
+  orderId: number
+  status: number
+  customerSnapshot: number
+  currency: number
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt: number
+  createdAt: number
+  _all: number
+}
+
+
+export type InvoiceAvgAggregateInputType = {
+  subtotalMinor?: true
+  taxMinor?: true
+  totalMinor?: true
+}
+
+export type InvoiceSumAggregateInputType = {
+  subtotalMinor?: true
+  taxMinor?: true
+  totalMinor?: true
+}
+
+export type InvoiceMinAggregateInputType = {
+  id?: true
+  number?: true
+  orderId?: true
+  status?: true
+  currency?: true
+  subtotalMinor?: true
+  taxMinor?: true
+  totalMinor?: true
+  issuedAt?: true
+  createdAt?: true
+}
+
+export type InvoiceMaxAggregateInputType = {
+  id?: true
+  number?: true
+  orderId?: true
+  status?: true
+  currency?: true
+  subtotalMinor?: true
+  taxMinor?: true
+  totalMinor?: true
+  issuedAt?: true
+  createdAt?: true
+}
+
+export type InvoiceCountAggregateInputType = {
+  id?: true
+  number?: true
+  orderId?: true
+  status?: true
+  customerSnapshot?: true
+  currency?: true
+  subtotalMinor?: true
+  taxMinor?: true
+  totalMinor?: true
+  issuedAt?: true
+  createdAt?: true
+  _all?: true
+}
+
+export type InvoiceAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Filter which Invoice to aggregate.
+   */
+  where?: Prisma.InvoiceWhereInput
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+   *
+   * Determine the order of Invoices to fetch.
+   */
+  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+   *
+   * Sets the start position
+   */
+  cursor?: Prisma.InvoiceWhereUniqueInput
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+   *
+   * Take `¬±n` Invoices from the position of the cursor.
+   */
+  take?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+   *
+   * Skip the first `n` Invoices.
+   */
+  skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Count returned Invoices
+  **/
+  _count?: true | InvoiceCountAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to average
+  **/
+  _avg?: InvoiceAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to sum
+  **/
+  _sum?: InvoiceSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to find the minimum value
+  **/
+  _min?: InvoiceMinAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to find the maximum value
+  **/
+  _max?: InvoiceMaxAggregateInputType
+}
+
+export type GetInvoiceAggregateType<T extends InvoiceAggregateArgs> = {
+      [P in keyof T & keyof AggregateInvoice]: P extends '_count' | 'count'
+    ? T[P] extends true
+      ? number
+      : Prisma.GetScalarType<T[P], AggregateInvoice[P]>
+    : Prisma.GetScalarType<T[P], AggregateInvoice[P]>
+}
+
+
+
+
+export type InvoiceGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceWhereInput
+  orderBy?: Prisma.InvoiceOrderByWithAggregationInput | Prisma.InvoiceOrderByWithAggregationInput[]
+  by: Prisma.InvoiceScalarFieldEnum[] | Prisma.InvoiceScalarFieldEnum
+  having?: Prisma.InvoiceScalarWhereWithAggregatesInput
+  take?: number
+  skip?: number
+  _count?: InvoiceCountAggregateInputType | true
+  _avg?: InvoiceAvgAggregateInputType
+  _sum?: InvoiceSumAggregateInputType
+  _min?: InvoiceMinAggregateInputType
+  _max?: InvoiceMaxAggregateInputType
+}
+
+export type InvoiceGroupByOutputType = {
+  id: string
+  number: string
+  orderId: string
+  status: $Enums.InvoiceStatus
+  customerSnapshot: runtime.JsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt: Date | null
+  createdAt: Date
+  _count: InvoiceCountAggregateOutputType | null
+  _avg: InvoiceAvgAggregateOutputType | null
+  _sum: InvoiceSumAggregateOutputType | null
+  _min: InvoiceMinAggregateOutputType | null
+  _max: InvoiceMaxAggregateOutputType | null
+}
+
+export type GetInvoiceGroupByPayload<T extends InvoiceGroupByArgs> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<InvoiceGroupByOutputType, T['by']> &
+      {
+        [P in ((keyof T) & (keyof InvoiceGroupByOutputType))]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], InvoiceGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], InvoiceGroupByOutputType[P]>
+      }
+    >
+  >
+
+
+
+export type InvoiceWhereInput = {
+  AND?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
+  OR?: Prisma.InvoiceWhereInput[]
+  NOT?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
+  id?: Prisma.StringFilter<"Invoice"> | string
+  number?: Prisma.StringFilter<"Invoice"> | string
+  orderId?: Prisma.StringFilter<"Invoice"> | string
+  status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonFilter<"Invoice">
+  currency?: Prisma.StringFilter<"Invoice"> | string
+  subtotalMinor?: Prisma.IntFilter<"Invoice"> | number
+  taxMinor?: Prisma.IntFilter<"Invoice"> | number
+  totalMinor?: Prisma.IntFilter<"Invoice"> | number
+  issuedAt?: Prisma.DateTimeNullableFilter<"Invoice"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  lines?: Prisma.InvoiceLineListRelationFilter
+}
+
+export type InvoiceOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  customerSnapshot?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  order?: Prisma.OrderOrderByWithRelationInput
+  lines?: Prisma.InvoiceLineOrderByRelationAggregateInput
+}
+
+export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
+  id?: string
+  number?: string
+  orderId?: string
+  AND?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
+  OR?: Prisma.InvoiceWhereInput[]
+  NOT?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
+  status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonFilter<"Invoice">
+  currency?: Prisma.StringFilter<"Invoice"> | string
+  subtotalMinor?: Prisma.IntFilter<"Invoice"> | number
+  taxMinor?: Prisma.IntFilter<"Invoice"> | number
+  totalMinor?: Prisma.IntFilter<"Invoice"> | number
+  issuedAt?: Prisma.DateTimeNullableFilter<"Invoice"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  lines?: Prisma.InvoiceLineListRelationFilter
+}, "id" | "number" | "orderId">
+
+export type InvoiceOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  customerSnapshot?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  _count?: Prisma.InvoiceCountOrderByAggregateInput
+  _avg?: Prisma.InvoiceAvgOrderByAggregateInput
+  _max?: Prisma.InvoiceMaxOrderByAggregateInput
+  _min?: Prisma.InvoiceMinOrderByAggregateInput
+  _sum?: Prisma.InvoiceSumOrderByAggregateInput
+}
+
+export type InvoiceScalarWhereWithAggregatesInput = {
+  AND?: Prisma.InvoiceScalarWhereWithAggregatesInput | Prisma.InvoiceScalarWhereWithAggregatesInput[]
+  OR?: Prisma.InvoiceScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.InvoiceScalarWhereWithAggregatesInput | Prisma.InvoiceScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
+  number?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
+  orderId?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
+  status?: Prisma.EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonWithAggregatesFilter<"Invoice">
+  currency?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
+  subtotalMinor?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
+  taxMinor?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
+  totalMinor?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
+  issuedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+}
+
+export type InvoiceCreateInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutInvoiceInput
+  lines?: Prisma.InvoiceLineCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceUncheckedCreateInput = {
+  id?: string
+  number: string
+  orderId: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  lines?: Prisma.InvoiceLineUncheckedCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutInvoiceNestedInput
+  lines?: Prisma.InvoiceLineUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lines?: Prisma.InvoiceLineUncheckedUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceCreateManyInput = {
+  id?: string
+  number: string
+  orderId: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type InvoiceUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InvoiceUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InvoiceNullableScalarRelationFilter = {
+  is?: Prisma.InvoiceWhereInput | null
+  isNot?: Prisma.InvoiceWhereInput | null
+}
+
+export type InvoiceCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  customerSnapshot?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+}
+
+export type InvoiceAvgOrderByAggregateInput = {
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+}
+
+export type InvoiceMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+}
+
+export type InvoiceMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+}
+
+export type InvoiceSumOrderByAggregateInput = {
+  subtotalMinor?: Prisma.SortOrder
+  taxMinor?: Prisma.SortOrder
+  totalMinor?: Prisma.SortOrder
+}
+
+export type InvoiceScalarRelationFilter = {
+  is?: Prisma.InvoiceWhereInput
+  isNot?: Prisma.InvoiceWhereInput
+}
+
+export type InvoiceCreateNestedOneWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutOrderInput, Prisma.InvoiceUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutOrderInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+}
+
+export type InvoiceUncheckedCreateNestedOneWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutOrderInput, Prisma.InvoiceUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutOrderInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+}
+
+export type InvoiceUpdateOneWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutOrderInput, Prisma.InvoiceUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutOrderInput
+  upsert?: Prisma.InvoiceUpsertWithoutOrderInput
+  disconnect?: Prisma.InvoiceWhereInput | boolean
+  delete?: Prisma.InvoiceWhereInput | boolean
+  connect?: Prisma.InvoiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutOrderInput, Prisma.InvoiceUpdateWithoutOrderInput>, Prisma.InvoiceUncheckedUpdateWithoutOrderInput>
+}
+
+export type InvoiceUncheckedUpdateOneWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutOrderInput, Prisma.InvoiceUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutOrderInput
+  upsert?: Prisma.InvoiceUpsertWithoutOrderInput
+  disconnect?: Prisma.InvoiceWhereInput | boolean
+  delete?: Prisma.InvoiceWhereInput | boolean
+  connect?: Prisma.InvoiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutOrderInput, Prisma.InvoiceUpdateWithoutOrderInput>, Prisma.InvoiceUncheckedUpdateWithoutOrderInput>
+}
+
+export type EnumInvoiceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InvoiceStatus
+}
+
+export type InvoiceCreateNestedOneWithoutLinesInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutLinesInput, Prisma.InvoiceUncheckedCreateWithoutLinesInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutLinesInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+}
+
+export type InvoiceUpdateOneRequiredWithoutLinesNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutLinesInput, Prisma.InvoiceUncheckedCreateWithoutLinesInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutLinesInput
+  upsert?: Prisma.InvoiceUpsertWithoutLinesInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutLinesInput, Prisma.InvoiceUpdateWithoutLinesInput>, Prisma.InvoiceUncheckedUpdateWithoutLinesInput>
+}
+
+export type InvoiceCreateWithoutOrderInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  lines?: Prisma.InvoiceLineCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceUncheckedCreateWithoutOrderInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  lines?: Prisma.InvoiceLineUncheckedCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceCreateOrConnectWithoutOrderInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutOrderInput, Prisma.InvoiceUncheckedCreateWithoutOrderInput>
+}
+
+export type InvoiceUpsertWithoutOrderInput = {
+  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutOrderInput, Prisma.InvoiceUncheckedUpdateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutOrderInput, Prisma.InvoiceUncheckedCreateWithoutOrderInput>
+  where?: Prisma.InvoiceWhereInput
+}
+
+export type InvoiceUpdateToOneWithWhereWithoutOrderInput = {
+  where?: Prisma.InvoiceWhereInput
+  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutOrderInput, Prisma.InvoiceUncheckedUpdateWithoutOrderInput>
+}
+
+export type InvoiceUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lines?: Prisma.InvoiceLineUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lines?: Prisma.InvoiceLineUncheckedUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceCreateWithoutLinesInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutInvoiceInput
+}
+
+export type InvoiceUncheckedCreateWithoutLinesInput = {
+  id?: string
+  number: string
+  orderId: string
+  status?: $Enums.InvoiceStatus
+  customerSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency: string
+  subtotalMinor: number
+  taxMinor: number
+  totalMinor: number
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type InvoiceCreateOrConnectWithoutLinesInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutLinesInput, Prisma.InvoiceUncheckedCreateWithoutLinesInput>
+}
+
+export type InvoiceUpsertWithoutLinesInput = {
+  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutLinesInput, Prisma.InvoiceUncheckedUpdateWithoutLinesInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutLinesInput, Prisma.InvoiceUncheckedCreateWithoutLinesInput>
+  where?: Prisma.InvoiceWhereInput
+}
+
+export type InvoiceUpdateToOneWithWhereWithoutLinesInput = {
+  where?: Prisma.InvoiceWhereInput
+  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutLinesInput, Prisma.InvoiceUncheckedUpdateWithoutLinesInput>
+}
+
+export type InvoiceUpdateWithoutLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateWithoutLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  customerSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  taxMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type InvoiceCountOutputType
+ */
+
+export type InvoiceCountOutputType = {
+  lines: number
+}
+
+export type InvoiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  lines?: boolean | InvoiceCountOutputTypeCountLinesArgs
+}
+
+/**
+ * InvoiceCountOutputType without action
+ */
+export type InvoiceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceCountOutputType
+   */
+  select?: Prisma.InvoiceCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * InvoiceCountOutputType without action
+ */
+export type InvoiceCountOutputTypeCountLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceLineWhereInput
+}
+
+
+export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  number?: boolean
+  orderId?: boolean
+  status?: boolean
+  customerSnapshot?: boolean
+  currency?: boolean
+  subtotalMinor?: boolean
+  taxMinor?: boolean
+  totalMinor?: boolean
+  issuedAt?: boolean
+  createdAt?: boolean
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  lines?: boolean | Prisma.Invoice$linesArgs<ExtArgs>
+  _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoice"]>
+
+export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  number?: boolean
+  orderId?: boolean
+  status?: boolean
+  customerSnapshot?: boolean
+  currency?: boolean
+  subtotalMinor?: boolean
+  taxMinor?: boolean
+  totalMinor?: boolean
+  issuedAt?: boolean
+  createdAt?: boolean
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoice"]>
+
+export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  number?: boolean
+  orderId?: boolean
+  status?: boolean
+  customerSnapshot?: boolean
+  currency?: boolean
+  subtotalMinor?: boolean
+  taxMinor?: boolean
+  totalMinor?: boolean
+  issuedAt?: boolean
+  createdAt?: boolean
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoice"]>
+
+export type InvoiceSelectScalar = {
+  id?: boolean
+  number?: boolean
+  orderId?: boolean
+  status?: boolean
+  customerSnapshot?: boolean
+  currency?: boolean
+  subtotalMinor?: boolean
+  taxMinor?: boolean
+  totalMinor?: boolean
+  issuedAt?: boolean
+  createdAt?: boolean
+}
+
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "orderId" | "status" | "customerSnapshot" | "currency" | "subtotalMinor" | "taxMinor" | "totalMinor" | "issuedAt" | "createdAt", ExtArgs["result"]["invoice"]>
+export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  lines?: boolean | Prisma.Invoice$linesArgs<ExtArgs>
+  _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+}
+export type InvoiceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+}
+
+export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "Invoice"
+  objects: {
+    order: Prisma.$OrderPayload<ExtArgs>
+    lines: Prisma.$InvoiceLinePayload<ExtArgs>[]
+  }
+  scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
+    number: string
+    orderId: string
+    status: $Enums.InvoiceStatus
+    customerSnapshot: runtime.JsonValue
+    currency: string
+    subtotalMinor: number
+    taxMinor: number
+    totalMinor: number
+    issuedAt: Date | null
+    createdAt: Date
+  }, ExtArgs["result"]["invoice"]>
+  composites: {}
+}
+
+export type InvoiceGetPayload<S extends boolean | null | undefined | InvoiceDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$InvoicePayload, S>
+
+export type InvoiceCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<InvoiceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: InvoiceCountAggregateInputType | true
+  }
+
+export interface InvoiceDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Invoice'], meta: { name: 'Invoice' } }
+  /**
+   * Find zero or one Invoice that matches the filter.
+   * @param {InvoiceFindUniqueArgs} args - Arguments to find a Invoice
+   * @example
+   * // Get one Invoice
+   * const invoice = await prisma.invoice.findUnique({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findUnique<T extends InvoiceFindUniqueArgs>(args: Prisma.SelectSubset<T, InvoiceFindUniqueArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Invoice that matches the filter or throw an error with `error.code='P2025'`

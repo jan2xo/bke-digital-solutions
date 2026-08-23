@@ -1,4 +1,744 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛN4õ:-jZ.¶›­–)Ş³P¢ò¢F†—2—26öFRvVæW&FVB'’&—6ÖâFòæ÷BVF—BF—&V7FÇ’â¢ğ¢ò¢W6Æ–çBÖF—6&ÆR¢ğ¢òò&–öÖRÖ–væ÷&RÖÆÂÆ–çC¢vVæW&FVBf–ÆP¢òòG2Öæö6†V6°¢ò ¢¢F†—2f–ÆRW‡÷'G2F†RÆVvÄFö7VÖVçFÖöFVÂæB—G2&VÆFVBG—W2à¢ ¢¢	ùú"–÷R6â–×÷'BF†—2f–ÆRF—&V7FÇ’à¢¢ğ¦–×÷'BG—R¢2'VçF–ÖRg&öÒ$&—6Öö6Æ–VçB÷'VçF–ÖRö6Æ–VçB ¦–×÷'BG—R¢2DVçV×2g&öÒ"ââöVçV×2 ¦–×÷'BG—R¢2&—6Ög&öÒ"ââö–çFW&æÂ÷&—6ÖæÖW76R  ¢ò¢ ¢¢ÖöFVÂÆVvÄFö7VÖVç@¢ ¢¢ğ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖöFVÂÒ'VçF–ÖRåG—W2å&W7VÇBäFVfVÇE6VÆV7F–öãÅ&—6ÖâDÆVvÄFö7VÖVçE–ÆöCà ¦W‡÷'BG—Rvw&VvFTÆVvÄFö7VÖVçBÒ°¢ö6÷VçC¢ÆVvÄFö7VÖVçD6÷VçDvw&VvFT÷WGWEG—RÂçVÆÀ¢öÖ–ã¢ÆVvÄFö7VÖVçDÖ–ävw&VvFT÷WGWEG—RÂçVÆÀ¢öÖƒ¢ÆVvÄFö7VÖVçDÖ„vw&VvFT÷WGWEG—RÂçVÆÀ§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖ–ävw&VvFT÷WGWEG—RÒ°¢–C¢7G&–ærÂçVÆÀ¢F—FÆS¢7G&–ærÂçVÆÀ¢6ÇVs¢7G&–ærÂçVÆÀ¢Fö7VÖVçEG—S¢7G&–ærÂçVÆÀ¢7FGW3¢7G&–ærÂçVÆÀ¢7W'&VçEV&Æ—6†VEfW'6–öä–C¢7G&–ærÂçVÆÀ¢7&VFVDC¢FFRÂçVÆÀ¢WFFVDC¢FFRÂçVÆÀ§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖ„vw&VvFT÷WGWEG—RÒ°¢–C¢7G&–ærÂçVÆÀ¢F—FÆS¢7G&–ærÂçVÆÀ¢6ÇVs¢7G&–ærÂçVÆÀ¢Fö7VÖVçEG—S¢7G&–ærÂçVÆÀ¢7FGW3¢7G&–ærÂçVÆÀ¢7W'&VçEV&Æ—6†VEfW'6–öä–C¢7G&–ærÂçVÆÀ¢7&VFVDC¢FFRÂçVÆÀ¢WFFVDC¢FFRÂçVÆÀ§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçDvw&VvFT÷WGWEG—RÒ°¢–C¢çVÖ&W ¢F—FÆS¢çVÖ&W ¢6ÇVs¢çVÖ&W ¢Fö7VÖVçEG—S¢çVÖ&W ¢7FGW3¢çVÖ&W ¢7W'&VçEV&Æ—6†VEfW'6–öä–C¢çVÖ&W ¢7&VFVDC¢çVÖ&W ¢WFFVDC¢çVÖ&W ¢öÆÃ¢çVÖ&W §Ğ  ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖ–ävw&VvFT–çWEG—RÒ°¢–Có¢G'VP¢F—FÆSó¢G'VP¢6ÇVsó¢G'VP¢Fö7VÖVçEG—Só¢G'VP¢7FGW3ó¢G'VP¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢G'VP¢7&VFVDCó¢G'VP¢WFFVDCó¢G'VP§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖ„vw&VvFT–çWEG—RÒ°¢–Có¢G'VP¢F—FÆSó¢G'VP¢6ÇVsó¢G'VP¢Fö7VÖVçEG—Só¢G'VP¢7FGW3ó¢G'VP¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢G'VP¢7&VFVDCó¢G'VP¢WFFVDCó¢G'VP§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçDvw&VvFT–çWEG—RÒ°¢–Có¢G'VP¢F—FÆSó¢G'VP¢6ÇVsó¢G'VP¢Fö7VÖVçEG—Só¢G'VP¢7FGW3ó¢G'VP¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢G'VP¢7&VFVDCó¢G'VP¢WFFVDCó¢G'VP¢öÆÃó¢G'VP§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDvw&VvFT&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢ò¢ ¢¢f–ÇFW"v†–6‚ÆVvÄFö7VÖVçBFòvw&VvFRà¢¢ğ¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷6÷'F–ær6÷'F–ærFö77Ğ¢ ¢¢FWFW&Ö–æRF†R÷&FW"öbÆVvÄFö7VÖVçG2FòfWF6‚à¢¢ğ¢÷&FW$'“ó¢&—6ÖäÆVvÄFö7VÖVçD÷&FW$'•v—F…&VÆF–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçD÷&FW$'•v—F…&VÆF–öä–çWEµĞ¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷v–æF–öâ67W'6÷"Ö&6VB×v–æF–öâ7W'6÷"Fö77Ğ¢ ¢¢6WG2F†R7F'B÷6—F–öà¢¢ğ¢7W'6÷#ó¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷v–æF–öâv–æF–öâFö77Ğ¢ ¢¢F¶R+æÆVvÄFö7VÖVçG2g&öÒF†R÷6—F–öâöbF†R7W'6÷"à¢¢ğ¢F¶Só¢çVÖ&W ¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçB÷v–æF–öâv–æF–öâFö77Ğ¢ ¢¢6¶—F†Rf—'7BæÆVvÄFö7VÖVçG2à¢¢ğ¢6¶—ó¢çVÖ&W ¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6÷VçB&WGW&æVBÆVvÄFö7VÖVçG0¢¢¢ğ¢ö6÷VçCó¢G'VRÂÆVvÄFö7VÖVçD6÷VçDvw&VvFT–çWEG—P¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6VÆV7Bv†–6‚f–VÆG2Fòf–æBF†RÖ–æ–×VÒfÇVP¢¢¢ğ¢öÖ–ãó¢ÆVvÄFö7VÖVçDÖ–ävw&VvFT–çWEG—P¢ò¢ ¢¢´Æ–æ²‡GG3¢ò÷wwrç&—6Öæ–òöFö72ö6öæ6WG2ö6ö×öæVçG2÷&—6ÖÖ6Æ–VçBövw&VvF–öç2vw&VvF–öâFö77Ğ¢ ¢¢6VÆV7Bv†–6‚f–VÆG2Fòf–æBF†RÖ†–×VÒfÇVP¢¢¢ğ¢öÖƒó¢ÆVvÄFö7VÖVçDÖ„vw&VvFT–çWEG—P§Ğ ¦W‡÷'BG—RvWDÆVvÄFö7VÖVçDvw&VvFUG—SÅBW‡FVæG2ÆVvÄFö7VÖVçDvw&VvFT&w3âÒ°¢µ–â¶W–öbBb¶W–öbvw&VvFTÆVvÄFö7VÖVçEÓ¢W‡FVæG2uö6÷VçBrÂv6÷VçBp¢òEµÒW‡FVæG2G'VP¢òçVÖ&W ¢¢&—6ÖävWE66Æ%G—SÅEµÒÂvw&VvFTÆVvÄFö7VÖVçEµÓà¢¢&—6ÖävWE66Æ%G—SÅEµÒÂvw&VvFTÆVvÄFö7VÖVçEµÓà§Ğ    ¦W‡÷'BG—RÆVvÄFö7VÖVçDw&÷W'”&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@¢÷&FW$'“ó¢&—6ÖäÆVvÄFö7VÖVçD÷&FW$'•v—F„vw&VvF–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçD÷&FW$'•v—F„vw&VvF–öä–çWEµĞ¢'“¢&—6ÖäÆVvÄFö7VÖVçE66Æ$f–VÆDVçVÕµÒÂ&—6ÖäÆVvÄFö7VÖVçE66Æ$f–VÆDVçVĞ¢†f–æsó¢&—6ÖäÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çW@¢F¶Só¢çVÖ&W ¢6¶—ó¢çVÖ&W ¢ö6÷VçCó¢ÆVvÄFö7VÖVçD6÷VçDvw&VvFT–çWEG—RÂG'VP¢öÖ–ãó¢ÆVvÄFö7VÖVçDÖ–ävw&VvFT–çWEG—P¢öÖƒó¢ÆVvÄFö7VÖVçDÖ„vw&VvFT–çWEG—P§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDw&÷W'”÷WGWEG—RÒ°¢–C¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3¢7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–C¢7G&–ærÂçVÆÀ¢7&VFVDC¢FFP¢WFFVDC¢FFP¢ö6÷VçC¢ÆVvÄFö7VÖVçD6÷VçDvw&VvFT÷WGWEG—RÂçVÆÀ¢öÖ–ã¢ÆVvÄFö7VÖVçDÖ–ävw&VvFT÷WGWEG—RÂçVÆÀ¢öÖƒ¢ÆVvÄFö7VÖVçDÖ„vw&VvFT÷WGWEG—RÂçVÆÀ§Ğ ¦W‡÷'BG—RvWDÆVvÄFö7VÖVçDw&÷W'•–ÆöCÅBW‡FVæG2ÆVvÄFö7VÖVçDw&÷W'”&w3âÒ&—6Öå&—6Ö&öÖ—6SÀ¢'&“À¢&—6Öå–6´VçVÖW&&ÆSÄÆVvÄFö7VÖVçDw&÷W'”÷WGWEG—RÂE²v'’uÓâ`¢°¢µ–â‚†¶W–öbB’b†¶W–öbÆVvÄFö7VÖVçDw&÷W'”÷WGWEG—R’•Ó¢W‡FVæG2uö6÷VçBp¢òEµÒW‡FVæG2&ööÆVà¢òçVÖ&W ¢¢&—6ÖävWE66Æ%G—SÅEµÒÂÆVvÄFö7VÖVçDw&÷W'”÷WGWEG—UµÓà¢¢&—6ÖävWE66Æ%G—SÅEµÒÂÆVvÄFö7VÖVçDw&÷W'”÷WGWEG—UµÓà¢Ğ¢à¢à   ¦W‡÷'BG—RÆVvÄFö7VÖVçEv†W&T–çWBÒ°¢äCó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWEµĞ¢õ#ó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWEµĞ¢äõCó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWEµĞ¢–Có¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå7G&–ætçVÆÆ&ÆTf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂFFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öäÆ—7E&VÆF–öäf–ÇFW ¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEfW'6–öäçVÆÆ&ÆU66Æ%&VÆF–öäf–ÇFW"Â&—6ÖäÆVvÄFö7VÖVçEfW'6–öåv†W&T–çWCâÂçVÆÀ§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD÷&FW$'•v—F…&VÆF–öä–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢F—FÆSó¢&—6Öå6÷'D÷&FW ¢6ÇVsó¢&—6Öå6÷'D÷&FW ¢Fö7VÖVçEG—Só¢&—6Öå6÷'D÷&FW ¢7FGW3ó¢&—6Öå6÷'D÷&FW ¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW ¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öä÷&FW$'•&VÆF–öävw&VvFT–çW@¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öä÷&FW$'•v—F…&VÆF–öä–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEv†W&UVæ—VT–çWBÒ&—6ÖäDÆV7CÇ°¢–Có¢7G&–æp¢6ÇVsó¢7G&–æp¢Fö7VÖVçEG—Só¢7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢7G&–æp¢äCó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWEµĞ¢õ#ó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWEµĞ¢äõCó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWEµĞ¢F—FÆSó¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂFFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öäÆ—7E&VÆF–öäf–ÇFW ¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEfW'6–öäçVÆÆ&ÆU66Æ%&VÆF–öäf–ÇFW"Â&—6ÖäÆVvÄFö7VÖVçEfW'6–öåv†W&T–çWCâÂçVÆÀ§ÒÂ&–B"Â'6ÇVr"Â&Fö7VÖVçEG—R"Â&7W'&VçEV&Æ—6†VEfW'6–öä–B#à ¦W‡÷'BG—RÆVvÄFö7VÖVçD÷&FW$'•v—F„vw&VvF–öä–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢F—FÆSó¢&—6Öå6÷'D÷&FW ¢6ÇVsó¢&—6Öå6÷'D÷&FW ¢Fö7VÖVçEG—Só¢&—6Öå6÷'D÷&FW ¢7FGW3ó¢&—6Öå6÷'D÷&FW ¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå6÷'D÷&FW$–çWBÂ&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW ¢ö6÷VçCó¢&—6ÖäÆVvÄFö7VÖVçD6÷VçD÷&FW$'”vw&VvFT–çW@¢öÖƒó¢&—6ÖäÆVvÄFö7VÖVçDÖ„÷&FW$'”vw&VvFT–çW@¢öÖ–ãó¢&—6ÖäÆVvÄFö7VÖVçDÖ–ä÷&FW$'”vw&VvFT–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çWBÒ°¢äCó¢&—6ÖäÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çWBÂ&—6ÖäÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çWEµĞ¢õ#ó¢&—6ÖäÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çWEµĞ¢äõCó¢&—6ÖäÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çWBÂ&—6ÖäÆVvÄFö7VÖVçE66Æ%v†W&Uv—F„vw&VvFW4–çWEµĞ¢–Có¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–æuv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå7G&–ætçVÆÆ&ÆUv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖUv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖUv—F„vw&VvFW4f–ÇFW#Â$ÆVvÄFö7VÖVçB#âÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFT–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öä7&VFTæW7FVDÖç•v—F†÷WDFö7VÖVçD–çW@¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öä7&VFTæW7FVDöæUv—F†÷WD7W'&VçDf÷$Fö7VÖVçD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFT–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåVæ6†V6¶VD7&VFTæW7FVDÖç•v—F†÷WDFö7VÖVçD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFT–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåWFFTÖç•v—F†÷WDFö7VÖVçDæW7FVD–çW@¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåWFFTöæUv—F†÷WD7W'&VçDf÷$Fö7VÖVçDæW7FVD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VEWFFT–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåVæ6†V6¶VEWFFTÖç•v—F†÷WDFö7VÖVçDæW7FVD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFTÖç”–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFTÖç”×WFF–öä–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VEWFFTÖç”–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçD÷&FW$'”vw&VvFT–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢F—FÆSó¢&—6Öå6÷'D÷&FW ¢6ÇVsó¢&—6Öå6÷'D÷&FW ¢Fö7VÖVçEG—Só¢&—6Öå6÷'D÷&FW ¢7FGW3ó¢&—6Öå6÷'D÷&FW ¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖ„÷&FW$'”vw&VvFT–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢F—FÆSó¢&—6Öå6÷'D÷&FW ¢6ÇVsó¢&—6Öå6÷'D÷&FW ¢Fö7VÖVçEG—Só¢&—6Öå6÷'D÷&FW ¢7FGW3ó¢&—6Öå6÷'D÷&FW ¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDÖ–ä÷&FW$'”vw&VvFT–çWBÒ°¢–Có¢&—6Öå6÷'D÷&FW ¢F—FÆSó¢&—6Öå6÷'D÷&FW ¢6ÇVsó¢&—6Öå6÷'D÷&FW ¢Fö7VÖVçEG—Só¢&—6Öå6÷'D÷&FW ¢7FGW3ó¢&—6Öå6÷'D÷&FW ¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6Öå6÷'D÷&FW ¢7&VFVDCó¢&—6Öå6÷'D÷&FW ¢WFFVDCó¢&—6Öå6÷'D÷&FW §Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçE66Æ%&VÆF–öäf–ÇFW"Ò°¢—3ó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@¢—4æ÷Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDçVÆÆ&ÆU66Æ%&VÆF–öäf–ÇFW"Ò°¢—3ó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂçVÆÀ¢—4æ÷Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂçVÆÀ§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFTæW7FVDöæUv—F†÷WEfW'6–öç4–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WEfW'6–öç4–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WEfW'6–öç4–çW@¢6öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFTæW7FVDöæUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çW@¢6öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFTæW7FVDöæUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çW@¢6öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFTöæU&WV—&VEv—F†÷WEfW'6–öç4æW7FVD–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WEfW'6–öç4–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WEfW'6–öç4–çW@¢W6W'Có¢&—6ÖäÆVvÄFö7VÖVçEW6W'Ev—F†÷WEfW'6–öç4–çW@¢6öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@¢WFFSó¢&—6Öå„õ#Å&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUFôöæUv—F…v†W&Uv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WEfW'6–öç4–çWCâÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WEfW'6–öç4–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFTöæUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öäæW7FVD–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çW@¢W6W'Có¢&—6ÖäÆVvÄFö7VÖVçEW6W'Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çW@¢F—66öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&ööÆVà¢FVÆWFSó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&ööÆVà¢6öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@¢WFFSó¢&—6Öå„õ#Å&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUFôöæUv—F…v†W&Uv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCâÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VEWFFTöæUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öäæW7FVD–çWBÒ°¢7&VFSó¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà¢6öææV7D÷$7&VFSó¢&—6ÖäÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çW@¢W6W'Có¢&—6ÖäÆVvÄFö7VÖVçEW6W'Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çW@¢F—66öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&ööÆVà¢FVÆWFSó¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çWBÂ&ööÆVà¢6öææV7Có¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@¢WFFSó¢&—6Öå„õ#Å&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUFôöæUv—F…v†W&Uv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCâÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFUv—F†÷WEfW'6–öç4–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öä7&VFTæW7FVDöæUv—F†÷WD7W'&VçDf÷$Fö7VÖVçD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WEfW'6–öç4–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢7G&–ærÂçVÆÀ¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WEfW'6–öç4–çWBÒ°¢v†W&S¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@¢7&VFS¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WEfW'6–öç4–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öä7&VFTæW7FVDÖç•v—F†÷WDFö7VÖVçD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢–Có¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3ó¢7G&–æp¢7&VFVDCó¢FFRÂ7G&–æp¢WFFVDCó¢FFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåVæ6†V6¶VD7&VFTæW7FVDÖç•v—F†÷WDFö7VÖVçD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD7&VFT÷$6öææV7Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢v†W&S¢&—6ÖäÆVvÄFö7VÖVçEv†W&UVæ—VT–çW@¢7&VFS¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEW6W'Ev—F†÷WEfW'6–öç4–çWBÒ°¢WFFS¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WEfW'6–öç4–çWCà¢7&VFS¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WEfW'6–öç4–çWCà¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFUFôöæUv—F…v†W&Uv—F†÷WEfW'6–öç4–çWBÒ°¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@¢FF¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WEfW'6–öç4–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WEfW'6–öç4–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFUv—F†÷WEfW'6–öç4–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåWFFTöæUv—F†÷WD7W'&VçDf÷$Fö7VÖVçDæW7FVD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WEfW'6–öç4–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&—6ÖäçVÆÆ&ÆU7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–ærÂçVÆÀ¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEW6W'Ev—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢WFFS¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà¢7&VFS¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VD7&VFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFUFôöæUv—F…v†W&Uv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEv†W&T–çW@¢FF¢&—6Öå„õ#Å&—6ÖäÆVvÄFö7VÖVçEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÂ&—6ÖäÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWCà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåWFFTÖç•v—F†÷WDFö7VÖVçDæW7FVD–çW@§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçEVæ6†V6¶VEWFFUv—F†÷WD7W'&VçEV&Æ—6†VEfW'6–öä–çWBÒ°¢–Có¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢F—FÆSó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢6ÇVsó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢Fö7VÖVçEG—Só¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7FGW3ó¢&—6Öå7G&–ætf–VÆEWFFT÷W&F–öç4–çWBÂ7G&–æp¢7&VFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢WFFVDCó¢&—6ÖäFFUF–ÖTf–VÆEWFFT÷W&F–öç4–çWBÂFFRÂ7G&–æp¢fW'6–öç3ó¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåVæ6†V6¶VEWFFTÖç•v—F†÷WDFö7VÖVçDæW7FVD–çW@§Ğ  ¢ò¢ ¢¢6÷VçBG—RÆVvÄFö7VÖVçD6÷VçD÷WGWEG—P¢¢ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçD÷WGWEG—RÒ°¢fW'6–öç3¢çVÖ&W §Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçD÷WGWEG—U6VÆV7CÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢fW'6–öç3ó¢&ööÆVâÂÆVvÄFö7VÖVçD6÷VçD÷WGWEG—T6÷VçEfW'6–öç4&w0§Ğ ¢ò¢ ¢¢ÆVvÄFö7VÖVçD6÷VçD÷WGWEG—Rv—F†÷WB7F–öà¢¢ğ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçD÷WGWEG—TFVfVÇD&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢ò¢ ¢¢6VÆV7B7V6–f–2f–VÆG2FòfWF6‚g&öÒF†RÆVvÄFö7VÖVçD6÷VçD÷WGWEG—P¢¢ğ¢6VÆV7Có¢&—6ÖäÆVvÄFö7VÖVçD6÷VçD÷WGWEG—U6VÆV7CÄW‡D&w3âÂçVÆÀ§Ğ ¢ò¢ ¢¢ÆVvÄFö7VÖVçD6÷VçD÷WGWEG—Rv—F†÷WB7F–öà¢¢ğ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçD÷WGWEG—T6÷VçEfW'6–öç4&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢v†W&Só¢&—6ÖäÆVvÄFö7VÖVçEfW'6–öåv†W&T–çW@§Ğ  ¦W‡÷'BG—RÆVvÄFö7VÖVçE6VÆV7CÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE6VÆV7CÇ°¢–Có¢&ööÆVà¢F—FÆSó¢&ööÆVà¢6ÇVsó¢&ööÆVà¢Fö7VÖVçEG—Só¢&ööÆVà¢7FGW3ó¢&ööÆVà¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà¢fW'6–öç3ó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBGfW'6–öç4&w3ÄW‡D&w3à¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBF7W'&VçEV&Æ—6†VEfW'6–öä&w3ÄW‡D&w3à¢ö6÷VçCó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçD6÷VçD÷WGWEG—TFVfVÇD&w3ÄW‡D&w3à§ÒÂW‡D&w5²'&W7VÇB%Õ²&ÆVvÄFö7VÖVçB%Óà ¦W‡÷'BG—RÆVvÄFö7VÖVçE6VÆV7D7&VFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE6VÆV7CÇ°¢–Có¢&ööÆVà¢F—FÆSó¢&ööÆVà¢6ÇVsó¢&ööÆVà¢Fö7VÖVçEG—Só¢&ööÆVà¢7FGW3ó¢&ööÆVà¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBF7W'&VçEV&Æ—6†VEfW'6–öä&w3ÄW‡D&w3à§ÒÂW‡D&w5²'&W7VÇB%Õ²&ÆVvÄFö7VÖVçB%Óà ¦W‡÷'BG—RÆVvÄFö7VÖVçE6VÆV7EWFFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE6VÆV7CÇ°¢–Có¢&ööÆVà¢F—FÆSó¢&ööÆVà¢6ÇVsó¢&ööÆVà¢Fö7VÖVçEG—Só¢&ööÆVà¢7FGW3ó¢&ööÆVà¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBF7W'&VçEV&Æ—6†VEfW'6–öä&w3ÄW‡D&w3à§ÒÂW‡D&w5²'&W7VÇB%Õ²&ÆVvÄFö7VÖVçB%Óà ¦W‡÷'BG—RÆVvÄFö7VÖVçE6VÆV7E66Æ"Ò°¢–Có¢&ööÆVà¢F—FÆSó¢&ööÆVà¢6ÇVsó¢&ööÆVà¢Fö7VÖVçEG—Só¢&ööÆVà¢7FGW3ó¢&ööÆVà¢7W'&VçEV&Æ—6†VEfW'6–öä–Có¢&ööÆVà¢7&VFVDCó¢&ööÆVà¢WFFVDCó¢&ööÆVà§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDöÖ—CÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ'VçF–ÖRåG—W2äW‡FVç6–öç2ävWDöÖ—CÂ&–B"Â'F—FÆR"Â'6ÇVr"Â&Fö7VÖVçEG—R"Â'7FGW2"Â&7W'&VçEV&Æ—6†VEfW'6–öä–B"Â&7&VFVDB"Â'WFFVDB"ÂW‡D&w5²'&W7VÇB%Õ²&ÆVvÄFö7VÖVçB%Óà¦W‡÷'BG—RÆVvÄFö7VÖVçD–æ6ÇVFSÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢fW'6–öç3ó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBGfW'6–öç4&w3ÄW‡D&w3à¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBF7W'&VçEV&Æ—6†VEfW'6–öä&w3ÄW‡D&w3à¢ö6÷VçCó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçD6÷VçD÷WGWEG—TFVfVÇD&w3ÄW‡D&w3à§Ğ¦W‡÷'BG—RÆVvÄFö7VÖVçD–æ6ÇVFT7&VFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBF7W'&VçEV&Æ—6†VEfW'6–öä&w3ÄW‡D&w3à§Ğ¦W‡÷'BG—RÆVvÄFö7VÖVçD–æ6ÇVFUWFFTÖç”æE&WGW&ãÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢7W'&VçEV&Æ—6†VEfW'6–öãó¢&ööÆVâÂ&—6ÖäÆVvÄFö7VÖVçBF7W'&VçEV&Æ—6†VEfW'6–öä&w3ÄW‡D&w3à§Ğ ¦W‡÷'BG—RDÆVvÄFö7VÖVçE–ÆöCÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âÒ°¢æÖS¢$ÆVvÄFö7VÖVçB ¢ö&¦V7G3¢°¢fW'6–öç3¢&—6ÖâDÆVvÄFö7VÖVçEfW'6–öå–ÆöCÄW‡D&w3åµĞ¢7W'&VçEV&Æ—6†VEfW'6–öã¢&—6ÖâDÆVvÄFö7VÖVçEfW'6–öå–ÆöCÄW‡D&w3âÂçVÆÀ¢Ğ¢66Æ'3¢'VçF–ÖRåG—W2äW‡FVç6–öç2ävWE–ÆöE&W7VÇCÇ°¢–C¢7G&–æp¢F—FÆS¢7G&–æp¢6ÇVs¢7G&–æp¢Fö7VÖVçEG—S¢7G&–æp¢7FGW3¢7G&–æp¢7W'&VçEV&Æ—6†VEfW'6–öä–C¢7G&–ærÂçVÆÀ¢7&VFVDC¢FFP¢WFFVDC¢FFP¢ÒÂW‡D&w5²'&W7VÇB%Õ²&ÆVvÄFö7VÖVçB%Óà¢6ö×÷6—FW3¢·Ğ§Ğ ¦W‡÷'BG—RÆVvÄFö7VÖVçDvWE–ÆöCÅ2W‡FVæG2&ööÆVâÂçVÆÂÂVæFVf–æVBÂÆVvÄFö7VÖVçDFVfVÇD&w3âÒ'VçF–ÖRåG—W2å&W7VÇBävWE&W7VÇCÅ&—6ÖâDÆVvÄFö7VÖVçE–ÆöBÂ3à ¦W‡÷'BG—RÆVvÄFö7VÖVçD6÷VçD&w3ÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w3âĞ¢öÖ—CÄÆVvÄFö7VÖVçDf–æDÖç”&w2Âw6VÆV7BrÂv–æ6ÇVFRrÂvF—7F–æ7BrÂvöÖ—Bsâb°¢6VÆV7Có¢ÆVvÄFö7VÖVçD6÷VçDvw&VvFT–çWEG—RÂG'VP¢Ğ ¦W‡÷'B–çFW&f6RÆVvÄFö7VÖVçDFVÆVvFSÄW‡D&w2W‡FVæG2'VçF–ÖRåG—W2äW‡FVç6–öç2ä–çFW&æÄ&w2Ò'VçF–ÖRåG—W2äW‡FVç6–öç2äFVfVÇD&w2ÂvÆö&ÄöÖ—D÷F–öç2Ò·Óâ°¢´³¢7–Ö&öÅÓ¢²G—W3¢&—6ÖåG—TÖÄW‡D&w3å²vÖöFVÂuÕ²tÆVvÄFö7VÖVçBuÒÂÖWF¢²æÖS¢tÆVvÄFö7VÖVçBrÒĞ¢ò¢ ¢¢f–æB¦W&ò÷"öæRÆVvÄFö7VÖVçBF†BÖF6†W2F†Rf–ÇFW"à¢¢&Ò´ÆVvÄFö7VÖVçDf–æEVæ—VT&w7Ò&w2Ò&wVÖVçG2Fòf–æBÆVvÄFö7VÖVç@¢¢W†×ÆP¢¢òòvWBöæRÆVvÄFö7VÖVç@¢¢6öç7BÆVvÄFö7VÖVçBÒv—B&—6ÖæÆVvÄFö7VÖVçBæf–æEVæ—VR‡°¢¢v†W&S¢°¢¢òòâââ&÷f–FRf–ÇFW"†W&P¢¢Ğ¢¢Ò¢¢ğ¢f–æEVæ—VSÅBW‡FVæG2ÆVvÄFö7VÖVçDf–æEVæ—VT&w3â†&w3¢&—6Öå6VÆV7E7V'6WCÅBÂÆVvÄFö7VÖVçDf–æEVæ—VT&w3ÄW‡D&w3ãâ“¢&—6Öå&—6ÖõôÆVvÄFö7VÖVçD6Æ–VçCÇ'VçF–ÖRåG—W2å&W7VÇBävWE&W7VÇCÅ&—6ÖâDÆVvÄFö7VÖVçE–ÆöCÄW‡D&w3âÂBÂ&f–æEVæ—VR"ÂvÆö&ÄöÖ—D÷F–öç3âÂçVÆÂÂçVÆÂÂW‡D&w2ÂvÆö&ÄöÖ—D÷F–öç3à ¢ò¢ ¢¢f–æBöæRÆVvÄFö7VÖVçBF†BÖF6†W2F†Rf–ÇFW"÷"F‡&÷râW'&÷"v—F‚W'&÷"æ6öFSÒu##Rv ¢¢–bæòÖF6†W2vW&Rf÷VæBà¢¢&Ò´ÆVvÄFö7VÖVçDf–æEVæ—VT÷%F‡&÷t&w7Ò&w2Ò&wVÖVçG2Fòf–æBÆVvÄFö7VÖVç@¢¢W†×ÆP¢¢òòvWBöæRÆVvÄFö7VÖVç@¢¢6öç7BÆVvÄFö7VÖVçBÒv—B&—6ÖæÆVvÄFö7VÖVçBæf–æEVæ—VT÷%F‡&÷r‡°¢¢v†W&S¢°¢¢òòâââ&÷f–FRf–ÇFW"†W&P¢¢Ğ¢¢Ò¢¢ğ¢f–æEVæ—VT÷%F‡&÷sÅBW‡FVæG2ÆVvÄFö7VÖVçDf–æEVæ—VT÷%F‡&÷t&w3â†&w3¢&—6Öå6VÆV7E7V'6WCÅBÂÆVvÄFö7VÖVçDf–æEVæ—VT÷%F‡&÷t&w3ÄW‡D&w3ãâ“¢&—6Öå&—6ÖõôÆVvÄFö7VÖVçD6Æ–VçCÇ'VçF–ÖRåG—W2å&W7VÇBävWE&W7VÇCÅ&—6ÖâDÆVvÄFö7VÖVçE–ÆöCÄW‡D&w3âÂBÂ&f–æEVæ—VT÷%F‡&÷r"ÂvÆö&ÄöÖ—D÷F–öç3âÂæWfW"ÂW‡D&w2ÂvÆö&ÄöÖ—D÷F–öç3à ¢ò¢ ¢¢f–æBF†Rf—'7BÆVvÄFö7VÖVçBF†BÖF6†W2F†Rf–ÇFW"à¢¢æ÷FRÂF†B&÷f–F–ærVæFVf–æVF—2G&VFVB2F†RfÇVRæ÷B&V–ærF†W&Rà¢¢&VBÖ÷&R†W&S¢‡GG3¢ò÷&—2æÇ’öBöçVÆÂ×VæFVf–æV@¢¢&Ò´ÆVvÄFö7VÖVçDf–æDf—'7D&w7Ò&w2Ò&wVÖVçG2Fòf–æBÆVvÄFö7VÖVç@¢¢W†×ÆP¢¢òòvWBöæRÆVvÄFö7VÖVç@¢¢6öç7BÆVvÄFö7VÖVçBÒv—B&—6ÖæÆVvÄFö7VÖVçBæf–æDf—'7B‡°¢¢v†W&S¢°¢¢òòâââ&÷f–FRf–ÇFW"†W&P¢¢Ğ¢¢Ò¢¢ğ¢f–æDf—'7CÅBW‡FVæG2ÆVvÄFö7VÖVçDf–æDf—'7D&w3â†&w3ó¢&—6Öå6VÆV7E7V'6WCÅBÂÆVvÄFö7VÖVçDf–æDf—'7D&w3ÄW‡D&w3ãâ“¢4öÚ$z{-®éÜj×re here: https://pris.ly/d/null-undefined
+
+/* !!! This is code generated by Prisma. Do not edit directly. !!! */
+/* eslint-disable */
+// biome-ignore-all lint: generated file
+// @ts-nocheck
+/*
+ * This file exports the `LegalDocument` model and its related types.
+ *
+ * ğŸŸ¢ You can import this file directly.
+ */
+import type * as runtime from "@prisma/client/runtime/client"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
+
+/**
+ * Model LegalDocument
+ *
+ */
+export type LegalDocumentModel = runtime.Types.Result.DefaultSelection<Prisma.$LegalDocumentPayload>
+
+export type AggregateLegalDocument = {
+  _count: LegalDocumentCountAggregateOutputType | null
+  _min: LegalDocumentMinAggregateOutputType | null
+  _max: LegalDocumentMaxAggregateOutputType | null
+}
+
+export type LegalDocumentMinAggregateOutputType = {
+  id: string | null
+  title: string | null
+  slug: string | null
+  documentType: string | null
+  status: string | null
+  currentPublishedVersionId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+}
+
+export type LegalDocumentMaxAggregateOutputType = {
+  id: string | null
+  title: string | null
+  slug: string | null
+  documentType: string | null
+  status: string | null
+  currentPublishedVersionId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+}
+
+export type LegalDocumentCountAggregateOutputType = {
+  id: number
+  title: number
+  slug: number
+  documentType: number
+  status: number
+  currentPublishedVersionId: number
+  createdAt: number
+  updatedAt: number
+  _all: number
+}
+
+
+export type LegalDocumentMinAggregateInputType = {
+  id?: true
+  title?: true
+  slug?: true
+  documentType?: true
+  status?: true
+  currentPublishedVersionId?: true
+  createdAt?: true
+  updatedAt?: true
+}
+
+export type LegalDocumentMaxAggregateInputType = {
+  id?: true
+  title?: true
+  slug?: true
+  documentType?: true
+  status?: true
+  currentPublishedVersionId?: true
+  createdAt?: true
+  updatedAt?: true
+}
+
+export type LegalDocumentCountAggregateInputType = {
+  id?: true
+  title?: true
+  slug?: true
+  documentType?: true
+  status?: true
+  currentPublishedVersionId?: true
+  createdAt?: true
+  updatedAt?: true
+  _all?: true
+}
+
+export type LegalDocumentAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Filter which LegalDocument to aggregate.
+   */
+  where?: Prisma.LegalDocumentWhereInput
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+   *
+   * Determine the order of LegalDocuments to fetch.
+   */
+  orderBy?: Prisma.LegalDocumentOrderByWithRelationInput | Prisma.LegalDocumentOrderByWithRelationInput[]
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+   *
+   * Sets the start position
+   */
+  cursor?: Prisma.LegalDocumentWhereUniqueInput
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+   *
+   * Take `Â±n` LegalDocuments from the position of the cursor.
+   */
+  take?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+   *
+   * Skip the first `n` LegalDocuments.
+   */
+  skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Count returned LegalDocuments
+  **/
+  _count?: true | LegalDocumentCountAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to find the minimum value
+  **/
+  _min?: LegalDocumentMinAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to find the maximum value
+  **/
+  _max?: LegalDocumentMaxAggregateInputType
+}
+
+export type GetLegalDocumentAggregateType<T extends LegalDocumentAggregateArgs> = {
+      [P in keyof T & keyof AggregateLegalDocument]: P extends '_count' | 'count'
+    ? T[P] extends true
+      ? number
+      : Prisma.GetScalarType<T[P], AggregateLegalDocument[P]>
+    : Prisma.GetScalarType<T[P], AggregateLegalDocument[P]>
+}
+
+
+
+
+export type LegalDocumentGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LegalDocumentWhereInput
+  orderBy?: Prisma.LegalDocumentOrderByWithAggregationInput | Prisma.LegalDocumentOrderByWithAggregationInput[]
+  by: Prisma.LegalDocumentScalarFieldEnum[] | Prisma.LegalDocumentScalarFieldEnum
+  having?: Prisma.LegalDocumentScalarWhereWithAggregatesInput
+  take?: number
+  skip?: number
+  _count?: LegalDocumentCountAggregateInputType | true
+  _min?: LegalDocumentMinAggregateInputType
+  _max?: LegalDocumentMaxAggregateInputType
+}
+
+export type LegalDocumentGroupByOutputType = {
+  id: string
+  title: string
+  slug: string
+  documentType: string
+  status: string
+  currentPublishedVersionId: string | null
+  createdAt: Date
+  updatedAt: Date
+  _count: LegalDocumentCountAggregateOutputType | null
+  _min: LegalDocumentMinAggregateOutputType | null
+  _max: LegalDocumentMaxAggregateOutputType | null
+}
+
+export type GetLegalDocumentGroupByPayload<T extends LegalDocumentGroupByArgs> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<LegalDocumentGroupByOutputType, T['by']> &
+      {
+        [P in ((keyof T) & (keyof LegalDocumentGroupByOutputType))]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], LegalDocumentGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], LegalDocumentGroupByOutputType[P]>
+      }
+    >
+  >
+
+
+
+export type LegalDocumentWhereInput = {
+  AND?: Prisma.LegalDocumentWhereInput | Prisma.LegalDocumentWhereInput[]
+  OR?: Prisma.LegalDocumentWhereInput[]
+  NOT?: Prisma.LegalDocumentWhereInput | Prisma.LegalDocumentWhereInput[]
+  id?: Prisma.StringFilter<"LegalDocument"> | string
+  title?: Prisma.StringFilter<"LegalDocument"> | string
+  slug?: Prisma.StringFilter<"LegalDocument"> | string
+  documentType?: Prisma.StringFilter<"LegalDocument"> | string
+  status?: Prisma.StringFilter<"LegalDocument"> | string
+  currentPublishedVersionId?: Prisma.StringNullableFilter<"LegalDocument"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"LegalDocument"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"LegalDocument"> | Date | string
+  versions?: Prisma.LegalDocumentVersionListRelationFilter
+  currentPublishedVersion?: Prisma.XOR<Prisma.LegalDocumentVersionNullableScalarRelationFilter, Prisma.LegalDocumentVersionWhereInput> | null
+}
+
+export type LegalDocumentOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  documentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currentPublishedVersionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  versions?: Prisma.LegalDocumentVersionOrderByRelationAggregateInput
+  currentPublishedVersion?: Prisma.LegalDocumentVersionOrderByWithRelationInput
+}
+
+export type LegalDocumentWhereUniqueInput = Prisma.AtLeast<{
+  id?: string
+  slug?: string
+  documentType?: string
+  currentPublishedVersionId?: string
+  AND?: Prisma.LegalDocumentWhereInput | Prisma.LegalDocumentWhereInput[]
+  OR?: Prisma.LegalDocumentWhereInput[]
+  NOT?: Prisma.LegalDocumentWhereInput | Prisma.LegalDocumentWhereInput[]
+  title?: Prisma.StringFilter<"LegalDocument"> | string
+  status?: Prisma.StringFilter<"LegalDocument"> | string
+  createdAt?: Prisma.DateTimeFilter<"LegalDocument"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"LegalDocument"> | Date | string
+  versions?: Prisma.LegalDocumentVersionListRelationFilter
+  currentPublishedVersion?: Prisma.XOR<Prisma.LegalDocumentVersionNullableScalarRelationFilter, Prisma.LegalDocumentVersionWhereInput> | null
+}, "id" | "slug" | "documentType" | "currentPublishedVersionId">
+
+export type LegalDocumentOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  documentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currentPublishedVersionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  _count?: Prisma.LegalDocumentCountOrderByAggregateInput
+  _max?: Prisma.LegalDocumentMaxOrderByAggregateInput
+  _min?: Prisma.LegalDocumentMinOrderByAggregateInput
+}
+
+export type LegalDocumentScalarWhereWithAggregatesInput = {
+  AND?: Prisma.LegalDocumentScalarWhereWithAggregatesInput | Prisma.LegalDocumentScalarWhereWithAggregatesInput[]
+  OR?: Prisma.LegalDocumentScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.LegalDocumentScalarWhereWithAggregatesInput | Prisma.LegalDocumentScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"LegalDocument"> | string
+  title?: Prisma.StringWithAggregatesFilter<"LegalDocument"> | string
+  slug?: Prisma.StringWithAggregatesFilter<"LegalDocument"> | string
+  documentType?: Prisma.StringWithAggregatesFilter<"LegalDocument"> | string
+  status?: Prisma.StringWithAggregatesFilter<"LegalDocument"> | string
+  currentPublishedVersionId?: Prisma.StringNullableWithAggregatesFilter<"LegalDocument"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"LegalDocument"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LegalDocument"> | Date | string
+}
+
+export type LegalDocumentCreateInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.LegalDocumentVersionCreateNestedManyWithoutDocumentInput
+  currentPublishedVersion?: Prisma.LegalDocumentVersionCreateNestedOneWithoutCurrentForDocumentInput
+}
+
+export type LegalDocumentUncheckedCreateInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  currentPublishedVersionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type LegalDocumentUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.LegalDocumentVersionUpdateManyWithoutDocumentNestedInput
+  currentPublishedVersion?: Prisma.LegalDocumentVersionUpdateOneWithoutCurrentForDocumentNestedInput
+}
+
+export type LegalDocumentUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentPublishedVersionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type LegalDocumentCreateManyInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  currentPublishedVersionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LegalDocumentUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LegalDocumentUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentPublishedVersionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LegalDocumentCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  documentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currentPublishedVersionId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type LegalDocumentMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  documentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currentPublishedVersionId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type LegalDocumentMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  documentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  currentPublishedVersionId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type LegalDocumentScalarRelationFilter = {
+  is?: Prisma.LegalDocumentWhereInput
+  isNot?: Prisma.LegalDocumentWhereInput
+}
+
+export type LegalDocumentNullableScalarRelationFilter = {
+  is?: Prisma.LegalDocumentWhereInput | null
+  isNot?: Prisma.LegalDocumentWhereInput | null
+}
+
+export type LegalDocumentCreateNestedOneWithoutVersionsInput = {
+  create?: Prisma.XOR<Prisma.LegalDocumentCreateWithoutVersionsInput, Prisma.LegalDocumentUncheckedCreateWithoutVersionsInput>
+  connectOrCreate?: Prisma.LegalDocumentCreateOrConnectWithoutVersionsInput
+  connect?: Prisma.LegalDocumentWhereUniqueInput
+}
+
+export type LegalDocumentCreateNestedOneWithoutCurrentPublishedVersionInput = {
+  create?: Prisma.XOR<Prisma.LegalDocumentCreateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput>
+  connectOrCreate?: Prisma.LegalDocumentCreateOrConnectWithoutCurrentPublishedVersionInput
+  connect?: Prisma.LegalDocumentWhereUniqueInput
+}
+
+export type LegalDocumentUncheckedCreateNestedOneWithoutCurrentPublishedVersionInput = {
+  create?: Prisma.XOR<Prisma.LegalDocumentCreateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput>
+  connectOrCreate?: Prisma.LegalDocumentCreateOrConnectWithoutCurrentPublishedVersionInput
+  connect?: Prisma.LegalDocumentWhereUniqueInput
+}
+
+export type LegalDocumentUpdateOneRequiredWithoutVersionsNestedInput = {
+  create?: Prisma.XOR<Prisma.LegalDocumentCreateWithoutVersionsInput, Prisma.LegalDocumentUncheckedCreateWithoutVersionsInput>
+  connectOrCreate?: Prisma.LegalDocumentCreateOrConnectWithoutVersionsInput
+  upsert?: Prisma.LegalDocumentUpsertWithoutVersionsInput
+  connect?: Prisma.LegalDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LegalDocumentUpdateToOneWithWhereWithoutVersionsInput, Prisma.LegalDocumentUpdateWithoutVersionsInput>, Prisma.LegalDocumentUncheckedUpdateWithoutVersionsInput>
+}
+
+export type LegalDocumentUpdateOneWithoutCurrentPublishedVersionNestedInput = {
+  create?: Prisma.XOR<Prisma.LegalDocumentCreateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput>
+  connectOrCreate?: Prisma.LegalDocumentCreateOrConnectWithoutCurrentPublishedVersionInput
+  upsert?: Prisma.LegalDocumentUpsertWithoutCurrentPublishedVersionInput
+  disconnect?: Prisma.LegalDocumentWhereInput | boolean
+  delete?: Prisma.LegalDocumentWhereInput | boolean
+  connect?: Prisma.LegalDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LegalDocumentUpdateToOneWithWhereWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUpdateWithoutCurrentPublishedVersionInput>, Prisma.LegalDocumentUncheckedUpdateWithoutCurrentPublishedVersionInput>
+}
+
+export type LegalDocumentUncheckedUpdateOneWithoutCurrentPublishedVersionNestedInput = {
+  create?: Prisma.XOR<Prisma.LegalDocumentCreateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput>
+  connectOrCreate?: Prisma.LegalDocumentCreateOrConnectWithoutCurrentPublishedVersionInput
+  upsert?: Prisma.LegalDocumentUpsertWithoutCurrentPublishedVersionInput
+  disconnect?: Prisma.LegalDocumentWhereInput | boolean
+  delete?: Prisma.LegalDocumentWhereInput | boolean
+  connect?: Prisma.LegalDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LegalDocumentUpdateToOneWithWhereWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUpdateWithoutCurrentPublishedVersionInput>, Prisma.LegalDocumentUncheckedUpdateWithoutCurrentPublishedVersionInput>
+}
+
+export type LegalDocumentCreateWithoutVersionsInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  currentPublishedVersion?: Prisma.LegalDocumentVersionCreateNestedOneWithoutCurrentForDocumentInput
+}
+
+export type LegalDocumentUncheckedCreateWithoutVersionsInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  currentPublishedVersionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LegalDocumentCreateOrConnectWithoutVersionsInput = {
+  where: Prisma.LegalDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.LegalDocumentCreateWithoutVersionsInput, Prisma.LegalDocumentUncheckedCreateWithoutVersionsInput>
+}
+
+export type LegalDocumentCreateWithoutCurrentPublishedVersionInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.LegalDocumentVersionCreateNestedManyWithoutDocumentInput
+}
+
+export type LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput = {
+  id?: string
+  title: string
+  slug: string
+  documentType: string
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type LegalDocumentCreateOrConnectWithoutCurrentPublishedVersionInput = {
+  where: Prisma.LegalDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.LegalDocumentCreateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput>
+}
+
+export type LegalDocumentUpsertWithoutVersionsInput = {
+  update: Prisma.XOR<Prisma.LegalDocumentUpdateWithoutVersionsInput, Prisma.LegalDocumentUncheckedUpdateWithoutVersionsInput>
+  create: Prisma.XOR<Prisma.LegalDocumentCreateWithoutVersionsInput, Prisma.LegalDocumentUncheckedCreateWithoutVersionsInput>
+  where?: Prisma.LegalDocumentWhereInput
+}
+
+export type LegalDocumentUpdateToOneWithWhereWithoutVersionsInput = {
+  where?: Prisma.LegalDocumentWhereInput
+  data: Prisma.XOR<Prisma.LegalDocumentUpdateWithoutVersionsInput, Prisma.LegalDocumentUncheckedUpdateWithoutVersionsInput>
+}
+
+export type LegalDocumentUpdateWithoutVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currentPublishedVersion?: Prisma.LegalDocumentVersionUpdateOneWithoutCurrentForDocumentNestedInput
+}
+
+export type LegalDocumentUncheckedUpdateWithoutVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentPublishedVersionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LegalDocumentUpsertWithoutCurrentPublishedVersionInput = {
+  update: Prisma.XOR<Prisma.LegalDocumentUpdateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedUpdateWithoutCurrentPublishedVersionInput>
+  create: Prisma.XOR<Prisma.LegalDocumentCreateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedCreateWithoutCurrentPublishedVersionInput>
+  where?: Prisma.LegalDocumentWhereInput
+}
+
+export type LegalDocumentUpdateToOneWithWhereWithoutCurrentPublishedVersionInput = {
+  where?: Prisma.LegalDocumentWhereInput
+  data: Prisma.XOR<Prisma.LegalDocumentUpdateWithoutCurrentPublishedVersionInput, Prisma.LegalDocumentUncheckedUpdateWithoutCurrentPublishedVersionInput>
+}
+
+export type LegalDocumentUpdateWithoutCurrentPublishedVersionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.LegalDocumentVersionUpdateManyWithoutDocumentNestedInput
+}
+
+export type LegalDocumentUncheckedUpdateWithoutCurrentPublishedVersionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+
+/**
+ * Count Type LegalDocumentCountOutputType
+ */
+
+export type LegalDocumentCountOutputType = {
+  versions: number
+}
+
+export type LegalDocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  versions?: boolean | LegalDocumentCountOutputTypeCountVersionsArgs
+}
+
+/**
+ * LegalDocumentCountOutputType without action
+ */
+export type LegalDocumentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LegalDocumentCountOutputType
+   */
+  select?: Prisma.LegalDocumentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LegalDocumentCountOutputType without action
+ */
+export type LegalDocumentCountOutputTypeCountVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LegalDocumentVersionWhereInput
+}
+
+
+export type LegalDocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  title?: boolean
+  slug?: boolean
+  documentType?: boolean
+  status?: boolean
+  currentPublishedVersionId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  versions?: boolean | Prisma.LegalDocument$versionsArgs<ExtArgs>
+  currentPublishedVersion?: boolean | Prisma.LegalDocument$currentPublishedVersionArgs<ExtArgs>
+  _count?: boolean | Prisma.LegalDocumentCountOutputTypeDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["legalDocument"]>
+
+export type LegalDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  title?: boolean
+  slug?: boolean
+  documentType?: boolean
+  status?: boolean
+  currentPublishedVersionId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  currentPublishedVersion?: boolean | Prisma.LegalDocument$currentPublishedVersionArgs<ExtArgs>
+}, ExtArgs["result"]["legalDocument"]>
+
+export type LegalDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  title?: boolean
+  slug?: boolean
+  documentType?: boolean
+  status?: boolean
+  currentPublishedVersionId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  currentPublishedVersion?: boolean | Prisma.LegalDocument$currentPublishedVersionArgs<ExtArgs>
+}, ExtArgs["result"]["legalDocument"]>
+
+export type LegalDocumentSelectScalar = {
+  id?: boolean
+  title?: boolean
+  slug?: boolean
+  documentType?: boolean
+  status?: boolean
+  currentPublishedVersionId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}
+
+export type LegalDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "documentType" | "status" | "currentPublishedVersionId" | "createdAt" | "updatedAt", ExtArgs["result"]["legalDocument"]>
+export type LegalDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  versions?: boolean | Prisma.LegalDocument$versionsArgs<ExtArgs>
+  currentPublishedVersion?: boolean | Prisma.LegalDocument$currentPublishedVersionArgs<ExtArgs>
+  _count?: boolean | Prisma.LegalDocumentCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type LegalDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  currentPublishedVersion?: boolean | Prisma.LegalDocument$currentPublishedVersionArgs<ExtArgs>
+}
+export type LegalDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  currentPublishedVersion?: boolean | Prisma.LegalDocument$currentPublishedVersionArgs<ExtArgs>
+}
+
+export type $LegalDocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "LegalDocument"
+  objects: {
+    versions: Prisma.$LegalDocumentVersionPayload<ExtArgs>[]
+    currentPublishedVersion: Prisma.$LegalDocumentVersionPayload<ExtArgs> | null
+  }
+  scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
+    title: string
+    slug: string
+    documentType: string
+    status: string
+    currentPublishedVersionId: string | null
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["legalDocument"]>
+  composites: {}
+}
+
+export type LegalDocumentGetPayload<S extends boolean | null | undefined | LegalDocumentDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$LegalDocumentPayload, S>
+
+export type LegalDocumentCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<LegalDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: LegalDocumentCountAggregateInputType | true
+  }
+
+export interface LegalDocumentDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LegalDocument'], meta: { name: 'LegalDocument' } }
+  /**
+   * Find zero or one LegalDocument that matches the filter.
+   * @param {LegalDocumentFindUniqueArgs} args - Arguments to find a LegalDocument
+   * @example
+   * // Get one LegalDocument
+   * const legalDocument = await prisma.legalDocument.findUnique({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findUnique<T extends LegalDocumentFindUniqueArgs>(args: Prisma.SelectSubset<T, LegalDocumentFindUniqueArgs<ExtArgs>>): Prisma.Prisma__LegalDocumentClient<runtime.Types.Result.GetResult<Prisma.$LegalDocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find one LegalDocument that matches the filter or throw an error with `error.code='P2025'`
+   * if no matches were found.
+   * @param {LegalDocumentFindUniqueOrThrowArgs} args - Arguments to find a LegalDocument
+   * @example
+   * // Get one LegalDocument
+   * const legalDocument = await prisma.legalDocument.findUniqueOrThrow({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findUniqueOrThrow<T extends LegalDocumentFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, LegalDocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__LegalDocumentClient<runtime.Types.Result.GetResult<Prisma.$LegalDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find the first LegalDocument that matches the filter.
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * @param {LegalDocumentFindFirstArgs} args - Arguments to find a LegalDocument
+   * @example
+   * // Get one LegalDocument
+   * const legalDocument = await prisma.legalDocument.findFirst({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findFirst<T extends LegalDocumentFindFirstArgs>(args?: Prisma.SelectSubset<T, LegalDocumentFindFirstArgs<ExtArgs>>): Prisma.Prisma__LegalDocumentClient<runtime.Types.Result.GetResult<Prisma.$LegalDocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find the first LegalDocument that matches the filter or
+   * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * @param {LegalDocumentFindFirstOrThrowArgs} args - Arguments to find a LegalDocument
+   * @example
+   * // Get one LegalDocument
+   * const legalDocument = await prisma.legalDocument.findFirstOrThrow({
+   *   where: {
+   *     // ... provide filter here
+   *   }
+   * })
+   */
+  findFirstOrThrow<T extends LegalDocumentFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, LegalDocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__LegalDocumentClient<runtime.Types.Result.GetResult<Prisma.$LegalDocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find zero or more LegalDocuments that matches the filter.
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
    * @param {LegalDocumentFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all LegalDocuments
