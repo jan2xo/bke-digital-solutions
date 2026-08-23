@@ -5,7 +5,7 @@ export type ArtifactClassification = "WINDOWS_BINARY" | "MACOS_PACKAGE" | "LINUX
 export type EvidenceResult = "COMPLETE" | "PARTIAL" | "NOT_APPLICABLE" | "UNDETERMINED" | "FAILED";
 
 export type ArtifactDescriptor = { id: string; name: string; objectKey: string; sha256: string; sizeBytes: bigint; contentType: string; productId: string; versionId: string; version: string };
-export type CommissioningEvidence = { schema: string; result: EvidenceResult; artifactSha256: string; artifactId: string; generatedAt: string; generator: string; method: string; components?: unknown[]; dependencies?: unknown[]; classification?: ArtifactClassification; limitations: string[] };
+export type CommissioningEvidence = { schema: string; bomFormat?: "CycloneDX"; specVersion?: string; version?: number; result: EvidenceResult; artifactSha256: string; artifactId: string; generatedAt: string; generator: string; method: string; components?: unknown[]; dependencies?: unknown[]; classification?: ArtifactClassification; limitations: string[] };
 export type AnalyzerMatch = { matched: boolean; confidence: "HIGH" | "MEDIUM" | "LOW" };
 export type AnalysisContext = { artifact: Readonly<ArtifactDescriptor>; bytes: AsyncIterable<Uint8Array>; commissioningRunId: string };
 export type ArtifactAnalysis = { classification: ArtifactClassification; sbom: CommissioningEvidence; dependencies: CommissioningEvidence; limitations: string[] };
