@@ -29,7 +29,7 @@ export async function queueStorageCleanup(input: {
 
 export async function recoverAbandonedCleanupJobs() {
   return db.storageCleanupJob.updateMany({
-    where: { status: "PROCESSING", startedAt: { lt: new Date(Date.now() - PROCESSING_TIMEOUT_MS) } },
+    where: { type: { in: ["PRODUCT_DELETION", "ORPHANED_OBJECT"] }, status: "PROCESSING", startedAt: { lt: new Date(Date.now() - PROCESSING_TIMEOUT_MS) } },
     data: { status: "RETRYING", nextAttemptAt: new Date(), lastErrorCode: "PROCESSING_TIMEOUT" },
   });
 }
@@ -75,7 +75,7 @@ export async function processStorageCleanupJob(id: string, removeObject: (object
 
 export async function processReadyStorageCleanupJobs(limit = 20, removeObject: (objectKey: string) => Promise<void> = deleteObject) {
   await recoverAbandonedCleanupJobs();
-  const jobs = await db.storageCleanupJob.findMany({ where: { status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: new Date() } }, select: { id: true }, orderBy: { createdAt: "asc" }, take: Math.min(limit, 100) });
+  const jobs = await db.storageCleanupJob.findMany({ where: { type: { in: ["PRODUCT_DELETION", "ORPHANED_OBJECT"] }, status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: new Date() } }, select: { id: true }, orderBy: { createdAt: "asc" }, take: Math.min(limit, 100) });
   const results = [];
   for (const job of jobs) results.push(await processStorageCleanupJob(job.id, removeObject));
   return results;

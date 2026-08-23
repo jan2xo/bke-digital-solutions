@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { hashToken, randomToken } from "@/lib/security/crypto";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { apiError } from "@/lib/http";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
-import { resolveEligibleReleaseForArtifact } from "@/lib/releases/resolution";
+import { CUSTOMER_RELEASE_LIFECYCLES } from "@/lib/releases/eligibility";
 
 export async function GET(_: Request, { params }: { params: Promise<{ artifactId: string }> }) {
   try {
@@ -13,7 +12,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ artifactId
     await assertLegalAcceptanceCurrent(user.id);
     if (!user.emailVerified) throw new Error("FORBIDDEN");
     if (!(await rateLimit(`download:${user.id}`, 30, 3600)).allowed) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
-    const { artifactId } = await params;
+    const { artifactId: versionId } = await params;
     const access = {
       OR: [
         { account: { ownerId: user.id } },
@@ -21,12 +20,11 @@ export async function GET(_: Request, { params }: { params: Promise<{ artifactId
         { assignments: { some: { userId: user.id } } },
       ],
     };
-    const artifact = await resolveEligibleReleaseForArtifact(artifactId);
-    if (!artifact) throw new Error("NOT_FOUND");
-    const license = await db.license.findFirst({ where: { productId: artifact.productId, status: "ACTIVE", account: { lifecycleState: "ACTIVE" }, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }], AND: access } });
+    const version = await db.productVersion.findFirst({ where: { id: versionId, active: true, publishedAt: { not: null }, lifecycle: { in: [...CUSTOMER_RELEASE_LIFECYCLES] }, product: { active: true, archivedAt: null } }, select: { id: true, productId: true, externalUrl: true } });
+    if (!version?.externalUrl) throw new Error("NOT_FOUND");
+    const license = await db.license.findFirst({ where: { productId: version.productId, status: "ACTIVE", account: { lifecycleState: "ACTIVE" }, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }], AND: access } });
     if (!license) throw new Error("NOT_FOUND");
-    const token = randomToken();
-    await db.downloadGrant.create({ data: { licenseId: license.id, artifactId: artifact.id, tokenHash: hashToken(token), expiresAt: new Date(Date.now() + 60_000) } });
-    return NextResponse.redirect(new URL(`/api/downloads/grants/${token}`, process.env.APP_URL), { status: 303 });
+    await db.licenseEvent.create({ data: { licenseId: license.id, type: "DOWNLOAD_REDIRECTED", metadata: { versionId: version.id } } });
+    return NextResponse.redirect(version.externalUrl, { status: 303 });
   } catch (error) { return apiError(error); }
 }

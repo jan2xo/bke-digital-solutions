@@ -6218,6 +6218,7 @@ export const ProductVersionScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
   version: 'version',
+  externalUrl: 'externalUrl',
   releaseNotes: 'releaseNotes',
   changelog: 'changelog',
   channel: 'channel',

@@ -1,5 +1,5 @@
 import "server-only";
-import type { Prisma } from "@/generated/prisma/client";
+import type { Prisma, StorageCleanupJobType } from "@/generated/prisma/client";
 import { env } from "@/lib/env";
 import { db } from "@/lib/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
@@ -13,8 +13,9 @@ import type { JobContext, JobSummary } from "@/lib/scheduler/types";
 const DAY = 86_400_000;
 
 export async function storageLifecycle(context: JobContext): Promise<JobSummary> {
-  const due = await db.storageCleanupJob.count({ where: { status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: context.now } } });
-  const abandoned = await db.storageCleanupJob.count({ where: { status: "PROCESSING", startedAt: { lt: new Date(context.now.getTime() - 15 * 60_000) } } });
+  const storageTypes: { in: StorageCleanupJobType[] } = { in: ["PRODUCT_DELETION", "ORPHANED_OBJECT"] };
+  const due = await db.storageCleanupJob.count({ where: { type: storageTypes, status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: context.now } } });
+  const abandoned = await db.storageCleanupJob.count({ where: { type: storageTypes, status: "PROCESSING", startedAt: { lt: new Date(context.now.getTime() - 15 * 60_000) } } });
   const finalizable = await db.product.findMany({ where: { deletionRequestedAt: { not: null }, cleanupJobs: { every: { status: "SUCCEEDED" } } }, select: { id: true, cleanupJobs: { select: { createdByAdminId: true }, take: 1 } }, take: 20 });
   if (context.dryRun) return { due, abandoned, finalizable: finalizable.length };
   const results = await processReadyStorageCleanupJobs(100);
@@ -60,9 +61,8 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
   const subscriptions = await db.subscription.findMany({ where: { status: { in: ["ACTIVE", "PAST_DUE"] }, currentPeriodEnd: { lte: context.now } }, include: { account: true }, take: 500 });
   const licenses = await db.license.findMany({ where: { status: "ACTIVE", expiresAt: { lte: context.now } }, include: { account: true, trialGrant: true }, take: 1000 });
   const endingTrials = await db.trialGrant.findMany({ where: { revokedAt: null, trialEndsAt: { gt: context.now, lte: new Date(context.now.getTime() + DAY) } }, include: { account: true }, take: 500 });
-  const expiredGrants = await db.downloadGrant.count({ where: { expiresAt: { lte: context.now } } });
   const inactiveDevices = await db.deviceActivation.count({ where: { active: true, lastSeenAt: { lt: new Date(context.now.getTime() - 90 * DAY) } } });
-  if (context.dryRun) return { subscriptions: subscriptions.length, licenses: licenses.length, endingTrials: endingTrials.length, expiredDownloadGrants: expiredGrants, inactiveDevicesForReview: inactiveDevices };
+  if (context.dryRun) return { subscriptions: subscriptions.length, licenses: licenses.length, endingTrials: endingTrials.length, inactiveDevicesForReview: inactiveDevices };
   await db.$transaction(async (tx) => {
     for (const subscription of subscriptions) {
       const changed = await tx.subscription.updateMany({ where: { id: subscription.id, status: { in: ["ACTIVE", "PAST_DUE"] }, currentPeriodEnd: { lte: context.now } }, data: { status: "EXPIRED" } });
@@ -75,9 +75,8 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
       await queueCommerceEmail(tx, { type: license.trialGrant ? "TRIAL_EXPIRED" : "LICENSE_EXPIRED", recipient: license.account.billingEmail, subject: license.trialGrant ? "Your BKE trial has expired" : "Your BKE license has expired", payload: { licenseId: license.id }, deduplicationKey: `entitlement-expired:${license.id}:${license.expiresAt?.toISOString()}` });
     }
     for (const trial of endingTrials) await queueCommerceEmail(tx, { type: "TRIAL_ENDING", recipient: trial.account.billingEmail, subject: "Your BKE trial ends soon", payload: { trialId: trial.id }, deduplicationKey: `trial-ending:${trial.id}:${trial.trialEndsAt.toISOString()}:1` });
-    await tx.downloadGrant.deleteMany({ where: { expiresAt: { lte: context.now } } });
   });
-  return { expiredSubscriptions: subscriptions.length, expiredLicenses: licenses.length, trialReminders: endingTrials.length, deletedDownloadGrants: expiredGrants, inactiveDevicesForReview: inactiveDevices };
+  return { expiredSubscriptions: subscriptions.length, expiredLicenses: licenses.length, trialReminders: endingTrials.length, inactiveDevicesForReview: inactiveDevices };
 }
 
 export async function commerceLifecycle(context: JobContext): Promise<JobSummary> {

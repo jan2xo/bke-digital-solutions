@@ -855,6 +855,7 @@ model ProductVersion {
   id              String            @id @default(cuid())
   productId       String
   version         String
+  externalUrl     String?
   releaseNotes    String?
   changelog       String?
   channel         ReleaseChannel    @default(STABLE)
