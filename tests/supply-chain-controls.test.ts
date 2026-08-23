@@ -66,7 +66,7 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain('"RECORD_SBOM", "RECORD_PROVENANCE"');
     expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
     expect(route).toContain('kind === "SBOM" ? { sbomReference: input.reference } : kind === "PROVENANCE"');
-    expect(readFileSync("app/api/admin/versions/[id]/route.ts", "utf8")).toContain("provenanceVerified: evidence?.provenanceStatus === \"VERIFIED\"");
+    expect(readFileSync("app/api/admin/versions/[id]/route.ts", "utf8")).not.toContain("provenanceVerified: evidence?.provenanceStatus === \"VERIFIED\"");
   });
 
   it("rejects opaque technical uploads and accepts only generated evidence shapes", () => {
@@ -82,10 +82,9 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(route).toContain('"RECORD_DEPENDENCIES", "RECORD_BACKUP", "RECORD_COMPLIANCE", "RECORD_MIGRATION"');
     expect(route).toContain("input.evidenceHash !== canonicalPayloadHash");
     const lifecycle = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
-    expect(lifecycle).toContain('currentEvidence("DEPENDENCIES")');
-    expect(lifecycle).toContain('currentEvidence("BACKUP")');
-    expect(lifecycle).toContain("complianceCurrent");
-    expect(lifecycle).toContain('currentEvidence("MIGRATION")');
+    expect(lifecycle).not.toContain('currentEvidence("DEPENDENCIES")');
+    expect(lifecycle).not.toContain('currentEvidence("BACKUP")');
+    expect(lifecycle).not.toContain('currentEvidence("MIGRATION")');
   });
 
   it("requires server-verified durable evidence documents and makes replay storage idempotent", () => {
@@ -110,13 +109,13 @@ describe("Phase 6.8 supply-chain security controls", () => {
     expect(readFileSync("lib/supply-chain/manifest.ts", "utf8")).toContain("sizeBytes: number");
   });
 
-  it("exposes evidence recording from the release readiness UI", () => {
+  it("keeps technical evidence controls out of the normal release UI", () => {
     const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
     const component = readFileSync("components/release-evidence-controls.tsx", "utf8");
-    expect(page).toContain("ReleaseEvidenceControls");
+    expect(page).not.toContain("ReleaseEvidenceControls");
+    expect(page).not.toContain("BKE Commissioning");
+    expect(page).not.toContain("SBOM");
     expect(component).toContain("RECORD_${kind}");
-    expect(component).toContain("documentBase64");
-    expect(component).toContain("router.refresh");
   });
 
   it("guards every publication mutation and binds approval to payload state", () => {

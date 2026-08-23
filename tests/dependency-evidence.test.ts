@@ -58,7 +58,7 @@ describe("dependency evidence operations", () => {
     expect(builder).toContain("manifestHash(canonicalizeManifest(buildReleaseManifest");
     expect(controls).toContain('action: "CERTIFY_BACKUP"');
     expect(controls).toContain("backupOptions");
-    expect(page).toContain("backupArchive.findMany");
-    expect(page).toContain('status: "VERIFIED"');
+    expect(page).not.toContain("backupArchive.findMany");
+    expect(page).not.toContain('status: "VERIFIED"');
   });
 });

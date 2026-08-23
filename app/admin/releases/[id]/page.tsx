@@ -11,7 +11,6 @@ export default async function ReleaseDetail({ params }: { params: Promise<{ id: 
     db.productVersion.findUnique({ where: { id: versionId }, include: { product: { include: { editions: { include: { purchasePlans: { where: { active: true }, select: { type: true } } } } } }, artifacts: true, approvals: { orderBy: { createdAt: "desc" }, take: 50 } } }),
   ]);
   if (!version) notFound();
-  const payloadHash = releaseReadiness(version).payloadHash;
   const readiness = releaseReadiness(version);
   const objectiveReady = readiness.items.filter((item) => item.key !== "approval").every((item) => item.status === "PASS");
   const currentApproval = version.approvals.find((approval) => approval.payloadHash === readiness.payloadHash);

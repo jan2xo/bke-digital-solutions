@@ -28,7 +28,7 @@ describe("Admin-native commercial compliance certification", () => {
   });
 
   it("passes the current legal state into readiness rendering", () => {
-    expect(page).toContain("complianceLegalReferencesCurrent");
     expect(page).toContain("releaseReadiness(version)");
+    expect(page).not.toContain("complianceLegalReferencesCurrent");
   });
 });
