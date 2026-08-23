@@ -11,6 +11,6 @@ function files(directory) {
 const generatedFiles = files("generated/prisma").filter((path) => path.endsWith(".ts"));
 for (const file of generatedFiles) {
   const source = readFileSync(file, "utf8");
-  const normalized = source.replace(/[ \t]+$/gm, "");
+  const normalized = source.replace(/\r\n/g, "\n").replace(/[ \t]+$/gm, "");
   if (normalized !== source) writeFileSync(file, normalized);
 }
