@@ -2,7 +2,7 @@ import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { COMMISSIONING_GENERATOR_VERSION, COMMISSIONING_POLICY_VERSION, classifyArtifact, type ArtifactClassification, type CommissioningEvidence } from "@/lib/commissioning/types";
+import { COMMISSIONING_EVIDENCE_KINDS, COMMISSIONING_GENERATOR_VERSION, COMMISSIONING_POLICY_VERSION, classifyArtifact, type ArtifactClassification, type CommissioningEvidence } from "@/lib/commissioning/types";
 
 const nowIso = () => new Date().toISOString();
 function json(value: unknown): Prisma.InputJsonValue { return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue; }
@@ -34,17 +34,18 @@ export async function processCommissioningRun(runId: string) {
   const migration = { schema: "bke.migration-assessment.v1", category: classification === "SCRIPT" ? "NONE_REQUIRED" : "UNKNOWN", status: classification === "SCRIPT" ? "VERIFIED" : "UNDETERMINED", artifactId: run.artifact.id, artifactSha256: run.artifact.sha256, rationale: classification === "SCRIPT" ? "Script/plugin classification has no BKE database migration surface in this MVP." : "No application migration contract is observable from this artifact alone.", method: "BKE metadata-only artifact classification", limitations };
   const dependency = { schema: "bke.dependency-analysis.v1", result: "NONE_OBSERVED", confidence: "LOW", artifactId: run.artifact.id, artifactSha256: run.artifact.sha256, dependencies: [], method: "BKE metadata-only fallback", limitations };
   const evidenceItems = [
-    { kind: "SBOM", result: "VERIFIED", artifactHash: run.payloadHash!, metadata: result },
-    { kind: "DEPENDENCIES", result: "VERIFIED", artifactHash: run.payloadHash!, metadata: dependency },
+    { kind: "SBOM", result: result.result, artifactHash: run.payloadHash!, metadata: result },
+    { kind: "DEPENDENCIES", result: dependency.result, artifactHash: run.payloadHash!, metadata: dependency },
     { kind: "PROVENANCE", result: "VERIFIED", artifactHash: run.payloadHash!, metadata: provenance },
-    { kind: "MIGRATION", result: "VERIFIED", artifactHash: run.payloadHash!, metadata: migration },
+    { kind: "MIGRATION", result: migration.status, artifactHash: run.payloadHash!, metadata: migration },
   ];
   await db.$transaction(async (tx) => {
     const existing = run.version.supplyChainEvidence ?? await tx.supplyChainEvidence.create({ data: { versionId: run.versionId, releaseIdentifier: `${run.version.product.slug}:${run.version.version}`, commitHash: "BKE-COMMISSIONING", branch: "BKE", buildEnvironment: "BKE-CUSTODY", builderIdentity: "BKE-DIGITAL-SOLUTIONS", builtAt: run.artifact.createdAt, manifestJson: {}, canonicalPayloadHash: run.payloadHash } });
-    await tx.supplyChainVerificationEvidence.deleteMany({ where: { evidenceId: existing.id, artifactHash: run.payloadHash! } });
+    await tx.supplyChainVerificationEvidence.deleteMany({ where: { evidenceId: existing.id, artifactHash: run.payloadHash!, kind: { in: COMMISSIONING_EVIDENCE_KINDS } } });
     await tx.supplyChainVerificationEvidence.createMany({ data: evidenceItems.map((item) => ({ evidenceId: existing.id, kind: item.kind, result: item.result, artifactHash: item.artifactHash, scannerId: COMMISSIONING_GENERATOR_VERSION, scannerVersion: COMMISSIONING_GENERATOR_VERSION, metadata: json(item.metadata) })) });
-    await tx.supplyChainEvidence.update({ where: { id: existing.id }, data: { sbomReference: `commissioning:${run.id}:sbom`, sbomFormat: "CycloneDX", provenanceStatus: "VERIFIED", dependencyVerified: true, canonicalPayloadHash: run.payloadHash, manifestJson: { commissioningRunId: run.id, artifactSha256: run.artifact.sha256 } } });
-    await tx.commissioningRun.update({ where: { id: run.id }, data: { status: "EVIDENCE_READY", completedAt: new Date(), sbomStatus: result.result, dependencyStatus: "NONE_OBSERVED", migrationCategory: migration.category, migrationStatus: migration.status, evidence: json({ sbom: result, dependencies: dependency, provenance, migration }), limitations: json(limitations) } });
+    await tx.supplyChainEvidence.update({ where: { id: existing.id }, data: { sbomReference: `commissioning:${run.id}:sbom`, sbomFormat: "CycloneDX", provenanceStatus: "VERIFIED", dependencyVerified: false, canonicalPayloadHash: run.payloadHash, manifestJson: { commissioningRunId: run.id, artifactSha256: run.artifact.sha256 } } });
+    await tx.productVersion.update({ where: { id: run.versionId }, data: { migrationEvidence: `commissioning:${run.id}:${migration.category}:${migration.status}` } });
+    await tx.commissioningRun.update({ where: { id: run.id }, data: { status: "EVIDENCE_READY", completedAt: new Date(), sbomStatus: result.result, dependencyStatus: dependency.result, migrationCategory: migration.category, migrationStatus: migration.status, evidence: json({ sbom: result, dependencies: dependency, provenance, migration }), limitations: json(limitations) } });
   });
   return { runId: run.id, status: "EVIDENCE_READY" as const };
 }
