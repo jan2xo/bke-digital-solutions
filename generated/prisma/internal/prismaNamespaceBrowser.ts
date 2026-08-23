@@ -81,6 +81,7 @@ export const ModelName = {
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
   ProductArtifact: 'ProductArtifact',
+  CommissioningRun: 'CommissioningRun',
   StorageCleanupJob: 'StorageCleanupJob',
   Cart: 'Cart',
   CartItem: 'CartItem',
@@ -657,6 +658,35 @@ export const ProductArtifactScalarFieldEnum = {
 } as const
 
 export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
+
+
+export const CommissioningRunScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  versionId: 'versionId',
+  artifactId: 'artifactId',
+  artifactSha256: 'artifactSha256',
+  artifactSizeBytes: 'artifactSizeBytes',
+  payloadHash: 'payloadHash',
+  policyVersion: 'policyVersion',
+  generatorVersion: 'generatorVersion',
+  status: 'status',
+  classification: 'classification',
+  sbomStatus: 'sbomStatus',
+  dependencyStatus: 'dependencyStatus',
+  migrationCategory: 'migrationCategory',
+  migrationStatus: 'migrationStatus',
+  evidence: 'evidence',
+  limitations: 'limitations',
+  errorCode: 'errorCode',
+  attempts: 'attempts',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommissioningRunScalarFieldEnum = (typeof CommissioningRunScalarFieldEnum)[keyof typeof CommissioningRunScalarFieldEnum]
 
 
 export const StorageCleanupJobScalarFieldEnum = {

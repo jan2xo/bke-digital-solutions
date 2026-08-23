@@ -168,6 +168,11 @@ export type Price = Prisma.PriceModel
  */
 export type ProductArtifact = Prisma.ProductArtifactModel
 /**
+ * Model CommissioningRun
+ *
+ */
+export type CommissioningRun = Prisma.CommissioningRunModel
+/**
  * Model StorageCleanupJob
  *
  */

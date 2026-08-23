@@ -705,6 +705,23 @@ export type EnumIntervalUnitNullableWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumIntervalUnitNullableFilter<$PrismaModel>
 }
 
+export type EnumCommissioningStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.CommissioningStatus | Prisma.EnumCommissioningStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCommissioningStatusFilter<$PrismaModel> | $Enums.CommissioningStatus
+}
+
+export type EnumCommissioningStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CommissioningStatus | Prisma.EnumCommissioningStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCommissioningStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommissioningStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCommissioningStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCommissioningStatusFilter<$PrismaModel>
+}
+
 export type EnumStorageCleanupJobTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.StorageCleanupJobType | Prisma.EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
   in?: $Enums.StorageCleanupJobType[] | Prisma.ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel>
@@ -1863,6 +1880,23 @@ export type NestedEnumIntervalUnitNullableWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumIntervalUnitNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumIntervalUnitNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumCommissioningStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.CommissioningStatus | Prisma.EnumCommissioningStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCommissioningStatusFilter<$PrismaModel> | $Enums.CommissioningStatus
+}
+
+export type NestedEnumCommissioningStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CommissioningStatus | Prisma.EnumCommissioningStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CommissioningStatus[] | Prisma.ListEnumCommissioningStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCommissioningStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommissioningStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCommissioningStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCommissioningStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumStorageCleanupJobTypeFilter<$PrismaModel = never> = {

@@ -1,6 +1,7 @@
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { env } from "@/lib/env";
 import { currentApproval } from "@/lib/releases/approval";
+import { commissioningEvidenceDecision } from "@/lib/commissioning/types";
 import { isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";
 import { evaluateSupplyChainSecurity } from "@/lib/supply-chain/controls";
 export type ReadinessItem = { key: string; label: string; status: "PASS" | "PENDING" | "BLOCKED"; detail: string };
@@ -8,20 +9,32 @@ export function releaseReadiness(version: { id?: string; productId: string; vers
   const manifest = buildReleaseManifest({ productId: version.productId, productSlug: version.product.slug, versionId: version.id ?? "", version: version.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });
   const payloadHash = manifestHash(canonicalizeManifest(manifest)); const evidence = version.supplyChainEvidence;
   const current = (kind: string, result: string) => evidence?.verificationEvidence.some((item) => item.kind === kind && item.result === result && item.artifactHash === payloadHash) ?? false;
+  const currentEvent = (kind: string) => evidence?.verificationEvidence.find((item) => item.kind === kind && item.artifactHash === payloadHash);
+  const technicalDecision = (kind: string) => {
+    const item = currentEvent(kind);
+    if (!item) return { accepted: false, detail: "Missing current evidence", commissioning: false };
+    const decision = commissioningEvidenceDecision(kind, item.result, item.metadata);
+    if (decision.recognized) return { accepted: decision.accepted, detail: decision.detail, commissioning: true };
+    return { accepted: item.result === "VERIFIED", detail: item.result === "VERIFIED" ? "Verified" : `Evidence ${item.result}`, commissioning: false };
+  };
   const cleanIds = new Set((evidence?.verificationEvidence ?? []).filter((item) => item.kind === "MALWARE_SCAN" && item.result === "CLEAN" && item.artifactHash === payloadHash).map((item) => typeof item.metadata === "object" && item.metadata && "artifactId" in item.metadata ? String((item.metadata as { artifactId: unknown }).artifactId) : ""));
   const malware = version.artifacts.length > 0 && cleanIds.size === version.artifacts.length && version.artifacts.every((a) => cleanIds.has(a.id));
   const complianceCurrent = (options.complianceCurrent ?? true) && (evidence?.verificationEvidence.some((item) => isCommercialComplianceEvidence(item, version.id ?? "", payloadHash)) ?? false);
   const supplyChainSafe = evaluateSupplyChainSecurity({ currentHash: payloadHash, artifacts: version.artifacts, evidence: evidence?.verificationEvidence ?? [], certificateStatus: evidence?.certificateStatus, malwareStatus: evidence?.malwareStatus }).releasable;
   const approval = currentApproval(version.approvals, payloadHash);
+  const sbom = technicalDecision("SBOM");
+  const provenance = technicalDecision("PROVENANCE");
+  const dependencies = technicalDecision("DEPENDENCIES");
+  const migration = technicalDecision("MIGRATION");
   const items: ReadinessItem[] = [
     { key: "signature", label: "Signature", status: current("SIGNATURE", "VERIFIED") ? "PASS" : "BLOCKED", detail: evidence?.signatureKeyId ?? "Missing current signature" },
     { key: "malware", label: "Malware", status: malware ? "PASS" : "BLOCKED", detail: malware ? "All current artifacts CLEAN" : evidence?.malwareStatus ?? "Missing current evidence" },
-    { key: "sbom", label: "SBOM", status: current("SBOM", "VERIFIED") && Boolean(evidence?.sbomReference) ? "PASS" : "BLOCKED", detail: current("SBOM", "VERIFIED") ? evidence?.sbomReference ?? "Missing" : "Missing current evidence" },
-    { key: "provenance", label: "Provenance", status: current("PROVENANCE", "VERIFIED") && evidence?.provenanceStatus === "VERIFIED" ? "PASS" : "BLOCKED", detail: current("PROVENANCE", "VERIFIED") ? evidence?.provenanceStatus ?? "Missing" : "Missing current evidence" },
-    { key: "dependencies", label: "Dependencies", status: evidence?.dependencyVerified === true && current("DEPENDENCIES", "VERIFIED") ? "PASS" : "BLOCKED", detail: evidence?.dependencyVerified && current("DEPENDENCIES", "VERIFIED") ? "Verified" : "Missing current evidence" },
+    { key: "sbom", label: "SBOM", status: sbom.accepted && Boolean(evidence?.sbomReference) ? "PASS" : "BLOCKED", detail: sbom.accepted ? `${evidence?.sbomReference ?? "Evidence recorded"} — ${sbom.detail}` : sbom.detail },
+    { key: "provenance", label: "Provenance", status: provenance.accepted && evidence?.provenanceStatus === "VERIFIED" ? "PASS" : "BLOCKED", detail: provenance.accepted ? provenance.detail : "Missing or unacceptable current provenance" },
+    { key: "dependencies", label: "Dependencies", status: dependencies.commissioning ? (dependencies.accepted ? "PASS" : "BLOCKED") : (evidence?.dependencyVerified === true && dependencies.accepted ? "PASS" : "BLOCKED"), detail: dependencies.detail },
     { key: "backup", label: "Backup", status: Boolean(version.backupEvidence) && current("BACKUP", "VERIFIED") ? "PASS" : "BLOCKED", detail: version.backupEvidence && current("BACKUP", "VERIFIED") ? version.backupEvidence : "Missing current evidence" },
     { key: "compliance", label: "Compliance", status: Boolean(version.complianceEvidence) && complianceCurrent ? "PASS" : "BLOCKED", detail: version.complianceEvidence && complianceCurrent ? version.complianceEvidence : "Missing current commercial evidence" },
-    { key: "migration", label: "Migration", status: Boolean(version.migrationEvidence) && current("MIGRATION", "VERIFIED") ? "PASS" : "BLOCKED", detail: version.migrationEvidence && current("MIGRATION", "VERIFIED") ? version.migrationEvidence : "Missing current evidence" },
+    { key: "migration", label: "Migration", status: Boolean(version.migrationEvidence) && migration.accepted ? "PASS" : "BLOCKED", detail: migration.accepted ? `${version.migrationEvidence ?? "Evidence recorded"} — ${migration.detail}` : migration.detail },
     { key: "approval", label: "Approval", status: approval.valid ? "PASS" : "BLOCKED", detail: approval.valid ? "Approved for current payload" : version.approvals[0]?.approvedAt ? "Stale or incomplete approval" : "Pending" },
     { key: "compliance-register", label: "Compliance register", status: (options.pendingComplianceCount ?? 0) === 0 ? "PASS" : "BLOCKED", detail: (options.pendingComplianceCount ?? 0) === 0 ? "All requirements implemented" : `${options.pendingComplianceCount} requirement(s) pending` },
     { key: "supply-chain-safety", label: "Supply-chain safety", status: supplyChainSafe ? "PASS" : "BLOCKED", detail: supplyChainSafe ? "Integrity and scanner safety checks pass" : "Supply-chain safety checks incomplete" },

@@ -7,6 +7,7 @@ import { assertSameOrigin } from "@/lib/security/request";
 import { deleteObject } from "@/lib/storage";
 import { verifyStoredArtifact } from "@/lib/artifacts/verify-stored-artifact";
 import { queueStorageCleanup } from "@/lib/storage-cleanup";
+import { ensureCommissioningRun } from "@/lib/commissioning/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string; uploadId: string }> }) {
   let session: { id: string; objectKey: string; productId: string; versionId: string; createdById: string; state: string; expiresAt: Date; expectedSize: bigint; expectedSha256: string | null; contentType: string; originalFilename: string } | null = null;
@@ -39,6 +40,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return created;
     });
     await audit({ actorId: admin.id, action: "ARTIFACT_UPLOAD_COMPLETED", targetType: "ProductVersion", targetId: versionId, metadata: { uploadId: session.id, artifactId: artifact.id, sha256: verified.sha256, objectSize: verified.sizeBytes, malware: verified.malware.scannerId } });
+    await ensureCommissioningRun(artifact.id);
     return NextResponse.json({ uploadId: session.id, state: "VERIFIED", artifactId: artifact.id, objectKey: session.objectKey, sha256: verified.sha256, sizeBytes: verified.sizeBytes });
   } catch (error) {
     if (session && !["UPLOAD_ALREADY_COMPLETED", "UPLOAD_COMPLETION_CONFLICT", "UPLOAD_VERSION_MISMATCH", "UPLOAD_NOT_OWNER"].some((code) => error instanceof Error && error.message === code)) {

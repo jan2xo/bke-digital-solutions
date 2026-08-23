@@ -72,6 +72,18 @@ export const ArtifactUploadState = {
 export type ArtifactUploadState = (typeof ArtifactUploadState)[keyof typeof ArtifactUploadState]
 
 
+export const CommissioningStatus = {
+  PENDING: 'PENDING',
+  VERIFYING: 'VERIFYING',
+  ANALYZING: 'ANALYZING',
+  EVIDENCE_READY: 'EVIDENCE_READY',
+  FAILED: 'FAILED',
+  SUPERSEDED: 'SUPERSEDED'
+} as const
+
+export type CommissioningStatus = (typeof CommissioningStatus)[keyof typeof CommissioningStatus]
+
+
 export const ScheduledJobRunStatus = {
   QUEUED: 'QUEUED',
   RUNNING: 'RUNNING',

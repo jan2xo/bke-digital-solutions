@@ -52,6 +52,15 @@ enum ArtifactUploadState {
   EXPIRED
 }
 
+enum CommissioningStatus {
+  PENDING
+  VERIFYING
+  ANALYZING
+  EVIDENCE_READY
+  FAILED
+  SUPERSEDED
+}
+
 enum ScheduledJobRunStatus {
   QUEUED
   RUNNING
@@ -787,6 +796,7 @@ model Product {
   trials              TrialGrant[]
   offers              DiscountOffer[]
   cleanupJobs         StorageCleanupJob[]
+  commissioningRuns   CommissioningRun[]
 
   @@index([deletionRequestedAt])
 }
@@ -864,6 +874,7 @@ model ProductVersion {
   backupEvidence  String?
   complianceEvidence String?
   migrationEvidence String?
+  commissioningRuns CommissioningRun[]
 
   @@unique([productId, version])
 }
@@ -1011,6 +1022,39 @@ model ProductArtifact {
   version       ProductVersion?     @relation(fields: [versionId], references: [id])
   grants        DownloadGrant[]
   cleanupJobs   StorageCleanupJob[]
+  commissioningRuns CommissioningRun[]
+}
+
+model CommissioningRun {
+  id                 String             @id @default(cuid())
+  productId          String
+  versionId          String
+  artifactId         String
+  artifactSha256     String
+  artifactSizeBytes  BigInt
+  payloadHash        String?
+  policyVersion      String
+  generatorVersion   String
+  status             CommissioningStatus @default(PENDING)
+  classification     String
+  sbomStatus         String             @default("UNDETERMINED")
+  dependencyStatus   String             @default("UNDETERMINED")
+  migrationCategory  String             @default("UNKNOWN")
+  migrationStatus    String             @default("UNDETERMINED")
+  evidence           Json               @default("{}")
+  limitations        Json               @default("[]")
+  errorCode          String?
+  attempts           Int                @default(0)
+  startedAt          DateTime?
+  completedAt        DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  product            Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version            ProductVersion     @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  artifact           ProductArtifact   @relation(fields: [artifactId], references: [id], onDelete: Restrict)
+  @@unique([artifactId, artifactSha256, payloadHash, policyVersion, generatorVersion])
+  @@index([status, createdAt])
+  @@index([versionId, status])
 }
 
 model StorageCleanupJob {

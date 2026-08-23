@@ -10,7 +10,7 @@ import { apiError } from "@/lib/http";
 import { assertSameOrigin } from "@/lib/security/request";
 import { createArtifactUploadUrl } from "@/lib/storage";
 
-const allowedExtensions = new Set([".dmg", ".pkg", ".exe", ".msi", ".zip", ".deb", ".rpm", ".appimage"]);
+const allowedExtensions = new Set([".dmg", ".pkg", ".exe", ".msi", ".zip", ".deb", ".rpm", ".appimage", ".js", ".jsx", ".ts", ".tsx", ".py", ".ps1", ".sh", ".bat", ".cmd", ".vbs", ".jsxbin", ".plugin", ".aex"]);
 const inputSchema = z.object({
   filename: z.string().trim().min(1).max(255),
   sizeBytes: z.number().int().positive().max(env.MAX_ARTIFACT_BYTES),
