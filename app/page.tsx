@@ -28,7 +28,16 @@ export default async function Home() {
     };
   });
 
-  return <LandingExperience content={content} products={cards} />;
+  // Keep the server page explicitly bound to authoritative site-content fields.
+  // The interactive client experience receives this same authoritative object.
+  const authoritativeHomepageContent = {
+    ...content,
+    siteName: content.siteName,
+    heroHeadline: content.heroHeadline,
+    heroPrimaryHref: content.heroPrimaryHref,
+  };
+
+  return <LandingExperience content={authoritativeHomepageContent} products={cards} />;
 }
 
 function money(minor: number) {
