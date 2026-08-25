@@ -1,1 +1,0 @@
-# Temporary external customer downloads
