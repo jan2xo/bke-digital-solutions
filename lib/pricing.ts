@@ -4,15 +4,6 @@ export const OFFER_DISCOUNT_MIN_BPS = 0;
 export const OFFER_DISCOUNT_MAX_BPS = 10_000;
 export const PRICING_VERSION = "OFFER_V1";
 
-export type AnnualPricing = {
-  monthlyAmountMinor: number;
-  discountBps: number;
-  grossAnnualMinor: number;
-  annualAmountMinor: number;
-  savingsMinor: number;
-  effectiveMonthlyMinor: number;
-};
-
 function assertMinorUnits(value: number, field: string) {
   if (!Number.isSafeInteger(value) || value < 1) throw new Error(`INVALID_${field}`);
 }
@@ -25,22 +16,14 @@ export function roundRatioHalfUp(numerator: bigint, denominator: bigint) {
   return value;
 }
 
-export function calculateAnnualPricing(monthlyAmountMinor: number, discountBps: number): AnnualPricing {
-  assertMinorUnits(monthlyAmountMinor, "MONTHLY_AMOUNT");
-  if (!Number.isInteger(discountBps) || discountBps < ANNUAL_DISCOUNT_MIN_BPS || discountBps > ANNUAL_DISCOUNT_MAX_BPS) {
-    throw new Error("INVALID_ANNUAL_DISCOUNT");
-  }
-  const grossAnnualMinor = monthlyAmountMinor * 12;
-  if (!Number.isSafeInteger(grossAnnualMinor)) throw new Error("MONEY_OVERFLOW");
-  const annualAmountMinor = roundRatioHalfUp(BigInt(grossAnnualMinor) * BigInt(10_000 - discountBps), 10_000n);
-  return {
-    monthlyAmountMinor,
-    discountBps,
-    grossAnnualMinor,
-    annualAmountMinor,
-    savingsMinor: grossAnnualMinor - annualAmountMinor,
-    effectiveMonthlyMinor: roundRatioHalfUp(BigInt(annualAmountMinor), 12n),
-  };
+export function calculatePlanMerchandising(listAmountMinor: number | null | undefined, amountMinor: number) {
+  assertMinorUnits(amountMinor, "PLAN_AMOUNT");
+  const list = listAmountMinor ?? amountMinor;
+  assertMinorUnits(list, "PLAN_LIST_AMOUNT");
+  if (list < amountMinor) throw new Error("INVALID_PLAN_LIST_AMOUNT");
+  const savingsMinor = list - amountMinor;
+  const discountBps = savingsMinor === 0 ? 0 : roundRatioHalfUp(BigInt(savingsMinor) * 10_000n, BigInt(list));
+  return { listAmountMinor: list, amountMinor, savingsMinor, discountBps };
 }
 
 export function applyOfferDiscount(catalogAmountMinor: number, discountBps: number) {
@@ -57,32 +40,26 @@ export type ResolvablePlan = {
   type: "PERPETUAL" | "MONTHLY" | "ANNUAL";
   currency: string;
   amountMinor: number | null;
+  listAmountMinor?: number | null;
   annualDiscountBps: number | null;
   renewalBehavior: "NONE" | "CUSTOMER_AUTHORIZED";
   monthlySource?: { amountMinor: number | null; active: boolean; type?: "PERPETUAL" | "MONTHLY" | "ANNUAL"; editionId?: string } | null;
 };
 
 export function resolvePurchasePlan(plan: ResolvablePlan) {
-  if (plan.type === "ANNUAL") {
-    if (!plan.monthlySource?.active || plan.monthlySource.amountMinor === null || plan.monthlySource.type !== "MONTHLY" || (plan.editionId && plan.monthlySource.editionId !== plan.editionId)) {
-      throw new Error("ANNUAL_MONTHLY_PLAN_REQUIRED");
-    }
-    const pricing = calculateAnnualPricing(plan.monthlySource.amountMinor, plan.annualDiscountBps ?? 0);
-    return { ...pricing, amountMinor: pricing.annualAmountMinor, intervalUnit: "YEAR" as const, intervalCount: 1, billingType: "SUBSCRIPTION" as const };
-  }
   if (plan.amountMinor === null) throw new Error("PLAN_AMOUNT_REQUIRED");
   assertMinorUnits(plan.amountMinor, "PLAN_AMOUNT");
   return {
     amountMinor: plan.amountMinor,
-    intervalUnit: plan.type === "MONTHLY" ? "MONTH" as const : null,
-    intervalCount: plan.type === "MONTHLY" ? 1 : null,
+    intervalUnit: plan.type === "MONTHLY" ? "MONTH" as const : plan.type === "ANNUAL" ? "YEAR" as const : null,
+    intervalCount: plan.type === "MONTHLY" || plan.type === "ANNUAL" ? 1 : null,
     billingType: plan.type === "PERPETUAL" ? "ONE_TIME" as const : "SUBSCRIPTION" as const,
     monthlyAmountMinor: plan.type === "MONTHLY" ? plan.amountMinor : null,
     discountBps: 0,
     grossAnnualMinor: null,
-    annualAmountMinor: null,
-    savingsMinor: 0,
-    effectiveMonthlyMinor: plan.type === "MONTHLY" ? plan.amountMinor : null,
+    annualAmountMinor: plan.type === "ANNUAL" ? plan.amountMinor : null,
+    savingsMinor: calculatePlanMerchandising(plan.listAmountMinor, plan.amountMinor).savingsMinor,
+    effectiveMonthlyMinor: plan.type === "ANNUAL" ? roundRatioHalfUp(BigInt(plan.amountMinor), 12n) : plan.type === "MONTHLY" ? plan.amountMinor : null,
   };
 }
 

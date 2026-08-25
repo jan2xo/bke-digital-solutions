@@ -644,87 +644,76 @@ model LegalDocument {
 }
 
 model LegalDocumentVersion {
-  id                   String            @id @default(cuid())
-  documentId           String
-  versionNumber        Int
-  markdownContent      String
-  renderedHtml         String?
-  status               String            @default("DRAFT")
-  effectiveAt          DateTime?
-  publishedAt          DateTime?
-  archivedAt           DateTime?
-  authorId             String?
-  changeSummary        String
-  requiresReacceptance Boolean           @default(false)
-  contentHash          String
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
-  document             LegalDocument     @relation("LegalDocumentVersions", fields: [documentId], references: [id], onDelete: Restrict)
-  currentForDocument   LegalDocument?    @relation("CurrentPublishedLegalVersion")
-  author               User?             @relation("LegalVersionAuthor", fields: [authorId], references: [id], onDelete: SetNull)
-  acceptances          LegalAcceptance[]
+  id                        String                 @id @default(cuid())
+  legalDocumentId           String
+  version                   String
+  title                     String
+  contentMarkdown           String
+  contentSha256             String
+  publishedAt               DateTime?
+  retiredAt                 DateTime?
+  effectiveAt               DateTime?
+  createdAt                 DateTime               @default(now())
+  createdById               String
+  legalDocument             LegalDocument          @relation("LegalDocumentVersions", fields: [legalDocumentId], references: [id], onDelete: Cascade)
+  createdBy                 User                   @relation("LegalVersionAuthor", fields: [createdById], references: [id])
+  currentForDocument        LegalDocument?         @relation("CurrentPublishedLegalVersion")
+  acceptances               LegalAcceptance[]
 
-  @@unique([documentId, versionNumber])
-  @@index([documentId, status, publishedAt])
+  @@unique([legalDocumentId, version])
+  @@index([legalDocumentId, publishedAt])
 }
 
 model LegalAcceptance {
-  id                  String               @id @default(cuid())
-  userId              String
-  customerAccountId   String?
-  documentVersionId   String
-  acceptanceContext   String
-  acceptedAt          DateTime             @default(now())
-  ipAddress           String?
-  userAgent           String?
-  renderedContentHash String
-  variablesSnapshot   Json                 @default("{}")
-  user                User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
-  customerAccount     CustomerAccount?     @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
-  documentVersion     LegalDocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Restrict)
+  id                     String               @id @default(cuid())
+  userId                 String
+  accountId              String?
+  legalDocumentVersionId String
+  acceptedAt             DateTime             @default(now())
+  ipHash                 String?
+  userAgentHash          String?
+  acceptanceContext      String
+  user                   User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account                CustomerAccount?     @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  legalDocumentVersion   LegalDocumentVersion @relation(fields: [legalDocumentVersionId], references: [id], onDelete: Restrict)
 
-  @@unique([userId, customerAccountId, documentVersionId, acceptanceContext], map: "LegalAcceptance_userId_customerAccountId_documentVersionId_acce")
-  @@index([userId, acceptedAt])
-  @@index([customerAccountId, acceptedAt])
-  @@index([documentVersionId, acceptedAt])
+  @@unique([userId, legalDocumentVersionId, acceptanceContext])
+  @@index([accountId, acceptedAt])
 }
 
 model PrivacyRequest {
-  id                String           @id @default(cuid())
-  userId            String
-  customerAccountId String?
-  requestType       String
-  status            String           @default("OPEN")
-  summary           String
-  responseSummary   String?
-  ipAddress         String?
-  userAgent         String?
-  reviewedById      String?
-  reviewedAt        DateTime?
-  closedAt          DateTime?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  user              User             @relation("PrivacyRequestUser", fields: [userId], references: [id], onDelete: Restrict)
-  customerAccount   CustomerAccount? @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
-  reviewedBy        User?            @relation("PrivacyRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
-  events            PrivacyRequestEvent[]
+  id                 String                 @id @default(cuid())
+  userId             String
+  accountId          String?
+  type               String
+  status             String                 @default("OPEN")
+  requestedAt        DateTime               @default(now())
+  dueAt              DateTime
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+  requestReason      String?
+  outcomeSummary     String?
+  reviewedById       String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  user               User                   @relation("PrivacyRequestUser", fields: [userId], references: [id], onDelete: Cascade)
+  account            CustomerAccount?       @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  reviewedBy         User?                  @relation("PrivacyRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  events             PrivacyRequestEvent[]
 
-  @@index([userId, createdAt])
-  @@index([customerAccountId, createdAt])
-  @@index([status, createdAt])
-  @@index([requestType, status])
+  @@index([userId, status, requestedAt])
+  @@index([accountId, status, requestedAt])
+  @@index([dueAt, status])
 }
 
 model PrivacyRequestEvent {
   id               String         @id @default(cuid())
   privacyRequestId String
   actorId          String?
-  eventType        String
-  fromStatus       String?
-  toStatus         String?
-  metadata         Json           @default("{}")
+  action           String
+  metadata         Json?
   createdAt        DateTime       @default(now())
-  privacyRequest   PrivacyRequest @relation(fields: [privacyRequestId], references: [id], onDelete: Restrict)
+  privacyRequest   PrivacyRequest @relation(fields: [privacyRequestId], references: [id], onDelete: Cascade)
   actor            User?          @relation("PrivacyRequestEventActor", fields: [actorId], references: [id], onDelete: SetNull)
 
   @@index([privacyRequestId, createdAt])
@@ -832,6 +821,7 @@ model PurchasePlan {
   type                PurchasePlanType
   currency            String           @default("PHP")
   amountMinor         Int?
+  listAmountMinor     Int?
   annualDiscountBps   Int?
   renewalBehavior     RenewalBehavior  @default(NONE)
   active              Boolean          @default(true)
@@ -877,1048 +867,826 @@ model ProductVersion {
   commissioningRuns CommissioningRun[]
 
   @@unique([productId, version])
+  @@index([productId, lifecycle])
+}
+
+model Price {
+  id              String       @id @default(cuid())
+  productId       String
+  licensePolicyId String
+  name            String
+  amountMinor     Int
+  currency        String       @default("PHP")
+  billingType     BillingType
+  intervalUnit    IntervalUnit?
+  intervalCount   Int?
+  active          Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  product         Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  licensePolicy   LicensePolicy @relation(fields: [licensePolicyId], references: [id], onDelete: Restrict)
+  legacyPlan      PurchasePlan?
+  orderItems      OrderItem[]
+  subscriptions   Subscription[]
+}
+
+model LicensePolicy {
+  id                String   @id @default(cuid())
+  productId         String
+  name              String
+  maxSeats          Int
+  maxDevicesPerSeat Int
+  validityDays      Int?
+  createdAt         DateTime @default(now())
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  prices            Price[]
+  orderItems        OrderItem[]
+
+  @@index([productId])
+}
+
+model ProductArtifact {
+  id                    String         @id @default(cuid())
+  productId             String
+  versionId             String
+  platform              String
+  architecture          String
+  objectKey             String?
+  storageBucket         String?
+  sha256                String
+  sizeBytes             BigInt
+  originalFilename      String
+  contentType           String
+  malwareStatus         String         @default("PENDING")
+  malwareScannedAt      DateTime?
+  malwareScanDetail     Json?
+  active                Boolean        @default(true)
+  artifactUrl           String?
+  artifactUrlSource     String?
+  artifactUrlUpdatedAt  DateTime?
+  createdAt             DateTime       @default(now())
+  product               Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version               ProductVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  uploadSessions        ArtifactUploadSession[]
+  commissioningRuns     CommissioningRun[]
+
+  @@unique([productId, versionId, platform, architecture])
+  @@index([productId, versionId, active])
 }
 
 model ArtifactUploadSession {
   id               String              @id @default(cuid())
   productId        String
   versionId        String
-  objectKey        String              @unique
-  originalFilename String
-  extension        String
-  contentType      String
-  expectedSize     BigInt
-  expectedSha256   String?
-  state            ArtifactUploadState  @default(PENDING)
+  artifactId       String?
   createdById      String
-  expiresAt        DateTime
-  completedAt      DateTime?
+  objectKey        String
+  originalFilename String
+  contentType      String
+  expectedSizeBytes BigInt
+  expectedSha256   String?
+  state            ArtifactUploadState @default(PENDING)
+  uploadedAt       DateTime?
+  verifiedAt       DateTime?
   failedAt         DateTime?
-  failureReason    String?
+  expiresAt        DateTime
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
   product          Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
   version          ProductVersion      @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  artifact         ProductArtifact?    @relation(fields: [artifactId], references: [id], onDelete: SetNull)
   createdBy        User                @relation("ArtifactUploadCreator", fields: [createdById], references: [id], onDelete: Restrict)
 
-  @@index([versionId, state])
+  @@index([productId, versionId, state])
   @@index([expiresAt, state])
 }
 
-model ReleaseApproval {
-  id          String        @id @default(cuid())
-  versionId   String
-  stage       ReleaseLifecycle
-  createdById String
-  reviewedById String?
-  approvedById String?
-  approvedAt  DateTime?
-  reviewedAt  DateTime?
-  payloadHash String?
-  notes       String?
-  createdAt   DateTime      @default(now())
-  version     ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
-  createdBy   User          @relation("ReleaseApprovalCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  reviewedBy  User?         @relation("ReleaseApprovalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
-  approvedBy  User?         @relation("ReleaseApprovalApprover", fields: [approvedById], references: [id], onDelete: SetNull)
-  @@index([versionId, stage])
-}
-
-model SupplyChainEvidence {
-  id                 String   @id @default(cuid())
-  versionId          String   @unique
-  releaseIdentifier  String
-  commitHash         String
-  branch             String
-  buildEnvironment   String
-  builderIdentity    String
-  builtAt            DateTime
-  manifestJson       Json     @default("{}")
-  sbomReference      String?
-  sbomFormat         String?
-  manifestSignature  String?
-  signatureVerified  Boolean  @default(false)
-  canonicalPayloadHash String?
-  signatureAlgorithm String?
-  signatureKeyId    String?
-  signedAt          DateTime?
-  dependencyVerified Boolean  @default(false)
-  malwareStatus      String   @default("PENDING_SCAN")
-  certificateStatus  String   @default("PENDING_PROVISIONING")
-  provenanceStatus   String   @default("RECORDED")
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  version            ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
-  verificationEvidence SupplyChainVerificationEvidence[]
-  @@index([malwareStatus, certificateStatus])
-}
-
-model SupplyChainVerificationEvidence {
-  id                String   @id @default(cuid())
-  evidenceId        String
-  kind              String
-  artifactHash      String
-  signerKeyId       String?
-  scannerId         String?
-  scannerVersion    String?
-  result            String
-  reference         String?
-  documentObjectKey String?
-  documentSha256    String?
-  failureReason     String?
-  verifiedAt        DateTime @default(now())
-  metadata          Json     @default("{}")
-  evidence          SupplyChainEvidence @relation(fields: [evidenceId], references: [id], onDelete: Restrict)
-  @@index([evidenceId, kind, verifiedAt])
-  @@index([documentObjectKey])
-}
-
-model LicensePolicy {
-  id                String  @id @default(cuid())
-  productId         String
-  name              String
-  maxSeats          Int     @default(1)
-  maxDevicesPerSeat Int     @default(1)
-  validityDays      Int?
-  transferable      Boolean @default(false)
-  rules             Json    @default("{}")
-  product           Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  prices            Price[]
-}
-
-model Price {
-  id              String        @id @default(cuid())
-  productId       String
-  licensePolicyId String
-  name            String
-  amountMinor     Int
-  currency        String        @default("PHP")
-  billingType     BillingType
-  intervalUnit    IntervalUnit?
-  intervalCount   Int?
-  active          Boolean       @default(true)
-  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
-  licensePolicy   LicensePolicy @relation(fields: [licensePolicyId], references: [id])
-  cartItems       CartItem[]
-  purchasePlan    PurchasePlan?
-
-  @@index([productId, active])
-}
-
-model ProductArtifact {
-  id            String              @id @default(cuid())
-  productId     String
-  versionId     String?
-  name          String
-  objectKey     String              @unique
-  sha256        String
-  sizeBytes     BigInt
-  contentType   String
-  active        Boolean             @default(true)
-  downloadCount Int                 @default(0)
-  removedAt     DateTime?
-  createdAt     DateTime            @default(now())
-  product       Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
-  version       ProductVersion?     @relation(fields: [versionId], references: [id])
-  grants        DownloadGrant[]
-  cleanupJobs   StorageCleanupJob[]
-  commissioningRuns CommissioningRun[]
-}
-
 model CommissioningRun {
-  id                 String             @id @default(cuid())
-  productId          String
-  versionId          String
-  artifactId         String
-  artifactSha256     String
-  artifactSizeBytes  BigInt
-  payloadHash        String?
-  policyVersion      String
-  generatorVersion   String
-  status             CommissioningStatus @default(PENDING)
-  classification     String
-  sbomStatus         String             @default("UNDETERMINED")
-  dependencyStatus   String             @default("UNDETERMINED")
-  migrationCategory  String             @default("UNKNOWN")
-  migrationStatus    String             @default("UNDETERMINED")
-  evidence           Json               @default("{}")
-  limitations        Json               @default("[]")
-  errorCode          String?
-  attempts           Int                @default(0)
-  startedAt          DateTime?
-  completedAt        DateTime?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  product            Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
-  version            ProductVersion     @relation(fields: [versionId], references: [id], onDelete: Cascade)
-  artifact           ProductArtifact   @relation(fields: [artifactId], references: [id], onDelete: Restrict)
-  @@unique([artifactId, artifactSha256, payloadHash, policyVersion, generatorVersion])
-  @@index([status, createdAt])
-  @@index([versionId, status])
-}
+  id                    String              @id @default(cuid())
+  productId             String
+  versionId             String
+  artifactId            String?
+  sourceUploadSessionId String?
+  status                CommissioningStatus @default(PENDING)
+  attemptCount          Int                 @default(0)
+  artifactSha256        String?
+  artifactSizeBytes     BigInt?
+  manifestSha256        String?
+  manifestSnapshot      Json?
+  dependencyEvidence    Json?
+  migrationEvidence     Json?
+  sbomDocument          Json?
+  evidenceSha256        String?
+  evidenceGeneratedAt   DateTime?
+  startedAt             DateTime?
+  completedAt           DateTime?
+  failureCode           String?
+  failureDetail         String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  product               Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version               ProductVersion      @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  artifact              ProductArtifact?    @relation(fields: [artifactId], references: [id], onDelete: SetNull)
 
-model StorageCleanupJob {
-  id               String                @id @default(cuid())
-  type             StorageCleanupJobType
-  status           StorageCleanupStatus  @default(PENDING)
-  targetType       String
-  targetId         String
-  objectKey        String
-  idempotencyKey   String                @unique
-  attempts         Int                   @default(0)
-  nextAttemptAt    DateTime              @default(now())
-  lastErrorCode    String?
-  correlationId    String
-  productId        String?
-  artifactId       String?
-  createdByAdminId String?
-  createdAt        DateTime              @default(now())
-  startedAt        DateTime?
-  completedAt      DateTime?
-  product          Product?              @relation(fields: [productId], references: [id], onDelete: SetNull)
-  artifact         ProductArtifact?      @relation(fields: [artifactId], references: [id], onDelete: SetNull)
-  createdByAdmin   User?                 @relation("StorageCleanupCreator", fields: [createdByAdminId], references: [id], onDelete: SetNull)
-
-  @@index([status, nextAttemptAt])
-  @@index([targetType, targetId])
-  @@index([productId, status])
-  @@index([artifactId, status])
+  @@index([productId, versionId, status])
+  @@index([createdAt, status])
 }
 
 model Cart {
   id        String          @id @default(cuid())
   accountId String
-  expiresAt DateTime
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   account   CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
   items     CartItem[]
+
+  @@index([accountId])
 }
 
 model CartItem {
-  cartId   String
-  priceId  String
-  quantity Int
-  cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  price    Price  @relation(fields: [priceId], references: [id])
+  id        String @id @default(cuid())
+  cartId    String
+  productId String
+  priceId   String
+  quantity  Int    @default(1)
+  cart      Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
 
-  @@id([cartId, priceId])
+  @@unique([cartId, productId, priceId])
 }
 
 model Order {
-  id                    String                  @id @default(cuid())
-  number                String                  @unique
-  accountId             String
-  status                OrderStatus             @default(PENDING)
-  currency              String
-  subtotalMinor         Int
-  taxMinor              Int
-  totalMinor            Int
-  billingSnapshot       Json
-  createdAt             DateTime                @default(now())
-  paidAt                DateTime?
-  renewalSubscriptionId String?
-  account               CustomerAccount         @relation(fields: [accountId], references: [id])
-  items                 OrderItem[]
-  payments              Payment[]
-  attempts              PaymentAttempt[]
-  invoice               Invoice?
-  licenses              License[]
-  subscriptions         Subscription[]
-  renewalSubscription   Subscription?           @relation("SubscriptionRenewalOrders", fields: [renewalSubscriptionId], references: [id], onDelete: Restrict)
-  offerRedemption       OfferRedemption?
-  webhookEvents         WebhookEvent[]
-  refundOperations      RefundOperation[]
-  reconciliations       PaymentReconciliation[]
-  supportTickets        SupportTicket[]
+  id               String      @id @default(cuid())
+  number           String      @unique
+  accountId        String
+  status           OrderStatus @default(PENDING)
+  currency         String      @default("PHP")
+  subtotalMinor    Int
+  discountMinor    Int         @default(0)
+  taxMinor         Int         @default(0)
+  totalMinor       Int
+  billingSnapshot  Json
+  paymentReference String?
+  paymentProvider  String?
+  paymentMode      ProviderEnvironment?
+  paymentCheckoutId String?
+  paymentCheckoutUrl String?
+  providerExpiresAt DateTime?
+  checkoutCreatedAt DateTime?
+  paymentSettledAt DateTime?
+  paymentFailedAt  DateTime?
+  paidAt           DateTime?
+  cancelledAt      DateTime?
+  refundedAt       DateTime?
+  refundAmountMinor Int        @default(0)
+  createdAt        DateTime    @default(now())
+  account          CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  items            OrderItem[]
+  payments         Payment[]
+  licenses         License[]
+  subscriptions    Subscription[]
+  invoices         Invoice[]
+  offerRedemptions OfferRedemption[]
+  refundOperations RefundOperation[]
 
-  @@index([accountId, createdAt])
-  @@index([renewalSubscriptionId])
+  @@index([accountId, status])
+  @@index([status, createdAt])
+  @@index([paymentMode, status])
 }
 
 model OrderItem {
-  id                  String            @id @default(cuid())
-  orderId             String
-  productId           String
-  priceId             String
-  policyId            String
-  productName         String
-  priceName           String
-  quantity            Int
-  unitAmountMinor     Int
-  totalMinor          Int
-  billingType         BillingType
-  policySnapshot      Json
-  editionId           String?
-  purchasePlanId      String?
-  editionName         String?
-  planName            String?
-  planType            PurchasePlanType?
-  intervalUnit        IntervalUnit?
-  intervalCount       Int?
-  renewalBehavior     RenewalBehavior?
-  entitlementSnapshot Json?
-  pricingSnapshot     Json?
-  catalogAmountMinor  Int?
-  offerId             String?
-  offerDiscountBps    Int?
-  offerDiscountMinor  Int?
-  pricingVersion      String?
-  order               Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
-}
-
-model Payment {
-  id               String                  @id @default(cuid())
-  orderId          String
-  provider         String
-  externalId       String
-  status           PaymentStatus
-  amountMinor      Int
-  currency         String
-  paidAt           DateTime?
-  createdAt        DateTime                @default(now())
-  updatedAt        DateTime                @updatedAt
-  order            Order                   @relation(fields: [orderId], references: [id])
-  webhookEvents    WebhookEvent[]
-  refundOperations RefundOperation[]
-  reconciliations  PaymentReconciliation[]
-
-  @@unique([provider, externalId])
-  @@index([orderId])
-}
-
-model PaymentAttempt {
-  id                 String         @id @default(cuid())
-  orderId            String
-  provider           String
-  idempotencyKey     String         @unique
-  externalCheckoutId String?        @unique
-  checkoutUrl        String?
-  status             String
-  createdAt          DateTime       @default(now())
-  order              Order          @relation(fields: [orderId], references: [id])
-  webhookEvents      WebhookEvent[]
-}
-
-model WebhookEvent {
-  id                 String          @id @default(cuid())
-  provider           String
-  externalEventId    String
-  rawEventType       String?
-  eventType          String
-  livemode           Boolean
-  payloadHash        String
-  normalizedData     Json?
-  status             String
-  error              String?
-  lastErrorCode      String?
-  mismatchCategory   String?
-  processingAttempts Int             @default(0)
-  conflictCount      Int             @default(0)
-  receivedAt         DateTime        @default(now())
-  lastAttemptAt      DateTime?
-  processedAt        DateTime?
-  occurredAt         DateTime?
-  orderId            String?
-  paymentAttemptId   String?
-  paymentId          String?
-  providerCheckoutId String?
-  providerPaymentId  String?
-  providerRefundId   String?
-  resolutionStatus   String          @default("OPEN")
-  resolutionCode     String?
-  resolvedAt         DateTime?
-  resolvedById       String?
-  order              Order?          @relation(fields: [orderId], references: [id], onDelete: SetNull)
-  paymentAttempt     PaymentAttempt? @relation(fields: [paymentAttemptId], references: [id], onDelete: SetNull)
-  payment            Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-  resolvedBy         User?           @relation("WebhookAcknowledger", fields: [resolvedById], references: [id], onDelete: SetNull)
-
-  @@unique([provider, externalEventId])
-  @@index([status, receivedAt])
-  @@index([mismatchCategory, receivedAt])
-  @@index([orderId, receivedAt])
-}
-
-model RefundOperation {
-  id               String    @id @default(cuid())
-  orderId          String
-  paymentId        String
-  provider         String
-  amountMinor      Int
-  currency         String
-  reasonCode       String
-  idempotencyKey   String    @unique
-  externalRefundId String?   @unique
-  status           String    @default("REQUESTED")
-  lastErrorCode    String?
-  requestedById    String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  completedAt      DateTime?
-  order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  payment          Payment   @relation(fields: [paymentId], references: [id], onDelete: Restrict)
-  requestedBy      User      @relation("RefundRequester", fields: [requestedById], references: [id], onDelete: Restrict)
-
-  @@index([orderId, createdAt])
-  @@index([status, createdAt])
-}
-
-model PaymentReconciliation {
-  id               String    @id @default(cuid())
-  orderId          String
-  paymentId        String?
-  provider         String
-  classification   String
-  differences      Json      @default("[]")
-  localStatus      String
-  providerStatus   String?
-  status           String    @default("OPEN")
-  correlationId    String    @unique
-  lastErrorCode    String?
-  runById          String
-  acknowledgedById String?
-  acknowledgedAt   DateTime?
-  createdAt        DateTime  @default(now())
-  order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  payment          Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-  runBy            User      @relation("ReconciliationRunner", fields: [runById], references: [id], onDelete: Restrict)
-  acknowledgedBy   User?     @relation("ReconciliationAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
-
-  @@index([orderId, createdAt])
-  @@index([status, createdAt])
-  @@index([classification, createdAt])
-}
-
-model Invoice {
-  id               String        @id @default(cuid())
-  number           String        @unique
-  orderId          String        @unique
-  status           InvoiceStatus @default(DRAFT)
-  customerSnapshot Json
-  currency         String
-  subtotalMinor    Int
-  taxMinor         Int
-  totalMinor       Int
-  issuedAt         DateTime?
-  createdAt        DateTime      @default(now())
-  order            Order         @relation(fields: [orderId], references: [id])
-  lines            InvoiceLine[]
-}
-
-model InvoiceLine {
-  id              String  @id @default(cuid())
-  invoiceId       String
-  description     String
+  id              String      @id @default(cuid())
+  orderId         String
+  productId       String
+  priceId         String
+  policyId        String
+  productName     String
+  priceName       String
   quantity        Int
   unitAmountMinor Int
   totalMinor      Int
-  invoice         Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-}
-
-model Subscription {
-  id                             String             @id @default(cuid())
-  accountId                      String
-  orderId                        String
-  productId                      String
-  editionId                      String?
-  purchasePlanId                 String?
-  status                         SubscriptionStatus @default(PENDING)
-  seats                          Int
-  currentPeriodStart             DateTime
-  currentPeriodEnd               DateTime
-  renewalReminderAt              DateTime
-  currency                       String?
-  normalRecurringAmountMinor     Int?
-  discountedRecurringAmountMinor Int?
-  promotionalDiscountBps         Int?
-  discountedCyclesTotal          Int?
-  discountedCyclesConsumed       Int                @default(0)
-  offerId                        String?
-  offerSnapshot                  Json?
-  pricingVersion                 String?
-  createdAt                      DateTime           @default(now())
-  updatedAt                      DateTime           @updatedAt
-  account                        CustomerAccount    @relation(fields: [accountId], references: [id])
-  order                          Order              @relation(fields: [orderId], references: [id])
-  product                        Product            @relation(fields: [productId], references: [id])
-  edition                        Edition?           @relation(fields: [editionId], references: [id])
-  purchasePlan                   PurchasePlan?      @relation(fields: [purchasePlanId], references: [id])
-  renewalOrders                  Order[]            @relation("SubscriptionRenewalOrders")
-  licenses                       License[]
-
-  @@index([accountId, status])
+  billingType     BillingType
+  policySnapshot  Json
+  purchasePlanId  String?
+  editionId       String?
+  editionName     String?
+  planName        String?
+  planType        PurchasePlanType?
+  pricingSnapshot Json?
+  order           Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  price           Price       @relation(fields: [priceId], references: [id], onDelete: Restrict)
+  product         Product     @relation(fields: [productId], references: [id], onDelete: Restrict)
+  policy          LicensePolicy @relation(fields: [policyId], references: [id], onDelete: Restrict)
+  purchasePlan    PurchasePlan? @relation(fields: [purchasePlanId], references: [id], onDelete: SetNull)
+  edition         Edition?    @relation(fields: [editionId], references: [id], onDelete: SetNull)
 }
 
 model DiscountOffer {
-  id                        String            @id @default(cuid())
-  codeNormalized            String?           @unique
-  name                      String
-  description               String?
-  type                      DiscountType
-  status                    DiscountStatus    @default(DRAFT)
-  discountBps               Int
-  startsAt                  DateTime
-  endsAt                    DateTime?
-  productId                 String?
-  editionId                 String?
-  purchasePlanId            String?
-  customerAccountId         String?
-  maximumRedemptions        Int?
-  perAccountRedemptionLimit Int?
-  discountedBillingCycles   Int?
-  allowZeroTotal            Boolean           @default(false)
-  createdById               String
-  createdAt                 DateTime          @default(now())
-  updatedAt                 DateTime          @updatedAt
-  revokedAt                 DateTime?
-  product                   Product?          @relation(fields: [productId], references: [id], onDelete: Restrict)
-  edition                   Edition?          @relation(fields: [editionId], references: [id], onDelete: Restrict)
-  purchasePlan              PurchasePlan?     @relation(fields: [purchasePlanId], references: [id], onDelete: Restrict)
-  customerAccount           CustomerAccount?  @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
-  createdBy                 User              @relation("OfferCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  redemptions               OfferRedemption[]
+  id                       String          @id @default(cuid())
+  code                     String          @unique
+  name                     String
+  description              String?
+  type                     DiscountType
+  status                   DiscountStatus  @default(DRAFT)
+  discountBps              Int
+  productId                String?
+  editionId                String?
+  purchasePlanId           String?
+  customerAccountId        String?
+  startsAt                 DateTime?
+  endsAt                   DateTime?
+  maxRedemptions           Int?
+  maxRedemptionsPerAccount Int?
+  subscriptionCycles       Int?
+  allowZeroTotal           Boolean         @default(false)
+  createdById              String
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+  product                  Product?        @relation(fields: [productId], references: [id], onDelete: Restrict)
+  edition                  Edition?        @relation(fields: [editionId], references: [id], onDelete: Restrict)
+  purchasePlan             PurchasePlan?   @relation(fields: [purchasePlanId], references: [id], onDelete: Restrict)
+  customerAccount          CustomerAccount? @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  createdBy                User            @relation("OfferCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  redemptions              OfferRedemption[]
 
   @@index([status, startsAt, endsAt])
+  @@index([productId, editionId, purchasePlanId])
   @@index([customerAccountId, status])
-  @@index([purchasePlanId, status])
 }
 
 model OfferRedemption {
-  id             String                @id @default(cuid())
-  offerId        String
-  accountId      String
-  orderId        String                @unique
-  status         OfferRedemptionStatus @default(RESERVED)
-  discountBps    Int
-  baseMinor      Int
-  discountMinor  Int
-  finalMinor     Int
-  currency       String
-  pricingVersion String
-  reservedAt     DateTime              @default(now())
-  appliedAt      DateTime?
-  releasedAt     DateTime?
-  offer          DiscountOffer         @relation(fields: [offerId], references: [id], onDelete: Restrict)
-  account        CustomerAccount       @relation(fields: [accountId], references: [id], onDelete: Restrict)
-  order          Order                 @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  id               String                  @id @default(cuid())
+  offerId          String
+  customerAccountId String
+  orderId          String?
+  subscriptionId   String?
+  status           OfferRedemptionStatus   @default(RESERVED)
+  reservedAt       DateTime                @default(now())
+  appliedAt        DateTime?
+  releasedAt       DateTime?
+  refundedAt       DateTime?
+  discountBps      Int
+  catalogAmountMinor Int
+  discountAmountMinor Int
+  finalAmountMinor Int
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  offer            DiscountOffer           @relation(fields: [offerId], references: [id], onDelete: Restrict)
+  customerAccount  CustomerAccount         @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  order            Order?                  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  subscription     Subscription?           @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 
-  @@index([offerId, status])
-  @@index([offerId, accountId, status])
-}
-
-model License {
-  id                String              @id @default(cuid())
-  publicId          String              @unique
-  keyHash           String              @unique
-  keyLastFour       String
-  keyCiphertext     String?
-  keyRevealedAt     DateTime?
-  accountId         String
-  orderId           String
-  orderItemId       String
-  productId         String
-  editionId         String?
-  purchasePlanId    String?
-  subscriptionId    String?
-  status            LicenseStatus       @default(ACTIVE)
-  maxSeats          Int
-  maxDevicesPerSeat Int
-  expiresAt         DateTime?
-  createdAt         DateTime            @default(now())
-  account           CustomerAccount     @relation(fields: [accountId], references: [id])
-  order             Order               @relation(fields: [orderId], references: [id])
-  subscription      Subscription?       @relation(fields: [subscriptionId], references: [id])
-  product           Product             @relation(fields: [productId], references: [id])
-  edition           Edition?            @relation(fields: [editionId], references: [id])
-  purchasePlan      PurchasePlan?       @relation(fields: [purchasePlanId], references: [id])
-  assignments       LicenseAssignment[]
-  activations       DeviceActivation[]
-  grants            DownloadGrant[]
-  events            LicenseEvent[]
-  leaseHistory      LicenseLeaseRecord[]
-  leaseOperations   CommercialLeaseOperation[]
-  trialGrant        TrialGrant?
-  supportTickets    SupportTicket[]
-
-  @@unique([orderItemId])
-  @@index([accountId, status])
-}
-
-model SupportTicket {
-  id              String                @id @default(cuid())
-  publicId        String                @unique
-  createdById     String
-  accountId       String
-  orderId         String?
-  licenseId       String?
-  category        SupportTicketCategory
-  state           SupportTicketState    @default(OPEN)
-  priority        SupportTicketPriority @default(NORMAL)
-  subject         String
-  safeContext     Json                  @default("{}")
-  securityReport  Boolean               @default(false)
-  assignedToId    String?
-  escalatedAt     DateTime?
-  resolvedAt      DateTime?
-  closedAt        DateTime?
-  lastCustomerReplyAt DateTime?
-  lastAdminReplyAt    DateTime?
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
-  createdBy       User                  @relation("SupportTicketCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  account         CustomerAccount       @relation(fields: [accountId], references: [id], onDelete: Restrict)
-  order           Order?                @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  license         License?              @relation(fields: [licenseId], references: [id], onDelete: Restrict)
-  assignedTo      User?                 @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
-  messages        SupportTicketMessage[]
-  events          SupportTicketEvent[]
-
-  @@index([createdById, createdAt])
-  @@index([accountId, createdAt])
-  @@index([state, priority, createdAt])
-  @@index([assignedToId, state])
-  @@index([securityReport, state])
-}
-
-model SupportTicketMessage {
-  id          String                   @id @default(cuid())
-  ticketId    String
-  authorId    String
-  body        String
-  visibility  SupportMessageVisibility @default(PUBLIC)
-  createdAt   DateTime                 @default(now())
-  ticket      SupportTicket            @relation(fields: [ticketId], references: [id], onDelete: Restrict)
-  author      User                     @relation("SupportMessageAuthor", fields: [authorId], references: [id], onDelete: Restrict)
-
-  @@index([ticketId, createdAt])
-  @@index([authorId, createdAt])
-}
-
-model SupportTicketEvent {
-  id        String        @id @default(cuid())
-  ticketId  String
-  actorId   String?
-  eventType String
-  metadata  Json          @default("{}")
-  createdAt DateTime      @default(now())
-  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
-  actor     User?         @relation("SupportEventActor", fields: [actorId], references: [id], onDelete: SetNull)
-
-  @@index([ticketId, createdAt])
-  @@index([actorId, createdAt])
-  @@index([eventType, createdAt])
-}
-
-model LicenseLeaseRecord {
-  id              String   @id @default(cuid())
-  licenseId       String
-  leaseId         String   @unique
-  generation      Int
-  serverRevision  Int
-  installationId  String
-  deviceId        String
-  version         String
-  status          String
-  action          String
-  operationId     String?  @unique
-  signerKeyId     String?
-  expiresAt       DateTime?
-  leasePayload    String?
-  leaseSignature  String?
-  supersededById  String?
-  issuedAt        DateTime @default(now())
-  createdAt       DateTime @default(now())
-  license         License  @relation(fields: [licenseId], references: [id], onDelete: Restrict)
-  operation       CommercialLeaseOperation? @relation("LeaseOperationReference", fields: [operationId], references: [operationId], onDelete: Restrict)
-  operationResult CommercialLeaseOperation? @relation("LeaseOperationResult")
-  supersededBy    LicenseLeaseRecord? @relation("LeaseSupersession", fields: [supersededById], references: [id], onDelete: Restrict)
-  supersedes      LicenseLeaseRecord[] @relation("LeaseSupersession")
-  @@index([licenseId, installationId, deviceId, generation, serverRevision])
-}
-
-model CommercialLeaseOperation {
-  id             String   @id @default(cuid())
-  operationId    String   @unique
-  licenseId      String?
-  action         String
-  status         String   @default("PENDING")
-  resultLeaseId  String?  @unique
-  metadata       Json     @default("{}")
-  createdAt      DateTime @default(now())
-  completedAt    DateTime?
-  license        License? @relation(fields: [licenseId], references: [id], onDelete: Restrict)
-  resultLease    LicenseLeaseRecord? @relation("LeaseOperationResult", fields: [resultLeaseId], references: [leaseId], onDelete: Restrict)
-  leaseRecords   LicenseLeaseRecord[] @relation("LeaseOperationReference")
-  @@index([licenseId, action, status])
-}
-
-model CommercialSigningKey {
-  id                  String   @id @default(cuid())
-  keyId               String   @unique
-  algorithm           String   @default("Ed25519")
-  status              String   @default("ACTIVE")
-  publicKey           String
-  privateKeyReference String
-  createdAt           DateTime @default(now())
-  activatedAt         DateTime @default(now())
-  retiredAt           DateTime?
-  rotationReason      String?
-  createdBy           String?
-  @@index([status])
+  @@index([offerId, customerAccountId, status])
+  @@index([orderId])
+  @@index([subscriptionId])
 }
 
 model TrialGrant {
-  id              String          @id @default(cuid())
-  accountId       String
-  productId       String
-  editionId       String
-  licenseId       String          @unique
-  source          TrialSource
-  selfServiceYear Int?
-  trialStartsAt   DateTime
-  trialEndsAt     DateTime
-  graceEndsAt     DateTime
-  revokedAt       DateTime?
-  createdById     String?
-  createdAt       DateTime        @default(now())
-  account         CustomerAccount @relation(fields: [accountId], references: [id])
-  product         Product         @relation(fields: [productId], references: [id])
-  edition         Edition         @relation(fields: [editionId], references: [id])
-  license         License         @relation(fields: [licenseId], references: [id])
+  id               String      @id @default(cuid())
+  accountId        String
+  productId        String
+  editionId        String
+  source           TrialSource
+  createdAt        DateTime    @default(now())
+  trialStartsAt    DateTime
+  trialEndsAt      DateTime
+  convertedAt      DateTime?
+  revokedAt        DateTime?
+  account          CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  product          Product         @relation(fields: [productId], references: [id], onDelete: Restrict)
+  edition          Edition         @relation(fields: [editionId], references: [id], onDelete: Restrict)
 
-  @@unique([accountId, productId, selfServiceYear])
-  @@index([accountId, graceEndsAt])
-  @@index([productId, createdAt])
+  @@unique([accountId, productId, trialStartsAt])
+  @@index([accountId, productId, trialStartsAt])
+  @@index([trialEndsAt])
+}
+
+model Subscription {
+  id                String             @id @default(cuid())
+  publicId          String             @unique
+  accountId         String
+  productId         String
+  priceId           String
+  purchasePlanId    String?
+  editionId         String?
+  status            SubscriptionStatus @default(PENDING)
+  startedAt         DateTime
+  currentPeriodStart DateTime
+  currentPeriodEnd  DateTime
+  cancelAtPeriodEnd Boolean            @default(false)
+  cancelledAt       DateTime?
+  createdAt         DateTime           @default(now())
+  account           CustomerAccount    @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  product           Product            @relation(fields: [productId], references: [id], onDelete: Restrict)
+  price             Price              @relation(fields: [priceId], references: [id], onDelete: Restrict)
+  purchasePlan      PurchasePlan?      @relation(fields: [purchasePlanId], references: [id], onDelete: SetNull)
+  edition           Edition?           @relation(fields: [editionId], references: [id], onDelete: SetNull)
+  offerRedemptions  OfferRedemption[]
+  licenses          License[]
+
+  @@index([accountId, status])
+  @@index([productId, status])
+  @@index([purchasePlanId, status])
+}
+
+model License {
+  id                  String        @id @default(cuid())
+  publicId            String        @unique
+  keyHash              String        @unique
+  keyLastFour          String
+  keyCiphertext        String
+  accountId            String
+  orderId              String?
+  orderItemId          String?
+  productId            String
+  editionId            String?
+  purchasePlanId       String?
+  subscriptionId       String?
+  status               LicenseStatus @default(ACTIVE)
+  issuedAt             DateTime      @default(now())
+  expiresAt            DateTime?
+  maxSeats             Int
+  maxDevicesPerSeat    Int
+  account              CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  order                Order?        @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  orderItem            OrderItem?    @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+  product              Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
+  edition              Edition?      @relation(fields: [editionId], references: [id], onDelete: SetNull)
+  purchasePlan         PurchasePlan? @relation(fields: [purchasePlanId], references: [id], onDelete: SetNull)
+  subscription         Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  assignments          LicenseAssignment[]
+  activations          DeviceActivation[]
+  trialGrant           TrialGrant?
+  commercialOperations CommercialLeaseOperation[]
+  commercialLeases     CommercialLease[]
+
+  @@index([accountId, status])
+  @@index([productId, status])
+  @@index([subscriptionId])
 }
 
 model LicenseAssignment {
-  id        String   @id @default(cuid())
-  licenseId String
-  userId    String
-  createdAt DateTime @default(now())
-  license   License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id])
+  id         String   @id @default(cuid())
+  licenseId  String
+  userId     String
+  createdAt  DateTime @default(now())
+  license    License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([licenseId, userId])
 }
 
 model DeviceActivation {
+  id             String   @id @default(cuid())
+  licenseId      String
+  deviceId       String
+  deviceName     String?
+  activatedAt    DateTime @default(now())
+  lastSeenAt     DateTime @default(now())
+  deactivatedAt  DateTime?
+  license        License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+
+  @@unique([licenseId, deviceId])
+  @@index([deviceId])
+}
+
+model CommercialLeaseOperation {
+  id             String    @id @default(cuid())
+  operationId    String    @unique
+  licenseId      String
+  action         String
+  status         String    @default("PENDING")
+  resultLeaseId  String?
+  createdAt      DateTime  @default(now())
+  completedAt    DateTime?
+  license        License   @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+
+  @@index([licenseId, createdAt])
+}
+
+model CommercialLease {
   id              String    @id @default(cuid())
+  leaseId         String    @unique
   licenseId       String
-  deviceHash      String
-  label           String?
-  machineIdHint   String?
-  operatingSystem String?
-  architecture    String?
-  lastSeenAt      DateTime  @default(now())
-  active          Boolean   @default(true)
-  activatedAt     DateTime  @default(now())
+  installationId  String
+  deviceBinding   String
+  version         String
+  status          String    @default("ACTIVE")
+  issuedAt        DateTime  @default(now())
+  validUntil      DateTime
   deactivatedAt   DateTime?
+  lastSeenAt      DateTime  @default(now())
+  signingKeyId    String
   license         License   @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  signingKey      LicensingSigningKey @relation(fields: [signingKeyId], references: [id], onDelete: Restrict)
 
-  @@unique([licenseId, deviceHash])
-  @@index([licenseId, active])
+  @@unique([licenseId, installationId])
+  @@index([licenseId, status])
+  @@index([installationId, status])
+  @@index([validUntil, status])
 }
 
-model DownloadGrant {
-  id         String          @id @default(cuid())
-  licenseId  String
-  artifactId String
-  tokenHash  String          @unique
-  expiresAt  DateTime
-  usedAt     DateTime?
-  processingAt DateTime?
-  license    License         @relation(fields: [licenseId], references: [id], onDelete: Cascade)
-  artifact   ProductArtifact @relation(fields: [artifactId], references: [id])
+model LicensingSigningKey {
+  id              String   @id @default(cuid())
+  keyId           String   @unique
+  algorithm       String   @default("Ed25519")
+  publicKey       String
+  privateKeyCiphertext String
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  retiredAt       DateTime?
+  commercialLeases CommercialLease[]
+
+  @@index([active])
 }
 
-model LicenseEvent {
-  id        String   @id @default(cuid())
-  licenseId String
-  type      String
-  metadata  Json     @default("{}")
-  createdAt DateTime @default(now())
-  license   License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+model Payment {
+  id               String        @id @default(cuid())
+  orderId          String
+  provider         String
+  providerPaymentId String?
+  amountMinor      Int
+  refundedMinor    Int           @default(0)
+  status           PaymentStatus @default(PENDING)
+  rawPayload       Json?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  order            Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@unique([provider, providerPaymentId])
+  @@index([orderId, status])
+}
+
+model RefundOperation {
+  id                String        @id @default(cuid())
+  orderId           String
+  requestedById     String
+  amountMinor       Int
+  reason            String
+  providerReference String?
+  status            String        @default("PENDING")
+  errorCode         String?
+  createdAt         DateTime      @default(now())
+  completedAt       DateTime?
+  order             Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  requestedBy       User          @relation("RefundRequester", fields: [requestedById], references: [id], onDelete: Restrict)
+
+  @@index([orderId, status])
+}
+
+model PaymentReconciliation {
+  id                   String          @id @default(cuid())
+  provider             ExternalProvider
+  environment          ProviderEnvironment
+  runAt                DateTime        @default(now())
+  runById              String?
+  comparedCount        Int             @default(0)
+  matchedCount         Int             @default(0)
+  mismatchCount        Int             @default(0)
+  mismatchDetails      Json?
+  acknowledgedAt       DateTime?
+  acknowledgedById     String?
+  acknowledgeReason    String?
+  createdAt            DateTime        @default(now())
+  runBy                User?           @relation("ReconciliationRunner", fields: [runById], references: [id], onDelete: SetNull)
+  acknowledgedBy       User?           @relation("ReconciliationAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@index([provider, environment, runAt])
+  @@index([mismatchCount, runAt])
+}
+
+model WebhookEvent {
+  id               String               @id @default(cuid())
+  provider         ExternalProvider
+  environment      ProviderEnvironment
+  providerEventId  String
+  eventType        String
+  payloadSha256    String
+  signatureValid   Boolean
+  processed        Boolean              @default(false)
+  processedAt      DateTime?
+  processingError  String?
+  acknowledgedAt   DateTime?
+  acknowledgedById String?
+  acknowledgeReason String?
+  createdAt        DateTime             @default(now())
+  acknowledgedBy   User?                @relation("WebhookAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@unique([provider, environment, providerEventId])
+  @@index([provider, environment, processed, createdAt])
+  @@index([signatureValid, processed, createdAt])
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  orderId     String
+  number      String        @unique
+  status      InvoiceStatus @default(DRAFT)
+  currency    String
+  subtotalMinor Int
+  discountMinor Int         @default(0)
+  taxMinor    Int           @default(0)
+  totalMinor  Int
+  issuedAt    DateTime?
+  finalizedAt DateTime?
+  voidedAt    DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  lines       InvoiceLine[]
+
+  @@index([orderId])
+  @@index([status, createdAt])
+}
+
+model InvoiceLine {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  description String
+  quantity    Int
+  unitMinor   Int
+  totalMinor  Int
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
 }
 
 model AuditLog {
-  id         String           @id @default(cuid())
+  id         String   @id @default(cuid())
   actorId    String?
-  accountId  String?
   action     String
   targetType String
-  targetId   String?
-  requestId  String?
-  ipHash     String?
-  metadata   Json             @default("{}")
-  createdAt  DateTime         @default(now())
-  actor      User?            @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
-  account    CustomerAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
 
-  @@index([accountId, createdAt])
-  @@index([actorId, createdAt])
-}
-
-model ProductGraceOverride {
-  id           String   @id @default(cuid())
-  productKey   String   @unique
-  graceEnabled Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  @@index([targetType, targetId])
 }
 
 model SiteContent {
-  id        String   @id @default(cuid())
-  key       String   @unique
-  group     String
-  value     String
-  updatedBy String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  editor    User?    @relation("SiteContentEditor", fields: [updatedBy], references: [id], onDelete: SetNull)
-
-  @@index([group])
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  updatedAt   DateTime @updatedAt
+  updatedById String?
+  updatedBy   User?    @relation("SiteContentEditor", fields: [updatedById], references: [id], onDelete: SetNull)
 }
 
-model ComplianceRequirement {
-  id          String               @id @default(cuid())
-  key         String               @unique
-  title       String
-  category    String
-  status      String               @default("IMPLEMENTED")
-  owner       String?
-  reviewer    String?
-  description String
-  decision    String?
-  dueAt       DateTime?
-  reviewedAt  DateTime?
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-  evidence    ComplianceEvidence[]
+model ExternalProviderConfiguration {
+  id                 String                   @id @default(cuid())
+  provider           ExternalProvider
+  environment        ProviderEnvironment
+  active             Boolean                  @default(false)
+  validatedAt        DateTime?
+  lastValidationStatus ProviderValidationStatus @default(NOT_VALIDATED)
+  lastValidationMessage String?
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  createdById        String
+  updatedById        String
+  createdBy          User                     @relation("ProviderConfigurationCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy          User                     @relation("ProviderConfigurationUpdater", fields: [updatedById], references: [id], onDelete: Restrict)
+  credentials        ExternalProviderCredential[]
 
-  @@index([category, status])
-  @@index([status, dueAt])
+  @@unique([provider, environment])
+  @@index([provider, active])
 }
 
-model ComplianceEvidence {
-  id            String                @id @default(cuid())
-  requirementId String
-  kind          String
-  summary       String
-  reference     String?
-  recordedBy    String?
-  createdAt     DateTime              @default(now())
-  requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id], onDelete: Restrict)
-  recorder      User?                 @relation(fields: [recordedBy], references: [id], onDelete: SetNull)
+model ExternalProviderCredential {
+  id                     String                   @id @default(cuid())
+  providerConfigurationId String
+  type                   ProviderCredentialType
+  ciphertext             String
+  keyVersion             Int                      @default(1)
+  active                 Boolean                  @default(true)
+  createdAt              DateTime                 @default(now())
+  revokedAt              DateTime?
+  createdById            String
+  providerConfiguration  ExternalProviderConfiguration @relation(fields: [providerConfigurationId], references: [id], onDelete: Cascade)
+  createdBy              User                     @relation("ProviderCredentialCreator", fields: [createdById], references: [id], onDelete: Restrict)
 
-  @@index([requirementId, createdAt])
+  @@index([providerConfigurationId, type, active])
 }
 
-model JobRun {
-  id          String    @id @default(cuid())
-  key         String    @unique
-  jobType     String
-  completedAt DateTime?
-  createdAt   DateTime  @default(now())
+model SupportTicket {
+  id             String                @id @default(cuid())
+  publicId       String                @unique
+  accountId      String
+  createdById    String
+  assignedToId   String?
+  category       SupportTicketCategory
+  state          SupportTicketState    @default(OPEN)
+  priority       SupportTicketPriority @default(NORMAL)
+  subject        String
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  resolvedAt     DateTime?
+  closedAt       DateTime?
+  account        CustomerAccount       @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  createdBy      User                  @relation("SupportTicketCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  assignedTo     User?                 @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  messages       SupportTicketMessage[]
+  events         SupportTicketEvent[]
+
+  @@index([accountId, state, updatedAt])
+  @@index([assignedToId, state, updatedAt])
+  @@index([category, state, updatedAt])
 }
 
-model ScheduledJobDefinition {
-  key                 String            @id
-  enabled             Boolean           @default(true)
-  cadenceSeconds      Int
-  timeoutSeconds      Int
-  maxAttempts         Int
-  nextRunAt           DateTime
-  lastRunAt           DateTime?
-  lastSuccessAt       DateTime?
-  lastFailureAt       DateTime?
-  consecutiveFailures Int               @default(0)
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-  runs                ScheduledJobRun[]
+model SupportTicketMessage {
+  id         String                   @id @default(cuid())
+  ticketId   String
+  authorId   String
+  visibility SupportMessageVisibility @default(PUBLIC)
+  body       String
+  createdAt  DateTime                 @default(now())
+  ticket     SupportTicket            @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author     User                     @relation("SupportMessageAuthor", fields: [authorId], references: [id], onDelete: Restrict)
 
-  @@index([enabled, nextRunAt])
-  @@index([consecutiveFailures, lastFailureAt])
+  @@index([ticketId, createdAt])
+}
+
+model SupportTicketEvent {
+  id         String    @id @default(cuid())
+  ticketId   String
+  actorId    String?
+  action     String
+  metadata   Json?
+  createdAt  DateTime  @default(now())
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  actor      User?     @relation("SupportEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+}
+
+model StorageCleanupJob {
+  id             String                  @id @default(cuid())
+  type           StorageCleanupJobType
+  status         StorageCleanupStatus    @default(PENDING)
+  productId      String?
+  artifactId     String?
+  objectKey      String?
+  attempts       Int                     @default(0)
+  requestedById  String?
+  requestedAt    DateTime                @default(now())
+  startedAt      DateTime?
+  completedAt    DateTime?
+  nextAttemptAt  DateTime?
+  errorCode      String?
+  errorMessage   String?
+  metadata       Json?
+  product        Product?                @relation(fields: [productId], references: [id], onDelete: SetNull)
+  requestedBy    User?                   @relation("StorageCleanupCreator", fields: [requestedById], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@index([productId, status])
 }
 
 model ScheduledJobRun {
-  id               String                 @id @default(cuid())
-  jobKey           String
-  status           ScheduledJobRunStatus  @default(QUEUED)
-  scheduledFor     DateTime
-  startedAt        DateTime?
-  completedAt      DateTime?
-  durationMs       Int?
-  attempt          Int                    @default(1)
-  trigger          ScheduledJobTrigger
-  dryRun           Boolean                @default(false)
-  lockOwner        String?
-  correlationId    String                 @unique
-  idempotencyKey   String                 @unique
-  parentRunId      String?
-  retryAt          DateTime?
-  resultSummary    Json                   @default("{}")
-  errorCode        String?
-  failureClass     String?
-  acknowledgedAt   DateTime?
-  acknowledgedById String?
-  createdAt        DateTime               @default(now())
-  definition       ScheduledJobDefinition @relation(fields: [jobKey], references: [key], onDelete: Restrict)
-  acknowledgedBy   User?                  @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  id                 String                @id @default(cuid())
+  jobKey             String
+  status             ScheduledJobRunStatus @default(QUEUED)
+  trigger            ScheduledJobTrigger
+  attempt            Int                   @default(0)
+  startedAt          DateTime?
+  finishedAt         DateTime?
+  errorCode          String?
+  errorMessage       String?
+  metadata           Json?
+  acknowledgedAt     DateTime?
+  acknowledgedById   String?
+  acknowledgeReason  String?
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  acknowledgedBy     User?                 @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
 
   @@index([jobKey, createdAt])
-  @@index([status, retryAt])
-  @@index([status, startedAt])
+  @@index([status, createdAt])
+  @@index([trigger, createdAt])
 }
 
 model BackupArchive {
-  id                   String              @id @default(cuid())
-  status               BackupArchiveStatus @default(PENDING)
-  retentionTier        BackupRetentionTier
-  deploymentId         String
-  formatVersion        Int                 @default(1)
-  storagePrefix        String              @unique
-  manifestObjectKey    String?
-  manifestChecksum     String?
-  databaseObjectKey    String?
-  databaseChecksum     String?
-  encryptedChecksum    String?
-  encryptionKeyVersion Int?
-  objectCount          Int                 @default(0)
-  missingObjectCount   Int                 @default(0)
-  sizeBytes            BigInt              @default(0)
-  startedAt            DateTime?
-  completedAt          DateTime?
-  verifiedAt           DateTime?
-  expiresAt            DateTime?
-  deletedAt            DateTime?
-  durationMs           Int?
-  errorCode            String?
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
-  operations           BackupOperation[]
+  id                 String                @id @default(cuid())
+  objectKey          String                @unique
+  status             BackupArchiveStatus   @default(PENDING)
+  retentionTier      BackupRetentionTier
+  backupDate         DateTime
+  sizeBytes          BigInt?
+  sha256             String?
+  manifest           Json?
+  createdAt          DateTime              @default(now())
+  verifiedAt         DateTime?
+  expiresAt          DateTime?
+  deletedAt          DateTime?
+  operations         BackupOperation[]
 
   @@index([status, createdAt])
+  @@index([retentionTier, backupDate])
   @@index([expiresAt, status])
-  @@index([deploymentId, createdAt])
 }
 
 model BackupOperation {
-  id                String                 @id @default(cuid())
-  backupId          String?
-  type              BackupOperationType
-  status            BackupOperationStatus  @default(PENDING)
-  trigger           BackupOperationTrigger
-  requestedById     String?
-  dryRun            Boolean                @default(false)
-  attempts          Int                    @default(0)
-  maxAttempts       Int                    @default(3)
-  nextAttemptAt     DateTime               @default(now())
-  startedAt         DateTime?
-  completedAt       DateTime?
-  durationMs        Int?
-  claimedBy         String?
-  correlationId     String                 @unique
-  idempotencyKey    String                 @unique
-  targetFingerprint String?
-  resultSummary     Json                   @default("{}")
-  errorCode         String?
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
-  backup            BackupArchive?         @relation(fields: [backupId], references: [id], onDelete: Restrict)
-  requestedBy       User?                  @relation("BackupOperationRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+  id             String                @id @default(cuid())
+  archiveId      String?
+  type           BackupOperationType
+  status         BackupOperationStatus @default(PENDING)
+  trigger        BackupOperationTrigger
+  requestedById  String?
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  errorCode      String?
+  errorMessage   String?
+  metadata       Json?
+  createdAt      DateTime              @default(now())
+  archive        BackupArchive?        @relation(fields: [archiveId], references: [id], onDelete: SetNull)
+  requestedBy    User?                 @relation("BackupOperationRequester", fields: [requestedById], references: [id], onDelete: SetNull)
 
-  @@index([status, nextAttemptAt])
-  @@index([backupId, createdAt])
-  @@index([requestedById, createdAt])
+  @@index([status, createdAt])
+  @@index([type, createdAt])
+  @@index([archiveId])
 }
 
 model ObservabilityAlert {
   id               String                     @id @default(cuid())
-  fingerprint      String
   source           String
+  code             String
+  severity         ObservabilityAlertSeverity
+  status           ObservabilityAlertStatus    @default(OPEN)
   title            String
   detail           String?
-  severity         ObservabilityAlertSeverity
-  status           ObservabilityAlertStatus   @default(OPEN)
-  firstSeenAt      DateTime                   @default(now())
-  lastSeenAt       DateTime                   @default(now())
+  dedupKey         String?
+  metadata         Json?
+  firstSeenAt      DateTime                    @default(now())
+  lastSeenAt       DateTime                    @default(now())
   acknowledgedAt   DateTime?
-  resolvedAt       DateTime?
   acknowledgedById String?
+  resolvedAt       DateTime?
   resolvedById     String?
-  metadata         Json                       @default("{}")
-  acknowledgedBy   User?                      @relation("ObservabilityAlertAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
-  resolvedBy       User?                      @relation("ObservabilityAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  acknowledgeReason String?
+  resolveReason    String?
+  createdAt        DateTime                    @default(now())
+  updatedAt        DateTime                    @updatedAt
+  acknowledgedBy   User?                       @relation("ObservabilityAlertAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  resolvedBy       User?                       @relation("ObservabilityAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
 
-  @@unique([fingerprint, status])
   @@index([status, severity, lastSeenAt])
-  @@index([source, lastSeenAt])
+  @@index([source, code, status])
+  @@index([dedupKey, status])
 }
 
-model EmailOutbox {
-  id               String    @id @default(cuid())
-  type             String
-  recipient        String
-  subject          String
-  payload          Json
-  status           String    @default("PENDING")
-  attempts         Int       @default(0)
-  lastError        String?
-  createdAt        DateTime  @default(now())
-  sentAt           DateTime?
-  claimedBy        String?
-  claimedAt        DateTime?
-  claimExpiresAt   DateTime?
-  deduplicationKey String?   @unique
+model ReleaseApproval {
+  id          String   @id @default(cuid())
+  versionId   String
+  createdById String
+  reviewedById String?
+  approvedById String?
+  status      String   @default("PENDING")
+  note        String?
+  createdAt   DateTime @default(now())
+  reviewedAt  DateTime?
+  approvedAt  DateTime?
+  version     ProductVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  createdBy   User @relation("ReleaseApprovalCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  reviewedBy  User? @relation("ReleaseApprovalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  approvedBy  User? @relation("ReleaseApprovalApprover", fields: [approvedById], references: [id], onDelete: SetNull)
 
-  @@index([status, createdAt])
-  @@index([status, claimExpiresAt])
+  @@index([versionId, status])
 }
 
-model ExternalProviderConfiguration {
-  id                 String                       @id @default(cuid())
-  provider           ExternalProvider
-  environment        ProviderEnvironment
-  enabled            Boolean                      @default(false)
-  senderName         String?
-  senderEmail        String?
-  supportEmail       String?
-  metadata           Json                         @default("{}")
-  validationStatus   ProviderValidationStatus     @default(NOT_VALIDATED)
-  lastValidatedAt    DateTime?
-  lastValidationCode String?
-  lastRotatedAt      DateTime?
-  createdByUserId    String
-  updatedByUserId    String
-  createdAt          DateTime                     @default(now())
-  updatedAt          DateTime                     @updatedAt
-  createdBy          User                         @relation("ProviderConfigurationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  updatedBy          User                         @relation("ProviderConfigurationUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
-  credentials        ExternalProviderCredential[]
-
-  @@unique([provider, environment])
-  @@index([enabled, provider, environment])
+model SupplyChainEvidence {
+  id                  String   @id @default(cuid())
+  versionId           String   @unique
+  sbomStatus          String   @default("PENDING")
+  sbomDocument        Json?
+  provenanceStatus    String   @default("PENDING")
+  provenanceDocument  Json?
+  dependencyStatus    String   @default("PENDING")
+  dependencyEvidence  Json?
+  migrationStatus     String   @default("PENDING")
+  migrationEvidence   Json?
+  backupStatus        String   @default("PENDING")
+  backupEvidence      Json?
+  complianceStatus    String   @default("PENDING")
+  complianceEvidence  Json?
+  safetyStatus        String   @default("PENDING")
+  safetyEvidence      Json?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  version             ProductVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
 }
 
-model ExternalProviderCredential {
-  id                     String                        @id @default(cuid())
-  configurationId        String
-  credentialType         ProviderCredentialType
-  encryptedValue         String
-  encryptionKeyVersion   Int
-  maskedHint             String
-  createdAt              DateTime                      @default(now())
-  activatedAt            DateTime                      @default(now())
-  revokedAt              DateTime?
-  replacedByCredentialId String?
-  createdByUserId        String
-  configuration          ExternalProviderConfiguration @relation(fields: [configurationId], references: [id], onDelete: Cascade)
-  createdBy              User                          @relation("ProviderCredentialCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  replacedByCredential   ExternalProviderCredential?   @relation("ProviderCredentialReplacement", fields: [replacedByCredentialId], references: [id], onDelete: SetNull)
-  replaces               ExternalProviderCredential[]  @relation("ProviderCredentialReplacement")
+model ComplianceEvidence {
+  id           String   @id @default(cuid())
+  productId    String?
+  versionId    String?
+  category     String
+  status       String
+  evidence     Json?
+  recordedById String?
+  recordedAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
+  recordedBy   User?    @relation(fields: [recordedById], references: [id], onDelete: SetNull)
 
-  @@index([configurationId, credentialType, revokedAt], map: "ExternalProviderCredential_config_type_revoked_idx")
-  @@index([encryptionKeyVersion, revokedAt])
+  @@index([productId, versionId, category])
+  @@index([category, status])
 }

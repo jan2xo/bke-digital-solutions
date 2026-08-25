@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
-import { calculateAnnualPricing, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { calculatePlanMerchandising, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
 import { PurchasePlanSelector } from "@/components/purchase-plan-selector";
 import { TrialStartButton } from "@/components/trial-start-button";
 
@@ -14,7 +14,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       include: {
         editions: {
           where: { active: true },
-          include: { purchasePlans: { where: { active: true }, include: { monthlySource: true } } },
+          include: { purchasePlans: { where: { active: true } } },
           orderBy: { sortOrder: "asc" },
         },
       },
@@ -32,15 +32,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
         .map((plan) => {
           const terms = resolvePurchasePlan(plan);
-          const annual = plan.type === "ANNUAL" ? calculateAnnualPricing(plan.monthlySource!.amountMinor!, plan.annualDiscountBps ?? 0) : null;
+          const merch = calculatePlanMerchandising(plan.listAmountMinor, terms.amountMinor);
+          const suffix = plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : "";
           return {
             id: plan.id,
             type: plan.type,
             label: purchasePlanLabel(plan.type),
-            amount: money(terms.amountMinor) + (plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : ""),
+            amount: money(terms.amountMinor) + suffix,
+            originalAmount: merch.savingsMinor > 0 ? money(merch.listAmountMinor) + suffix : undefined,
             detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : "Customer-authorized annual renewal",
-            savings: annual ? `Save ${(annual.discountBps / 100).toFixed(annual.discountBps % 100 ? 2 : 0)}% (${money(annual.savingsMinor)})` : undefined,
-            effectiveMonthly: annual ? `Equivalent to ${money(annual.effectiveMonthlyMinor)}/month` : undefined,
+            discountLabel: merch.savingsMinor > 0 ? `${formatDiscount(merch.discountBps)} OFF` : undefined,
+            savings: merch.savingsMinor > 0 ? `You save ${money(merch.savingsMinor)}` : undefined,
+            effectiveMonthly: plan.type === "ANNUAL" ? `Equivalent to ${money(Math.round(terms.amountMinor / 12))}/month` : undefined,
           };
         });
       return <article className="card grid gap-8 p-8 lg:grid-cols-[1fr_1.1fr]" key={edition.id}>
@@ -58,6 +61,5 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   </section>;
 }
 
-function money(minor: number) {
-  return new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(minor / 100);
-}
+function money(minor: number) { return new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(minor / 100); }
+function formatDiscount(bps: number) { const percent = bps / 100; return `${percent.toFixed(bps % 100 ? 2 : 0)}%`; }
