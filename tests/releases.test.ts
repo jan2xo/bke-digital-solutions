@@ -22,7 +22,7 @@ describe("customer release eligibility", () => {
     expect(isCustomerReleaseEligible({ lifecycle: "STABLE", active: false, publishedAt: new Date() })).toBe(false);
   });
 
-  it("requires trusted publication readiness in the artifact download resolver", () => {
+  it("requires trusted V1 publication readiness in the artifact download resolver", () => {
     const readiness = releaseReadiness({
       id: "version-1",
       productId: "product-1",
@@ -36,10 +36,11 @@ describe("customer release eligibility", () => {
       approvals: [],
     });
     expect(readiness.publishable).toBe(false);
-    expect(readiness.items.filter((item) => item.status === "BLOCKED").map((item) => item.key)).toEqual(expect.arrayContaining(["signature", "malware", "sbom", "provenance"]));
+    expect(readiness.items.filter((item) => item.status === "BLOCKED").map((item) => item.key)).toEqual(expect.arrayContaining(["signature", "malware", "approval", "supply-chain-safety"]));
+    expect(readiness.items.filter((item) => item.key === "sbom" || item.key === "provenance").every((item) => item.status === "PENDING")).toBe(true);
   });
 
-  it("rejects SBOM and provenance fields without current hash-bound evidence", () => {
+  it("keeps stale SBOM and provenance evidence advisory without accepting it as current", () => {
     const readiness = releaseReadiness({
       id: "version-2", productId: "product-1", version: "1.0.1", product: { slug: "product" },
       artifacts: [{ id: "artifact-1", objectKey: "artifacts/a.bin", sha256: "a".repeat(64), sizeBytes: 1n, contentType: "application/octet-stream" }],
@@ -51,7 +52,7 @@ describe("customer release eligibility", () => {
       backupEvidence: "backup", complianceEvidence: "compliance", migrationEvidence: "migration", approvals: [{ approvedAt: new Date(), reviewedById: "reviewer" }],
     });
     expect(readiness.publishable).toBe(false);
-    expect(readiness.items.filter((item) => item.key === "sbom" || item.key === "provenance").every((item) => item.status === "BLOCKED")).toBe(true);
+    expect(readiness.items.filter((item) => item.key === "sbom" || item.key === "provenance").every((item) => item.status === "PENDING")).toBe(true);
   });
 
   it("accepts owner review and approval for the current payload", () => {
@@ -73,8 +74,8 @@ describe("customer release eligibility", () => {
     expect(isCommercialComplianceEvidence({ kind: "COMPLIANCE", result: "VERIFIED", artifactHash: payloadHash, metadata: { reference: "Codex Image Aug 18, 2026, 03_53_39 PM.png" } }, "version-1", payloadHash)).toBe(false);
   });
 
-  it("does not let legacy current-hash compliance rows satisfy readiness", () => {
+  it("does not treat legacy compliance rows as valid V2 evidence", () => {
     const version = { id: "version-legacy", productId: "product-1", version: "1.0.0", product: { slug: "product" }, artifacts: [{ id: "artifact-1", objectKey: "artifacts/a.bin", sha256: "a".repeat(64), sizeBytes: 1n, contentType: "application/octet-stream" }], supplyChainEvidence: { signatureVerified: false, signatureKeyId: null, sbomReference: null, provenanceStatus: "RECORDED", dependencyVerified: false, malwareStatus: "PENDING_SCAN", verificationEvidence: [{ kind: "COMPLIANCE", result: "VERIFIED", artifactHash: "0".repeat(64), metadata: { reference: "Codex Image Aug 18, 2026, 03_53_39 PM.png" } }] }, backupEvidence: null, complianceEvidence: "Codex Image Aug 18, 2026, 03_53_39 PM.png", migrationEvidence: null, approvals: [] };
-    expect(releaseReadiness(version).items.find((item) => item.key === "compliance")?.status).toBe("BLOCKED");
+    expect(releaseReadiness(version).items.find((item) => item.key === "compliance")?.status).toBe("PENDING");
   });
 });
