@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
-import { calculateAnnualPricing, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { applyOfferDiscount, calculateAnnualPricing, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { findPublicPromotion } from "@/lib/offers";
 import { PurchasePlanSelector } from "@/components/purchase-plan-selector";
 import { TrialStartButton } from "@/components/trial-start-button";
 
@@ -27,22 +28,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <p className="font-bold text-[#ffd15a]">{product.type}</p>
     <h1 className="mt-2 text-5xl font-black">{product.name}</h1>
     <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>
-    <div className="mt-12 grid gap-8 motion-stagger">{product.editions.map((edition) => {
-      const plans = edition.purchasePlans
+    <div className="mt-12 grid gap-8 motion-stagger">{await Promise.all(product.editions.map(async (edition) => {
+      const plans = await Promise.all(edition.purchasePlans
         .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
-        .map((plan) => {
+        .map(async (plan) => {
           const terms = resolvePurchasePlan(plan);
           const annual = plan.type === "ANNUAL" ? calculateAnnualPricing(plan.monthlySource!.amountMinor!, plan.annualDiscountBps ?? 0) : null;
+          const publicPromotion = await findPublicPromotion(db, { id: plan.id, type: plan.type, editionId: plan.editionId, productId: edition.productId, currency: plan.currency });
+          const promotional = publicPromotion ? applyOfferDiscount(terms.amountMinor, publicPromotion.discountBps) : null;
+          const suffix = plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : "";
           return {
             id: plan.id,
             type: plan.type,
             label: purchasePlanLabel(plan.type),
-            amount: money(terms.amountMinor) + (plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : ""),
+            amount: money(promotional?.finalAmountMinor ?? terms.amountMinor) + suffix,
+            originalAmount: promotional ? money(terms.amountMinor) + suffix : undefined,
             detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : "Customer-authorized annual renewal",
-            savings: annual ? `Save ${(annual.discountBps / 100).toFixed(annual.discountBps % 100 ? 2 : 0)}% (${money(annual.savingsMinor)})` : undefined,
-            effectiveMonthly: annual ? `Equivalent to ${money(annual.effectiveMonthlyMinor)}/month` : undefined,
+            savings: promotional ? `${formatPercent(publicPromotion!.discountBps)} OFF · YOU SAVE ${money(promotional.discountAmountMinor)}` : annual ? `Save ${(annual.discountBps / 100).toFixed(annual.discountBps % 100 ? 2 : 0)}% (${money(annual.savingsMinor)})` : undefined,
+            effectiveMonthly: !promotional && annual ? `Equivalent to ${money(annual.effectiveMonthlyMinor)}/month` : undefined,
           };
-        });
+        }));
       return <article className="card grid gap-8 p-8 lg:grid-cols-[1fr_1.1fr]" key={edition.id}>
         <div>
           <p className="text-sm font-bold uppercase text-[#8cc8f5]">{edition.name} Edition</p>
@@ -54,10 +59,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
         <div><div className="mb-5 rounded-xl border border-[#3d75a7]/50 bg-[#213a53]/60 p-4"><p className="mb-3 text-sm font-semibold">Try this edition free for 7 days. Each account is eligible for one trial per product per calendar year.</p><TrialStartButton editionId={edition.id} accounts={accounts.map((account) => ({ id: account.id, name: account.displayName }))}/></div><PurchasePlanSelector plans={plans} signedIn={Boolean(user)} /></div>
       </article>;
-    })}</div>
+    }))}</div>
   </section>;
 }
 
 function money(minor: number) {
   return new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(minor / 100);
+}
+function formatPercent(bps: number) {
+  return `${(bps / 100).toFixed(bps % 100 ? 2 : 0)}%`;
 }

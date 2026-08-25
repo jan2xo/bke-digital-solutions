@@ -2,7 +2,7 @@ import "server-only";
 import { db } from "@/lib/db";
 import { paymentProvider } from "@/lib/payments";
 import { applyOfferDiscount, PRICING_VERSION, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
-import { offerSnapshot, resolveAndReserveOffer } from "@/lib/offers";
+import { offerSnapshot, reservePublicPromotion, resolveAndReserveOffer } from "@/lib/offers";
 import { randomToken } from "@/lib/security/crypto";
 import { issueEntitlements } from "@/lib/licensing";
 import { queueCommerceEmail } from "@/lib/email";
@@ -31,6 +31,7 @@ export async function createCheckout(userId:string,purchasePlanId:string,account
     const scheduled=renewal?.offerId&&renewal.discountedCyclesTotal&&renewal.discountedCyclesConsumed<renewal.discountedCyclesTotal;
     if(scheduled){const discounted=applyOfferDiscount(catalogAmountMinor,renewal.promotionalDiscountBps??0);const snapshot=(renewal.offerSnapshot??{}) as Record<string,unknown>;appliedOffer={id:renewal.offerId!,discountBps:renewal.promotionalDiscountBps??0,discountAmountMinor:discounted.discountAmountMinor,snapshot,cycles:renewal.discountedCyclesTotal};finalAmountMinor=discounted.finalAmountMinor}
     else if(offerIdentifier){const reserved=await resolveAndReserveOffer(tx,{identifier:offerIdentifier,accountId:account.id,orderId:order.id,plan:{id:plan.id,type:plan.type,editionId:plan.editionId,productId:plan.edition.productId,currency:plan.currency},catalogAmountMinor});const snapshot=offerSnapshot(reserved.offer,reserved.discountAmountMinor);appliedOffer={id:reserved.offer.id,discountBps:reserved.offer.discountBps,discountAmountMinor:reserved.discountAmountMinor,snapshot,cycles:reserved.offer.discountedBillingCycles};finalAmountMinor=reserved.finalAmountMinor}
+    else {const publicReserved=await reservePublicPromotion(tx,{accountId:account.id,orderId:order.id,plan:{id:plan.id,type:plan.type,editionId:plan.editionId,productId:plan.edition.productId,currency:plan.currency},catalogAmountMinor});if(publicReserved){const snapshot=offerSnapshot(publicReserved.offer,publicReserved.discountAmountMinor);appliedOffer={id:publicReserved.offer.id,discountBps:publicReserved.offer.discountBps,discountAmountMinor:publicReserved.discountAmountMinor,snapshot,cycles:publicReserved.offer.discountedBillingCycles};finalAmountMinor=publicReserved.finalAmountMinor}}
     const pricingSnapshot={pricingVersion:PRICING_VERSION,currency:plan.currency,planType:plan.type,purchasePlanAmountMinor:plan.amountMinor,catalogAmountMinor,finalAmountMinor,...annual,...appliedOffer?{offer:appliedOffer.snapshot}:{}};
     const invoiceSubtotalMinor=plan.type==="ANNUAL"?terms.grossAnnualMinor!:catalogAmountMinor;
     const invoiceLines=[{description:`${plan.edition.product.name} — ${plan.edition.name} — ${planName}`,quantity:1,unitAmountMinor:invoiceSubtotalMinor,totalMinor:invoiceSubtotalMinor}];
