@@ -26,6 +26,21 @@ export function offerMatches(offer:DiscountOffer,plan:OfferPlanContext,accountId
   return true;
 }
 
+export function publicPromotionMatches(offer:DiscountOffer,plan:OfferPlanContext,now=new Date()){
+  if(offer.type!=="GENERAL_PROMOTION"||offer.codeNormalized||offer.customerAccountId)return false;
+  if(offer.status!=="ACTIVE"||offer.revokedAt||offer.startsAt>now||(offer.endsAt&&offer.endsAt<=now))return false;
+  if(offer.productId&&offer.productId!==plan.productId)return false;
+  if(offer.editionId&&offer.editionId!==plan.editionId)return false;
+  if(offer.purchasePlanId&&offer.purchasePlanId!==plan.id)return false;
+  if(offer.discountedBillingCycles&&plan.type!=="MONTHLY")return false;
+  return true;
+}
+
+export async function findPublicPromotion(tx:Prisma.TransactionClient|typeof import("@/lib/db")["db"],plan:OfferPlanContext,now=new Date()){
+  const candidates=await tx.discountOffer.findMany({where:{type:"GENERAL_PROMOTION",status:"ACTIVE",codeNormalized:null,customerAccountId:null,revokedAt:null,startsAt:{lte:now},OR:[{endsAt:null},{endsAt:{gt:now}}]},orderBy:[{discountBps:"desc"},{createdAt:"asc"}]});
+  return candidates.find(offer=>publicPromotionMatches(offer,plan,now))??null;
+}
+
 export async function resolveAndReserveOffer(tx:Prisma.TransactionClient,input:{identifier:string;accountId:string;orderId:string;plan:OfferPlanContext;catalogAmountMinor:number}){
   const normalized=normalizeOfferCode(input.identifier);
   const candidate=await tx.discountOffer.findFirst({where:{OR:[{id:input.identifier},{codeNormalized:normalized}]}});
@@ -47,6 +62,12 @@ export async function resolveAndReserveOffer(tx:Prisma.TransactionClient,input:{
   }
   await tx.offerRedemption.create({data:{offerId:offer.id,accountId:input.accountId,orderId:input.orderId,status:"RESERVED",discountBps:offer.discountBps,baseMinor:input.catalogAmountMinor,discountMinor:discounted.discountAmountMinor,finalMinor:discounted.finalAmountMinor,currency:input.plan.currency,pricingVersion:PRICING_VERSION}});
   return {offer, ...discounted};
+}
+
+export async function reservePublicPromotion(tx:Prisma.TransactionClient,input:{accountId:string;orderId:string;plan:OfferPlanContext;catalogAmountMinor:number}){
+  const offer=await findPublicPromotion(tx,input.plan);
+  if(!offer)return null;
+  return resolveAndReserveOffer(tx,{identifier:offer.id,...input});
 }
 
 export function offerSnapshot(offer:DiscountOffer,discountAmountMinor:number){return{id:offer.id,name:offer.name,code:offer.codeNormalized,type:offer.type,scope:offer.purchasePlanId?"PURCHASE_PLAN":offer.editionId?"EDITION":offer.productId?"PRODUCT":offer.customerAccountId?"CUSTOMER_ACCOUNT":"ALL_ELIGIBLE",discountBps:offer.discountBps,discountAmountMinor,discountedBillingCycles:offer.discountedBillingCycles}}
