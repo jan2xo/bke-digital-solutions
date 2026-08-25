@@ -13,7 +13,7 @@ export async function issueCommercialLease(input: { licenseKey: string; installa
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
       return await db.$transaction(async (tx) => {
-        const license = await tx.license.findUnique({ where: { keyHash: hashLicenseKey(input.licenseKey) }, include: { product: { include: { versions: { where: { version: input.productVersion, active: true, lifecycle: { in: ["STABLE", "LTS"] } }, take: 1, select: { version: true } } } }, account: { select: { lifecycleState: true } }, subscription: { select: { status: true } } } });
+        const license = await tx.license.findUnique({ where: { keyHash: hashLicenseKey(input.licenseKey) }, include: { product: { include: { versions: { where: { version: input.productVersion, active: true }, take: 1, select: { version: true } } } }, account: { select: { lifecycleState: true } }, subscription: { select: { status: true } } } });
         if (!license || license.account.lifecycleState !== "ACTIVE" || license.status !== "ACTIVE" || (license.expiresAt && license.expiresAt < new Date())) throw new Error("INVALID_LICENSE");
         const operation = await tx.commercialLeaseOperation.findUnique({ where: { operationId: input.operationId } });
         if (!operation) {

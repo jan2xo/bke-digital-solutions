@@ -55,6 +55,14 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
     expect(source).not.toContain("input.productVersion ?? license.product.versions[0]?.version");
   });
 
+  it("keeps runtime licensing independent from release lifecycle while requiring an active registered version", () => {
+    const source = readFileSync("lib/licensing/commercial-lease.ts", "utf8");
+    expect(source).toContain("versions: { where: { version: input.productVersion, active: true }");
+    expect(source).not.toContain('lifecycle: { in: ["STABLE", "LTS"] }');
+    expect(source).toContain('throw new Error("VERSION_NOT_ELIGIBLE")');
+    expect(source).toContain("isVersionAccepted(version, license.product.minimumAcceptedVersion, license.product.maximumAcceptedVersion)");
+  });
+
   it("self-verifies newly issued signed leases", async () => {
     const { issueSignedLease, verifySignedLease } = await import("@/lib/licensing-agent");
     const payload = { license_id: "license-self", lease_id: "l-self", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519" as const, revoked: false, superseded_by: null };
