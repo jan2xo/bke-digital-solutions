@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./shared-surfaces.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { getSiteContent } from "@/lib/site-content";

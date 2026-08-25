@@ -1,0 +1,67 @@
+/*
+ * Shared application/admin styles intentionally isolated from the public
+ * landing experience. PR #22 replaced globals.css and accidentally removed
+ * these rules, breaking Admin, Releases, legal/status surfaces, and desktop
+ * admin navigation. Keep landing-specific CSS in globals.css; keep shared
+ * application infrastructure here.
+ */
+
+.admin-nav-group h2 { margin: .6rem 0 .35rem; color: #8fa7bd; font-size: .68rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.admin-nav-links { display: flex; flex-wrap: wrap; gap: .3rem; }
+.admin-nav-link { border-radius: .5rem; padding: .55rem .7rem; color: #d4dee8; font-size: .85rem; font-weight: 700; }
+.admin-nav-link:hover, .admin-nav-link.is-active { color: white; background: #213a53; }
+.admin-nav-link.is-active { box-shadow: inset 3px 0 #ffd15a; }
+.admin-layout { min-height: 100vh; background: var(--background); }
+.admin-content { min-width: 0; }
+
+@media (min-width: 900px) {
+  .admin-layout { display: grid; grid-template-columns: 16rem minmax(0, 1fr); }
+  .admin-sidebar { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; border-right: 1px solid #2d5579; border-bottom: 0; }
+  .admin-sidebar-header { width: auto; min-height: 4.5rem; margin: 0; padding: 0 1.25rem; }
+  .admin-sidebar-toggle { display: none; }
+  .admin-sidebar-content { display: grid; width: auto; margin: 0; padding: .75rem .8rem 1.5rem; }
+  .admin-nav-group { display: block; }
+  .admin-nav-group h2 { margin: 1rem .5rem .4rem; }
+  .admin-nav-links { display: grid; gap: .2rem; }
+  .admin-nav-link { display: block; }
+}
+
+.legal-consent-panel { border: 1px solid #46617a; border-radius: .85rem; background: #172432; padding: 1rem; }
+.legal-consent-panel[data-invalid="true"] { border-color: #dc2626; background: #351d25; box-shadow: 0 0 0 1px #dc2626; }
+
+/* Keep authentication, release, legal, informational, and status pages on the shared dark canvas. */
+main { min-height: calc(100vh - 10rem); background: var(--background); }
+main > section:not(.commerce-hero):not(.commerce-lanes-section):not(.hero-section):not(.solutions-section) { color: var(--text); }
+main > section p.text-slate-600, main > section p.text-slate-500 { color: var(--text-muted); }
+main > section .text-slate-400 { color: #8796a8; }
+main > section .border-slate-200, main > section .border-slate-300 { border-color: #2d3f52; }
+main > section .bg-slate-50, main > section .bg-slate-100 { background: #172432; }
+main > section .text-red-700 { color: #fca5a5; }
+main > section .text-green-700 { color: #86efac; }
+
+/* Light notice surfaces need explicit dark foreground on the shared dark canvas. */
+main > section .bg-blue-50 { background: #dbeafe; color: #172554; }
+main > section .bg-amber-50 { background: #fef3c7; color: #78350f; }
+main > section .bg-emerald-50 { background: #d1fae5; color: #065f46; }
+.legal-content strong { color: var(--text); }
+
+/* Shared public/application motion retained outside the interactive landing. */
+@keyframes public-fade-up { from { opacity: 0; transform: translateY(1rem); } to { opacity: 1; transform: translateY(0); } }
+.motion-fade-up { animation: public-fade-up .55s cubic-bezier(.22,1,.36,1) both; }
+.motion-stagger > * { opacity: 0; animation: public-fade-up .55s cubic-bezier(.22,1,.36,1) both; }
+.motion-stagger > *:nth-child(1) { animation-delay: .05s; }
+.motion-stagger > *:nth-child(2) { animation-delay: .12s; }
+.motion-stagger > *:nth-child(3) { animation-delay: .19s; }
+.motion-stagger > *:nth-child(4) { animation-delay: .26s; }
+.motion-stagger > *:nth-child(5) { animation-delay: .33s; }
+
+.motion-reveal { animation: legal-reveal .45s ease-out both; }
+.motion-reveal-delay-1 { animation-delay: .07s; }
+.motion-reveal-delay-2 { animation-delay: .14s; }
+.motion-reveal-delay-3 { animation-delay: .21s; }
+@keyframes legal-reveal { from { opacity: 0; transform: translateY(.65rem); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-fade-up, .motion-stagger > *, .motion-reveal, .motion-reveal-delay-1, .motion-reveal-delay-2, .motion-reveal-delay-3 { animation: none; opacity: 1; transform: none; }
+  .solution-card:hover, .card:hover { transform: none !important; }
+}
