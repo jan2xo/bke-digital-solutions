@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const accountPage = readFileSync("app/dashboard/accounts/[id]/page.tsx", "utf8");
+const licensingPage = readFileSync("app/licensing/page.tsx", "utf8");
 const read = (path: string) => readFileSync(path, "utf8");
 
 describe("customer-facing contrast safeguards", () => {
@@ -25,6 +26,10 @@ describe("customer-facing contrast safeguards", () => {
     expect(accountPage).toContain("text-sky-300 underline");
     expect(accountPage).not.toContain("text-[#0b7197]");
     expect(accountPage).not.toContain("bg-slate-50");
+  });
+
+  it("keeps licensing explanatory copy on the shared muted text token", () => {
+    expect(licensingPage).toContain("text-[#a8b5c4]");
   });
 
   it("keeps authentication notices readable on light utility surfaces", () => {
