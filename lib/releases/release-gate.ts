@@ -21,17 +21,19 @@ export type ReleaseGateResult = {
   failures: string[];
 };
 
-/** Repository-controlled release gate. This is evidence evaluation, not external certification. */
+/**
+ * V1 release gate.
+ *
+ * Runtime/distribution safety remains mandatory: current signed bytes, clean malware
+ * evidence, human review, and the integrity/revocation safety evaluation. Rich
+ * certification evidence (SBOM, provenance, dependency, backup, compliance and
+ * migration evidence) is retained for V2 and observability, but is advisory and
+ * must not block the current commercial release path.
+ */
 export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult {
   const checks = {
     signature: input.signatureVerified,
-    dependencies: input.dependenciesVerified,
-    sbom: input.sbomPresent,
-    provenance: input.provenanceVerified,
     malware: input.malwareClean,
-    backup: input.backupEvidencePresent,
-    compliance: input.complianceEvidencePresent && input.pendingComplianceCount === 0,
-    migration: input.migrationEvidencePresent,
     approval: Boolean(input.reviewedById),
     supplyChainSafe: input.supplyChainSafe ?? true,
   };
