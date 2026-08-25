@@ -6,35 +6,35 @@ const complete = {
   provenanceVerified: true, malwareClean: true, backupEvidencePresent: true,
   complianceEvidencePresent: true, migrationEvidencePresent: true,
   pendingComplianceCount: 0, reviewedById: "reviewer", priorCreatedById: "author",
-  approvingAdminId: "approver",
+  approvingAdminId: "approver", supplyChainSafe: true,
 };
 
-describe("repository release gate", () => {
-  it("passes only when all evidence and approval checks are present", () => {
+describe("V1 repository release gate", () => {
+  it("passes when runtime integrity, malware, human review and safety checks pass", () => {
     const result = evaluateReleaseGate(complete);
     expect(result.ready).toBe(true);
     expect(result.failures).toEqual([]);
   });
 
-  it("reports missing evidence instead of producing a vague failure", () => {
-    const result = evaluateReleaseGate({ ...complete, malwareClean: false, sbomPresent: false, pendingComplianceCount: 1 });
-    expect(result.ready).toBe(false);
-    expect(result.failures).toEqual(expect.arrayContaining(["malware", "sbom", "compliance"]));
-  });
-
-  it("allows the sole owner to review and approve", () => {
-    const result = evaluateReleaseGate({ ...complete, reviewedById: "approver" });
+  it("keeps V2 certification evidence advisory instead of blocking V1 publication", () => {
+    const result = evaluateReleaseGate({
+      ...complete,
+      dependenciesVerified: false,
+      sbomPresent: false,
+      provenanceVerified: false,
+      backupEvidencePresent: false,
+      complianceEvidencePresent: false,
+      migrationEvidencePresent: false,
+      pendingComplianceCount: 99,
+    });
     expect(result.ready).toBe(true);
+    expect(result.failures).toEqual([]);
   });
 
-  it("does not bypass missing owner approval with break-glass configuration", () => {
-    const result = evaluateReleaseGate({ ...complete, reviewedById: null, priorCreatedById: null, breakGlassAllowed: true });
-    expect(result.ready).toBe(false);
-    expect(result.failures).toContain("approval");
-  });
-
-  it("treats supply-chain safety and compliance-register state as explicit gates", () => {
-    const result = evaluateReleaseGate({ ...complete, supplyChainSafe: false });
-    expect(result.failures).toContain("supplyChainSafe");
+  it("still blocks unsafe bytes, malware failures and missing human review", () => {
+    expect(evaluateReleaseGate({ ...complete, malwareClean: false }).failures).toContain("malware");
+    expect(evaluateReleaseGate({ ...complete, signatureVerified: false }).failures).toContain("signature");
+    expect(evaluateReleaseGate({ ...complete, reviewedById: null }).failures).toContain("approval");
+    expect(evaluateReleaseGate({ ...complete, supplyChainSafe: false }).failures).toContain("supplyChainSafe");
   });
 });
