@@ -73,8 +73,8 @@ export function LandingExperience({ content, products }: { content: LandingConte
               <Link className="button button-yellow" href={content.heroPrimaryHref}>{content.heroPrimaryLabel}</Link>
               <Link className="button button-outline" href={content.heroSecondaryHref}>{content.heroSecondaryLabel}</Link>
             </div>
-            <div className="commerce-proof" aria-label="Marketplace capabilities">
-              <span><b>01</b> Discover</span><span><b>02</b> License</span><span><b>03</b> Deliver</span>
+            <div id="how-it-works" className="commerce-proof" aria-label="Marketplace capabilities">
+              <span><b>01</b> Discover</span><span><b>02</b> License</span>
             </div>
           </div>
 
@@ -89,7 +89,7 @@ export function LandingExperience({ content, products }: { content: LandingConte
                 <p>One storefront.<br /><strong>Multiple digital formats.</strong></p>
               </div>
               <div className="console-lanes">
-                {lanes.map((lane) => <div className="console-lane" key={lane.code}><span>{lane.code}</span><b>{lane.glyph}</b><small>{lane.label}</small></div>)}
+                {lanes.map((lane) => <div className="console-lane" key={lane.code}><b>{lane.glyph}</b><small>{lane.label}</small></div>)}
               </div>
               <div className="console-status"><span>Catalog online</span><span>Controlled delivery</span></div>
             </div>
@@ -108,7 +108,7 @@ export function LandingExperience({ content, products }: { content: LandingConte
             <Link href="/products" className="text-link">Browse catalog <span>→</span></Link>
           </div>
           <div className="commerce-lane-grid">
-            {lanes.map((lane) => <article className="commerce-lane-card" key={lane.code}><span className="lane-code">{lane.code}</span><div className="lane-glyph">{lane.glyph}</div><h3>{lane.label}</h3><p>{lane.detail}</p></article>)}
+            {lanes.map((lane) => <article className="commerce-lane-card" key={lane.code}><div className="lane-glyph" style={{ marginTop: 0 }}>{lane.glyph}</div><h3>{lane.label}</h3><p>{lane.detail}</p></article>)}
           </div>
         </div>
       </section>
@@ -117,7 +117,7 @@ export function LandingExperience({ content, products }: { content: LandingConte
         <div className="shell">
           <div className="section-heading"><div><p className="eyebrow eyebrow-yellow">{content.solutionsEyebrow}</p><h2>{content.solutionsHeading}<br /><span>{content.solutionsAccent}</span></h2></div><Link href="/products" className="text-link">{content.solutionsLinkLabel} <span>→</span></Link></div>
           <div className="solution-grid">
-            {products.map((product, index) => <Link href={`/products/${product.slug}`} key={product.id} className="solution-card commerce-product-card"><span className="solution-number">0{index + 1}</span><p className="solution-type">{product.type}</p><h3>{product.name}</h3><p>{product.summary}</p><strong>{product.priceLabel} <span>↗</span></strong></Link>)}
+            {products.map((product) => <Link href={`/products/${product.slug}`} key={product.id} className="solution-card commerce-product-card" style={{ display: "flex", flexDirection: "column" }}><p className="solution-type" style={{ marginTop: 0 }}>{product.type}</p><h3>{product.name}</h3><p style={{ marginBottom: "1.5rem" }}>{product.summary}</p><strong style={{ position: "static", alignSelf: "flex-end", marginTop: "auto", paddingTop: "1rem" }}>{product.priceLabel} <span>↗</span></strong></Link>)}
           </div>
         </div>
       </section>
