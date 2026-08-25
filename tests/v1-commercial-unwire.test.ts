@@ -12,7 +12,7 @@ describe("V1 commercial path separation", () => {
 
   it("keeps V2 evidence visible but non-blocking in V1 readiness", () => {
     const readiness = readFileSync("lib/supply-chain/readiness.ts", "utf8");
-    expect(readiness).toContain('new Set(["signature", "malware", "approval", "supply-chain-safety"])');
+    expect(readiness).toContain('const blockingKeys = new Set(["signature", "malware", "approval", "supply-chain-safety"]);');
     expect(readiness).toContain("SBOM (V2 evidence)");
     expect(readiness).toContain("PENDING");
   });
