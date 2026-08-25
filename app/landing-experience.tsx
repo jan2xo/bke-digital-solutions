@@ -73,8 +73,8 @@ export function LandingExperience({ content, products }: { content: LandingConte
               <Link className="button button-yellow" href={content.heroPrimaryHref}>{content.heroPrimaryLabel}</Link>
               <Link className="button button-outline" href={content.heroSecondaryHref}>{content.heroSecondaryLabel}</Link>
             </div>
-            <div id="how-it-works" className="commerce-proof" aria-label="Marketplace capabilities">
-              <span><b>01</b> Discover</span><span><b>02</b> License</span>
+            <div className="commerce-proof" aria-label="Marketplace capabilities">
+              <span><b>01</b> Discover</span><span><b>02</b> License</span><span><b>03</b> Deliver</span>
             </div>
           </div>
 

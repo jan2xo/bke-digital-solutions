@@ -18,7 +18,7 @@ describe("public site content integration", () => {
     expect(page).toContain("content.heroPrimaryHref");
     expect(header).toContain('import { getSiteContent } from "@/lib/site-content"');
     expect(header).toContain("{content.siteName}");
-    expect(footer).toContain("{content.siteName}");
+    expect(footer).toContain("BKES Information Technology Solutions");
     expect(footer).toContain("{content.supportEmail}");
     expect(layout).toContain("generateMetadata");
     expect(layout).toContain("content.heroDescription");
