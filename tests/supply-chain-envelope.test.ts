@@ -4,7 +4,18 @@ import { canonicalizeManifest, requireManifestArtifact, verifySignedEnvelope, ty
 
 const { privateKey, publicKey } = generateKeyPairSync("ed25519");
 const key = publicKey.export({ type: "spki", format: "der" }).toString("base64");
-const manifest: SignedReleaseManifest = { schema: "bke.supply-chain.v1", productId: "p1", productSlug: "product", versionId: "v1", version: "1.0.0", signingKeyId: "active", artifacts: [{ id: "a1", objectKey: "a.bin", sha256: "a".repeat(64), sizeBytes: 4, contentType: "application/octet-stream" }] };
+const manifest: SignedReleaseManifest = {
+  schema: "bke.supply-chain.v1",
+  productId: "p1",
+  productSlug: "product",
+  versionId: "v1",
+  version: "1.0.0",
+  signingKeyId: "active",
+  artifacts: [
+    { id: "installer", objectKey: "installer.exe", sha256: "a".repeat(64), sizeBytes: 4, contentType: "application/vnd.microsoft.portable-executable" },
+    { id: "updater", objectKey: "update.zip", sha256: "b".repeat(64), sizeBytes: 8, contentType: "application/vnd.bke.update-package+zip" },
+  ],
+};
 const envelope = () => ({ algorithm: "Ed25519", keyId: "active", manifest, signature: sign(null, Buffer.from(canonicalizeManifest(manifest)), privateKey).toString("base64") });
 
 describe("signed supply-chain envelope boundary", () => {
@@ -22,8 +33,10 @@ describe("signed supply-chain envelope boundary", () => {
 });
 
 describe("selected artifact binding", () => {
-  it("accepts only the exact artifact covered by the signed manifest", () => {
-    expect(() => requireManifestArtifact(manifest, manifest.artifacts[0])).not.toThrow();
-    expect(() => requireManifestArtifact(manifest, { ...manifest.artifacts[0], sha256: "b".repeat(64) })).toThrow("ARTIFACT_MISMATCH");
+  it("accepts an exact selected artifact within a multi-artifact signed manifest", () => {
+    const updater = manifest.artifacts[1];
+    expect(() => requireManifestArtifact(manifest, updater)).not.toThrow();
+    expect(() => requireManifestArtifact(manifest, { ...updater, sha256: "c".repeat(64) })).toThrow("ARTIFACT_MISMATCH");
+    expect(() => requireManifestArtifact(manifest, { ...updater, id: "missing" })).toThrow("ARTIFACT_MISMATCH");
   });
 });
