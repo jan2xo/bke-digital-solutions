@@ -1,9 +1,7 @@
 /*
- * Shared application/admin styles intentionally isolated from the public
- * landing experience. PR #22 replaced globals.css and accidentally removed
- * these rules, breaking Admin, Releases, legal/status surfaces, and desktop
- * admin navigation. Keep landing-specific CSS in globals.css; keep shared
- * application infrastructure here.
+ * Shared application/admin styles plus the restrained public canvas.
+ * The homepage keeps its full interactive commerce spectacle in globals.css;
+ * ordinary public pages inherit the same visual language without duplicating it.
  */
 
 .admin-nav-group h2 { margin: .6rem 0 .35rem; color: #8fa7bd; font-size: .68rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
@@ -29,21 +27,60 @@
 .legal-consent-panel { border: 1px solid #46617a; border-radius: .85rem; background: #172432; padding: 1rem; }
 .legal-consent-panel[data-invalid="true"] { border-color: #dc2626; background: #351d25; box-shadow: 0 0 0 1px #dc2626; }
 
-/* Keep authentication, release, legal, informational, and status pages on the shared dark canvas. */
-main { min-height: calc(100vh - 10rem); background: var(--background); }
-main > section:not(.commerce-hero):not(.commerce-lanes-section):not(.hero-section):not(.solutions-section) { color: var(--text); }
+/*
+ * Public canvas convergence.
+ * The root main now carries the landing page's near-black base, restrained
+ * blue/yellow radial light, and a faint square grid. Homepage sections paint
+ * their own full-intensity backgrounds above this canvas. Admin remains
+ * explicitly owned by .admin-layout and is not given decorative atmosphere.
+ */
+main {
+  position: relative;
+  min-height: calc(100vh - 10rem);
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 82% 10%, rgb(23 41 71 / .58) 0, transparent 30rem),
+    radial-gradient(circle at 10% 22%, rgb(42 37 22 / .42) 0, transparent 24rem),
+    #080a10;
+}
+main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .18;
+  background-image:
+    linear-gradient(rgb(255 255 255 / .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / .045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / .82) 48%, transparent 100%);
+}
+main > section:not(.commerce-hero):not(.commerce-lanes-section):not(.hero-section):not(.solutions-section) { position: relative; color: var(--text); background: transparent; }
 main > section p.text-slate-600, main > section p.text-slate-500 { color: var(--text-muted); }
 main > section .text-slate-400 { color: #8796a8; }
 main > section .border-slate-200, main > section .border-slate-300 { border-color: #2d3f52; }
-main > section .bg-slate-50, main > section .bg-slate-100 { background: #172432; }
+main > section .bg-slate-50, main > section .bg-slate-100 { background: rgb(16 22 30 / .9); }
 main > section .text-red-700 { color: #fca5a5; }
 main > section .text-green-700 { color: #86efac; }
+
+/* Public cards inherit the landing page's charcoal/navy surface language. */
+main > section:not(.admin-layout) .card {
+  border-color: #292f41;
+  background: linear-gradient(145deg, rgb(21 25 37 / .96), rgb(15 18 27 / .96));
+  box-shadow: 0 24px 65px rgb(0 0 0 / .28), inset 0 1px rgb(255 255 255 / .035);
+}
+main > section:not(.admin-layout) .card:hover { border-color: #50566a; }
 
 /* Light notice surfaces need explicit dark foreground on the shared dark canvas. */
 main > section .bg-blue-50 { background: #dbeafe; color: #172554; }
 main > section .bg-amber-50 { background: #fef3c7; color: #78350f; }
 main > section .bg-emerald-50 { background: #d1fae5; color: #065f46; }
 .legal-content strong { color: var(--text); }
+
+/* Admin/operations stays intentionally utilitarian and suppresses public atmosphere. */
+main:has(> .admin-layout) { background: var(--background); }
+main:has(> .admin-layout)::before { display: none; }
 
 /* Shared public/application motion retained outside the interactive landing. */
 @keyframes public-fade-up { from { opacity: 0; transform: translateY(1rem); } to { opacity: 1; transform: translateY(0); } }
