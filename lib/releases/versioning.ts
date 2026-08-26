@@ -1,23 +1,16 @@
-const SEMVER = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/;
+import { compare, parse } from "semver";
 
 export type SemanticVersion = readonly [number, number, number, string | null];
 
 export function parseSemanticVersion(value: string): SemanticVersion {
-  const match = SEMVER.exec(value);
-  if (!match) throw new Error("INVALID_SEMANTIC_VERSION");
-  return [Number(match[1]), Number(match[2]), Number(match[3]), match[4] ?? null];
+  const parsed = parse(value, { loose: false });
+  if (!parsed) throw new Error("INVALID_SEMANTIC_VERSION");
+  return [parsed.major, parsed.minor, parsed.patch, parsed.prerelease.length ? parsed.prerelease.join(".") : null];
 }
 
 export function compareSemanticVersions(left: string, right: string): number {
-  const a = parseSemanticVersion(left);
-  const b = parseSemanticVersion(right);
-  for (let index = 0; index < 3; index += 1) {
-    if (a[index] !== b[index]) return (a[index] as number) - (b[index] as number);
-  }
-  if (a[3] === b[3]) return 0;
-  if (a[3] === null) return 1;
-  if (b[3] === null) return -1;
-  return a[3].localeCompare(b[3]);
+  parseSemanticVersion(left); parseSemanticVersion(right);
+  return compare(left, right);
 }
 
 export function selectNewestSemanticRelease<T extends { version: string }>(candidates: T[], currentVersion: string, sameMajorOnly = false): T | null {

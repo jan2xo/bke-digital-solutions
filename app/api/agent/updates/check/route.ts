@@ -10,7 +10,7 @@ import { resolveAgentUpdateRelease } from "@/lib/releases/resolution";
 import { clientIp, readLimitedBody } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { hashToken, randomToken } from "@/lib/security/crypto";
-import { verifySignedEnvelope } from "@/lib/supply-chain/manifest";
+import { requireManifestArtifact, verifySignedEnvelope } from "@/lib/supply-chain/manifest";
 
 const requestSchema = z.object({
   lease: z.unknown(),
@@ -51,11 +51,15 @@ export async function POST(request: Request) {
     const evidence = release.supplyChainEvidence;
     if (!evidence?.manifestSignature || !evidence.signatureKeyId || evidence.signatureAlgorithm !== "Ed25519") return error("RELEASE_NOT_VERIFIED", 503);
     const runtime = getRuntimeEnvironment();
-    verifySignedEnvelope(
+    const verifiedEnvelope = verifySignedEnvelope(
       { algorithm: "Ed25519", keyId: evidence.signatureKeyId, manifest: evidence.manifestJson, signature: evidence.manifestSignature },
       runtime.SUPPLY_CHAIN_TRUSTED_KEYS, runtime.SUPPLY_CHAIN_SIGNING_KEY_ID, runtime.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY,
       { productId: release.productId, productSlug: release.product.slug, versionId: release.id, version: release.version },
     );
+    requireManifestArtifact(verifiedEnvelope.manifest, {
+      id: artifact.id, objectKey: artifact.objectKey, sha256: artifact.sha256,
+      sizeBytes: Number(artifact.sizeBytes), contentType: artifact.contentType,
+    });
 
     await ensureCommercialSigningKey();
     const signingKey = await activeCommercialSigningKey();
@@ -64,7 +68,7 @@ export async function POST(request: Request) {
       latest_version: release.version, minimum_supported_version: input.current_version, channel: input.channel,
       platform: release.operatingSystem, architecture: release.architecture, release_id: release.id,
       artifact_id: artifact.id, artifact_sha256: artifact.sha256.toLowerCase(), artifact_size: Number(artifact.sizeBytes),
-      content_type: artifact.contentType, published_at: release.publishedAt!.toISOString(), issued_at: new Date().toISOString(),
+      content_type: artifact.contentType, published_at: release.publishedAt!.toISOString(), issued_at: release.releasedAt.toISOString(),
       revision: release.releasedAt.getTime(), signing_key_id: signingKey.keyId, algorithm: "Ed25519",
     };
     if (!/^[a-f0-9]{64}$/.test(policy.artifact_sha256) || !Number.isSafeInteger(policy.artifact_size) || policy.artifact_size < 0) return error("INVALID_ARTIFACT_CONTRACT", 503);

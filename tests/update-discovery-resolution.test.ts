@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compareSemanticVersions, selectNewestSemanticRelease } from "@/lib/releases/versioning";
+import { compareSemanticVersions, parseSemanticVersion, selectNewestSemanticRelease } from "@/lib/releases/versioning";
 
 describe("Agent update release selection", () => {
   it("selects the newest semantic release newer than the installed version", () => {
@@ -16,6 +16,11 @@ describe("Agent update release selection", () => {
 
   it("orders stable versions after prereleases", () => {
     expect(compareSemanticVersions("2.0.0", "2.0.0-rc.1")).toBeGreaterThan(0);
+    expect(compareSemanticVersions("2.0.0-rc.10", "2.0.0-rc.2")).toBeGreaterThan(0);
+  });
+
+  it("rejects non-canonical numeric components", () => {
+    expect(() => parseSemanticVersion("01.0.0")).toThrow("INVALID_SEMANTIC_VERSION");
   });
 
   it("can constrain an existing major-version update entitlement", () => {
