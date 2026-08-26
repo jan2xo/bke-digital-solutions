@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { CUSTOMER_RELEASE_LIFECYCLES } from "@/lib/releases/eligibility";
 import { releaseReadiness } from "@/lib/supply-chain/readiness";
+import { selectNewestSemanticRelease } from "@/lib/releases/versioning";
 
 export async function resolveCurrentCustomerRelease(productId: string) {
   return db.productVersion.findFirst({
@@ -9,6 +10,39 @@ export async function resolveCurrentCustomerRelease(productId: string) {
     include: { artifacts: { where: { active: true, removedAt: null } } },
   });
 }
+
+export async function resolveAgentUpdateRelease(input: {
+  canonicalProductId: string;
+  currentVersion: string;
+  platform: string;
+  architecture: string;
+  channel: "stable" | "lts";
+  sameMajorOnly?: boolean;
+}) {
+  const lifecycle = input.channel === "lts" ? "LTS" : "STABLE";
+  const candidates = await db.productVersion.findMany({
+    where: {
+      active: true,
+      publishedAt: { not: null },
+      lifecycle,
+      operatingSystem: { equals: input.platform, mode: "insensitive" },
+      architecture: { equals: input.architecture, mode: "insensitive" },
+      product: { productId: input.canonicalProductId, active: true, archivedAt: null },
+    },
+    include: {
+      product: true,
+      artifacts: { where: { active: true, removedAt: null } },
+      supplyChainEvidence: { include: { verificationEvidence: true } },
+      approvals: true,
+    },
+  });
+  return selectNewestSemanticRelease(
+    candidates.filter((candidate) => candidate.artifacts.length === 1 && releaseReadiness(candidate).publishable),
+    input.currentVersion,
+    input.sameMajorOnly,
+  );
+}
+
 
 export async function resolveEligibleReleaseForArtifact(artifactId: string) {
   const artifact = await db.productArtifact.findFirst({

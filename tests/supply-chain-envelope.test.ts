@@ -1,6 +1,6 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { canonicalizeManifest, verifySignedEnvelope, type SignedReleaseManifest } from "@/lib/supply-chain/manifest";
+import { canonicalizeManifest, requireManifestArtifact, verifySignedEnvelope, type SignedReleaseManifest } from "@/lib/supply-chain/manifest";
 
 const { privateKey, publicKey } = generateKeyPairSync("ed25519");
 const key = publicKey.export({ type: "spki", format: "der" }).toString("base64");
@@ -18,5 +18,12 @@ describe("signed supply-chain envelope boundary", () => {
     expect(() => verifySignedEnvelope({ ...envelope(), keyId: "retired" }, JSON.stringify({ active: key }), "active")).toThrow("SUPPLY_CHAIN_ENVELOPE_KEY_MISMATCH");
     expect(() => verifySignedEnvelope({ ...envelope(), algorithm: "RSA" }, JSON.stringify({ active: key }), "active")).toThrow("SUPPLY_CHAIN_ENVELOPE_CONTRACT");
     expect(() => verifySignedEnvelope(envelope(), JSON.stringify({ active: key }), "active", undefined, undefined)).not.toThrow();
+  });
+});
+
+describe("selected artifact binding", () => {
+  it("accepts only the exact artifact covered by the signed manifest", () => {
+    expect(() => requireManifestArtifact(manifest, manifest.artifacts[0])).not.toThrow();
+    expect(() => requireManifestArtifact(manifest, { ...manifest.artifacts[0], sha256: "b".repeat(64) })).toThrow("ARTIFACT_MISMATCH");
   });
 });
