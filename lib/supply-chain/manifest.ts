@@ -61,11 +61,10 @@ export function verifySignedEnvelope(envelope: unknown, keyringRaw: string | und
 }
 
 export function requireManifestArtifact(manifest: SignedReleaseManifest, artifact: SignedArtifact): void {
-  if (manifest.artifacts.length !== 1) throw new Error("SUPPLY_CHAIN_MANIFEST_ARTIFACT_SELECTION");
-  const signed = manifest.artifacts[0];
-  if (signed.id !== artifact.id || signed.objectKey !== artifact.objectKey ||
-      signed.sha256 !== artifact.sha256.toLowerCase() || signed.sizeBytes !== artifact.sizeBytes ||
-      signed.contentType !== artifact.contentType) {
-    throw new Error("SUPPLY_CHAIN_MANIFEST_ARTIFACT_MISMATCH");
-  }
+  const matches = manifest.artifacts.filter((signed) =>
+    signed.id === artifact.id && signed.objectKey === artifact.objectKey &&
+    signed.sha256 === artifact.sha256.toLowerCase() && signed.sizeBytes === artifact.sizeBytes &&
+    signed.contentType === artifact.contentType,
+  );
+  if (matches.length !== 1) throw new Error("SUPPLY_CHAIN_MANIFEST_ARTIFACT_MISMATCH");
 }
