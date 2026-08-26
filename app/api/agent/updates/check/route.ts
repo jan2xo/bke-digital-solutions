@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     if (updatePolicy === "ACTIVE_TERM" && (!record.license.expiresAt || record.license.expiresAt <= new Date() || record.license.subscription?.status !== "ACTIVE")) return error("UPDATE_NOT_ENTITLED", 403);
     const release = await resolveAgentUpdateRelease({ canonicalProductId: input.product_id, currentVersion: input.current_version, platform: input.platform, architecture: input.architecture, channel: input.channel, sameMajorOnly: updatePolicy === "MAJOR_VERSION" });
     if (!release) return NextResponse.json({ status: "up_to_date" });
-    const artifact = release.artifacts[0]!;
+    const artifact = release.updateArtifact;
     const evidence = release.supplyChainEvidence;
     if (!evidence?.manifestSignature || !evidence.signatureKeyId || evidence.signatureAlgorithm !== "Ed25519") return error("RELEASE_NOT_VERIFIED", 503);
     const runtime = getRuntimeEnvironment();

@@ -3,6 +3,8 @@ import { CUSTOMER_RELEASE_LIFECYCLES } from "@/lib/releases/eligibility";
 import { releaseReadiness } from "@/lib/supply-chain/readiness";
 import { selectNewestSemanticRelease } from "@/lib/releases/versioning";
 
+export const UPDATE_PACKAGE_CONTENT_TYPE = "application/vnd.bke.update-package+zip";
+
 export async function resolveCurrentCustomerRelease(productId: string) {
   return db.productVersion.findFirst({
     where: { productId, active: true, publishedAt: { not: null }, lifecycle: { in: [...CUSTOMER_RELEASE_LIFECYCLES] } },
@@ -36,13 +38,15 @@ export async function resolveAgentUpdateRelease(input: {
       approvals: true,
     },
   });
-  return selectNewestSemanticRelease(
-    candidates.filter((candidate) => candidate.artifacts.length === 1 && releaseReadiness(candidate).publishable),
-    input.currentVersion,
-    input.sameMajorOnly,
+  const eligible = candidates.filter((candidate) =>
+    candidate.artifacts.filter((artifact) => artifact.contentType === UPDATE_PACKAGE_CONTENT_TYPE).length === 1 &&
+    releaseReadiness(candidate).publishable,
   );
+  const selected = selectNewestSemanticRelease(eligible, input.currentVersion, input.sameMajorOnly);
+  if (!selected) return null;
+  const updateArtifact = selected.artifacts.find((artifact) => artifact.contentType === UPDATE_PACKAGE_CONTENT_TYPE);
+  return updateArtifact ? { ...selected, updateArtifact } : null;
 }
-
 
 export async function resolveEligibleReleaseForArtifact(artifactId: string) {
   const artifact = await db.productArtifact.findFirst({
