@@ -6,16 +6,24 @@ const scenario = process.argv[2];
 
 const modules = {
   alpha: {
+    moduleId: "spike-alpha",
     config: "v2/modules/spike-alpha/prisma.config.ts",
     table: "V2SpikeAlpha",
+    initialMigration: "20260831000100_spike_alpha_initial",
+    brokenMigration: "20991231000100_spike_alpha_broken",
     brokenMigrationDir:
       "v2/modules/spike-alpha/prisma/migrations/20991231000100_spike_alpha_broken",
+    brokenTable: "V2BrokenAlphaPartial",
   },
   beta: {
+    moduleId: "spike-beta",
     config: "v2/modules/spike-beta/prisma.config.ts",
     table: "V2SpikeBeta",
+    initialMigration: "20260831000200_spike_beta_initial",
+    brokenMigration: "20991231000200_spike_beta_broken",
     brokenMigrationDir:
       "v2/modules/spike-beta/prisma/migrations/20991231000200_spike_beta_broken",
+    brokenTable: "V2BrokenBetaPartial",
   },
 };
 
@@ -32,17 +40,12 @@ if (!supported.has(scenario)) {
   throw new Error(`Unsupported scenario: ${scenario ?? "<missing>"}`);
 }
 
-function runPrisma(moduleName, expectedSuccess = true) {
-  const module = modules[moduleName];
-  const result = spawnSync(
-    process.platform === "win32" ? "npx.cmd" : "npx",
-    ["prisma", "migrate", "deploy", "--config", module.config],
-    {
-      cwd: process.cwd(),
-      env: process.env,
-      encoding: "utf8",
-    },
-  );
+function runProcess(command, args, expectedSuccess, description) {
+  const result = spawnSync(command, args, {
+    cwd: process.cwd(),
+    env: process.env,
+    encoding: "utf8",
+  });
 
   process.stdout.write(result.stdout ?? "");
   process.stderr.write(result.stderr ?? "");
@@ -50,9 +53,29 @@ function runPrisma(moduleName, expectedSuccess = true) {
   const succeeded = result.status === 0;
   if (succeeded !== expectedSuccess) {
     throw new Error(
-      `${moduleName} migrate deploy ${succeeded ? "succeeded" : "failed"}; expected ${expectedSuccess ? "success" : "failure"}`,
+      `${description} ${succeeded ? "succeeded" : "failed"}; expected ${expectedSuccess ? "success" : "failure"}`,
     );
   }
+}
+
+function validateModule(moduleName) {
+  const module = modules[moduleName];
+  runProcess(
+    process.platform === "win32" ? "npx.cmd" : "npx",
+    ["prisma", "validate", "--config", module.config],
+    true,
+    `${moduleName} prisma validate`,
+  );
+}
+
+function runCompositor(moduleName, expectedSuccess = true) {
+  const module = modules[moduleName];
+  runProcess(
+    process.execPath,
+    ["v2/platform/persistence/migration-compositor.mjs", module.moduleId],
+    expectedSuccess,
+    `${moduleName} migration compositor`,
+  );
 }
 
 async function withDatabase(callback) {
@@ -79,69 +102,118 @@ async function tableExists(tableName) {
   });
 }
 
-async function requireTable(moduleName, expected) {
-  const present = await tableExists(modules[moduleName].table);
+async function requireTableName(tableName, expected) {
+  const present = await tableExists(tableName);
   if (present !== expected) {
-    throw new Error(
-      `${modules[moduleName].table} presence=${present}; expected ${expected}`,
-    );
+    throw new Error(`${tableName} presence=${present}; expected ${expected}`);
   }
 }
 
+async function requireModuleTable(moduleName, expected) {
+  await requireTableName(modules[moduleName].table, expected);
+}
+
+async function requireLedgerState(moduleName, migrationName, expectedState) {
+  const module = modules[moduleName];
+  await withDatabase(async (client) => {
+    const result = await client.query(
+      `SELECT "state"
+         FROM "_bke_module_migrations"
+        WHERE "moduleId" = $1 AND "migrationName" = $2`,
+      [module.moduleId, migrationName],
+    );
+
+    const actualState = result.rows[0]?.state ?? null;
+    if (actualState !== expectedState) {
+      throw new Error(
+        `${module.moduleId}/${migrationName} state=${actualState}; expected ${expectedState}`,
+      );
+    }
+  });
+}
+
 function injectBrokenMigration(moduleName) {
-  const directory = modules[moduleName].brokenMigrationDir;
-  mkdirSync(directory, { recursive: true });
+  const module = modules[moduleName];
+  mkdirSync(module.brokenMigrationDir, { recursive: true });
   writeFileSync(
-    `${directory}/migration.sql`,
-    `CREATE TABLE "V2Broken${moduleName}" (\n  "id" TEXT NOT NULL,\n  BROKEN SQL HERE\n);\n`,
+    `${module.brokenMigrationDir}/migration.sql`,
+    `CREATE TABLE "${module.brokenTable}" ("id" TEXT NOT NULL);\nBROKEN SQL HERE;\n`,
     "utf8",
   );
 }
 
+async function proveBrokenMigrationLocality(brokenModule, healthyModule) {
+  const broken = modules[brokenModule];
+  const healthy = modules[healthyModule];
+
+  runCompositor(healthyModule);
+  await requireLedgerState(
+    healthyModule,
+    healthy.initialMigration,
+    "APPLIED",
+  );
+
+  injectBrokenMigration(brokenModule);
+  runCompositor(brokenModule, false);
+
+  await requireLedgerState(
+    brokenModule,
+    broken.brokenMigration,
+    "FAILED",
+  );
+  await requireModuleTable(healthyModule, true);
+  await requireTableName(broken.brokenTable, false);
+
+  // The failed module stays blocked until its own migration is explicitly resolved.
+  runCompositor(brokenModule, false);
+
+  // The unrelated module remains independently runnable despite that failure.
+  runCompositor(healthyModule);
+  await requireLedgerState(
+    healthyModule,
+    healthy.initialMigration,
+    "APPLIED",
+  );
+  await requireModuleTable(healthyModule, true);
+}
+
 async function run() {
+  validateModule("alpha");
+  validateModule("beta");
+
   switch (scenario) {
     case "alpha-only":
-      runPrisma("alpha");
-      await requireTable("alpha", true);
-      await requireTable("beta", false);
+      runCompositor("alpha");
+      await requireModuleTable("alpha", true);
+      await requireModuleTable("beta", false);
       break;
 
     case "beta-only":
-      runPrisma("beta");
-      await requireTable("beta", true);
-      await requireTable("alpha", false);
+      runCompositor("beta");
+      await requireModuleTable("beta", true);
+      await requireModuleTable("alpha", false);
       break;
 
     case "alpha-then-beta":
-      runPrisma("alpha");
-      runPrisma("beta");
-      await requireTable("alpha", true);
-      await requireTable("beta", true);
+      runCompositor("alpha");
+      runCompositor("beta");
+      await requireModuleTable("alpha", true);
+      await requireModuleTable("beta", true);
       break;
 
     case "beta-then-alpha":
-      runPrisma("beta");
-      runPrisma("alpha");
-      await requireTable("alpha", true);
-      await requireTable("beta", true);
+      runCompositor("beta");
+      runCompositor("alpha");
+      await requireModuleTable("alpha", true);
+      await requireModuleTable("beta", true);
       break;
 
     case "broken-alpha-locality":
-      runPrisma("beta");
-      injectBrokenMigration("alpha");
-      runPrisma("alpha", false);
-      await requireTable("beta", true);
-      runPrisma("beta");
-      await requireTable("beta", true);
+      await proveBrokenMigrationLocality("alpha", "beta");
       break;
 
     case "broken-beta-locality":
-      runPrisma("alpha");
-      injectBrokenMigration("beta");
-      runPrisma("beta", false);
-      await requireTable("alpha", true);
-      runPrisma("alpha");
-      await requireTable("alpha", true);
+      await proveBrokenMigrationLocality("beta", "alpha");
       break;
   }
 
