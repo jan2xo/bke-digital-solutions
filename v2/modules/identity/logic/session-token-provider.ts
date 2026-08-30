@@ -6,4 +6,5 @@ export interface IdentitySessionTokenMaterial {
 
 export interface IdentitySessionTokenProvider {
   issue(): IdentitySessionTokenMaterial;
+  hash(token: string): string;
 }
