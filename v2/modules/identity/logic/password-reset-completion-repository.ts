@@ -8,6 +8,13 @@ export interface IdentityPasswordResetCompletionRecord {
   readonly role: IdentityRole;
 }
 
+export interface IdentityPasswordResetCommitInput {
+  readonly tokenId: string;
+  readonly userId: string;
+  readonly passwordHash: string;
+  readonly completedAt: Date;
+}
+
 export type IdentityPasswordResetCommitResult =
   | { readonly status: "COMPLETED" }
   | { readonly status: "TOKEN_REJECTED" };
@@ -17,10 +24,7 @@ export interface IdentityPasswordResetCompletionRepository {
     tokenHash: string,
   ): Promise<IdentityPasswordResetCompletionRecord | null>;
 
-  complete(input: {
-    readonly tokenId: string;
-    readonly userId: string;
-    readonly passwordHash: string;
-    readonly completedAt: Date;
-  }): Promise<IdentityPasswordResetCommitResult>;
+  complete(
+    input: IdentityPasswordResetCommitInput,
+  ): Promise<IdentityPasswordResetCommitResult>;
 }
