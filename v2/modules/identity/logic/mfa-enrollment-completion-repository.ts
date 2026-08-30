@@ -22,6 +22,14 @@ export type IdentityMfaEnrollmentCommitResult =
   | "RECOVERY_REJECTED"
   | "ENROLLMENT_REJECTED";
 
+export interface IdentityMfaEnrollmentCompletionCommitInput {
+  readonly userId: string;
+  readonly challengeId: string;
+  readonly recoveryCodeId: string | null;
+  readonly newRecoveryCodeHashes: readonly string[];
+  readonly completedAt: Date;
+}
+
 export interface IdentityMfaEnrollmentCompletionRepository {
   findEnrollmentChallenge(
     userId: string,
@@ -35,11 +43,7 @@ export interface IdentityMfaEnrollmentCompletionRepository {
 
   incrementChallengeAttempt(challengeId: string): Promise<void>;
 
-  completeEnrollment(input: {
-    readonly userId: string;
-    readonly challengeId: string;
-    readonly recoveryCodeId: string | null;
-    readonly newRecoveryCodeHashes: readonly string[];
-    readonly completedAt: Date;
-  }): Promise<IdentityMfaEnrollmentCommitResult>;
+  completeEnrollment(
+    input: IdentityMfaEnrollmentCompletionCommitInput,
+  ): Promise<IdentityMfaEnrollmentCommitResult>;
 }
