@@ -26,7 +26,12 @@ function repository(
     },
   }),
 ): IdentitySessionRepository {
-  return { issueSession };
+  return {
+    issueSession,
+    findSessionByTokenHash: async () => null,
+    revokeSession: async () => undefined,
+    touchLastSeen: async () => undefined,
+  };
 }
 
 function tokenProvider(
@@ -36,7 +41,10 @@ function tokenProvider(
     tokenHash: "hashed-session-token",
   }),
 ): IdentitySessionTokenProvider {
-  return { issue };
+  return {
+    issue,
+    hash: (token) => `hashed:${token}`,
+  };
 }
 
 describe("Identity session issuance capability", () => {

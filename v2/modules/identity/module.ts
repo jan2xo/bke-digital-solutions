@@ -3,12 +3,14 @@ import {
   IDENTITY_LOOKUP_CAPABILITY_ID,
   IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
 } from "./contracts/identity.contract";
+import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
 import { createIdentitySessionIssuanceCapability } from "./logic/session-issuance";
+import { createIdentitySessionValidationCapability } from "./logic/session-validation";
 import { identityModuleManifest } from "./module.manifest";
 import { createPostgresIdentityRepository } from "./prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "./prisma/repositories/postgres-session-repository";
@@ -46,6 +48,13 @@ export function createIdentityModule(
         {
           id: IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID,
           value: createIdentitySessionIssuanceCapability(
+            sessionRepository,
+            sessionTokenProvider,
+          ),
+        },
+        {
+          id: IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
+          value: createIdentitySessionValidationCapability(
             sessionRepository,
             sessionTokenProvider,
           ),
