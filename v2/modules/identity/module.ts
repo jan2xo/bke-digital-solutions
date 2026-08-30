@@ -5,15 +5,17 @@ import {
 } from "./contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/login-mfa-challenge.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login-mfa-verification.contract";
+import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "./logic/login-mfa-challenge-issuance";
 import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-verification";
+import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
-import { createHmacLoginMfaChallengeMaterialProvider } from "./logic/providers/hmac-login-mfa-challenge-material-provider";
+import { createHmacEmailMfaChallengeMaterialProvider } from "./logic/providers/hmac-email-mfa-challenge-material-provider";
 import { createHmacLoginMfaProofProvider } from "./logic/providers/hmac-login-mfa-proof-provider";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
 import { createIdentitySessionIssuanceCapability } from "./logic/session-issuance";
@@ -22,6 +24,7 @@ import { createIdentitySessionValidationCapability } from "./logic/session-valid
 import { identityModuleManifest } from "./module.manifest";
 import { createPostgresIdentityLoginMfaChallengeRepository } from "./prisma/repositories/postgres-login-mfa-challenge-repository";
 import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
+import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
 import { createPostgresIdentityRepository } from "./prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "./prisma/repositories/postgres-session-repository";
 import { createPostgresIdentitySessionTerminationRepository } from "./prisma/repositories/postgres-session-termination-repository";
@@ -47,13 +50,15 @@ export function createIdentityModule(
   );
   const loginMfaChallengeRepository =
     createPostgresIdentityLoginMfaChallengeRepository(options.connectionString);
+  const mfaEnrollmentStartRepository =
+    createPostgresIdentityMfaEnrollmentStartRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
   const loginMfaProofProvider = createHmacLoginMfaProofProvider(
     options.sessionSecret,
     options.mfaEncryptionKey,
   );
-  const loginMfaChallengeMaterialProvider =
-    createHmacLoginMfaChallengeMaterialProvider(
+  const emailMfaChallengeMaterialProvider =
+    createHmacEmailMfaChallengeMaterialProvider(
       options.sessionSecret,
       options.mfaEncryptionKey,
     );
@@ -105,7 +110,14 @@ export function createIdentityModule(
           id: IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
           value: createIdentityLoginMfaChallengeIssuanceCapability(
             loginMfaChallengeRepository,
-            loginMfaChallengeMaterialProvider,
+            emailMfaChallengeMaterialProvider,
+          ),
+        },
+        {
+          id: IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID,
+          value: createIdentityMfaEnrollmentStartCapability(
+            mfaEnrollmentStartRepository,
+            emailMfaChallengeMaterialProvider,
           ),
         },
       ];

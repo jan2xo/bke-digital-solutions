@@ -1,12 +1,8 @@
-export interface IdentityLoginMfaChallengeMaterial {
-  readonly challengeId: string;
-  readonly token: string;
-  readonly tokenHash: string;
-  readonly code: string;
-  readonly codeHash: string;
-  readonly reference: string;
-}
+import type {
+  IdentityEmailMfaChallengeMaterial,
+  IdentityEmailMfaChallengeMaterialProvider,
+} from "./email-mfa-challenge-material-provider";
 
-export interface IdentityLoginMfaChallengeMaterialProvider {
-  issue(): IdentityLoginMfaChallengeMaterial;
-}
+export type IdentityLoginMfaChallengeMaterial = IdentityEmailMfaChallengeMaterial;
+export type IdentityLoginMfaChallengeMaterialProvider =
+  IdentityEmailMfaChallengeMaterialProvider;
