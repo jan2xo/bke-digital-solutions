@@ -64,6 +64,7 @@ jobs:
           v2/modules/identity/test/session-termination.test.ts
           v2/modules/identity/test/login-mfa-verification.test.ts
           v2/modules/identity/test/login-mfa-challenge-issuance.test.ts
+          v2/modules/identity/test/mfa-enrollment-start.test.ts
       - name: Certify Identity persistence
         run: npx tsx v2/modules/identity/test/persistence.certify.ts
       - name: Certify Identity password authentication
@@ -78,3 +79,5 @@ jobs:
         run: npx tsx v2/modules/identity/test/login-mfa-verification.certify.ts
       - name: Certify Identity login MFA challenge issuance
         run: npx tsx v2/modules/identity/test/login-mfa-challenge-issuance.certify.ts
+      - name: Certify Identity MFA enrollment start
+        run: npx tsx v2/modules/identity/test/mfa-enrollment-start.certify.ts
