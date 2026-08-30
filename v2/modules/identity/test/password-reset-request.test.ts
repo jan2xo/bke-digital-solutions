@@ -18,6 +18,7 @@ function harness(found = true) {
       token: "raw-reset-token",
       tokenHash: "hashed-reset-token",
     })),
+    hash: vi.fn(() => "hashed-reset-token"),
   };
   return {
     repository,
