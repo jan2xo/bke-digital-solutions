@@ -59,20 +59,20 @@ function runProcess(command, args, expectedSuccess, description) {
 }
 
 function validateModule(moduleName) {
-  const module = modules[moduleName];
+  const moduleSpec = modules[moduleName];
   runProcess(
     process.platform === "win32" ? "npx.cmd" : "npx",
-    ["prisma", "validate", "--config", module.config],
+    ["prisma", "validate", "--config", moduleSpec.config],
     true,
     `${moduleName} prisma validate`,
   );
 }
 
 function runCompositor(moduleName, expectedSuccess = true) {
-  const module = modules[moduleName];
+  const moduleSpec = modules[moduleName];
   runProcess(
     process.execPath,
-    ["v2/platform/persistence/migration-compositor.mjs", module.moduleId],
+    ["v2/platform/persistence/migration-compositor.mjs", moduleSpec.moduleId],
     expectedSuccess,
     `${moduleName} migration compositor`,
   );
@@ -114,30 +114,30 @@ async function requireModuleTable(moduleName, expected) {
 }
 
 async function requireLedgerState(moduleName, migrationName, expectedState) {
-  const module = modules[moduleName];
+  const moduleSpec = modules[moduleName];
   await withDatabase(async (client) => {
     const result = await client.query(
       `SELECT "state"
          FROM "_bke_module_migrations"
         WHERE "moduleId" = $1 AND "migrationName" = $2`,
-      [module.moduleId, migrationName],
+      [moduleSpec.moduleId, migrationName],
     );
 
     const actualState = result.rows[0]?.state ?? null;
     if (actualState !== expectedState) {
       throw new Error(
-        `${module.moduleId}/${migrationName} state=${actualState}; expected ${expectedState}`,
+        `${moduleSpec.moduleId}/${migrationName} state=${actualState}; expected ${expectedState}`,
       );
     }
   });
 }
 
 function injectBrokenMigration(moduleName) {
-  const module = modules[moduleName];
-  mkdirSync(module.brokenMigrationDir, { recursive: true });
+  const moduleSpec = modules[moduleName];
+  mkdirSync(moduleSpec.brokenMigrationDir, { recursive: true });
   writeFileSync(
-    `${module.brokenMigrationDir}/migration.sql`,
-    `CREATE TABLE "${module.brokenTable}" ("id" TEXT NOT NULL);\nBROKEN SQL HERE;\n`,
+    `${moduleSpec.brokenMigrationDir}/migration.sql`,
+    `CREATE TABLE "${moduleSpec.brokenTable}" ("id" TEXT NOT NULL);\nBROKEN SQL HERE;\n`,
     "utf8",
   );
 }
