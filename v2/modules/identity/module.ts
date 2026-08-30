@@ -3,17 +3,21 @@ import {
   IDENTITY_LOOKUP_CAPABILITY_ID,
   IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
 } from "./contracts/identity.contract";
+import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login-mfa-verification.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
 import { createIdentityLookupCapability } from "./logic/identity-service";
+import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-verification";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
+import { createHmacLoginMfaProofProvider } from "./logic/providers/hmac-login-mfa-proof-provider";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
 import { createIdentitySessionIssuanceCapability } from "./logic/session-issuance";
 import { createIdentitySessionTerminationCapability } from "./logic/session-termination";
 import { createIdentitySessionValidationCapability } from "./logic/session-validation";
 import { identityModuleManifest } from "./module.manifest";
+import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
 import { createPostgresIdentityRepository } from "./prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "./prisma/repositories/postgres-session-repository";
 import { createPostgresIdentitySessionTerminationRepository } from "./prisma/repositories/postgres-session-termination-repository";
@@ -21,6 +25,7 @@ import { createPostgresIdentitySessionTerminationRepository } from "./prisma/rep
 export interface IdentityModuleOptions {
   readonly connectionString: string;
   readonly sessionSecret: string;
+  readonly mfaEncryptionKey?: string;
 }
 
 export function createIdentityModule(
@@ -33,7 +38,14 @@ export function createIdentityModule(
   );
   const sessionTerminationRepository =
     createPostgresIdentitySessionTerminationRepository(options.connectionString);
+  const loginMfaRepository = createPostgresIdentityLoginMfaRepository(
+    options.connectionString,
+  );
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
+  const loginMfaProofProvider = createHmacLoginMfaProofProvider(
+    options.sessionSecret,
+    options.mfaEncryptionKey,
+  );
 
   return Object.freeze({
     manifest: identityModuleManifest,
@@ -69,6 +81,13 @@ export function createIdentityModule(
           value: createIdentitySessionTerminationCapability(
             sessionTerminationRepository,
             sessionTokenProvider,
+          ),
+        },
+        {
+          id: IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID,
+          value: createIdentityLoginMfaVerificationCapability(
+            loginMfaRepository,
+            loginMfaProofProvider,
           ),
         },
       ];
