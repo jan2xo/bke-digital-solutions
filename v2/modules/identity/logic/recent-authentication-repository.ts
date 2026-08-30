@@ -27,6 +27,14 @@ export type IdentityRecentAuthenticationCommitResult =
   | "CHALLENGE_REJECTED"
   | "RECOVERY_REJECTED";
 
+export interface IdentityRecentAuthenticationAdminCommitInput {
+  readonly sessionId: string;
+  readonly userId: string;
+  readonly challengeId: string;
+  readonly recoveryCodeId: string | null;
+  readonly authenticatedAt: Date;
+}
+
 export interface IdentityRecentAuthenticationRepository {
   findContext(
     sessionId: string,
@@ -52,11 +60,7 @@ export interface IdentityRecentAuthenticationRepository {
     authenticatedAt: Date,
   ): Promise<IdentityRecentAuthenticationCommitResult>;
 
-  completeAdminRecentAuthentication(input: {
-    readonly sessionId: string;
-    readonly userId: string;
-    readonly challengeId: string;
-    readonly recoveryCodeId: string | null;
-    readonly authenticatedAt: Date;
-  }): Promise<IdentityRecentAuthenticationCommitResult>;
+  completeAdminRecentAuthentication(
+    input: IdentityRecentAuthenticationAdminCommitInput,
+  ): Promise<IdentityRecentAuthenticationCommitResult>;
 }
