@@ -12,5 +12,5 @@ export interface IdentityPasswordResetTokenRecord {
 
 export interface IdentityPasswordResetRequestRepository {
   findPrincipalByEmail(email: string): Promise<IdentityPasswordResetPrincipal | null>;
-  replacePendingToken(record: IdentityPasswordResetTokenRecord): Promise<void>;
+  createToken(record: IdentityPasswordResetTokenRecord): Promise<void>;
 }
