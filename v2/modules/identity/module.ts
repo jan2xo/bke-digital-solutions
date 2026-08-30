@@ -8,6 +8,7 @@ import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
+import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/recent-auth-challenge.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
@@ -23,6 +24,7 @@ import { createHmacEmailMfaChallengeMaterialProvider } from "./logic/providers/h
 import { createHmacEmailMfaProofProvider } from "./logic/providers/hmac-email-mfa-proof-provider";
 import { createHmacMfaRecoveryCodeProvider } from "./logic/providers/hmac-mfa-recovery-code-provider";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
+import { createIdentityRecentAuthChallengeIssuanceCapability } from "./logic/recent-auth-challenge-issuance";
 import { createIdentitySessionIssuanceCapability } from "./logic/session-issuance";
 import { createIdentitySessionTerminationCapability } from "./logic/session-termination";
 import { createIdentitySessionValidationCapability } from "./logic/session-validation";
@@ -32,6 +34,7 @@ import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
+import { createPostgresIdentityRecentAuthChallengeRepository } from "./prisma/repositories/postgres-recent-auth-challenge-repository";
 import { createPostgresIdentityRepository } from "./prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "./prisma/repositories/postgres-session-repository";
 import { createPostgresIdentitySessionTerminationRepository } from "./prisma/repositories/postgres-session-termination-repository";
@@ -64,6 +67,8 @@ export function createIdentityModule(
   const mfaDisableRepository = createPostgresIdentityMfaDisableRepository(
     options.connectionString,
   );
+  const recentAuthChallengeRepository =
+    createPostgresIdentityRecentAuthChallengeRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
   const emailMfaProofProvider = createHmacEmailMfaProofProvider(
     options.sessionSecret,
@@ -147,6 +152,13 @@ export function createIdentityModule(
         {
           id: IDENTITY_MFA_DISABLE_CAPABILITY_ID,
           value: createIdentityMfaDisableCapability(mfaDisableRepository),
+        },
+        {
+          id: IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
+          value: createIdentityRecentAuthChallengeIssuanceCapability(
+            recentAuthChallengeRepository,
+            emailMfaChallengeMaterialProvider,
+          ),
         },
       ];
     },
