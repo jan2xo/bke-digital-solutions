@@ -1,5 +1,3 @@
-export interface IdentityLoginMfaProofProvider {
-  hashChallengeToken(token: string): string;
-  verifyEmailCode(codeHash: string, candidate: string): boolean;
-  hashRecoveryCode(candidate: string): string;
-}
+import type { IdentityEmailMfaProofProvider } from "./email-mfa-proof-provider";
+
+export type IdentityLoginMfaProofProvider = IdentityEmailMfaProofProvider;

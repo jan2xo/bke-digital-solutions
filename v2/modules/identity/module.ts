@@ -5,6 +5,7 @@ import {
 } from "./contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/login-mfa-challenge.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login-mfa-verification.contract";
+import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
@@ -12,11 +13,13 @@ import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.con
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "./logic/login-mfa-challenge-issuance";
 import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-verification";
+import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
 import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
 import { createHmacEmailMfaChallengeMaterialProvider } from "./logic/providers/hmac-email-mfa-challenge-material-provider";
-import { createHmacLoginMfaProofProvider } from "./logic/providers/hmac-login-mfa-proof-provider";
+import { createHmacEmailMfaProofProvider } from "./logic/providers/hmac-email-mfa-proof-provider";
+import { createHmacMfaRecoveryCodeProvider } from "./logic/providers/hmac-mfa-recovery-code-provider";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
 import { createIdentitySessionIssuanceCapability } from "./logic/session-issuance";
 import { createIdentitySessionTerminationCapability } from "./logic/session-termination";
@@ -24,6 +27,7 @@ import { createIdentitySessionValidationCapability } from "./logic/session-valid
 import { identityModuleManifest } from "./module.manifest";
 import { createPostgresIdentityLoginMfaChallengeRepository } from "./prisma/repositories/postgres-login-mfa-challenge-repository";
 import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
+import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
 import { createPostgresIdentityRepository } from "./prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "./prisma/repositories/postgres-session-repository";
@@ -52,8 +56,10 @@ export function createIdentityModule(
     createPostgresIdentityLoginMfaChallengeRepository(options.connectionString);
   const mfaEnrollmentStartRepository =
     createPostgresIdentityMfaEnrollmentStartRepository(options.connectionString);
+  const mfaEnrollmentCompletionRepository =
+    createPostgresIdentityMfaEnrollmentCompletionRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
-  const loginMfaProofProvider = createHmacLoginMfaProofProvider(
+  const emailMfaProofProvider = createHmacEmailMfaProofProvider(
     options.sessionSecret,
     options.mfaEncryptionKey,
   );
@@ -62,6 +68,10 @@ export function createIdentityModule(
       options.sessionSecret,
       options.mfaEncryptionKey,
     );
+  const mfaRecoveryCodeProvider = createHmacMfaRecoveryCodeProvider(
+    options.sessionSecret,
+    options.mfaEncryptionKey,
+  );
 
   return Object.freeze({
     manifest: identityModuleManifest,
@@ -103,7 +113,7 @@ export function createIdentityModule(
           id: IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID,
           value: createIdentityLoginMfaVerificationCapability(
             loginMfaRepository,
-            loginMfaProofProvider,
+            emailMfaProofProvider,
           ),
         },
         {
@@ -118,6 +128,14 @@ export function createIdentityModule(
           value: createIdentityMfaEnrollmentStartCapability(
             mfaEnrollmentStartRepository,
             emailMfaChallengeMaterialProvider,
+          ),
+        },
+        {
+          id: IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID,
+          value: createIdentityMfaEnrollmentCompletionCapability(
+            mfaEnrollmentCompletionRepository,
+            emailMfaProofProvider,
+            mfaRecoveryCodeProvider,
           ),
         },
       ];
