@@ -180,14 +180,14 @@ export function createPostgresIdentityRecentAuthCompletionRepository(
 
         const challenge = await client.query(
           `UPDATE "MfaChallenge"
-              SET "consumedAt" = $4
-            WHERE "id" = $3
+              SET "consumedAt" = $3
+            WHERE "id" = $1
               AND "userId" = $2
               AND "purpose" = 'RECENT_AUTH'::"MfaChallengePurpose"
               AND "consumedAt" IS NULL
               AND "attemptCount" < 5
-              AND "expiresAt" > $4`,
-          [input.sessionId, input.userId, input.challengeId, input.completedAt],
+              AND "expiresAt" > $3`,
+          [input.challengeId, input.userId, input.completedAt],
         );
         if ((challenge.rowCount ?? 0) !== 1) {
           await client.query("ROLLBACK");
