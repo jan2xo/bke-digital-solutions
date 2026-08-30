@@ -1,0 +1,7 @@
+CREATE TABLE "V2SpikeBeta" (
+    "id" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "V2SpikeBeta_pkey" PRIMARY KEY ("id")
+);

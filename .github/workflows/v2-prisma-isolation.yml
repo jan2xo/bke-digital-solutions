@@ -1,0 +1,57 @@
+name: V2 Prisma Isolation
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/**"
+      - ".github/workflows/v2-prisma-isolation.yml"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  certify:
+    name: ${{ matrix.scenario }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - alpha-only
+          - beta-only
+          - alpha-then-beta
+          - beta-then-alpha
+          - broken-alpha-locality
+          - broken-beta-locality
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_spike
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_spike"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_spike
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Certify module-owned Prisma isolation
+        run: node v2/tooling/certify-prisma-isolation.mjs "${{ matrix.scenario }}"
