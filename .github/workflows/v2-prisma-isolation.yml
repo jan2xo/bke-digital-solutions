@@ -4,7 +4,10 @@ on:
   pull_request:
     branches: [develop/v2]
     paths:
-      - "v2/**"
+      - "v2/modules/spike-alpha/**"
+      - "v2/modules/spike-beta/**"
+      - "v2/platform/persistence/migration-compositor.mjs"
+      - "v2/tooling/certify-prisma-isolation.mjs"
       - ".github/workflows/v2-prisma-isolation.yml"
       - "package.json"
       - "package-lock.json"
