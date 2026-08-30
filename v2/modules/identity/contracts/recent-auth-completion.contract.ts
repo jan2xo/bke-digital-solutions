@@ -24,6 +24,7 @@ export type IdentityRecentAuthInvalidCode =
 
 export type IdentityRecentAuthFailureCode =
   | "INVALID_INPUT"
+  | "SESSION_PROVIDER_UNAVAILABLE"
   | "PASSWORD_PROVIDER_UNAVAILABLE"
   | "CODE_PROVIDER_UNAVAILABLE"
   | "PERSISTENCE_UNAVAILABLE";
