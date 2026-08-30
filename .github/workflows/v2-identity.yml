@@ -60,9 +60,12 @@ jobs:
           v2/modules/identity/test/identity-service.test.ts
           v2/modules/identity/test/password-authentication.test.ts
           v2/modules/identity/test/session-issuance.test.ts
+          v2/modules/identity/test/session-validation.test.ts
       - name: Certify Identity persistence
         run: npx tsx v2/modules/identity/test/persistence.certify.ts
       - name: Certify Identity password authentication
         run: npx tsx v2/modules/identity/test/password-authentication.certify.ts
       - name: Certify Identity session issuance
         run: npx tsx v2/modules/identity/test/session-issuance.certify.ts
+      - name: Certify Identity session validation
+        run: npx tsx v2/modules/identity/test/session-validation.certify.ts
