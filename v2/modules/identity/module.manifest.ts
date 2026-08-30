@@ -8,6 +8,7 @@ import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
+import { IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID } from "./contracts/password-reset-completion.contract";
 import { IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID } from "./contracts/password-reset-request.contract";
 import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/recent-auth-challenge.contract";
 import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "./contracts/recent-auth-completion.contract";
@@ -32,5 +33,6 @@ export const identityModuleManifest = Object.freeze({
     IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
     IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID,
     IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
+    IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID,
   ],
 } satisfies ModuleManifest);
