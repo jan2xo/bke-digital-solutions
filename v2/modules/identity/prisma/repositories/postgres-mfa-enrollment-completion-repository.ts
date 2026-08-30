@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Client } from "pg";
 import type {
   IdentityMfaEnrollmentChallengeRecord,
+  IdentityMfaEnrollmentCompletionCommitInput,
   IdentityMfaEnrollmentCompletionRepository,
   IdentityMfaEnrollmentRecoveryCodeRecord,
 } from "../../logic/mfa-enrollment-completion-repository";
@@ -85,7 +86,7 @@ export function createPostgresIdentityMfaEnrollmentCompletionRepository(
       }
     },
 
-    async completeEnrollment(input) {
+    async completeEnrollment(input: IdentityMfaEnrollmentCompletionCommitInput) {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
 
