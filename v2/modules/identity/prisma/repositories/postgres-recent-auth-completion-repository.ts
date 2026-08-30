@@ -221,7 +221,7 @@ export function createPostgresIdentityRecentAuthCompletionRepository(
               AND EXISTS (
                 SELECT 1 FROM "User" u
                  WHERE u."id" = s."userId"
-                   AND u."role" = 'ADMIN'::"UserRole"
+                   AND u."role" = 'ADMIN'::"IdentityRole"
                    AND u."suspendedAt" IS NULL
               )
           RETURNING ${SESSION_RETURNING}`,
