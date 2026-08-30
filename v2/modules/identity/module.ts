@@ -9,6 +9,7 @@ import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.cont
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
 import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/recent-auth-challenge.contract";
+import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "./contracts/recent-auth-completion.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
@@ -25,6 +26,7 @@ import { createHmacEmailMfaProofProvider } from "./logic/providers/hmac-email-mf
 import { createHmacMfaRecoveryCodeProvider } from "./logic/providers/hmac-mfa-recovery-code-provider";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
 import { createIdentityRecentAuthChallengeIssuanceCapability } from "./logic/recent-auth-challenge-issuance";
+import { createIdentityRecentAuthCompletionCapability } from "./logic/recent-auth-completion";
 import { createIdentitySessionIssuanceCapability } from "./logic/session-issuance";
 import { createIdentitySessionTerminationCapability } from "./logic/session-termination";
 import { createIdentitySessionValidationCapability } from "./logic/session-validation";
@@ -35,6 +37,7 @@ import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositorie
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
 import { createPostgresIdentityRecentAuthChallengeRepository } from "./prisma/repositories/postgres-recent-auth-challenge-repository";
+import { createPostgresIdentityRecentAuthCompletionRepository } from "./prisma/repositories/postgres-recent-auth-completion-repository";
 import { createPostgresIdentityRepository } from "./prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "./prisma/repositories/postgres-session-repository";
 import { createPostgresIdentitySessionTerminationRepository } from "./prisma/repositories/postgres-session-termination-repository";
@@ -69,6 +72,8 @@ export function createIdentityModule(
   );
   const recentAuthChallengeRepository =
     createPostgresIdentityRecentAuthChallengeRepository(options.connectionString);
+  const recentAuthCompletionRepository =
+    createPostgresIdentityRecentAuthCompletionRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
   const emailMfaProofProvider = createHmacEmailMfaProofProvider(
     options.sessionSecret,
@@ -82,6 +87,10 @@ export function createIdentityModule(
   const mfaRecoveryCodeProvider = createHmacMfaRecoveryCodeProvider(
     options.sessionSecret,
     options.mfaEncryptionKey,
+  );
+  const sessionValidation = createIdentitySessionValidationCapability(
+    sessionRepository,
+    sessionTokenProvider,
   );
 
   return Object.freeze({
@@ -108,10 +117,7 @@ export function createIdentityModule(
         },
         {
           id: IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
-          value: createIdentitySessionValidationCapability(
-            sessionRepository,
-            sessionTokenProvider,
-          ),
+          value: sessionValidation,
         },
         {
           id: IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
@@ -158,6 +164,15 @@ export function createIdentityModule(
           value: createIdentityRecentAuthChallengeIssuanceCapability(
             recentAuthChallengeRepository,
             emailMfaChallengeMaterialProvider,
+          ),
+        },
+        {
+          id: IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID,
+          value: createIdentityRecentAuthCompletionCapability(
+            recentAuthCompletionRepository,
+            sessionValidation,
+            passwordVerifier,
+            emailMfaProofProvider,
           ),
         },
       ];
