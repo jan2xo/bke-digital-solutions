@@ -18,8 +18,6 @@ async function invalidate(
   now: Date,
   code: "ACCOUNT_SUSPENDED" | "EXPIRED" | "IDLE_TIMEOUT",
 ): Promise<IdentitySessionValidationResult> {
-  // Preserve V1 behavior: invalid sessions fail closed even if best-effort
-  // persistence of the revocation marker is temporarily unavailable.
   await repository.revokeSession(sessionId, reason, now).catch(() => undefined);
   return { status: "INVALID", code };
 }
@@ -30,7 +28,7 @@ export function createIdentitySessionValidationCapability(
   nowProvider: () => Date = () => new Date(),
 ): IdentitySessionValidationCapability {
   return Object.freeze({
-    async validate(token: string) {
+    async validate(token: string): Promise<IdentitySessionValidationResult> {
       if (!token || !token.trim()) {
         return { status: "INVALID", code: "TOKEN_MISSING" };
       }
