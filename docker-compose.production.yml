@@ -122,7 +122,7 @@ services:
 
   clamav:
     image: clamav/clamav:1.4
-    networks: [private]
+    networks: [private, egress]
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "clamdscan --ping 1 >/dev/null 2>&1"]
