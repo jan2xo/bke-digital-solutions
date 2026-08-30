@@ -32,4 +32,21 @@ describe("purchase plan pricing", () => {
     expect(applyOfferDiscount(annual.annualAmountMinor, 2_500).finalAmountMinor).toBe(81_000);
     expect(() => applyOfferDiscount(10_000, 10_001)).toThrow("INVALID_OFFER_DISCOUNT");
   });
+  it("keeps the Air Stack annual catalog saving separate from the 71-percent welcome offer", () => {
+    const annual = calculateAnnualPricing(2_599_900, 500);
+    expect(annual).toEqual({
+      monthlyAmountMinor: 2_599_900,
+      discountBps: 500,
+      grossAnnualMinor: 31_198_800,
+      annualAmountMinor: 29_638_860,
+      savingsMinor: 1_559_940,
+      effectiveMonthlyMinor: 2_469_905,
+    });
+    expect(applyOfferDiscount(annual.annualAmountMinor, 7_100)).toEqual({
+      catalogAmountMinor: 29_638_860,
+      discountBps: 7_100,
+      discountAmountMinor: 21_043_591,
+      finalAmountMinor: 8_595_269,
+    });
+  });
 });
