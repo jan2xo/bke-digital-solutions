@@ -6,4 +6,5 @@ export interface IdentityPasswordResetTokenMaterial {
 
 export interface IdentityPasswordResetTokenProvider {
   issue(): IdentityPasswordResetTokenMaterial;
+  hash(token: string): string;
 }
