@@ -70,6 +70,7 @@ jobs:
           v2/modules/identity/test/recent-auth-challenge-issuance.test.ts
           v2/modules/identity/test/recent-auth-completion.test.ts
           v2/modules/identity/test/password-reset-request.test.ts
+          v2/modules/identity/test/password-reset-completion.test.ts
       - name: Certify Identity persistence
         run: npx tsx v2/modules/identity/test/persistence.certify.ts
       - name: Certify Identity password authentication
@@ -96,3 +97,5 @@ jobs:
         run: npx tsx v2/modules/identity/test/recent-auth-completion.certify.ts
       - name: Certify Identity password-reset request
         run: npx tsx v2/modules/identity/test/password-reset-request.certify.ts
+      - name: Certify Identity password-reset completion
+        run: npx tsx v2/modules/identity/test/password-reset-completion.certify.ts
