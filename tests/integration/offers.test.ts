@@ -109,6 +109,36 @@ describe.sequential("discount offers and immutable pricing", () => {
     expect(order.invoice!.totalMinor).toBe(order.totalMinor);
   });
 
+  it("auto-applies a code-less public promotion and carries it into the invoice", async () => {
+    const offer = await db.discountOffer.create({
+      data: {
+        name: `Welcome annual ${suffix}`,
+        type: "GENERAL_PROMOTION",
+        status: "ACTIVE",
+        discountBps: 7_100,
+        startsAt: new Date(Date.now() - 1_000),
+        purchasePlanId: annualPlanId,
+        maximumRedemptions: 1,
+        perAccountRedemptionLimit: 1,
+        createdById: adminId,
+      },
+    });
+    const { createCheckout } = await import("@/lib/checkout");
+    const checkout = await createCheckout(userId, annualPlanId, accountId);
+    const order = await db.order.findUniqueOrThrow({
+      where: { id: checkout.orderId },
+      include: { invoice: { include: { lines: true } }, items: true, offerRedemption: true },
+    });
+    const catalogAmountMinor = order.items[0]!.catalogAmountMinor!;
+    const expectedDiscountMinor = Math.round((catalogAmountMinor * 7_100) / 10_000);
+    expect(order.items[0]).toMatchObject({ offerId: offer.id, offerDiscountBps: 7_100, offerDiscountMinor: expectedDiscountMinor });
+    expect(order.totalMinor).toBe(catalogAmountMinor - expectedDiscountMinor);
+    expect(order.offerRedemption).toMatchObject({ offerId: offer.id, discountMinor: expectedDiscountMinor, finalMinor: order.totalMinor, status: "RESERVED" });
+    expect(order.invoice!.lines.some((line) => line.description.includes(offer.name) && line.totalMinor === -expectedDiscountMinor)).toBe(true);
+    expect(order.invoice!.lines.reduce((sum, line) => sum + line.totalMinor, 0)).toBe(order.totalMinor);
+    expect(order.invoice!.totalMinor).toBe(order.totalMinor);
+  });
+
   it("applies a monthly offer for exactly the configured number of renewal cycles", async () => {
     const offer = await db.discountOffer.create({ data: { codeNormalized: `TWO_CYCLES_${suffix}`.toUpperCase(), name: "Two discounted cycles", type: "CUSTOMER_ACCOUNT_OFFER", status: "ACTIVE", discountBps: 2_500, startsAt: new Date(Date.now() - 1_000), customerAccountId: accountId, purchasePlanId: monthlyPlanId, discountedBillingCycles: 2, createdById: adminId } });
     const { createCheckout } = await import("@/lib/checkout");
