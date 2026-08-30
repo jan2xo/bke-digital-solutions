@@ -53,7 +53,7 @@ export function createIdentityPasswordResetRequestCapability(
       }
 
       try {
-        await repository.replacePendingToken({
+        await repository.createToken({
           id: material.tokenId,
           userId: principal.id,
           tokenHash: material.tokenHash,
