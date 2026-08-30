@@ -1,8 +1,10 @@
 import { Client } from "pg";
 import type {
+  IdentityRecentAuthAdminCommitInput,
   IdentityRecentAuthChallengeRecord,
   IdentityRecentAuthCommitResult,
   IdentityRecentAuthCompletionRepository,
+  IdentityRecentAuthCustomerCommitInput,
   IdentityRecentAuthPasswordRecord,
   IdentityRecentAuthRecoveryCodeRecord,
 } from "../../logic/recent-auth-completion-repository";
@@ -142,7 +144,9 @@ export function createPostgresIdentityRecentAuthCompletionRepository(
       }
     },
 
-    async upgradeCustomerSession(input): Promise<IdentityRecentAuthCommitResult> {
+    async upgradeCustomerSession(
+      input: IdentityRecentAuthCustomerCommitInput,
+    ): Promise<IdentityRecentAuthCommitResult> {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
       try {
@@ -172,7 +176,9 @@ export function createPostgresIdentityRecentAuthCompletionRepository(
       }
     },
 
-    async completeAdminRecentAuth(input): Promise<IdentityRecentAuthCommitResult> {
+    async completeAdminRecentAuth(
+      input: IdentityRecentAuthAdminCommitInput,
+    ): Promise<IdentityRecentAuthCommitResult> {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
       try {
