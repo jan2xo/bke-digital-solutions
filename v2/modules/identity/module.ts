@@ -8,6 +8,7 @@ import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
+import { IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID } from "./contracts/password-reset-completion.contract";
 import { IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID } from "./contracts/password-reset-request.contract";
 import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/recent-auth-challenge.contract";
 import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "./contracts/recent-auth-completion.contract";
@@ -21,7 +22,9 @@ import { createIdentityMfaDisableCapability } from "./logic/mfa-disable";
 import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
 import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
+import { createIdentityPasswordResetCompletionCapability } from "./logic/password-reset-completion";
 import { createIdentityPasswordResetRequestCapability } from "./logic/password-reset-request";
+import { createArgon2PasswordHasher } from "./logic/providers/argon2-password-hasher";
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
 import { createHmacEmailMfaChallengeMaterialProvider } from "./logic/providers/hmac-email-mfa-challenge-material-provider";
 import { createHmacEmailMfaProofProvider } from "./logic/providers/hmac-email-mfa-proof-provider";
@@ -39,6 +42,7 @@ import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
+import { createPostgresIdentityPasswordResetCompletionRepository } from "./prisma/repositories/postgres-password-reset-completion-repository";
 import { createPostgresIdentityPasswordResetRequestRepository } from "./prisma/repositories/postgres-password-reset-request-repository";
 import { createPostgresIdentityRecentAuthChallengeRepository } from "./prisma/repositories/postgres-recent-auth-challenge-repository";
 import { createPostgresIdentityRecentAuthCompletionRepository } from "./prisma/repositories/postgres-recent-auth-completion-repository";
@@ -57,6 +61,7 @@ export function createIdentityModule(
 ): CapabilityModule {
   const repository = createPostgresIdentityRepository(options.connectionString);
   const passwordVerifier = createArgon2PasswordVerifier();
+  const passwordHasher = createArgon2PasswordHasher();
   const sessionRepository = createPostgresIdentitySessionRepository(
     options.connectionString,
   );
@@ -80,6 +85,8 @@ export function createIdentityModule(
     createPostgresIdentityRecentAuthCompletionRepository(options.connectionString);
   const passwordResetRequestRepository =
     createPostgresIdentityPasswordResetRequestRepository(options.connectionString);
+  const passwordResetCompletionRepository =
+    createPostgresIdentityPasswordResetCompletionRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
   const passwordResetTokenProvider = createHmacPasswordResetTokenProvider(
     options.sessionSecret,
@@ -189,6 +196,14 @@ export function createIdentityModule(
           value: createIdentityPasswordResetRequestCapability(
             passwordResetRequestRepository,
             passwordResetTokenProvider,
+          ),
+        },
+        {
+          id: IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID,
+          value: createIdentityPasswordResetCompletionCapability(
+            passwordResetCompletionRepository,
+            passwordResetTokenProvider,
+            passwordHasher,
           ),
         },
       ];
