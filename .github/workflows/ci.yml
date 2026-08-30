@@ -1,5 +1,14 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    paths-ignore:
+      - "v2/**"
+      - ".github/workflows/v2-*.yml"
+  pull_request:
+    paths-ignore:
+      - "v2/**"
+      - ".github/workflows/v2-*.yml"
 
 permissions:
   contents: read

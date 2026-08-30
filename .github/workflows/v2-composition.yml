@@ -1,0 +1,41 @@
+name: V2 Composition
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/apps/orchestrator/**"
+      - "v2/platform/composition/**"
+      - "v2/contracts/**"
+      - "v2/modules/*/module.ts"
+      - "v2/modules/*/module.manifest.ts"
+      - "v2/modules/*/contracts/**"
+      - "v2/tooling/check-module-boundaries.mjs"
+      - "v2/tsconfig.json"
+      - "v2/vitest.config.ts"
+      - ".github/workflows/v2-composition.yml"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Test composition root
+        run: npx vitest run --config v2/vitest.config.ts v2/platform/composition/test/composer.test.ts
+      - name: Boot disposable composition
+        run: npx tsx v2/apps/orchestrator/bootstrap.ts
