@@ -59,7 +59,10 @@ jobs:
           npx vitest run --config v2/vitest.config.ts
           v2/modules/identity/test/identity-service.test.ts
           v2/modules/identity/test/password-authentication.test.ts
+          v2/modules/identity/test/session-issuance.test.ts
       - name: Certify Identity persistence
         run: npx tsx v2/modules/identity/test/persistence.certify.ts
       - name: Certify Identity password authentication
         run: npx tsx v2/modules/identity/test/password-authentication.certify.ts
+      - name: Certify Identity session issuance
+        run: npx tsx v2/modules/identity/test/session-issuance.certify.ts
