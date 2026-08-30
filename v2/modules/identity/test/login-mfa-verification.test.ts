@@ -44,7 +44,7 @@ function repository(
       codeHash === "recovery:RECOVERY-CODE" ? { id: "recovery-1" } : null,
     ),
     incrementChallengeAttempt: vi.fn(async () => undefined),
-    consumeChallenge: vi.fn(async () => "CONSUMED"),
+    consumeChallenge: vi.fn(async () => "CONSUMED" as const),
     ...overrides,
   };
 }
@@ -127,7 +127,9 @@ describe("Identity login MFA verification", () => {
 
   it("maps atomic consume races without granting authentication", async () => {
     const challengeRace = createIdentityLoginMfaVerificationCapability(
-      repository({ consumeChallenge: vi.fn(async () => "CHALLENGE_REJECTED") }),
+      repository({
+        consumeChallenge: vi.fn(async () => "CHALLENGE_REJECTED" as const),
+      }),
       proofProvider(),
       () => now,
     );
@@ -136,7 +138,9 @@ describe("Identity login MFA verification", () => {
     ).resolves.toEqual({ status: "INVALID", code: "INVALID_CHALLENGE" });
 
     const recoveryRace = createIdentityLoginMfaVerificationCapability(
-      repository({ consumeChallenge: vi.fn(async () => "RECOVERY_REJECTED") }),
+      repository({
+        consumeChallenge: vi.fn(async () => "RECOVERY_REJECTED" as const),
+      }),
       proofProvider(),
       () => now,
     );
