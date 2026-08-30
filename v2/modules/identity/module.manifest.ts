@@ -5,6 +5,7 @@ import {
 } from "./contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/login-mfa-challenge.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login-mfa-verification.contract";
+import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
@@ -24,5 +25,6 @@ export const identityModuleManifest = Object.freeze({
     IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
     IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID,
     IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID,
+    IDENTITY_MFA_DISABLE_CAPABILITY_ID,
   ],
 } satisfies ModuleManifest);
