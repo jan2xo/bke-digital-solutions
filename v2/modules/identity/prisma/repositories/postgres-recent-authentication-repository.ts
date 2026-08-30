@@ -1,5 +1,6 @@
 import { Client } from "pg";
 import type {
+  IdentityRecentAuthenticationAdminCommitInput,
   IdentityRecentAuthenticationChallengeRecord,
   IdentityRecentAuthenticationContext,
   IdentityRecentAuthenticationRecoveryCodeRecord,
@@ -146,7 +147,9 @@ export function createPostgresIdentityRecentAuthenticationRepository(
       }
     },
 
-    async completeAdminRecentAuthentication(input) {
+    async completeAdminRecentAuthentication(
+      input: IdentityRecentAuthenticationAdminCommitInput,
+    ) {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
       try {
