@@ -137,6 +137,7 @@ describe.sequential("discount offers and immutable pricing", () => {
     expect(order.invoice!.lines.some((line) => line.description.includes(offer.name) && line.totalMinor === -expectedDiscountMinor)).toBe(true);
     expect(order.invoice!.lines.reduce((sum, line) => sum + line.totalMinor, 0)).toBe(order.totalMinor);
     expect(order.invoice!.totalMinor).toBe(order.totalMinor);
+    await db.discountOffer.update({ where: { id: offer.id }, data: { status: "DISABLED" } });
   });
 
   it("applies a monthly offer for exactly the configured number of renewal cycles", async () => {
