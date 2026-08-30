@@ -1,4 +1,6 @@
 export const IDENTITY_LOOKUP_CAPABILITY_ID = "bke.identity.lookup.v1" as const;
+export const IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID =
+  "bke.identity.password-authentication.v1" as const;
 
 export type IdentityRole = "CUSTOMER" | "ADMIN";
 
@@ -33,4 +35,36 @@ export type IdentityLookupResult =
 export interface IdentityLookupCapability {
   findById(userId: string): Promise<IdentityLookupResult>;
   findByEmail(email: string): Promise<IdentityLookupResult>;
+}
+
+export interface IdentityPasswordAuthenticationInput {
+  readonly email: string;
+  readonly password: string;
+}
+
+export type IdentityPrimaryAuthenticationRoute =
+  | "CUSTOMER_SESSION"
+  | "ADMIN_MFA_CHALLENGE"
+  | "ADMIN_MFA_ENROLLMENT";
+
+export type IdentityPasswordAuthenticationFailureCode =
+  | "INVALID_INPUT"
+  | "PERSISTENCE_UNAVAILABLE";
+
+export type IdentityPasswordAuthenticationResult =
+  | {
+      readonly status: "PRIMARY_AUTHENTICATED";
+      readonly principal: IdentityPrincipal;
+      readonly route: IdentityPrimaryAuthenticationRoute;
+    }
+  | { readonly status: "INVALID_CREDENTIALS" }
+  | {
+      readonly status: "FAILED";
+      readonly code: IdentityPasswordAuthenticationFailureCode;
+    };
+
+export interface IdentityPasswordAuthenticationCapability {
+  authenticate(
+    input: IdentityPasswordAuthenticationInput,
+  ): Promise<IdentityPasswordAuthenticationResult>;
 }
