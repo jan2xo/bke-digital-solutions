@@ -18,6 +18,20 @@ export interface IdentityRecentAuthRecoveryCodeRecord {
   readonly id: string;
 }
 
+export interface IdentityRecentAuthCustomerCommitInput {
+  readonly sessionId: string;
+  readonly userId: string;
+  readonly completedAt: Date;
+}
+
+export interface IdentityRecentAuthAdminCommitInput {
+  readonly sessionId: string;
+  readonly userId: string;
+  readonly challengeId: string;
+  readonly recoveryCodeId: string | null;
+  readonly completedAt: Date;
+}
+
 export type IdentityRecentAuthCommitResult =
   | { readonly status: "COMPLETED"; readonly session: IdentityIssuedSession }
   | { readonly status: "SESSION_REJECTED" }
@@ -41,17 +55,11 @@ export interface IdentityRecentAuthCompletionRepository {
 
   incrementChallengeAttempt(challengeId: string): Promise<void>;
 
-  upgradeCustomerSession(input: {
-    readonly sessionId: string;
-    readonly userId: string;
-    readonly completedAt: Date;
-  }): Promise<IdentityRecentAuthCommitResult>;
+  upgradeCustomerSession(
+    input: IdentityRecentAuthCustomerCommitInput,
+  ): Promise<IdentityRecentAuthCommitResult>;
 
-  completeAdminRecentAuth(input: {
-    readonly sessionId: string;
-    readonly userId: string;
-    readonly challengeId: string;
-    readonly recoveryCodeId: string | null;
-    readonly completedAt: Date;
-  }): Promise<IdentityRecentAuthCommitResult>;
+  completeAdminRecentAuth(
+    input: IdentityRecentAuthAdminCommitInput,
+  ): Promise<IdentityRecentAuthCommitResult>;
 }
