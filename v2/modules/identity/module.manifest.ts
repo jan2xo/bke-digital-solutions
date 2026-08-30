@@ -3,6 +3,7 @@ import {
   IDENTITY_LOOKUP_CAPABILITY_ID,
   IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
 } from "./contracts/identity.contract";
+import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
 
 export const identityModuleManifest = Object.freeze({
   moduleId: "identity",
@@ -10,5 +11,6 @@ export const identityModuleManifest = Object.freeze({
   provides: [
     IDENTITY_LOOKUP_CAPABILITY_ID,
     IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
+    IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID,
   ],
 } satisfies ModuleManifest);
