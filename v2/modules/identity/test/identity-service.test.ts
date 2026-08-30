@@ -17,6 +17,7 @@ function repository(overrides: Partial<IdentityRepository> = {}): IdentityReposi
   return {
     findById: async () => principal,
     findByEmail: async () => principal,
+    findPasswordAuthenticationByEmail: async () => null,
     ...overrides,
   };
 }
