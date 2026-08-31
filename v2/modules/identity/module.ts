@@ -5,6 +5,7 @@ import {
 } from "./contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/login-mfa-challenge.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login-mfa-verification.contract";
+import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "./contracts/magic-login-request.contract";
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
@@ -18,6 +19,7 @@ import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.con
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "./logic/login-mfa-challenge-issuance";
 import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-verification";
+import { createIdentityMagicLoginRequestCapability } from "./logic/magic-login-request";
 import { createIdentityMfaDisableCapability } from "./logic/mfa-disable";
 import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
 import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
@@ -28,6 +30,7 @@ import { createArgon2PasswordHasher } from "./logic/providers/argon2-password-ha
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
 import { createHmacEmailMfaChallengeMaterialProvider } from "./logic/providers/hmac-email-mfa-challenge-material-provider";
 import { createHmacEmailMfaProofProvider } from "./logic/providers/hmac-email-mfa-proof-provider";
+import { createHmacMagicLoginTokenProvider } from "./logic/providers/hmac-magic-login-token-provider";
 import { createHmacMfaRecoveryCodeProvider } from "./logic/providers/hmac-mfa-recovery-code-provider";
 import { createHmacPasswordResetTokenProvider } from "./logic/providers/hmac-password-reset-token-provider";
 import { createHmacSessionTokenProvider } from "./logic/providers/hmac-session-token-provider";
@@ -39,6 +42,7 @@ import { createIdentitySessionValidationCapability } from "./logic/session-valid
 import { identityModuleManifest } from "./module.manifest";
 import { createPostgresIdentityLoginMfaChallengeRepository } from "./prisma/repositories/postgres-login-mfa-challenge-repository";
 import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
+import { createPostgresIdentityMagicLoginRequestRepository } from "./prisma/repositories/postgres-magic-login-request-repository";
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
@@ -72,6 +76,8 @@ export function createIdentityModule(
   );
   const loginMfaChallengeRepository =
     createPostgresIdentityLoginMfaChallengeRepository(options.connectionString);
+  const magicLoginRequestRepository =
+    createPostgresIdentityMagicLoginRequestRepository(options.connectionString);
   const mfaEnrollmentStartRepository =
     createPostgresIdentityMfaEnrollmentStartRepository(options.connectionString);
   const mfaEnrollmentCompletionRepository =
@@ -88,6 +94,7 @@ export function createIdentityModule(
   const passwordResetCompletionRepository =
     createPostgresIdentityPasswordResetCompletionRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
+  const magicLoginTokenProvider = createHmacMagicLoginTokenProvider(options.sessionSecret);
   const passwordResetTokenProvider = createHmacPasswordResetTokenProvider(
     options.sessionSecret,
   );
@@ -122,6 +129,13 @@ export function createIdentityModule(
           value: createIdentityPasswordAuthenticationCapability(
             repository,
             passwordVerifier,
+          ),
+        },
+        {
+          id: IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID,
+          value: createIdentityMagicLoginRequestCapability(
+            magicLoginRequestRepository,
+            magicLoginTokenProvider,
           ),
         },
         {
