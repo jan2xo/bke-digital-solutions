@@ -1,4 +1,5 @@
 import type { CapabilityModule } from "../../contracts/capability";
+import { IDENTITY_EMAIL_VERIFICATION_COMPLETION_CAPABILITY_ID } from "./contracts/email-verification-completion.contract";
 import { IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID } from "./contracts/email-verification-issuance.contract";
 import {
   IDENTITY_LOOKUP_CAPABILITY_ID,
@@ -18,6 +19,7 @@ import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "./contracts/recen
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
+import { createIdentityEmailVerificationCompletionCapability } from "./logic/email-verification-completion";
 import { createIdentityEmailVerificationIssuanceCapability } from "./logic/email-verification-issuance";
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "./logic/login-mfa-challenge-issuance";
@@ -45,6 +47,7 @@ import { createIdentitySessionIssuanceCapability } from "./logic/session-issuanc
 import { createIdentitySessionTerminationCapability } from "./logic/session-termination";
 import { createIdentitySessionValidationCapability } from "./logic/session-validation";
 import { identityModuleManifest } from "./module.manifest";
+import { createPostgresIdentityEmailVerificationCompletionRepository } from "./prisma/repositories/postgres-email-verification-completion-repository";
 import { createPostgresIdentityEmailVerificationIssuanceRepository } from "./prisma/repositories/postgres-email-verification-issuance-repository";
 import { createPostgresIdentityLoginMfaChallengeRepository } from "./prisma/repositories/postgres-login-mfa-challenge-repository";
 import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
@@ -85,6 +88,10 @@ export function createIdentityModule(
     createPostgresIdentityLoginMfaChallengeRepository(options.connectionString);
   const emailVerificationIssuanceRepository =
     createPostgresIdentityEmailVerificationIssuanceRepository(
+      options.connectionString,
+    );
+  const emailVerificationCompletionRepository =
+    createPostgresIdentityEmailVerificationCompletionRepository(
       options.connectionString,
     );
   const magicLoginRequestRepository =
@@ -150,6 +157,13 @@ export function createIdentityModule(
           id: IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID,
           value: createIdentityEmailVerificationIssuanceCapability(
             emailVerificationIssuanceRepository,
+            emailVerificationTokenProvider,
+          ),
+        },
+        {
+          id: IDENTITY_EMAIL_VERIFICATION_COMPLETION_CAPABILITY_ID,
+          value: createIdentityEmailVerificationCompletionCapability(
+            emailVerificationCompletionRepository,
             emailVerificationTokenProvider,
           ),
         },
