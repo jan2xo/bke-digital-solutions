@@ -23,11 +23,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     user ? db.customerAccount.findMany({ where: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] }, select: { id: true, displayName: true }, orderBy: { createdAt: "asc" } }) : [],
   ]);
   if (!product?.active) notFound();
+  const landingPageUrl = product.productId === "bke-air-stack" ? "https://airstack.jl-bke.com" : null;
 
   return <section className="shell py-16 motion-fade-up">
     <p className="font-bold text-[#ffd15a]">{product.type}</p>
     <h1 className="mt-2 text-5xl font-black">{product.name}</h1>
     <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>
+    {landingPageUrl && <a className="button mt-8" href={landingPageUrl} target="_blank" rel="noopener noreferrer">Visit</a>}
     <div className="mt-12 grid gap-8 motion-stagger">{await Promise.all(product.editions.map(async (edition) => {
       const plans = await Promise.all(edition.purchasePlans
         .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
