@@ -1,4 +1,5 @@
 import type { CapabilityModule } from "../../contracts/capability";
+import { IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID } from "./contracts/email-verification-issuance.contract";
 import {
   IDENTITY_LOOKUP_CAPABILITY_ID,
   IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
@@ -17,6 +18,7 @@ import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "./contracts/recen
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "./contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "./contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.contract";
+import { createIdentityEmailVerificationIssuanceCapability } from "./logic/email-verification-issuance";
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "./logic/login-mfa-challenge-issuance";
 import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-verification";
@@ -32,6 +34,7 @@ import { createArgon2PasswordHasher } from "./logic/providers/argon2-password-ha
 import { createArgon2PasswordVerifier } from "./logic/providers/argon2-password-verifier";
 import { createHmacEmailMfaChallengeMaterialProvider } from "./logic/providers/hmac-email-mfa-challenge-material-provider";
 import { createHmacEmailMfaProofProvider } from "./logic/providers/hmac-email-mfa-proof-provider";
+import { createHmacEmailVerificationTokenProvider } from "./logic/providers/hmac-email-verification-token-provider";
 import { createHmacMagicLoginTokenProvider } from "./logic/providers/hmac-magic-login-token-provider";
 import { createHmacMfaRecoveryCodeProvider } from "./logic/providers/hmac-mfa-recovery-code-provider";
 import { createHmacPasswordResetTokenProvider } from "./logic/providers/hmac-password-reset-token-provider";
@@ -42,6 +45,7 @@ import { createIdentitySessionIssuanceCapability } from "./logic/session-issuanc
 import { createIdentitySessionTerminationCapability } from "./logic/session-termination";
 import { createIdentitySessionValidationCapability } from "./logic/session-validation";
 import { identityModuleManifest } from "./module.manifest";
+import { createPostgresIdentityEmailVerificationIssuanceRepository } from "./prisma/repositories/postgres-email-verification-issuance-repository";
 import { createPostgresIdentityLoginMfaChallengeRepository } from "./prisma/repositories/postgres-login-mfa-challenge-repository";
 import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
 import { createPostgresIdentityMagicLoginConsumeRepository } from "./prisma/repositories/postgres-magic-login-consume-repository";
@@ -79,6 +83,10 @@ export function createIdentityModule(
   );
   const loginMfaChallengeRepository =
     createPostgresIdentityLoginMfaChallengeRepository(options.connectionString);
+  const emailVerificationIssuanceRepository =
+    createPostgresIdentityEmailVerificationIssuanceRepository(
+      options.connectionString,
+    );
   const magicLoginRequestRepository =
     createPostgresIdentityMagicLoginRequestRepository(options.connectionString);
   const magicLoginConsumeRepository =
@@ -99,6 +107,8 @@ export function createIdentityModule(
   const passwordResetCompletionRepository =
     createPostgresIdentityPasswordResetCompletionRepository(options.connectionString);
   const sessionTokenProvider = createHmacSessionTokenProvider(options.sessionSecret);
+  const emailVerificationTokenProvider =
+    createHmacEmailVerificationTokenProvider(options.sessionSecret);
   const magicLoginTokenProvider = createHmacMagicLoginTokenProvider(options.sessionSecret);
   const passwordResetTokenProvider = createHmacPasswordResetTokenProvider(
     options.sessionSecret,
@@ -134,6 +144,13 @@ export function createIdentityModule(
           value: createIdentityPasswordAuthenticationCapability(
             repository,
             passwordVerifier,
+          ),
+        },
+        {
+          id: IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID,
+          value: createIdentityEmailVerificationIssuanceCapability(
+            emailVerificationIssuanceRepository,
+            emailVerificationTokenProvider,
           ),
         },
         {
