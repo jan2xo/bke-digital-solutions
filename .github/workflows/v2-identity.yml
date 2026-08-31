@@ -60,6 +60,7 @@ jobs:
           v2/modules/identity/test/identity-service.test.ts
           v2/modules/identity/test/password-authentication.test.ts
           v2/modules/identity/test/magic-login-request.test.ts
+          v2/modules/identity/test/magic-login-consume.test.ts
           v2/modules/identity/test/session-issuance.test.ts
           v2/modules/identity/test/session-validation.test.ts
           v2/modules/identity/test/session-termination.test.ts
@@ -78,6 +79,8 @@ jobs:
         run: npx tsx v2/modules/identity/test/password-authentication.certify.ts
       - name: Certify Identity magic-login request
         run: npx tsx v2/modules/identity/test/magic-login-request.certify.ts
+      - name: Certify Identity magic-login consume
+        run: npx tsx v2/modules/identity/test/magic-login-consume.certify.ts
       - name: Certify Identity session issuance
         run: npx tsx v2/modules/identity/test/session-issuance.certify.ts
       - name: Certify Identity session validation
