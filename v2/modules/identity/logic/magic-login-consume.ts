@@ -7,7 +7,6 @@ import type { IdentityMagicLoginConsumeRepository } from "./magic-login-consume-
 import type { IdentityMagicLoginTokenProvider } from "./magic-login-token-provider";
 import type { IdentitySessionTokenProvider } from "./session-token-provider";
 
-const MIN_TOKEN_LENGTH = 20;
 const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000;
 
 export function createIdentityMagicLoginConsumeCapability(
@@ -18,9 +17,9 @@ export function createIdentityMagicLoginConsumeCapability(
 ): IdentityMagicLoginConsumeCapability {
   return Object.freeze({
     async consume(input: IdentityMagicLoginConsumeInput): Promise<IdentityMagicLoginConsumeResult> {
-      const token = input.token.trim();
-      if (token.length < MIN_TOKEN_LENGTH) {
-        return { status: "FAILED", code: "INVALID_INPUT" };
+      const token = input.token;
+      if (!token) {
+        return { status: "REJECTED", code: "INVALID_TOKEN" };
       }
 
       let magicTokenHash: string;
