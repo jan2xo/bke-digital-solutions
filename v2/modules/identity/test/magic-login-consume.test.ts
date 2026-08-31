@@ -62,10 +62,10 @@ function harness(
 }
 
 describe("Identity magic-login consume", () => {
-  it("hashes the proof and atomically requests a BASIC MAGIC_LINK session", async () => {
+  it("hashes the exact proof and atomically requests a BASIC MAGIC_LINK session", async () => {
     const h = harness();
     const result = await h.capability.consume({
-      token: "  raw-magic-token-long-enough  ",
+      token: "raw-magic-token-long-enough",
       userAgentSummary: "Browser",
       networkHint: "network",
     });
@@ -94,9 +94,7 @@ describe("Identity magic-login consume", () => {
 
   it("preserves typed invalid/admin/inactive rejection semantics", async () => {
     await expect(
-      harness({ status: "INVALID_TOKEN" }).capability.consume({
-        token: "raw-magic-token-long-enough",
-      }),
+      harness({ status: "INVALID_TOKEN" }).capability.consume({ token: "x" }),
     ).resolves.toEqual({ status: "REJECTED", code: "INVALID_TOKEN" });
 
     await expect(
@@ -120,15 +118,20 @@ describe("Identity magic-login consume", () => {
     });
   });
 
-  it("rejects short token input before providers or persistence", async () => {
-    const h = harness();
-    await expect(h.capability.consume({ token: "too-short" })).resolves.toEqual({
-      status: "FAILED",
-      code: "INVALID_INPUT",
+  it("treats only a missing proof as INVALID_TOKEN and does not normalize supplied proof bytes", async () => {
+    const empty = harness();
+    await expect(empty.capability.consume({ token: "" })).resolves.toEqual({
+      status: "REJECTED",
+      code: "INVALID_TOKEN",
     });
-    expect(h.magicTokenProvider.hash).not.toHaveBeenCalled();
-    expect(h.sessionTokenProvider.issue).not.toHaveBeenCalled();
-    expect(h.repository.consumeAndIssueSession).not.toHaveBeenCalled();
+    expect(empty.magicTokenProvider.hash).not.toHaveBeenCalled();
+    expect(empty.sessionTokenProvider.issue).not.toHaveBeenCalled();
+    expect(empty.repository.consumeAndIssueSession).not.toHaveBeenCalled();
+
+    const exact = harness({ status: "INVALID_TOKEN" });
+    await exact.capability.consume({ token: " x " });
+    expect(exact.magicTokenProvider.hash).toHaveBeenCalledWith(" x ");
+    expect(exact.repository.consumeAndIssueSession).toHaveBeenCalled();
   });
 
   it("returns typed token-provider and persistence failures", async () => {
