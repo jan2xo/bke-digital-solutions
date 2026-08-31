@@ -12,6 +12,7 @@ import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "./contracts/magic-lo
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
+import { IDENTITY_PASSWORD_CHANGE_CAPABILITY_ID } from "./contracts/password-change.contract";
 import { IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID } from "./contracts/password-reset-completion.contract";
 import { IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID } from "./contracts/password-reset-request.contract";
 import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/recent-auth-challenge.contract";
@@ -30,6 +31,7 @@ import { createIdentityMfaDisableCapability } from "./logic/mfa-disable";
 import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
 import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
+import { createIdentityPasswordChangeCapability } from "./logic/password-change";
 import { createIdentityPasswordResetCompletionCapability } from "./logic/password-reset-completion";
 import { createIdentityPasswordResetRequestCapability } from "./logic/password-reset-request";
 import { createArgon2PasswordHasher } from "./logic/providers/argon2-password-hasher";
@@ -56,6 +58,7 @@ import { createPostgresIdentityMagicLoginRequestRepository } from "./prisma/repo
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
+import { createPostgresIdentityPasswordChangeRepository } from "./prisma/repositories/postgres-password-change-repository";
 import { createPostgresIdentityPasswordResetCompletionRepository } from "./prisma/repositories/postgres-password-reset-completion-repository";
 import { createPostgresIdentityPasswordResetRequestRepository } from "./prisma/repositories/postgres-password-reset-request-repository";
 import { createPostgresIdentityRecentAuthChallengeRepository } from "./prisma/repositories/postgres-recent-auth-challenge-repository";
@@ -76,6 +79,9 @@ export function createIdentityModule(
   const repository = createPostgresIdentityRepository(options.connectionString);
   const passwordVerifier = createArgon2PasswordVerifier();
   const passwordHasher = createArgon2PasswordHasher();
+  const passwordChangeRepository = createPostgresIdentityPasswordChangeRepository(
+    options.connectionString,
+  );
   const sessionRepository = createPostgresIdentitySessionRepository(
     options.connectionString,
   );
@@ -165,6 +171,15 @@ export function createIdentityModule(
           value: createIdentityEmailVerificationCompletionCapability(
             emailVerificationCompletionRepository,
             emailVerificationTokenProvider,
+          ),
+        },
+        {
+          id: IDENTITY_PASSWORD_CHANGE_CAPABILITY_ID,
+          value: createIdentityPasswordChangeCapability(
+            passwordChangeRepository,
+            sessionValidation,
+            passwordVerifier,
+            passwordHasher,
           ),
         },
         {

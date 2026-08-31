@@ -59,6 +59,7 @@ jobs:
           npx vitest run --config v2/vitest.config.ts
           v2/modules/identity/test/identity-service.test.ts
           v2/modules/identity/test/password-authentication.test.ts
+          v2/modules/identity/test/password-change.test.ts
           v2/modules/identity/test/email-verification-issuance.test.ts
           v2/modules/identity/test/email-verification-completion.test.ts
           v2/modules/identity/test/magic-login-request.test.ts
@@ -79,6 +80,8 @@ jobs:
         run: npx tsx v2/modules/identity/test/persistence.certify.ts
       - name: Certify Identity password authentication
         run: npx tsx v2/modules/identity/test/password-authentication.certify.ts
+      - name: Certify Identity password change
+        run: npx tsx v2/modules/identity/test/password-change.certify.ts
       - name: Certify Identity email verification issuance
         run: npx tsx v2/modules/identity/test/email-verification-issuance.certify.ts
       - name: Certify Identity email verification completion
