@@ -30,9 +30,9 @@ try {
   await client.query(
     `INSERT INTO "User" ("id", "email", "name", "role", "updatedAt", "lifecycleState", "suspendedAt")
      VALUES
-       ('magic-active', 'active@example.com', 'Active Customer', 'CUSTOMER', $1, 'ACTIVE', NULL),
-       ('magic-admin', 'admin@example.com', 'Admin', 'ADMIN', $1, 'ACTIVE', NULL),
-       ('magic-inactive', 'inactive@example.com', 'Inactive Customer', 'CUSTOMER', $1, 'SUSPENDED', $1)`,
+       ('magic-consume-active', 'magic-consume-active@example.com', 'Active Customer', 'CUSTOMER', $1, 'ACTIVE', NULL),
+       ('magic-consume-admin', 'magic-consume-admin@example.com', 'Admin', 'ADMIN', $1, 'ACTIVE', NULL),
+       ('magic-consume-inactive', 'magic-consume-inactive@example.com', 'Inactive Customer', 'CUSTOMER', $1, 'SUSPENDED', $1)`,
     [now],
   );
 
@@ -40,13 +40,13 @@ try {
     `INSERT INTO "VerificationToken"
        ("id", "identifier", "purpose", "tokenHash", "expiresAt", "usedAt")
      VALUES
-       ('magic-valid', 'active@example.com', 'MAGIC_LOGIN', $1, $8, NULL),
-       ('magic-admin-token', 'admin@example.com', 'MAGIC_LOGIN', $2, $8, NULL),
-       ('magic-inactive-token', 'inactive@example.com', 'MAGIC_LOGIN', $3, $8, NULL),
-       ('magic-wrong-purpose', 'active@example.com', 'VERIFY_EMAIL', $4, $8, NULL),
-       ('magic-used', 'active@example.com', 'MAGIC_LOGIN', $5, $8, $7),
-       ('magic-expired', 'active@example.com', 'MAGIC_LOGIN', $6, $9, NULL),
-       ('magic-missing-user', 'missing@example.com', 'MAGIC_LOGIN', $10, $8, NULL)`,
+       ('magic-consume-valid', 'magic-consume-active@example.com', 'MAGIC_LOGIN', $1, $8, NULL),
+       ('magic-consume-admin-token', 'magic-consume-admin@example.com', 'MAGIC_LOGIN', $2, $8, NULL),
+       ('magic-consume-inactive-token', 'magic-consume-inactive@example.com', 'MAGIC_LOGIN', $3, $8, NULL),
+       ('magic-consume-wrong-purpose', 'magic-consume-active@example.com', 'VERIFY_EMAIL', $4, $8, NULL),
+       ('magic-consume-used', 'magic-consume-active@example.com', 'MAGIC_LOGIN', $5, $8, $7),
+       ('magic-consume-expired', 'magic-consume-active@example.com', 'MAGIC_LOGIN', $6, $9, NULL),
+       ('magic-consume-missing-user', 'magic-consume-missing@example.com', 'MAGIC_LOGIN', $10, $8, NULL)`,
     [
       hmac(validToken),
       hmac(adminToken),
@@ -69,12 +69,12 @@ try {
   );
 
   await client.query(`
-    CREATE FUNCTION "identity_fail_magic_session_insert"()
+    CREATE FUNCTION "identity_fail_magic_consume_session_insert"()
     RETURNS trigger
     LANGUAGE plpgsql
     AS $$
     BEGIN
-      IF NEW."userId" = 'magic-active' AND NEW."authenticationMethod" = 'MAGIC_LINK' THEN
+      IF NEW."userId" = 'magic-consume-active' AND NEW."authenticationMethod" = 'MAGIC_LINK' THEN
         RAISE EXCEPTION 'forced magic session insert failure';
       END IF;
       RETURN NEW;
@@ -82,10 +82,10 @@ try {
     $$
   `);
   await client.query(`
-    CREATE TRIGGER "identity_fail_magic_session_insert_trigger"
+    CREATE TRIGGER "identity_fail_magic_consume_session_insert_trigger"
     BEFORE INSERT ON "Session"
     FOR EACH ROW
-    EXECUTE FUNCTION "identity_fail_magic_session_insert"()
+    EXECUTE FUNCTION "identity_fail_magic_consume_session_insert"()
   `);
 
   const forcedFailure = await capability.consume({ token: validToken });
@@ -97,23 +97,23 @@ try {
   }
 
   const rollbackToken = await client.query<{ usedAt: Date | null }>(
-    `SELECT "usedAt" FROM "VerificationToken" WHERE "id" = 'magic-valid'`,
+    `SELECT "usedAt" FROM "VerificationToken" WHERE "id" = 'magic-consume-valid'`,
   );
   const rollbackSessions = await client.query<{ count: string }>(
-    `SELECT COUNT(*)::text AS "count" FROM "Session" WHERE "userId" = 'magic-active'`,
+    `SELECT COUNT(*)::text AS "count" FROM "Session" WHERE "userId" = 'magic-consume-active'`,
   );
   if (rollbackToken.rows[0]?.usedAt !== null || rollbackSessions.rows[0]?.count !== "0") {
     throw new Error("Magic-login consume did not roll back token consumption when session insertion failed.");
   }
 
-  await client.query(`DROP TRIGGER "identity_fail_magic_session_insert_trigger" ON "Session"`);
-  await client.query(`DROP FUNCTION "identity_fail_magic_session_insert"()`);
+  await client.query(`DROP TRIGGER "identity_fail_magic_consume_session_insert_trigger" ON "Session"`);
+  await client.query(`DROP FUNCTION "identity_fail_magic_consume_session_insert"()`);
 
   const admin = await capability.consume({ token: adminToken });
   if (
     admin.status !== "REJECTED" ||
     admin.code !== "ADMIN_PASSWORD_REQUIRED" ||
-    admin.userId !== "magic-admin"
+    admin.userId !== "magic-consume-admin"
   ) {
     throw new Error(`Administrator magic-login block mismatch: ${JSON.stringify(admin)}`);
   }
@@ -122,7 +122,7 @@ try {
   if (
     inactive.status !== "REJECTED" ||
     inactive.code !== "ACCOUNT_NOT_ACTIVE" ||
-    inactive.userId !== "magic-inactive"
+    inactive.userId !== "magic-consume-inactive"
   ) {
     throw new Error(`Inactive-customer magic-login result mismatch: ${JSON.stringify(inactive)}`);
   }
@@ -137,7 +137,7 @@ try {
   const untouched = await client.query<{ id: string; usedAt: Date | null }>(
     `SELECT "id", "usedAt"
        FROM "VerificationToken"
-      WHERE "id" IN ('magic-admin-token', 'magic-inactive-token', 'magic-wrong-purpose', 'magic-expired', 'magic-missing-user')
+      WHERE "id" IN ('magic-consume-admin-token', 'magic-consume-inactive-token', 'magic-consume-wrong-purpose', 'magic-consume-expired', 'magic-consume-missing-user')
       ORDER BY "id"`,
   );
   if (untouched.rows.some((row) => row.usedAt !== null)) {
@@ -152,7 +152,7 @@ try {
   if (success.status !== "AUTHENTICATED") {
     throw new Error(`Valid magic-login proof did not authenticate: ${JSON.stringify(success)}`);
   }
-  if (success.userId !== "magic-active" || success.role !== "CUSTOMER") {
+  if (success.userId !== "magic-consume-active" || success.role !== "CUSTOMER") {
     throw new Error("Magic-login success returned the wrong principal identity.");
   }
   if (
@@ -171,7 +171,7 @@ try {
   }
 
   const consumed = await client.query<{ usedAt: Date | null }>(
-    `SELECT "usedAt" FROM "VerificationToken" WHERE "id" = 'magic-valid'`,
+    `SELECT "usedAt" FROM "VerificationToken" WHERE "id" = 'magic-consume-valid'`,
   );
   if (!consumed.rows[0]?.usedAt || consumed.rows[0].usedAt.getTime() !== now.getTime()) {
     throw new Error("Successful magic-login proof was not consumed at the authentication time.");
@@ -199,7 +199,7 @@ try {
     throw new Error("Magic-login session persistence did not keep the raw session token outside PostgreSQL.");
   }
   if (
-    row.userId !== "magic-active" ||
+    row.userId !== "magic-consume-active" ||
     row.authenticationMethod !== "MAGIC_LINK" ||
     row.assuranceLevel !== "BASIC" ||
     row.userAgentSummary !== "Certification Browser" ||
@@ -213,7 +213,7 @@ try {
     throw new Error(`Consumed magic-login proof replay was not rejected: ${JSON.stringify(replay)}`);
   }
   const finalSessions = await client.query<{ count: string }>(
-    `SELECT COUNT(*)::text AS "count" FROM "Session" WHERE "userId" = 'magic-active'`,
+    `SELECT COUNT(*)::text AS "count" FROM "Session" WHERE "userId" = 'magic-consume-active'`,
   );
   if (finalSessions.rows[0]?.count !== "1") {
     throw new Error(`Magic-login replay created an extra session: ${finalSessions.rows[0]?.count}`);
@@ -221,7 +221,7 @@ try {
 
   console.log("Identity magic-login consume certification GREEN");
 } finally {
-  await client.query(`DROP TRIGGER IF EXISTS "identity_fail_magic_session_insert_trigger" ON "Session"`).catch(() => undefined);
-  await client.query(`DROP FUNCTION IF EXISTS "identity_fail_magic_session_insert"()`).catch(() => undefined);
+  await client.query(`DROP TRIGGER IF EXISTS "identity_fail_magic_consume_session_insert_trigger" ON "Session"`).catch(() => undefined);
+  await client.query(`DROP FUNCTION IF EXISTS "identity_fail_magic_consume_session_insert"()`).catch(() => undefined);
   await client.end();
 }
