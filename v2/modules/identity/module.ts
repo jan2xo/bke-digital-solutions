@@ -12,6 +12,7 @@ import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "./contracts/magic-lo
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
+import { IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID } from "./contracts/mfa-recovery-regeneration.contract";
 import { IDENTITY_PASSWORD_CHANGE_CAPABILITY_ID } from "./contracts/password-change.contract";
 import { IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID } from "./contracts/password-reset-completion.contract";
 import { IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID } from "./contracts/password-reset-request.contract";
@@ -30,6 +31,7 @@ import { createIdentityMagicLoginRequestCapability } from "./logic/magic-login-r
 import { createIdentityMfaDisableCapability } from "./logic/mfa-disable";
 import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
 import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
+import { createIdentityMfaRecoveryRegenerationCapability } from "./logic/mfa-recovery-regeneration";
 import { createIdentityPasswordAuthenticationCapability } from "./logic/password-authentication";
 import { createIdentityPasswordChangeCapability } from "./logic/password-change";
 import { createIdentityPasswordResetCompletionCapability } from "./logic/password-reset-completion";
@@ -58,6 +60,7 @@ import { createPostgresIdentityMagicLoginRequestRepository } from "./prisma/repo
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
+import { createPostgresIdentityMfaRecoveryRegenerationRepository } from "./prisma/repositories/postgres-mfa-recovery-regeneration-repository";
 import { createPostgresIdentityPasswordChangeRepository } from "./prisma/repositories/postgres-password-change-repository";
 import { createPostgresIdentityPasswordResetCompletionRepository } from "./prisma/repositories/postgres-password-reset-completion-repository";
 import { createPostgresIdentityPasswordResetRequestRepository } from "./prisma/repositories/postgres-password-reset-request-repository";
@@ -111,6 +114,10 @@ export function createIdentityModule(
   const mfaDisableRepository = createPostgresIdentityMfaDisableRepository(
     options.connectionString,
   );
+  const mfaRecoveryRegenerationRepository =
+    createPostgresIdentityMfaRecoveryRegenerationRepository(
+      options.connectionString,
+    );
   const recentAuthChallengeRepository =
     createPostgresIdentityRecentAuthChallengeRepository(options.connectionString);
   const recentAuthCompletionRepository =
@@ -247,6 +254,14 @@ export function createIdentityModule(
         {
           id: IDENTITY_MFA_DISABLE_CAPABILITY_ID,
           value: createIdentityMfaDisableCapability(mfaDisableRepository),
+        },
+        {
+          id: IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID,
+          value: createIdentityMfaRecoveryRegenerationCapability(
+            mfaRecoveryRegenerationRepository,
+            sessionValidation,
+            mfaRecoveryCodeProvider,
+          ),
         },
         {
           id: IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
