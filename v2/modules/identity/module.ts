@@ -5,6 +5,7 @@ import {
 } from "./contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "./contracts/login-mfa-challenge.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login-mfa-verification.contract";
+import { IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID } from "./contracts/magic-login-consume.contract";
 import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "./contracts/magic-login-request.contract";
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
@@ -19,6 +20,7 @@ import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "./contracts/session.con
 import { createIdentityLookupCapability } from "./logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "./logic/login-mfa-challenge-issuance";
 import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-verification";
+import { createIdentityMagicLoginConsumeCapability } from "./logic/magic-login-consume";
 import { createIdentityMagicLoginRequestCapability } from "./logic/magic-login-request";
 import { createIdentityMfaDisableCapability } from "./logic/mfa-disable";
 import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
@@ -42,6 +44,7 @@ import { createIdentitySessionValidationCapability } from "./logic/session-valid
 import { identityModuleManifest } from "./module.manifest";
 import { createPostgresIdentityLoginMfaChallengeRepository } from "./prisma/repositories/postgres-login-mfa-challenge-repository";
 import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/postgres-login-mfa-repository";
+import { createPostgresIdentityMagicLoginConsumeRepository } from "./prisma/repositories/postgres-magic-login-consume-repository";
 import { createPostgresIdentityMagicLoginRequestRepository } from "./prisma/repositories/postgres-magic-login-request-repository";
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
@@ -78,6 +81,8 @@ export function createIdentityModule(
     createPostgresIdentityLoginMfaChallengeRepository(options.connectionString);
   const magicLoginRequestRepository =
     createPostgresIdentityMagicLoginRequestRepository(options.connectionString);
+  const magicLoginConsumeRepository =
+    createPostgresIdentityMagicLoginConsumeRepository(options.connectionString);
   const mfaEnrollmentStartRepository =
     createPostgresIdentityMfaEnrollmentStartRepository(options.connectionString);
   const mfaEnrollmentCompletionRepository =
@@ -136,6 +141,14 @@ export function createIdentityModule(
           value: createIdentityMagicLoginRequestCapability(
             magicLoginRequestRepository,
             magicLoginTokenProvider,
+          ),
+        },
+        {
+          id: IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID,
+          value: createIdentityMagicLoginConsumeCapability(
+            magicLoginConsumeRepository,
+            magicLoginTokenProvider,
+            sessionTokenProvider,
           ),
         },
         {
