@@ -24,7 +24,7 @@ export type IdentityMagicLoginConsumeResult =
     }
   | {
       readonly status: "FAILED";
-      readonly code: "INVALID_INPUT" | "TOKEN_PROVIDER_UNAVAILABLE" | "PERSISTENCE_UNAVAILABLE";
+      readonly code: "TOKEN_PROVIDER_UNAVAILABLE" | "PERSISTENCE_UNAVAILABLE";
     };
 
 export interface IdentityMagicLoginConsumeCapability {
