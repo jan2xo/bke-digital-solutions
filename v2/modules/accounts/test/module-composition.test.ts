@@ -13,6 +13,10 @@ import {
   type AccountsOrganizationAccountCreationCapability,
 } from "../contracts/organization-account-creation.contract";
 import {
+  ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID,
+  type AccountsOrganizationProfileUpdateCapability,
+} from "../contracts/organization-profile-update.contract";
+import {
   ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
   type AccountsSwitchableAccountListCapability,
 } from "../contracts/switchable-account-list.contract";
@@ -27,6 +31,7 @@ describe("Accounts module composition", () => {
     expect(application.has(ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID)).toBe(true);
+    expect(application.has(ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID)).toBe(true);
     expect(
       typeof application.get<AccountsIndividualAccountCreationCapability>(
         ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID,
@@ -46,6 +51,11 @@ describe("Accounts module composition", () => {
       typeof application.get<AccountsOrganizationAccountCreationCapability>(
         ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID,
       ).create,
+    ).toBe("function");
+    expect(
+      typeof application.get<AccountsOrganizationProfileUpdateCapability>(
+        ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID,
+      ).update,
     ).toBe("function");
   });
 });
