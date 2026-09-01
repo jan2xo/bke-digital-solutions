@@ -90,7 +90,10 @@ export function createCommerceOfferRedemptionCapability(
       }
     },
 
-    async transition(input): Promise<CommerceTransitionOfferRedemptionResult> {
+    async transition(input: {
+      readonly redemptionId: string;
+      readonly transition: CommerceOfferRedemptionTransition;
+    }): Promise<CommerceTransitionOfferRedemptionResult> {
       if (!isValidId(input.redemptionId)) {
         return { status: "FAILED", code: "INVALID_INPUT" };
       }
