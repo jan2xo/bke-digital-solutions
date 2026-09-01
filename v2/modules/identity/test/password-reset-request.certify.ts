@@ -82,7 +82,7 @@ try {
     throw new Error("Missing-principal password-reset request leaked state or mutated persistence.");
   }
 
-  console.log("Identity password-reset request certification GREEN");
+  console.log("Identity credential reset request certification GREEN");
 } finally {
   await client.end();
 }
