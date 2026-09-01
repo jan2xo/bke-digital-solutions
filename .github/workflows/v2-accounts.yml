@@ -72,5 +72,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-profile-update.test.ts
       - name: Certify Accounts organization profile update with PostgreSQL
         run: npx tsx v2/modules/accounts/test/organization-profile-update.postgres.certify.ts
+      - name: Test Accounts invitation issuance
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-issuance.test.ts
+      - name: Certify Accounts invitation issuance with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/invitation-issuance.postgres.certify.ts
       - name: Test Accounts module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts
