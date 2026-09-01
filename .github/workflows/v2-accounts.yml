@@ -76,6 +76,10 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-close.test.ts
       - name: Certify Accounts organization close with PostgreSQL
         run: npx tsx v2/modules/accounts/test/organization-close.postgres.certify.ts
+      - name: Test Accounts organization detail
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-detail.test.ts
+      - name: Certify Accounts organization detail with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/organization-detail.postgres.certify.ts
       - name: Test Accounts invitation issuance
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-issuance.test.ts
       - name: Certify Accounts invitation issuance with PostgreSQL

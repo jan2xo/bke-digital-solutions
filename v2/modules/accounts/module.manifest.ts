@@ -10,6 +10,7 @@ import { ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID } from "./contracts/membershi
 import { ACCOUNTS_MEMBERSHIP_ROLE_CHANGE_CAPABILITY_ID } from "./contracts/membership-role-change.contract";
 import { ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/organization-account-creation.contract";
 import { ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID } from "./contracts/organization-close.contract";
+import { ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID } from "./contracts/organization-detail.contract";
 import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "./contracts/organization-profile-update.contract";
 import { ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID } from "./contracts/ownership-transfer.contract";
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "./contracts/switchable-account-list.contract";
@@ -25,6 +26,7 @@ export const accountsModuleManifest = Object.freeze({
     ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID,
     ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID,
     ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID,
+    ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID,
     ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
     ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID,
     ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID,
