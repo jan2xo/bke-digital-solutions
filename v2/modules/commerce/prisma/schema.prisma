@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+}
+
+enum CommercePurchasePlanType {
+  PERPETUAL
+  MONTHLY
+  ANNUAL
+}
+
+enum CommerceRenewalBehavior {
+  NONE
+  CUSTOMER_AUTHORIZED
+}
+
+enum CommerceBillingType {
+  ONE_TIME
+  SUBSCRIPTION
+}
+
+enum CommerceIntervalUnit {
+  MONTH
+  YEAR
+}
+
+model Price {
+  id              String                @id
+  productId       String
+  licensePolicyId String
+  name            String
+  amountMinor     Int
+  currency        String                @default("PHP")
+  billingType     CommerceBillingType
+  intervalUnit    CommerceIntervalUnit?
+  intervalCount   Int?
+  active          Boolean               @default(true)
+  purchasePlan    PurchasePlan?
+
+  @@index([productId, active])
+}
+
+model PurchasePlan {
+  id                  String                   @id
+  editionId           String
+  type                CommercePurchasePlanType
+  currency            String                   @default("PHP")
+  amountMinor         Int?
+  annualDiscountBps   Int?
+  renewalBehavior     CommerceRenewalBehavior  @default(NONE)
+  active              Boolean                  @default(true)
+  monthlySourcePlanId String?
+  legacyPriceId       String?                  @unique
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @default(now()) @updatedAt
+  monthlySource       PurchasePlan?            @relation("CommerceAnnualMonthlySource", fields: [monthlySourcePlanId], references: [id], onDelete: Cascade)
+  annualPlans         PurchasePlan[]           @relation("CommerceAnnualMonthlySource")
+  legacyPrice         Price?                   @relation(fields: [legacyPriceId], references: [id], onDelete: SetNull)
+
+  @@unique([editionId, type])
+  @@index([editionId, active])
+}
