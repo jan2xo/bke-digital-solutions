@@ -14,7 +14,6 @@ try {
     `SELECT to_regclass('public."Product"')::text AS "name"
      UNION ALL SELECT to_regclass('public."Edition"')::text
      UNION ALL SELECT to_regclass('public."CustomerAccount"')::text
-     UNION ALL SELECT to_regclass('public."Order"')::text
      UNION ALL SELECT to_regclass('public."User"')::text`,
   );
   if (externalTables.rows.some((row) => row.name !== null)) {
