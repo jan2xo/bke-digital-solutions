@@ -1,5 +1,8 @@
 import { Client } from "pg";
-import type { AccountsOrganizationAccountCreationRepository } from "../../logic/organization-account-creation-repository";
+import type {
+  AccountsOrganizationAccountCreationRecord,
+  AccountsOrganizationAccountCreationRepository,
+} from "../../logic/organization-account-creation-repository";
 
 export function createPostgresAccountsOrganizationAccountCreationRepository(
   connectionString: string,
@@ -10,7 +13,7 @@ export function createPostgresAccountsOrganizationAccountCreationRepository(
   }
 
   return Object.freeze({
-    async createOrganizationAccount(record) {
+    async createOrganizationAccount(record: AccountsOrganizationAccountCreationRecord) {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
       try {
