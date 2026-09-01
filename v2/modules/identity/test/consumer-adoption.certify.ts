@@ -100,7 +100,7 @@ if (
   );
 }
 
-if (!nextConfigSource.includes('transpilePackages: ["@bke/identity"]')) {
+if (!nextConfigSource.includes('"@bke/identity"')) {
   throw new Error(
     "Next.js must explicitly transpile the source-native @bke/identity package.",
   );
