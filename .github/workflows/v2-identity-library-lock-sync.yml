@@ -28,8 +28,9 @@ jobs:
         run: npm install --package-lock-only --ignore-scripts
 
       - name: Verify pinned Identity lock entry
-        shell: node
+        shell: bash
         run: |
+          node <<'NODE'
           const fs = require('node:fs');
           const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
           const expected = 'https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.1.0/bke-identity-0.1.0.tgz';
@@ -41,6 +42,7 @@ jobs:
             throw new Error(`Unexpected @bke/identity lock entry: ${JSON.stringify(identity)}`);
           }
           console.log(`Identity lock entry GREEN integrity=${identity.integrity}`);
+          NODE
 
       - name: Commit generated lockfile
         shell: bash
