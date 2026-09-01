@@ -197,7 +197,11 @@ export function createPostgresCommerceOfferRedemptionRepository(
       }
     },
 
-    async transition(input): Promise<CommerceTransitionOfferRedemptionResult> {
+    async transition(input: {
+      readonly redemptionId: string;
+      readonly transition: CommerceOfferRedemptionTransition;
+      readonly now: Date;
+    }): Promise<CommerceTransitionOfferRedemptionResult> {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
       try {
