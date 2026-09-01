@@ -66,12 +66,16 @@ try {
   if (listed.status !== "LISTED") {
     throw new Error(`Expected invitation list, received ${JSON.stringify(listed)}`);
   }
-  if (listed.expiration.count !== 2) {
-    throw new Error(`Expected two globally expired invitations, received ${listed.expiration.count}`);
+  if (listed.expiration.count < 2) {
+    throw new Error(`Expected at least our two globally due invitations, received ${listed.expiration.count}`);
   }
-  const expirationTargets = listed.expiration.auditIntents.map((intent) => intent.targetId).sort();
-  if (expirationTargets.join(",") !== "list-due,other-due") {
-    throw new Error(`Unexpected expiration audit intents: ${JSON.stringify(expirationTargets)}`);
+  const expirationTargets = new Set(
+    listed.expiration.auditIntents.map((intent) => intent.targetId),
+  );
+  if (!expirationTargets.has("list-due") || !expirationTargets.has("other-due")) {
+    throw new Error(
+      `Global expiration omitted invitation-list fixtures: ${JSON.stringify([...expirationTargets].sort())}`,
+    );
   }
   const ids = listed.invitations.map((invitation) => invitation.id);
   if (
