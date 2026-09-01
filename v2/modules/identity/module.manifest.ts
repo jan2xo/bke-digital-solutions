@@ -10,6 +10,7 @@ import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login
 import { IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID } from "./contracts/magic-login-consume.contract";
 import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "./contracts/magic-login-request.contract";
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
+import { IDENTITY_MFA_EMERGENCY_ENROLLMENT_CAPABILITY_ID } from "./contracts/mfa-emergency-enrollment.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
 import { IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID } from "./contracts/mfa-recovery-regeneration.contract";
@@ -42,6 +43,7 @@ export const identityModuleManifest = Object.freeze({
     IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID,
     IDENTITY_MFA_DISABLE_CAPABILITY_ID,
     IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID,
+    IDENTITY_MFA_EMERGENCY_ENROLLMENT_CAPABILITY_ID,
     IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
     IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID,
     IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
