@@ -4,6 +4,7 @@ import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/
 import { ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID } from "./contracts/invitation-acceptance.contract";
 import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "./contracts/invitation-expiration.contract";
 import { ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID } from "./contracts/invitation-issuance.contract";
+import { ACCOUNTS_INVITATION_LIST_CAPABILITY_ID } from "./contracts/invitation-list.contract";
 import { ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID } from "./contracts/invitation-resend.contract";
 import { ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID } from "./contracts/invitation-revocation.contract";
 import { ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID } from "./contracts/member-leave.contract";
@@ -20,6 +21,7 @@ import { createAccountsIndividualAccountCreationCapability } from "./logic/indiv
 import { createAccountsInvitationAcceptanceCapability } from "./logic/invitation-acceptance";
 import { createAccountsInvitationExpirationCapability } from "./logic/invitation-expiration";
 import { createAccountsInvitationIssuanceCapability } from "./logic/invitation-issuance";
+import { createAccountsInvitationListCapability } from "./logic/invitation-list";
 import { createAccountsInvitationResendCapability } from "./logic/invitation-resend";
 import { createAccountsInvitationRevocationCapability } from "./logic/invitation-revocation";
 import { createAccountsMemberLeaveCapability } from "./logic/member-leave";
@@ -37,6 +39,7 @@ import { createPostgresAccountsIndividualAccountCreationRepository } from "./pri
 import { createPostgresAccountsInvitationAcceptanceRepository } from "./prisma/repositories/postgres-invitation-acceptance-repository";
 import { createPostgresAccountsInvitationExpirationRepository } from "./prisma/repositories/postgres-invitation-expiration-repository";
 import { createPostgresAccountsInvitationIssuanceRepository } from "./prisma/repositories/postgres-invitation-issuance-repository";
+import { createPostgresAccountsInvitationListRepository } from "./prisma/repositories/postgres-invitation-list-repository";
 import { createPostgresAccountsInvitationResendRepository } from "./prisma/repositories/postgres-invitation-resend-repository";
 import { createPostgresAccountsInvitationRevocationRepository } from "./prisma/repositories/postgres-invitation-revocation-repository";
 import { createPostgresAccountsMemberLeaveRepository } from "./prisma/repositories/postgres-member-leave-repository";
@@ -75,6 +78,8 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     createPostgresAccountsOrganizationDetailRepository(options.connectionString);
   const invitationIssuanceRepository =
     createPostgresAccountsInvitationIssuanceRepository(options.connectionString);
+  const invitationListRepository =
+    createPostgresAccountsInvitationListRepository(options.connectionString);
   const invitationResendRepository =
     createPostgresAccountsInvitationResendRepository(options.connectionString);
   const invitationRevocationRepository =
@@ -126,6 +131,15 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     invitationTokenProvider,
     clock,
   );
+  const invitationExpiration = createAccountsInvitationExpirationCapability(
+    invitationExpirationRepository,
+    clock,
+  );
+  const invitationList = createAccountsInvitationListCapability(
+    invitationExpiration,
+    accountAccess,
+    invitationListRepository,
+  );
   const invitationResend = createAccountsInvitationResendCapability(
     accountAccess,
     invitationResendRepository,
@@ -135,10 +149,6 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
   const invitationRevocation = createAccountsInvitationRevocationCapability(
     accountAccess,
     invitationRevocationRepository,
-  );
-  const invitationExpiration = createAccountsInvitationExpirationCapability(
-    invitationExpirationRepository,
-    clock,
   );
   const invitationAcceptance = createAccountsInvitationAcceptanceCapability(
     invitationAcceptanceRepository,
@@ -193,6 +203,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
         value: invitationIssuance,
+      },
+      {
+        id: ACCOUNTS_INVITATION_LIST_CAPABILITY_ID,
+        value: invitationList,
       },
       {
         id: ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID,
