@@ -29,6 +29,10 @@ import {
   type AccountsInvitationRevocationCapability,
 } from "../contracts/invitation-revocation.contract";
 import {
+  ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID,
+  type AccountsMemberLeaveCapability,
+} from "../contracts/member-leave.contract";
+import {
   ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID,
   type AccountsMembershipRemovalCapability,
 } from "../contracts/membership-removal.contract";
@@ -67,6 +71,7 @@ describe("Accounts module composition", () => {
     expect(application.has(ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_MEMBERSHIP_ROLE_CHANGE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID)).toBe(true);
+    expect(application.has(ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID)).toBe(true);
     expect(
       typeof application.get<AccountsIndividualAccountCreationCapability>(
         ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID,
@@ -126,6 +131,11 @@ describe("Accounts module composition", () => {
       typeof application.get<AccountsMembershipRemovalCapability>(
         ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID,
       ).remove,
+    ).toBe("function");
+    expect(
+      typeof application.get<AccountsMemberLeaveCapability>(
+        ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID,
+      ).leave,
     ).toBe("function");
   });
 });

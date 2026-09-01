@@ -6,6 +6,7 @@ import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "./contracts/invita
 import { ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID } from "./contracts/invitation-issuance.contract";
 import { ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID } from "./contracts/invitation-resend.contract";
 import { ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID } from "./contracts/invitation-revocation.contract";
+import { ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID } from "./contracts/member-leave.contract";
 import { ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID } from "./contracts/membership-removal.contract";
 import { ACCOUNTS_MEMBERSHIP_ROLE_CHANGE_CAPABILITY_ID } from "./contracts/membership-role-change.contract";
 import { ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/organization-account-creation.contract";
@@ -18,6 +19,7 @@ import { createAccountsInvitationExpirationCapability } from "./logic/invitation
 import { createAccountsInvitationIssuanceCapability } from "./logic/invitation-issuance";
 import { createAccountsInvitationResendCapability } from "./logic/invitation-resend";
 import { createAccountsInvitationRevocationCapability } from "./logic/invitation-revocation";
+import { createAccountsMemberLeaveCapability } from "./logic/member-leave";
 import { createAccountsMembershipRemovalCapability } from "./logic/membership-removal";
 import { createAccountsMembershipRoleChangeCapability } from "./logic/membership-role-change";
 import { createAccountsOrganizationAccountCreationCapability } from "./logic/organization-account-creation";
@@ -31,6 +33,7 @@ import { createPostgresAccountsInvitationExpirationRepository } from "./prisma/r
 import { createPostgresAccountsInvitationIssuanceRepository } from "./prisma/repositories/postgres-invitation-issuance-repository";
 import { createPostgresAccountsInvitationResendRepository } from "./prisma/repositories/postgres-invitation-resend-repository";
 import { createPostgresAccountsInvitationRevocationRepository } from "./prisma/repositories/postgres-invitation-revocation-repository";
+import { createPostgresAccountsMemberLeaveRepository } from "./prisma/repositories/postgres-member-leave-repository";
 import { createPostgresAccountsMembershipRemovalRepository } from "./prisma/repositories/postgres-membership-removal-repository";
 import { createPostgresAccountsMembershipRoleChangeRepository } from "./prisma/repositories/postgres-membership-role-change-repository";
 import { createPostgresAccountsOrganizationAccountCreationRepository } from "./prisma/repositories/postgres-organization-account-creation-repository";
@@ -71,6 +74,7 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     createPostgresAccountsMembershipRoleChangeRepository(options.connectionString);
   const membershipRemovalRepository =
     createPostgresAccountsMembershipRemovalRepository(options.connectionString);
+  const memberLeaveRepository = createPostgresAccountsMemberLeaveRepository(options.connectionString);
   const idProvider = createCryptoAccountsIdProvider();
   const invitationTokenProvider = createCryptoAccountsInvitationTokenProvider();
   const invitationTokenHasher = createCryptoAccountsInvitationTokenHasher();
@@ -125,6 +129,7 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     accountAccess,
     membershipRemovalRepository,
   );
+  const memberLeave = createAccountsMemberLeaveCapability(accountAccess, memberLeaveRepository);
 
   return Object.freeze({
     manifest: accountsModuleManifest,
@@ -176,6 +181,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID,
         value: membershipRemoval,
+      },
+      {
+        id: ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID,
+        value: memberLeave,
       },
     ],
   });
