@@ -1,4 +1,4 @@
-import type { ModuleManifest } from "../../contracts/capability";
+import type { IdentityModuleManifest } from "./contracts/module.contract";
 import { IDENTITY_EMAIL_VERIFICATION_COMPLETION_CAPABILITY_ID } from "./contracts/email-verification-completion.contract";
 import { IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID } from "./contracts/email-verification-issuance.contract";
 import {
@@ -49,4 +49,4 @@ export const identityModuleManifest = Object.freeze({
     IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
     IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID,
   ],
-} satisfies ModuleManifest);
+} satisfies IdentityModuleManifest);
