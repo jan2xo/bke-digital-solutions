@@ -12,32 +12,35 @@ const [moduleSource, packageSource, lockSource, nextConfigSource] =
     readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
   ]);
 
-if (!moduleSource.includes('from "../../contracts/capability"')) {
+if (
+  !moduleSource.includes("CapabilityModule") ||
+  !moduleSource.includes('"../../contracts/capability"')
+) {
   throw new Error(
     "Identity host adapter must retain the Digital Solutions CapabilityModule contract.",
   );
 }
 
-const requiredPackageImports = [
-  '@bke/identity/contracts/',
-  '@bke/identity/logic/',
-  '@bke/identity/providers/',
-  '@bke/identity/prisma/repositories/',
-  '@bke/identity/module.manifest',
+const requiredPackageSurfaces = [
+  "@bke/identity/contracts/",
+  "@bke/identity/logic/",
+  "@bke/identity/providers/",
+  "@bke/identity/prisma/repositories/",
+  "@bke/identity/module.manifest",
 ];
-for (const marker of requiredPackageImports) {
+for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
-    throw new Error(`Identity host adapter is missing standalone package import surface: ${marker}`);
+    throw new Error(`Identity host adapter is missing standalone package surface: ${marker}`);
   }
 }
 
-const forbiddenStagingImports = [
-  'from "./contracts/',
-  'from "./logic/',
-  'from "./prisma/repositories/',
-  'from "./module.manifest"',
+const forbiddenStagingSpecifiers = [
+  '"./contracts/',
+  '"./logic/',
+  '"./prisma/repositories/',
+  '"./module.manifest"',
 ];
-for (const marker of forbiddenStagingImports) {
+for (const marker of forbiddenStagingSpecifiers) {
   if (moduleSource.includes(marker)) {
     throw new Error(`Identity host adapter still consumes staging implementation: ${marker}`);
   }
