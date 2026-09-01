@@ -15,6 +15,7 @@ Certified capabilities:
 
 - `bke.accounts.individual-account-creation.v1` — creates the INDIVIDUAL account portion of registration. Ownership is represented by `ownerId`; no Membership row is created.
 - `bke.accounts.account-access.v1` — resolves account access and the effective OWNER/BILLING/LICENSE_MANAGER/MEMBER role, then applies the V1 account capability matrix when a required capability is supplied.
+- `bke.accounts.switchable-account-list.v1` — lists only ACTIVE accounts owned by or shared with a principal, preserving V1 `type ASC, createdAt ASC` ordering and owner-role precedence.
 
 The generic account-access capability deliberately does not impose lifecycle mutability rules. V1 account access and role authorization were separate from organization lifecycle checks; later Accounts capabilities own those lifecycle-specific invariants.
 
