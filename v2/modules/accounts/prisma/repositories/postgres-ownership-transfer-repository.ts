@@ -10,9 +10,9 @@ import type {
   AccountsOwnershipTransferRepositoryResult,
 } from "../../logic/ownership-transfer-repository";
 
-interface AccountRow extends AccountsAccountSnapshot {}
+type AccountRow = AccountsAccountSnapshot;
 
-interface MembershipRow extends AccountsOwnershipTransferMembershipSnapshot {}
+type MembershipRow = AccountsOwnershipTransferMembershipSnapshot;
 
 export function createPostgresAccountsOwnershipTransferRepository(
   connectionString: string,
