@@ -226,14 +226,16 @@ export function createPostgresCommerceOfferRedemptionRepository(
             : input.transition === "RELEASE"
               ? "RELEASED"
               : "REFUNDED";
+        const appliedAt = input.transition === "APPLY" ? input.now : null;
+        const releasedAt = input.transition === "RELEASE" ? input.now : null;
         const updated = await client.query<RedemptionRow>(
           `UPDATE "OfferRedemption"
-              SET "status" = $2,
-                  "appliedAt" = CASE WHEN $2 = 'APPLIED' THEN $3 ELSE "appliedAt" END,
-                  "releasedAt" = CASE WHEN $2 = 'RELEASED' THEN $3 ELSE "releasedAt" END
+              SET "status" = $2::"CommerceOfferRedemptionStatus",
+                  "appliedAt" = COALESCE($3, "appliedAt"),
+                  "releasedAt" = COALESCE($4, "releasedAt")
             WHERE "id" = $1
             RETURNING ${redemptionColumns}`,
-          [input.redemptionId, nextStatus, input.now],
+          [input.redemptionId, nextStatus, appliedAt, releasedAt],
         );
         await client.query("COMMIT");
         return { status: "UPDATED", redemption: mapRedemption(updated.rows[0]!) };
