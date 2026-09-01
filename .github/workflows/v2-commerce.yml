@@ -1,0 +1,36 @@
+name: V2 Module - Commerce
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/modules/commerce/**"
+      - "v2/platform/composition/**"
+      - "v2/contracts/**"
+      - "v2/tooling/check-module-boundaries.mjs"
+      - "v2/tsconfig.json"
+      - "v2/vitest.config.ts"
+      - ".github/workflows/v2-commerce.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  commerce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Test Commerce purchase-plan pricing
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/purchase-plan-pricing.test.ts
+      - name: Test Commerce module composition
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/module-composition.test.ts
