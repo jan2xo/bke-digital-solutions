@@ -20,6 +20,15 @@ try {
     throw new Error("Accounts invitation expiration certification must not depend on an Identity User table.");
   }
 
+  const preexistingDue = await client.query<{ id: string; accountId: string }>(
+    `SELECT "id", "accountId"
+       FROM "Invitation"
+      WHERE "status" = 'PENDING'
+        AND "expiresAt" <= $1
+      ORDER BY "id"`,
+    [now],
+  );
+
   await client.query(
     `INSERT INTO "CustomerAccount"
        ("id", "type", "displayName", "ownerId", "billingEmail", "lifecycleState")
@@ -46,15 +55,34 @@ try {
     { now: () => now },
   );
   const result = await capability.expire();
-  if (result.status !== "EXPIRED" || result.count !== 3) {
-    throw new Error(`Expected three expired invitations, received ${JSON.stringify(result)}`);
+  const expectedExpired = [
+    ...preexistingDue.rows,
+    { id: "expire-before", accountId: "expire-active" },
+    { id: "expire-exact", accountId: "expire-active" },
+    { id: "expire-suspended-due", accountId: "expire-suspended" },
+  ].sort((left, right) => left.id.localeCompare(right.id));
+  if (result.status !== "EXPIRED" || result.count !== expectedExpired.length) {
+    throw new Error(
+      `Expected global sweep of ${expectedExpired.length} due invitations, received ${JSON.stringify(result)}`,
+    );
   }
-  const expiredIds = result.invitations.map((item) => item.id).sort();
-  if (expiredIds.join(",") !== "expire-before,expire-exact,expire-suspended-due") {
-    throw new Error(`Expiration selected the wrong rows: ${expiredIds.join(",")}`);
+  const expired = [...result.invitations].sort((left, right) => left.id.localeCompare(right.id));
+  if (JSON.stringify(expired) !== JSON.stringify(expectedExpired)) {
+    throw new Error(
+      `Expiration did not sweep the exact global due set. expected=${JSON.stringify(expectedExpired)} actual=${JSON.stringify(expired)}`,
+    );
   }
-  if (result.auditIntents.length !== 3) {
-    throw new Error("Expiration did not return one audit intent per successfully claimed invitation.");
+  const expectedAuditIntents = expectedExpired.map((invitation) => ({
+    action: "ORGANIZATION_INVITATION_EXPIRED" as const,
+    accountId: invitation.accountId,
+    targetType: "Invitation" as const,
+    targetId: invitation.id,
+  }));
+  const auditIntents = [...result.auditIntents].sort((left, right) =>
+    left.targetId.localeCompare(right.targetId),
+  );
+  if (JSON.stringify(auditIntents) !== JSON.stringify(expectedAuditIntents)) {
+    throw new Error("Expiration did not return one exact audit intent per globally expired invitation.");
   }
 
   const states = await client.query<{
