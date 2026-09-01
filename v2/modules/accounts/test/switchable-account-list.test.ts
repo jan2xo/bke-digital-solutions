@@ -1,32 +1,37 @@
 import { describe, expect, it, vi } from "vitest";
 import { createAccountsSwitchableAccountListCapability } from "../logic/switchable-account-list";
-import type { AccountsSwitchableAccountListRepository } from "../logic/switchable-account-list-repository";
+import type {
+  AccountsSwitchableAccountListRepository,
+  AccountsSwitchableAccountRecord,
+} from "../logic/switchable-account-list-repository";
 
 describe("Accounts switchable account list", () => {
   it("maps owner precedence and membership roles while preserving repository order", async () => {
     const repository: AccountsSwitchableAccountListRepository = {
-      listSwitchable: vi.fn(async () => [
-        {
-          account: {
-            id: "individual-1",
-            type: "INDIVIDUAL",
-            displayName: "Alice",
-            ownerId: "principal-1",
-            lifecycleState: "ACTIVE",
+      listSwitchable: vi.fn(
+        async (): Promise<readonly AccountsSwitchableAccountRecord[]> => [
+          {
+            account: {
+              id: "individual-1",
+              type: "INDIVIDUAL",
+              displayName: "Alice",
+              ownerId: "principal-1",
+              lifecycleState: "ACTIVE",
+            },
+            membershipRole: null,
           },
-          membershipRole: null,
-        },
-        {
-          account: {
-            id: "organization-1",
-            type: "ORGANIZATION",
-            displayName: "Example Org",
-            ownerId: "someone-else",
-            lifecycleState: "ACTIVE",
+          {
+            account: {
+              id: "organization-1",
+              type: "ORGANIZATION",
+              displayName: "Example Org",
+              ownerId: "someone-else",
+              lifecycleState: "ACTIVE",
+            },
+            membershipRole: "BILLING",
           },
-          membershipRole: "BILLING",
-        },
-      ]),
+        ],
+      ),
     };
     const capability = createAccountsSwitchableAccountListCapability(repository);
     await expect(capability.list({ principalId: " principal-1 " })).resolves.toEqual({
