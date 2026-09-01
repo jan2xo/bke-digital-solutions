@@ -1,5 +1,6 @@
 import { ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID } from "./contracts/account-access.contract";
 import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/individual-account-creation.contract";
+import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "./contracts/invitation-expiration.contract";
 import { ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID } from "./contracts/invitation-issuance.contract";
 import { ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID } from "./contracts/invitation-resend.contract";
 import { ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID } from "./contracts/invitation-revocation.contract";
@@ -20,5 +21,6 @@ export const accountsModuleManifest = Object.freeze({
     ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
     ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID,
     ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID,
+    ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
   ],
 } as const satisfies AccountsModuleManifest);
