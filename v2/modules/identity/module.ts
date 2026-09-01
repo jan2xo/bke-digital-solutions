@@ -10,6 +10,7 @@ import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "./contracts/login
 import { IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID } from "./contracts/magic-login-consume.contract";
 import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "./contracts/magic-login-request.contract";
 import { IDENTITY_MFA_DISABLE_CAPABILITY_ID } from "./contracts/mfa-disable.contract";
+import { IDENTITY_MFA_EMERGENCY_ENROLLMENT_CAPABILITY_ID } from "./contracts/mfa-emergency-enrollment.contract";
 import { IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID } from "./contracts/mfa-enrollment-completion.contract";
 import { IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID } from "./contracts/mfa-enrollment-start.contract";
 import { IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID } from "./contracts/mfa-recovery-regeneration.contract";
@@ -29,6 +30,7 @@ import { createIdentityLoginMfaVerificationCapability } from "./logic/login-mfa-
 import { createIdentityMagicLoginConsumeCapability } from "./logic/magic-login-consume";
 import { createIdentityMagicLoginRequestCapability } from "./logic/magic-login-request";
 import { createIdentityMfaDisableCapability } from "./logic/mfa-disable";
+import { createIdentityMfaEmergencyEnrollmentCapability } from "./logic/mfa-emergency-enrollment";
 import { createIdentityMfaEnrollmentCompletionCapability } from "./logic/mfa-enrollment-completion";
 import { createIdentityMfaEnrollmentStartCapability } from "./logic/mfa-enrollment-start";
 import { createIdentityMfaRecoveryRegenerationCapability } from "./logic/mfa-recovery-regeneration";
@@ -58,6 +60,7 @@ import { createPostgresIdentityLoginMfaRepository } from "./prisma/repositories/
 import { createPostgresIdentityMagicLoginConsumeRepository } from "./prisma/repositories/postgres-magic-login-consume-repository";
 import { createPostgresIdentityMagicLoginRequestRepository } from "./prisma/repositories/postgres-magic-login-request-repository";
 import { createPostgresIdentityMfaDisableRepository } from "./prisma/repositories/postgres-mfa-disable-repository";
+import { createPostgresIdentityMfaEmergencyEnrollmentRepository } from "./prisma/repositories/postgres-mfa-emergency-enrollment-repository";
 import { createPostgresIdentityMfaEnrollmentCompletionRepository } from "./prisma/repositories/postgres-mfa-enrollment-completion-repository";
 import { createPostgresIdentityMfaEnrollmentStartRepository } from "./prisma/repositories/postgres-mfa-enrollment-start-repository";
 import { createPostgresIdentityMfaRecoveryRegenerationRepository } from "./prisma/repositories/postgres-mfa-recovery-regeneration-repository";
@@ -118,6 +121,10 @@ export function createIdentityModule(
     createPostgresIdentityMfaRecoveryRegenerationRepository(
       options.connectionString,
     );
+  const mfaEmergencyEnrollmentRepository =
+    createPostgresIdentityMfaEmergencyEnrollmentRepository(
+      options.connectionString,
+    );
   const recentAuthChallengeRepository =
     createPostgresIdentityRecentAuthChallengeRepository(options.connectionString);
   const recentAuthCompletionRepository =
@@ -155,145 +162,27 @@ export function createIdentityModule(
     manifest: identityModuleManifest,
     start() {
       return [
-        {
-          id: IDENTITY_LOOKUP_CAPABILITY_ID,
-          value: createIdentityLookupCapability(repository),
-        },
-        {
-          id: IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
-          value: createIdentityPasswordAuthenticationCapability(
-            repository,
-            passwordVerifier,
-          ),
-        },
-        {
-          id: IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID,
-          value: createIdentityEmailVerificationIssuanceCapability(
-            emailVerificationIssuanceRepository,
-            emailVerificationTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_EMAIL_VERIFICATION_COMPLETION_CAPABILITY_ID,
-          value: createIdentityEmailVerificationCompletionCapability(
-            emailVerificationCompletionRepository,
-            emailVerificationTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_PASSWORD_CHANGE_CAPABILITY_ID,
-          value: createIdentityPasswordChangeCapability(
-            passwordChangeRepository,
-            sessionValidation,
-            passwordVerifier,
-            passwordHasher,
-          ),
-        },
-        {
-          id: IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID,
-          value: createIdentityMagicLoginRequestCapability(
-            magicLoginRequestRepository,
-            magicLoginTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID,
-          value: createIdentityMagicLoginConsumeCapability(
-            magicLoginConsumeRepository,
-            magicLoginTokenProvider,
-            sessionTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID,
-          value: createIdentitySessionIssuanceCapability(
-            sessionRepository,
-            sessionTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
-          value: sessionValidation,
-        },
-        {
-          id: IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
-          value: createIdentitySessionTerminationCapability(
-            sessionTerminationRepository,
-            sessionTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID,
-          value: createIdentityLoginMfaVerificationCapability(
-            loginMfaRepository,
-            emailMfaProofProvider,
-          ),
-        },
-        {
-          id: IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
-          value: createIdentityLoginMfaChallengeIssuanceCapability(
-            loginMfaChallengeRepository,
-            emailMfaChallengeMaterialProvider,
-          ),
-        },
-        {
-          id: IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID,
-          value: createIdentityMfaEnrollmentStartCapability(
-            mfaEnrollmentStartRepository,
-            emailMfaChallengeMaterialProvider,
-          ),
-        },
-        {
-          id: IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID,
-          value: createIdentityMfaEnrollmentCompletionCapability(
-            mfaEnrollmentCompletionRepository,
-            emailMfaProofProvider,
-            mfaRecoveryCodeProvider,
-          ),
-        },
-        {
-          id: IDENTITY_MFA_DISABLE_CAPABILITY_ID,
-          value: createIdentityMfaDisableCapability(mfaDisableRepository),
-        },
-        {
-          id: IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID,
-          value: createIdentityMfaRecoveryRegenerationCapability(
-            mfaRecoveryRegenerationRepository,
-            sessionValidation,
-            mfaRecoveryCodeProvider,
-          ),
-        },
-        {
-          id: IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
-          value: createIdentityRecentAuthChallengeIssuanceCapability(
-            recentAuthChallengeRepository,
-            emailMfaChallengeMaterialProvider,
-          ),
-        },
-        {
-          id: IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID,
-          value: createIdentityRecentAuthCompletionCapability(
-            recentAuthCompletionRepository,
-            sessionValidation,
-            passwordVerifier,
-            emailMfaProofProvider,
-          ),
-        },
-        {
-          id: IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
-          value: createIdentityPasswordResetRequestCapability(
-            passwordResetRequestRepository,
-            passwordResetTokenProvider,
-          ),
-        },
-        {
-          id: IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID,
-          value: createIdentityPasswordResetCompletionCapability(
-            passwordResetCompletionRepository,
-            passwordResetTokenProvider,
-            passwordHasher,
-          ),
-        },
+        { id: IDENTITY_LOOKUP_CAPABILITY_ID, value: createIdentityLookupCapability(repository) },
+        { id: IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID, value: createIdentityPasswordAuthenticationCapability(repository, passwordVerifier) },
+        { id: IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID, value: createIdentityEmailVerificationIssuanceCapability(emailVerificationIssuanceRepository, emailVerificationTokenProvider) },
+        { id: IDENTITY_EMAIL_VERIFICATION_COMPLETION_CAPABILITY_ID, value: createIdentityEmailVerificationCompletionCapability(emailVerificationCompletionRepository, emailVerificationTokenProvider) },
+        { id: IDENTITY_PASSWORD_CHANGE_CAPABILITY_ID, value: createIdentityPasswordChangeCapability(passwordChangeRepository, sessionValidation, passwordVerifier, passwordHasher) },
+        { id: IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID, value: createIdentityMagicLoginRequestCapability(magicLoginRequestRepository, magicLoginTokenProvider) },
+        { id: IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID, value: createIdentityMagicLoginConsumeCapability(magicLoginConsumeRepository, magicLoginTokenProvider, sessionTokenProvider) },
+        { id: IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID, value: createIdentitySessionIssuanceCapability(sessionRepository, sessionTokenProvider) },
+        { id: IDENTITY_SESSION_VALIDATION_CAPABILITY_ID, value: sessionValidation },
+        { id: IDENTITY_SESSION_TERMINATION_CAPABILITY_ID, value: createIdentitySessionTerminationCapability(sessionTerminationRepository, sessionTokenProvider) },
+        { id: IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID, value: createIdentityLoginMfaVerificationCapability(loginMfaRepository, emailMfaProofProvider) },
+        { id: IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID, value: createIdentityLoginMfaChallengeIssuanceCapability(loginMfaChallengeRepository, emailMfaChallengeMaterialProvider) },
+        { id: IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID, value: createIdentityMfaEnrollmentStartCapability(mfaEnrollmentStartRepository, emailMfaChallengeMaterialProvider) },
+        { id: IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID, value: createIdentityMfaEnrollmentCompletionCapability(mfaEnrollmentCompletionRepository, emailMfaProofProvider, mfaRecoveryCodeProvider) },
+        { id: IDENTITY_MFA_DISABLE_CAPABILITY_ID, value: createIdentityMfaDisableCapability(mfaDisableRepository) },
+        { id: IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID, value: createIdentityMfaRecoveryRegenerationCapability(mfaRecoveryRegenerationRepository, sessionValidation, mfaRecoveryCodeProvider) },
+        { id: IDENTITY_MFA_EMERGENCY_ENROLLMENT_CAPABILITY_ID, value: createIdentityMfaEmergencyEnrollmentCapability(mfaEmergencyEnrollmentRepository, sessionValidation, sessionTokenProvider, mfaRecoveryCodeProvider) },
+        { id: IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID, value: createIdentityRecentAuthChallengeIssuanceCapability(recentAuthChallengeRepository, emailMfaChallengeMaterialProvider) },
+        { id: IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID, value: createIdentityRecentAuthCompletionCapability(recentAuthCompletionRepository, sessionValidation, passwordVerifier, emailMfaProofProvider) },
+        { id: IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID, value: createIdentityPasswordResetRequestCapability(passwordResetRequestRepository, passwordResetTokenProvider) },
+        { id: IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID, value: createIdentityPasswordResetCompletionCapability(passwordResetCompletionRepository, passwordResetTokenProvider, passwordHasher) },
       ];
     },
   });
