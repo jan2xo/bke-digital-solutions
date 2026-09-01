@@ -44,6 +44,8 @@ jobs:
       - run: npm ci
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Accounts extraction boundary
+        run: npx tsx v2/modules/accounts/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate Accounts Prisma schema
@@ -52,6 +54,8 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs accounts
       - name: Prove Accounts migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs accounts
+      - name: Certify Accounts persistence isolation
+        run: npx tsx v2/modules/accounts/test/persistence-isolation.certify.ts
       - name: Test Accounts individual account creation
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/individual-account-creation.test.ts
       - name: Certify Accounts individual account creation with PostgreSQL
