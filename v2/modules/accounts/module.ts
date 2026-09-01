@@ -10,6 +10,7 @@ import { ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID } from "./contracts/member-leave.co
 import { ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID } from "./contracts/membership-removal.contract";
 import { ACCOUNTS_MEMBERSHIP_ROLE_CHANGE_CAPABILITY_ID } from "./contracts/membership-role-change.contract";
 import { ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/organization-account-creation.contract";
+import { ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID } from "./contracts/organization-close.contract";
 import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "./contracts/organization-profile-update.contract";
 import { ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID } from "./contracts/ownership-transfer.contract";
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "./contracts/switchable-account-list.contract";
@@ -24,6 +25,7 @@ import { createAccountsMemberLeaveCapability } from "./logic/member-leave";
 import { createAccountsMembershipRemovalCapability } from "./logic/membership-removal";
 import { createAccountsMembershipRoleChangeCapability } from "./logic/membership-role-change";
 import { createAccountsOrganizationAccountCreationCapability } from "./logic/organization-account-creation";
+import { createAccountsOrganizationCloseCapability } from "./logic/organization-close";
 import { createAccountsOrganizationProfileUpdateCapability } from "./logic/organization-profile-update";
 import { createAccountsOwnershipTransferCapability } from "./logic/ownership-transfer";
 import { createAccountsSwitchableAccountListCapability } from "./logic/switchable-account-list";
@@ -39,6 +41,7 @@ import { createPostgresAccountsMemberLeaveRepository } from "./prisma/repositori
 import { createPostgresAccountsMembershipRemovalRepository } from "./prisma/repositories/postgres-membership-removal-repository";
 import { createPostgresAccountsMembershipRoleChangeRepository } from "./prisma/repositories/postgres-membership-role-change-repository";
 import { createPostgresAccountsOrganizationAccountCreationRepository } from "./prisma/repositories/postgres-organization-account-creation-repository";
+import { createPostgresAccountsOrganizationCloseRepository } from "./prisma/repositories/postgres-organization-close-repository";
 import { createPostgresAccountsOrganizationProfileUpdateRepository } from "./prisma/repositories/postgres-organization-profile-update-repository";
 import { createPostgresAccountsOwnershipTransferRepository } from "./prisma/repositories/postgres-ownership-transfer-repository";
 import { createPostgresAccountsSwitchableAccountListRepository } from "./prisma/repositories/postgres-switchable-account-list-repository";
@@ -63,6 +66,8 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     createPostgresAccountsOrganizationAccountCreationRepository(options.connectionString);
   const organizationProfileUpdateRepository =
     createPostgresAccountsOrganizationProfileUpdateRepository(options.connectionString);
+  const organizationCloseRepository =
+    createPostgresAccountsOrganizationCloseRepository(options.connectionString);
   const invitationIssuanceRepository =
     createPostgresAccountsInvitationIssuanceRepository(options.connectionString);
   const invitationResendRepository =
@@ -99,6 +104,11 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
   const organizationProfileUpdate = createAccountsOrganizationProfileUpdateCapability(
     accountAccess,
     organizationProfileUpdateRepository,
+  );
+  const organizationClose = createAccountsOrganizationCloseCapability(
+    accountAccess,
+    organizationCloseRepository,
+    clock,
   );
   const invitationIssuance = createAccountsInvitationIssuanceCapability(
     accountAccess,
@@ -162,6 +172,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID,
         value: organizationProfileUpdate,
+      },
+      {
+        id: ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID,
+        value: organizationClose,
       },
       {
         id: ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
