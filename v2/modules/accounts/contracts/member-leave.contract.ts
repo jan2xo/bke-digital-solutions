@@ -27,7 +27,12 @@ export type AccountsMemberLeaveResult =
     }
   | {
       readonly status: "REJECTED";
-      readonly code: "NOT_FOUND" | "ACCOUNT_NOT_ORGANIZATION" | "OWNER_CANNOT_LEAVE" | "MEMBER_NOT_FOUND";
+      readonly code:
+        | "NOT_FOUND"
+        | "ACCOUNT_ROLE_FORBIDDEN"
+        | "ACCOUNT_NOT_ORGANIZATION"
+        | "OWNER_CANNOT_LEAVE"
+        | "MEMBER_NOT_FOUND";
     }
   | {
       readonly status: "FAILED";
