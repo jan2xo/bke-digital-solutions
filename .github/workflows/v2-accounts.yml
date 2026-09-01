@@ -84,6 +84,10 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-issuance.test.ts
       - name: Certify Accounts invitation issuance with PostgreSQL
         run: npx tsx v2/modules/accounts/test/invitation-issuance.postgres.certify.ts
+      - name: Test Accounts invitation list
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-list.test.ts
+      - name: Certify Accounts invitation list with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/invitation-list.postgres.certify.ts
       - name: Test Accounts invitation resend
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-resend.test.ts
       - name: Certify Accounts invitation resend with PostgreSQL

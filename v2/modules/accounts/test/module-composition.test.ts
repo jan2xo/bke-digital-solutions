@@ -21,6 +21,10 @@ import {
   type AccountsInvitationIssuanceCapability,
 } from "../contracts/invitation-issuance.contract";
 import {
+  ACCOUNTS_INVITATION_LIST_CAPABILITY_ID,
+  type AccountsInvitationListCapability,
+} from "../contracts/invitation-list.contract";
+import {
   ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID,
   type AccountsInvitationResendCapability,
 } from "../contracts/invitation-resend.contract";
@@ -79,6 +83,7 @@ describe("Accounts module composition", () => {
     expect(application.has(ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID)).toBe(true);
+    expect(application.has(ACCOUNTS_INVITATION_LIST_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID)).toBe(true);
@@ -126,6 +131,11 @@ describe("Accounts module composition", () => {
       typeof application.get<AccountsInvitationIssuanceCapability>(
         ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
       ).issue,
+    ).toBe("function");
+    expect(
+      typeof application.get<AccountsInvitationListCapability>(
+        ACCOUNTS_INVITATION_LIST_CAPABILITY_ID,
+      ).list,
     ).toBe("function");
     expect(
       typeof application.get<AccountsInvitationResendCapability>(

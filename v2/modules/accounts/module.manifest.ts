@@ -3,6 +3,7 @@ import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/
 import { ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID } from "./contracts/invitation-acceptance.contract";
 import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "./contracts/invitation-expiration.contract";
 import { ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID } from "./contracts/invitation-issuance.contract";
+import { ACCOUNTS_INVITATION_LIST_CAPABILITY_ID } from "./contracts/invitation-list.contract";
 import { ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID } from "./contracts/invitation-resend.contract";
 import { ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID } from "./contracts/invitation-revocation.contract";
 import { ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID } from "./contracts/member-leave.contract";
@@ -28,6 +29,7 @@ export const accountsModuleManifest = Object.freeze({
     ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID,
     ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID,
     ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
+    ACCOUNTS_INVITATION_LIST_CAPABILITY_ID,
     ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID,
     ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID,
     ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
