@@ -62,12 +62,12 @@ jobs:
         run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Identity Prisma schema
-        run: npx prisma validate --config v2/modules/identity/prisma.config.ts
-      - name: Apply Identity baseline
-        run: node v2/platform/persistence/migration-compositor.mjs identity
-      - name: Prove Identity migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs identity
+      - name: Validate installed Identity Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/identity/prisma/schema.prisma
+      - name: Apply installed Identity baseline
+        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
+      - name: Prove installed Identity migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
       - name: Test Identity logic
         run: >-
           npx vitest run --config v2/vitest.config.ts
