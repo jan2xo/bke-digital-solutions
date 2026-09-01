@@ -20,11 +20,12 @@ Certified capabilities:
 - `bke.accounts.organization-profile-update.v1` — updates organization/profile/billing fields with the V1 split authorization rules: organization identity fields require MANAGE_MEMBERS, billing fields require VIEW_PAYMENTS, and mixed updates require both. Closed/closure-requested/suspended organizations are rejected.
 - `bke.accounts.invitation-issuance.v1` — authorizes MANAGE_MEMBERS, enforces V1 mutable-organization lifecycle rules, lowercases the invite email, generates a 32-byte base64url token with SHA-256-only persistence, defaults expiry to seven days, and returns the raw token once to the trusted host boundary. V1 allows multiple PENDING invitations for the same account/email; issuance does not replace them.
 - `bke.accounts.invitation-resend.v1` — resolves the invitation before authorization, reuses MANAGE_MEMBERS and mutable-organization policy, requires PENDING state, rotates only tokenHash + expiresAt, returns the new raw token once, and preserves invitation account/email/role/status. The PostgreSQL adapter also requires PENDING in the final UPDATE so a concurrent revoke/accept cannot be overwritten.
+- `bke.accounts.invitation-revocation.v1` — resolves the invitation before authorization, reuses MANAGE_MEMBERS and mutable-organization policy, requires PENDING state, and changes only the invitation status to REVOKED. The final PostgreSQL UPDATE also requires PENDING so concurrent accept/expire/revoke transitions cannot be overwritten.
 
 The generic account-access capability deliberately does not impose lifecycle mutability rules. V1 account access and role authorization were separate from organization lifecycle checks; organization mutations add those lifecycle invariants on top of the shared access primitive.
 
 The account role/capability policy is Accounts-owned. Commerce and Licensing consume Accounts authorization results rather than duplicating the matrix.
 
-HTTP, same-origin checks, Identity creation, Legal acceptance, email delivery, sessions, audit transport, Commerce, and Licensing remain outside Accounts. Invitation expiry/revoke/accept are separate Accounts capabilities and are not hidden inside issuance/resend.
+HTTP, same-origin checks, Identity creation, Legal acceptance, email delivery, sessions, audit transport, Commerce, and Licensing remain outside Accounts. Invitation expiry/accept are separate Accounts capabilities and are not hidden inside issuance/resend/revocation.
 
 This staging module must remain mechanically extractable to a future `@bke/accounts` package with `contracts/`, `logic/`, `providers/`, `prisma/`, `migrations/`, `tests/`, `module.manifest.ts`, and `docs/` ownership.
