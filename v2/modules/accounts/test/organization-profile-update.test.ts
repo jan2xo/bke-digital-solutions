@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import type { AccountsAccountAccessCapability } from "../contracts/account-access.contract";
+import type {
+  AccountsAccountAccessCapability,
+  AccountsAccountAccessResult,
+} from "../contracts/account-access.contract";
 import { createAccountsOrganizationProfileUpdateCapability } from "../logic/organization-profile-update";
 import type { AccountsOrganizationProfileUpdateRepository } from "../logic/organization-profile-update-repository";
 
@@ -98,7 +101,7 @@ describe("Accounts organization profile update", () => {
 
   it("rejects wrong account type and V1-blocked lifecycle states", async () => {
     const wrongType: AccountsAccountAccessCapability = {
-      authorize: vi.fn(async () => ({
+      authorize: vi.fn(async (): Promise<AccountsAccountAccessResult> => ({
         status: "AUTHORIZED",
         account: { ...baseAccount, type: "INDIVIDUAL" },
         effectiveRole: "OWNER",
@@ -113,7 +116,7 @@ describe("Accounts organization profile update", () => {
 
     for (const lifecycleState of ["CLOSED", "CLOSURE_REQUESTED", "SUSPENDED"] as const) {
       const lifecycleAccess: AccountsAccountAccessCapability = {
-        authorize: vi.fn(async () => ({
+        authorize: vi.fn(async (): Promise<AccountsAccountAccessResult> => ({
           status: "AUTHORIZED",
           account: { ...baseAccount, lifecycleState },
           effectiveRole: "OWNER",
@@ -132,7 +135,10 @@ describe("Accounts organization profile update", () => {
 
   it("maps access and persistence failures without leaking infrastructure errors", async () => {
     const rejected: AccountsAccountAccessCapability = {
-      authorize: vi.fn(async () => ({ status: "REJECTED", code: "ACCOUNT_ROLE_FORBIDDEN" })),
+      authorize: vi.fn(async (): Promise<AccountsAccountAccessResult> => ({
+        status: "REJECTED",
+        code: "ACCOUNT_ROLE_FORBIDDEN",
+      })),
     };
     await expect(
       createAccountsOrganizationProfileUpdateCapability(rejected, repository()).update({
