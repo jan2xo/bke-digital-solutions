@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
@@ -58,6 +59,24 @@ const forbiddenStagingSpecifiers = [
 for (const marker of forbiddenStagingSpecifiers) {
   if (moduleSource.includes(marker)) {
     throw new Error(`Accounts host adapter still consumes staging implementation: ${marker}`);
+  }
+}
+
+const forbiddenStagingPaths = [
+  new URL("../contracts", import.meta.url),
+  new URL("../logic", import.meta.url),
+  new URL("../providers", import.meta.url),
+  new URL("../prisma", import.meta.url),
+  new URL("../docs", import.meta.url),
+  new URL("../module.manifest.ts", import.meta.url),
+  new URL("../prisma.config.ts", import.meta.url),
+  new URL("./module-composition.test.ts", import.meta.url),
+  new URL("./extraction.certify.ts", import.meta.url),
+  new URL("./persistence-isolation.certify.ts", import.meta.url),
+];
+for (const path of forbiddenStagingPaths) {
+  if (existsSync(path)) {
+    throw new Error(`Accounts staging path still exists after retirement: ${path.pathname}`);
   }
 }
 
@@ -123,5 +142,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Accounts standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedAccounts.integrity}`,
+  `Accounts standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedAccounts.integrity} staging=retired`,
 );
