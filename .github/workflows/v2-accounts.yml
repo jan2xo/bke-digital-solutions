@@ -104,5 +104,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/member-leave.test.ts
       - name: Certify Accounts member leave with PostgreSQL
         run: npx tsx v2/modules/accounts/test/member-leave.postgres.certify.ts
+      - name: Test Accounts ownership transfer
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/ownership-transfer.test.ts
+      - name: Certify Accounts ownership transfer with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/ownership-transfer.postgres.certify.ts
       - name: Test Accounts module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts

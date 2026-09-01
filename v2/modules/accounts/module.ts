@@ -11,6 +11,7 @@ import { ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID } from "./contracts/membershi
 import { ACCOUNTS_MEMBERSHIP_ROLE_CHANGE_CAPABILITY_ID } from "./contracts/membership-role-change.contract";
 import { ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/organization-account-creation.contract";
 import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "./contracts/organization-profile-update.contract";
+import { ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID } from "./contracts/ownership-transfer.contract";
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "./contracts/switchable-account-list.contract";
 import { createAccountsAccountAccessCapability } from "./logic/account-access";
 import { createAccountsIndividualAccountCreationCapability } from "./logic/individual-account-creation";
@@ -24,6 +25,7 @@ import { createAccountsMembershipRemovalCapability } from "./logic/membership-re
 import { createAccountsMembershipRoleChangeCapability } from "./logic/membership-role-change";
 import { createAccountsOrganizationAccountCreationCapability } from "./logic/organization-account-creation";
 import { createAccountsOrganizationProfileUpdateCapability } from "./logic/organization-profile-update";
+import { createAccountsOwnershipTransferCapability } from "./logic/ownership-transfer";
 import { createAccountsSwitchableAccountListCapability } from "./logic/switchable-account-list";
 import { accountsModuleManifest } from "./module.manifest";
 import { createPostgresAccountsAccountAccessRepository } from "./prisma/repositories/postgres-account-access-repository";
@@ -38,6 +40,7 @@ import { createPostgresAccountsMembershipRemovalRepository } from "./prisma/repo
 import { createPostgresAccountsMembershipRoleChangeRepository } from "./prisma/repositories/postgres-membership-role-change-repository";
 import { createPostgresAccountsOrganizationAccountCreationRepository } from "./prisma/repositories/postgres-organization-account-creation-repository";
 import { createPostgresAccountsOrganizationProfileUpdateRepository } from "./prisma/repositories/postgres-organization-profile-update-repository";
+import { createPostgresAccountsOwnershipTransferRepository } from "./prisma/repositories/postgres-ownership-transfer-repository";
 import { createPostgresAccountsSwitchableAccountListRepository } from "./prisma/repositories/postgres-switchable-account-list-repository";
 import { createCryptoAccountsIdProvider } from "./providers/crypto-accounts-id-provider";
 import { createCryptoAccountsInvitationTokenHasher } from "./providers/crypto-invitation-token-hasher";
@@ -75,6 +78,8 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
   const membershipRemovalRepository =
     createPostgresAccountsMembershipRemovalRepository(options.connectionString);
   const memberLeaveRepository = createPostgresAccountsMemberLeaveRepository(options.connectionString);
+  const ownershipTransferRepository =
+    createPostgresAccountsOwnershipTransferRepository(options.connectionString);
   const idProvider = createCryptoAccountsIdProvider();
   const invitationTokenProvider = createCryptoAccountsInvitationTokenProvider();
   const invitationTokenHasher = createCryptoAccountsInvitationTokenHasher();
@@ -130,6 +135,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     membershipRemovalRepository,
   );
   const memberLeave = createAccountsMemberLeaveCapability(accountAccess, memberLeaveRepository);
+  const ownershipTransfer = createAccountsOwnershipTransferCapability(
+    accountAccess,
+    ownershipTransferRepository,
+  );
 
   return Object.freeze({
     manifest: accountsModuleManifest,
@@ -185,6 +194,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID,
         value: memberLeave,
+      },
+      {
+        id: ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID,
+        value: ownershipTransfer,
       },
     ],
   });

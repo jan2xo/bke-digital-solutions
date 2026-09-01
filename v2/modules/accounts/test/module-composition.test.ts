@@ -49,6 +49,10 @@ import {
   type AccountsOrganizationProfileUpdateCapability,
 } from "../contracts/organization-profile-update.contract";
 import {
+  ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID,
+  type AccountsOwnershipTransferCapability,
+} from "../contracts/ownership-transfer.contract";
+import {
   ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
   type AccountsSwitchableAccountListCapability,
 } from "../contracts/switchable-account-list.contract";
@@ -72,6 +76,7 @@ describe("Accounts module composition", () => {
     expect(application.has(ACCOUNTS_MEMBERSHIP_ROLE_CHANGE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_MEMBERSHIP_REMOVAL_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID)).toBe(true);
+    expect(application.has(ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID)).toBe(true);
     expect(
       typeof application.get<AccountsIndividualAccountCreationCapability>(
         ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID,
@@ -136,6 +141,11 @@ describe("Accounts module composition", () => {
       typeof application.get<AccountsMemberLeaveCapability>(
         ACCOUNTS_MEMBER_LEAVE_CAPABILITY_ID,
       ).leave,
+    ).toBe("function");
+    expect(
+      typeof application.get<AccountsOwnershipTransferCapability>(
+        ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID,
+      ).transfer,
     ).toBe("function");
   });
 });
