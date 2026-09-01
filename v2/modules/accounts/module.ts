@@ -1,6 +1,7 @@
 import type { CapabilityModule } from "../../contracts/capability";
 import { ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID } from "./contracts/account-access.contract";
 import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/individual-account-creation.contract";
+import { ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID } from "./contracts/invitation-acceptance.contract";
 import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "./contracts/invitation-expiration.contract";
 import { ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID } from "./contracts/invitation-issuance.contract";
 import { ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID } from "./contracts/invitation-resend.contract";
@@ -10,6 +11,7 @@ import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "./contracts/
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "./contracts/switchable-account-list.contract";
 import { createAccountsAccountAccessCapability } from "./logic/account-access";
 import { createAccountsIndividualAccountCreationCapability } from "./logic/individual-account-creation";
+import { createAccountsInvitationAcceptanceCapability } from "./logic/invitation-acceptance";
 import { createAccountsInvitationExpirationCapability } from "./logic/invitation-expiration";
 import { createAccountsInvitationIssuanceCapability } from "./logic/invitation-issuance";
 import { createAccountsInvitationResendCapability } from "./logic/invitation-resend";
@@ -20,6 +22,7 @@ import { createAccountsSwitchableAccountListCapability } from "./logic/switchabl
 import { accountsModuleManifest } from "./module.manifest";
 import { createPostgresAccountsAccountAccessRepository } from "./prisma/repositories/postgres-account-access-repository";
 import { createPostgresAccountsIndividualAccountCreationRepository } from "./prisma/repositories/postgres-individual-account-creation-repository";
+import { createPostgresAccountsInvitationAcceptanceRepository } from "./prisma/repositories/postgres-invitation-acceptance-repository";
 import { createPostgresAccountsInvitationExpirationRepository } from "./prisma/repositories/postgres-invitation-expiration-repository";
 import { createPostgresAccountsInvitationIssuanceRepository } from "./prisma/repositories/postgres-invitation-issuance-repository";
 import { createPostgresAccountsInvitationResendRepository } from "./prisma/repositories/postgres-invitation-resend-repository";
@@ -28,6 +31,7 @@ import { createPostgresAccountsOrganizationAccountCreationRepository } from "./p
 import { createPostgresAccountsOrganizationProfileUpdateRepository } from "./prisma/repositories/postgres-organization-profile-update-repository";
 import { createPostgresAccountsSwitchableAccountListRepository } from "./prisma/repositories/postgres-switchable-account-list-repository";
 import { createCryptoAccountsIdProvider } from "./providers/crypto-accounts-id-provider";
+import { createCryptoAccountsInvitationTokenHasher } from "./providers/crypto-invitation-token-hasher";
 import { createCryptoAccountsInvitationTokenProvider } from "./providers/crypto-invitation-token-provider";
 import { createSystemAccountsClock } from "./providers/system-accounts-clock";
 
@@ -55,8 +59,11 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     createPostgresAccountsInvitationRevocationRepository(options.connectionString);
   const invitationExpirationRepository =
     createPostgresAccountsInvitationExpirationRepository(options.connectionString);
+  const invitationAcceptanceRepository =
+    createPostgresAccountsInvitationAcceptanceRepository(options.connectionString);
   const idProvider = createCryptoAccountsIdProvider();
   const invitationTokenProvider = createCryptoAccountsInvitationTokenProvider();
+  const invitationTokenHasher = createCryptoAccountsInvitationTokenHasher();
   const clock = createSystemAccountsClock();
   const individualAccountCreation = createAccountsIndividualAccountCreationCapability(
     individualAccountCreationRepository,
@@ -93,6 +100,11 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
   );
   const invitationExpiration = createAccountsInvitationExpirationCapability(
     invitationExpirationRepository,
+    clock,
+  );
+  const invitationAcceptance = createAccountsInvitationAcceptanceCapability(
+    invitationAcceptanceRepository,
+    invitationTokenHasher,
     clock,
   );
 
@@ -134,6 +146,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
         value: invitationExpiration,
+      },
+      {
+        id: ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID,
+        value: invitationAcceptance,
       },
     ],
   });
