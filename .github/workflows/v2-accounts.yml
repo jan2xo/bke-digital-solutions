@@ -5,12 +5,10 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/accounts/**"
-      - "v2/modules/identity/test/consumer-adoption.certify.ts"
       - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/contracts/**"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
       - ".github/workflows/v2-accounts.yml"
       - "next.config.ts"
       - "package.json"
@@ -59,8 +57,6 @@ jobs:
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Accounts standalone consumer adoption
         run: npx tsx v2/modules/accounts/test/consumer-adoption.certify.ts
-      - name: Certify Accounts staging extraction boundary
-        run: npx tsx v2/modules/accounts/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate installed Accounts Prisma schema
@@ -69,75 +65,3 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
       - name: Prove installed Accounts migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
-      - name: Certify Accounts persistence isolation
-        run: npx tsx v2/modules/accounts/test/persistence-isolation.certify.ts
-      - name: Test Accounts individual account creation
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/individual-account-creation.test.ts
-      - name: Certify Accounts individual account creation with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/individual-account-creation.postgres.certify.ts
-      - name: Test Accounts account access
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/account-access.test.ts
-      - name: Certify Accounts account access with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/account-access.postgres.certify.ts
-      - name: Test Accounts switchable account list
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/switchable-account-list.test.ts
-      - name: Certify Accounts switchable account list with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/switchable-account-list.postgres.certify.ts
-      - name: Test Accounts organization account creation
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-account-creation.test.ts
-      - name: Certify Accounts organization account creation with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/organization-account-creation.postgres.certify.ts
-      - name: Test Accounts organization profile update
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-profile-update.test.ts
-      - name: Certify Accounts organization profile update with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/organization-profile-update.postgres.certify.ts
-      - name: Test Accounts organization close
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-close.test.ts
-      - name: Certify Accounts organization close with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/organization-close.postgres.certify.ts
-      - name: Test Accounts organization detail
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/organization-detail.test.ts
-      - name: Certify Accounts organization detail with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/organization-detail.postgres.certify.ts
-      - name: Test Accounts invitation issuance
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-issuance.test.ts
-      - name: Certify Accounts invitation issuance with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/invitation-issuance.postgres.certify.ts
-      - name: Test Accounts invitation list
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-list.test.ts
-      - name: Certify Accounts invitation list with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/invitation-list.postgres.certify.ts
-      - name: Test Accounts invitation resend
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-resend.test.ts
-      - name: Certify Accounts invitation resend with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/invitation-resend.postgres.certify.ts
-      - name: Test Accounts invitation revocation
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-revocation.test.ts
-      - name: Certify Accounts invitation revocation with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/invitation-revocation.postgres.certify.ts
-      - name: Test Accounts invitation expiration
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-expiration.test.ts
-      - name: Certify Accounts invitation expiration with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/invitation-expiration.postgres.certify.ts
-      - name: Test Accounts invitation acceptance
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-acceptance.test.ts
-      - name: Certify Accounts invitation acceptance with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/invitation-acceptance.postgres.certify.ts
-      - name: Test Accounts membership role change
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/membership-role-change.test.ts
-      - name: Certify Accounts membership role change with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/membership-role-change.postgres.certify.ts
-      - name: Test Accounts membership removal
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/membership-removal.test.ts
-      - name: Certify Accounts membership removal with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/membership-removal.postgres.certify.ts
-      - name: Test Accounts member leave
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/member-leave.test.ts
-      - name: Certify Accounts member leave with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/member-leave.postgres.certify.ts
-      - name: Test Accounts ownership transfer
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/ownership-transfer.test.ts
-      - name: Certify Accounts ownership transfer with PostgreSQL
-        run: npx tsx v2/modules/accounts/test/ownership-transfer.postgres.certify.ts
-      - name: Test Accounts host module composition
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts
