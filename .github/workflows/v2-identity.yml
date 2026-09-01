@@ -46,6 +46,8 @@ jobs:
       - run: npm ci
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Identity extraction boundary
+        run: npx tsx v2/modules/identity/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate Identity Prisma schema
