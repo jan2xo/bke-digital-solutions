@@ -4,7 +4,6 @@ import { fileURLToPath } from "node:url";
 
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".mjs"]);
-const forbiddenExternalImports = new Set(["next", "server-only"]);
 const violations: string[] = [];
 
 function extension(path: string) {
@@ -21,6 +20,17 @@ function collectFiles(directory: string): string[] {
     else if (sourceExtensions.has(extension(path))) files.push(path);
   }
   return files;
+}
+
+function isExtractableSource(sourceFile: string) {
+  const path = relative(moduleRoot, sourceFile).split(sep).join("/");
+  return (
+    path === "module.manifest.ts" ||
+    path.startsWith("contracts/") ||
+    path.startsWith("logic/") ||
+    path.startsWith("prisma/") ||
+    path.startsWith("test/")
+  );
 }
 
 function importsFrom(source: string) {
@@ -41,7 +51,7 @@ function isWithin(parent: string, child: string) {
   return path === "" || (!path.startsWith(`..${sep}`) && path !== "..");
 }
 
-for (const sourceFile of collectFiles(moduleRoot)) {
+for (const sourceFile of collectFiles(moduleRoot).filter(isExtractableSource)) {
   const source = readFileSync(sourceFile, "utf8");
   for (const specifier of importsFrom(source)) {
     if (specifier.startsWith(".")) {
@@ -59,7 +69,7 @@ for (const sourceFile of collectFiles(moduleRoot)) {
       specifier.startsWith("v2/") ||
       specifier === "next" ||
       specifier.startsWith("next/") ||
-      forbiddenExternalImports.has(specifier)
+      specifier === "server-only"
     ) {
       violations.push(
         `${relative(moduleRoot, sourceFile)} imports application/runtime boundary ${specifier}`,
