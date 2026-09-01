@@ -73,6 +73,7 @@ jobs:
           v2/modules/identity/test/mfa-enrollment-completion.test.ts
           v2/modules/identity/test/mfa-disable.test.ts
           v2/modules/identity/test/mfa-recovery-regeneration.test.ts
+          v2/modules/identity/test/mfa-emergency-enrollment.test.ts
           v2/modules/identity/test/recent-auth-challenge-issuance.test.ts
           v2/modules/identity/test/recent-auth-completion.test.ts
           v2/modules/identity/test/password-reset-request.test.ts
@@ -109,6 +110,8 @@ jobs:
         run: npx tsx v2/modules/identity/test/mfa-disable.certify.ts
       - name: Certify Identity MFA recovery regeneration
         run: npx tsx v2/modules/identity/test/mfa-recovery-regeneration.certify.ts
+      - name: Certify Identity emergency MFA enrollment
+        run: npx tsx v2/modules/identity/test/mfa-emergency-enrollment.certify.ts
       - name: Certify Identity recent-auth challenge issuance
         run: npx tsx v2/modules/identity/test/recent-auth-challenge-issuance.certify.ts
       - name: Certify Identity recent-auth completion
