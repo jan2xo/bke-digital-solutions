@@ -17,7 +17,12 @@ export type AccountsOwnershipTransferRepositoryResult =
     }
   | {
       readonly status: "REJECTED";
-      readonly code: "NOT_FOUND" | "MEMBER_NOT_FOUND";
+      readonly code:
+        | "NOT_FOUND"
+        | "MEMBER_NOT_FOUND"
+        | "ACCOUNT_NOT_ORGANIZATION"
+        | "CLOSED_ACCOUNT"
+        | "SUSPENDED_ACCOUNT";
     };
 
 export interface AccountsOwnershipTransferRepository {
