@@ -5,12 +5,16 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/accounts/**"
+      - "v2/modules/identity/test/consumer-adoption.certify.ts"
       - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/contracts/**"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
       - ".github/workflows/v2-accounts.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
@@ -42,18 +46,29 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Accounts package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-accounts-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.1.0/bke-accounts-0.1.0.tgz
+          echo "3837547a2d5d5084616d848b9b1a4674cc24a73a1b8285155e148808cdbdd511  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Accounts extraction boundary
+      - name: Certify Accounts standalone consumer adoption
+        run: npx tsx v2/modules/accounts/test/consumer-adoption.certify.ts
+      - name: Certify Accounts staging extraction boundary
         run: npx tsx v2/modules/accounts/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Accounts Prisma schema
-        run: npx prisma validate --schema v2/modules/accounts/prisma/schema.prisma
-      - name: Apply Accounts baseline
-        run: node v2/platform/persistence/migration-compositor.mjs accounts
-      - name: Prove Accounts migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs accounts
+      - name: Validate installed Accounts Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/accounts/prisma/schema.prisma
+      - name: Apply installed Accounts baseline
+        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
+      - name: Prove installed Accounts migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
       - name: Certify Accounts persistence isolation
         run: npx tsx v2/modules/accounts/test/persistence-isolation.certify.ts
       - name: Test Accounts individual account creation
@@ -124,5 +139,5 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/ownership-transfer.test.ts
       - name: Certify Accounts ownership transfer with PostgreSQL
         run: npx tsx v2/modules/accounts/test/ownership-transfer.postgres.certify.ts
-      - name: Test Accounts module composition
+      - name: Test Accounts host module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts
