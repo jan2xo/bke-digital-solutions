@@ -4,7 +4,9 @@ Commerce owns the commercial transaction lifecycle. This module is being rebuilt
 
 ## What I need
 
-For the first certified slice, `bke.commerce.purchase-plan-pricing.v1`, Commerce needs only an immutable purchase-plan snapshot. It has no runtime dependency on Identity, Accounts, Product/Catalog, Entitlements, Legal, payment providers, email, audit transport, or persistence.
+`bke.commerce.purchase-plan-pricing.v1` needs only an immutable purchase-plan snapshot.
+
+`bke.commerce.purchase-plan-lookup.v1` needs only Commerce-owned persistence. `editionId`, legacy `productId`, and legacy `licensePolicyId` are stored as opaque external identifiers; Commerce does not require or foreign-key Entitlements, Catalog/Product, or Licensing tables.
 
 Later Commerce capabilities may consume approved contracts for:
 
@@ -22,7 +24,7 @@ Those dependencies must be capability contracts, never another module's Prisma c
 
 Forensic ownership from the V1 production reconciliation assigns Commerce:
 
-- `PurchasePlan` pricing terms;
+- `PurchasePlan` pricing terms and persistence;
 - legacy `Price` compatibility during transition;
 - `Cart` / `CartItem`;
 - `Order` / `OrderItem` and immutable commercial snapshots;
@@ -31,15 +33,18 @@ Forensic ownership from the V1 production reconciliation assigns Commerce:
 - `Subscription` recurring commercial state;
 - `Payment`, `PaymentAttempt`, `PaymentReconciliation`, `RefundOperation`, and `WebhookEvent` payment lifecycle/provider-event interpretation.
 
-The first slice owns deterministic purchase-plan pricing only: PERPETUAL, MONTHLY, and ANNUAL resolution, annual discount bounds, annual derivation from the active monthly source, safe-integer money checks, and V1 half-up rounding.
+The first capability owns deterministic purchase-plan pricing: PERPETUAL, MONTHLY, and ANNUAL resolution, annual discount bounds, annual derivation from the active monthly source, safe-integer money checks, and V1 half-up rounding.
+
+The second capability owns PurchasePlan lookup and its legacy Price compatibility seam while deliberately keeping cross-domain IDs opaque.
 
 ## What I give
 
-Current public capability:
+Current public capabilities:
 
 - `bke.commerce.purchase-plan-pricing.v1`
+- `bke.commerce.purchase-plan-lookup.v1`
 
-It returns typed resolved pricing terms or a typed failure code. It does not expose database records, Prisma clients, provider credentials, or V1 helpers.
+They return typed pricing/persistence results. They do not expose database clients, provider credentials, V1 helpers, or another module's persistence.
 
 ## Explicit non-ownership
 
@@ -47,11 +52,11 @@ Commerce does **not** own:
 
 - `Product` — Catalog/Product owns canonical product identity;
 - `Edition` — Entitlements owns entitlement-definition identity;
+- `LicensePolicy` / device authorization — Licensing owns those semantics;
 - `CustomerAccount`, membership, or account lifecycle — Accounts owns them;
 - authentication/session state — Identity owns it;
 - legal acceptance policy/persistence — Legal owns it;
 - entitlement issuance — Entitlements owns it;
-- license/device authorization — Licensing owns it;
 - HTTP/same-origin/rate limiting/cookies — host/presentation/security boundary;
 - email delivery or global audit persistence — host/provider capabilities;
 - release artifacts, updates, distribution, or certification.
@@ -60,8 +65,8 @@ Commerce does **not** own:
 
 ## Capability attack order
 
-1. Purchase Plan Pricing — pure, no persistence.
-2. PurchasePlan persistence + legacy Price compatibility.
+1. Purchase Plan Pricing — CERTIFIED.
+2. PurchasePlan persistence + legacy Price compatibility — ACTIVE.
 3. Offers / redemptions.
 4. Order + invoice creation and immutable pricing snapshots.
 5. Checkout orchestration through Accounts / Legal / Entitlements / Payments contracts.
@@ -74,8 +79,8 @@ Commerce does **not** own:
 
 - no production PostgreSQL mutation;
 - no changes to V1 behavior;
-- no Product or Edition ownership copied into Commerce;
+- no Product, Edition, or LicensePolicy ownership copied into Commerce;
 - no direct Accounts/Identity/Entitlements/Licensing Prisma reach-through;
-- no payment-provider implementation bundled into pure pricing;
+- no payment-provider implementation bundled into pricing/persistence;
 - no frontend work in the backend capability attack;
 - no Commerce extraction until public contracts and owned persistence seams are independently certified.

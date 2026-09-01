@@ -5,6 +5,7 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/commerce/**"
+      - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/platform/composition/**"
       - "v2/contracts/**"
       - "v2/tooling/check-module-boundaries.mjs"
@@ -19,6 +20,22 @@ permissions:
 jobs:
   commerce:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_commerce
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_commerce"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_commerce
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,7 +47,17 @@ jobs:
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Validate Commerce Prisma schema
+        run: npx prisma validate --schema v2/modules/commerce/prisma/schema.prisma
+      - name: Apply Commerce baseline
+        run: node v2/platform/persistence/migration-compositor.mjs commerce
+      - name: Prove Commerce migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs commerce
       - name: Test Commerce purchase-plan pricing
         run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/purchase-plan-pricing.test.ts
+      - name: Test Commerce purchase-plan lookup
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/purchase-plan-lookup.test.ts
+      - name: Certify Commerce purchase-plan lookup with PostgreSQL
+        run: npx tsx v2/modules/commerce/test/purchase-plan-lookup.postgres.certify.ts
       - name: Test Commerce module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/module-composition.test.ts
