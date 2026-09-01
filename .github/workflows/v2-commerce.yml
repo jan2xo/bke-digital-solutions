@@ -59,5 +59,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/purchase-plan-lookup.test.ts
       - name: Certify Commerce purchase-plan lookup with PostgreSQL
         run: npx tsx v2/modules/commerce/test/purchase-plan-lookup.postgres.certify.ts
+      - name: Test Commerce offer redemption
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/offer-redemption.test.ts
+      - name: Certify Commerce offer redemption with PostgreSQL
+        run: npx tsx v2/modules/commerce/test/offer-redemption.postgres.certify.ts
       - name: Test Commerce module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/module-composition.test.ts
