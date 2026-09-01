@@ -1,6 +1,7 @@
 import type { CapabilityModule } from "../../contracts/capability";
 import { ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID } from "./contracts/account-access.contract";
 import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "./contracts/individual-account-creation.contract";
+import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "./contracts/invitation-expiration.contract";
 import { ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID } from "./contracts/invitation-issuance.contract";
 import { ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID } from "./contracts/invitation-resend.contract";
 import { ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID } from "./contracts/invitation-revocation.contract";
@@ -9,6 +10,7 @@ import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "./contracts/
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "./contracts/switchable-account-list.contract";
 import { createAccountsAccountAccessCapability } from "./logic/account-access";
 import { createAccountsIndividualAccountCreationCapability } from "./logic/individual-account-creation";
+import { createAccountsInvitationExpirationCapability } from "./logic/invitation-expiration";
 import { createAccountsInvitationIssuanceCapability } from "./logic/invitation-issuance";
 import { createAccountsInvitationResendCapability } from "./logic/invitation-resend";
 import { createAccountsInvitationRevocationCapability } from "./logic/invitation-revocation";
@@ -18,6 +20,7 @@ import { createAccountsSwitchableAccountListCapability } from "./logic/switchabl
 import { accountsModuleManifest } from "./module.manifest";
 import { createPostgresAccountsAccountAccessRepository } from "./prisma/repositories/postgres-account-access-repository";
 import { createPostgresAccountsIndividualAccountCreationRepository } from "./prisma/repositories/postgres-individual-account-creation-repository";
+import { createPostgresAccountsInvitationExpirationRepository } from "./prisma/repositories/postgres-invitation-expiration-repository";
 import { createPostgresAccountsInvitationIssuanceRepository } from "./prisma/repositories/postgres-invitation-issuance-repository";
 import { createPostgresAccountsInvitationResendRepository } from "./prisma/repositories/postgres-invitation-resend-repository";
 import { createPostgresAccountsInvitationRevocationRepository } from "./prisma/repositories/postgres-invitation-revocation-repository";
@@ -50,6 +53,8 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     createPostgresAccountsInvitationResendRepository(options.connectionString);
   const invitationRevocationRepository =
     createPostgresAccountsInvitationRevocationRepository(options.connectionString);
+  const invitationExpirationRepository =
+    createPostgresAccountsInvitationExpirationRepository(options.connectionString);
   const idProvider = createCryptoAccountsIdProvider();
   const invitationTokenProvider = createCryptoAccountsInvitationTokenProvider();
   const clock = createSystemAccountsClock();
@@ -86,6 +91,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     accountAccess,
     invitationRevocationRepository,
   );
+  const invitationExpiration = createAccountsInvitationExpirationCapability(
+    invitationExpirationRepository,
+    clock,
+  );
 
   return Object.freeze({
     manifest: accountsModuleManifest,
@@ -121,6 +130,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID,
         value: invitationRevocation,
+      },
+      {
+        id: ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
+        value: invitationExpiration,
       },
     ],
   });

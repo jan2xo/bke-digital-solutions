@@ -84,5 +84,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-revocation.test.ts
       - name: Certify Accounts invitation revocation with PostgreSQL
         run: npx tsx v2/modules/accounts/test/invitation-revocation.postgres.certify.ts
+      - name: Test Accounts invitation expiration
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-expiration.test.ts
+      - name: Certify Accounts invitation expiration with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/invitation-expiration.postgres.certify.ts
       - name: Test Accounts module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts

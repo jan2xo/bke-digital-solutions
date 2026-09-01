@@ -9,6 +9,10 @@ import {
   type AccountsIndividualAccountCreationCapability,
 } from "../contracts/individual-account-creation.contract";
 import {
+  ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
+  type AccountsInvitationExpirationCapability,
+} from "../contracts/invitation-expiration.contract";
+import {
   ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
   type AccountsInvitationIssuanceCapability,
 } from "../contracts/invitation-issuance.contract";
@@ -47,6 +51,7 @@ describe("Accounts module composition", () => {
     expect(application.has(ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID)).toBe(true);
+    expect(application.has(ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID)).toBe(true);
     expect(
       typeof application.get<AccountsIndividualAccountCreationCapability>(
         ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID,
@@ -86,6 +91,11 @@ describe("Accounts module composition", () => {
       typeof application.get<AccountsInvitationRevocationCapability>(
         ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID,
       ).revoke,
+    ).toBe("function");
+    expect(
+      typeof application.get<AccountsInvitationExpirationCapability>(
+        ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
+      ).expire,
     ).toBe("function");
   });
 });
