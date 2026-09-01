@@ -260,7 +260,7 @@ try {
     );
   }
 
-  console.log("Identity password change certification GREEN");
+  console.log("Identity credential change certification GREEN");
 } finally {
   await client
     .query(
