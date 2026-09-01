@@ -36,40 +36,105 @@ export interface AccountsModuleOptions {
 }
 
 export function createAccountsModule(options: AccountsModuleOptions): CapabilityModule {
-  const individualAccountCreationRepository = createPostgresAccountsIndividualAccountCreationRepository(options.connectionString);
-  const accountAccessRepository = createPostgresAccountsAccountAccessRepository(options.connectionString);
-  const switchableAccountListRepository = createPostgresAccountsSwitchableAccountListRepository(options.connectionString);
-  const organizationAccountCreationRepository = createPostgresAccountsOrganizationAccountCreationRepository(options.connectionString);
-  const organizationProfileUpdateRepository = createPostgresAccountsOrganizationProfileUpdateRepository(options.connectionString);
-  const invitationIssuanceRepository = createPostgresAccountsInvitationIssuanceRepository(options.connectionString);
-  const invitationResendRepository = createPostgresAccountsInvitationResendRepository(options.connectionString);
-  const invitationRevocationRepository = createPostgresAccountsInvitationRevocationRepository(options.connectionString);
-  const invitationExpirationRepository = createPostgresAccountsInvitationExpirationRepository(options.connectionString);
+  const individualAccountCreationRepository =
+    createPostgresAccountsIndividualAccountCreationRepository(options.connectionString);
+  const accountAccessRepository = createPostgresAccountsAccountAccessRepository(
+    options.connectionString,
+  );
+  const switchableAccountListRepository =
+    createPostgresAccountsSwitchableAccountListRepository(options.connectionString);
+  const organizationAccountCreationRepository =
+    createPostgresAccountsOrganizationAccountCreationRepository(options.connectionString);
+  const organizationProfileUpdateRepository =
+    createPostgresAccountsOrganizationProfileUpdateRepository(options.connectionString);
+  const invitationIssuanceRepository =
+    createPostgresAccountsInvitationIssuanceRepository(options.connectionString);
+  const invitationResendRepository =
+    createPostgresAccountsInvitationResendRepository(options.connectionString);
+  const invitationRevocationRepository =
+    createPostgresAccountsInvitationRevocationRepository(options.connectionString);
+  const invitationExpirationRepository =
+    createPostgresAccountsInvitationExpirationRepository(options.connectionString);
   const idProvider = createCryptoAccountsIdProvider();
   const invitationTokenProvider = createCryptoAccountsInvitationTokenProvider();
   const clock = createSystemAccountsClock();
-  const individualAccountCreation = createAccountsIndividualAccountCreationCapability(individualAccountCreationRepository, idProvider);
+  const individualAccountCreation = createAccountsIndividualAccountCreationCapability(
+    individualAccountCreationRepository,
+    idProvider,
+  );
   const accountAccess = createAccountsAccountAccessCapability(accountAccessRepository);
-  const switchableAccountList = createAccountsSwitchableAccountListCapability(switchableAccountListRepository);
-  const organizationAccountCreation = createAccountsOrganizationAccountCreationCapability(organizationAccountCreationRepository, idProvider);
-  const organizationProfileUpdate = createAccountsOrganizationProfileUpdateCapability(accountAccess, organizationProfileUpdateRepository);
-  const invitationIssuance = createAccountsInvitationIssuanceCapability(accountAccess, invitationIssuanceRepository, idProvider, invitationTokenProvider, clock);
-  const invitationResend = createAccountsInvitationResendCapability(accountAccess, invitationResendRepository, invitationTokenProvider, clock);
-  const invitationRevocation = createAccountsInvitationRevocationCapability(accountAccess, invitationRevocationRepository);
-  const invitationExpiration = createAccountsInvitationExpirationCapability(invitationExpirationRepository, clock);
+  const switchableAccountList = createAccountsSwitchableAccountListCapability(
+    switchableAccountListRepository,
+  );
+  const organizationAccountCreation = createAccountsOrganizationAccountCreationCapability(
+    organizationAccountCreationRepository,
+    idProvider,
+  );
+  const organizationProfileUpdate = createAccountsOrganizationProfileUpdateCapability(
+    accountAccess,
+    organizationProfileUpdateRepository,
+  );
+  const invitationIssuance = createAccountsInvitationIssuanceCapability(
+    accountAccess,
+    invitationIssuanceRepository,
+    idProvider,
+    invitationTokenProvider,
+    clock,
+  );
+  const invitationResend = createAccountsInvitationResendCapability(
+    accountAccess,
+    invitationResendRepository,
+    invitationTokenProvider,
+    clock,
+  );
+  const invitationRevocation = createAccountsInvitationRevocationCapability(
+    accountAccess,
+    invitationRevocationRepository,
+  );
+  const invitationExpiration = createAccountsInvitationExpirationCapability(
+    invitationExpirationRepository,
+    clock,
+  );
 
   return Object.freeze({
     manifest: accountsModuleManifest,
     start: () => [
-      { id: ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID, value: individualAccountCreation },
-      { id: ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID, value: accountAccess },
-      { id: ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID, value: switchableAccountList },
-      { id: ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID, value: organizationAccountCreation },
-      { id: ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID, value: organizationProfileUpdate },
-      { id: ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID, value: invitationIssuance },
-      { id: ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID, value: invitationResend },
-      { id: ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID, value: invitationRevocation },
-      { id: ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID, value: invitationExpiration },
+      {
+        id: ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID,
+        value: individualAccountCreation,
+      },
+      {
+        id: ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+        value: accountAccess,
+      },
+      {
+        id: ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
+        value: switchableAccountList,
+      },
+      {
+        id: ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID,
+        value: organizationAccountCreation,
+      },
+      {
+        id: ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID,
+        value: organizationProfileUpdate,
+      },
+      {
+        id: ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID,
+        value: invitationIssuance,
+      },
+      {
+        id: ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID,
+        value: invitationResend,
+      },
+      {
+        id: ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID,
+        value: invitationRevocation,
+      },
+      {
+        id: ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID,
+        value: invitationExpiration,
+      },
     ],
   });
 }
