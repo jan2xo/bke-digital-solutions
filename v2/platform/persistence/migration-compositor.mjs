@@ -4,16 +4,20 @@ import { join, resolve } from "node:path";
 import { Client } from "pg";
 
 const moduleName = process.argv[2];
+const configuredMigrationsRoot = process.argv[3];
 
 if (!moduleName || !/^[a-z0-9-]+$/.test(moduleName)) {
   throw new Error("A lowercase module name is required.");
 }
 
-const moduleRoot = resolve("v2", "modules", moduleName);
-const migrationsRoot = join(moduleRoot, "prisma", "migrations");
+const migrationsRoot = configuredMigrationsRoot
+  ? resolve(configuredMigrationsRoot)
+  : resolve("v2", "modules", moduleName, "prisma", "migrations");
 
 if (!statSync(migrationsRoot, { throwIfNoEntry: false })?.isDirectory()) {
-  throw new Error(`No module migration directory found for ${moduleName}.`);
+  throw new Error(
+    `No module migration directory found for ${moduleName}: ${migrationsRoot}`,
+  );
 }
 
 const client = new Client({ connectionString: process.env.DATABASE_URL });

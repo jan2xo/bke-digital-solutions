@@ -9,7 +9,6 @@ on:
       - "v2/contracts/**"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
       - ".github/workflows/v2-identity.yml"
       - "next.config.ts"
       - "package.json"
@@ -56,81 +55,13 @@ jobs:
           echo "4d77587762405e5844fe2a4ad38d16c1bea62ac06ac260696f1c2f3cc1b2cb8d  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Identity extraction boundary
-        run: npx tsx v2/modules/identity/test/extraction.certify.ts
       - name: Certify Identity standalone consumer adoption
         run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Identity Prisma schema
-        run: npx prisma validate --config v2/modules/identity/prisma.config.ts
-      - name: Apply Identity baseline
-        run: node v2/platform/persistence/migration-compositor.mjs identity
-      - name: Prove Identity migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs identity
-      - name: Test Identity logic
-        run: >-
-          npx vitest run --config v2/vitest.config.ts
-          v2/modules/identity/test/identity-service.test.ts
-          v2/modules/identity/test/password-authentication.test.ts
-          v2/modules/identity/test/password-change.test.ts
-          v2/modules/identity/test/email-verification-issuance.test.ts
-          v2/modules/identity/test/email-verification-completion.test.ts
-          v2/modules/identity/test/magic-login-request.test.ts
-          v2/modules/identity/test/magic-login-consume.test.ts
-          v2/modules/identity/test/session-issuance.test.ts
-          v2/modules/identity/test/session-validation.test.ts
-          v2/modules/identity/test/session-termination.test.ts
-          v2/modules/identity/test/login-mfa-verification.test.ts
-          v2/modules/identity/test/login-mfa-challenge-issuance.test.ts
-          v2/modules/identity/test/mfa-enrollment-start.test.ts
-          v2/modules/identity/test/mfa-enrollment-completion.test.ts
-          v2/modules/identity/test/mfa-disable.test.ts
-          v2/modules/identity/test/mfa-recovery-regeneration.test.ts
-          v2/modules/identity/test/mfa-emergency-enrollment.test.ts
-          v2/modules/identity/test/recent-auth-challenge-issuance.test.ts
-          v2/modules/identity/test/recent-auth-completion.test.ts
-          v2/modules/identity/test/password-reset-request.test.ts
-          v2/modules/identity/test/password-reset-completion.test.ts
-      - name: Certify Identity persistence
-        run: npx tsx v2/modules/identity/test/persistence.certify.ts
-      - name: Certify Identity password authentication
-        run: npx tsx v2/modules/identity/test/password-authentication.certify.ts
-      - name: Certify Identity password change
-        run: npx tsx v2/modules/identity/test/password-change.certify.ts
-      - name: Certify Identity email verification issuance
-        run: npx tsx v2/modules/identity/test/email-verification-issuance.certify.ts
-      - name: Certify Identity email verification completion
-        run: npx tsx v2/modules/identity/test/email-verification-completion.certify.ts
-      - name: Certify Identity magic-login request
-        run: npx tsx v2/modules/identity/test/magic-login-request.certify.ts
-      - name: Certify Identity magic-login consume
-        run: npx tsx v2/modules/identity/test/magic-login-consume.certify.ts
-      - name: Certify Identity session issuance
-        run: npx tsx v2/modules/identity/test/session-issuance.certify.ts
-      - name: Certify Identity session validation
-        run: npx tsx v2/modules/identity/test/session-validation.certify.ts
-      - name: Certify Identity session termination
-        run: npx tsx v2/modules/identity/test/session-termination.certify.ts
-      - name: Certify Identity login MFA verification
-        run: npx tsx v2/modules/identity/test/login-mfa-verification.certify.ts
-      - name: Certify Identity login MFA challenge issuance
-        run: npx tsx v2/modules/identity/test/login-mfa-challenge-issuance.certify.ts
-      - name: Certify Identity MFA enrollment start
-        run: npx tsx v2/modules/identity/test/mfa-enrollment-start.certify.ts
-      - name: Certify Identity MFA enrollment completion
-        run: npx tsx v2/modules/identity/test/mfa-enrollment-completion.certify.ts
-      - name: Certify Identity MFA disable
-        run: npx tsx v2/modules/identity/test/mfa-disable.certify.ts
-      - name: Certify Identity MFA recovery regeneration
-        run: npx tsx v2/modules/identity/test/mfa-recovery-regeneration.certify.ts
-      - name: Certify Identity emergency MFA enrollment
-        run: npx tsx v2/modules/identity/test/mfa-emergency-enrollment.certify.ts
-      - name: Certify Identity recent-auth challenge issuance
-        run: npx tsx v2/modules/identity/test/recent-auth-challenge-issuance.certify.ts
-      - name: Certify Identity recent-auth completion
-        run: npx tsx v2/modules/identity/test/recent-auth-completion.certify.ts
-      - name: Certify Identity password-reset request
-        run: npx tsx v2/modules/identity/test/password-reset-request.certify.ts
-      - name: Certify Identity password-reset completion
-        run: npx tsx v2/modules/identity/test/password-reset-completion.certify.ts
+      - name: Validate installed Identity Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/identity/prisma/schema.prisma
+      - name: Apply installed Identity baseline
+        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
+      - name: Prove installed Identity migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
