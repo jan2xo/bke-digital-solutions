@@ -57,7 +57,10 @@ describe("Accounts invitation acceptance", () => {
 
   it("preserves repository rejection classification", async () => {
     const repository: AccountsInvitationAcceptanceRepository = {
-      accept: vi.fn(async () => ({ status: "REJECTED", code: "INVITATION_EXPIRED" as const })),
+      accept: vi.fn(async () => ({
+        status: "REJECTED" as const,
+        code: "INVITATION_EXPIRED" as const,
+      })),
     };
     await expect(
       createCapability(repository).accept({
