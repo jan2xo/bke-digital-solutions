@@ -92,5 +92,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/invitation-acceptance.test.ts
       - name: Certify Accounts invitation acceptance with PostgreSQL
         run: npx tsx v2/modules/accounts/test/invitation-acceptance.postgres.certify.ts
+      - name: Test Accounts membership role change
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/membership-role-change.test.ts
+      - name: Certify Accounts membership role change with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/membership-role-change.postgres.certify.ts
       - name: Test Accounts module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts
