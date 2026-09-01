@@ -11,7 +11,14 @@ Owned persistence:
 
 Identity principal identifiers are opaque external IDs. Accounts does not define or foreign-key an Identity `User` table. Composition is responsible for proving that a principal exists before invoking capabilities whose contract requires an existing principal.
 
-The first certified capability is `bke.accounts.individual-account-creation.v1`, extracted from the account portion of V1 registration. It creates one active `INDIVIDUAL` account using the supplied principal ID, normalized display name, and normalized billing email. It intentionally does not create a `Membership` row because V1 individual registration represented ownership through `CustomerAccount.ownerId` only.
+Certified capabilities:
+
+- `bke.accounts.individual-account-creation.v1` — creates the INDIVIDUAL account portion of registration. Ownership is represented by `ownerId`; no Membership row is created.
+- `bke.accounts.account-access.v1` — resolves account access and the effective OWNER/BILLING/LICENSE_MANAGER/MEMBER role, then applies the V1 account capability matrix when a required capability is supplied.
+
+The generic account-access capability deliberately does not impose lifecycle mutability rules. V1 account access and role authorization were separate from organization lifecycle checks; later Accounts capabilities own those lifecycle-specific invariants.
+
+The account role/capability policy is Accounts-owned. Commerce and Licensing consume Accounts authorization results rather than duplicating the matrix.
 
 HTTP, same-origin checks, Identity creation, Legal acceptance, email delivery, sessions, audit transport, Commerce, and Licensing remain outside Accounts.
 
