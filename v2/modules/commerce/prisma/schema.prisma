@@ -44,6 +44,20 @@ enum CommerceOfferRedemptionStatus {
   REFUNDED
 }
 
+enum CommerceOrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum CommerceInvoiceStatus {
+  DRAFT
+  FINAL
+  VOID
+}
+
 model Price {
   id              String                @id
   productId       String
@@ -131,4 +145,82 @@ model OfferRedemption {
   @@index([offerId, status])
   @@index([offerId, accountId, status])
   @@index([accountId, status])
+}
+
+model Order {
+  id              String              @id
+  number          String              @unique
+  accountId       String
+  status          CommerceOrderStatus @default(PENDING)
+  currency        String
+  subtotalMinor   Int
+  taxMinor        Int
+  totalMinor      Int
+  billingSnapshot Json
+  createdAt       DateTime            @default(now())
+  paidAt          DateTime?
+  items           OrderItem[]
+  invoice         Invoice?
+
+  @@index([accountId, createdAt])
+}
+
+model OrderItem {
+  id                  String                   @id
+  orderId             String
+  productId           String
+  priceId             String
+  policyId            String
+  productName         String
+  priceName           String
+  quantity            Int
+  unitAmountMinor     Int
+  totalMinor          Int
+  billingType         CommerceBillingType
+  policySnapshot      Json
+  editionId           String?
+  purchasePlanId      String?
+  planName            String?
+  planType            CommercePurchasePlanType?
+  intervalUnit        CommerceIntervalUnit?
+  intervalCount       Int?
+  renewalBehavior     CommerceRenewalBehavior?
+  entitlementSnapshot Json?
+  pricingSnapshot     Json?
+  catalogAmountMinor  Int?
+  offerId             String?
+  offerDiscountBps    Int?
+  offerDiscountMinor  Int?
+  pricingVersion      String?
+  order               Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model Invoice {
+  id               String                @id
+  number           String                @unique
+  orderId          String                @unique
+  status           CommerceInvoiceStatus @default(DRAFT)
+  customerSnapshot Json
+  currency         String
+  subtotalMinor    Int
+  taxMinor         Int
+  totalMinor       Int
+  issuedAt         DateTime?
+  createdAt        DateTime              @default(now())
+  order            Order                 @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  lines            InvoiceLine[]
+}
+
+model InvoiceLine {
+  id              String  @id
+  invoiceId       String
+  description     String
+  quantity        Int
+  unitAmountMinor Int
+  totalMinor      Int
+  invoice         Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
 }
