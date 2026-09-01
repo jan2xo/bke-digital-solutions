@@ -2,6 +2,7 @@ import { Client } from "pg";
 import type { AccountsMemberRole } from "../../contracts/account.contract";
 import type {
   AccountsMembershipRoleChangeRepository,
+  AccountsMembershipRoleChangeRepositoryInput,
   AccountsMembershipRoleChangeRepositoryResult,
 } from "../../logic/membership-role-change-repository";
 
@@ -21,7 +22,9 @@ export function createPostgresAccountsMembershipRoleChangeRepository(
   }
 
   return Object.freeze({
-    async updateRole(input): Promise<AccountsMembershipRoleChangeRepositoryResult> {
+    async updateRole(
+      input: AccountsMembershipRoleChangeRepositoryInput,
+    ): Promise<AccountsMembershipRoleChangeRepositoryResult> {
       const client = new Client({ connectionString: normalizedConnectionString });
       await client.connect();
       try {
