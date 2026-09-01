@@ -96,5 +96,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/membership-role-change.test.ts
       - name: Certify Accounts membership role change with PostgreSQL
         run: npx tsx v2/modules/accounts/test/membership-role-change.postgres.certify.ts
+      - name: Test Accounts membership removal
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/membership-removal.test.ts
+      - name: Certify Accounts membership removal with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/membership-removal.postgres.certify.ts
       - name: Test Accounts module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts
