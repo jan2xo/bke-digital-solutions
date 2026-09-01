@@ -142,7 +142,7 @@ try {
     throw new Error(`Consumed password-reset token was replayable: ${JSON.stringify(replay)}`);
   }
 
-  console.log("Identity password-reset completion certification GREEN");
+  console.log("Identity credential reset completion certification GREEN");
 } finally {
   await client.query(
     `DROP TRIGGER IF EXISTS identity_password_reset_cert_fail_revoke_trigger ON "Session"`,

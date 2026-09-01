@@ -64,6 +64,7 @@
     "deploy": "bash scripts/deploy-production.sh"
   },
   "dependencies": {
+    "@bke/identity": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.1.0/bke-identity-0.1.0.tgz",
     "@aws-sdk/client-s3": "^3.883.0",
     "@aws-sdk/s3-request-presigner": "^3.883.0",
     "@prisma/adapter-pg": "7.9.1",

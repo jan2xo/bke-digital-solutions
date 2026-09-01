@@ -10,10 +10,12 @@ on:
       - "v2/modules/*/module.ts"
       - "v2/modules/*/module.manifest.ts"
       - "v2/modules/*/contracts/**"
+      - "v2/modules/identity/test/consumer-adoption.certify.ts"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
       - ".github/workflows/v2-composition.yml"
+      - "next.config.ts"
       - "package.json"
       - "package-lock.json"
   workflow_dispatch:
@@ -31,8 +33,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Identity package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-identity-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.1.0/bke-identity-0.1.0.tgz
+          echo "4d77587762405e5844fe2a4ad38d16c1bea62ac06ac260696f1c2f3cc1b2cb8d  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Identity standalone consumer adoption
+        run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Test composition root
