@@ -71,6 +71,11 @@ function packageName(specifier: string) {
   return specifier.split("/")[0];
 }
 
+function sqlTextFromPersistenceFile(path: string, source: string) {
+  if (extension(path) === ".sql") return source;
+  return [...source.matchAll(/`([\s\S]*?)`/g)].map((match) => match[1]).join("\n");
+}
+
 const requiredPaths = [
   "module.manifest.ts",
   "prisma.config.ts",
@@ -149,7 +154,8 @@ const tableReferencePattern =
   /\b(?:FROM|JOIN|UPDATE|INTO|REFERENCES|DELETE\s+FROM|CREATE\s+TABLE(?:\s+IF\s+NOT\s+EXISTS)?)\s+"([A-Za-z0-9_]+)"/gi;
 for (const persistenceFile of persistenceFiles) {
   const source = readFileSync(persistenceFile, "utf8");
-  for (const match of source.matchAll(tableReferencePattern)) {
+  const sqlText = sqlTextFromPersistenceFile(persistenceFile, source);
+  for (const match of sqlText.matchAll(tableReferencePattern)) {
     const table = match[1];
     if (!allowedModels.has(table)) {
       violations.push(
