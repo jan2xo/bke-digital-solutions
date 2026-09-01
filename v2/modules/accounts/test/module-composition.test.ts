@@ -49,6 +49,10 @@ import {
   type AccountsOrganizationCloseCapability,
 } from "../contracts/organization-close.contract";
 import {
+  ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID,
+  type AccountsOrganizationDetailCapability,
+} from "../contracts/organization-detail.contract";
+import {
   ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID,
   type AccountsOrganizationProfileUpdateCapability,
 } from "../contracts/organization-profile-update.contract";
@@ -73,6 +77,7 @@ describe("Accounts module composition", () => {
     expect(application.has(ACCOUNTS_ORGANIZATION_ACCOUNT_CREATION_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID)).toBe(true);
+    expect(application.has(ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_ISSUANCE_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_RESEND_CAPABILITY_ID)).toBe(true);
     expect(application.has(ACCOUNTS_INVITATION_REVOCATION_CAPABILITY_ID)).toBe(true);
@@ -111,6 +116,11 @@ describe("Accounts module composition", () => {
       typeof application.get<AccountsOrganizationCloseCapability>(
         ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID,
       ).close,
+    ).toBe("function");
+    expect(
+      typeof application.get<AccountsOrganizationDetailCapability>(
+        ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID,
+      ).get,
     ).toBe("function");
     expect(
       typeof application.get<AccountsInvitationIssuanceCapability>(
