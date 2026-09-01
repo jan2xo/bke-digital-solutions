@@ -23,6 +23,27 @@ enum CommerceIntervalUnit {
   YEAR
 }
 
+enum CommerceDiscountType {
+  GENERAL_PROMOTION
+  CUSTOMER_ACCOUNT_OFFER
+  ADMINISTRATIVE_ADJUSTMENT
+}
+
+enum CommerceDiscountStatus {
+  DRAFT
+  ACTIVE
+  DISABLED
+  REVOKED
+  EXPIRED
+}
+
+enum CommerceOfferRedemptionStatus {
+  RESERVED
+  APPLIED
+  RELEASED
+  REFUNDED
+}
+
 model Price {
   id              String                @id
   productId       String
@@ -58,4 +79,56 @@ model PurchasePlan {
 
   @@unique([editionId, type])
   @@index([editionId, active])
+}
+
+model DiscountOffer {
+  id                        String                 @id
+  codeNormalized            String?                @unique
+  name                      String
+  description               String?
+  type                      CommerceDiscountType
+  status                    CommerceDiscountStatus @default(DRAFT)
+  discountBps               Int
+  startsAt                  DateTime
+  endsAt                    DateTime?
+  productId                 String?
+  editionId                 String?
+  purchasePlanId            String?
+  customerAccountId         String?
+  maximumRedemptions        Int?
+  perAccountRedemptionLimit Int?
+  discountedBillingCycles   Int?
+  allowZeroTotal            Boolean                @default(false)
+  createdById               String
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @default(now()) @updatedAt
+  revokedAt                 DateTime?
+  redemptions               OfferRedemption[]
+
+  @@index([status, startsAt, endsAt])
+  @@index([customerAccountId, status])
+  @@index([purchasePlanId, status])
+}
+
+model OfferRedemption {
+  id                      String                         @id
+  offerId                 String
+  accountId               String
+  orderId                 String                         @unique
+  status                  CommerceOfferRedemptionStatus  @default(RESERVED)
+  discountBps             Int
+  discountedBillingCycles Int?
+  baseMinor               Int
+  discountMinor           Int
+  finalMinor              Int
+  currency                String
+  pricingVersion          String
+  reservedAt              DateTime                       @default(now())
+  appliedAt               DateTime?
+  releasedAt              DateTime?
+  offer                   DiscountOffer                  @relation(fields: [offerId], references: [id], onDelete: Restrict)
+
+  @@index([offerId, status])
+  @@index([offerId, accountId, status])
+  @@index([accountId, status])
 }
