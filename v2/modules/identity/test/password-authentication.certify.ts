@@ -124,7 +124,7 @@ try {
     throw new Error(`Missing-identity fail-closed proof failed: ${JSON.stringify(missingIdentity)}`);
   }
 
-  console.log("Identity password authentication certification GREEN");
+  console.log("Identity authentication certification GREEN");
 } finally {
   await client.end();
 }
