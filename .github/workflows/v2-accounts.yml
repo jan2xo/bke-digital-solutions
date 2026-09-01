@@ -60,5 +60,9 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/account-access.test.ts
       - name: Certify Accounts account access with PostgreSQL
         run: npx tsx v2/modules/accounts/test/account-access.postgres.certify.ts
+      - name: Test Accounts switchable account list
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/switchable-account-list.test.ts
+      - name: Certify Accounts switchable account list with PostgreSQL
+        run: npx tsx v2/modules/accounts/test/switchable-account-list.postgres.certify.ts
       - name: Test Accounts module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/accounts/test/module-composition.test.ts
