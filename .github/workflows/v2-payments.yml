@@ -12,6 +12,9 @@ on:
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
       - ".github/workflows/v2-payments.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
@@ -43,21 +46,32 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Payments package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-payments-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.1.0/bke-payments-0.1.0.tgz
+          echo "d28c5fd37360e717416c4827c4aba48bf960685f324565b7ae0ca948eb318f41  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Payments extraction boundary
+      - name: Certify Payments consumer adoption while staging remains
+        run: npx tsx v2/modules/payments/test/consumer-adoption.certify.ts
+      - name: Certify Payments staging extraction boundary
         run: npx tsx v2/modules/payments/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Payments Prisma schema
-        run: npx prisma validate --schema v2/modules/payments/prisma/schema.prisma
-      - name: Apply Payments migrations
-        run: node v2/platform/persistence/migration-compositor.mjs payments
-      - name: Prove Payments migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs payments
-      - name: Test Payments capabilities
+      - name: Validate installed Payments Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/payments/prisma/schema.prisma
+      - name: Apply installed Payments migrations
+        run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+      - name: Prove installed Payments migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+      - name: Regression-test Payments staging capabilities
         run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/checkout-attempt.test.ts v2/modules/payments/test/provider-event-ingestion.test.ts v2/modules/payments/test/settlement-fact.test.ts v2/modules/payments/test/refund-initiation.test.ts
-      - name: Certify PayMongo provider adapter
+      - name: Regression-test PayMongo staging adapter
         run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/paymongo-adapter.test.ts
       - name: Certify Payments checkout attempt with PostgreSQL
         run: npx tsx v2/modules/payments/test/checkout-attempt.postgres.certify.ts
@@ -67,5 +81,5 @@ jobs:
         run: npx tsx v2/modules/payments/test/settlement-fact.postgres.certify.ts
       - name: Certify Payments refund initiation with PostgreSQL
         run: npx tsx v2/modules/payments/test/refund-initiation.postgres.certify.ts
-      - name: Test Payments module composition
+      - name: Test package-backed Payments module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/module-composition.test.ts
