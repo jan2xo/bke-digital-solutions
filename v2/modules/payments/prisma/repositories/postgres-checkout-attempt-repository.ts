@@ -90,7 +90,7 @@ export function createPostgresPaymentsCheckoutAttemptRepository(
       });
     },
 
-    async markPending(id, externalCheckoutId, checkoutUrl) {
+    async markPending(id: string, externalCheckoutId: string, checkoutUrl: string) {
       return withClient(async (client) => {
         const result = await client.query<CheckoutAttemptRow>(
           `UPDATE "PaymentCheckoutAttempt"
@@ -108,7 +108,7 @@ export function createPostgresPaymentsCheckoutAttemptRepository(
       });
     },
 
-    async markFailed(id, failureCode) {
+    async markFailed(id: string, failureCode: string) {
       return withClient(async (client) => {
         const result = await client.query<CheckoutAttemptRow>(
           `UPDATE "PaymentCheckoutAttempt"
