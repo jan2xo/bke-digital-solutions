@@ -21,4 +21,5 @@ export interface PaymentsRefundRepository {
   findSettlementFact(id: string): Promise<PaymentsSettlementFactSnapshot | null>;
   claim(input: PaymentsRefundOperationClaim): Promise<PaymentsRefundClaimResult>;
   markProviderResult(id: string, externalRefundId: string, state: "PENDING" | "SUCCEEDED" | "FAILED"): Promise<PaymentsRefundOperationSnapshot & { readonly notes: string | null }>;
+  markFailed(id: string): Promise<PaymentsRefundOperationSnapshot & { readonly notes: string | null }>;
 }
