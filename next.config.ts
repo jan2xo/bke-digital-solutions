@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "@bke/accounts",
     "@bke/legal",
     "@bke/licensing",
+    "@bke/entitlements",
   ],
 };
 

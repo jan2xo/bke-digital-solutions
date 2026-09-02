@@ -1,8 +1,8 @@
 import type { CapabilityModule } from "../../contracts/capability";
-import { ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID } from "./contracts/durable-right-grant.contract";
-import { createEntitlementsDurableRightGrantCapability } from "./logic/durable-right-grant";
-import { entitlementsModuleManifest } from "./module.manifest";
-import { createPostgresEntitlementsDurableRightGrantRepository } from "./prisma/repositories/postgres-durable-right-grant-repository";
+import { ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID } from "@bke/entitlements/contracts/durable-right-grant.contract";
+import { createEntitlementsDurableRightGrantCapability } from "@bke/entitlements/logic/durable-right-grant";
+import { entitlementsModuleManifest } from "@bke/entitlements/module.manifest";
+import { createPostgresEntitlementsDurableRightGrantRepository } from "@bke/entitlements/prisma/repositories/postgres-durable-right-grant-repository";
 
 export interface EntitlementsModuleOptions {
   readonly connectionString: string;

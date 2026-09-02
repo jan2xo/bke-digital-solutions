@@ -12,6 +12,9 @@ on:
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
       - ".github/workflows/v2-entitlements.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
@@ -43,23 +46,34 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Entitlements package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-entitlements-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz
+          echo "f9c0bb1d464c9271076333a6c5012478cd9bc3cec9e9571a3ba4c2b0d2b1257b  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Entitlements extraction boundary
+      - name: Certify Entitlements standalone consumer adoption
+        run: npx tsx v2/modules/entitlements/test/consumer-adoption.certify.ts
+      - name: Certify Entitlements staging extraction boundary
         run: npx tsx v2/modules/entitlements/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Entitlements Prisma schema
-        run: npx prisma validate --schema v2/modules/entitlements/prisma/schema.prisma
-      - name: Apply Entitlements baseline
-        run: node v2/platform/persistence/migration-compositor.mjs entitlements
-      - name: Prove Entitlements migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs entitlements
+      - name: Validate installed Entitlements Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/entitlements/prisma/schema.prisma
+      - name: Apply installed Entitlements baseline
+        run: node v2/platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations
+      - name: Prove installed Entitlements migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations
       - name: Certify Entitlements persistence isolation
         run: npx tsx v2/modules/entitlements/test/persistence-isolation.certify.ts
-      - name: Test durable-right grant
+      - name: Test durable-right grant staging regression
         run: npx vitest run --config v2/vitest.config.ts v2/modules/entitlements/test/durable-right-grant.test.ts
-      - name: Certify durable-right grant with PostgreSQL
+      - name: Certify durable-right grant staging regression with PostgreSQL
         run: npx tsx v2/modules/entitlements/test/durable-right-grant.postgres.certify.ts
-      - name: Test Entitlements module composition
+      - name: Test Entitlements package-backed host module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/entitlements/test/module-composition.test.ts
