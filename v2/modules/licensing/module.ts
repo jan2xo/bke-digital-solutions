@@ -1,10 +1,10 @@
 import type { CapabilityModule } from "../../contracts/capability";
-import { LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID } from "./contracts/license-key-reveal.contract";
-import { createLicensingLicenseKeyRevealCapability } from "./logic/license-key-reveal";
-import { licensingModuleManifest } from "./module.manifest";
-import { createPostgresLicensingLicenseKeyRevealRepository } from "./prisma/repositories/postgres-license-key-reveal-repository";
-import { createAesGcmLicensingLicenseKeyDecrypter } from "./providers/aes-gcm-license-key-decrypter";
-import { createSystemLicensingClock } from "./providers/system-licensing-clock";
+import { LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID } from "@bke/licensing/contracts/license-key-reveal.contract";
+import { createLicensingLicenseKeyRevealCapability } from "@bke/licensing/logic/license-key-reveal";
+import { licensingModuleManifest } from "@bke/licensing/module.manifest";
+import { createPostgresLicensingLicenseKeyRevealRepository } from "@bke/licensing/prisma/repositories/postgres-license-key-reveal-repository";
+import { createAesGcmLicensingLicenseKeyDecrypter } from "@bke/licensing/providers/aes-gcm-license-key-decrypter";
+import { createSystemLicensingClock } from "@bke/licensing/providers/system-licensing-clock";
 
 export interface LicensingModuleOptions {
   readonly connectionString: string;
