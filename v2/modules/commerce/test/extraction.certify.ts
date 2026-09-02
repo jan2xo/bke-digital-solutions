@@ -24,11 +24,12 @@ const reusableFiles = [
   ...extractableRoots.flatMap(filesUnder),
   resolve(moduleRoot, "module.manifest.ts"),
 ];
+const at = "@";
 const forbiddenMarkers = [
-  'from "@bke/',
-  "from '@bke/",
-  'from "@/',
-  "from '@/",
+  `from "${at}bke/`,
+  `from '${at}bke/`,
+  `from "${at}/`,
+  `from '${at}/`,
   'from "next/',
   "from 'next/",
   'from "server-only"',
@@ -84,7 +85,7 @@ if (JSON.stringify(models) !== JSON.stringify(expectedModels)) {
 }
 
 const hostModule = readFileSync(resolve(moduleRoot, "module.ts"), "utf8");
-for (const marker of ["@bke/accounts/", "@bke/legal/", "@bke/payments/", "@bke/entitlements/"]) {
+for (const marker of [`${at}bke/accounts/`, `${at}bke/legal/`, `${at}bke/payments/`, `${at}bke/entitlements/`]) {
   if (!hostModule.includes(marker)) throw new Error(`Commerce host adapter is missing expected composition dependency: ${marker}`);
 }
 
