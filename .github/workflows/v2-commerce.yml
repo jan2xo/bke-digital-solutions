@@ -67,5 +67,7 @@ jobs:
         run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/order-invoice-creation.test.ts
       - name: Certify Commerce order and invoice creation with PostgreSQL
         run: npx tsx v2/modules/commerce/test/order-invoice-creation.postgres.certify.ts
+      - name: Test Commerce checkout orchestration
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/checkout-orchestration.test.ts
       - name: Test Commerce module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/commerce/test/module-composition.test.ts
