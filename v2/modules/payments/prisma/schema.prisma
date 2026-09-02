@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../../../generated/payments"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PaymentCheckoutAttemptStatus {
+  CREATING
+  PENDING
+  FAILED
+}
+
+model PaymentCheckoutAttempt {
+  id                 String                       @id
+  sourceReference    String                       @unique
+  commercialReference String
+  provider           String
+  requestFingerprint String
+  amountMinor        Int
+  currency           String
+  payerSnapshot      Json
+  itemsSnapshot      Json
+  status             PaymentCheckoutAttemptStatus @default(CREATING)
+  externalCheckoutId String?
+  checkoutUrl        String?
+  failureCode        String?
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
+
+  @@unique([provider, externalCheckoutId])
+  @@index([provider, status])
+  @@index([createdAt])
+}
