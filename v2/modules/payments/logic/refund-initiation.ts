@@ -48,7 +48,7 @@ export function createPaymentsRefundInitiationCapability(
   if (!providerName) throw new Error("Payments refund provider name is required.");
 
   return Object.freeze({
-    async initiate(input): Promise<PaymentsInitiateRefundResult> {
+    async initiate(input: PaymentsInitiateRefundInput): Promise<PaymentsInitiateRefundResult> {
       const normalized = normalize(input);
       if (!normalized) return { status: "FAILED", code: "INVALID_INPUT" };
 
