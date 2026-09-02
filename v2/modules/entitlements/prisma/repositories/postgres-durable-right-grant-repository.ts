@@ -26,7 +26,11 @@ type EntitlementRow = {
 type ExistingEntitlementRow = EntitlementRow & { matches: boolean };
 
 function json(value: unknown): string {
-  return JSON.stringify(value);
+  return JSON.stringify(value ?? null);
+}
+
+function copyDate(value: Date): Date {
+  return new Date(value.getTime());
 }
 
 function snapshot(row: EntitlementRow): EntitlementsDurableRightSnapshot {
@@ -39,9 +43,9 @@ function snapshot(row: EntitlementRow): EntitlementsDurableRightSnapshot {
     quantity: row.quantity,
     scopeSnapshot: row.scopeSnapshot,
     grantSnapshot: row.grantSnapshot,
-    validFrom: new Date(row.validFrom),
-    validUntil: row.validUntil ? new Date(row.validUntil) : null,
-    createdAt: new Date(row.createdAt),
+    validFrom: copyDate(row.validFrom),
+    validUntil: row.validUntil ? copyDate(row.validUntil) : null,
+    createdAt: copyDate(row.createdAt),
   };
 }
 
