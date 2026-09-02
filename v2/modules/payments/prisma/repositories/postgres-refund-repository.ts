@@ -162,5 +162,20 @@ export function createPostgresPaymentsRefundRepository(connectionString: string)
         return toRefund(result.rows[0]!);
       });
     },
+
+    async markFailed(id: string) {
+      return withClient(async (client) => {
+        const result = await client.query<RefundRow>(
+          `UPDATE "PaymentRefundOperation"
+              SET "state" = 'FAILED',
+                  "updatedAt" = CURRENT_TIMESTAMP
+            WHERE "id" = $1
+            RETURNING *`,
+          [id],
+        );
+        if (result.rowCount !== 1) throw new Error("Payments refund operation not found.");
+        return toRefund(result.rows[0]!);
+      });
+    },
   });
 }
