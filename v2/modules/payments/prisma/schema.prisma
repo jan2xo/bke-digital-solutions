@@ -14,23 +14,50 @@ enum PaymentCheckoutAttemptStatus {
 }
 
 model PaymentCheckoutAttempt {
-  id                 String                       @id
-  sourceReference    String                       @unique
+  id                  String                       @id
+  sourceReference     String                       @unique
   commercialReference String
-  provider           String
-  requestFingerprint String
-  amountMinor        Int
-  currency           String
-  payerSnapshot      Json
-  itemsSnapshot      Json
-  status             PaymentCheckoutAttemptStatus @default(CREATING)
-  externalCheckoutId String?
-  checkoutUrl        String?
-  failureCode        String?
-  createdAt          DateTime                     @default(now())
-  updatedAt          DateTime                     @updatedAt
+  provider            String
+  requestFingerprint  String
+  amountMinor         Int
+  currency            String
+  payerSnapshot       Json
+  itemsSnapshot       Json
+  status              PaymentCheckoutAttemptStatus @default(CREATING)
+  externalCheckoutId  String?
+  checkoutUrl         String?
+  failureCode         String?
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime                     @updatedAt
 
   @@unique([provider, externalCheckoutId])
   @@index([provider, status])
   @@index([createdAt])
+}
+
+model PaymentProviderEvent {
+  id                 String   @id
+  provider           String
+  eventId            String
+  payloadHash        String
+  eventFingerprint   String
+  rawType            String?
+  type               String
+  externalPaymentId  String?
+  externalCheckoutId String?
+  reference          String?
+  externalRefundId   String?
+  refundStatus       String?
+  amountMinor        Int?
+  currency           String?
+  livemode           Boolean
+  occurredAt         DateTime
+  receivedAt         DateTime @default(now())
+
+  @@unique([provider, eventId])
+  @@index([provider, type, occurredAt])
+  @@index([externalPaymentId])
+  @@index([externalCheckoutId])
+  @@index([reference])
+  @@index([receivedAt])
 }

@@ -49,13 +49,15 @@ jobs:
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate Payments Prisma schema
         run: npx prisma validate --schema v2/modules/payments/prisma/schema.prisma
-      - name: Apply Payments baseline
+      - name: Apply Payments migrations
         run: node v2/platform/persistence/migration-compositor.mjs payments
       - name: Prove Payments migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs payments
-      - name: Test Payments checkout attempt
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/checkout-attempt.test.ts
+      - name: Test Payments capabilities
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/checkout-attempt.test.ts v2/modules/payments/test/provider-event-ingestion.test.ts
       - name: Certify Payments checkout attempt with PostgreSQL
         run: npx tsx v2/modules/payments/test/checkout-attempt.postgres.certify.ts
+      - name: Certify Payments provider-event ingestion with PostgreSQL
+        run: npx tsx v2/modules/payments/test/provider-event-ingestion.postgres.certify.ts
       - name: Test Payments module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/module-composition.test.ts
