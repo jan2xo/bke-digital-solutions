@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 const EXPECTED_RELEASE =
   "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz";
 const EXPECTED_VERSION = "0.1.0";
+const EXPECTED_SHA256 =
+  "f9c0bb1d464c9271076333a6c5012478cd9bc3cec9e9571a3ba4c2b0d2b1257b";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -63,7 +65,7 @@ for (const marker of forbiddenStagingSpecifiers) {
   }
 }
 
-const requiredStagingPaths = [
+const forbiddenStagingPaths = [
   "contracts",
   "docs",
   "logic",
@@ -76,10 +78,10 @@ const requiredStagingPaths = [
   "test/persistence-isolation.certify.ts",
   "test/module-composition.test.ts",
 ];
-for (const path of requiredStagingPaths) {
-  if (!existsSync(resolve(moduleRoot, path))) {
+for (const path of forbiddenStagingPaths) {
+  if (existsSync(resolve(moduleRoot, path))) {
     throw new Error(
-      `Entitlements staging source was deleted before package-backed consumer certification: ${path}`,
+      `Entitlements staging path must be retired after library adoption: ${path}`,
     );
   }
 }
@@ -129,13 +131,17 @@ if (!nextConfigSource.includes('"@bke/entitlements"')) {
   );
 }
 
-if (
-  !entitlementsWorkflowSource.includes("node_modules/@bke/entitlements/prisma/schema.prisma") ||
-  !entitlementsWorkflowSource.includes("node_modules/@bke/entitlements/migrations")
-) {
-  throw new Error(
-    "Entitlements CI must validate and compose persistence from the installed @bke/entitlements package.",
-  );
+const requiredWorkflowMarkers = [
+  EXPECTED_RELEASE,
+  EXPECTED_SHA256,
+  "node_modules/@bke/entitlements/prisma/schema.prisma",
+  "node_modules/@bke/entitlements/migrations",
+  "Certify Entitlements consumer adoption and staging retirement",
+];
+for (const marker of requiredWorkflowMarkers) {
+  if (!entitlementsWorkflowSource.includes(marker)) {
+    throw new Error(`Entitlements CI is missing package-backed retirement guardrail: ${marker}`);
+  }
 }
 
 if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
@@ -145,5 +151,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Entitlements standalone consumer adoption GREEN; staging retained for certified comparison; version=${EXPECTED_VERSION} integrity=${lockedEntitlements.integrity}`,
+  `Entitlements package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedEntitlements.integrity}`,
 );
