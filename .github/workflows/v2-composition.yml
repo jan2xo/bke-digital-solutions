@@ -10,6 +10,7 @@ on:
       - "v2/modules/*/module.ts"
       - "v2/modules/*/module.manifest.ts"
       - "v2/modules/*/contracts/**"
+      - "v2/modules/payments/providers/**"
       - "v2/modules/identity/test/consumer-adoption.certify.ts"
       - "v2/modules/accounts/test/consumer-adoption.certify.ts"
       - "v2/modules/legal/test/consumer-adoption.certify.ts"
@@ -99,4 +100,4 @@ jobs:
       - name: Test composition root
         run: npx vitest run --config v2/vitest.config.ts v2/platform/composition/test/composer.test.ts
       - name: Boot disposable composition
-        run: npx tsx v2/apps/orchestrator/bootstrap.ts
+        run: npx tsx v2/apps/orchestrator/certify.ts
