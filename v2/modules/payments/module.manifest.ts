@@ -1,6 +1,7 @@
 import type { ModuleManifest } from "../../contracts/capability";
 import { PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID } from "./contracts/checkout-attempt.contract";
 import { PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID } from "./contracts/provider-event-ingestion.contract";
+import { PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID } from "./contracts/settlement-fact.contract";
 
 export const paymentsModuleManifest = Object.freeze({
   moduleId: "payments",
@@ -8,5 +9,6 @@ export const paymentsModuleManifest = Object.freeze({
   provides: [
     PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
     PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID,
+    PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
   ],
 } satisfies ModuleManifest);
