@@ -26,6 +26,22 @@ interface RefundRow {
   updatedAt: Date | string;
 }
 
+interface SettlementRow {
+  id: string;
+  providerEventRecordId: string;
+  checkoutAttemptId: string;
+  provider: string;
+  eventId: string;
+  externalPaymentId: string;
+  externalCheckoutId: string;
+  commercialReference: string;
+  amountMinor: number;
+  currency: string;
+  livemode: boolean;
+  settledAt: Date | string;
+  createdAt: Date | string;
+}
+
 function toRefund(row: RefundRow): PaymentsRefundOperationSnapshot & { readonly notes: string | null } {
   return Object.freeze({
     refundOperationId: row.id,
@@ -44,7 +60,7 @@ function toRefund(row: RefundRow): PaymentsRefundOperationSnapshot & { readonly 
   });
 }
 
-function toSettlement(row: any): PaymentsSettlementFactSnapshot {
+function toSettlement(row: SettlementRow): PaymentsSettlementFactSnapshot {
   return Object.freeze({
     settlementFactId: row.id,
     providerEventRecordId: row.providerEventRecordId,
@@ -79,8 +95,11 @@ export function createPostgresPaymentsRefundRepository(connectionString: string)
   return Object.freeze({
     async findSettlementFact(id: string) {
       return withClient(async (client) => {
-        const result = await client.query(`SELECT * FROM "PaymentSettlementFact" WHERE "id" = $1`, [id]);
-        return result.rowCount === 1 ? toSettlement(result.rows[0]) : null;
+        const result = await client.query<SettlementRow>(
+          `SELECT * FROM "PaymentSettlementFact" WHERE "id" = $1`,
+          [id],
+        );
+        return result.rowCount === 1 ? toSettlement(result.rows[0]!) : null;
       });
     },
 

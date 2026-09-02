@@ -16,6 +16,7 @@ on:
       - "v2/modules/legal/test/consumer-adoption.certify.ts"
       - "v2/modules/licensing/test/consumer-adoption.certify.ts"
       - "v2/modules/entitlements/test/consumer-adoption.certify.ts"
+      - "v2/modules/payments/test/consumer-adoption.certify.ts"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
@@ -83,6 +84,15 @@ jobs:
             -o "$artifact" \
             https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz
           echo "f9c0bb1d464c9271076333a6c5012478cd9bc3cec9e9571a3ba4c2b0d2b1257b  $artifact" | sha256sum -c -
+      - name: Verify certified Payments package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-payments-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.1.0/bke-payments-0.1.0.tgz
+          echo "d28c5fd37360e717416c4827c4aba48bf960685f324565b7ae0ca948eb318f41  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Identity standalone consumer adoption
@@ -95,6 +105,8 @@ jobs:
         run: npx tsx v2/modules/licensing/test/consumer-adoption.certify.ts
       - name: Certify Entitlements standalone consumer adoption
         run: npx tsx v2/modules/entitlements/test/consumer-adoption.certify.ts
+      - name: Certify Payments standalone consumer adoption
+        run: npx tsx v2/modules/payments/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Test composition root
