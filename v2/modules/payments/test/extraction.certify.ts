@@ -88,7 +88,7 @@ const requiredPaths = [
   "prisma/repositories",
   "contracts",
   "logic",
-  "providers/paymongo.ts",
+  "providers/paymongo/paymongo-adapter.ts",
   "providers",
   "test",
   "docs/EXTRACTION-BOUNDARY.md",
