@@ -1,0 +1,79 @@
+name: V2 Standalone Capability Host
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/apps/standalone/**"
+      - "v2/modules/**"
+      - "v2/platform/composition/**"
+      - "v2/platform/persistence/migration-compositor.mjs"
+      - "v2/contracts/**"
+      - "v2/tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/v2-standalone.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  standalone:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_standalone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_standalone"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_standalone
+      V2_STANDALONE_SESSION_SECRET: v2-standalone-certification-session-secret-2026
+      V2_STANDALONE_LICENSE_PEPPER: v2-standalone-certification-license-pepper-2026
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Typecheck V2 standalone host
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Apply Identity migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
+      - name: Apply Accounts migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
+      - name: Apply Legal migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
+      - name: Apply Commerce migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs commerce
+      - name: Apply Payments migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+      - name: Apply Entitlements migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations
+      - name: Apply Licensing migrations to fresh PostgreSQL
+        run: node v2/platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
+      - name: Prove all module migrations are idempotent together
+        shell: bash
+        run: |
+          set -euo pipefail
+          node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
+          node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
+          node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
+          node v2/platform/persistence/migration-compositor.mjs commerce
+          node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+          node v2/platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations
+          node v2/platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
+      - name: Boot V2 standalone capability host
+        run: npx tsx v2/apps/standalone/bootstrap.ts
