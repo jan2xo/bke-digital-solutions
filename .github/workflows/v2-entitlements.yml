@@ -1,0 +1,63 @@
+name: V2 Module - Entitlements
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/modules/entitlements/**"
+      - "v2/platform/persistence/migration-compositor.mjs"
+      - "v2/platform/composition/**"
+      - "v2/contracts/**"
+      - "v2/tooling/check-module-boundaries.mjs"
+      - "v2/tsconfig.json"
+      - "v2/vitest.config.ts"
+      - ".github/workflows/v2-entitlements.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  entitlements:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_entitlements
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_entitlements"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_entitlements
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Validate Entitlements Prisma schema
+        run: npx prisma validate --schema v2/modules/entitlements/prisma/schema.prisma
+      - name: Apply Entitlements baseline
+        run: node v2/platform/persistence/migration-compositor.mjs entitlements
+      - name: Prove Entitlements migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs entitlements
+      - name: Certify Entitlements persistence isolation
+        run: npx tsx v2/modules/entitlements/test/persistence-isolation.certify.ts
+      - name: Test durable-right grant
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/entitlements/test/durable-right-grant.test.ts
+      - name: Certify durable-right grant with PostgreSQL
+        run: npx tsx v2/modules/entitlements/test/durable-right-grant.postgres.certify.ts
+      - name: Test Entitlements module composition
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/entitlements/test/module-composition.test.ts
