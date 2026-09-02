@@ -13,6 +13,13 @@ enum PaymentCheckoutAttemptStatus {
   FAILED
 }
 
+enum PaymentRefundOperationState {
+  CREATING
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
 model PaymentCheckoutAttempt {
   id                  String                       @id
   sourceReference     String                       @unique
@@ -81,4 +88,26 @@ model PaymentSettlementFact {
   @@index([checkoutAttemptId])
   @@index([commercialReference])
   @@index([settledAt])
+}
+
+model PaymentRefundOperation {
+  id                String                      @id
+  sourceReference   String                      @unique
+  settlementFactId  String
+  provider          String
+  externalPaymentId String
+  externalRefundId  String?
+  amountMinor       Int
+  currency          String
+  reason            String
+  notes             String?
+  state             PaymentRefundOperationState @default(CREATING)
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime                    @updatedAt
+
+  @@unique([provider, externalRefundId])
+  @@index([settlementFactId])
+  @@index([externalPaymentId])
+  @@index([state])
+  @@index([createdAt])
 }
