@@ -54,12 +54,14 @@ jobs:
       - name: Prove Payments migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs payments
       - name: Test Payments capabilities
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/checkout-attempt.test.ts v2/modules/payments/test/provider-event-ingestion.test.ts v2/modules/payments/test/settlement-fact.test.ts
+        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/checkout-attempt.test.ts v2/modules/payments/test/provider-event-ingestion.test.ts v2/modules/payments/test/settlement-fact.test.ts v2/modules/payments/test/refund-initiation.test.ts
       - name: Certify Payments checkout attempt with PostgreSQL
         run: npx tsx v2/modules/payments/test/checkout-attempt.postgres.certify.ts
       - name: Certify Payments provider-event ingestion with PostgreSQL
         run: npx tsx v2/modules/payments/test/provider-event-ingestion.postgres.certify.ts
       - name: Certify Payments settlement fact with PostgreSQL
         run: npx tsx v2/modules/payments/test/settlement-fact.postgres.certify.ts
+      - name: Certify Payments refund initiation with PostgreSQL
+        run: npx tsx v2/modules/payments/test/refund-initiation.postgres.certify.ts
       - name: Test Payments module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/module-composition.test.ts
