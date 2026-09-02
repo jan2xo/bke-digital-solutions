@@ -5,6 +5,8 @@ import type {
   CommerceSettlementRecord,
 } from "../../logic/settlement-reaction-repository";
 
+type SettlementInput = Parameters<CommerceSettlementReactionRepository["settle"]>[0];
+
 interface OrderRow {
   id: string;
   accountId: string;
@@ -54,7 +56,7 @@ export function createPostgresCommerceSettlementReactionRepository(
   if (!normalized) throw new Error("Commerce PostgreSQL connection string is required.");
 
   return Object.freeze({
-    async settle(input) {
+    async settle(input: SettlementInput) {
       const client = new Client({ connectionString: normalized });
       await client.connect();
       try {
