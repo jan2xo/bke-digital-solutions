@@ -57,6 +57,7 @@ const forbiddenStagingSpecifiers = [
   '"./contracts/',
   '"./logic/',
   '"./prisma/repositories/',
+  '"./providers/',
   '"./module.manifest"',
 ];
 for (const marker of forbiddenStagingSpecifiers) {
@@ -65,7 +66,7 @@ for (const marker of forbiddenStagingSpecifiers) {
   }
 }
 
-const requiredStagingPaths = [
+const forbiddenStagingPaths = [
   "contracts",
   "docs",
   "logic",
@@ -85,10 +86,10 @@ const requiredStagingPaths = [
   "test/extraction.certify.ts",
   "test/module-composition.test.ts",
 ];
-for (const path of requiredStagingPaths) {
-  if (!existsSync(resolve(moduleRoot, path))) {
+for (const path of forbiddenStagingPaths) {
+  if (existsSync(resolve(moduleRoot, path))) {
     throw new Error(
-      `Payments staging must remain present during package consumer adoption: ${path}`,
+      `Payments staging path must be retired after library adoption: ${path}`,
     );
   }
 }
@@ -141,11 +142,23 @@ const requiredWorkflowMarkers = [
   EXPECTED_SHA256,
   "node_modules/@bke/payments/prisma/schema.prisma",
   "node_modules/@bke/payments/migrations",
-  "Certify Payments consumer adoption while staging remains",
+  "Certify Payments consumer adoption and staging retirement",
 ];
 for (const marker of requiredWorkflowMarkers) {
   if (!paymentsWorkflowSource.includes(marker)) {
-    throw new Error(`Payments CI is missing package-backed adoption guardrail: ${marker}`);
+    throw new Error(`Payments CI is missing package-backed retirement guardrail: ${marker}`);
+  }
+}
+
+const forbiddenWorkflowMarkers = [
+  "v2/modules/payments/test/extraction.certify.ts",
+  "v2/modules/payments/test/paymongo-adapter.test.ts",
+  "v2/modules/payments/test/module-composition.test.ts",
+  "Regression-test Payments staging capabilities",
+];
+for (const marker of forbiddenWorkflowMarkers) {
+  if (paymentsWorkflowSource.includes(marker)) {
+    throw new Error(`Payments CI still depends on retired staging: ${marker}`);
   }
 }
 
@@ -156,5 +169,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Payments package-backed consumer adoption GREEN; staging retained; version=${EXPECTED_VERSION} integrity=${lockedPayments.integrity}`,
+  `Payments package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedPayments.integrity}`,
 );
