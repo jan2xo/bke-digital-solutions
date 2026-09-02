@@ -45,6 +45,8 @@ jobs:
       - run: npm ci
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Legal extraction boundary
+        run: npx tsx v2/modules/legal/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate Legal Prisma schema
@@ -53,6 +55,8 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs legal
       - name: Prove Legal migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs legal
+      - name: Certify Legal persistence isolation
+        run: npx tsx v2/modules/legal/test/persistence-isolation.certify.ts
       - name: Test Legal acceptance
         run: npx vitest run --config v2/vitest.config.ts v2/modules/legal/test/acceptance.test.ts
       - name: Certify Legal acceptance with PostgreSQL
