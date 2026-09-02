@@ -57,10 +57,8 @@ jobs:
           echo "d28c5fd37360e717416c4827c4aba48bf960685f324565b7ae0ca948eb318f41  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Payments consumer adoption while staging remains
+      - name: Certify Payments consumer adoption and staging retirement
         run: npx tsx v2/modules/payments/test/consumer-adoption.certify.ts
-      - name: Certify Payments staging extraction boundary
-        run: npx tsx v2/modules/payments/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate installed Payments Prisma schema
@@ -69,17 +67,3 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
       - name: Prove installed Payments migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
-      - name: Regression-test Payments staging capabilities
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/checkout-attempt.test.ts v2/modules/payments/test/provider-event-ingestion.test.ts v2/modules/payments/test/settlement-fact.test.ts v2/modules/payments/test/refund-initiation.test.ts
-      - name: Regression-test PayMongo staging adapter
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/paymongo-adapter.test.ts
-      - name: Certify Payments checkout attempt with PostgreSQL
-        run: npx tsx v2/modules/payments/test/checkout-attempt.postgres.certify.ts
-      - name: Certify Payments provider-event ingestion with PostgreSQL
-        run: npx tsx v2/modules/payments/test/provider-event-ingestion.postgres.certify.ts
-      - name: Certify Payments settlement fact with PostgreSQL
-        run: npx tsx v2/modules/payments/test/settlement-fact.postgres.certify.ts
-      - name: Certify Payments refund initiation with PostgreSQL
-        run: npx tsx v2/modules/payments/test/refund-initiation.postgres.certify.ts
-      - name: Test package-backed Payments module composition
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/payments/test/module-composition.test.ts
