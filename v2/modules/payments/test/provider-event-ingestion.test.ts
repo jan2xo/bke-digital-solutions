@@ -5,7 +5,10 @@ import type {
   PaymentsProviderEventRecord,
   PaymentsProviderEventRepository,
 } from "../logic/provider-event-repository";
-import type { PaymentsProviderEventVerifier } from "../logic/provider-event-verifier";
+import type {
+  PaymentsProviderEventVerifier,
+  PaymentsVerifiedProviderEvent,
+} from "../logic/provider-event-verifier";
 
 function repository(): PaymentsProviderEventRepository {
   const records = new Map<string, PaymentsProviderEventRecord>();
@@ -24,10 +27,10 @@ function repository(): PaymentsProviderEventRepository {
   };
 }
 
-const verifiedEvent = {
+const verifiedEvent: PaymentsVerifiedProviderEvent = {
   eventId: "evt_123",
   rawType: "payment.paid",
-  type: "payment.paid" as const,
+  type: "payment.paid",
   externalPaymentId: "pay_123",
   externalCheckoutId: "cs_123",
   reference: "BKE-2026-00123",
@@ -37,7 +40,7 @@ const verifiedEvent = {
   occurredAt: new Date("2026-09-02T00:00:00.000Z"),
 };
 
-function verifier(event = verifiedEvent): PaymentsProviderEventVerifier {
+function verifier(event: PaymentsVerifiedProviderEvent = verifiedEvent): PaymentsProviderEventVerifier {
   return {
     name: "fakepay",
     async verifyAndParse() {
