@@ -11,18 +11,18 @@ const unusedResolver = {
 
 describe("Licensing module composition", () => {
   it("registers the key reveal capability without sibling-domain dependencies", async () => {
-    const module = createLicensingModule({
+    const licensingModule = createLicensingModule({
       connectionString: "postgresql://bke:bke@localhost:5432/bke_v2_licensing",
       licensePepper: "composition-pepper",
     });
 
-    expect(module.manifest.moduleId).toBe("bke.licensing");
-    expect(module.manifest.needs).toEqual([]);
-    expect(module.manifest.provides).toEqual([
+    expect(licensingModule.manifest.moduleId).toBe("bke.licensing");
+    expect(licensingModule.manifest.needs).toEqual([]);
+    expect(licensingModule.manifest.provides).toEqual([
       LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID,
     ]);
 
-    const registrations = await module.start(unusedResolver);
+    const registrations = await licensingModule.start(unusedResolver);
     expect(registrations).toHaveLength(1);
     expect(registrations[0]?.id).toBe(LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID);
     expect(registrations[0]?.value).toMatchObject({ reveal: expect.any(Function) });
