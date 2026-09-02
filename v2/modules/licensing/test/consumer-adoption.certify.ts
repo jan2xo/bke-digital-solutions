@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
   "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.1.0/bke-licensing-0.1.0.tgz";
@@ -58,6 +58,39 @@ const forbiddenStagingSpecifiers = [
 for (const marker of forbiddenStagingSpecifiers) {
   if (moduleSource.includes(marker)) {
     throw new Error(`Licensing host adapter still consumes staging implementation: ${marker}`);
+  }
+}
+
+const retiredStagingPaths = [
+  "../contracts",
+  "../docs",
+  "../logic",
+  "../providers",
+  "../prisma",
+  "../module.manifest.ts",
+  "../prisma.config.ts",
+  "./extraction.certify.ts",
+  "./license-key-reveal.postgres.certify.ts",
+  "./license-key-reveal.test.ts",
+  "./module-composition.test.ts",
+  "./persistence-isolation.certify.ts",
+];
+
+async function pathExists(relativePath: string): Promise<boolean> {
+  try {
+    await access(new URL(relativePath, import.meta.url));
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return false;
+    }
+    throw error;
+  }
+}
+
+for (const retiredPath of retiredStagingPaths) {
+  if (await pathExists(retiredPath)) {
+    throw new Error(`Retired Licensing staging path reappeared: ${retiredPath}`);
   }
 }
 
@@ -122,5 +155,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Licensing standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedLicensing.integrity}`,
+  `Licensing standalone consumer adoption + staging retirement GREEN version=${EXPECTED_VERSION} integrity=${lockedLicensing.integrity}`,
 );
