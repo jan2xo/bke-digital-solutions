@@ -10,6 +10,7 @@ on:
       - "v2/modules/*/module.ts"
       - "v2/modules/*/module.manifest.ts"
       - "v2/modules/*/contracts/**"
+      - "v2/modules/payments/providers/**"
       - "v2/modules/identity/test/consumer-adoption.certify.ts"
       - "v2/modules/accounts/test/consumer-adoption.certify.ts"
       - "v2/modules/legal/test/consumer-adoption.certify.ts"
