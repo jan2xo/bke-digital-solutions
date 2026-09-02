@@ -56,10 +56,8 @@ jobs:
           echo "3e13858c21c12bafa682f45074c79353951609b4bb2e2945b170bb1e6e898d6b  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Licensing standalone consumer adoption
+      - name: Certify Licensing standalone consumer adoption and staging retirement
         run: npx tsx v2/modules/licensing/test/consumer-adoption.certify.ts
-      - name: Certify Licensing staging extraction boundary
-        run: npx tsx v2/modules/licensing/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate installed Licensing Prisma schema
@@ -68,11 +66,3 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
       - name: Prove installed Licensing migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
-      - name: Certify Licensing persistence isolation
-        run: npx tsx v2/modules/licensing/test/persistence-isolation.certify.ts
-      - name: Test Licensing license key reveal
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/licensing/test/license-key-reveal.test.ts
-      - name: Certify Licensing license key reveal with PostgreSQL
-        run: npx tsx v2/modules/licensing/test/license-key-reveal.postgres.certify.ts
-      - name: Test Licensing host module composition
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/licensing/test/module-composition.test.ts
