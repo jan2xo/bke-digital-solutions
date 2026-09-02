@@ -61,3 +61,24 @@ model PaymentProviderEvent {
   @@index([reference])
   @@index([receivedAt])
 }
+
+model PaymentSettlementFact {
+  id                    String   @id
+  providerEventRecordId String   @unique
+  checkoutAttemptId     String
+  provider              String
+  eventId               String
+  externalPaymentId     String
+  externalCheckoutId    String
+  commercialReference   String
+  amountMinor           Int
+  currency              String
+  livemode              Boolean
+  settledAt             DateTime
+  createdAt             DateTime @default(now())
+
+  @@unique([provider, externalPaymentId])
+  @@index([checkoutAttemptId])
+  @@index([commercialReference])
+  @@index([settledAt])
+}
