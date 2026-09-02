@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { composeCapabilities } from "../../../platform/composition/composer";
 import {
+  COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID,
+  type CommerceOfferRedemptionCapability,
+} from "../contracts/offer-redemption.contract";
+import {
+  COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID,
+  type CommerceOrderInvoiceCreationCapability,
+} from "../contracts/order-invoice-creation.contract";
+import {
   COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID,
   type CommercePurchasePlanLookupCapability,
 } from "../contracts/purchase-plan-lookup.contract";
@@ -19,6 +27,8 @@ describe("Commerce module composition", () => {
     expect(application.moduleIds).toContain("commerce");
     expect(application.has(COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID)).toBe(true);
     expect(application.has(COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID)).toBe(true);
+    expect(application.has(COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID)).toBe(true);
+    expect(application.has(COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID)).toBe(true);
     expect(
       typeof application.get<CommercePurchasePlanPricingCapability>(
         COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
@@ -28,6 +38,16 @@ describe("Commerce module composition", () => {
       typeof application.get<CommercePurchasePlanLookupCapability>(
         COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID,
       ).find,
+    ).toBe("function");
+    const offerRedemption = application.get<CommerceOfferRedemptionCapability>(
+      COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID,
+    );
+    expect(typeof offerRedemption.reserve).toBe("function");
+    expect(typeof offerRedemption.transition).toBe("function");
+    expect(
+      typeof application.get<CommerceOrderInvoiceCreationCapability>(
+        COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID,
+      ).create,
     ).toBe("function");
   });
 });
