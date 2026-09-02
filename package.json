@@ -66,6 +66,7 @@
   "dependencies": {
     "@bke/accounts": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.1.0/bke-accounts-0.1.0.tgz",
     "@bke/identity": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.1.0/bke-identity-0.1.0.tgz",
+    "@bke/legal": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.1.0/bke-legal-0.1.0.tgz",
     "@aws-sdk/client-s3": "^3.883.0",
     "@aws-sdk/s3-request-presigner": "^3.883.0",
     "@prisma/adapter-pg": "7.9.1",
