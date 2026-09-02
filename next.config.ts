@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   allowedDevOrigins: ["127.0.0.1"],
-  transpilePackages: ["@bke/identity", "@bke/accounts"],
+  transpilePackages: ["@bke/identity", "@bke/accounts", "@bke/legal"],
 };
 
 export default nextConfig;
