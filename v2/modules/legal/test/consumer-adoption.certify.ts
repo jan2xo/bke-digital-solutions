@@ -1,8 +1,12 @@
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
   "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.1.0/bke-legal-0.1.0.tgz";
 const EXPECTED_VERSION = "0.1.0";
+const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
   moduleSource,
@@ -56,6 +60,25 @@ const forbiddenStagingSpecifiers = [
 for (const marker of forbiddenStagingSpecifiers) {
   if (moduleSource.includes(marker)) {
     throw new Error(`Legal host adapter still consumes staging implementation: ${marker}`);
+  }
+}
+
+const forbiddenStagingPaths = [
+  "contracts",
+  "docs",
+  "logic",
+  "module.manifest.ts",
+  "prisma.config.ts",
+  "prisma",
+  "test/acceptance.test.ts",
+  "test/acceptance.postgres.certify.ts",
+  "test/extraction.certify.ts",
+  "test/persistence-isolation.certify.ts",
+  "test/module-composition.test.ts",
+];
+for (const path of forbiddenStagingPaths) {
+  if (existsSync(resolve(moduleRoot, path))) {
+    throw new Error(`Legal staging implementation was not retired: ${path}`);
   }
 }
 
@@ -120,5 +143,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Legal standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedLegal.integrity}`,
+  `Legal standalone consumer adoption GREEN; staging retired; version=${EXPECTED_VERSION} integrity=${lockedLegal.integrity}`,
 );
