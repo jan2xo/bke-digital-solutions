@@ -1,20 +1,20 @@
 import type { CapabilityModule } from "../../contracts/capability";
-import { PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID } from "./contracts/checkout-attempt.contract";
-import { PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID } from "./contracts/provider-event-ingestion.contract";
-import { PAYMENTS_REFUND_INITIATION_CAPABILITY_ID } from "./contracts/refund-initiation.contract";
-import { PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID } from "./contracts/settlement-fact.contract";
-import { createPaymentsCheckoutAttemptCapability } from "./logic/checkout-attempt";
-import type { PaymentsCheckoutProvider } from "./logic/checkout-attempt-provider";
-import { createPaymentsProviderEventIngestionCapability } from "./logic/provider-event-ingestion";
-import type { PaymentsProviderEventVerifier } from "./logic/provider-event-verifier";
-import { createPaymentsRefundInitiationCapability } from "./logic/refund-initiation";
-import type { PaymentsRefundProvider } from "./logic/refund-provider";
-import { createPaymentsSettlementFactCapability } from "./logic/settlement-fact";
-import { paymentsModuleManifest } from "./module.manifest";
-import { createPostgresPaymentsCheckoutAttemptRepository } from "./prisma/repositories/postgres-checkout-attempt-repository";
-import { createPostgresPaymentsProviderEventRepository } from "./prisma/repositories/postgres-provider-event-repository";
-import { createPostgresPaymentsRefundRepository } from "./prisma/repositories/postgres-refund-repository";
-import { createPostgresPaymentsSettlementFactRepository } from "./prisma/repositories/postgres-settlement-fact-repository";
+import { PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID } from "@bke/payments/contracts/checkout-attempt.contract";
+import { PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID } from "@bke/payments/contracts/provider-event-ingestion.contract";
+import { PAYMENTS_REFUND_INITIATION_CAPABILITY_ID } from "@bke/payments/contracts/refund-initiation.contract";
+import { PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID } from "@bke/payments/contracts/settlement-fact.contract";
+import { createPaymentsCheckoutAttemptCapability } from "@bke/payments/logic/checkout-attempt";
+import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-attempt-provider";
+import { createPaymentsProviderEventIngestionCapability } from "@bke/payments/logic/provider-event-ingestion";
+import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
+import { createPaymentsRefundInitiationCapability } from "@bke/payments/logic/refund-initiation";
+import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
+import { createPaymentsSettlementFactCapability } from "@bke/payments/logic/settlement-fact";
+import { paymentsModuleManifest } from "@bke/payments/module.manifest";
+import { createPostgresPaymentsCheckoutAttemptRepository } from "@bke/payments/prisma/repositories/postgres-checkout-attempt-repository";
+import { createPostgresPaymentsProviderEventRepository } from "@bke/payments/prisma/repositories/postgres-provider-event-repository";
+import { createPostgresPaymentsRefundRepository } from "@bke/payments/prisma/repositories/postgres-refund-repository";
+import { createPostgresPaymentsSettlementFactRepository } from "@bke/payments/prisma/repositories/postgres-settlement-fact-repository";
 
 export interface PaymentsModuleOptions {
   readonly connectionString: string;
