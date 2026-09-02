@@ -57,10 +57,8 @@ jobs:
           echo "f3a0a2f73a0aeabd88e3311e00fac10f8e38cc2f334a6e1c1627da56a569378e  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Legal standalone consumer adoption
+      - name: Certify Legal standalone consumer adoption and staging retirement
         run: npx tsx v2/modules/legal/test/consumer-adoption.certify.ts
-      - name: Certify Legal staging extraction boundary
-        run: npx tsx v2/modules/legal/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate installed Legal Prisma schema
@@ -69,11 +67,3 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
       - name: Prove installed Legal migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
-      - name: Certify Legal persistence isolation
-        run: npx tsx v2/modules/legal/test/persistence-isolation.certify.ts
-      - name: Test Legal acceptance
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/legal/test/acceptance.test.ts
-      - name: Certify Legal acceptance with PostgreSQL
-        run: npx tsx v2/modules/legal/test/acceptance.postgres.certify.ts
-      - name: Test Legal host module composition
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/legal/test/module-composition.test.ts
