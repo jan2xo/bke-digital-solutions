@@ -13,8 +13,12 @@ export interface PaymentsRefundOperationClaim {
   readonly notes: string | null;
 }
 
+export type PaymentsRefundClaimResult =
+  | { readonly outcome: "CLAIMED"; readonly created: boolean; readonly record: PaymentsRefundOperationSnapshot & { readonly notes: string | null } }
+  | { readonly outcome: "AMOUNT_EXCEEDS_SETTLEMENT" };
+
 export interface PaymentsRefundRepository {
   findSettlementFact(id: string): Promise<PaymentsSettlementFactSnapshot | null>;
-  claim(input: PaymentsRefundOperationClaim): Promise<{ readonly created: boolean; readonly record: PaymentsRefundOperationSnapshot & { readonly notes: string | null } }>;
+  claim(input: PaymentsRefundOperationClaim): Promise<PaymentsRefundClaimResult>;
   markProviderResult(id: string, externalRefundId: string, state: "PENDING" | "SUCCEEDED" | "FAILED"): Promise<PaymentsRefundOperationSnapshot & { readonly notes: string | null }>;
 }
