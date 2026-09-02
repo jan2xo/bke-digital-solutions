@@ -63,7 +63,7 @@ const expectedModules = [
   "commerce",
   "payments",
   "entitlements",
-  "licensing",
+  "bke.licensing",
 ] as const;
 
 for (const moduleId of expectedModules) {
