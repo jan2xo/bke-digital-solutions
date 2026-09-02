@@ -12,6 +12,7 @@ on:
       - "v2/modules/*/contracts/**"
       - "v2/modules/identity/test/consumer-adoption.certify.ts"
       - "v2/modules/accounts/test/consumer-adoption.certify.ts"
+      - "v2/modules/legal/test/consumer-adoption.certify.ts"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
@@ -52,12 +53,23 @@ jobs:
             -o "$artifact" \
             https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.1.0/bke-accounts-0.1.0.tgz
           echo "3837547a2d5d5084616d848b9b1a4674cc24a73a1b8285155e148808cdbdd511  $artifact" | sha256sum -c -
+      - name: Verify certified Legal package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-legal-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.1.0/bke-legal-0.1.0.tgz
+          echo "f3a0a2f73a0aeabd88e3311e00fac10f8e38cc2f334a6e1c1627da56a569378e  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Identity standalone consumer adoption
         run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
       - name: Certify Accounts standalone consumer adoption
         run: npx tsx v2/modules/accounts/test/consumer-adoption.certify.ts
+      - name: Certify Legal standalone consumer adoption
+        run: npx tsx v2/modules/legal/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Test composition root
