@@ -123,7 +123,7 @@ export function createPaymentsCheckoutAttemptCapability(
   if (!providerName) throw new Error("PAYMENTS_PROVIDER_NAME_REQUIRED");
 
   return Object.freeze({
-    async create(input): Promise<PaymentsCreateCheckoutAttemptResult> {
+    async create(input: PaymentsCreateCheckoutAttemptInput): Promise<PaymentsCreateCheckoutAttemptResult> {
       const normalized = normalize(input);
       if (!normalized) {
         return { status: "FAILED", code: "INVALID_INPUT" };
