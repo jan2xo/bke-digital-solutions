@@ -44,6 +44,8 @@ jobs:
       - run: npm ci
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Licensing extraction boundary
+        run: npx tsx v2/modules/licensing/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Validate Licensing Prisma schema
