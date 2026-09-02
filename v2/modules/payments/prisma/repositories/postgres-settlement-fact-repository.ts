@@ -1,6 +1,13 @@
 import { Client } from "pg";
+import type {
+  PaymentsProviderEventType,
+  PaymentsRefundStatus,
+} from "../../contracts/provider-event-ingestion.contract";
 import type { PaymentsSettlementFactSnapshot } from "../../contracts/settlement-fact.contract";
-import type { PaymentsCheckoutAttemptRecord } from "../../logic/checkout-attempt-repository";
+import type {
+  PaymentsCheckoutAttemptRecord,
+  PaymentsCheckoutAttemptState,
+} from "../../logic/checkout-attempt-repository";
 import type {
   PaymentsSettlementFactClaim,
   PaymentsSettlementFactRepository,
@@ -21,6 +28,44 @@ interface SettlementRow {
   livemode: boolean;
   settledAt: Date | string;
   createdAt: Date | string;
+}
+
+interface ProviderEventRow {
+  id: string;
+  provider: string;
+  eventId: string;
+  payloadHash: string;
+  eventFingerprint: string;
+  rawType: string | null;
+  type: PaymentsProviderEventType;
+  externalPaymentId: string | null;
+  externalCheckoutId: string | null;
+  reference: string | null;
+  externalRefundId: string | null;
+  refundStatus: PaymentsRefundStatus | null;
+  amountMinor: number | null;
+  currency: string | null;
+  livemode: boolean;
+  occurredAt: Date | string;
+  receivedAt: Date | string;
+}
+
+interface CheckoutAttemptRow {
+  id: string;
+  sourceReference: string;
+  commercialReference: string;
+  provider: string;
+  requestFingerprint: string;
+  amountMinor: number;
+  currency: string;
+  payerSnapshot: unknown;
+  itemsSnapshot: unknown;
+  status: PaymentsCheckoutAttemptState;
+  externalCheckoutId: string | null;
+  checkoutUrl: string | null;
+  failureCode: string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
 function toSettlement(row: SettlementRow): PaymentsSettlementFactSnapshot {
@@ -60,11 +105,11 @@ export function createPostgresPaymentsSettlementFactRepository(
   return Object.freeze({
     async findProviderEventById(id: string) {
       return withClient(async (client) => {
-        const result = await client.query(
+        const result = await client.query<ProviderEventRow>(
           `SELECT * FROM "PaymentProviderEvent" WHERE "id" = $1`, [id],
         );
         if (result.rowCount === 0) return null;
-        const row = result.rows[0] as any;
+        const row = result.rows[0]!;
         const record: PaymentsProviderEventRecord = Object.freeze({
           id: row.id,
           provider: row.provider,
@@ -90,12 +135,12 @@ export function createPostgresPaymentsSettlementFactRepository(
 
     async findCheckoutAttempt(provider: string, externalCheckoutId: string) {
       return withClient(async (client) => {
-        const result = await client.query(
+        const result = await client.query<CheckoutAttemptRow>(
           `SELECT * FROM "PaymentCheckoutAttempt" WHERE "provider" = $1 AND "externalCheckoutId" = $2`,
           [provider, externalCheckoutId],
         );
         if (result.rowCount === 0) return null;
-        const row = result.rows[0] as any;
+        const row = result.rows[0]!;
         const record: PaymentsCheckoutAttemptRecord = Object.freeze({
           ...row,
           amountMinor: Number(row.amountMinor),
