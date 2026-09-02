@@ -12,6 +12,9 @@ on:
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
       - ".github/workflows/v2-legal.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
@@ -43,23 +46,34 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Legal package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-legal-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.1.0/bke-legal-0.1.0.tgz
+          echo "f3a0a2f73a0aeabd88e3311e00fac10f8e38cc2f334a6e1c1627da56a569378e  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Legal extraction boundary
+      - name: Certify Legal standalone consumer adoption
+        run: npx tsx v2/modules/legal/test/consumer-adoption.certify.ts
+      - name: Certify Legal staging extraction boundary
         run: npx tsx v2/modules/legal/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Legal Prisma schema
-        run: npx prisma validate --schema v2/modules/legal/prisma/schema.prisma
-      - name: Apply Legal baseline
-        run: node v2/platform/persistence/migration-compositor.mjs legal
-      - name: Prove Legal migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs legal
+      - name: Validate installed Legal Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/legal/prisma/schema.prisma
+      - name: Apply installed Legal baseline
+        run: node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
+      - name: Prove installed Legal migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
       - name: Certify Legal persistence isolation
         run: npx tsx v2/modules/legal/test/persistence-isolation.certify.ts
       - name: Test Legal acceptance
         run: npx vitest run --config v2/vitest.config.ts v2/modules/legal/test/acceptance.test.ts
       - name: Certify Legal acceptance with PostgreSQL
         run: npx tsx v2/modules/legal/test/acceptance.postgres.certify.ts
-      - name: Test Legal module composition
+      - name: Test Legal host module composition
         run: npx vitest run --config v2/vitest.config.ts v2/modules/legal/test/module-composition.test.ts
