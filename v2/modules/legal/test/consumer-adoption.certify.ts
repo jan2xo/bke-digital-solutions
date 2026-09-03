@@ -4,8 +4,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.1.0/bke-legal-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.2.0/bke-legal-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -48,6 +48,17 @@ const requiredPackageSurfaces = [
 for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Legal host adapter is missing standalone package surface: ${marker}`);
+  }
+}
+
+const requiredCheckoutRequirementSurfaces = [
+  "LEGAL_CHECKOUT_REQUIREMENTS_CAPABILITY_ID",
+  "createLegalCheckoutRequirementsCapability",
+  "createPostgresLegalCheckoutRequirementsRepository",
+];
+for (const marker of requiredCheckoutRequirementSurfaces) {
+  if (!moduleSource.includes(marker)) {
+    throw new Error(`Legal host adapter is missing checkout requirements surface: ${marker}`);
   }
 }
 
@@ -143,5 +154,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Legal standalone consumer adoption GREEN; staging retired; version=${EXPECTED_VERSION} integrity=${lockedLegal.integrity}`,
+  `Legal standalone consumer adoption GREEN; checkout requirements exposed; staging retired; version=${EXPECTED_VERSION} integrity=${lockedLegal.integrity}`,
 );

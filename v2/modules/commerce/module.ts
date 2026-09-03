@@ -8,6 +8,7 @@ import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "@bke/commerce/con
 import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-lookup.contract";
 import { COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "@bke/commerce/contracts/settlement-reaction.contract";
+import { COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID } from "@bke/commerce/contracts/zero-payment-fulfillment.contract";
 import { createCommerceCheckoutOrchestrationCapability } from "@bke/commerce/logic/checkout-orchestration";
 import type {
   CommerceAccountPurchaseAuthorizer,
@@ -23,11 +24,13 @@ import type {
   CommerceEntitlementGranter,
   CommercePaymentsSettlementReconciler,
 } from "@bke/commerce/logic/settlement-reaction-ports";
+import { createCommerceZeroPaymentFulfillmentCapability } from "@bke/commerce/logic/zero-payment-fulfillment";
 import { commerceModuleManifest } from "@bke/commerce/module.manifest";
 import { createPostgresCommerceOfferRedemptionRepository } from "@bke/commerce/prisma/repositories/postgres-offer-redemption-repository";
 import { createPostgresCommerceOrderInvoiceCreationRepository } from "@bke/commerce/prisma/repositories/postgres-order-invoice-creation-repository";
 import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
 import { createPostgresCommerceSettlementReactionRepository } from "@bke/commerce/prisma/repositories/postgres-settlement-reaction-repository";
+import { createPostgresCommerceZeroPaymentFulfillmentRepository } from "@bke/commerce/prisma/repositories/postgres-zero-payment-fulfillment-repository";
 import {
   ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
   type EntitlementsDurableRightGrantCapability,
@@ -62,6 +65,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   );
   const purchasePlanPricing = createCommercePurchasePlanPricingCapability();
   const settlementRepository = createPostgresCommerceSettlementReactionRepository(
+    options.connectionString,
+  );
+  const zeroPaymentRepository = createPostgresCommerceZeroPaymentFulfillmentRepository(
     options.connectionString,
   );
 
@@ -134,10 +140,27 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         },
       };
 
+      const entitlements: CommerceEntitlementGranter = {
+        async grant(input) {
+          const result = await entitlementGrant.grant(input);
+          if (result.status === "GRANTED" || result.status === "EXISTING") {
+            return { status: result.status };
+          }
+          if (result.status === "REJECTED") return { status: "REJECTED" };
+          return { status: "FAILED" };
+        },
+      };
+
+      const zeroPaymentFulfillment = createCommerceZeroPaymentFulfillmentCapability({
+        repository: zeroPaymentRepository,
+        entitlements,
+      });
+
       const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({
         accountAuthorizer,
         legalChecker,
         orderInvoiceCreation,
+        zeroPaymentFulfillment,
         paymentStarter,
       });
 
@@ -145,17 +168,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         async reconcile(input) {
           const result = await paymentSettlement.reconcile(input);
           if (result.status === "SETTLED") return { status: "SETTLED", value: result.value };
-          if (result.status === "REJECTED") return { status: "REJECTED" };
-          return { status: "FAILED" };
-        },
-      };
-
-      const entitlements: CommerceEntitlementGranter = {
-        async grant(input) {
-          const result = await entitlementGrant.grant(input);
-          if (result.status === "GRANTED" || result.status === "EXISTING") {
-            return { status: result.status };
-          }
           if (result.status === "REJECTED") return { status: "REJECTED" };
           return { status: "FAILED" };
         },
@@ -174,6 +186,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         { id: COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID, value: orderInvoiceCreation },
         { id: COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID, value: checkoutOrchestration },
         { id: COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID, value: settlementReaction },
+        { id: COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID, value: zeroPaymentFulfillment },
       ];
     },
   });

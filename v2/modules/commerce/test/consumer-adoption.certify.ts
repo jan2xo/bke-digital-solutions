@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.1.0/bke-commerce-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.2.0/bke-commerce-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 const EXPECTED_SHA256 =
-  "9cdb41e3607c87768a44c71d1eca690ddb23b5ff175c2eef1f4ebb2b9907bc14";
+  "e29458fdf468e475bb524c76788237eb1f846ca885753fe78ca8efd731185173";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -29,6 +29,10 @@ for (const marker of [
   "@bke/commerce/logic/",
   "@bke/commerce/prisma/repositories/",
   "@bke/commerce/module.manifest",
+  "COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID",
+  "createCommerceZeroPaymentFulfillmentCapability",
+  "createPostgresCommerceZeroPaymentFulfillmentRepository",
+  "zeroPaymentFulfillment",
 ]) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Commerce host adapter is missing standalone package surface: ${marker}`);
@@ -95,6 +99,7 @@ for (const forbiddenWorkflowMarker of [
   "v2/modules/commerce/test/order-invoice-creation.test.ts",
   "v2/modules/commerce/test/checkout-orchestration.test.ts",
   "v2/modules/commerce/test/settlement-reaction.test.ts",
+  "v2/modules/commerce/test/zero-payment-fulfillment.test.ts",
   "v2/modules/commerce/test/module-composition.test.ts",
 ]) {
   if (commerceWorkflowSource.includes(forbiddenWorkflowMarker)) {
