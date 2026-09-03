@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { audit } from "@/lib/audit";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { acceptedVersionSchema, assertProductIdChangeAllowed, productIdSchema, validateAcceptedVersionRange } from "@/lib/product-identity";
 
 const schema = z.object({ productId: productIdSchema.optional(), minimumAcceptedVersion: acceptedVersionSchema.nullable().optional(), maximumAcceptedVersion: acceptedVersionSchema.nullable().optional(), name: z.string().trim().min(2).max(120).optional(), slug: z.string().regex(/^[a-z0-9-]+$/).max(80).optional(), summary: z.string().trim().min(10).max(240).optional(), description: z.string().trim().min(10).max(10_000).optional(), category: z.string().trim().min(2).max(80).optional(), licenseType: z.string().trim().min(2).max(80).optional(), featured: z.boolean().optional(), imageKey: z.string().trim().max(500).nullable().optional(), tags: z.array(z.string().trim().min(1).max(40)).max(20).optional(), action: z.enum(["PUBLISH", "UNPUBLISH", "ARCHIVE", "RESTORE"]).optional() }).strict();

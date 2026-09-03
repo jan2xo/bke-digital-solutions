@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { assertSameOrigin } from "@/lib/security/request";
-import { apiError } from "@/lib/http";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { db } from "@/lib/db";
 import { requestBackup } from "@/lib/backups/service";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { clientIp } from "@/lib/security/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { clientIp } from "@/v2/apps/web/http/request";
 
 const createSchema = z.object({ dryRun: z.boolean().default(false) });
 

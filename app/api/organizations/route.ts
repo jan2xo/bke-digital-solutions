@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { createOrganizationAccount, listSwitchableAccounts } from "@/lib/organizations";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 const createSchema = z.object({ displayName: z.string().trim().min(2).max(120), legalName: z.string().trim().min(2).max(180), billingEmail: z.string().trim().email(), registrationNumber: z.string().trim().max(80).optional(), taxId: z.string().trim().max(80).optional() }).strict();

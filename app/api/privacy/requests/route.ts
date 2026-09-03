@@ -3,9 +3,9 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { requireAccountAccess } from "@/lib/authorization";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { createPrivacyRequest, normalizePrivacyRequestType, PRIVACY_REQUEST_TYPES } from "@/lib/privacy/requests";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const schema = z.object({ requestType: z.enum(PRIVACY_REQUEST_TYPES), summary: z.string().trim().min(10).max(2_000), accountId: z.string().cuid().optional() }).strict();
 

@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminEnrollmentSession, createSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { hashRecoveryCode } from "@/lib/security/mfa";
 import { tokenHash } from "@/lib/emergency-mfa";
 import { generateRecoveryCodes } from "@/lib/security/mfa";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 
 export async function POST(request: Request) {
   try {

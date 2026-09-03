@@ -3,8 +3,8 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { requireAccountCapability } from "@/lib/authorization";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { inviteOrganizationMember, resendOrganizationInvitation, revokeOrganizationInvitation, expirePendingOrganizationInvitations } from "@/lib/organizations";
 const schema = z.discriminatedUnion("action", [z.object({ action: z.literal("create"), email: z.string().email(), role: z.enum(["OWNER", "BILLING", "LICENSE_MANAGER", "MEMBER"]) }), z.object({ action: z.literal("resend"), invitationId: z.string().cuid() }), z.object({ action: z.literal("revoke"), invitationId: z.string().cuid() }), z.object({ action: z.literal("expire") })]);
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) { try { const user = await requireUser(); const { id } = await params; await expirePendingOrganizationInvitations(); await requireAccountCapability(user.id, id, "MANAGE_MEMBERS"); return NextResponse.json(await db.invitation.findMany({ where: { accountId: id }, orderBy: { createdAt: "desc" }, select: { id: true, email: true, role: true, status: true, expiresAt: true, createdAt: true } })); } catch (error) { return apiError(error); } }

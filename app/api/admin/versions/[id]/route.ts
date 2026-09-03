@@ -2,15 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { audit } from "@/lib/audit";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { env } from "@/lib/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { hasCurrentCleanMalwareEvidence } from "@/lib/supply-chain/malware-gate";
 import { evaluateSupplyChainSecurity } from "@/lib/supply-chain/controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
