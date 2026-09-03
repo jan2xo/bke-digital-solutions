@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.2.0/bke-commerce-0.2.0.tgz";
-const EXPECTED_VERSION = "0.2.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.3.0/bke-commerce-0.3.0.tgz";
+const EXPECTED_VERSION = "0.3.0";
 const EXPECTED_SHA256 =
-  "e29458fdf468e475bb524c76788237eb1f846ca885753fe78ca8efd731185173";
+  "6165369b8dced957ea6246153bcd8863a681532841950b051fa3ec571ce3d6b9";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -29,6 +29,10 @@ for (const marker of [
   "@bke/commerce/logic/",
   "@bke/commerce/prisma/repositories/",
   "@bke/commerce/module.manifest",
+  "COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID",
+  "createCommerceCheckoutOfferPricingCapability",
+  "createPostgresCommerceCheckoutOfferPricingRepository",
+  "checkoutOfferPricing",
   "COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID",
   "createCommerceZeroPaymentFulfillmentCapability",
   "createPostgresCommerceZeroPaymentFulfillmentRepository",
