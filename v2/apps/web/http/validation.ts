@@ -1,0 +1,42 @@
+import { z } from "zod";
+
+export const emailSchema = z.email().max(254).transform((value) => value.trim().toLowerCase());
+export const passwordSchema = z
+  .string()
+  .min(12)
+  .max(128)
+  .regex(/[a-z]/)
+  .regex(/[A-Z]/)
+  .regex(/[0-9]/);
+
+export const registerSchema = z
+  .object({
+    email: emailSchema,
+    name: z.string().trim().min(2).max(100),
+    password: passwordSchema,
+    legalVersionIds: z.array(z.string().cuid()).length(2),
+  })
+  .strict();
+
+export const loginSchema = z.object({
+  email: emailSchema,
+  password: z.string().min(1).max(128),
+});
+
+export const checkoutSchema = z
+  .object({
+    purchasePlanId: z.string().cuid(),
+    customerAccountId: z.string().cuid(),
+    offerIdentifier: z.string().trim().min(1).max(100).optional(),
+    legalVersionIds: z.array(z.string().cuid()).min(2).max(3),
+  })
+  .strict();
+
+export const activationSchema = z.object({
+  licenseKey: z.string().regex(/^BKE-[A-F0-9-]{40,}$/),
+  installationId: z.string().min(32).max(256),
+  deviceId: z.string().min(16).max(256),
+  label: z.string().trim().max(100).optional(),
+  operatingSystem: z.string().trim().max(80).optional(),
+  architecture: z.string().trim().max(80).optional(),
+});
