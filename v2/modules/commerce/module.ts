@@ -61,42 +61,36 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
     createPostgresCommercePurchasePlanLookupRepository(options.connectionString),
   );
   const purchasePlanPricing = createCommercePurchasePlanPricingCapability();
-  const settlementRepository = createPostgresCommerceSettlementReactionRepository(
-    options.connectionString,
-  );
+  const settlementRepository = createPostgresCommerceSettlementReactionRepository(options.connectionString);
+
+  const hostManifest = Object.freeze({
+    ...commerceModuleManifest,
+    needs: [
+      ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+      LEGAL_ACCEPTANCE_CAPABILITY_ID,
+      PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
+      PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
+      ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
+    ],
+  });
 
   return Object.freeze({
-    manifest: commerceModuleManifest,
+    manifest: hostManifest,
     start(resolver: CapabilityResolver) {
-      const accountAccess = resolver.get<AccountsAccountAccessCapability>(
-        ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
-      );
-      const legalAcceptance = resolver.get<LegalAcceptanceCapability>(
-        LEGAL_ACCEPTANCE_CAPABILITY_ID,
-      );
-      const paymentCheckout = resolver.get<PaymentsCheckoutAttemptCapability>(
-        PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
-      );
-      const paymentSettlement = resolver.get<PaymentsSettlementFactCapability>(
-        PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
-      );
-      const entitlementGrant = resolver.get<EntitlementsDurableRightGrantCapability>(
-        ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
-      );
+      const accountAccess = resolver.get<AccountsAccountAccessCapability>(ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID);
+      const legalAcceptance = resolver.get<LegalAcceptanceCapability>(LEGAL_ACCEPTANCE_CAPABILITY_ID);
+      const paymentCheckout = resolver.get<PaymentsCheckoutAttemptCapability>(PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID);
+      const paymentSettlement = resolver.get<PaymentsSettlementFactCapability>(PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID);
+      const entitlementGrant = resolver.get<EntitlementsDurableRightGrantCapability>(ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID);
 
       const accountAuthorizer: CommerceAccountPurchaseAuthorizer = {
         async authorize(input) {
-          const result = await accountAccess.authorize({
-            principalId: input.principalId,
-            accountId: input.accountId,
-            requiredCapability: "PURCHASE",
-          });
+          const result = await accountAccess.authorize({ principalId: input.principalId, accountId: input.accountId, requiredCapability: "PURCHASE" });
           if (result.status === "AUTHORIZED") return { status: "AUTHORIZED" };
           if (result.status === "REJECTED") return { status: "REJECTED" };
           return { status: "FAILED" };
         },
       };
-
       const legalChecker: CommerceLegalAcceptanceChecker = {
         async check(input) {
           const result = await legalAcceptance.check({
@@ -113,7 +107,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
           return { status: "FAILED" };
         },
       };
-
       const paymentStarter: CommercePaymentCheckoutStarter = {
         async create(input) {
           const result = await paymentCheckout.create(input);
@@ -122,13 +115,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
           return { status: "FAILED", code: result.code };
         },
       };
-
-      const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({
-        accountAuthorizer,
-        legalChecker,
-        orderInvoiceCreation,
-        paymentStarter,
-      });
+      const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({ accountAuthorizer, legalChecker, orderInvoiceCreation, paymentStarter });
 
       const payments: CommercePaymentsSettlementReconciler = {
         async reconcile(input) {
@@ -138,23 +125,15 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
           return { status: "FAILED" };
         },
       };
-
       const entitlements: CommerceEntitlementGranter = {
         async grant(input) {
           const result = await entitlementGrant.grant(input);
-          if (result.status === "GRANTED" || result.status === "EXISTING") {
-            return { status: result.status };
-          }
+          if (result.status === "GRANTED" || result.status === "EXISTING") return { status: result.status };
           if (result.status === "REJECTED") return { status: "REJECTED" };
           return { status: "FAILED" };
         },
       };
-
-      const settlementReaction = createCommerceSettlementReactionCapability({
-        payments,
-        repository: settlementRepository,
-        entitlements,
-      });
+      const settlementReaction = createCommerceSettlementReactionCapability({ payments, repository: settlementRepository, entitlements });
 
       return [
         { id: COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID, value: purchasePlanPricing },
