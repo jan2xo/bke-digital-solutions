@@ -1,12 +1,4 @@
 import {
-  ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
-  type AccountsPurchaseAccessCapability,
-} from "@bke/accounts/contracts/purchase-access.contract";
-import {
-  ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
-  type AccountsSwitchableAccountListCapability,
-} from "@bke/accounts/contracts/switchable-account-list.contract";
-import {
   CATALOG_LOOKUP_CAPABILITY_ID,
   type CatalogLookupCapability,
 } from "@bke/catalog/contracts/catalog.contract";
@@ -28,6 +20,7 @@ import {
 } from "@bke/legal/contracts/reacceptance-status.contract";
 import { notFound, redirect } from "next/navigation";
 import { CheckoutStartButton } from "@/components/checkout-start-button";
+import { listPurchaseAuthorizedAccounts } from "@/v2/apps/web/accounts/purchase-account-list";
 import { currentIdentitySession } from "@/v2/apps/web/auth/session";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 
@@ -103,27 +96,7 @@ export default async function CheckoutReview({
   if (requirementsResult.status === "FAILED") throw new Error(requirementsResult.code);
   const legalDocuments = requirementsResult.requirements;
 
-  const switchableAccounts = application.get<AccountsSwitchableAccountListCapability>(
-    ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
-  );
-  const switchableResult = await switchableAccounts.list({ principalId: principal.id });
-  if (switchableResult.status === "FAILED") throw new Error(switchableResult.code);
-
-  const purchaseAccess = application.get<AccountsPurchaseAccessCapability>(
-    ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
-  );
-  const authorizedAccounts = [] as Array<{ id: string; name: string }>;
-  for (const account of switchableResult.accounts) {
-    const access = await purchaseAccess.authorize({
-      principalId: principal.id,
-      accountId: account.id,
-    });
-    if (access.status === "FAILED") throw new Error(access.code);
-    if (access.status === "AUTHORIZED") {
-      authorizedAccounts.push({ id: access.account.id, name: access.account.displayName });
-    }
-  }
-
+  const authorizedAccounts = await listPurchaseAuthorizedAccounts(principal.id);
   const annual =
     plan.type === "ANNUAL"
       ? { savingsMinor: terms.savingsMinor, effectiveMonthlyMinor: terms.effectiveMonthlyMinor ?? 0 }
@@ -162,7 +135,7 @@ export default async function CheckoutReview({
       </p>
       <CheckoutStartButton
         purchasePlanId={plan.id}
-        accounts={authorizedAccounts}
+        accounts={authorizedAccounts.map((account) => ({ id: account.id, name: account.displayName }))}
         legalDocuments={legalDocuments.map((document) => ({
           versionId: document.documentVersionId,
           type: document.documentType,
