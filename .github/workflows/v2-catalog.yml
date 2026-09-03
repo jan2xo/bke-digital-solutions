@@ -57,7 +57,7 @@ jobs:
           echo "765f266a70c16ef6a722744cb51adf290294b430f8bfb35e81ae7252f675c1d5  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Catalog consumer adoption
+      - name: Certify Catalog consumer adoption and staging retirement
         run: npx tsx v2/modules/catalog/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
@@ -67,7 +67,3 @@ jobs:
         run: node v2/platform/persistence/migration-compositor.mjs catalog node_modules/@bke/catalog/migrations
       - name: Prove package-backed Catalog migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs catalog node_modules/@bke/catalog/migrations
-      - name: Test Catalog staging behavior during adoption
-        run: npx vitest run --config v2/modules/catalog/vitest.config.ts
-      - name: Certify Catalog staging PostgreSQL behavior during adoption
-        run: npx tsx v2/modules/catalog/test/postgres.certify.ts
