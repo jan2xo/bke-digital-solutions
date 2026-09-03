@@ -2,6 +2,7 @@ import {
   ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
   type AccountsAccountAccessCapability,
 } from "@bke/accounts/contracts/account-access.contract";
+import { COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-offer-pricing.contract";
 import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-orchestration.contract";
 import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "@bke/commerce/contracts/offer-redemption.contract";
 import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "@bke/commerce/contracts/order-invoice-creation.contract";
@@ -9,6 +10,7 @@ import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contr
 import { COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "@bke/commerce/contracts/settlement-reaction.contract";
 import { COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID } from "@bke/commerce/contracts/zero-payment-fulfillment.contract";
+import { createCommerceCheckoutOfferPricingCapability } from "@bke/commerce/logic/checkout-offer-pricing";
 import { createCommerceCheckoutOrchestrationCapability } from "@bke/commerce/logic/checkout-orchestration";
 import type {
   CommerceAccountPurchaseAuthorizer,
@@ -26,6 +28,7 @@ import type {
 } from "@bke/commerce/logic/settlement-reaction-ports";
 import { createCommerceZeroPaymentFulfillmentCapability } from "@bke/commerce/logic/zero-payment-fulfillment";
 import { commerceModuleManifest } from "@bke/commerce/module.manifest";
+import { createPostgresCommerceCheckoutOfferPricingRepository } from "@bke/commerce/prisma/repositories/postgres-checkout-offer-pricing-repository";
 import { createPostgresCommerceOfferRedemptionRepository } from "@bke/commerce/prisma/repositories/postgres-offer-redemption-repository";
 import { createPostgresCommerceOrderInvoiceCreationRepository } from "@bke/commerce/prisma/repositories/postgres-order-invoice-creation-repository";
 import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
@@ -59,6 +62,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   );
   const orderInvoiceCreation = createCommerceOrderInvoiceCreationCapability(
     createPostgresCommerceOrderInvoiceCreationRepository(options.connectionString),
+  );
+  const checkoutOfferPricing = createCommerceCheckoutOfferPricingCapability(
+    createPostgresCommerceCheckoutOfferPricingRepository(options.connectionString),
   );
   const purchasePlanLookup = createCommercePurchasePlanLookupCapability(
     createPostgresCommercePurchasePlanLookupRepository(options.connectionString),
@@ -160,6 +166,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         accountAuthorizer,
         legalChecker,
         orderInvoiceCreation,
+        checkoutOfferPricing,
         zeroPaymentFulfillment,
         paymentStarter,
       });
@@ -184,6 +191,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         { id: COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID, value: purchasePlanLookup },
         { id: COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID, value: offerRedemption },
         { id: COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID, value: orderInvoiceCreation },
+        { id: COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID, value: checkoutOfferPricing },
         { id: COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID, value: checkoutOrchestration },
         { id: COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID, value: settlementReaction },
         { id: COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID, value: zeroPaymentFulfillment },
