@@ -2,6 +2,32 @@ import {
   ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
   type AccountsAccountAccessCapability,
 } from "@bke/accounts/contracts/account-access.contract";
+import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-orchestration.contract";
+import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "@bke/commerce/contracts/offer-redemption.contract";
+import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "@bke/commerce/contracts/order-invoice-creation.contract";
+import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-lookup.contract";
+import { COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
+import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "@bke/commerce/contracts/settlement-reaction.contract";
+import { createCommerceCheckoutOrchestrationCapability } from "@bke/commerce/logic/checkout-orchestration";
+import type {
+  CommerceAccountPurchaseAuthorizer,
+  CommerceLegalAcceptanceChecker,
+  CommercePaymentCheckoutStarter,
+} from "@bke/commerce/logic/checkout-orchestration-ports";
+import { createCommerceOfferRedemptionCapability } from "@bke/commerce/logic/offer-redemption";
+import { createCommerceOrderInvoiceCreationCapability } from "@bke/commerce/logic/order-invoice-creation";
+import { createCommercePurchasePlanLookupCapability } from "@bke/commerce/logic/purchase-plan-lookup";
+import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
+import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
+import type {
+  CommerceEntitlementGranter,
+  CommercePaymentsSettlementReconciler,
+} from "@bke/commerce/logic/settlement-reaction-ports";
+import { commerceModuleManifest } from "@bke/commerce/module.manifest";
+import { createPostgresCommerceOfferRedemptionRepository } from "@bke/commerce/prisma/repositories/postgres-offer-redemption-repository";
+import { createPostgresCommerceOrderInvoiceCreationRepository } from "@bke/commerce/prisma/repositories/postgres-order-invoice-creation-repository";
+import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
+import { createPostgresCommerceSettlementReactionRepository } from "@bke/commerce/prisma/repositories/postgres-settlement-reaction-repository";
 import {
   ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
   type EntitlementsDurableRightGrantCapability,
@@ -19,32 +45,6 @@ import {
   type PaymentsSettlementFactCapability,
 } from "@bke/payments/contracts/settlement-fact.contract";
 import type { CapabilityModule, CapabilityResolver } from "../../contracts/capability";
-import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "./contracts/checkout-orchestration.contract";
-import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "./contracts/offer-redemption.contract";
-import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "./contracts/order-invoice-creation.contract";
-import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "./contracts/purchase-plan-lookup.contract";
-import { COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID } from "./contracts/purchase-plan-pricing.contract";
-import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "./contracts/settlement-reaction.contract";
-import { createCommerceCheckoutOrchestrationCapability } from "./logic/checkout-orchestration";
-import type {
-  CommerceAccountPurchaseAuthorizer,
-  CommerceLegalAcceptanceChecker,
-  CommercePaymentCheckoutStarter,
-} from "./logic/checkout-orchestration-ports";
-import { createCommerceOfferRedemptionCapability } from "./logic/offer-redemption";
-import { createCommerceOrderInvoiceCreationCapability } from "./logic/order-invoice-creation";
-import { createCommercePurchasePlanLookupCapability } from "./logic/purchase-plan-lookup";
-import { createCommercePurchasePlanPricingCapability } from "./logic/purchase-plan-pricing";
-import { createCommerceSettlementReactionCapability } from "./logic/settlement-reaction";
-import type {
-  CommerceEntitlementGranter,
-  CommercePaymentsSettlementReconciler,
-} from "./logic/settlement-reaction-ports";
-import { commerceModuleManifest } from "./module.manifest";
-import { createPostgresCommerceOfferRedemptionRepository } from "./prisma/repositories/postgres-offer-redemption-repository";
-import { createPostgresCommerceOrderInvoiceCreationRepository } from "./prisma/repositories/postgres-order-invoice-creation-repository";
-import { createPostgresCommercePurchasePlanLookupRepository } from "./prisma/repositories/postgres-purchase-plan-lookup-repository";
-import { createPostgresCommerceSettlementReactionRepository } from "./prisma/repositories/postgres-settlement-reaction-repository";
 
 export interface CommerceModuleOptions {
   readonly connectionString: string;
@@ -61,7 +61,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
     createPostgresCommercePurchasePlanLookupRepository(options.connectionString),
   );
   const purchasePlanPricing = createCommercePurchasePlanPricingCapability();
-  const settlementRepository = createPostgresCommerceSettlementReactionRepository(options.connectionString);
+  const settlementRepository = createPostgresCommerceSettlementReactionRepository(
+    options.connectionString,
+  );
 
   const hostManifest = Object.freeze({
     ...commerceModuleManifest,
@@ -77,20 +79,35 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   return Object.freeze({
     manifest: hostManifest,
     start(resolver: CapabilityResolver) {
-      const accountAccess = resolver.get<AccountsAccountAccessCapability>(ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID);
-      const legalAcceptance = resolver.get<LegalAcceptanceCapability>(LEGAL_ACCEPTANCE_CAPABILITY_ID);
-      const paymentCheckout = resolver.get<PaymentsCheckoutAttemptCapability>(PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID);
-      const paymentSettlement = resolver.get<PaymentsSettlementFactCapability>(PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID);
-      const entitlementGrant = resolver.get<EntitlementsDurableRightGrantCapability>(ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID);
+      const accountAccess = resolver.get<AccountsAccountAccessCapability>(
+        ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+      );
+      const legalAcceptance = resolver.get<LegalAcceptanceCapability>(
+        LEGAL_ACCEPTANCE_CAPABILITY_ID,
+      );
+      const paymentCheckout = resolver.get<PaymentsCheckoutAttemptCapability>(
+        PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
+      );
+      const paymentSettlement = resolver.get<PaymentsSettlementFactCapability>(
+        PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
+      );
+      const entitlementGrant = resolver.get<EntitlementsDurableRightGrantCapability>(
+        ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
+      );
 
       const accountAuthorizer: CommerceAccountPurchaseAuthorizer = {
         async authorize(input) {
-          const result = await accountAccess.authorize({ principalId: input.principalId, accountId: input.accountId, requiredCapability: "PURCHASE" });
+          const result = await accountAccess.authorize({
+            principalId: input.principalId,
+            accountId: input.accountId,
+            requiredCapability: "PURCHASE",
+          });
           if (result.status === "AUTHORIZED") return { status: "AUTHORIZED" };
           if (result.status === "REJECTED") return { status: "REJECTED" };
           return { status: "FAILED" };
         },
       };
+
       const legalChecker: CommerceLegalAcceptanceChecker = {
         async check(input) {
           const result = await legalAcceptance.check({
@@ -107,6 +124,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
           return { status: "FAILED" };
         },
       };
+
       const paymentStarter: CommercePaymentCheckoutStarter = {
         async create(input) {
           const result = await paymentCheckout.create(input);
@@ -115,7 +133,13 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
           return { status: "FAILED", code: result.code };
         },
       };
-      const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({ accountAuthorizer, legalChecker, orderInvoiceCreation, paymentStarter });
+
+      const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({
+        accountAuthorizer,
+        legalChecker,
+        orderInvoiceCreation,
+        paymentStarter,
+      });
 
       const payments: CommercePaymentsSettlementReconciler = {
         async reconcile(input) {
@@ -125,15 +149,23 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
           return { status: "FAILED" };
         },
       };
+
       const entitlements: CommerceEntitlementGranter = {
         async grant(input) {
           const result = await entitlementGrant.grant(input);
-          if (result.status === "GRANTED" || result.status === "EXISTING") return { status: result.status };
+          if (result.status === "GRANTED" || result.status === "EXISTING") {
+            return { status: result.status };
+          }
           if (result.status === "REJECTED") return { status: "REJECTED" };
           return { status: "FAILED" };
         },
       };
-      const settlementReaction = createCommerceSettlementReactionCapability({ payments, repository: settlementRepository, entitlements });
+
+      const settlementReaction = createCommerceSettlementReactionCapability({
+        payments,
+        repository: settlementRepository,
+        entitlements,
+      });
 
       return [
         { id: COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID, value: purchasePlanPricing },
