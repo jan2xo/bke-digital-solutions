@@ -15,6 +15,7 @@ import { ACCOUNTS_ORGANIZATION_CLOSE_CAPABILITY_ID } from "@bke/accounts/contrac
 import { ACCOUNTS_ORGANIZATION_DETAIL_CAPABILITY_ID } from "@bke/accounts/contracts/organization-detail.contract";
 import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "@bke/accounts/contracts/organization-profile-update.contract";
 import { ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID } from "@bke/accounts/contracts/ownership-transfer.contract";
+import { ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID } from "@bke/accounts/contracts/purchase-access.contract";
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "@bke/accounts/contracts/switchable-account-list.contract";
 import { createAccountsAccountAccessCapability } from "@bke/accounts/logic/account-access";
 import { createAccountsIndividualAccountCreationCapability } from "@bke/accounts/logic/individual-account-creation";
@@ -32,6 +33,7 @@ import { createAccountsOrganizationCloseCapability } from "@bke/accounts/logic/o
 import { createAccountsOrganizationDetailCapability } from "@bke/accounts/logic/organization-detail";
 import { createAccountsOrganizationProfileUpdateCapability } from "@bke/accounts/logic/organization-profile-update";
 import { createAccountsOwnershipTransferCapability } from "@bke/accounts/logic/ownership-transfer";
+import { createAccountsPurchaseAccessCapability } from "@bke/accounts/logic/purchase-access";
 import { createAccountsSwitchableAccountListCapability } from "@bke/accounts/logic/switchable-account-list";
 import { accountsModuleManifest } from "@bke/accounts/module.manifest";
 import { createPostgresAccountsAccountAccessRepository } from "@bke/accounts/prisma/repositories/postgres-account-access-repository";
@@ -45,12 +47,12 @@ import { createPostgresAccountsInvitationRevocationRepository } from "@bke/accou
 import { createPostgresAccountsMemberLeaveRepository } from "@bke/accounts/prisma/repositories/postgres-member-leave-repository";
 import { createPostgresAccountsMembershipRemovalRepository } from "@bke/accounts/prisma/repositories/postgres-membership-removal-repository";
 import { createPostgresAccountsMembershipRoleChangeRepository } from "@bke/accounts/prisma/repositories/postgres-membership-role-change-repository";
-import { createPostgresAccountsOrganizationAccountCreationRepository } from "@bke/accounts/prisma/repositories/postgres-organization-account-creation-repository";
 import { createPostgresAccountsOrganizationCloseRepository } from "@bke/accounts/prisma/repositories/postgres-organization-close-repository";
 import { createPostgresAccountsOrganizationDetailRepository } from "@bke/accounts/prisma/repositories/postgres-organization-detail-repository";
 import { createPostgresAccountsOrganizationProfileUpdateRepository } from "@bke/accounts/prisma/repositories/postgres-organization-profile-update-repository";
 import { createPostgresAccountsOwnershipTransferRepository } from "@bke/accounts/prisma/repositories/postgres-ownership-transfer-repository";
 import { createPostgresAccountsSwitchableAccountListRepository } from "@bke/accounts/prisma/repositories/postgres-switchable-account-list-repository";
+import { createPostgresAccountsOrganizationAccountCreationRepository } from "@bke/accounts/prisma/repositories/postgres-organization-account-creation-repository";
 import { createCryptoAccountsIdProvider } from "@bke/accounts/providers/crypto-accounts-id-provider";
 import { createCryptoAccountsInvitationTokenHasher } from "@bke/accounts/providers/crypto-invitation-token-hasher";
 import { createCryptoAccountsInvitationTokenProvider } from "@bke/accounts/providers/crypto-invitation-token-provider";
@@ -104,6 +106,7 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     idProvider,
   );
   const accountAccess = createAccountsAccountAccessCapability(accountAccessRepository);
+  const purchaseAccess = createAccountsPurchaseAccessCapability(accountAccess);
   const switchableAccountList = createAccountsSwitchableAccountListCapability(
     switchableAccountListRepository,
   );
@@ -179,6 +182,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
         value: accountAccess,
+      },
+      {
+        id: ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
+        value: purchaseAccess,
       },
       {
         id: ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
