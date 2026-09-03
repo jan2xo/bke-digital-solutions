@@ -36,7 +36,7 @@ for (const marker of [
 
 for (const marker of ['"./contracts/', '"./logic/', '"./module.manifest"']) {
   if (moduleSource.includes(marker)) {
-    throw new Error(`Notifications host adapter still consumes staging implementation: ${marker}`);
+    throw new Error(`Notifications host adapter consumes retired staging implementation: ${marker}`);
   }
 }
 
@@ -77,9 +77,23 @@ if (!nextConfigSource.includes('"@bke/notifications"')) {
   throw new Error("Next.js must explicitly transpile the source-native @bke/notifications package.");
 }
 
-for (const marker of [EXPECTED_RELEASE, EXPECTED_SHA256, "Certify Notifications consumer adoption"]) {
+for (const marker of [
+  EXPECTED_RELEASE,
+  EXPECTED_SHA256,
+  "Certify Notifications consumer adoption and staging retirement",
+]) {
   if (!workflowSource.includes(marker)) {
-    throw new Error(`Notifications CI is missing package-backed adoption guardrail: ${marker}`);
+    throw new Error(`Notifications CI is missing package-backed retirement guardrail: ${marker}`);
+  }
+}
+
+for (const forbiddenWorkflowMarker of [
+  "v2/modules/notifications/test/extraction.certify.ts",
+  "v2/modules/notifications/test/notification-intent.test.ts",
+  "Regression-test Notifications staging behavior",
+]) {
+  if (workflowSource.includes(forbiddenWorkflowMarker)) {
+    throw new Error(`Notifications CI still depends on retired staging: ${forbiddenWorkflowMarker}`);
   }
 }
 
@@ -87,7 +101,7 @@ if (!standaloneSource.includes("notificationsModule") || !standaloneSource.inclu
   throw new Error("The standalone host must compose package-backed Notifications as an actual module.");
 }
 
-for (const stagingPath of [
+for (const retiredPath of [
   "contracts",
   "docs",
   "logic",
@@ -95,11 +109,11 @@ for (const stagingPath of [
   "test/notification-intent.test.ts",
   "test/extraction.certify.ts",
 ]) {
-  if (!existsSync(resolve(moduleRoot, stagingPath))) {
-    throw new Error(`Notifications staging must remain during adoption certification: ${stagingPath}`);
+  if (existsSync(resolve(moduleRoot, retiredPath))) {
+    throw new Error(`Notifications staging path must remain retired: ${retiredPath}`);
   }
 }
 
 console.log(
-  `Notifications package-backed consumer adoption GREEN; version=${EXPECTED_VERSION} integrity=${lockedNotifications.integrity}`,
+  `Notifications package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedNotifications.integrity}`,
 );

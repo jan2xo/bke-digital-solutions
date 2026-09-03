@@ -10,7 +10,6 @@ on:
       - "v2/contracts/**"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
       - "next.config.ts"
       - "package.json"
       - "package-lock.json"
@@ -41,11 +40,7 @@ jobs:
           echo "9a9c5640ed27332886e54c491cb6b54fdcc6561ec100ddd2476adb02d93ee406  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Notifications extraction boundary
-        run: npx tsx v2/modules/notifications/test/extraction.certify.ts
-      - name: Certify Notifications consumer adoption
+      - name: Certify Notifications consumer adoption and staging retirement
         run: npx tsx v2/modules/notifications/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Regression-test Notifications staging behavior
-        run: npx vitest run --config v2/vitest.config.ts v2/modules/notifications/test/notification-intent.test.ts
