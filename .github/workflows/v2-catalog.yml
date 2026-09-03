@@ -56,6 +56,6 @@ jobs:
       - name: Prove Catalog migration idempotence
         run: node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
       - name: Test Catalog behavior
-        run: npx vitest run v2/modules/catalog/test/catalog.test.ts
+        run: npx vitest run --config v2/modules/catalog/vitest.config.ts
       - name: Certify Catalog PostgreSQL behavior
         run: npx tsx v2/modules/catalog/test/postgres.certify.ts
