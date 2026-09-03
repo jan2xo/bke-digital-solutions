@@ -1,7 +1,7 @@
 import {
-  ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
-  type AccountsAccountAccessCapability,
-} from "@bke/accounts/contracts/account-access.contract";
+  ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
+  type AccountsPurchaseAccessCapability,
+} from "@bke/accounts/contracts/purchase-access.contract";
 import { COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-offer-pricing.contract";
 import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-orchestration.contract";
 import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "@bke/commerce/contracts/offer-redemption.contract";
@@ -80,7 +80,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   const hostManifest = Object.freeze({
     ...commerceModuleManifest,
     needs: [
-      ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+      ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
       LEGAL_ACCEPTANCE_CAPABILITY_ID,
       PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
       PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
@@ -91,8 +91,8 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   return Object.freeze({
     manifest: hostManifest,
     start(resolver: CapabilityResolver) {
-      const accountAccess = resolver.get<AccountsAccountAccessCapability>(
-        ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+      const purchaseAccess = resolver.get<AccountsPurchaseAccessCapability>(
+        ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
       );
       const legalAcceptance = resolver.get<LegalAcceptanceCapability>(
         LEGAL_ACCEPTANCE_CAPABILITY_ID,
@@ -109,10 +109,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
 
       const accountAuthorizer: CommerceAccountPurchaseAuthorizer = {
         async authorize(input) {
-          const result = await accountAccess.authorize({
+          const result = await purchaseAccess.authorize({
             principalId: input.principalId,
             accountId: input.accountId,
-            requiredCapability: "PURCHASE",
           });
           if (result.status === "AUTHORIZED") return { status: "AUTHORIZED" };
           if (result.status === "REJECTED") return { status: "REJECTED" };

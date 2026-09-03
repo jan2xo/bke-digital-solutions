@@ -26,6 +26,10 @@ if (!moduleSource.includes("CapabilityModule") || !moduleSource.includes('"../..
 
 for (const marker of [
   "@bke/commerce/contracts/",
+  "@bke/accounts/contracts/purchase-access.contract",
+  "ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID",
+  "AccountsPurchaseAccessCapability",
+  "purchaseAccess",
   "@bke/commerce/logic/",
   "@bke/commerce/prisma/repositories/",
   "@bke/commerce/module.manifest",
@@ -40,6 +44,15 @@ for (const marker of [
 ]) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Commerce host adapter is missing standalone package surface: ${marker}`);
+  }
+}
+
+for (const forbiddenAccountsBypass of [
+  "@bke/accounts/contracts/account-access.contract",
+  'requiredCapability: "PURCHASE"',
+]) {
+  if (moduleSource.includes(forbiddenAccountsBypass)) {
+    throw new Error(`Commerce host adapter bypasses Accounts purchase policy: ${forbiddenAccountsBypass}`);
   }
 }
 
