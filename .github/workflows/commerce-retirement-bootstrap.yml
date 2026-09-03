@@ -1,0 +1,42 @@
+name: Commerce Staging Retirement Bootstrap
+
+on:
+  push:
+    branches: [feat/v2-commerce-staging-retirement]
+    paths:
+      - ".github/workflows/commerce-retirement-bootstrap.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  retire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Delete redundant Commerce staging implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=v2/modules/commerce
+          git rm -r \
+            "$root/contracts" \
+            "$root/docs" \
+            "$root/logic" \
+            "$root/module.manifest.ts" \
+            "$root/prisma.config.ts" \
+            "$root/prisma"
+          find "$root/test" -maxdepth 1 -type f ! -name 'consumer-adoption.certify.ts' -print -delete
+          git add -u "$root/test"
+          remaining="$(find "$root" -type f | sort)"
+          printf '%s\n' "$remaining"
+          test "$remaining" = "$root/module.ts
+$root/test/consumer-adoption.certify.ts"
+      - name: Commit staging retirement
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "refactor(v2 commerce): retire staging implementation"
+          git push origin HEAD:feat/v2-commerce-staging-retirement
