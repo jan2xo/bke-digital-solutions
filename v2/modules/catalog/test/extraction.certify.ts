@@ -10,6 +10,8 @@ const reusableRoots = [
   `${root}/prisma/repositories`,
 ];
 const reusableFiles = [`${root}/module.manifest.ts`];
+const parentContractsCapability = ["..", "..", "contracts", "capability"].join("/");
+const siblingContractsCapability = ["..", "contracts", "capability"].join("/");
 
 function filesUnder(path: string): string[] {
   const found: string[] = [];
@@ -29,8 +31,8 @@ const forbiddenMarkers = [
   '"server-only"',
   "v2/platform",
   "v2/apps",
-  "../../contracts/capability",
-  "../contracts/capability",
+  parentContractsCapability,
+  siblingContractsCapability,
   "generated/prisma",
   "/modules/commerce/",
   "/modules/payments/",
@@ -67,7 +69,7 @@ assert.deepEqual(migrations, ["0001_catalog_product_edition"]);
 assert.equal(existsSync(`${migrationsRoot}/0001_catalog_product_edition/migration.sql`), true);
 
 const hostAdapter = readFileSync(`${root}/module.ts`, "utf8");
-assert.equal(hostAdapter.includes('from "../../contracts/capability"'), true);
+assert.equal(hostAdapter.includes(`from "${parentContractsCapability}"`), true);
 assert.equal(hostAdapter.includes("createPostgresCatalogRepository"), true);
 
 console.log(
