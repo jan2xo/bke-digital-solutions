@@ -4,8 +4,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.2.0/bke-legal-0.2.0.tgz";
-const EXPECTED_VERSION = "0.2.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.3.0/bke-legal-0.3.0.tgz";
+const EXPECTED_VERSION = "0.3.0";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -20,23 +20,15 @@ const [
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
   readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
   readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
-  readFile(
-    new URL("../../../../.github/workflows/v2-legal.yml", import.meta.url),
-    "utf8",
-  ),
-  readFile(
-    new URL("../../../platform/persistence/migration-compositor.mjs", import.meta.url),
-    "utf8",
-  ),
+  readFile(new URL("../../../../.github/workflows/v2-legal.yml", import.meta.url), "utf8"),
+  readFile(new URL("../../../platform/persistence/migration-compositor.mjs", import.meta.url), "utf8"),
 ]);
 
 if (
   !moduleSource.includes("CapabilityModule") ||
   !moduleSource.includes('"../../contracts/capability"')
 ) {
-  throw new Error(
-    "Legal host adapter must retain the Digital Solutions CapabilityModule contract.",
-  );
+  throw new Error("Legal host adapter must retain the Digital Solutions CapabilityModule contract.");
 }
 
 const requiredPackageSurfaces = [
@@ -59,6 +51,17 @@ const requiredCheckoutRequirementSurfaces = [
 for (const marker of requiredCheckoutRequirementSurfaces) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Legal host adapter is missing checkout requirements surface: ${marker}`);
+  }
+}
+
+const requiredReacceptanceSurfaces = [
+  "LEGAL_REACCEPTANCE_STATUS_CAPABILITY_ID",
+  "createLegalReacceptanceStatusCapability",
+  "createPostgresLegalReacceptanceStatusRepository",
+];
+for (const marker of requiredReacceptanceSurfaces) {
+  if (!moduleSource.includes(marker)) {
+    throw new Error(`Legal host adapter is missing reacceptance surface: ${marker}`);
   }
 }
 
@@ -93,9 +96,7 @@ for (const path of forbiddenStagingPaths) {
   }
 }
 
-const packageJson = JSON.parse(packageSource) as {
-  dependencies?: Record<string, string>;
-};
+const packageJson = JSON.parse(packageSource) as { dependencies?: Record<string, string> };
 if (packageJson.dependencies?.["@bke/legal"] !== EXPECTED_RELEASE) {
   throw new Error(
     `Digital Solutions package.json does not pin the certified Legal artifact: ${packageJson.dependencies?.["@bke/legal"]}`,
@@ -113,12 +114,8 @@ const packageLock = JSON.parse(lockSource) as {
     }
   >;
 };
-if (
-  packageLock.packages?.[""]?.dependencies?.["@bke/legal"] !== EXPECTED_RELEASE
-) {
-  throw new Error(
-    "Digital Solutions package-lock root does not pin the certified Legal artifact.",
-  );
+if (packageLock.packages?.[""]?.dependencies?.["@bke/legal"] !== EXPECTED_RELEASE) {
+  throw new Error("Digital Solutions package-lock root does not pin the certified Legal artifact.");
 }
 
 const lockedLegal = packageLock.packages?.["node_modules/@bke/legal"];
@@ -133,26 +130,22 @@ if (
 }
 
 if (!nextConfigSource.includes('"@bke/legal"')) {
-  throw new Error(
-    "Next.js must explicitly transpile the source-native @bke/legal package.",
-  );
+  throw new Error("Next.js must explicitly transpile the source-native @bke/legal package.");
 }
 
 if (
   !legalWorkflowSource.includes("node_modules/@bke/legal/prisma/schema.prisma") ||
-  !legalWorkflowSource.includes("node_modules/@bke/legal/migrations")
+  !legalWorkflowSource.includes("node_modules/@bke/legal/migrations") ||
+  !legalWorkflowSource.includes("legal-v0.3.0") ||
+  !legalWorkflowSource.includes("f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3")
 ) {
-  throw new Error(
-    "Legal CI must validate and compose persistence from the installed @bke/legal package.",
-  );
+  throw new Error("Legal CI must certify and compose persistence from the exact installed @bke/legal v0.3.0 artifact.");
 }
 
 if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
-  throw new Error(
-    "The migration compositor must support module-owned external migration roots.",
-  );
+  throw new Error("The migration compositor must support module-owned external migration roots.");
 }
 
 console.log(
-  `Legal standalone consumer adoption GREEN; checkout requirements exposed; staging retired; version=${EXPECTED_VERSION} integrity=${lockedLegal.integrity}`,
+  `Legal standalone consumer adoption GREEN; checkout requirements + reacceptance exposed; staging retired; version=${EXPECTED_VERSION} integrity=${lockedLegal.integrity}`,
 );
