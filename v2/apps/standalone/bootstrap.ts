@@ -7,6 +7,7 @@ import { createEntitlementsModule } from "../../modules/entitlements/module";
 import { createIdentityModule } from "../../modules/identity/module";
 import { createLegalModule } from "../../modules/legal/module";
 import { createLicensingModule } from "../../modules/licensing/module";
+import { notificationsModule } from "../../modules/notifications/module";
 import { createPaymentsModule } from "../../modules/payments/module";
 import { composeCapabilities } from "../../platform/composition/composer";
 
@@ -54,6 +55,7 @@ const application = await composeCapabilities([
   }),
   createEntitlementsModule({ connectionString }),
   createLicensingModule({ connectionString, licensePepper }),
+  notificationsModule,
 ]);
 
 const expectedModules = [
@@ -64,6 +66,7 @@ const expectedModules = [
   "payments",
   "entitlements",
   "bke.licensing",
+  "notifications",
 ] as const;
 
 for (const moduleId of expectedModules) {

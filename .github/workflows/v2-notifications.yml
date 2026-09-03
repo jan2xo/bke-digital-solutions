@@ -5,11 +5,15 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/notifications/**"
+      - "v2/apps/standalone/**"
       - "v2/platform/composition/**"
       - "v2/contracts/**"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
       - ".github/workflows/v2-notifications.yml"
   workflow_dispatch:
 
@@ -26,11 +30,22 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Notifications package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-notifications-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.1.0/bke-notifications-0.1.0.tgz
+          echo "9a9c5640ed27332886e54c491cb6b54fdcc6561ec100ddd2476adb02d93ee406  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Notifications extraction boundary
         run: npx tsx v2/modules/notifications/test/extraction.certify.ts
+      - name: Certify Notifications consumer adoption
+        run: npx tsx v2/modules/notifications/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Test Notifications intent capability
+      - name: Regression-test Notifications staging behavior
         run: npx vitest run --config v2/vitest.config.ts v2/modules/notifications/test/notification-intent.test.ts
