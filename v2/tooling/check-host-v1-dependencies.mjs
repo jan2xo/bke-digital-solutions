@@ -105,6 +105,12 @@ for (const entry of entries) {
 
 for (let index = 0; index < queue.length; index += 1) {
   const file = queue[index];
+  // A V1 boundary is already a failure. Do not traverse deeper into V1 and
+  // inflate one reach-through (for example lib/db.ts) into every generated
+  // Prisma implementation file behind it. Zero boundary files remains the
+  // only passing condition.
+  if (isForbidden(file)) continue;
+
   for (const specifier of moduleSpecifiers(file)) {
     const dependency = resolveLocalImport(file, specifier);
     if (!dependency || seen.has(dependency)) continue;
@@ -138,7 +144,7 @@ if (legacyFiles.length === 0) {
   process.exit(0);
 }
 
-console.error(`V2 PRODUCTION HOST V1 REACH-THROUGH DETECTED: ${legacyFiles.length} reachable legacy files.`);
+console.error(`V2 PRODUCTION HOST V1 REACH-THROUGH DETECTED: ${legacyFiles.length} first-boundary legacy files.`);
 for (const file of legacyFiles) {
   console.error(`\nLEGACY: ${normalize(file)}`);
   for (const line of chainFor(file)) console.error(`  ${line}`);
