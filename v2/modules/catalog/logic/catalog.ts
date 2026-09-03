@@ -182,7 +182,7 @@ function normalizeUpdateEdition(input: CatalogUpdateEditionInput): CatalogUpdate
 }
 
 export function createCatalogLookupCapability(repository: CatalogRepository): CatalogLookupCapability {
-  return Object.freeze({
+  const capability: CatalogLookupCapability = {
     async findProductById(id) {
       const clean = id.trim();
       if (!clean) return { status: "FAILED", code: "INVALID_INPUT" };
@@ -222,11 +222,12 @@ export function createCatalogLookupCapability(repository: CatalogRepository): Ca
         return { status: "FAILED", code: "PERSISTENCE_UNAVAILABLE" };
       }
     },
-  });
+  };
+  return Object.freeze(capability);
 }
 
 export function createCatalogManagementCapability(repository: CatalogRepository): CatalogManagementCapability {
-  return Object.freeze({
+  const capability: CatalogManagementCapability = {
     async createProduct(input) {
       const normalized = normalizeCreateProduct(input);
       if (!normalized) return { status: "FAILED", code: "INVALID_INPUT" };
@@ -292,5 +293,6 @@ export function createCatalogManagementCapability(repository: CatalogRepository)
         return mutationFailure<CatalogEditionSnapshot>(error);
       }
     },
-  });
+  };
+  return Object.freeze(capability);
 }

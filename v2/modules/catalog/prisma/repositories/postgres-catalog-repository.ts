@@ -99,7 +99,7 @@ export function createPostgresCatalogRepository(connectionString: string): Catal
     }
   }
 
-  return Object.freeze({
+  const repository: CatalogRepository = {
     async findProductById(id) {
       return withClient(async (client) => {
         const result = await client.query<ProductRow>(`SELECT * FROM "CatalogProduct" WHERE "id" = $1`, [id]);
@@ -279,5 +279,6 @@ export function createPostgresCatalogRepository(connectionString: string): Catal
         return result.rowCount === 1 ? edition(result.rows[0]!) : null;
       });
     },
-  });
+  };
+  return Object.freeze(repository);
 }
