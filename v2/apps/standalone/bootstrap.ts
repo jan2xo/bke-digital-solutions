@@ -2,6 +2,7 @@ import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-atte
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
 import { createAccountsModule } from "../../modules/accounts/module";
+import { createCatalogModule } from "../../modules/catalog/module";
 import { createCommerceModule } from "../../modules/commerce/module";
 import { createEntitlementsModule } from "../../modules/entitlements/module";
 import { createIdentityModule } from "../../modules/identity/module";
@@ -46,6 +47,7 @@ const application = await composeCapabilities([
   createIdentityModule({ connectionString, sessionSecret }),
   createAccountsModule({ connectionString }),
   createLegalModule({ connectionString }),
+  createCatalogModule({ connectionString }),
   createCommerceModule({ connectionString }),
   createPaymentsModule({
     connectionString,
@@ -62,6 +64,7 @@ const expectedModules = [
   "identity",
   "accounts",
   "legal",
+  "catalog",
   "commerce",
   "payments",
   "entitlements",

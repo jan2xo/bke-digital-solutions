@@ -1,0 +1,61 @@
+name: V2 Module - Catalog
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/modules/catalog/**"
+      - "v2/apps/standalone/**"
+      - "v2/platform/persistence/migration-compositor.mjs"
+      - "v2/platform/composition/**"
+      - "v2/contracts/**"
+      - "v2/tooling/check-module-boundaries.mjs"
+      - "v2/tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/v2-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_catalog
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_catalog"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_catalog
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Validate Catalog Prisma schema
+        run: npx prisma validate --schema v2/modules/catalog/prisma/schema.prisma
+      - name: Apply Catalog migrations
+        run: node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
+      - name: Prove Catalog migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
+      - name: Test Catalog behavior
+        run: npx vitest run --config v2/modules/catalog/vitest.config.ts
+      - name: Certify Catalog PostgreSQL behavior
+        run: npx tsx v2/modules/catalog/test/postgres.certify.ts
