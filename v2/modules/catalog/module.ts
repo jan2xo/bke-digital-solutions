@@ -1,14 +1,14 @@
-import type { CapabilityModule } from "../../contracts/capability";
 import {
   CATALOG_LOOKUP_CAPABILITY_ID,
   CATALOG_MANAGEMENT_CAPABILITY_ID,
-} from "./contracts/catalog.contract";
+} from "@bke/catalog/contracts/catalog.contract";
 import {
   createCatalogLookupCapability,
   createCatalogManagementCapability,
-} from "./logic/catalog";
-import { catalogModuleManifest } from "./module.manifest";
-import { createPostgresCatalogRepository } from "./prisma/repositories/postgres-catalog-repository";
+} from "@bke/catalog/logic/catalog";
+import { catalogModuleManifest } from "@bke/catalog/module.manifest";
+import { createPostgresCatalogRepository } from "@bke/catalog/prisma/repositories/postgres-catalog-repository";
+import type { CapabilityModule } from "../../contracts/capability";
 
 export interface CatalogModuleOptions {
   readonly connectionString: string;
