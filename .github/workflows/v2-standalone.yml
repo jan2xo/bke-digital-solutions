@@ -57,7 +57,7 @@ jobs:
       - name: Apply Legal migrations to fresh PostgreSQL
         run: node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
       - name: Apply Catalog migrations to fresh PostgreSQL
-        run: node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
+        run: node v2/platform/persistence/migration-compositor.mjs catalog node_modules/@bke/catalog/migrations
       - name: Apply Commerce migrations to fresh PostgreSQL
         run: node v2/platform/persistence/migration-compositor.mjs commerce node_modules/@bke/commerce/migrations
       - name: Apply Payments migrations to fresh PostgreSQL
@@ -73,7 +73,7 @@ jobs:
           node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
           node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
           node v2/platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
-          node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
+          node v2/platform/persistence/migration-compositor.mjs catalog node_modules/@bke/catalog/migrations
           node v2/platform/persistence/migration-compositor.mjs commerce node_modules/@bke/commerce/migrations
           node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
           node v2/platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations

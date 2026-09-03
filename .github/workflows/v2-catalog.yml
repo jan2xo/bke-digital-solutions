@@ -13,6 +13,7 @@ on:
       - "v2/tsconfig.json"
       - "package.json"
       - "package-lock.json"
+      - "next.config.ts"
       - ".github/workflows/v2-catalog.yml"
   workflow_dispatch:
 
@@ -45,19 +46,28 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify certified Catalog package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-catalog-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.1.0/bke-catalog-0.1.0.tgz
+          echo "765f266a70c16ef6a722744cb51adf290294b430f8bfb35e81ae7252f675c1d5  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
-      - name: Certify Catalog extraction readiness
-        run: npx tsx v2/modules/catalog/test/extraction.certify.ts
+      - name: Certify Catalog consumer adoption
+        run: npx tsx v2/modules/catalog/test/consumer-adoption.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
-      - name: Validate Catalog Prisma schema
-        run: npx prisma validate --schema v2/modules/catalog/prisma/schema.prisma
-      - name: Apply Catalog migrations
-        run: node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
-      - name: Prove Catalog migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs catalog v2/modules/catalog/prisma/migrations
-      - name: Test Catalog behavior
+      - name: Validate package-backed Catalog Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/catalog/prisma/schema.prisma
+      - name: Apply package-backed Catalog migrations
+        run: node v2/platform/persistence/migration-compositor.mjs catalog node_modules/@bke/catalog/migrations
+      - name: Prove package-backed Catalog migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs catalog node_modules/@bke/catalog/migrations
+      - name: Test Catalog staging behavior during adoption
         run: npx vitest run --config v2/modules/catalog/vitest.config.ts
-      - name: Certify Catalog PostgreSQL behavior
+      - name: Certify Catalog staging PostgreSQL behavior during adoption
         run: npx tsx v2/modules/catalog/test/postgres.certify.ts
