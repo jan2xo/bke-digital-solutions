@@ -1,0 +1,38 @@
+name: Commerce Consumer Lock Bootstrap
+
+on:
+  push:
+    branches: [feat/v2-commerce-library-consumer]
+    paths:
+      - ".github/workflows/commerce-consumer-lock-bootstrap.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pin certified Commerce release and regenerate lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --save --package-lock-only --ignore-scripts \
+            '@bke/commerce@https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.1.0/bke-commerce-0.1.0.tgz'
+      - name: Commit package pin
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            echo "Commerce package pin already current"
+            exit 0
+          fi
+          git commit -m "chore(v2 commerce): pin certified package"
+          git push origin HEAD:feat/v2-commerce-library-consumer
