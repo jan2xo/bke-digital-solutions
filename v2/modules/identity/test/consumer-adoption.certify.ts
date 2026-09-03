@@ -1,8 +1,8 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.1.0/bke-identity-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.2.0/bke-identity-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 
 const [
   moduleSource,
@@ -11,6 +11,7 @@ const [
   nextConfigSource,
   identityWorkflowSource,
   migrationCompositorSource,
+  installedIdentityContractSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
@@ -22,6 +23,10 @@ const [
   ),
   readFile(
     new URL("../../../platform/persistence/migration-compositor.mjs", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../node_modules/@bke/identity/contracts/identity.contract.ts", import.meta.url),
     "utf8",
   ),
 ]);
@@ -46,6 +51,12 @@ for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Identity host adapter is missing standalone package surface: ${marker}`);
   }
+}
+
+if (!installedIdentityContractSource.includes("readonly establishedAt: Date;")) {
+  throw new Error(
+    "Installed @bke/identity contract does not expose the canonical principal establishment fact.",
+  );
 }
 
 const forbiddenStagingSpecifiers = [
@@ -153,5 +164,5 @@ if (
 }
 
 console.log(
-  `Identity standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedIdentity.integrity}`,
+  `Identity standalone consumer adoption GREEN; establishedAt exposed; version=${EXPECTED_VERSION} integrity=${lockedIdentity.integrity}`,
 );
