@@ -18,7 +18,7 @@ function appOrigin() {
 
 function createMockAdapter(): WebPaymentsAdapter {
   if (process.env.NODE_ENV === "production") throw new Error("V2_MOCK_PAYMENTS_FORBIDDEN_IN_PRODUCTION");
-  return Object.freeze({
+  const adapter: WebPaymentsAdapter = {
     name: "mock",
     async createCheckout(input) {
       return {
@@ -37,7 +37,8 @@ function createMockAdapter(): WebPaymentsAdapter {
         externalPaymentId: input.externalPaymentId,
       };
     },
-  });
+  };
+  return Object.freeze(adapter);
 }
 
 export function createWebPaymentsAdapter(): WebPaymentsAdapter {
