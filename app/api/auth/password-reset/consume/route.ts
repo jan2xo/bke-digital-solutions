@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { hashToken } from "@/lib/security/crypto";
 import { securityEvent } from "@/lib/security/events";
 import { assertSameOrigin } from "@/lib/security/request";
-import { passwordSchema } from "@/lib/validation";
+import { passwordSchema } from "@/v2/apps/web/http/validation";
 
 const schema = z.object({ token: z.string().min(20), password: passwordSchema });
 export async function POST(request: Request) {

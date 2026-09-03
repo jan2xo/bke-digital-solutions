@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { activationSchema } from "@/lib/validation";
+import { activationSchema } from "@/v2/apps/web/http/validation";
 import { clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { issueCommercialLease } from "@/lib/licensing/commercial-lease";

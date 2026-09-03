@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { emailSchema } from "@/lib/validation";
+import { emailSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { issueMagicLinkForExistingCustomer } from "@/lib/auth/magic-link";

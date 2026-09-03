@@ -7,7 +7,7 @@ import { apiError } from "@/lib/http";
 import { securityEvent } from "@/lib/security/events";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { passwordSchema } from "@/lib/validation";
+import { passwordSchema } from "@/v2/apps/web/http/validation";
 
 const schema = z.object({ currentPassword: z.string().min(1).max(128), newPassword: passwordSchema });
 export async function POST(request: Request) {

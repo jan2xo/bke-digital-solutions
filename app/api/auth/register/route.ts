@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { createSession, hashPassword } from "@/lib/auth";
-import { registerSchema } from "@/lib/validation";
+import { registerSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { hashToken, randomToken } from "@/lib/security/crypto";

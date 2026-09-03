@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { createSession, verifyPassword } from "@/lib/auth";
 import { ADMIN_EMAIL_CHALLENGE_COOKIE, ADMIN_EMAIL_CHALLENGE_COOKIE_OPTIONS, createEmailChallenge } from "@/lib/admin-mfa";
-import { loginSchema } from "@/lib/validation";
+import { loginSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/lib/security/request";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { securityEvent } from "@/lib/security/events";
