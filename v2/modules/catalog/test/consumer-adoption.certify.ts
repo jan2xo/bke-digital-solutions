@@ -1,10 +1,14 @@
+import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
   "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.1.0/bke-catalog-0.1.0.tgz";
 const EXPECTED_VERSION = "0.1.0";
 const EXPECTED_SHA256 =
   "765f266a70c16ef6a722744cb51adf290294b430f8bfb35e81ae7252f675c1d5";
+const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, catalogWorkflowSource, standaloneWorkflowSource] =
   await Promise.all([
@@ -38,7 +42,7 @@ for (const marker of [
   '"./module.manifest"',
 ]) {
   if (moduleSource.includes(marker)) {
-    throw new Error(`Catalog host adapter still prefers staging implementation: ${marker}`);
+    throw new Error(`Catalog host adapter consumes retired staging implementation: ${marker}`);
   }
 }
 
@@ -75,10 +79,23 @@ for (const marker of [
   EXPECTED_SHA256,
   "node_modules/@bke/catalog/prisma/schema.prisma",
   "node_modules/@bke/catalog/migrations",
-  "Certify Catalog consumer adoption",
+  "Certify Catalog consumer adoption and staging retirement",
 ]) {
   if (!catalogWorkflowSource.includes(marker)) {
-    throw new Error(`Catalog CI is missing package-backed adoption guardrail: ${marker}`);
+    throw new Error(`Catalog CI is missing package-backed retirement guardrail: ${marker}`);
+  }
+}
+
+for (const forbiddenWorkflowMarker of [
+  "v2/modules/catalog/test/extraction.certify.ts",
+  "v2/modules/catalog/test/catalog.test.ts",
+  "v2/modules/catalog/test/postgres.certify.ts",
+  "v2/modules/catalog/vitest.config.ts",
+  "v2/modules/catalog/prisma/schema.prisma",
+  "v2/modules/catalog/prisma/migrations",
+]) {
+  if (catalogWorkflowSource.includes(forbiddenWorkflowMarker)) {
+    throw new Error(`Catalog CI still depends on retired staging: ${forbiddenWorkflowMarker}`);
   }
 }
 
@@ -91,6 +108,15 @@ for (const marker of [
   }
 }
 
+const moduleEntries = readdirSync(moduleRoot).sort();
+if (JSON.stringify(moduleEntries) !== JSON.stringify(["module.ts", "test"])) {
+  throw new Error(`Catalog staging root must remain retired: ${JSON.stringify(moduleEntries)}`);
+}
+const testEntries = readdirSync(resolve(moduleRoot, "test")).sort();
+if (JSON.stringify(testEntries) !== JSON.stringify(["consumer-adoption.certify.ts"])) {
+  throw new Error(`Catalog staging tests must remain retired: ${JSON.stringify(testEntries)}`);
+}
+
 console.log(
-  `Catalog package-backed consumer adoption GREEN; version=${EXPECTED_VERSION} integrity=${lockedCatalog.integrity}`,
+  `Catalog package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedCatalog.integrity}`,
 );
