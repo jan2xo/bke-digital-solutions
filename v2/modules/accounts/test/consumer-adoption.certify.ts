@@ -2,11 +2,12 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.1.0/bke-accounts-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.2.0/bke-accounts-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 
 const [
   moduleSource,
+  commerceModuleSource,
   packageSource,
   lockSource,
   nextConfigSource,
@@ -14,6 +15,7 @@ const [
   migrationCompositorSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../commerce/module.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
   readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
   readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
@@ -38,7 +40,9 @@ if (
 
 const requiredPackageSurfaces = [
   "@bke/accounts/contracts/",
+  "@bke/accounts/contracts/purchase-access.contract",
   "@bke/accounts/logic/",
+  "@bke/accounts/logic/purchase-access",
   "@bke/accounts/providers/",
   "@bke/accounts/prisma/repositories/",
   "@bke/accounts/module.manifest",
@@ -47,6 +51,16 @@ for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Accounts host adapter is missing standalone package surface: ${marker}`);
   }
+}
+
+if (
+  !commerceModuleSource.includes("ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID") ||
+  !commerceModuleSource.includes("AccountsPurchaseAccessCapability") ||
+  commerceModuleSource.includes("ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID")
+) {
+  throw new Error(
+    "Commerce host checkout authorization must consume Accounts purchase-access instead of generic account-access.",
+  );
 }
 
 const forbiddenStagingSpecifiers = [
@@ -142,5 +156,5 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
 }
 
 console.log(
-  `Accounts standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedAccounts.integrity} staging=retired`,
+  `Accounts standalone consumer adoption GREEN version=${EXPECTED_VERSION} integrity=${lockedAccounts.integrity} staging=retired purchaseAccess=package-owned`,
 );
