@@ -1,0 +1,41 @@
+name: V2 Commerce 0.3 Lock Bootstrap
+
+on:
+  push:
+    branches:
+      - feat/v2-commerce-0.3-adoption
+    paths:
+      - ".github/workflows/v2-commerce-0.3-lock-bootstrap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-commerce-0.3-adoption
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Pin Commerce v0.3.0 and regenerate lock
+        run: |
+          set -euo pipefail
+          npm install --package-lock-only --ignore-scripts \
+            '@bke/commerce@https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.3.0/bke-commerce-0.3.0.tgz'
+      - name: Commit generated lock and retire bootstrap
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/v2-commerce-0.3-lock-bootstrap.yml
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "build(v2 commerce): lock @bke/commerce 0.3.0"
+          git push origin HEAD:feat/v2-commerce-0.3-adoption
