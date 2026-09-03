@@ -8,12 +8,35 @@ import {
 import type { IdentityPrincipal } from "@bke/identity/contracts/identity.contract";
 import { getV2WebApplication } from "../runtime";
 
+const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000;
+
 function cookieName() {
   return process.env.NODE_ENV === "production" ? "__Host-bke_session" : "bke_session";
 }
 
+export async function currentIdentitySessionToken(): Promise<string | null> {
+  return (await cookies()).get(cookieName())?.value ?? null;
+}
+
+export async function writeIdentitySessionCookie(
+  token: string,
+  expiresAt = new Date(Date.now() + SESSION_LIFETIME_MS),
+): Promise<void> {
+  (await cookies()).set(cookieName(), token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    expires: expiresAt,
+  });
+}
+
+export async function clearIdentitySessionCookie(): Promise<void> {
+  (await cookies()).delete(cookieName());
+}
+
 export async function currentIdentitySession(): Promise<IdentitySessionContext | null> {
-  const token = (await cookies()).get(cookieName())?.value;
+  const token = await currentIdentitySessionToken();
   if (!token) return null;
   const application = await getV2WebApplication();
   const sessionValidation = application.get<IdentitySessionValidationCapability>(
