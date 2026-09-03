@@ -40,7 +40,7 @@ export function createNotificationsIntentCapability(
   now: () => Date = () => new Date(),
 ): NotificationsIntentCapability {
   return Object.freeze({
-    create(input): NotificationsCreateIntentResult {
+    create(input: NotificationsCreateIntentInput): NotificationsCreateIntentResult {
       if (invalid(input)) return { status: "FAILED", code: "INVALID_INPUT" };
       if (input.eligible === false) return { status: "DO_NOT_NOTIFY", code: "INELIGIBLE" };
       if (input.expiresAt && input.expiresAt.getTime() <= now().getTime()) {
