@@ -28,6 +28,8 @@ jobs:
       - run: npm ci
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Notifications extraction boundary
+        run: npx tsx v2/modules/notifications/test/extraction.certify.ts
       - name: Typecheck V2
         run: npx tsc -p v2/tsconfig.json --noEmit
       - name: Test Notifications intent capability
