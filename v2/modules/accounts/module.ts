@@ -1,5 +1,6 @@
 import type { CapabilityModule } from "../../contracts/capability";
 import { ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID } from "@bke/accounts/contracts/account-access.contract";
+import { ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID } from "@bke/accounts/contracts/purchase-access.contract";
 import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "@bke/accounts/contracts/individual-account-creation.contract";
 import { ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID } from "@bke/accounts/contracts/invitation-acceptance.contract";
 import { ACCOUNTS_INVITATION_EXPIRATION_CAPABILITY_ID } from "@bke/accounts/contracts/invitation-expiration.contract";
@@ -17,6 +18,7 @@ import { ACCOUNTS_ORGANIZATION_PROFILE_UPDATE_CAPABILITY_ID } from "@bke/account
 import { ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID } from "@bke/accounts/contracts/ownership-transfer.contract";
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "@bke/accounts/contracts/switchable-account-list.contract";
 import { createAccountsAccountAccessCapability } from "@bke/accounts/logic/account-access";
+import { createAccountsPurchaseAccessCapability } from "@bke/accounts/logic/purchase-access";
 import { createAccountsIndividualAccountCreationCapability } from "@bke/accounts/logic/individual-account-creation";
 import { createAccountsInvitationAcceptanceCapability } from "@bke/accounts/logic/invitation-acceptance";
 import { createAccountsInvitationExpirationCapability } from "@bke/accounts/logic/invitation-expiration";
@@ -104,6 +106,7 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
     idProvider,
   );
   const accountAccess = createAccountsAccountAccessCapability(accountAccessRepository);
+  const purchaseAccess = createAccountsPurchaseAccessCapability(accountAccess);
   const switchableAccountList = createAccountsSwitchableAccountListCapability(
     switchableAccountListRepository,
   );
@@ -179,6 +182,10 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
         value: accountAccess,
+      },
+      {
+        id: ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
+        value: purchaseAccess,
       },
       {
         id: ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID,
