@@ -1,0 +1,38 @@
+name: V2 Production Host - V1 Free
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "prisma/**"
+      - "generated/prisma/**"
+      - "middleware.ts"
+      - "middleware.tsx"
+      - "proxy.ts"
+      - "instrumentation.ts"
+      - "instrumentation-client.ts"
+      - "v2/**"
+      - "package.json"
+      - "package-lock.json"
+      - "next.config.ts"
+      - ".github/workflows/v2-host-v1-free.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host-v1-free:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Certify production host has zero V1 runtime reach-through
+        run: node v2/tooling/check-host-v1-dependencies.mjs
