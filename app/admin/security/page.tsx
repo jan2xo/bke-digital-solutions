@@ -2,8 +2,7 @@ import { AdminSecurityActions } from "@/components/admin-security-actions";
 import { AdminSessionManager } from "@/components/admin-session-manager";
 import { currentSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { securityEventDefinition } from "@/lib/security/catalog";
-import { deriveSecurityReviewSignals } from "@/lib/security/review-signals";
+import { deriveSecurityReviewSignals, securityEventDefinition } from "@/v2/apps/web/security/presentation";
 import { redirect } from "next/navigation";
 
 export default async function AdminSecurityPage({ searchParams }: { searchParams: Promise<{ type?: string; severity?: string; outcome?: string; provider?: string }> }) {
