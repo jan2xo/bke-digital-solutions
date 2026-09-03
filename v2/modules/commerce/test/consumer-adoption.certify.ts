@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -42,7 +42,7 @@ for (const marker of [
   '"./module.manifest"',
 ]) {
   if (moduleSource.includes(marker)) {
-    throw new Error(`Commerce host adapter still executes staging implementation: ${marker}`);
+    throw new Error(`Commerce host adapter consumes retired staging implementation: ${marker}`);
   }
 }
 
@@ -54,15 +54,7 @@ if (packageJson.dependencies?.["@bke/commerce"] !== EXPECTED_RELEASE) {
 }
 
 const packageLock = JSON.parse(lockSource) as {
-  packages?: Record<
-    string,
-    {
-      dependencies?: Record<string, string>;
-      version?: string;
-      resolved?: string;
-      integrity?: string;
-    }
-  >;
+  packages?: Record<string, { dependencies?: Record<string, string>; version?: string; resolved?: string; integrity?: string }>;
 };
 if (packageLock.packages?.[""]?.dependencies?.["@bke/commerce"] !== EXPECTED_RELEASE) {
   throw new Error("Digital Solutions package-lock root does not pin the certified Commerce artifact.");
@@ -88,10 +80,25 @@ for (const marker of [
   EXPECTED_SHA256,
   "node_modules/@bke/commerce/prisma/schema.prisma",
   "node_modules/@bke/commerce/migrations",
-  "Certify Commerce consumer adoption",
+  "Certify Commerce consumer adoption and staging retirement",
 ]) {
   if (!commerceWorkflowSource.includes(marker)) {
-    throw new Error(`Commerce CI is missing package-backed adoption guardrail: ${marker}`);
+    throw new Error(`Commerce CI is missing package-backed retirement guardrail: ${marker}`);
+  }
+}
+
+for (const forbiddenWorkflowMarker of [
+  "v2/modules/commerce/test/extraction.certify.ts",
+  "v2/modules/commerce/test/purchase-plan-pricing.test.ts",
+  "v2/modules/commerce/test/purchase-plan-lookup.test.ts",
+  "v2/modules/commerce/test/offer-redemption.test.ts",
+  "v2/modules/commerce/test/order-invoice-creation.test.ts",
+  "v2/modules/commerce/test/checkout-orchestration.test.ts",
+  "v2/modules/commerce/test/settlement-reaction.test.ts",
+  "v2/modules/commerce/test/module-composition.test.ts",
+]) {
+  if (commerceWorkflowSource.includes(forbiddenWorkflowMarker)) {
+    throw new Error(`Commerce CI still depends on retired staging: ${forbiddenWorkflowMarker}`);
   }
 }
 
@@ -104,21 +111,15 @@ for (const marker of [
   }
 }
 
-for (const stagingPath of [
-  "contracts",
-  "docs",
-  "logic",
-  "module.manifest.ts",
-  "prisma.config.ts",
-  "prisma",
-  "test/extraction.certify.ts",
-  "test/module-composition.test.ts",
-]) {
-  if (!existsSync(resolve(moduleRoot, stagingPath))) {
-    throw new Error(`Commerce staging must remain present until adoption is GREEN: ${stagingPath}`);
-  }
+const moduleEntries = readdirSync(moduleRoot).sort();
+if (JSON.stringify(moduleEntries) !== JSON.stringify(["module.ts", "test"])) {
+  throw new Error(`Commerce staging root must remain retired: ${JSON.stringify(moduleEntries)}`);
+}
+const testEntries = readdirSync(resolve(moduleRoot, "test")).sort();
+if (JSON.stringify(testEntries) !== JSON.stringify(["consumer-adoption.certify.ts"])) {
+  throw new Error(`Commerce staging tests must remain retired: ${JSON.stringify(testEntries)}`);
 }
 
 console.log(
-  `Commerce package-backed consumer adoption GREEN; version=${EXPECTED_VERSION} integrity=${lockedCommerce.integrity}`,
+  `Commerce package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedCommerce.integrity}`,
 );
