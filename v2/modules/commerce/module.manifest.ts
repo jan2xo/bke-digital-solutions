@@ -1,9 +1,4 @@
-import { ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID } from "@bke/accounts/contracts/account-access.contract";
-import { ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID } from "@bke/entitlements/contracts/durable-right-grant.contract";
-import { LEGAL_ACCEPTANCE_CAPABILITY_ID } from "@bke/legal/contracts/acceptance.contract";
-import { PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID } from "@bke/payments/contracts/checkout-attempt.contract";
-import { PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID } from "@bke/payments/contracts/settlement-fact.contract";
-import type { ModuleManifest } from "../../contracts/capability";
+import type { CommerceModuleManifest } from "./contracts/module.contract";
 import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "./contracts/checkout-orchestration.contract";
 import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "./contracts/offer-redemption.contract";
 import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "./contracts/order-invoice-creation.contract";
@@ -13,13 +8,7 @@ import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "./contracts/settleme
 
 export const commerceModuleManifest = Object.freeze({
   moduleId: "commerce",
-  needs: [
-    ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
-    LEGAL_ACCEPTANCE_CAPABILITY_ID,
-    PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
-    PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
-    ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
-  ],
+  needs: [],
   provides: [
     COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
     COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID,
@@ -28,4 +17,4 @@ export const commerceModuleManifest = Object.freeze({
     COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID,
     COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID,
   ],
-} satisfies ModuleManifest);
+} as const satisfies CommerceModuleManifest);
