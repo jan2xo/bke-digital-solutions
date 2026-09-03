@@ -4,7 +4,6 @@ import { requireUser } from "@/lib/auth";
 import { requireAccountAccess } from "@/lib/authorization";
 import { db } from "@/lib/db";
 import { CustomerLicenseCard } from "@/components/customer-license-card";
-import { purchasePlanLabel } from "@/lib/pricing";
 import { PendingOrderActions } from "@/components/pending-order-actions";
 import { requireLegalClearance } from "@/lib/legal/guard";
 import { publishedLegalDocuments } from "@/lib/legal/service";
@@ -42,4 +41,5 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) { return <section className="card p-6"><h2 className="text-xl font-black">{title}</h2><div className="mt-5 grid gap-3">{children}</div></section>; }
 function Empty() { return <p className="text-sm text-[#a8b5c4]">Nothing here yet.</p>; }
+function purchasePlanLabel(type: "PERPETUAL" | "MONTHLY" | "ANNUAL") { return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : "Annual"; }
 function money(minor: number, currency: string) { return new Intl.NumberFormat("en-PH", { style: "currency", currency }).format(minor / 100); }
