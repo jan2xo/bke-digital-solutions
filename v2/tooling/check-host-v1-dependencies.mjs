@@ -97,6 +97,7 @@ const queue = [];
 const seen = new Set();
 const parent = new Map();
 const edgeSpecifier = new Map();
+const incoming = new Map();
 for (const entry of entries) {
   seen.add(entry);
   parent.set(entry, null);
@@ -109,7 +110,11 @@ for (let index = 0; index < queue.length; index += 1) {
 
   for (const specifier of moduleSpecifiers(file)) {
     const dependency = resolveLocalImport(file, specifier);
-    if (!dependency || seen.has(dependency)) continue;
+    if (!dependency) continue;
+    const edges = incoming.get(dependency) ?? [];
+    edges.push({ from: file, specifier });
+    incoming.set(dependency, edges);
+    if (seen.has(dependency)) continue;
     seen.add(dependency);
     parent.set(dependency, file);
     edgeSpecifier.set(dependency, specifier);
@@ -144,6 +149,13 @@ console.error(`V2 PRODUCTION HOST V1 REACH-THROUGH DETECTED: ${legacyFiles.lengt
 for (const file of legacyFiles) {
   console.error(`\nLEGACY: ${normalize(file)}`);
   for (const line of chainFor(file)) console.error(`  ${line}`);
+  const directImporters = (incoming.get(file) ?? [])
+    .map(({ from, specifier }) => `${normalize(from)}  <=  ${specifier}`)
+    .sort();
+  if (directImporters.length > 1) {
+    console.error("  DIRECT IMPORTERS:");
+    for (const importer of directImporters) console.error(`    ${importer}`);
+  }
 }
 console.error("\nMove required host infrastructure into V2-owned platform/host adapters and route business behavior through @bke/* capabilities. Do not allowlist V1 runtime implementation.");
 process.exit(1);
