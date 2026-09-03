@@ -28,10 +28,10 @@ jobs:
             "$root/prisma"
           find "$root/test" -maxdepth 1 -type f ! -name 'consumer-adoption.certify.ts' -print -delete
           git add -u "$root/test"
-          remaining="$(find "$root" -type f | sort)"
-          printf '%s\n' "$remaining"
-          test "$remaining" = "$root/module.ts
-$root/test/consumer-adoption.certify.ts"
+          find "$root" -type f | sort
+          test -f "$root/module.ts"
+          test -f "$root/test/consumer-adoption.certify.ts"
+          test "$(find "$root" -type f | wc -l | tr -d ' ')" = "2"
       - name: Commit staging retirement
         shell: bash
         run: |
