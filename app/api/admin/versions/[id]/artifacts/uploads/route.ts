@@ -8,7 +8,7 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { createArtifactUploadUrl } from "@/lib/storage";
+import { createArtifactUploadUrl } from "@/v2/apps/web/storage/object-storage";
 
 const allowedExtensions = new Set([".dmg", ".pkg", ".exe", ".msi", ".zip", ".deb", ".rpm", ".appimage", ".js", ".jsx", ".ts", ".tsx", ".py", ".ps1", ".sh", ".bat", ".cmd", ".vbs", ".jsxbin", ".plugin", ".aex"]);
 const inputSchema = z.object({
