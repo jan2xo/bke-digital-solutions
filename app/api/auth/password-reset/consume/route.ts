@@ -4,7 +4,7 @@ import {
   IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID,
   type IdentityPasswordResetCompletionCapability,
 } from "@bke/identity/contracts/password-reset-completion.contract";
-import { securityEvent } from "@/lib/security/events";
+import { securityEvent } from "@/v2/apps/web/security/events";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { passwordSchema } from "@/v2/apps/web/http/validation";
