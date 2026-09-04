@@ -11,7 +11,7 @@ import { scanArtifactStream } from "@/lib/supply-chain/scanner";
 import { resolveTrustedSupplyChainKey } from "@/lib/supply-chain/keyring";
 import { signReleaseManifest } from "@/lib/supply-chain/signing";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { assertObjectExists, streamObject, uploadObject } from "@/lib/storage";
+import { assertObjectExists, streamObject, uploadObject } from "@/v2/apps/web/storage/object-storage";
 import { buildBackupCertificationDocument, selectUniqueVerifiedBackup } from "@/lib/supply-chain/backup-certification";
 import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
