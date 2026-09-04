@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { deleteObject, uploadObject } from "@/lib/storage";
+import { deleteObject, uploadObject } from "@/v2/apps/web/storage/object-storage";
 import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 
 const allowed = new Set([".png", ".jpg", ".jpeg", ".webp"]);
