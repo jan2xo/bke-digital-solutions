@@ -5,7 +5,7 @@ import { clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
 import { commercialLeaseActions } from "@/lib/licensing/lifecycle";
-import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, validateLifecycleRequest } from "@/lib/licensing/cloud-agent-contract";
+import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, validateLifecycleRequest } from "@/v2/apps/web/licensing/cloud-agent-contract";
 
 const schema = activationSchema.extend({ operationId: z.string().min(8).max(128), productVersion: z.string().min(1), action: z.enum(commercialLeaseActions).optional() });
 

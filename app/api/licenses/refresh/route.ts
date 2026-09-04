@@ -9,7 +9,7 @@ import { decryptLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
 import { activeCommercialSigningKey } from "@/lib/licensing/signing-registry";
 import { requireProductVersion } from "@/lib/licensing/lifecycle";
 import { refreshRequiresReplacement } from "@/lib/licensing/refresh-decision";
-import { CLOUD_AGENT_PROTOCOL_VERSION, CloudAgentProtocolError, requireCloudAgentVersion } from "@/lib/licensing/cloud-agent-contract";
+import { CLOUD_AGENT_PROTOCOL_VERSION, CloudAgentProtocolError, requireCloudAgentVersion } from "@/v2/apps/web/licensing/cloud-agent-contract";
 
 const schema = activationSchema.extend({ operationId: z.string().min(8).max(128), currentLeaseId: z.string().uuid() });
 

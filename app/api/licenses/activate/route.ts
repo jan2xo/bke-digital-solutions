@@ -4,7 +4,7 @@ import { activationSchema } from "@/v2/apps/web/http/validation";
 import { clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
-import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion } from "@/lib/licensing/cloud-agent-contract";
+import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion } from "@/v2/apps/web/licensing/cloud-agent-contract";
 import { audit } from "@/lib/audit";
 
 const schema = activationSchema.extend({ operationId: z.string().min(8).max(128), productVersion: z.string().min(1) });
