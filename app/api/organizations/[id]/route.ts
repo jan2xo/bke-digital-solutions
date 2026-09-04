@@ -1,11 +1,16 @@
+import {
+  ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+  type AccountsAccountAccessCapability,
+} from "@bke/accounts/contracts/account-access.contract";
+import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authorization-policy";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAccountAccess, roleHasCapability } from "@/lib/authorization";
 import { db } from "@/lib/db";
 import { updateOrganizationProfile } from "@/v2/apps/web/accounts/organization-operations";
 import { requireIdentityUser } from "@/v2/apps/web/auth/session";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { getV2WebApplication } from "@/v2/apps/web/runtime";
 
 const schema = z
   .object({
@@ -21,10 +26,15 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   try {
     const principal = await requireIdentityUser();
     const { id } = await params;
-    const access = await requireAccountAccess(principal.id, id);
-    const canManageMembers = roleHasCapability(access.effectiveRole, "MANAGE_MEMBERS");
-    const canViewBilling = roleHasCapability(access.effectiveRole, "VIEW_PAYMENTS");
-    const canViewLicenses = roleHasCapability(access.effectiveRole, "VIEW_LICENSES");
+    const application = await getV2WebApplication();
+    const accountAccess = application.get<AccountsAccountAccessCapability>(
+      ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+    );
+    const access = await accountAccess.authorize({ principalId: principal.id, accountId: id });
+    if (access.status === "REJECTED" || access.status === "FAILED") throw new Error(access.code);
+    const canManageMembers = roleHasAccountsCapability(access.effectiveRole, "MANAGE_MEMBERS");
+    const canViewBilling = roleHasAccountsCapability(access.effectiveRole, "VIEW_PAYMENTS");
+    const canViewLicenses = roleHasAccountsCapability(access.effectiveRole, "VIEW_LICENSES");
     const account = await db.customerAccount.findUniqueOrThrow({
       where: { id },
       include: {
