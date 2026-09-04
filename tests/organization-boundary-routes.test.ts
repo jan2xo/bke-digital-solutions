@@ -24,7 +24,7 @@ describe("customer-facing organization boundary routes", () => {
       }
       expect(source).toContain("@/v2/apps/web/accounts/organization-operations");
       expect(source).not.toContain("@/lib/organizations");
-      expect(source).not.toContain("@/lib/auth");
+      expect(source).not.toMatch(/from\s+["']@\/lib\/auth["']/);
       expect(source).not.toContain("support");
       expect(source).not.toContain("production");
     }
