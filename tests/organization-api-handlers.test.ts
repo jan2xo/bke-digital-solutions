@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   requireIdentityUser: vi.fn(),
-  requireAccountAccess: vi.fn(),
+  accountAccessAuthorize: vi.fn(),
   listSwitchableAccounts: vi.fn(),
   createOrganizationAccount: vi.fn(),
   listOrganizationInvitations: vi.fn(),
@@ -29,11 +29,6 @@ vi.mock("@/v2/apps/web/accounts/organization-operations", () => ({
   transferOrganizationOwnership: mocks.transferOrganizationOwnership,
 }));
 vi.mock("@/v2/apps/web/runtime", () => ({ getV2WebApplication: mocks.getV2WebApplication }));
-vi.mock("@/lib/authorization", () => ({
-  requireAccountAccess: mocks.requireAccountAccess,
-  roleHasCapability: (role: string, capability: string) =>
-    role === "OWNER" || (role === "BILLING" && ["VIEW_PAYMENTS", "MANAGE_MEMBERS"].includes(capability)),
-}));
 vi.mock("@/lib/db", () => ({ db: mocks.db }));
 
 const appUrl = process.env.APP_URL!;
@@ -53,8 +48,24 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.requireIdentityUser.mockResolvedValue(user);
   mocks.checkLegalReacceptance.mockResolvedValue({ status: "CURRENT" });
+  mocks.accountAccessAuthorize.mockResolvedValue({
+    status: "AUTHORIZED",
+    account: {
+      id: "account-1",
+      type: "ORGANIZATION",
+      displayName: "Acme",
+      ownerId: user.id,
+      billingEmail: "owner@acme.test",
+      taxId: "tax",
+      lifecycleState: "ACTIVE",
+    },
+    effectiveRole: "OWNER",
+  });
   mocks.getV2WebApplication.mockResolvedValue({
-    get: () => ({ check: mocks.checkLegalReacceptance }),
+    get: (capabilityId: string) =>
+      capabilityId === "bke.accounts.account-access.v1"
+        ? { authorize: mocks.accountAccessAuthorize }
+        : { check: mocks.checkLegalReacceptance },
   });
   mocks.expirePendingOrganizationInvitations.mockResolvedValue({ count: 0 });
 });
@@ -171,7 +182,6 @@ describe("organization API handlers", () => {
   });
 
   it("serializes the retained rich account-detail read model through an explicit safe invitation select", async () => {
-    mocks.requireAccountAccess.mockResolvedValue({ effectiveRole: "OWNER" });
     mocks.db.customerAccount.findUniqueOrThrow.mockResolvedValue({
       id: "account-1",
       type: "ORGANIZATION",
@@ -196,6 +206,10 @@ describe("organization API handlers", () => {
     const { GET } = await import("../app/api/organizations/[id]/route");
     const response = await GET(new Request("https://app.test/api/organizations/account-1"), params);
     expect(response.status).toBe(200);
+    expect(mocks.accountAccessAuthorize).toHaveBeenCalledWith({
+      principalId: user.id,
+      accountId: "account-1",
+    });
     expect((await response.json()).invitations[0]).not.toHaveProperty("tokenHash");
     expect(mocks.db.customerAccount.findUniqueOrThrow).toHaveBeenCalledWith(
       expect.objectContaining({
