@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { hashToken } from "@/lib/security/crypto";
-import { downloadObject } from "@/lib/storage";
+import { downloadObject } from "@/v2/apps/web/storage/object-storage";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { clientIp } from "@/v2/apps/web/http/request";
 import { audit } from "@/lib/audit";
