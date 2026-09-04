@@ -4,7 +4,7 @@ import { audit } from "@/lib/audit";
 import { createSession, hashPassword, requireRecentSession, verifyPassword } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { securityEvent } from "@/lib/security/events";
+import { securityEvent } from "@/v2/apps/web/security/events";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { passwordSchema } from "@/v2/apps/web/http/validation";
