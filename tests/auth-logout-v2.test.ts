@@ -23,7 +23,6 @@ vi.mock("../v2/apps/web/runtime", () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  process.env.NODE_ENV = "test";
   mocks.cookieGet.mockReturnValue({ value: "raw-token" });
   mocks.applicationGet.mockReturnValue({ terminate: mocks.terminate });
   mocks.terminate.mockResolvedValue({ status: "TERMINATED" });
