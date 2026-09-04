@@ -1,6 +1,10 @@
 import "server-only";
 import { cookies } from "next/headers";
 import {
+  IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
+  type IdentitySessionTerminationCapability,
+} from "@bke/identity/contracts/session-termination.contract";
+import {
   IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
   type IdentitySessionContext,
   type IdentitySessionValidationCapability,
@@ -9,6 +13,17 @@ import type { IdentityPrincipal } from "@bke/identity/contracts/identity.contrac
 import { getV2WebApplication } from "../runtime";
 
 const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000;
+
+class IdentitySessionOperationError extends Error {
+  readonly code: string;
+  readonly status: number;
+
+  constructor(code: string, status: number) {
+    super(code);
+    this.code = code;
+    this.status = status;
+  }
+}
 
 function cookieName() {
   return process.env.NODE_ENV === "production" ? "__Host-bke_session" : "bke_session";
@@ -33,6 +48,19 @@ export async function writeIdentitySessionCookie(
 
 export async function clearIdentitySessionCookie(): Promise<void> {
   (await cookies()).delete(cookieName());
+}
+
+export async function terminateCurrentIdentitySession(): Promise<void> {
+  const token = await currentIdentitySessionToken();
+  if (token) {
+    const application = await getV2WebApplication();
+    const sessionTermination = application.get<IdentitySessionTerminationCapability>(
+      IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
+    );
+    const result = await sessionTermination.terminate(token);
+    if (result.status === "FAILED") throw new IdentitySessionOperationError(result.code, 503);
+  }
+  await clearIdentitySessionCookie();
 }
 
 export async function currentIdentitySession(): Promise<IdentitySessionContext | null> {
