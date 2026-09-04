@@ -13,7 +13,7 @@ import {
 } from "@/v2/apps/web/auth/mfa-challenge";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { securityEvent } from "@/lib/security/events";
+import { securityEvent } from "@/v2/apps/web/security/events";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 
