@@ -1,0 +1,85 @@
+name: Temporary V2 Host Infrastructure Codemod
+
+on:
+  push:
+    branches:
+      - feat/v2-host-standalone-convergence
+    paths:
+      - .github/workflows/tmp-v2-host-infra-codemod.yml
+
+permissions:
+  contents: write
+
+jobs:
+  codemod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out host convergence branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-standalone-convergence
+          fetch-depth: 0
+
+      - name: Move production app routes to V2-owned HTTP infrastructure
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              '"@/lib/http"': '"@/v2/apps/web/http/api-error"',
+              "'@/lib/http'": "'@/v2/apps/web/http/api-error'",
+              '"@/lib/security/request"': '"@/v2/apps/web/http/request"',
+              "'@/lib/security/request'": "'@/v2/apps/web/http/request'",
+              '"@/lib/security/rate-limit"': '"@/v2/apps/web/http/rate-limit"',
+              "'@/lib/security/rate-limit'": "'@/v2/apps/web/http/rate-limit'",
+          }
+
+          changed = []
+          counts = {old: 0 for old in replacements}
+          app = Path("app")
+          for path in sorted(app.rglob("*")):
+              if not path.is_file() or path.suffix not in {".ts", ".tsx"}:
+                  continue
+              source = path.read_text()
+              updated = source
+              for old, new in replacements.items():
+                  occurrences = updated.count(old)
+                  if occurrences:
+                      counts[old] += occurrences
+                      updated = updated.replace(old, new)
+              if updated != source:
+                  path.write_text(updated)
+                  changed.append(str(path))
+
+          if not changed:
+              raise SystemExit("codemod changed no production app files")
+
+          stale = []
+          for path in sorted(app.rglob("*")):
+              if not path.is_file() or path.suffix not in {".ts", ".tsx"}:
+                  continue
+              source = path.read_text()
+              for old in replacements:
+                  if old in source:
+                      stale.append(f"{path}: {old}")
+          if stale:
+              raise SystemExit("stale V1 host infrastructure imports remain:\n" + "\n".join(stale))
+
+          print(f"changed_files={len(changed)}")
+          for old, count in counts.items():
+              if count:
+                  print(f"replaced {old}: {count}")
+          for path in changed:
+              print(path)
+          PY
+
+      - name: Self-delete bootstrap and publish codemod
+        run: |
+          rm .github/workflows/tmp-v2-host-infra-codemod.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app .github/workflows/tmp-v2-host-infra-codemod.yml
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No codemod changes to commit"; exit 1; }
+          git commit -m "refactor(v2 host): adopt V2 HTTP infrastructure"
+          git push origin HEAD:feat/v2-host-standalone-convergence
