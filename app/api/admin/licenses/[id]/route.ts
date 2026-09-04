@@ -6,7 +6,7 @@ import {assertSameOrigin} from "@/v2/apps/web/http/request";
 import {audit} from "@/lib/audit";
 import {apiError} from "@/v2/apps/web/http/api-error";
 import {decryptLicenseKey, sha256} from "@/lib/security/crypto";
-import {addDays} from "@/lib/time";
+import {addDays} from "@/v2/apps/web/time";
 import {issueCommercialLease} from "@/lib/licensing/commercial-lease";
 
 const schema=z.discriminatedUnion("action",[
