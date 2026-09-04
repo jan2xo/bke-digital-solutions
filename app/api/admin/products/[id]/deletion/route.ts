@@ -5,8 +5,8 @@ import { audit } from "@/lib/audit";
 import { evaluateProductDeletionEligibility, finalizeProductDeletion, requestProductDeletion, ProductDeletionError } from "@/lib/product-deletion";
 import { processStorageCleanupJob } from "@/lib/storage-cleanup";
 import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
-import { apiError } from "@/lib/http";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
 
 const idSchema = z.string().cuid();
 const bodySchema = z.object({ confirmationName: z.string().min(1).max(120) }).strict();

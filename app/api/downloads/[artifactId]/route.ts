@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { hashToken, randomToken } from "@/lib/security/crypto";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { apiError } from "@/lib/http";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 import { resolveEligibleReleaseForArtifact } from "@/lib/releases/resolution";
 

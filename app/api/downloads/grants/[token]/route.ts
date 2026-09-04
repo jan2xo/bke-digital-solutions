@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { hashToken } from "@/lib/security/crypto";
 import { downloadObject } from "@/lib/storage";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { clientIp } from "@/lib/security/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { clientIp } from "@/v2/apps/web/http/request";
 import { audit } from "@/lib/audit";
 export async function GET(request: Request, { params }: { params: Promise<{ token: string }> }) {
   if (!(await rateLimit(`download-grant:${clientIp(request)}`, 30, 3600)).allowed) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });

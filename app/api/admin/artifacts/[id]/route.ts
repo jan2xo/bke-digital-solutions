@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { audit } from "@/lib/audit";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 
 export async function PATCH() {

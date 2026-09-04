@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
-import { apiError } from "@/lib/http";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

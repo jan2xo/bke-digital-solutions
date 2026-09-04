@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const schema = z.object({ markdownContent: z.string().min(1).max(200_000).optional(), changeSummary: z.string().trim().min(2).max(500), requiresReacceptance: z.boolean().default(false), duplicateVersionId: z.string().cuid().optional() }).strict();
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

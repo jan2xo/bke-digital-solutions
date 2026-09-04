@@ -3,10 +3,10 @@ import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { createSession, hashPassword, requireRecentSession, verifyPassword } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { securityEvent } from "@/lib/security/events";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { passwordSchema } from "@/v2/apps/web/http/validation";
 
 const schema = z.object({ currentPassword: z.string().min(1).max(128), newPassword: passwordSchema });

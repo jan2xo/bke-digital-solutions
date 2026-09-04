@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { ADMIN_EMAIL_CHALLENGE_COOKIE, ADMIN_EMAIL_CHALLENGE_COOKIE_OPTIONS, createEmailChallenge, resendPendingLoginChallenge } from "@/lib/admin-mfa";
 import { currentSession } from "@/lib/auth";
-import { apiError } from "@/lib/http";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 
 export async function POST(request: Request) {
   try {

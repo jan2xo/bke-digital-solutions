@@ -3,8 +3,8 @@ import { z } from "zod";
 import { createPrivateKey, createPublicKey } from "node:crypto";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { sha256 } from "@/lib/security/crypto";
 
 export async function GET() { try { await requireRecentAdmin(); return NextResponse.json(await db.commercialSigningKey.findMany({ orderBy: { createdAt: "desc" }, select: { keyId: true, algorithm: true, publicKey: true, status: true, createdAt: true, activatedAt: true, retiredAt: true } })); } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "FORBIDDEN" }, { status: 403 }); } }
