@@ -1,7 +1,11 @@
+import {
+  ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+  type AccountsAccountAccessCapability,
+} from "@bke/accounts/contracts/account-access.contract";
+import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authorization-policy";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { requireAccountAccess } from "@/lib/authorization";
 import { db } from "@/lib/db";
 import { CustomerLicenseCard } from "@/components/customer-license-card";
 import { PendingOrderActions } from "@/components/pending-order-actions";
@@ -9,17 +13,26 @@ import { requireLegalClearance } from "@/lib/legal/guard";
 import { publishedLegalDocuments } from "@/lib/legal/service";
 import { SUBSCRIPTION_LEGAL_TYPES, CHECKOUT_LEGAL_TYPES } from "@/lib/legal/constants";
 import { SubscriptionRenewButton } from "@/components/subscription-renew-button";
-import { roleHasCapability } from "@/lib/authorization";
 import { resolveCurrentCustomerRelease } from "@/lib/releases/resolution";
+import { getV2WebApplication } from "@/v2/apps/web/runtime";
 
 export default async function AccountPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser().catch(() => redirect("/login"));
   const { id } = await params;
   await requireLegalClearance(user.id, `/dashboard/accounts/${id}`);
-  const account = await requireAccountAccess(user.id, id).catch(() => redirect("/dashboard"));
-  const canViewOrders = roleHasCapability(account.effectiveRole, "VIEW_ORDERS");
-  const canViewLicenses = roleHasCapability(account.effectiveRole, "VIEW_LICENSES");
-  const canViewSubscriptions = roleHasCapability(account.effectiveRole, "VIEW_SUBSCRIPTIONS");
+  const access = await (async () => {
+    const application = await getV2WebApplication();
+    const accountAccess = application.get<AccountsAccountAccessCapability>(
+      ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
+    );
+    const result = await accountAccess.authorize({ principalId: user.id, accountId: id });
+    if (result.status !== "AUTHORIZED") throw new Error(result.code);
+    return result;
+  })().catch(() => redirect("/dashboard"));
+  const account = { ...access.account, effectiveRole: access.effectiveRole };
+  const canViewOrders = roleHasAccountsCapability(account.effectiveRole, "VIEW_ORDERS");
+  const canViewLicenses = roleHasAccountsCapability(account.effectiveRole, "VIEW_LICENSES");
+  const canViewSubscriptions = roleHasAccountsCapability(account.effectiveRole, "VIEW_SUBSCRIPTIONS");
   const [orders, licenses, subscriptions, trials, renewalLegal] = await Promise.all([
     canViewOrders ? db.order.findMany({ where: { accountId: id }, include: { invoice: true, payments: true, items: true, attempts: { select: { status: true, checkoutUrl: true }, orderBy: { createdAt: "desc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
     db.license.findMany({ where: { accountId: id, ...(canViewLicenses ? {} : { assignments: { some: { userId: user.id } } }) }, include: { edition: true, purchasePlan: true, product: true, activations: { orderBy: { activatedAt: "desc" } } }, orderBy: { createdAt: "desc" }, take: 50 }),
