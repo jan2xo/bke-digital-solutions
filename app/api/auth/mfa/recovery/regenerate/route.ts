@@ -3,7 +3,7 @@ import {
   IDENTITY_MFA_RECOVERY_REGENERATION_CAPABILITY_ID,
   type IdentityMfaRecoveryRegenerationCapability,
 } from "@bke/identity/contracts/mfa-recovery-regeneration.contract";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { createSession } from "@/lib/auth";
 import {
   currentIdentitySessionToken,

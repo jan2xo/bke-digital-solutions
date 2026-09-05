@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireRecentAdmin } from "@/lib/auth";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { db } from "@/lib/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";

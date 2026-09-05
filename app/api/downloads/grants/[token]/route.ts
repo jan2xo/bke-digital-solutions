@@ -4,7 +4,7 @@ import { hashToken } from "@/lib/security/crypto";
 import { downloadObject } from "@/v2/apps/web/storage/object-storage";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { clientIp } from "@/v2/apps/web/http/request";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 export async function GET(request: Request, { params }: { params: Promise<{ token: string }> }) {
   if (!(await rateLimit(`download-grant:${clientIp(request)}`, 30, 3600)).allowed) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
   const { token } = await params; const tokenHash = hashToken(token); const now = new Date();

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { editionPlanSchema, syncEditionPlans } from "@/lib/edition-plans";
 

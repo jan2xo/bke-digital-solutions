@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { closeCustomer, customerRetentionBlockers, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, reopenCustomer, requestPrivacyDeletion, setLegalHold } from "@/lib/customer-lifecycle";

@@ -3,7 +3,7 @@ import { extname } from "node:path";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { apiError } from "@/v2/apps/web/http/api-error";

@@ -4,7 +4,7 @@ const findMany = vi.fn();
 const upsert = vi.fn();
 const transaction = vi.fn(async (callback: (tx: unknown) => unknown) => callback({ siteContent: { upsert }, auditLog: { create: vi.fn() } }));
 vi.mock("@/lib/db", () => ({ db: { siteContent: { findMany, upsert }, $transaction: transaction } }));
-vi.mock("@/lib/audit", () => ({ audit: vi.fn() }));
+vi.mock("@/v2/apps/web/audit", () => ({ audit: vi.fn() }));
 
 describe("site content", () => {
   it("returns typed defaults for missing keys", async () => {

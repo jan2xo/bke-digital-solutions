@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { env } from "@/lib/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";

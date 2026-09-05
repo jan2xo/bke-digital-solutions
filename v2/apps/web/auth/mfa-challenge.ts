@@ -1,6 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { sendAdministratorLoginCode } from "@/lib/email";
 
 export const IDENTITY_MFA_CHALLENGE_COOKIE =

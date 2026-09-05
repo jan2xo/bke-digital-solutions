@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { evaluateProductDeletionEligibility, finalizeProductDeletion, requestProductDeletion, ProductDeletionError } from "@/lib/product-deletion";
 import { processStorageCleanupJob } from "@/lib/storage-cleanup";
 import { db } from "@/lib/db";

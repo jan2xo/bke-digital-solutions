@@ -29,7 +29,7 @@ const mocks = vi.hoisted(() => {
 vi.mock("@/lib/auth", () => ({ requireRecentAdmin: mocks.requireRecentAdmin }));
 vi.mock("@/lib/db", () => ({ db: mocks.db }));
 vi.mock("@/v2/apps/web/http/request", () => ({ assertSameOrigin: mocks.assertSameOrigin }));
-vi.mock("@/lib/audit", () => ({ audit: mocks.audit }));
+vi.mock("@/v2/apps/web/audit", () => ({ audit: mocks.audit }));
 vi.mock("@/lib/security/crypto", () => ({ decryptLicenseKey: mocks.decryptLicenseKey, sha256: mocks.sha256 }));
 vi.mock("@/lib/licensing/commercial-lease", () => ({ issueCommercialLease: mocks.issueCommercialLease }));
 

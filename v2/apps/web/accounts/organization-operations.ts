@@ -56,7 +56,7 @@ import {
   type AccountsSwitchableAccountListCapability,
 } from "@bke/accounts/contracts/switchable-account-list.contract";
 import type { AccountsMemberRole } from "@bke/accounts/contracts/account.contract";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { getV2WebApplication } from "../runtime";
 
 class AccountsOperationError extends Error {
