@@ -67,7 +67,12 @@ export const paymentProvider = Object.freeze({
       amountMinor: input.amountMinor,
       currency: input.currency,
       payer: input.customer,
-      items: input.items,
+      items: input.items.map((item) => ({
+        name: item.name,
+        ...(item.description === null ? {} : { description: item.description }),
+        amountMinor: item.amountMinor,
+        quantity: item.quantity,
+      })),
       idempotencyKey: input.idempotencyKey,
     });
     return { externalId: checkout.externalCheckoutId, checkoutUrl: checkout.checkoutUrl };
