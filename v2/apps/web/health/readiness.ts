@@ -72,12 +72,18 @@ function providerKeyRing(): ProviderCredentialKeyRing {
   if (rawPrevious) {
     try {
       const parsed = JSON.parse(rawPrevious) as Record<string, unknown>;
-      previousKeys = Object.fromEntries(
-        Object.entries(parsed)
-          .filter((entry): entry is [string, string] => typeof entry[1] === "string")
-          .map(([version, key]) => [Number(version), key])
-          .filter(([version]) => Number.isInteger(version) && version > 0),
-      );
+      const entries: Array<[number, string]> = [];
+      for (const [version, key] of Object.entries(parsed)) {
+        const numericVersion = Number(version);
+        if (
+          typeof key === "string" &&
+          Number.isInteger(numericVersion) &&
+          numericVersion > 0
+        ) {
+          entries.push([numericVersion, key]);
+        }
+      }
+      previousKeys = Object.fromEntries(entries);
     } catch {
       previousKeys = {};
     }
