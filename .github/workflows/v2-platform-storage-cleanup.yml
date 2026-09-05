@@ -1,0 +1,51 @@
+name: V2 Platform - Storage Cleanup
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/platform/storage-cleanup/**"
+      - "v2/tooling/check-module-boundaries.mjs"
+      - "v2/tsconfig.json"
+      - "v2/vitest.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/v2-platform-storage-cleanup.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  storage-cleanup-platform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Reject V1/domain/persistence reach-through
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' v2/platform/storage-cleanup --include='*.ts'; then
+            echo "V2 Storage Cleanup must receive persistence, storage, and eligibility through ports."
+            exit 1
+          fi
+      - name: Reject domain deletion-policy ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(productArtifact|activeReference|Catalog|catalog|entitlement|license|order)' v2/platform/storage-cleanup --include='*.ts' --exclude='*.test.ts'; then
+            echo "V2 Storage Cleanup must not decide domain deletion eligibility."
+            exit 1
+          fi
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Certify Storage Cleanup platform behavior
+        run: npx vitest run --config v2/vitest.config.ts v2/platform/storage-cleanup/test/storage-cleanup.test.ts
