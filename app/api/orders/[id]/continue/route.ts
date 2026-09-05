@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { paymentProvider } from "@/lib/payments";
+import { paymentProvider } from "@/v2/apps/web/payments/compatibility-provider";
 import { randomToken } from "@/lib/security/crypto";
 import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
 
@@ -19,9 +19,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         where: { id, status: "PENDING", account: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } },
       });
       if (!orderRecord) throw new Error("NOT_FOUND");
-      // A multi-relation include is interpreted as parallel query-plan nodes by
-      // Prisma. Read each relation sequentially while this interactive
-      // transaction owns a single PostgreSQL connection.
       const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: orderRecord.accountId } });
       const items = await tx.orderItem.findMany({ where: { orderId: orderRecord.id }, orderBy: { id: "asc" } });
       const attempts = await tx.paymentAttempt.findMany({ where: { orderId: orderRecord.id, status: { in: ["CREATING", "PENDING"] } }, orderBy: { createdAt: "desc" }, take: 1 });
