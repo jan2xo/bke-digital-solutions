@@ -322,7 +322,7 @@ export function createProviderConfigurationPlatform(dependencies: Readonly<{
 
     let code = "PROVIDER_VALIDATION_FAILED";
     try {
-      await blockForbiddenLive(input.actorId, input.provider, input.environment);
+      assertLiveProviderAllowed(dependencies.runtime, input.provider, input.environment);
       const values = decryptConfiguration(configuration);
       assertProviderCredentialShape(
         input.provider,
