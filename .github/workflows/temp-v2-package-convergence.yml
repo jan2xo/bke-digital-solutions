@@ -1,0 +1,34 @@
+name: Temporary V2 Package Convergence
+
+on:
+  push:
+    branches: [feat/v2-host-standalone-convergence]
+    paths:
+      - ".github/workflows/temp-v2-package-convergence.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  converge-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-standalone-convergence
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: |
+          npm install --save-exact \
+            @bke/identity@https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz \
+            @bke/licensing@https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.2.0/bke-licensing-0.2.0.tgz \
+            @bke/support@https://github.com/jan2xo/bke-libraries-typescript/releases/download/support-v0.1.0/bke-support-0.1.0.tgz
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git diff --cached --exit-code && exit 0
+          git commit -m "chore(v2 host): converge released BKE capability packages"
+          git push origin HEAD:feat/v2-host-standalone-convergence
