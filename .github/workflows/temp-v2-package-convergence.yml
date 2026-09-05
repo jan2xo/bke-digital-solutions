@@ -32,3 +32,5 @@ jobs:
           git diff --cached --exit-code && exit 0
           git commit -m "chore(v2 host): converge released BKE capability packages"
           git push origin HEAD:feat/v2-host-standalone-convergence
+
+# trigger: 2
