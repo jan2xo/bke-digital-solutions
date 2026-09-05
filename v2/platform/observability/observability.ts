@@ -1,6 +1,7 @@
 import type {
   HealthState,
   MetricValue,
+  ObservabilityAlert,
   ObservabilityAlertStore,
   ObservabilityCard,
   ObservabilitySnapshot,
@@ -65,7 +66,7 @@ export async function syncObservabilityAlerts(input: Readonly<{
   snapshot: ObservabilitySnapshot;
   store: ObservabilityAlertStore;
   now?: () => Date;
-}>): Promise<readonly ReturnType<ObservabilityAlertStore["list"]> extends Promise<infer T> ? T extends readonly unknown[] ? T[number] : never : never[]> {
+}>): Promise<readonly ObservabilityAlert[]> {
   const now = (input.now ?? (() => new Date()))();
 
   for (const card of input.snapshot.cards) {
@@ -95,5 +96,5 @@ export async function syncObservabilityAlerts(input: Readonly<{
     });
   }
 
-  return input.store.list() as never;
+  return input.store.list();
 }
