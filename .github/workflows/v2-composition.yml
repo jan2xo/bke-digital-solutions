@@ -69,11 +69,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-licensing-0.1.0.tgz
+          artifact=/tmp/bke-licensing-0.2.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.1.0/bke-licensing-0.1.0.tgz
-          echo "3e13858c21c12bafa682f45074c79353951609b4bb2e2945b170bb1e6e898d6b  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.2.0/bke-licensing-0.2.0.tgz
+          echo "532761d887568fa4ca9767dbcbb17513e8408d6713d0bfc9f7c4feb97561131f  $artifact" | sha256sum -c -
       - name: Verify certified Entitlements package artifact
         shell: bash
         run: |

@@ -1,8 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.1.0/bke-licensing-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.2.0/bke-licensing-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 
 const [
   moduleSource,
