@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { apiError } from "@/lib/http";
-import { customerReply } from "@/lib/support";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { customerReply } from "@/v2/apps/web/support/capability";
 
 const schema = z.object({ body: z.string().trim().min(1).max(8000) });
 

@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { audit } from "@/lib/audit";
-import { apiError } from "@/lib/http";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { audit } from "@/v2/apps/web/audit";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { closeCustomer, customerRetentionBlockers, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, reopenCustomer, requestPrivacyDeletion, setLegalHold } from "@/lib/customer-lifecycle";
-import { securityEvent } from "@/lib/security/events";
+import { securityEvent } from "@/v2/apps/web/security/events";
 
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("SUSPEND") }), z.object({ action: z.literal("REACTIVATE") }), z.object({ action: z.literal("RESET_DEVICES") }),

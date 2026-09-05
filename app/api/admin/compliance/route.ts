@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { COMPLIANCE_STATUSES } from "@/lib/compliance";
 
 const schema = z.discriminatedUnion("action", [

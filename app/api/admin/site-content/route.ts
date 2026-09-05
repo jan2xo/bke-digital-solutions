@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { assertSameOrigin } from "@/lib/security/request";
-import { apiError } from "@/lib/http";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { getSiteContent, resetSiteContent, saveSiteContent, siteContentInput } from "@/lib/site-content";
 
 const requestSchema = z.discriminatedUnion("action", [

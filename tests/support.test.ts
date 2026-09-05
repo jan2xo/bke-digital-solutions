@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({ db: {} }));
-vi.mock("@/lib/audit", () => ({ audit: vi.fn(), redact: (value: unknown) => value }));
+vi.mock("@/v2/apps/web/audit", () => ({ audit: vi.fn(), redact: (value: unknown) => value }));
 vi.mock("@/lib/email", () => ({ queueCommerceEmail: vi.fn() }));
 
 const { buildSafeSupportContext, supportPublicId } = await import("@/lib/support");

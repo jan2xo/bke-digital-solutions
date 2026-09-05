@@ -2,11 +2,11 @@ import {NextResponse} from "next/server";
 import {z} from "zod";
 import {requireRecentAdmin} from "@/lib/auth";
 import {db} from "@/lib/db";
-import {assertSameOrigin} from "@/lib/security/request";
-import {audit} from "@/lib/audit";
-import {apiError} from "@/lib/http";
+import {assertSameOrigin} from "@/v2/apps/web/http/request";
+import {audit} from "@/v2/apps/web/audit";
+import {apiError} from "@/v2/apps/web/http/api-error";
 import {decryptLicenseKey, sha256} from "@/lib/security/crypto";
-import {addDays} from "@/lib/time";
+import {addDays} from "@/v2/apps/web/time";
 import {issueCommercialLease} from "@/lib/licensing/commercial-lease";
 
 const schema=z.discriminatedUnion("action",[

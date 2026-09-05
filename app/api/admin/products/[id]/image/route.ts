@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { extname } from "node:path";
 import { NextResponse } from "next/server";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
-import { deleteObject, uploadObject } from "@/lib/storage";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { deleteObject, uploadObject } from "@/v2/apps/web/storage/object-storage";
 import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 
 const allowed = new Set([".png", ".jpg", ".jpeg", ".webp"]);

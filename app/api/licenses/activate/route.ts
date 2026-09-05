@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { activationSchema } from "@/lib/validation";
-import { clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { activationSchema } from "@/v2/apps/web/http/validation";
+import { clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
-import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion } from "@/lib/licensing/cloud-agent-contract";
-import { audit } from "@/lib/audit";
+import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion } from "@/v2/apps/web/licensing/cloud-agent-contract";
+import { audit } from "@/v2/apps/web/audit";
 
 const schema = activationSchema.extend({ operationId: z.string().min(8).max(128), productVersion: z.string().min(1) });
 type ActivationInput = z.infer<typeof schema>;

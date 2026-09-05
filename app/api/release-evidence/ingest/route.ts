@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
-import { apiError } from "@/lib/http";
-import { downloadObject, uploadObject, deleteObject } from "@/lib/storage";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { downloadObject, uploadObject, deleteObject } from "@/v2/apps/web/storage/object-storage";
 import { validateReleaseEvidence, bearerMatches } from "@/lib/supply-chain/release-evidence";
 
 export async function POST(request: Request) {

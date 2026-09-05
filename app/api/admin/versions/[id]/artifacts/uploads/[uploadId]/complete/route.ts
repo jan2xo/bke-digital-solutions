@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireRecentAdmin } from "@/lib/auth";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
-import { deleteObject } from "@/lib/storage";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { deleteObject } from "@/v2/apps/web/storage/object-storage";
 import { verifyStoredArtifact } from "@/lib/artifacts/verify-stored-artifact";
 import { queueStorageCleanup } from "@/lib/storage-cleanup";
 import { ensureCommissioningRun } from "@/lib/commissioning/service";
