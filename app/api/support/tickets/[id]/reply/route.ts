@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { customerReply } from "@/lib/support";
+import { customerReply } from "@/v2/apps/web/support/capability";
 
 const schema = z.object({ body: z.string().trim().min(1).max(8000) });
 
