@@ -42,11 +42,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-identity-0.1.0.tgz
+          artifact=/tmp/bke-identity-0.3.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.1.0/bke-identity-0.1.0.tgz
-          echo "4d77587762405e5844fe2a4ad38d16c1bea62ac06ac260696f1c2f3cc1b2cb8d  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz
+          echo "5d8820122de15e0b500f6e3cccfdeeec6b63afbb361daa1dee3fc217e1c3f139  $artifact" | sha256sum -c -
       - name: Verify certified Accounts package artifact
         shell: bash
         run: |
