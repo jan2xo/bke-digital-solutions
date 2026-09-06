@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.1.0/bke-payments-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.2.0/bke-payments-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 const EXPECTED_SHA256 =
-  "d28c5fd37360e717416c4827c4aba48bf960685f324565b7ae0ca948eb318f41";
+  "5553cb18c57353add174417813e276e301e991758a38971dd046eea2bb3037d3";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
