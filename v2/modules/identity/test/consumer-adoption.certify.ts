@@ -12,6 +12,9 @@ const [
   identityWorkflowSource,
   migrationCompositorSource,
   installedIdentityContractSource,
+  installedSessionAdministrationContractSource,
+  sessionAdministrationHostSource,
+  sessionsRouteSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
@@ -27,6 +30,18 @@ const [
   ),
   readFile(
     new URL("../../../../node_modules/@bke/identity/contracts/identity.contract.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../node_modules/@bke/identity/contracts/session-administration.contract.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../apps/web/security/session-administration.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../app/api/admin/security/sessions/route.ts", import.meta.url),
     "utf8",
   ),
 ]);
@@ -57,6 +72,36 @@ if (!installedIdentityContractSource.includes("readonly establishedAt: Date;")) 
   throw new Error(
     "Installed @bke/identity contract does not expose the canonical principal establishment fact.",
   );
+}
+
+for (const marker of [
+  "IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID",
+  "createIdentitySessionAdministrationCapability",
+  "createPostgresIdentitySessionAdministrationRepository",
+  "...identityModuleManifest.provides",
+]) {
+  if (!moduleSource.includes(marker)) {
+    throw new Error(`Identity host adapter is missing released session-administration adoption: ${marker}`);
+  }
+}
+if (!installedSessionAdministrationContractSource.includes("bke.identity.session-administration.v1")) {
+  throw new Error("Installed @bke/identity does not expose the released session-administration capability.");
+}
+for (const marker of [
+  "IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID",
+  "securityEvent(",
+  "SECURITY_SESSIONS_REVOKED",
+  "EmailOutbox",
+]) {
+  if (!sessionAdministrationHostSource.includes(marker)) {
+    throw new Error(`V2 session-administration host adapter is missing required composition/effect surface: ${marker}`);
+  }
+}
+if (sessionsRouteSource.includes("@/lib/security/session-administration")) {
+  throw new Error("Admin sessions route still reaches through to V1 session administration.");
+}
+if (!sessionsRouteSource.includes("@/v2/apps/web/security/session-administration")) {
+  throw new Error("Admin sessions route does not consume the V2 session-administration host adapter.");
 }
 
 const forbiddenStagingSpecifiers = [
