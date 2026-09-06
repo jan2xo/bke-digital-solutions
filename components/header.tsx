@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { currentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
-import { getSiteContent } from "@/lib/site-content";
+import { getSiteContent } from "@/v2/apps/web/site-content";
 
 export async function Header() {
   const user = await currentUser();

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
+import { Prisma } from "@/generated/prisma/client";
 import {
   createAuditPort,
   redactAuditMetadata,
@@ -46,6 +47,37 @@ const port = createAuditPort<WebAuditRecord>({
 
 export function audit(input: AuditWriteInput): Promise<WebAuditRecord> {
   return port.record(input);
+}
+
+export async function auditInTransaction(
+  transaction: Prisma.TransactionClient,
+  input: AuditWriteInput,
+): Promise<WebAuditRecord> {
+  const transactionPort = createAuditPort<WebAuditRecord>({
+    async write(redacted: RedactedAuditWriteInput): Promise<WebAuditRecord> {
+      const id = randomUUID();
+      const rows = await transaction.$queryRaw<WebAuditRecord[]>(Prisma.sql`
+        INSERT INTO "AuditLog"
+          ("id", "actorId", "accountId", "action", "targetType", "targetId", "metadata", "createdAt")
+        VALUES (
+          ${id},
+          ${redacted.actorId ?? null},
+          ${redacted.accountId ?? null},
+          ${redacted.action},
+          ${redacted.targetType},
+          ${redacted.targetId ?? null},
+          ${JSON.stringify(redacted.metadata ?? {})}::jsonb,
+          NOW()
+        )
+        RETURNING "id", "actorId", "accountId", "action", "targetType", "targetId", "metadata", "createdAt"
+      `);
+      const record = rows[0];
+      if (!record) throw new Error("AUDIT_WRITE_FAILED");
+      return record;
+    },
+  });
+
+  return transactionPort.record(input);
 }
 
 export const redact = redactAuditMetadata;

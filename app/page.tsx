@@ -1,7 +1,7 @@
 import { LandingExperience } from "@/app/landing-experience";
 import { db } from "@/lib/db";
 import { resolvePurchasePlan } from "@/lib/pricing";
-import { getSiteContent } from "@/lib/site-content";
+import { getSiteContent } from "@/v2/apps/web/site-content";
 
 export default async function Home() {
   const content = await getSiteContent();
