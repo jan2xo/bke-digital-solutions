@@ -72,7 +72,6 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         </tfoot>
       </table>
     </div>
-    <p className="mt-5 text-xs text-slate-500">Commercial invoice only; not represented as a BIR-certified tax invoice.</p>
   </section>;
 }
 function money(amount: number, currency: string) {
