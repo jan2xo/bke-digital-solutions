@@ -19,6 +19,7 @@ import { IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID } from "@bke/identity/
 import { IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID } from "@bke/identity/contracts/password-reset-request.contract";
 import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/recent-auth-challenge.contract";
 import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "@bke/identity/contracts/recent-auth-completion.contract";
+import { IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID } from "@bke/identity/contracts/session-administration.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "@bke/identity/contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "@bke/identity/contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/session.contract";
@@ -50,6 +51,7 @@ import { createHmacSessionTokenProvider } from "@bke/identity/providers/hmac-ses
 import { createIdentityRecentAuthChallengeIssuanceCapability } from "@bke/identity/logic/recent-auth-challenge-issuance";
 import { createIdentityRecentAuthCompletionCapability } from "@bke/identity/logic/recent-auth-completion";
 import { createIdentitySessionIssuanceCapability } from "@bke/identity/logic/session-issuance";
+import { createIdentitySessionAdministrationCapability } from "@bke/identity/logic/session-administration";
 import { createIdentitySessionTerminationCapability } from "@bke/identity/logic/session-termination";
 import { createIdentitySessionValidationCapability } from "@bke/identity/logic/session-validation";
 import { identityModuleManifest } from "@bke/identity/module.manifest";
@@ -71,6 +73,7 @@ import { createPostgresIdentityRecentAuthChallengeRepository } from "@bke/identi
 import { createPostgresIdentityRecentAuthCompletionRepository } from "@bke/identity/prisma/repositories/postgres-recent-auth-completion-repository";
 import { createPostgresIdentityRepository } from "@bke/identity/prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "@bke/identity/prisma/repositories/postgres-session-repository";
+import { createPostgresIdentitySessionAdministrationRepository } from "@bke/identity/prisma/repositories/postgres-session-administration-repository";
 import { createPostgresIdentitySessionTerminationRepository } from "@bke/identity/prisma/repositories/postgres-session-termination-repository";
 
 export interface IdentityModuleOptions {
@@ -93,6 +96,8 @@ export function createIdentityModule(
   );
   const sessionTerminationRepository =
     createPostgresIdentitySessionTerminationRepository(options.connectionString);
+  const sessionAdministrationRepository =
+    createPostgresIdentitySessionAdministrationRepository(options.connectionString);
   const loginMfaRepository = createPostgresIdentityLoginMfaRepository(
     options.connectionString,
   );
@@ -157,9 +162,19 @@ export function createIdentityModule(
     sessionRepository,
     sessionTokenProvider,
   );
+  const sessionAdministration = createIdentitySessionAdministrationCapability(
+    sessionAdministrationRepository,
+  );
+  const hostManifest = Object.freeze({
+    ...identityModuleManifest,
+    provides: [
+      ...identityModuleManifest.provides,
+      IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
+    ],
+  });
 
   return Object.freeze({
-    manifest: identityModuleManifest,
+    manifest: hostManifest,
     start() {
       return [
         {
@@ -221,6 +236,10 @@ export function createIdentityModule(
         {
           id: IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
           value: sessionValidation,
+        },
+        {
+          id: IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
+          value: sessionAdministration,
         },
         {
           id: IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
