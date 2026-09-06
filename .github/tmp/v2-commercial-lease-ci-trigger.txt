@@ -1,0 +1,2 @@
+Helper-only CI trigger for the commercial lease composition candidate.
+Production candidate files are harvested separately; this file must not enter PR #128.
