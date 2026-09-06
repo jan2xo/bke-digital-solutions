@@ -1,0 +1,50 @@
+name: TEMP V2 Admin MFA Retirement
+
+on:
+  push:
+    branches:
+      - tmp/v2-admin-mfa-retirement
+    paths:
+      - ".github/workflows/tmp-admin-mfa-patch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp/v2-admin-mfa-retirement
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply asserted Admin MFA retirement patch
+        run: python3 scripts/tmp-admin-mfa-patch.py
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Identity consumer adoption
+        run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Check patch whitespace
+        run: git diff --check
+      - name: Commit verified candidate files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            v2/modules/identity/module.ts \
+            v2/modules/identity/test/consumer-adoption.certify.ts \
+            v2/apps/web/auth/mfa-challenge.ts \
+            app/api/auth/login/route.ts \
+            app/api/auth/mfa/challenge/request/route.ts \
+            app/api/auth/mfa/challenge/route.ts
+          git diff --cached --exit-code && { echo "No candidate changes produced"; exit 1; } || true
+          git commit -m "refactor(v2): retire legacy admin MFA"
+          git push origin HEAD:tmp/v2-admin-mfa-retirement
