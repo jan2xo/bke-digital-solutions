@@ -6,6 +6,7 @@ import {
   IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
 } from "@bke/identity/contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/login-mfa-challenge.contract";
+import { IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID } from "@bke/identity/contracts/login-mfa-challenge-reissue.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "@bke/identity/contracts/login-mfa-verification.contract";
 import { IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID } from "@bke/identity/contracts/magic-login-consume.contract";
 import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "@bke/identity/contracts/magic-login-request.contract";
@@ -27,6 +28,7 @@ import { createIdentityEmailVerificationCompletionCapability } from "@bke/identi
 import { createIdentityEmailVerificationIssuanceCapability } from "@bke/identity/logic/email-verification-issuance";
 import { createIdentityLookupCapability } from "@bke/identity/logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "@bke/identity/logic/login-mfa-challenge-issuance";
+import { createIdentityLoginMfaChallengeReissueCapability } from "@bke/identity/logic/login-mfa-challenge-reissue";
 import { createIdentityLoginMfaVerificationCapability } from "@bke/identity/logic/login-mfa-verification";
 import { createIdentityMagicLoginConsumeCapability } from "@bke/identity/logic/magic-login-consume";
 import { createIdentityMagicLoginRequestCapability } from "@bke/identity/logic/magic-login-request";
@@ -165,11 +167,21 @@ export function createIdentityModule(
   const sessionAdministration = createIdentitySessionAdministrationCapability(
     sessionAdministrationRepository,
   );
+  const loginMfaChallengeIssuance = createIdentityLoginMfaChallengeIssuanceCapability(
+    loginMfaChallengeRepository,
+    emailMfaChallengeMaterialProvider,
+  );
+  const loginMfaChallengeReissue = createIdentityLoginMfaChallengeReissueCapability(
+    loginMfaRepository,
+    emailMfaProofProvider,
+    loginMfaChallengeIssuance,
+  );
   const hostManifest = Object.freeze({
     ...identityModuleManifest,
     provides: [
       ...identityModuleManifest.provides,
       IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
+      IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
     ],
   });
 
@@ -257,10 +269,11 @@ export function createIdentityModule(
         },
         {
           id: IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
-          value: createIdentityLoginMfaChallengeIssuanceCapability(
-            loginMfaChallengeRepository,
-            emailMfaChallengeMaterialProvider,
-          ),
+          value: loginMfaChallengeIssuance,
+        },
+        {
+          id: IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
+          value: loginMfaChallengeReissue,
         },
         {
           id: IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID,
