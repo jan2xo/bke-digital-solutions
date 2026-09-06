@@ -1,8 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.6.0/bke-licensing-0.6.0.tgz";
-const EXPECTED_VERSION = "0.6.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.7.0/bke-licensing-0.7.0.tgz";
+const EXPECTED_VERSION = "0.7.0";
 
 const [
   moduleSource,
@@ -11,6 +11,9 @@ const [
   nextConfigSource,
   licensingWorkflowSource,
   migrationCompositorSource,
+  signingRegistryHostSource,
+  signingKeysRouteSource,
+  refreshRouteSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
@@ -24,6 +27,9 @@ const [
     new URL("../../../platform/persistence/migration-compositor.mjs", import.meta.url),
     "utf8",
   ),
+  readFile(new URL("../../../apps/web/licensing/signing-key-registry.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../app/api/licensing/keys/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../app/api/licenses/refresh/route.ts", import.meta.url), "utf8"),
 ]);
 
 if (
@@ -39,6 +45,7 @@ const requiredPackageSurfaces = [
   "@bke/licensing/contracts/",
   "LICENSING_COMMERCIAL_LEASE_CAPABILITY_ID",
   "LICENSING_TRANSFER_POLICY_CAPABILITY_ID",
+  "LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID",
   "@bke/licensing/logic/",
   "@bke/licensing/logic/commercial-lease",
   "createCommercialLeaseCapability",
@@ -50,6 +57,8 @@ const requiredPackageSurfaces = [
   "createPostgresCommercialLeaseStore",
   "@bke/licensing/prisma/repositories/postgres-commercial-signing-key-provider",
   "createPostgresCommercialSigningKeyProvider",
+  "@bke/licensing/prisma/repositories/postgres-signing-key-registry-repository",
+  "createPostgresLicensingSigningKeyRegistryCapability",
   "@bke/licensing/prisma/repositories/postgres-license-lookup-repository",
   "createPostgresLicensingLicenseLookupRepository",
   "@bke/licensing/prisma/repositories/postgres-transfer-policy-repository",
@@ -171,6 +180,25 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
   throw new Error(
     "The migration compositor must support module-owned external migration roots.",
   );
+}
+
+for (const marker of [
+  "LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID",
+  "ensureLicensingSigningKey",
+  "activeLicensingSigningKey",
+  "listPublicLicensingSigningKeys",
+]) {
+  if (!signingRegistryHostSource.includes(marker)) {
+    throw new Error(`Licensing signing-key host adapter missing capability surface: ${marker}`);
+  }
+}
+for (const [name, source] of [["keys", signingKeysRouteSource], ["refresh", refreshRouteSource]] as const) {
+  if (source.includes("@/lib/licensing/signing-registry")) {
+    throw new Error(`${name} route still reaches through to V1 signing registry.`);
+  }
+  if (!source.includes("@/v2/apps/web/licensing/signing-key-registry")) {
+    throw new Error(`${name} route does not consume the V2 signing-key registry adapter.`);
+  }
 }
 
 console.log(
