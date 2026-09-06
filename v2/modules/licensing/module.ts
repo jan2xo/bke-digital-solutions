@@ -108,7 +108,9 @@ export function createLicensingModule(options: LicensingModuleOptions): Capabili
       });
 
       const transfers: CommercialTransferEligibilityProvider = Object.freeze({
-        async isTransferAllowed(input) {
+        async isTransferAllowed(
+          input: Parameters<CommercialTransferEligibilityProvider["isTransferAllowed"]>[0],
+        ) {
           const orderItem = await orderItems.findByOrderItemId(input.orderItemId);
           if (orderItem.status !== "FOUND") return false;
           const policy = await transferPolicy.findByPolicyId(input.policyId);
