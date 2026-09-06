@@ -1,0 +1,35 @@
+name: Temporary V2 commercial lease composition
+
+on:
+  push:
+    branches:
+      - tmp/v2-lockgen-commercial-lease
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp/v2-lockgen-commercial-lease
+      - name: Apply exact adapter patch
+        run: |
+          if grep -q 'createCommercialLeaseCapability' v2/modules/licensing/module.ts; then
+            echo "commercial lease adapter already applied"
+            exit 0
+          fi
+          python3 .github/tmp/v2-commercial-lease-patch.py
+      - name: Commit helper candidate
+        run: |
+          if git diff --quiet -- v2/modules/accounts/module.ts v2/modules/catalog/module.ts v2/modules/commerce/module.ts v2/modules/licensing/module.ts; then
+            echo "no helper candidate changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v2/modules/accounts/module.ts v2/modules/catalog/module.ts v2/modules/commerce/module.ts v2/modules/licensing/module.ts
+          git commit -m "refactor(v2): compose released commercial licensing capabilities"
+          git push origin HEAD:tmp/v2-lockgen-commercial-lease
