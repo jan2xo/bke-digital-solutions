@@ -1,28 +1,42 @@
+import { createPublicKey } from "node:crypto";
 import { NextResponse } from "next/server";
-import { canonicalizePublicKey } from "@/lib/security/crypto";
+import { CLOUD_AGENT_PROTOCOL_VERSION } from "@/v2/apps/web/licensing/cloud-agent-contract";
 import {
   ensureLicensingSigningKey,
   listPublicLicensingSigningKeys,
 } from "@/v2/apps/web/licensing/signing-key-registry";
 
+function canonicalPublicKey(value: string) {
+  const decoded = value.includes("BEGIN") ? value : Buffer.from(value, "base64").toString("utf8");
+  return createPublicKey(decoded).export({ format: "pem", type: "spki" }).toString();
+}
+
 export async function GET() {
   try {
     await ensureLicensingSigningKey();
-    const records = await listPublicLicensingSigningKeys();
-    const active = records.filter((record) => record.status === "ACTIVE");
-    if (active.length !== 1) throw new Error("ACTIVE_SIGNING_KEY_COUNT_INVALID");
-    if (records.some((record) => record.algorithm !== "Ed25519")) throw new Error("UNSUPPORTED_SIGNING_ALGORITHM");
+    const keys = await listPublicLicensingSigningKeys();
+    const active = keys.filter((key) => key.status === "ACTIVE");
+    if (active.length !== 1 || keys.some((key) => key.algorithm !== "Ed25519")) {
+      throw new Error("INVALID_SIGNING_KEY_REGISTRY");
+    }
     return NextResponse.json(
       {
-        algorithm: "Ed25519",
-        activeKeyId: active[0]!.keyId,
-        publicKeys: Object.fromEntries(
-          records.map((record) => [record.keyId, canonicalizePublicKey(record.publicKey)]),
-        ),
+        keys: keys
+          .filter((key) => key.algorithm === "Ed25519")
+          .map((key) => ({
+            key_id: key.keyId,
+            algorithm: key.algorithm,
+            public_key: canonicalPublicKey(key.publicKey),
+          })),
       },
-      { headers: { "Cache-Control": "public, max-age=300, stale-while-revalidate=300" } },
+      {
+        headers: {
+          "cache-control": "public, max-age=300",
+          "x-bke-licensing-version": CLOUD_AGENT_PROTOCOL_VERSION,
+        },
+      },
     );
   } catch {
-    return NextResponse.json({ error: "SIGNING_KEYS_UNAVAILABLE" }, { status: 503 });
+    return NextResponse.json({ error: "LEASE_SIGNING_NOT_CONFIGURED" }, { status: 503 });
   }
 }
