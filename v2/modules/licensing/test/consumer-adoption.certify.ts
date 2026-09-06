@@ -1,8 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.2.0/bke-licensing-0.2.0.tgz";
-const EXPECTED_VERSION = "0.2.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.6.0/bke-licensing-0.6.0.tgz";
+const EXPECTED_VERSION = "0.6.0";
 
 const [
   moduleSource,
@@ -37,9 +37,28 @@ if (
 
 const requiredPackageSurfaces = [
   "@bke/licensing/contracts/",
+  "LICENSING_COMMERCIAL_LEASE_CAPABILITY_ID",
+  "LICENSING_TRANSFER_POLICY_CAPABILITY_ID",
   "@bke/licensing/logic/",
+  "@bke/licensing/logic/commercial-lease",
+  "createCommercialLeaseCapability",
+  "@bke/licensing/logic/commercial-license-context",
+  "createCommercialLicenseContextProvider",
   "@bke/licensing/providers/",
   "@bke/licensing/prisma/repositories/",
+  "@bke/licensing/prisma/repositories/postgres-commercial-lease-store",
+  "createPostgresCommercialLeaseStore",
+  "@bke/licensing/prisma/repositories/postgres-commercial-signing-key-provider",
+  "createPostgresCommercialSigningKeyProvider",
+  "@bke/licensing/prisma/repositories/postgres-license-lookup-repository",
+  "createPostgresLicensingLicenseLookupRepository",
+  "@bke/licensing/prisma/repositories/postgres-transfer-policy-repository",
+  "createPostgresLicensingTransferPolicyCapability",
+  "ACCOUNTS_ACCOUNT_LIFECYCLE_CAPABILITY_ID",
+  "CATALOG_LICENSING_VERSION_FACTS_CAPABILITY_ID",
+  "COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID",
+  "COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID",
+  'createHmac("sha256", options.licensePepper)',
   "@bke/licensing/module.manifest",
 ];
 for (const marker of requiredPackageSurfaces) {

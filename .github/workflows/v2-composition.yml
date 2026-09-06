@@ -51,29 +51,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-accounts-0.1.0.tgz
+          artifact=/tmp/bke-accounts-0.3.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.1.0/bke-accounts-0.1.0.tgz
-          echo "3837547a2d5d5084616d848b9b1a4674cc24a73a1b8285155e148808cdbdd511  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.3.0/bke-accounts-0.3.0.tgz
+          echo "57905c79432b121bdb269a4a3f51416aef3f9d80d979515e437b7ebbf629e26e  $artifact" | sha256sum -c -
       - name: Verify certified Legal package artifact
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-legal-0.1.0.tgz
+          artifact=/tmp/bke-legal-0.3.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.1.0/bke-legal-0.1.0.tgz
-          echo "f3a0a2f73a0aeabd88e3311e00fac10f8e38cc2f334a6e1c1627da56a569378e  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.3.0/bke-legal-0.3.0.tgz
+          echo "f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3  $artifact" | sha256sum -c -
       - name: Verify certified Licensing package artifact
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-licensing-0.2.0.tgz
+          artifact=/tmp/bke-licensing-0.6.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.2.0/bke-licensing-0.2.0.tgz
-          echo "532761d887568fa4ca9767dbcbb17513e8408d6713d0bfc9f7c4feb97561131f  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.6.0/bke-licensing-0.6.0.tgz
+          echo "188ced2d76f76bc722dab8dca6c9ab5d0a193789a7d6a4b4f979eac0c0d92ee5  $artifact" | sha256sum -c -
       - name: Verify certified Entitlements package artifact
         shell: bash
         run: |

@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.3.0/bke-commerce-0.3.0.tgz";
-const EXPECTED_VERSION = "0.3.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.5.0/bke-commerce-0.5.0.tgz";
+const EXPECTED_VERSION = "0.5.0";
 const EXPECTED_SHA256 =
-  "6165369b8dced957ea6246153bcd8863a681532841950b051fa3ec571ce3d6b9";
+  "5e420c968a40c4fef912e7d5c4c3341bdce1a40ac6c5b1f2f1e5d985f57a3d37";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -30,6 +30,16 @@ for (const marker of [
   "ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID",
   "AccountsPurchaseAccessCapability",
   "purchaseAccess",
+  "@bke/commerce/contracts/order-item-policy-lookup.contract",
+  "COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID",
+  "createPostgresCommerceOrderItemPolicyLookupCapability",
+  "orderItemPolicyLookup",
+  "@bke/commerce/contracts/subscription-status-lookup.contract",
+  "COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID",
+  "createCommerceSubscriptionStatusLookupCapability",
+  "@bke/commerce/prisma/repositories/postgres-subscription-status-lookup-repository",
+  "createPostgresCommerceSubscriptionStatusLookupRepository",
+  "subscriptionStatusLookup",
   "@bke/commerce/logic/",
   "@bke/commerce/prisma/repositories/",
   "@bke/commerce/module.manifest",

@@ -51,11 +51,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-licensing-0.2.0.tgz
+          artifact=/tmp/bke-licensing-0.6.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.2.0/bke-licensing-0.2.0.tgz
-          echo "532761d887568fa4ca9767dbcbb17513e8408d6713d0bfc9f7c4feb97561131f  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.6.0/bke-licensing-0.6.0.tgz
+          echo "188ced2d76f76bc722dab8dca6c9ab5d0a193789a7d6a4b4f979eac0c0d92ee5  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Licensing standalone consumer adoption and staging retirement

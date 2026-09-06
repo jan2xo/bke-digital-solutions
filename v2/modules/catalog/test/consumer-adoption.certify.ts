@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.1.0/bke-catalog-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.2.0/bke-catalog-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 const EXPECTED_SHA256 =
-  "765f266a70c16ef6a722744cb51adf290294b430f8bfb35e81ae7252f675c1d5";
+  "50ca48d723ccb00e6508d66f5a95fbbba6f74ec33720f8c9fd3877a9b4ae6fde";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, catalogWorkflowSource, standaloneWorkflowSource] =
@@ -26,8 +26,14 @@ if (!moduleSource.includes("CapabilityModule") || !moduleSource.includes('"../..
 
 for (const marker of [
   "@bke/catalog/contracts/",
+  "CATALOG_LICENSING_VERSION_FACTS_CAPABILITY_ID",
   "@bke/catalog/logic/",
+  "@bke/catalog/logic/licensing-version-facts",
+  "createCatalogLicensingVersionFactsCapability",
   "@bke/catalog/prisma/repositories/",
+  "@bke/catalog/prisma/repositories/postgres-licensing-version-facts-repository",
+  "createPostgresCatalogLicensingVersionFactsRepository",
+  "licensingVersionFacts",
   "@bke/catalog/module.manifest",
 ]) {
   if (!moduleSource.includes(marker)) {
