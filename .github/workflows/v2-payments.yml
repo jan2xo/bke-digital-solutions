@@ -50,11 +50,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-payments-0.1.0.tgz
+          artifact=/tmp/bke-payments-0.2.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.1.0/bke-payments-0.1.0.tgz
-          echo "d28c5fd37360e717416c4827c4aba48bf960685f324565b7ae0ca948eb318f41  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.2.0/bke-payments-0.2.0.tgz
+          echo "5553cb18c57353add174417813e276e301e991758a38971dd046eea2bb3037d3  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Payments consumer adoption and staging retirement
