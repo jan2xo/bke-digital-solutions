@@ -12,11 +12,11 @@ describe("public site content integration", () => {
       read("app/layout.tsx"),
     ]);
 
-    expect(page).toContain('import { getSiteContent } from "@/lib/site-content"');
+    expect(page).toContain('import { getSiteContent } from "@/v2/apps/web/site-content"');
     expect(page).toContain("content.siteName");
     expect(page).toContain("content.heroHeadline");
     expect(page).toContain("content.heroPrimaryHref");
-    expect(header).toContain('import { getSiteContent } from "@/lib/site-content"');
+    expect(header).toContain('import { getSiteContent } from "@/v2/apps/web/site-content"');
     expect(header).toContain("{content.siteName}");
     expect(footer).toContain("BKES Information Technology Solutions");
     expect(footer).toContain("{content.supportEmail}");
