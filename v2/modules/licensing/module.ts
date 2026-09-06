@@ -17,6 +17,7 @@ import {
 } from "@bke/commerce/contracts/subscription-status-lookup.contract";
 import { LICENSING_COMMERCIAL_LEASE_CAPABILITY_ID } from "@bke/licensing/contracts/commercial-lease.contract";
 import { LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID } from "@bke/licensing/contracts/license-key-reveal.contract";
+import { LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID } from "@bke/licensing/contracts/signing-key-registry.contract";
 import {
   LICENSING_TRANSFER_POLICY_CAPABILITY_ID,
   isTransferAllowed,
@@ -34,6 +35,7 @@ import { createPostgresCommercialLeaseStore } from "@bke/licensing/prisma/reposi
 import { createPostgresCommercialSigningKeyProvider } from "@bke/licensing/prisma/repositories/postgres-commercial-signing-key-provider";
 import { createPostgresLicensingLicenseKeyRevealRepository } from "@bke/licensing/prisma/repositories/postgres-license-key-reveal-repository";
 import { createPostgresLicensingLicenseLookupRepository } from "@bke/licensing/prisma/repositories/postgres-license-lookup-repository";
+import { createPostgresLicensingSigningKeyRegistryCapability } from "@bke/licensing/prisma/repositories/postgres-signing-key-registry-repository";
 import { createPostgresLicensingTransferPolicyCapability } from "@bke/licensing/prisma/repositories/postgres-transfer-policy-repository";
 import { createAesGcmLicensingLicenseKeyDecrypter } from "@bke/licensing/providers/aes-gcm-license-key-decrypter";
 import { createEd25519CommercialLeaseSigner } from "@bke/licensing/providers/ed25519-commercial-lease-signer";
@@ -72,6 +74,10 @@ export function createLicensingModule(options: LicensingModuleOptions): Capabili
   const signer = createEd25519CommercialLeaseSigner({
     resolve: resolveCommercialPrivateKey,
   });
+  const signingKeyRegistry = createPostgresLicensingSigningKeyRegistryCapability(
+    options.connectionString,
+    commercialSigningBootstrap(),
+  );
   const transferPolicy = createPostgresLicensingTransferPolicyCapability(options.connectionString);
 
   const hostManifest = Object.freeze({
@@ -148,6 +154,10 @@ export function createLicensingModule(options: LicensingModuleOptions): Capabili
         {
           id: LICENSING_TRANSFER_POLICY_CAPABILITY_ID,
           value: transferPolicy,
+        },
+        {
+          id: LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID,
+          value: signingKeyRegistry,
         },
       ];
     },
