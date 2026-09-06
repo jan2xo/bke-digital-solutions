@@ -15,6 +15,11 @@ const [
   installedSessionAdministrationContractSource,
   sessionAdministrationHostSource,
   sessionsRouteSource,
+  installedLoginMfaChallengeReissueContractSource,
+  mfaChallengeHostSource,
+  loginRouteSource,
+  mfaChallengeRequestRouteSource,
+  mfaChallengeRouteSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
@@ -42,6 +47,26 @@ const [
   ),
   readFile(
     new URL("../../../../app/api/admin/security/sessions/route.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../node_modules/@bke/identity/contracts/login-mfa-challenge-reissue.contract.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../apps/web/auth/mfa-challenge.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../app/api/auth/login/route.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../app/api/auth/mfa/challenge/request/route.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../../app/api/auth/mfa/challenge/route.ts", import.meta.url),
     "utf8",
   ),
 ]);
@@ -102,6 +127,50 @@ if (sessionsRouteSource.includes("@/lib/security/session-administration")) {
 }
 if (!sessionsRouteSource.includes("@/v2/apps/web/security/session-administration")) {
   throw new Error("Admin sessions route does not consume the V2 session-administration host adapter.");
+}
+
+for (const marker of [
+  "IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID",
+  "createIdentityLoginMfaChallengeReissueCapability",
+  "loginMfaChallengeIssuance",
+  "loginMfaChallengeReissue",
+]) {
+  if (!moduleSource.includes(marker)) {
+    throw new Error(`Identity host adapter is missing released LOGIN MFA reissue adoption: ${marker}`);
+  }
+}
+if (!installedLoginMfaChallengeReissueContractSource.includes("bke.identity.login-mfa-challenge-reissue.v1")) {
+  throw new Error("Installed @bke/identity does not expose the released LOGIN MFA challenge reissue capability.");
+}
+for (const marker of [
+  "IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID",
+  "IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID",
+  "IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID",
+  "issueIdentityLoginMfaChallenge",
+  "reissueIdentityLoginMfaChallenge",
+  "verifyIdentityLoginMfaChallenge",
+]) {
+  if (!mfaChallengeHostSource.includes(marker)) {
+    throw new Error(`V2 LOGIN MFA host adapter is missing released Identity composition: ${marker}`);
+  }
+}
+for (const [name, source] of [
+  ["login", loginRouteSource],
+  ["challenge request", mfaChallengeRequestRouteSource],
+  ["challenge completion", mfaChallengeRouteSource],
+] as const) {
+  if (source.includes("@/lib/admin-mfa")) {
+    throw new Error(`${name} route still reaches through to V1 admin MFA.`);
+  }
+}
+if (!loginRouteSource.includes("issueIdentityLoginMfaChallenge")) {
+  throw new Error("Login route does not consume released Identity LOGIN MFA issuance through the V2 adapter.");
+}
+if (!mfaChallengeRequestRouteSource.includes("reissueIdentityLoginMfaChallenge")) {
+  throw new Error("LOGIN MFA resend route does not consume released Identity reissue through the V2 adapter.");
+}
+if (!mfaChallengeRouteSource.includes("verifyIdentityLoginMfaChallenge")) {
+  throw new Error("LOGIN MFA completion route does not consume released Identity verification through the V2 adapter.");
 }
 
 const forbiddenStagingSpecifiers = [

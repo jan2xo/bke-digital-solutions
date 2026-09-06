@@ -1,7 +1,23 @@
 import "server-only";
+
 import { cookies } from "next/headers";
+import {
+  IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
+  type IdentityIssuedLoginMfaChallenge,
+  type IdentityLoginMfaChallengeIssuanceCapability,
+} from "@bke/identity/contracts/login-mfa-challenge.contract";
+import {
+  IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
+  type IdentityLoginMfaChallengeReissueCapability,
+} from "@bke/identity/contracts/login-mfa-challenge-reissue.contract";
+import {
+  IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID,
+  type IdentityLoginMfaAuthenticationMethod,
+  type IdentityLoginMfaVerificationCapability,
+} from "@bke/identity/contracts/login-mfa-verification.contract";
 import { audit } from "@/v2/apps/web/audit";
 import { sendAdministratorLoginCode } from "@/lib/email";
+import { getV2WebApplication } from "../runtime";
 
 export const IDENTITY_MFA_CHALLENGE_COOKIE =
   process.env.NODE_ENV === "production" ? "__Host-bke_mfa_challenge" : "bke_mfa_challenge";
@@ -55,4 +71,83 @@ export async function deliverIdentityMfaChallenge(input: {
     }).catch(() => undefined);
     return false;
   }
+}
+
+async function deliveredLoginChallenge(
+  userId: string,
+  challenge: IdentityIssuedLoginMfaChallenge,
+): Promise<{ token: string; delivered: boolean; reference: string }> {
+  return {
+    token: challenge.challengeToken,
+    delivered: await deliverIdentityMfaChallenge({
+      userId,
+      purpose: "LOGIN",
+      delivery: challenge.delivery,
+    }),
+    reference: challenge.delivery.reference,
+  };
+}
+
+export async function issueIdentityLoginMfaChallenge(
+  userId: string,
+): Promise<{ token: string; delivered: boolean; reference: string }> {
+  const application = await getV2WebApplication();
+  const issuance = application.get<IdentityLoginMfaChallengeIssuanceCapability>(
+    IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
+  );
+  const result = await issuance.issue({ userId });
+  if (result.status === "REJECTED") throw new Error(result.code);
+  if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
+  return deliveredLoginChallenge(userId, result.challenge);
+}
+
+export async function reissueIdentityLoginMfaChallenge(): Promise<{
+  token: string;
+  delivered: boolean;
+  reference: string;
+}> {
+  const challengeToken = await currentIdentityMfaChallengeToken();
+  if (!challengeToken) throw new Error("INVALID_MFA_CHALLENGE");
+
+  const application = await getV2WebApplication();
+  const reissue = application.get<IdentityLoginMfaChallengeReissueCapability>(
+    IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
+  );
+  const result = await reissue.reissue({ challengeToken });
+  if (result.status === "REJECTED") {
+    throw new Error(
+      result.code === "PRINCIPAL_NOT_FOUND" ? "INVALID_MFA_CHALLENGE" : result.code,
+    );
+  }
+  if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
+  return deliveredLoginChallenge(
+    result.challenge.delivery.recipientEmail,
+    result.challenge,
+  );
+}
+
+export async function verifyIdentityLoginMfaChallenge(code: string): Promise<{
+  userId: string;
+  recoveryUsed: boolean;
+  authenticationMethod: IdentityLoginMfaAuthenticationMethod;
+}> {
+  const challengeToken = await currentIdentityMfaChallengeToken();
+  if (!challengeToken) throw new Error("INVALID_MFA_CHALLENGE");
+
+  const application = await getV2WebApplication();
+  const verification = application.get<IdentityLoginMfaVerificationCapability>(
+    IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID,
+  );
+  const result = await verification.verify({ challengeToken, code });
+  if (result.status === "INVALID") {
+    throw new Error(
+      result.code === "INVALID_CHALLENGE" ? "INVALID_MFA_CHALLENGE" : "INVALID_MFA_CODE",
+    );
+  }
+  if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
+  return {
+    userId: result.userId,
+    recoveryUsed: result.authenticationMethod === "PASSWORD_RECOVERY",
+    authenticationMethod: result.authenticationMethod,
+  };
 }

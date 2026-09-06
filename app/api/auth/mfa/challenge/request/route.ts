@@ -4,13 +4,13 @@ import {
   IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
   type IdentityRecentAuthChallengeIssuanceCapability,
 } from "@bke/identity/contracts/recent-auth-challenge.contract";
-import { resendPendingLoginChallenge } from "@/lib/admin-mfa";
 import { currentIdentitySession } from "@/v2/apps/web/auth/session";
 import {
   deliverIdentityMfaChallenge,
   IDENTITY_MFA_CHALLENGE_COOKIE,
   IDENTITY_MFA_CHALLENGE_COOKIE_OPTIONS,
   IdentityCapabilityError,
+  reissueIdentityLoginMfaChallenge,
 } from "@/v2/apps/web/auth/mfa-challenge";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 import { apiError } from "@/v2/apps/web/http/api-error";
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       if (!(await rateLimit(`admin-email-otp-resend:${clientIp(request)}`, 3, 600)).allowed) {
         throw new Error("RATE_LIMITED");
       }
-      challenge = await resendPendingLoginChallenge();
+      challenge = await reissueIdentityLoginMfaChallenge();
     } else {
       const session = await currentIdentitySession();
       if (
