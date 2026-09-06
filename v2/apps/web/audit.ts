@@ -1,7 +1,7 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import { Prisma } from "@/generated/prisma/client";
+import type { PoolClient } from "pg";
 import {
   createAuditPort,
   redactAuditMetadata,
@@ -50,28 +50,28 @@ export function audit(input: AuditWriteInput): Promise<WebAuditRecord> {
 }
 
 export async function auditInTransaction(
-  transaction: Prisma.TransactionClient,
+  transaction: PoolClient,
   input: AuditWriteInput,
 ): Promise<WebAuditRecord> {
   const transactionPort = createAuditPort<WebAuditRecord>({
     async write(redacted: RedactedAuditWriteInput): Promise<WebAuditRecord> {
       const id = randomUUID();
-      const rows = await transaction.$queryRaw<WebAuditRecord[]>(Prisma.sql`
-        INSERT INTO "AuditLog"
-          ("id", "actorId", "accountId", "action", "targetType", "targetId", "metadata", "createdAt")
-        VALUES (
-          ${id},
-          ${redacted.actorId ?? null},
-          ${redacted.accountId ?? null},
-          ${redacted.action},
-          ${redacted.targetType},
-          ${redacted.targetId ?? null},
-          ${JSON.stringify(redacted.metadata ?? {})}::jsonb,
-          NOW()
-        )
-        RETURNING "id", "actorId", "accountId", "action", "targetType", "targetId", "metadata", "createdAt"
-      `);
-      const record = rows[0];
+      const result = await transaction.query<WebAuditRecord>(
+        `INSERT INTO "AuditLog"
+           ("id", "actorId", "accountId", "action", "targetType", "targetId", "metadata", "createdAt")
+         VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, NOW())
+         RETURNING "id", "actorId", "accountId", "action", "targetType", "targetId", "metadata", "createdAt"`,
+        [
+          id,
+          redacted.actorId ?? null,
+          redacted.accountId ?? null,
+          redacted.action,
+          redacted.targetType,
+          redacted.targetId ?? null,
+          JSON.stringify(redacted.metadata ?? {}),
+        ],
+      );
+      const record = result.rows[0];
       if (!record) throw new Error("AUDIT_WRITE_FAILED");
       return record;
     },

@@ -1,8 +1,9 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { db } from "@/lib/db";
 import { auditInTransaction } from "@/v2/apps/web/audit";
+import { getPostgresPool } from "@/v2/apps/web/persistence/postgres";
 
 export const SITE_CONTENT_GROUPS = {
   brand: ["siteName"],
@@ -56,25 +57,43 @@ export const DEFAULT_SITE_CONTENT: SiteContentValues = {
   supportEmail: "support@example.com",
 };
 
+type SiteContentRow = Readonly<{ key: string; value: string }>;
+
+function groupForKey(key: string): string {
+  return Object.entries(SITE_CONTENT_GROUPS).find(([, keys]) => keys.includes(key as never))?.[0] ?? "other";
+}
+
 export async function getSiteContent(): Promise<SiteContentValues> {
-  const rows = await db.siteContent.findMany({ where: { key: { in: SITE_CONTENT_KEYS } } });
+  const result = await getPostgresPool().query<SiteContentRow>(
+    `SELECT "key", "value"
+       FROM "SiteContent"
+      WHERE "key" = ANY($1::text[])`,
+    [SITE_CONTENT_KEYS],
+  );
   const defaults = DEFAULT_SITE_CONTENT as Record<SiteContentKey, string>;
   return SITE_CONTENT_KEYS.reduce(
-    (result, item) => ({ ...result, [item]: rows.find((row) => row.key === item)?.value ?? defaults[item] }),
+    (values, key) => ({ ...values, [key]: result.rows.find((row) => row.key === key)?.value ?? defaults[key] }),
     {} as SiteContentValues,
   );
 }
 
 export async function saveSiteContent(actorId: string, values: Partial<SiteContentValues>) {
   const parsed = valuesSchema.parse({ ...DEFAULT_SITE_CONTENT, ...values });
-  await db.$transaction(async (transaction) => {
+  const transaction = await getPostgresPool().connect();
+  try {
+    await transaction.query("BEGIN");
     for (const [key, value] of Object.entries(parsed)) {
-      const group = Object.entries(SITE_CONTENT_GROUPS).find(([, keys]) => keys.includes(key as never))?.[0] ?? "other";
-      await transaction.siteContent.upsert({
-        where: { key },
-        update: { value, group, updatedBy: actorId },
-        create: { key, value, group, updatedBy: actorId },
-      });
+      await transaction.query(
+        `INSERT INTO "SiteContent"
+           ("id", "key", "group", "value", "updatedBy", "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+         ON CONFLICT ("key") DO UPDATE
+           SET "group" = EXCLUDED."group",
+               "value" = EXCLUDED."value",
+               "updatedBy" = EXCLUDED."updatedBy",
+               "updatedAt" = NOW()`,
+        [randomUUID(), key, groupForKey(key), value, actorId],
+      );
     }
     await auditInTransaction(transaction, {
       actorId,
@@ -82,16 +101,33 @@ export async function saveSiteContent(actorId: string, values: Partial<SiteConte
       targetType: "SiteContent",
       metadata: { keys: Object.keys(parsed) },
     });
-  });
+    await transaction.query("COMMIT");
+  } catch (error) {
+    await transaction.query("ROLLBACK");
+    throw error;
+  } finally {
+    transaction.release();
+  }
 }
 
 export async function resetSiteContent(actorId: string) {
-  await db.$transaction(async (transaction) => {
-    await transaction.siteContent.deleteMany({ where: { key: { in: SITE_CONTENT_KEYS } } });
+  const transaction = await getPostgresPool().connect();
+  try {
+    await transaction.query("BEGIN");
+    await transaction.query(
+      `DELETE FROM "SiteContent" WHERE "key" = ANY($1::text[])`,
+      [SITE_CONTENT_KEYS],
+    );
     await auditInTransaction(transaction, {
       actorId,
       action: "SITE_CONTENT_RESET",
       targetType: "SiteContent",
     });
-  });
+    await transaction.query("COMMIT");
+  } catch (error) {
+    await transaction.query("ROLLBACK");
+    throw error;
+  } finally {
+    transaction.release();
+  }
 }
