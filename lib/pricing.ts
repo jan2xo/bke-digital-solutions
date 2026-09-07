@@ -1,6 +1,6 @@
 export const ANNUAL_DISCOUNT_MIN_BPS = 0;
 export const ANNUAL_DISCOUNT_MAX_BPS = 1_000;
-export const SEMI_ANNUAL_DISCOUNT_MIN_BPS = 1;
+export const SEMI_ANNUAL_DISCOUNT_MIN_BPS = ANNUAL_DISCOUNT_MIN_BPS;
 export const SEMI_ANNUAL_DISCOUNT_MAX_BPS = ANNUAL_DISCOUNT_MAX_BPS;
 export const OFFER_DISCOUNT_MIN_BPS = 0;
 export const OFFER_DISCOUNT_MAX_BPS = 10_000;
@@ -81,8 +81,6 @@ export function calculateSemiAnnualPricing(monthlyAmountMinor: number, discountB
   const grossAmountMinor = monthlyAmountMinor * 6;
   if (!Number.isSafeInteger(grossAmountMinor) || grossAmountMinor > 2_147_483_647) throw new Error("MONEY_OVERFLOW");
   const amountMinor = roundRatioHalfUp(BigInt(grossAmountMinor) * BigInt(10_000 - discountBps), 10_000n);
-  // Even a positive configured rate must produce an actual monetary discount.
-  if (amountMinor >= grossAmountMinor) throw new Error("SEMI_ANNUAL_DISCOUNT_TOO_SMALL");
   return { monthlyAmountMinor, discountBps, grossAmountMinor, amountMinor, savingsMinor: grossAmountMinor - amountMinor, effectiveMonthlyMinor: roundRatioHalfUp(BigInt(amountMinor), 6n) };
 }
 
