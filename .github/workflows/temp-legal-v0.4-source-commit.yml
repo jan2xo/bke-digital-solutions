@@ -1,0 +1,92 @@
+name: Temporary Legal 0.4 Source Commit
+
+on:
+  push:
+    branches: [tmp/v2-legal-constants-v0.4]
+    paths:
+      - ".github/workflows/temp-legal-v0.4-source-commit.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  certify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp/v2-legal-constants-v0.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply asserted candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          replacements = {
+            "app/admin/releases/[id]/page.tsx": [('import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";', 'import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";')],
+            "app/api/admin/legal/route.ts": [('import { LEGAL_DOCUMENT_TYPES } from "@/lib/legal/constants";', 'import { LEGAL_DOCUMENT_TYPES } from "@bke/legal/contracts/checkout-requirements.contract";')],
+            "app/api/admin/supply-chain/route.ts": [('import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";', 'import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";')],
+            "app/api/auth/register/route.ts": [('import { REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";', 'import { REGISTRATION_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";')],
+            "app/dashboard/accounts/[id]/page.tsx": [('import { SUBSCRIPTION_LEGAL_TYPES, CHECKOUT_LEGAL_TYPES } from "@/lib/legal/constants";', 'import { SUBSCRIPTION_LEGAL_TYPES, CHECKOUT_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";')],
+          }
+          for path, reps in replacements.items():
+              p=Path(path); text=p.read_text()
+              for old,new in reps:
+                  if text.count(old)!=1: raise SystemExit(f"unexpected source in {path}")
+                  text=text.replace(old,new)
+              p.write_text(text)
+          cert=Path('v2/modules/legal/test/consumer-adoption.certify.ts'); text=cert.read_text()
+          for old,new in [
+            ('legal-v0.3.0/bke-legal-0.3.0.tgz','legal-v0.4.0/bke-legal-0.4.0.tgz'),
+            ('const EXPECTED_VERSION = "0.3.0";','const EXPECTED_VERSION = "0.4.0";'),
+            ('legal-v0.3.0','legal-v0.4.0'),
+            ('f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3','9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9'),
+            ('exact installed @bke/legal v0.3.0 artifact','exact installed @bke/legal v0.4.0 artifact'),
+          ]:
+              if old not in text: raise SystemExit(f"missing cert marker {old}")
+              text=text.replace(old,new)
+          marker='if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {'
+          block='''const productionLegalConstantConsumers = await Promise.all([\n  "../../../../app/admin/releases/[id]/page.tsx",\n  "../../../../app/api/admin/legal/route.ts",\n  "../../../../app/api/admin/supply-chain/route.ts",\n  "../../../../app/api/auth/register/route.ts",\n  "../../../../app/dashboard/accounts/[id]/page.tsx",\n].map((path) => readFile(new URL(path, import.meta.url), "utf8")));\nconst productionLegalConstantSource = productionLegalConstantConsumers.join("\\n");\nif (productionLegalConstantSource.includes('"@/lib/legal/constants"')) throw new Error("Production host still reaches through the legacy Legal constants module.");\nif (!productionLegalConstantSource.includes('"@bke/legal/logic/document-catalog"')) throw new Error("Production host is not consuming the released Legal document catalog.");\nif (!productionLegalConstantSource.includes('"@bke/legal/contracts/checkout-requirements.contract"')) throw new Error("Production host is not consuming the released Legal document type contract.");\n\n'''
+          if marker not in text: raise SystemExit('missing cert insertion marker')
+          cert.write_text(text.replace(marker,block+marker,1))
+          for path in ['.github/workflows/v2-legal.yml','.github/workflows/v2-composition.yml']:
+              p=Path(path); text=p.read_text()
+              for old,new in [
+                ('artifact=/tmp/bke-legal-0.3.0.tgz','artifact=/tmp/bke-legal-0.4.0.tgz'),
+                ('legal-v0.3.0/bke-legal-0.3.0.tgz','legal-v0.4.0/bke-legal-0.4.0.tgz'),
+                ('f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3','9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9'),
+              ]:
+                  if old not in text: raise SystemExit(f'missing workflow marker {old} in {path}')
+                  text=text.replace(old,new)
+              if path.endswith('v2-legal.yml'):
+                  trigger='      - "lib/legal/service.ts"\n'
+                  if trigger not in text: raise SystemExit('missing focused trigger marker')
+                  text=text.replace(trigger,trigger+'      - "lib/legal/constants.ts"\n      - "app/admin/releases/[id]/page.tsx"\n      - "app/api/admin/legal/route.ts"\n      - "app/api/admin/supply-chain/route.ts"\n      - "app/api/auth/register/route.ts"\n      - "app/dashboard/accounts/[id]/page.tsx"\n',1)
+              p.write_text(text)
+          PY
+      - run: node v2/tooling/check-module-boundaries.mjs
+      - run: npx tsx v2/modules/legal/test/consumer-adoption.certify.ts
+      - run: npx tsc -p v2/tsconfig.json --noEmit
+      - run: git diff --check
+      - name: Commit validated non-workflow candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            app/admin/releases/'[id]'/page.tsx \
+            app/api/admin/legal/route.ts \
+            app/api/admin/supply-chain/route.ts \
+            app/api/auth/register/route.ts \
+            app/dashboard/accounts/'[id]'/page.tsx \
+            v2/modules/legal/test/consumer-adoption.certify.ts
+          git diff --cached --check
+          git commit -m "refactor(v2 host): retire legacy Legal constants boundary"
+          git push origin HEAD:tmp/v2-legal-constants-v0.4
