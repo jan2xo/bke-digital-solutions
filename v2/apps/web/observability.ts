@@ -9,6 +9,7 @@ import {
   stateFor,
   syncObservabilityAlerts as syncPlatformObservabilityAlerts,
   type HealthState,
+  type ObservabilityAlert,
   type ObservabilityAlertStore,
   type ObservabilityCard,
   type ObservabilitySnapshot,
@@ -159,11 +160,51 @@ const hostOperationalSource: ObservabilitySource = {
   },
 };
 
+type PersistedAlert = Readonly<{
+  id: string;
+  fingerprint: string;
+  source: string;
+  title: string;
+  detail: string | null;
+  severity: "WARNING" | "CRITICAL";
+  status: string;
+  firstSeenAt: Date;
+  lastSeenAt: Date;
+}>;
+
+const alertSelection = {
+  id: true,
+  fingerprint: true,
+  source: true,
+  title: true,
+  detail: true,
+  severity: true,
+  status: true,
+  firstSeenAt: true,
+  lastSeenAt: true,
+} as const;
+
+function normalizeAlert(row: PersistedAlert): ObservabilityAlert {
+  return Object.freeze({
+    id: row.id,
+    fingerprint: row.fingerprint,
+    source: row.source,
+    title: row.title,
+    detail: row.detail ?? "",
+    severity: row.severity,
+    status: row.status,
+    firstSeenAt: row.firstSeenAt,
+    lastSeenAt: row.lastSeenAt,
+  });
+}
+
 const alertStore: ObservabilityAlertStore = {
   async findActive(fingerprint) {
-    return db.observabilityAlert.findFirst({
+    const row = await db.observabilityAlert.findFirst({
       where: { fingerprint, status: { in: ["OPEN", "ACKNOWLEDGED"] } },
+      select: alertSelection,
     });
+    return row ? normalizeAlert(row) : null;
   },
   async refresh(input) {
     await db.observabilityAlert.update({
@@ -176,7 +217,7 @@ const alertStore: ObservabilityAlertStore = {
     });
   },
   async create(input) {
-    return db.observabilityAlert.create({
+    const row = await db.observabilityAlert.create({
       data: {
         fingerprint: input.fingerprint,
         source: input.source,
@@ -187,13 +228,17 @@ const alertStore: ObservabilityAlertStore = {
         firstSeenAt: input.firstSeenAt,
         lastSeenAt: input.lastSeenAt,
       },
+      select: alertSelection,
     });
+    return normalizeAlert(row);
   },
   async list() {
-    return db.observabilityAlert.findMany({
+    const rows = await db.observabilityAlert.findMany({
       orderBy: [{ status: "asc" }, { lastSeenAt: "desc" }],
       take: 100,
+      select: alertSelection,
     });
+    return rows.map(normalizeAlert);
   },
 };
 
