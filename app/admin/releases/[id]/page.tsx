@@ -5,7 +5,7 @@ import { releaseReadiness } from "@/lib/supply-chain/readiness";
 import { ReleaseArtifactControls } from "@/components/release-artifact-controls";
 import { AdminActionButton } from "@/components/admin-action-button";
 import { ReleaseEvidenceControls } from "@/components/release-evidence-controls";
-import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
+import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";
 import { complianceLegalReferencesCurrent, isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";
 
 export default async function ReleaseDetail({ params }: { params: Promise<{ id: string }> }) {

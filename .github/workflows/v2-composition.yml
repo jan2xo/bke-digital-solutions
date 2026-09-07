@@ -60,11 +60,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-legal-0.3.0.tgz
+          artifact=/tmp/bke-legal-0.4.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.3.0/bke-legal-0.3.0.tgz
-          echo "f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz
+          echo "9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9  $artifact" | sha256sum -c -
       - name: Verify certified Licensing package artifact
         shell: bash
         run: |

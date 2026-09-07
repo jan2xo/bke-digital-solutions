@@ -14,7 +14,7 @@ import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/
 import { assertObjectExists, streamObject, uploadObject } from "@/v2/apps/web/storage/object-storage";
 import { buildBackupCertificationDocument, selectUniqueVerifiedBackup } from "@/lib/supply-chain/backup-certification";
 import { validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
-import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@/lib/legal/constants";
+import { CHECKOUT_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";
 import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
 import { validateTechnicalEvidence } from "@/lib/supply-chain/technical-evidence";
 
