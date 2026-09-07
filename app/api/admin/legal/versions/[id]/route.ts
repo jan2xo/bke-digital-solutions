@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
+import { legalContentHash, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const schema = z.discriminatedUnion("action", [

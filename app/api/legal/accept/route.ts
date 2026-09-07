@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/lib/legal/render";
+import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
 import { pendingReacceptance } from "@/lib/legal/service";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 const schema = z.object({ versionIds: z.array(z.string().cuid()).min(1).max(20) }).strict();

@@ -5,6 +5,7 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/legal/**"
+      - "v2/apps/web/legal/**"
       - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/platform/composition/**"
       - "v2/contracts/**"
@@ -55,6 +56,14 @@ jobs:
             -o "$artifact" \
             https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.3.0/bke-legal-0.3.0.tgz
           echo "f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3  $artifact" | sha256sum -c -
+      - name: Reject legacy Legal implementation reach-through in web adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib/legal|generated/prisma|from ["'"'"']@prisma/)' v2/apps/web/legal --include='*.ts'; then
+            echo "V2 web Legal adapters must route Legal behavior through released @bke/legal capabilities."
+            exit 1
+          fi
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Legal standalone consumer adoption and staging retirement
