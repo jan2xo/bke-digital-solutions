@@ -8,7 +8,7 @@ import { apiError } from "@/v2/apps/web/http/api-error";
 import { env } from "@/lib/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 import { hasCurrentCleanMalwareEvidence } from "@/lib/supply-chain/malware-gate";
-import { evaluateSupplyChainSecurity } from "@/lib/supply-chain/controls";
+import { evaluateSupplyChainSecurity } from "@/v2/platform/security/supply-chain-controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";

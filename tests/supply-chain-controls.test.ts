@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { evaluateSupplyChainSecurity, type SupplyChainEvidenceEvent } from "@/lib/supply-chain/controls";
+import { evaluateSupplyChainSecurity, type SupplyChainEvidenceEvent } from "@/v2/platform/security/supply-chain-controls";
 import { evaluateReleaseGate } from "@/lib/releases/release-gate";
 import { integrityEvidencePlan } from "@/lib/supply-chain/integrity";
 import { validateTechnicalEvidence } from "@/lib/supply-chain/technical-evidence";
