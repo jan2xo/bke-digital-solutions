@@ -6,7 +6,7 @@ import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { deleteObject } from "@/v2/apps/web/storage/object-storage";
 import { verifyStoredArtifact } from "@/lib/artifacts/verify-stored-artifact";
-import { queueStorageCleanup } from "@/lib/storage-cleanup";
+import { queueStorageCleanup } from "@/v2/apps/web/storage/cleanup";
 import { ensureCommissioningRun } from "@/lib/commissioning/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string; uploadId: string }> }) {

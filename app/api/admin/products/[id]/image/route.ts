@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { deleteObject, uploadObject } from "@/v2/apps/web/storage/object-storage";
-import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
+import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/v2/apps/web/storage/cleanup";
 
 const allowed = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

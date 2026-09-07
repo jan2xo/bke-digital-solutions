@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { processStorageCleanupJob, retryStorageCleanupJob } from "@/lib/storage-cleanup";
+import { processStorageCleanupJob, retryStorageCleanupJob } from "@/v2/apps/web/storage/cleanup";
 
 const schema = z.object({ action: z.enum(["RETRY", "PROCESS"]) }).strict();
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
