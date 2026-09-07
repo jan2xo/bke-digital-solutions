@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { commercialLeaseActions, nextLeaseLifecycle, requireProductVersion } from "@/lib/licensing/lifecycle";
+import { commercialLeaseActions, nextLeaseLifecycle, requireProductVersion } from "@bke/licensing/logic/lease-lifecycle";
 
 describe("commercial lease lifecycle", () => {
   it("starts at generation and revision one", () => {
