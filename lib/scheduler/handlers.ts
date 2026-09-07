@@ -6,7 +6,7 @@ import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { finalizeProductDeletion } from "@/lib/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/lib/storage-cleanup";
 import { retryStoredWebhook } from "@/lib/webhooks";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import type { JobContext, JobSummary } from "@/lib/scheduler/types";
 import { processPendingCommissioning } from "@/lib/commissioning/service";

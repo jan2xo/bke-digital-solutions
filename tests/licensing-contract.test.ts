@@ -49,18 +49,20 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
   });
 
   it("requires direct lease issuance to receive an explicit requested version", () => {
-    const source = readFileSync("lib/licensing/commercial-lease.ts", "utf8");
-    expect(source).toContain("productVersion: string;");
-    expect(source).toContain("requireProductVersion(input.productVersion)");
-    expect(source).not.toContain("input.productVersion ?? license.product.versions[0]?.version");
+    const contract = readFileSync("node_modules/@bke/licensing/contracts/commercial-lease.contract.ts", "utf8");
+    const logic = readFileSync("node_modules/@bke/licensing/logic/commercial-lease.ts", "utf8");
+    expect(contract).toContain("productVersion: string;");
+    expect(logic).toContain("requireProductVersion(input.productVersion)");
+    expect(logic).not.toContain("input.productVersion ??");
   });
 
   it("keeps runtime licensing independent from release lifecycle while requiring an active registered version", () => {
-    const source = readFileSync("lib/licensing/commercial-lease.ts", "utf8");
-    expect(source).toContain("versions: { where: { version: input.productVersion, active: true }");
-    expect(source).not.toContain('lifecycle: { in: ["STABLE", "LTS"] }');
-    expect(source).toContain('throw new Error("VERSION_NOT_ELIGIBLE")');
-    expect(source).toContain("isVersionAccepted(version, license.product.minimumAcceptedVersion, license.product.maximumAcceptedVersion)");
+    const logic = readFileSync("node_modules/@bke/licensing/logic/commercial-lease.ts", "utf8");
+    expect(logic).toContain('if (!context.productVersionEligible) throw new Error("VERSION_NOT_ELIGIBLE")');
+    expect(logic).not.toContain('lifecycle: { in: ["STABLE", "LTS"] }');
+    expect(logic).toContain("isVersionAccepted(");
+    expect(logic).toContain("context.minimumAcceptedVersion");
+    expect(logic).toContain("context.maximumAcceptedVersion");
   });
 
   it("self-verifies newly issued signed leases", async () => {

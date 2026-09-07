@@ -3,7 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { issueEntitlements, type RenewalLeaseRequest } from "@/lib/licensing";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import { paymentProvider } from "@/lib/payments";
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
