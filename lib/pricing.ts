@@ -43,6 +43,23 @@ export function calculateAnnualPricing(monthlyAmountMinor: number, discountBps: 
   };
 }
 
+// Historical invoice components are usable only when their stored inputs and
+// amounts prove the subscription's saved normal recurring charge.
+export function resolveAnnualRenewalPricing(normalAmountMinor: number, currency: string, snapshot: unknown): AnnualPricing | null {
+  if (!snapshot || typeof snapshot !== "object" || Array.isArray(snapshot)) return null;
+  const saved = snapshot as Record<string, unknown>;
+  if (saved.pricingVersion !== PRICING_VERSION || saved.planType !== "ANNUAL" || saved.currency !== currency || saved.catalogAmountMinor !== normalAmountMinor
+    || typeof saved.monthlyBaseAmountMinor !== "number" || typeof saved.annualCatalogDiscountBps !== "number") return null;
+  try {
+    const pricing = calculateAnnualPricing(saved.monthlyBaseAmountMinor, saved.annualCatalogDiscountBps);
+    return pricing.annualAmountMinor === normalAmountMinor
+      && pricing.grossAnnualMinor === saved.grossAnnualAmountMinor
+      && pricing.savingsMinor === saved.annualCatalogDiscountMinor ? pricing : null;
+  } catch {
+    return null;
+  }
+}
+
 export function applyOfferDiscount(catalogAmountMinor: number, discountBps: number) {
   assertMinorUnits(catalogAmountMinor, "CATALOG_AMOUNT");
   if (!Number.isInteger(discountBps) || discountBps < OFFER_DISCOUNT_MIN_BPS || discountBps > OFFER_DISCOUNT_MAX_BPS) throw new Error("INVALID_OFFER_DISCOUNT");
