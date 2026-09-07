@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
-import { applyOfferDiscount, calculateAnnualPricing, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { applyOfferDiscount, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
 import { findPublicPromotion } from "@/lib/offers";
 import { PurchasePlanSelector } from "@/components/purchase-plan-selector";
 import { TrialStartButton } from "@/components/trial-start-button";
@@ -32,22 +32,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     {landingPageUrl && <a className="button mt-8" href={landingPageUrl} target="_blank" rel="noopener noreferrer">Visit</a>}
     <div className="mt-12 grid gap-8 motion-stagger">{await Promise.all(product.editions.map(async (edition) => {
       const plans = await Promise.all(edition.purchasePlans
-        .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
+        .sort((a, b) => ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(b.type))
         .map(async (plan) => {
           const terms = resolvePurchasePlan(plan);
-          const annual = plan.type === "ANNUAL" ? calculateAnnualPricing(plan.monthlySource!.amountMinor!, plan.annualDiscountBps ?? 0) : null;
+          const term = terms.termPricing;
           const publicPromotion = await findPublicPromotion(db, { id: plan.id, type: plan.type, editionId: plan.editionId, productId: edition.productId, currency: plan.currency });
           const promotional = publicPromotion ? applyOfferDiscount(terms.amountMinor, publicPromotion.discountBps) : null;
-          const suffix = plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : "";
+          const suffix = plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : plan.type === "SEMI_ANNUAL" ? "/6 months" : "";
           return {
             id: plan.id,
             type: plan.type,
-            label: purchasePlanLabel(plan.type),
+            label: plan.type === "SEMI_ANNUAL" ? "6 Months — Semi-annual" : purchasePlanLabel(plan.type),
             amount: money(promotional?.finalAmountMinor ?? terms.amountMinor) + suffix,
             originalAmount: promotional ? money(terms.amountMinor) + suffix : undefined,
-            detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : "Customer-authorized annual renewal",
-            savings: promotional ? `${formatPercent(publicPromotion!.discountBps)} OFF · YOU SAVE ${money(promotional.discountAmountMinor)}` : annual ? `Save ${(annual.discountBps / 100).toFixed(annual.discountBps % 100 ? 2 : 0)}% (${money(annual.savingsMinor)})` : undefined,
-            effectiveMonthly: !promotional && annual ? `Equivalent to ${money(annual.effectiveMonthlyMinor)}/month` : undefined,
+            detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : plan.type === "SEMI_ANNUAL" ? "Customer-authorized renewal every 6 months" : "Customer-authorized annual renewal",
+            savings: promotional ? `${formatPercent(publicPromotion!.discountBps)} OFF · YOU SAVE ${money(promotional.discountAmountMinor)}` : term ? `Save ${(term.discountBps / 100).toFixed(term.discountBps % 100 ? 2 : 0)}% (${money(term.savingsMinor)})` : undefined,
+            effectiveMonthly: !promotional && term ? `Equivalent to ${money(term.effectiveMonthlyMinor)}/month` : undefined,
           };
         }));
       return <article className="card grid gap-8 p-8 lg:grid-cols-[1fr_1.1fr]" key={edition.id}>

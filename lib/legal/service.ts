@@ -15,7 +15,7 @@ export async function publishedLegalDocuments(types?: LegalDocumentType[]) {
   });
 }
 
-export function checkoutLegalTypes(planType: "PERPETUAL" | "MONTHLY" | "ANNUAL") {
+export function checkoutLegalTypes(planType: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL") {
   return [...CHECKOUT_LEGAL_TYPES, ...(planType === "PERPETUAL" ? [] : SUBSCRIPTION_LEGAL_TYPES)];
 }
 

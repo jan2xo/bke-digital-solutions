@@ -181,6 +181,7 @@ enum PurchasePlanType {
   PERPETUAL
   MONTHLY
   ANNUAL
+  SEMI_ANNUAL
 }
 
 enum RenewalBehavior {
@@ -833,6 +834,7 @@ model PurchasePlan {
   currency            String           @default("PHP")
   amountMinor         Int?
   annualDiscountBps   Int?
+  semiAnnualDiscountBps Int?
   renewalBehavior     RenewalBehavior  @default(NONE)
   active              Boolean          @default(true)
   monthlySourcePlanId String?

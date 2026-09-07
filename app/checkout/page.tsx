@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { applyOfferDiscount, calculateAnnualPricing, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
+import { applyOfferDiscount, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
 import { findPublicPromotion } from "@/lib/offers";
 import { CheckoutStartButton } from "@/components/checkout-start-button";
 import { checkoutLegalTypes, pendingReacceptance, publishedLegalDocuments } from "@/lib/legal/service";
@@ -38,7 +38,7 @@ export default async function CheckoutReview({ searchParams }: { searchParams: P
   if (legalDocuments.length !== checkoutLegalTypes(plan.type).length) throw new Error("LEGAL_DOCUMENTS_UNAVAILABLE");
 
   const terms = resolvePurchasePlan(plan);
-  const annual = plan.type === "ANNUAL" ? calculateAnnualPricing(plan.monthlySource!.amountMinor!, plan.annualDiscountBps ?? 0) : null;
+  const term = terms.termPricing;
   const publicPromotion = await findPublicPromotion(db, {
     id: plan.id,
     type: plan.type,
@@ -55,14 +55,14 @@ export default async function CheckoutReview({ searchParams }: { searchParams: P
       <div className="card mt-8 border-[#2d3850] bg-[#10161e] grid gap-4 p-7">
         <Row label="Edition" value={plan.edition.name} />
         <Row label="Purchase plan" value={purchasePlanLabel(plan.type)} />
-        <Row label="Billing interval" value={plan.type === "PERPETUAL" ? "One-time" : plan.type === "MONTHLY" ? "Monthly" : "Annual"} />
+        <Row label="Billing interval" value={plan.type === "PERPETUAL" ? "One-time" : plan.type === "MONTHLY" ? "Monthly" : plan.type === "SEMI_ANNUAL" ? "Every 6 months" : "Annual"} />
         <Row label="Renewal" value={plan.renewalBehavior === "NONE" ? "No renewal" : "Customer authorizes each renewal checkout"} />
         <Row label="User limit" value={String(plan.edition.maxUsers)} />
         <Row label="Device limit" value={`${plan.edition.maxDevicesPerUser} per user`} />
-        {annual && (
+        {term && (
           <>
-            <Row label="Annual savings" value={money(annual.savingsMinor)} />
-            <Row label="Effective monthly" value={money(annual.effectiveMonthlyMinor)} />
+            <Row label={plan.type === "SEMI_ANNUAL" ? "Semi-annual savings" : "Annual savings"} value={money(term.savingsMinor)} />
+            <Row label="Effective monthly" value={money(term.effectiveMonthlyMinor)} />
           </>
         )}
         <div className="border-t pt-4">

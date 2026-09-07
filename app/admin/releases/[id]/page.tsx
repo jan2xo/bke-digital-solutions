@@ -16,7 +16,7 @@ export default async function ReleaseDetail({ params }: { params: Promise<{ id: 
     db.complianceRequirement.count({ where: { status: { not: "IMPLEMENTED" } } }),
   ]);
   if (!version) notFound();
-  const requiredTypes = [...REGISTRATION_LEGAL_TYPES, ...CHECKOUT_LEGAL_TYPES, ...(version.product.editions.some((edition) => edition.purchasePlans.some((plan) => plan.type === "MONTHLY" || plan.type === "ANNUAL")) ? SUBSCRIPTION_LEGAL_TYPES : [])];
+  const requiredTypes = [...REGISTRATION_LEGAL_TYPES, ...CHECKOUT_LEGAL_TYPES, ...(version.product.editions.some((edition) => edition.purchasePlans.some((plan) => plan.type === "MONTHLY" || plan.type === "SEMI_ANNUAL" || plan.type === "ANNUAL")) ? SUBSCRIPTION_LEGAL_TYPES : [])];
   const legalDocuments = await db.legalDocument.findMany({ where: { status: "ACTIVE", documentType: { in: requiredTypes }, currentPublishedVersionId: { not: null } }, include: { currentPublishedVersion: true } });
   const currentLegal = legalDocuments.flatMap((document) => document.currentPublishedVersion?.status === "PUBLISHED" ? [{ type: document.documentType, versionId: document.currentPublishedVersion.id, contentHash: document.currentPublishedVersion.contentHash }] : []);
   const payloadHash = releaseReadiness(version).payloadHash;

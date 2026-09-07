@@ -6203,6 +6203,7 @@ export const PurchasePlanScalarFieldEnum = {
   currency: 'currency',
   amountMinor: 'amountMinor',
   annualDiscountBps: 'annualDiscountBps',
+  semiAnnualDiscountBps: 'semiAnnualDiscountBps',
   renewalBehavior: 'renewalBehavior',
   active: 'active',
   monthlySourcePlanId: 'monthlySourcePlanId',
