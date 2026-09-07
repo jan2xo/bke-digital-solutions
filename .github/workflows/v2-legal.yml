@@ -6,6 +6,8 @@ on:
     paths:
       - "v2/modules/legal/**"
       - "v2/apps/web/legal/**"
+      - "lib/legal/service.ts"
+      - "tests/legal.test.ts"
       - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/platform/composition/**"
       - "v2/contracts/**"
