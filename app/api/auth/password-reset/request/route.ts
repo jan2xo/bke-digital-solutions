@@ -3,7 +3,7 @@ import {
   IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
   type IdentityPasswordResetRequestCapability,
 } from "@bke/identity/contracts/password-reset-request.contract";
-import { sendPasswordReset } from "@/lib/email";
+import { sendPasswordReset } from "@/v2/apps/web/email";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 import { emailSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";

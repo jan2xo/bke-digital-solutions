@@ -16,7 +16,7 @@ import {
   type IdentityLoginMfaVerificationCapability,
 } from "@bke/identity/contracts/login-mfa-verification.contract";
 import { audit } from "@/v2/apps/web/audit";
-import { sendAdministratorLoginCode } from "@/lib/email";
+import { sendAdministratorLoginCode } from "@/v2/apps/web/email";
 import { getV2WebApplication } from "../runtime";
 
 export const IDENTITY_MFA_CHALLENGE_COOKIE =

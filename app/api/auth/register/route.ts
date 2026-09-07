@@ -5,7 +5,7 @@ import { registerSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { hashToken, randomToken } from "@/lib/security/crypto";
-import { sendVerificationEmail } from "@/lib/email";
+import { sendVerificationEmail } from "@/v2/apps/web/email";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { recordLegalAcceptances } from "@/lib/legal/service";
 import { REGISTRATION_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";

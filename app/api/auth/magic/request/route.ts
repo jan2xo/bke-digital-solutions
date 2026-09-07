@@ -3,7 +3,7 @@ import {
   IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID,
   type IdentityMagicLoginRequestCapability,
 } from "@bke/identity/contracts/magic-login-request.contract";
-import { sendMagicLink } from "@/lib/email";
+import { sendMagicLink } from "@/v2/apps/web/email";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 import { emailSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
