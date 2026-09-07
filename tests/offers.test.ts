@@ -10,5 +10,6 @@ describe("offer configuration", () => {
     expect(() => assertOfferConfiguration({ type: "GENERAL_PROMOTION", discountBps: 2_500, discountedBillingCycles: 12, purchasePlanType: "MONTHLY" })).not.toThrow();
     expect(() => assertOfferConfiguration({ type: "GENERAL_PROMOTION", discountBps: 2_500, discountedBillingCycles: 12, purchasePlanType: "PERPETUAL" })).toThrow("INVALID_PROMOTIONAL_DURATION");
     expect(() => assertOfferConfiguration({ type: "GENERAL_PROMOTION", discountBps: 2_500, discountedBillingCycles: 12, purchasePlanType: "ANNUAL" })).toThrow("INVALID_PROMOTIONAL_DURATION");
+    expect(() => assertOfferConfiguration({ type: "GENERAL_PROMOTION", discountBps: 2_500, discountedBillingCycles: 12, purchasePlanType: "SEMI_ANNUAL" })).toThrow("INVALID_PROMOTIONAL_DURATION");
   });
 });

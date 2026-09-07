@@ -17,7 +17,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       await syncEditionPlans(tx, id, input.plans);
       return updated;
     });
-    await audit({ actorId: admin.id, action: "EDITION_PLANS_UPDATED", targetType: "Edition", targetId: id, metadata: { productId: edition.productId, active: edition.active, planTypes: Object.entries(input.plans).filter(([, value]) => value.enabled).map(([type]) => type), annualDiscountBps: input.plans.annual.enabled ? input.plans.annual.discountBps : null } });
+    await audit({ actorId: admin.id, action: "EDITION_PLANS_UPDATED", targetType: "Edition", targetId: id, metadata: { productId: edition.productId, active: edition.active, planTypes: Object.entries(input.plans).filter(([, value]) => value?.enabled).map(([type]) => type), annualDiscountBps: input.plans.annual.enabled ? input.plans.annual.discountBps : null, ...input.plans.semiAnnual ? { semiAnnualDiscountBps: input.plans.semiAnnual.enabled ? input.plans.semiAnnual.discountBps : null } : {} } });
     return NextResponse.json(edition);
   } catch (error) { return apiError(error); }
 }
