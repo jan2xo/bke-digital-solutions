@@ -18,6 +18,13 @@ describe("first-class six-month commercial terms (synthetic test rates)", () => 
     expect(applyOfferDiscount(57_000, 2_500)).toMatchObject({ discountAmountMinor: 14_250, finalAmountMinor: 42_750 });
   });
 
+  it("allows an explicit zero-percent six-month discount", () => {
+    expect(calculateSemiAnnualPricing(10_000, 0)).toEqual({ monthlyAmountMinor: 10_000, discountBps: 0, grossAmountMinor: 60_000, amountMinor: 60_000, savingsMinor: 0, effectiveMonthlyMinor: 10_000 });
+    expect(resolvePurchasePlan({ ...plan, semiAnnualDiscountBps: 0 })).toMatchObject({ amountMinor: 60_000, discountBps: 0, savingsMinor: 0, intervalCount: 6 });
+    const input = editionPlanSchema.parse({ ...edition, plans: { ...edition.plans, semiAnnual: { enabled: true, discountBps: 0 } } });
+    expect(input.plans.semiAnnual).toEqual({ enabled: true, discountBps: 0 });
+  });
+
   it("retains half-up rounding without one-cent disagreement", () => {
     expect(calculateSemiAnnualPricing(101, 333)).toMatchObject({ grossAmountMinor: 606, amountMinor: 586, savingsMinor: 20, effectiveMonthlyMinor: 98 });
     expect(calculateSemiAnnualPricing(125, 500)).toMatchObject({ grossAmountMinor: 750, amountMinor: 713, savingsMinor: 37, effectiveMonthlyMinor: 119 });
@@ -26,11 +33,11 @@ describe("first-class six-month commercial terms (synthetic test rates)", () => 
   it.each([null, undefined])("never derives an unset rate from the annual rate: %s", (rate) => {
     expect(() => resolvePurchasePlan({ ...plan, annualDiscountBps: 1_000, semiAnnualDiscountBps: rate })).toThrow("SEMI_ANNUAL_DISCOUNT_REQUIRED");
   });
-  it.each([0, -1, 1_001, 500.5, NaN, Infinity])("rejects invalid six-month discount %s", (rate) => {
+  it.each([-1, 1_001, 500.5, NaN, Infinity])("rejects invalid six-month discount %s", (rate) => {
     expect(() => calculateSemiAnnualPricing(10_000, rate)).toThrow("INVALID_SEMI_ANNUAL_DISCOUNT");
   });
-  it("requires an actual discount and fits every persisted amount in PostgreSQL Int", () => {
-    expect(() => calculateSemiAnnualPricing(100, 1)).toThrow("SEMI_ANNUAL_DISCOUNT_TOO_SMALL");
+  it("allows discounts whose monetary savings round to zero and fits every persisted amount in PostgreSQL Int", () => {
+    expect(calculateSemiAnnualPricing(100, 1)).toMatchObject({ grossAmountMinor: 600, amountMinor: 600, savingsMinor: 0, effectiveMonthlyMinor: 100 });
     expect(calculateSemiAnnualPricing(357_913_941, 1_000).grossAmountMinor).toBe(2_147_483_646);
     expect(() => calculateSemiAnnualPricing(357_913_942, 1_000)).toThrow("MONEY_OVERFLOW");
   });
@@ -42,17 +49,19 @@ describe("first-class six-month commercial terms (synthetic test rates)", () => 
     const input = editionPlanSchema.parse({ ...edition, plans: { ...edition.plans, semiAnnual: { enabled: false } } });
     expect(input.plans.semiAnnual).toEqual({ enabled: false });
   });
-  it.each([{ enabled: true }, { enabled: true, discountBps: 0 }, { enabled: true, discountBps: 1_001 }, { enabled: true, discountBps: 500, durationMonths: 7 }])("rejects missing or manipulated semi-annual configuration", (semiAnnual) => {
+  it.each([{ enabled: true }, { enabled: true, discountBps: 1_001 }, { enabled: true, discountBps: 500, durationMonths: 7 }])("rejects missing or manipulated semi-annual configuration", (semiAnnual) => {
     expect(editionPlanSchema.safeParse({ ...edition, plans: { ...edition.plans, semiAnnual } }).success).toBe(false);
   });
-  it("requires the monthly source and a discount that actually reduces its six-month total", () => {
-    for (const monthly of [{ enabled: false, amountMinor: 10_000 }, { enabled: true, amountMinor: 100 }, { enabled: true, amountMinor: 360_000_000 }]) {
-      expect(editionPlanSchema.safeParse({ ...edition, plans: { ...edition.plans, monthly, semiAnnual: { enabled: true, discountBps: 1 } } }).success).toBe(false);
-    }
+  it("requires the monthly source and rejects six-month totals that exceed the database money limit", () => {
+    expect(editionPlanSchema.safeParse({ ...edition, plans: { ...edition.plans, monthly: { enabled: false, amountMinor: 10_000 }, semiAnnual: { enabled: true, discountBps: 0 } } }).success).toBe(false);
+    expect(editionPlanSchema.safeParse({ ...edition, plans: { ...edition.plans, monthly: { enabled: true, amountMinor: 100 }, semiAnnual: { enabled: true, discountBps: 1 } } }).success).toBe(true);
+    expect(editionPlanSchema.safeParse({ ...edition, plans: { ...edition.plans, monthly: { enabled: true, amountMinor: 360_000_000 }, semiAnnual: { enabled: true, discountBps: 0 } } }).success).toBe(false);
   });
 
   it("uses only proven saved six-month breakdowns", () => {
     expect(resolveRenewalTermPricing("SEMI_ANNUAL", 57_000, "PHP", saved)).toMatchObject({ grossAmountMinor: 60_000, amountMinor: 57_000, savingsMinor: 3_000 });
+    const zeroSaved = { ...saved, semiAnnualCatalogDiscountBps: 0, semiAnnualCatalogDiscountMinor: 0, catalogAmountMinor: 60_000 };
+    expect(resolveRenewalTermPricing("SEMI_ANNUAL", 60_000, "PHP", zeroSaved)).toMatchObject({ grossAmountMinor: 60_000, amountMinor: 60_000, discountBps: 0, savingsMinor: 0 });
     for (const snapshot of [null, {}, { ...saved, currency: "USD" }, { ...saved, planType: "ANNUAL" }, { ...saved, pricingVersion: "UNKNOWN" }, { ...saved, semiAnnualCatalogDiscountMinor: 1 }, { ...saved, grossSemiAnnualAmountMinor: 1 }, { ...saved, semiAnnualCatalogDiscountBps: 750 }]) {
       expect(resolveRenewalTermPricing("SEMI_ANNUAL", 57_000, "PHP", snapshot)).toBeNull();
     }

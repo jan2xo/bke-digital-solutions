@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             amount: money(promotional?.finalAmountMinor ?? terms.amountMinor) + suffix,
             originalAmount: promotional ? money(terms.amountMinor) + suffix : undefined,
             detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : plan.type === "SEMI_ANNUAL" ? "Customer-authorized renewal every 6 months" : "Customer-authorized annual renewal",
-            savings: promotional ? `${formatPercent(publicPromotion!.discountBps)} OFF · YOU SAVE ${money(promotional.discountAmountMinor)}` : term ? `Save ${(term.discountBps / 100).toFixed(term.discountBps % 100 ? 2 : 0)}% (${money(term.savingsMinor)})` : undefined,
+            savings: promotional ? `${formatPercent(publicPromotion!.discountBps)} OFF · YOU SAVE ${money(promotional.discountAmountMinor)}` : term && term.savingsMinor > 0 ? `Save ${(term.discountBps / 100).toFixed(term.discountBps % 100 ? 2 : 0)}% (${money(term.savingsMinor)})` : undefined,
             effectiveMonthly: !promotional && term ? `Equivalent to ${money(term.effectiveMonthlyMinor)}/month` : undefined,
           };
         }));
