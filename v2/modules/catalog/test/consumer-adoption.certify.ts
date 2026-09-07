@@ -4,21 +4,31 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.2.0/bke-catalog-0.2.0.tgz";
-const EXPECTED_VERSION = "0.2.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.3.0/bke-catalog-0.3.0.tgz";
+const EXPECTED_VERSION = "0.3.0";
 const EXPECTED_SHA256 =
-  "50ca48d723ccb00e6508d66f5a95fbbba6f74ec33720f8c9fd3877a9b4ae6fde";
+  "806fa9702322cc716b3f749821bf26a7c74407df07681254ac9335580694f5aa";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const [moduleSource, packageSource, lockSource, nextConfigSource, catalogWorkflowSource, standaloneWorkflowSource] =
-  await Promise.all([
-    readFile(new URL("../module.ts", import.meta.url), "utf8"),
-    readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-    readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-    readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
-    readFile(new URL("../../../../.github/workflows/v2-catalog.yml", import.meta.url), "utf8"),
-    readFile(new URL("../../../../.github/workflows/v2-standalone.yml", import.meta.url), "utf8"),
-  ]);
+const [
+  moduleSource,
+  packageSource,
+  lockSource,
+  nextConfigSource,
+  catalogWorkflowSource,
+  standaloneWorkflowSource,
+  webRuntimeSource,
+  standaloneBootstrapSource,
+] = await Promise.all([
+  readFile(new URL("../module.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../.github/workflows/v2-catalog.yml", import.meta.url), "utf8"),
+  readFile(new URL("../../../../.github/workflows/v2-standalone.yml", import.meta.url), "utf8"),
+  readFile(new URL("../../../apps/web/runtime.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../apps/standalone/bootstrap.ts", import.meta.url), "utf8"),
+]);
 
 if (!moduleSource.includes("CapabilityModule") || !moduleSource.includes('"../../contracts/capability"')) {
   throw new Error("Catalog host adapter must retain the Digital Solutions CapabilityModule contract.");
@@ -33,6 +43,9 @@ for (const marker of [
   "@bke/catalog/prisma/repositories/",
   "@bke/catalog/prisma/repositories/postgres-licensing-version-facts-repository",
   "createPostgresCatalogLicensingVersionFactsRepository",
+  "@bke/catalog/prisma/repositories/legacy-schema-licensing-version-facts-repository",
+  "createLegacySchemaCatalogLicensingVersionFactsRepository",
+  'licensingVersionFactsStorage?: "native" | "legacy-product-schema"',
   "licensingVersionFacts",
   "@bke/catalog/module.manifest",
 ]) {
@@ -50,6 +63,13 @@ for (const marker of [
   if (moduleSource.includes(marker)) {
     throw new Error(`Catalog host adapter consumes retired staging implementation: ${marker}`);
   }
+}
+
+if (!webRuntimeSource.includes('licensingVersionFactsStorage: "legacy-product-schema"')) {
+  throw new Error("V2 web convergence host must use the Catalog-owned legacy Product schema adapter.");
+}
+if (standaloneBootstrapSource.includes("legacy-product-schema")) {
+  throw new Error("Fresh standalone V2 host must keep native Catalog persistence.");
 }
 
 const packageJson = JSON.parse(packageSource) as { dependencies?: Record<string, string> };

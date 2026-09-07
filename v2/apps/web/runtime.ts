@@ -29,7 +29,7 @@ async function composeWebApplication(): Promise<ComposedApplication> {
     createIdentityModule({ connectionString, sessionSecret, mfaEncryptionKey }),
     createAccountsModule({ connectionString }),
     createLegalModule({ connectionString }),
-    createCatalogModule({ connectionString }),
+    createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
     createCommerceModule({ connectionString }),
     createPaymentsModule({
       connectionString,
