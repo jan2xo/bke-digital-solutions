@@ -166,7 +166,7 @@ type PersistedAlert = Readonly<{
   source: string;
   title: string;
   detail: string | null;
-  severity: "WARNING" | "CRITICAL";
+  severity: "INFO" | "WARNING" | "CRITICAL";
   status: string;
   firstSeenAt: Date;
   lastSeenAt: Date;
@@ -185,6 +185,9 @@ const alertSelection = {
 } as const;
 
 function normalizeAlert(row: PersistedAlert): ObservabilityAlert {
+  if (row.severity !== "WARNING" && row.severity !== "CRITICAL") {
+    throw new Error("INVALID_OBSERVABILITY_HEALTH_ALERT_SEVERITY");
+  }
   return Object.freeze({
     id: row.id,
     fingerprint: row.fingerprint,
@@ -201,7 +204,11 @@ function normalizeAlert(row: PersistedAlert): ObservabilityAlert {
 const alertStore: ObservabilityAlertStore = {
   async findActive(fingerprint) {
     const row = await db.observabilityAlert.findFirst({
-      where: { fingerprint, status: { in: ["OPEN", "ACKNOWLEDGED"] } },
+      where: {
+        fingerprint,
+        status: { in: ["OPEN", "ACKNOWLEDGED"] },
+        severity: { in: ["WARNING", "CRITICAL"] },
+      },
       select: alertSelection,
     });
     return row ? normalizeAlert(row) : null;
@@ -234,6 +241,7 @@ const alertStore: ObservabilityAlertStore = {
   },
   async list() {
     const rows = await db.observabilityAlert.findMany({
+      where: { severity: { in: ["WARNING", "CRITICAL"] } },
       orderBy: [{ status: "asc" }, { lastSeenAt: "desc" }],
       take: 100,
       select: alertSelection,
