@@ -61,7 +61,7 @@ export default async function CheckoutReview({ searchParams }: { searchParams: P
         <Row label="Device limit" value={`${plan.edition.maxDevicesPerUser} per user`} />
         {term && (
           <>
-            <Row label={plan.type === "SEMI_ANNUAL" ? "Semi-annual savings" : "Annual savings"} value={money(term.savingsMinor)} />
+            {term.savingsMinor > 0 && <Row label={plan.type === "SEMI_ANNUAL" ? "Semi-annual savings" : "Annual savings"} value={money(term.savingsMinor)} />}
             <Row label="Effective monthly" value={money(term.effectiveMonthlyMinor)} />
           </>
         )}
