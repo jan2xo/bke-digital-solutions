@@ -166,7 +166,7 @@ type PersistedAlert = Readonly<{
   source: string;
   title: string;
   detail: string | null;
-  severity: "INFO" | "WARNING" | "CRITICAL";
+  severity: string;
   status: string;
   firstSeenAt: Date;
   lastSeenAt: Date;
