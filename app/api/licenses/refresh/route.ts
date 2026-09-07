@@ -7,7 +7,7 @@ import { clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { decryptLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
 import { activeLicensingSigningKey } from "@/v2/apps/web/licensing/signing-key-registry";
-import { requireProductVersion } from "@/lib/licensing/lifecycle";
+import { requireProductVersion } from "@bke/licensing/logic/lease-lifecycle";
 import { refreshRequiresReplacement } from "@bke/licensing/logic/refresh-decision";
 import { CLOUD_AGENT_PROTOCOL_VERSION, CloudAgentProtocolError, requireCloudAgentVersion } from "@/v2/apps/web/licensing/cloud-agent-contract";
 
