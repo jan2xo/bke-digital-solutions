@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { db } from "@/lib/db";
 import { hashLicenseKey } from "@/lib/security/crypto";
 import { issueSignedLease } from "@/lib/licensing-agent";
-import { nextLeaseLifecycle, requireProductVersion, type CommercialLeaseAction } from "@/lib/licensing/lifecycle";
+import { nextLeaseLifecycle, requireProductVersion, type CommercialLeaseAction } from "@bke/licensing/logic/lease-lifecycle";
 import { activeCommercialSigningKey, ensureCommercialSigningKey } from "@/lib/licensing/signing-registry";
 import { deviceIdentity } from "@/lib/licensing/product-identity";
 import { isVersionAccepted } from "@/lib/product-identity";
