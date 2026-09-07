@@ -7,7 +7,7 @@ import {audit} from "@/v2/apps/web/audit";
 import {apiError} from "@/v2/apps/web/http/api-error";
 import {decryptLicenseKey, sha256} from "@/lib/security/crypto";
 import {addDays} from "@/v2/apps/web/time";
-import {issueCommercialLease} from "@/lib/licensing/commercial-lease";
+import {issueCommercialLease} from "@/v2/apps/web/licensing/commercial-lease";
 
 const schema=z.discriminatedUnion("action",[
   z.object({action:z.enum(["ACTIVATE","SUSPEND","REVOKE","EXPIRE"])}),

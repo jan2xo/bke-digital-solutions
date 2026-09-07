@@ -3,7 +3,7 @@ import { z } from "zod";
 import { activationSchema } from "@/v2/apps/web/http/validation";
 import { clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion } from "@/v2/apps/web/licensing/cloud-agent-contract";
 import { audit } from "@/v2/apps/web/audit";
 
