@@ -4,7 +4,7 @@ import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { db } from "@/lib/db";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { collectObservability, syncObservabilityAlerts } from "@/lib/observability/metrics";
+import { collectObservability, syncObservabilityAlerts } from "@/v2/apps/web/observability";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 
 const actionSchema = z.object({ id: z.string().cuid(), action: z.enum(["ACKNOWLEDGE", "RESOLVE"]) });

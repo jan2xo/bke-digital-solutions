@@ -1,5 +1,5 @@
 import { ObservabilityActions } from "@/components/observability-actions";
-import { collectObservability, syncObservabilityAlerts } from "@/lib/observability/metrics";
+import { collectObservability, syncObservabilityAlerts } from "@/v2/apps/web/observability";
 import { db } from "@/lib/db";
 
 const stateClass = (state: string) => state === "HEALTHY" ? "border-green-200 bg-green-50" : state === "WARNING" ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50";
