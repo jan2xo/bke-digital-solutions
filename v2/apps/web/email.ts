@@ -134,6 +134,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
         to: row.recipient,
         subject: row.subject,
         text: render(row.type, row.payload),
+        idempotencyKey: row.id,
       }),
     }));
   },
