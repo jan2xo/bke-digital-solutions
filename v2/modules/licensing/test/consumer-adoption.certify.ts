@@ -1,8 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.7.0/bke-licensing-0.7.0.tgz";
-const EXPECTED_VERSION = "0.7.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.8.1/bke-licensing-0.8.1.tgz";
+const EXPECTED_VERSION = "0.8.1";
 
 const [
   moduleSource,
@@ -14,6 +14,9 @@ const [
   signingRegistryHostSource,
   signingKeysRouteSource,
   refreshRouteSource,
+  airstackGraceRouteSource,
+  renderdockGraceRouteSource,
+  graceCliSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
@@ -30,6 +33,9 @@ const [
   readFile(new URL("../../../apps/web/licensing/signing-key-registry.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../app/api/licensing/keys/route.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../../app/api/licenses/refresh/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../app/api/graceperiod/airstack/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../app/api/graceperiod/renderdock/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../../scripts/grace-period.ts", import.meta.url), "utf8"),
 ]);
 
 if (
@@ -46,11 +52,14 @@ const requiredPackageSurfaces = [
   "LICENSING_COMMERCIAL_LEASE_CAPABILITY_ID",
   "LICENSING_TRANSFER_POLICY_CAPABILITY_ID",
   "LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID",
+  "LICENSING_GRACE_PERIOD_CAPABILITY_ID",
   "@bke/licensing/logic/",
   "@bke/licensing/logic/commercial-lease",
   "createCommercialLeaseCapability",
   "@bke/licensing/logic/commercial-license-context",
   "createCommercialLicenseContextProvider",
+  "@bke/licensing/logic/grace-period",
+  "createLicensingGracePeriodCapability",
   "@bke/licensing/providers/",
   "@bke/licensing/prisma/repositories/",
   "@bke/licensing/prisma/repositories/postgres-commercial-lease-store",
@@ -63,6 +72,8 @@ const requiredPackageSurfaces = [
   "createPostgresLicensingLicenseLookupRepository",
   "@bke/licensing/prisma/repositories/postgres-transfer-policy-repository",
   "createPostgresLicensingTransferPolicyCapability",
+  "@bke/licensing/prisma/repositories/postgres-grace-period-store",
+  "createPostgresLicensingGracePeriodStore",
   "ACCOUNTS_ACCOUNT_LIFECYCLE_CAPABILITY_ID",
   "CATALOG_LICENSING_VERSION_FACTS_CAPABILITY_ID",
   "COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID",
@@ -199,6 +210,28 @@ for (const [name, source] of [["keys", signingKeysRouteSource], ["refresh", refr
   if (!source.includes("@/v2/apps/web/licensing/signing-key-registry")) {
     throw new Error(`${name} route does not consume the V2 signing-key registry adapter.`);
   }
+}
+
+for (const [name, source] of [
+  ["airstack grace", airstackGraceRouteSource],
+  ["renderdock grace", renderdockGraceRouteSource],
+] as const) {
+  if (source.includes("@/lib/grace-period")) {
+    throw new Error(`${name} route still reaches through to V1 grace-period implementation.`);
+  }
+  if (!source.includes("LICENSING_GRACE_PERIOD_CAPABILITY_ID")) {
+    throw new Error(`${name} route does not consume the released Licensing Grace capability.`);
+  }
+}
+if (graceCliSource.includes("../lib/grace-period")) {
+  throw new Error("Grace CLI still reaches through to V1 grace-period implementation.");
+}
+if (
+  !graceCliSource.includes("createLicensingGracePeriodCapability") ||
+  !graceCliSource.includes("createPostgresLicensingGracePeriodStore") ||
+  !graceCliSource.includes('operationSource: "VPS_CLI"')
+) {
+  throw new Error("Grace CLI does not compose the released Licensing Grace capability with VPS_CLI semantics.");
 }
 
 console.log(

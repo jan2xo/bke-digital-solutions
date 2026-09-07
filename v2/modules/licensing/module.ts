@@ -16,6 +16,7 @@ import {
   type CommerceSubscriptionStatusLookupCapability,
 } from "@bke/commerce/contracts/subscription-status-lookup.contract";
 import { LICENSING_COMMERCIAL_LEASE_CAPABILITY_ID } from "@bke/licensing/contracts/commercial-lease.contract";
+import { LICENSING_GRACE_PERIOD_CAPABILITY_ID } from "@bke/licensing/contracts/grace-period.contract";
 import { LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID } from "@bke/licensing/contracts/license-key-reveal.contract";
 import { LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID } from "@bke/licensing/contracts/signing-key-registry.contract";
 import {
@@ -29,10 +30,12 @@ import {
   resolveCommercialPrivateKey,
   type CommercialSigningKeyBootstrap,
 } from "@bke/licensing/logic/commercial-signing-registry";
+import { createLicensingGracePeriodCapability } from "@bke/licensing/logic/grace-period";
 import { createLicensingLicenseKeyRevealCapability } from "@bke/licensing/logic/license-key-reveal";
 import { licensingModuleManifest } from "@bke/licensing/module.manifest";
 import { createPostgresCommercialLeaseStore } from "@bke/licensing/prisma/repositories/postgres-commercial-lease-store";
 import { createPostgresCommercialSigningKeyProvider } from "@bke/licensing/prisma/repositories/postgres-commercial-signing-key-provider";
+import { createPostgresLicensingGracePeriodStore } from "@bke/licensing/prisma/repositories/postgres-grace-period-store";
 import { createPostgresLicensingLicenseKeyRevealRepository } from "@bke/licensing/prisma/repositories/postgres-license-key-reveal-repository";
 import { createPostgresLicensingLicenseLookupRepository } from "@bke/licensing/prisma/repositories/postgres-license-lookup-repository";
 import { createPostgresLicensingSigningKeyRegistryCapability } from "@bke/licensing/prisma/repositories/postgres-signing-key-registry-repository";
@@ -41,6 +44,7 @@ import { createAesGcmLicensingLicenseKeyDecrypter } from "@bke/licensing/provide
 import { createEd25519CommercialLeaseSigner } from "@bke/licensing/providers/ed25519-commercial-lease-signer";
 import { createSystemLicensingClock } from "@bke/licensing/providers/system-licensing-clock";
 import type { CapabilityModule, CapabilityResolver } from "../../contracts/capability";
+import { createLicensingGraceAuditEffect } from "./grace-audit";
 
 export interface LicensingModuleOptions {
   readonly connectionString: string;
@@ -64,6 +68,10 @@ export function createLicensingModule(options: LicensingModuleOptions): Capabili
     repository: createPostgresLicensingLicenseKeyRevealRepository(options.connectionString),
     decrypter: createAesGcmLicensingLicenseKeyDecrypter(options.licensePepper),
     clock: createSystemLicensingClock(),
+  });
+  const gracePeriod = createLicensingGracePeriodCapability({
+    store: createPostgresLicensingGracePeriodStore(options.connectionString),
+    mutationEffect: createLicensingGraceAuditEffect(),
   });
   const licenseLookup = createPostgresLicensingLicenseLookupRepository(options.connectionString);
   const leaseStore = createPostgresCommercialLeaseStore(options.connectionString);
@@ -158,6 +166,10 @@ export function createLicensingModule(options: LicensingModuleOptions): Capabili
         {
           id: LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID,
           value: signingKeyRegistry,
+        },
+        {
+          id: LICENSING_GRACE_PERIOD_CAPABILITY_ID,
+          value: gracePeriod,
         },
       ];
     },
