@@ -6,7 +6,7 @@ import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { finalizeProductDeletion } from "@/lib/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/lib/storage-cleanup";
 import { retryStoredWebhook } from "@/lib/webhooks";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import type { JobContext, JobSummary } from "@/lib/scheduler/types";
 import { processPendingCommissioning } from "@/lib/commissioning/service";
@@ -78,81 +78,44 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
       const changed = await tx.license.updateMany({ where: { id: license.id, status: "ACTIVE", expiresAt: { lte: context.now } }, data: { status: "EXPIRED" } });
       if (!changed.count) continue;
       await tx.licenseEvent.createMany({ data: [{ licenseId: license.id, type: license.trialGrant ? "TRIAL_EXPIRED" : "LICENSE_EXPIRED", metadata: { scheduled: true } }], skipDuplicates: true });
-      await queueCommerceEmail(tx, { type: license.trialGrant ? "TRIAL_EXPIRED" : "LICENSE_EXPIRED", recipient: license.account.billingEmail, subject: license.trialGrant ? "Your BKE trial has expired" : "Your BKE license has expired", payload: { licenseId: license.id }, deduplicationKey: `entitlement-expired:${license.id}:${license.expiresAt?.toISOString()}` });
+      await tx.deviceActivation.updateMany({ where: { licenseId: license.id, active: true }, data: { active: false, deactivatedAt: context.now } });
+      await queueCommerceEmail(tx, { type: license.trialGrant ? "TRIAL_EXPIRED" : "LICENSE_EXPIRED", recipient: license.account.billingEmail, subject: license.trialGrant ? "Your BKE trial has ended" : "Your BKE license has expired", payload: { licenseId: license.id }, deduplicationKey: `license-expired:${license.id}:${license.expiresAt?.toISOString() ?? "none"}` });
     }
-    for (const trial of endingTrials) await queueCommerceEmail(tx, { type: "TRIAL_ENDING", recipient: trial.account.billingEmail, subject: "Your BKE trial ends soon", payload: { trialId: trial.id }, deduplicationKey: `trial-ending:${trial.id}:${trial.trialEndsAt.toISOString()}:1` });
+    for (const trial of endingTrials) await queueCommerceEmail(tx, { type: "TRIAL_ENDING", recipient: trial.account.billingEmail, subject: "Your BKE trial ends soon", payload: { trialId: trial.id, trialEndsAt: trial.trialEndsAt.toISOString() }, deduplicationKey: `trial-ending:${trial.id}:${trial.trialEndsAt.toISOString()}` });
     await tx.downloadGrant.deleteMany({ where: { expiresAt: { lte: context.now } } });
+    await tx.deviceActivation.updateMany({ where: { active: true, lastSeenAt: { lt: new Date(context.now.getTime() - 90 * DAY) } }, data: { active: false, deactivatedAt: context.now } });
   });
-  return { expiredSubscriptions: subscriptions.length, expiredLicenses: licenses.length, trialReminders: endingTrials.length, deletedDownloadGrants: expiredGrants, inactiveDevicesForReview: inactiveDevices };
+  return { subscriptions: subscriptions.length, licenses: licenses.length, endingTrials: endingTrials.length, expiredDownloadGrants: expiredGrants, inactiveDevicesForReview: inactiveDevices };
 }
 
-export async function commerceLifecycle(context: JobContext): Promise<JobSummary> {
-  const cutoff = new Date(context.now.getTime() - DAY);
-  const orders = await db.order.count({ where: { status: "PENDING", createdAt: { lt: cutoff } } });
-  const staleAttemptWhere = { status: { in: ["CREATING", "PENDING"] }, createdAt: { lt: cutoff }, order: { status: "PENDING" } } satisfies Prisma.PaymentAttemptWhereInput;
-  const attempts = await db.paymentAttempt.count({ where: staleAttemptWhere });
-  const reservations = await db.offerRedemption.count({ where: { status: "RESERVED", reservedAt: { lt: cutoff } } });
-  if (context.dryRun) return { abandonedOrders: orders, stalePaymentAttempts: attempts, staleOfferReservations: reservations };
-  const [, expiredAttempts, released] = await db.$transaction([
-    db.order.updateMany({ where: { status: "PENDING", createdAt: { lt: cutoff } }, data: { status: "CANCELLED" } }),
-    db.paymentAttempt.updateMany({ where: staleAttemptWhere, data: { status: "EXPIRED" } }),
-    db.offerRedemption.updateMany({ where: { status: "RESERVED", reservedAt: { lt: cutoff } }, data: { status: "RELEASED", releasedAt: context.now } }),
-  ]);
-  return { expiredOrders: orders, expiredPaymentAttempts: expiredAttempts.count, releasedReservations: released.count };
-}
-
-export async function customerLifecycleReview(context: JobContext): Promise<JobSummary> {
-  const retentionDue = await db.user.count({ where: { lifecycleState: { in: ["PRIVACY_REVIEW", "PSEUDONYMIZED"] }, retentionExpiresAt: { lte: context.now }, legalHoldAt: null } });
-  const legalHolds = await db.user.count({ where: { legalHoldAt: { not: null }, lifecycleState: { not: "ACTIVE" } } });
-  const privacyPending = await db.user.count({ where: { lifecycleState: "PRIVACY_REVIEW" } });
-  if (!context.dryRun && (retentionDue || legalHolds || privacyPending)) {
-    const admins = await db.user.findMany({ where: { role: "ADMIN", emailVerified: { not: null }, suspendedAt: null }, select: { id: true, email: true }, take: 20 });
-    const day = context.now.toISOString().slice(0, 10);
-    await db.$transaction(async (tx) => { for (const admin of admins) await queueCommerceEmail(tx, { type: "CUSTOMER_LIFECYCLE_REVIEW", recipient: admin.email, subject: "BKE customer lifecycle review is due", payload: { retentionDue, legalHolds, privacyPending }, deduplicationKey: `customer-lifecycle-review:${day}:${admin.id}` }); });
+export async function subscriptionRenewals(context: JobContext): Promise<JobSummary> {
+  const subscriptions = await db.subscription.findMany({ where: { status: "ACTIVE", currentPeriodEnd: { lte: context.now }, purchasePlan: { renewalBehavior: "AUTO_RENEW" } }, include: { account: true, purchasePlan: true }, take: 100 });
+  if (context.dryRun) return { candidates: subscriptions.length };
+  let renewed = 0, failed = 0;
+  for (const subscription of subscriptions) {
+    try {
+      const operationId = `renewal:${subscription.id}:${subscription.currentPeriodEnd.toISOString()}`;
+      const operation = await db.commercialLeaseOperation.findUnique({ where: { operationId } });
+      if (operation?.status === "COMPLETED") { renewed++; continue; }
+      const license = await db.license.findFirst({ where: { subscriptionId: subscription.id, status: "ACTIVE" }, orderBy: { createdAt: "asc" } });
+      if (!license?.keyCiphertext) throw new Error("RENEWAL_LICENSE_UNAVAILABLE");
+      const predecessor = await db.licenseLeaseRecord.findFirst({ where: { licenseId: license.id, status: "ACTIVE" }, orderBy: [{ generation: "desc" }, { serverRevision: "desc" }] });
+      if (!predecessor) throw new Error("RENEWAL_LEASE_UNAVAILABLE");
+      await db.commercialLeaseOperation.upsert({ where: { operationId }, create: { operationId, licenseId: license.id, action: "RENEWAL", status: "PREPARED", metadata: { subscriptionId: subscription.id, installationId: predecessor.installationId, deviceId: predecessor.deviceId, predecessorLeaseId: predecessor.leaseId } }, update: {} });
+      await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext), installationId: predecessor.installationId, deviceId: predecessor.deviceId, operationId, productVersion: predecessor.version, action: "RENEWAL", predecessorLeaseId: predecessor.leaseId });
+      await db.subscription.update({ where: { id: subscription.id }, data: { currentPeriodStart: subscription.currentPeriodEnd, currentPeriodEnd: new Date(subscription.currentPeriodEnd.getTime() + subscription.purchasePlan.intervalMonths * 30 * DAY) } });
+      renewed++;
+    } catch { failed++; }
   }
-  return { retentionDue, legalHoldsForReview: legalHolds, privacyReviews: privacyPending, automaticPurge: false };
+  return { candidates: subscriptions.length, renewed, failed };
 }
 
-export async function securityCleanup(context: JobContext): Promise<JobSummary> {
-  const sessionWhere = { OR: [{ expiresAt: { lte: context.now } }, { absoluteExpiresAt: { lte: context.now } }] };
-  const counts = await Promise.all([
-    db.session.count({ where: sessionWhere }), db.mfaChallenge.count({ where: { expiresAt: { lte: context.now } } }),
-    db.verificationToken.count({ where: { expiresAt: { lte: context.now } } }), db.passwordResetToken.count({ where: { expiresAt: { lte: context.now } } }),
-  ]);
-  if (context.dryRun) return { sessions: counts[0], mfaChallenges: counts[1], verificationTokens: counts[2], passwordResetTokens: counts[3] };
-  const [sessions, mfa, verification, reset] = await db.$transaction([
-    db.session.deleteMany({ where: sessionWhere }), db.mfaChallenge.deleteMany({ where: { expiresAt: { lte: context.now } } }),
-    db.verificationToken.deleteMany({ where: { expiresAt: { lte: context.now } } }), db.passwordResetToken.deleteMany({ where: { expiresAt: { lte: context.now } } }),
-  ]);
-  return { sessions: sessions.count, mfaChallenges: mfa.count, verificationTokens: verification.count, passwordResetTokens: reset.count };
-}
-
-export async function paymentOperations(context: JobContext): Promise<JobSummary> {
-  const failed = await db.webhookEvent.findMany({ where: { status: "FAILED", resolutionStatus: "OPEN", lastErrorCode: { in: ["PAYMENT_PROCESSING_RETRYABLE", "PAYMENT_PROVIDER_UNAVAILABLE"] } }, select: { id: true }, orderBy: { receivedAt: "asc" }, take: 20 });
-  const reconciliationCandidates = await db.payment.count({ where: { provider: "paymongo", status: { in: ["PENDING", "PAID", "REFUNDED"] }, reconciliations: { none: {} } } });
-  if (context.dryRun) return { retryableWebhooks: failed.length, reconciliationCandidates, automaticSettlement: false };
-  let retried = 0, failedRetries = 0;
-  for (const webhook of failed) { try { await retryStoredWebhook(webhook.id); retried++; } catch { failedRetries++; } }
-  if (reconciliationCandidates) {
-    const admins = await db.user.findMany({ where: { role: "ADMIN", emailVerified: { not: null }, suspendedAt: null }, select: { id: true, email: true }, take: 20 });
-    const day = context.now.toISOString().slice(0, 10);
-    await db.$transaction(async (tx) => { for (const admin of admins) await queueCommerceEmail(tx, { type: "PAYMENT_RECONCILIATION_REVIEW", recipient: admin.email, subject: "BKE payment reconciliation review is due", payload: { candidateCount: reconciliationCandidates }, deduplicationKey: `payment-reconciliation-review:${day}:${admin.id}` }); });
+export async function webhookRetries(context: JobContext): Promise<JobSummary> {
+  const retries = await db.webhookEvent.findMany({ where: { status: "FAILED", resolutionStatus: "OPEN" }, select: { externalEventId: true }, take: 100 });
+  if (context.dryRun) return { candidates: retries.length };
+  let retried = 0, failed = 0;
+  for (const row of retries) {
+    try { await retryStoredWebhook(row.externalEventId); retried++; } catch { failed++; }
   }
-  return { retriedWebhooks: retried, failedRetries, reconciliationReminders: reconciliationCandidates, automaticSettlement: false };
-}
-
-/** Retries prepared renewal lease issuance without re-extending entitlement. */
-export async function preparedRenewalRecovery(context: JobContext): Promise<JobSummary> {
-  const operations = await db.commercialLeaseOperation.findMany({ where: { action: "RENEWAL", status: "PREPARED" }, orderBy: { createdAt: "asc" }, take: 20, include: { license: { select: { keyCiphertext: true, activations: { where: { active: true }, select: { deviceHash: true } }, leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true, version: true } } } } } });
-  if (context.dryRun) return { candidates: operations.length };
-  let completed = 0, failed = 0;
-  for (const operation of operations) {
-    const metadata = (operation.metadata ?? {}) as Record<string, unknown>;
-    const activation = operation.license?.activations.find((a) => a.deviceHash === String(metadata.deviceHash ?? ""));
-    const binding = operation.license?.leaseHistory.find((lease) => activation && sha256(lease.deviceId) === activation.deviceHash);
-    if (!operation.license?.keyCiphertext || !binding) { failed++; continue; }
-    try { await issueCommercialLease({ licenseKey: decryptLicenseKey(operation.license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: operation.operationId, productVersion: binding.version, action: "RENEWAL" }); completed++; }
-    catch { failed++; }
-  }
-  return { candidates: operations.length, completed, failed };
+  return { candidates: retries.length, retried, failed };
 }

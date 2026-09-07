@@ -3,7 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { issueEntitlements, type RenewalLeaseRequest } from "@/lib/licensing";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
 import { paymentProvider } from "@/lib/payments";
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
@@ -58,96 +58,47 @@ async function processVerifiedEvent(event: PaymentEvent) {
         const payment = await tx.payment.upsert({ where: { provider_externalId: { provider: paymentProvider.name, externalId: event.externalPaymentId } }, create: { orderId: order.id, provider: paymentProvider.name, externalId: event.externalPaymentId, status: "PAID", amountMinor: event.amountMinor!, currency: event.currency!, paidAt: event.occurredAt }, update: { status: "PAID", paidAt: event.occurredAt } });
         paymentId = payment.id;
         await tx.order.update({ where: { id: order.id }, data: { status: "PAID", paidAt: event.occurredAt } });
-        if (attempt) await tx.paymentAttempt.update({ where: { id: attempt.id }, data: { status: "COMPLETED" } });
-        const invoice = await tx.invoice.update({ where: { orderId: order.id }, data: { status: "FINAL", issuedAt: event.occurredAt } });
-        await issueEntitlements(tx, order.id, { paymentId, paymentEventId: event.eventId }, renewalRequests);
-        const redemption = await tx.offerRedemption.findUnique({ where: { orderId: order.id } });
-        if (redemption) await tx.offerRedemption.update({ where: { id: redemption.id }, data: { status: "APPLIED", appliedAt: event.occurredAt } });
-        const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-        await queueCommerceEmail(tx, { type: "PAYMENT_RECEIPT", recipient: account.billingEmail, subject: "BKE Digital Solutions payment receipt", payload: { orderNumber: order.number }, deduplicationKey: `payment-receipt:${order.id}` });
-        await queueCommerceEmail(tx, { type: "INVOICE_ISSUED", recipient: account.billingEmail, subject: "Your BKE Digital Solutions invoice", payload: { orderNumber: order.number, invoiceNumber: invoice.number }, deduplicationKey: `invoice-issued:${order.id}` });
-        await queueCommerceEmail(tx, { type: "LICENSE_ISSUED", recipient: account.billingEmail, subject: "Your BKE Digital Solutions license is ready", payload: { orderNumber: order.number }, deduplicationKey: `entitlement-issued:${order.id}` });
-        await tx.auditLog.create({ data: { accountId: order.accountId, action: order.status === "CANCELLED" ? "PAYMENT_SETTLED_AFTER_LOCAL_CANCELLATION" : "PAYMENT_SETTLED", targetType: "Order", targetId: order.id, metadata: { provider: paymentProvider.name, webhookEventId: event.eventId } } });
+        await issueEntitlements(tx, order.id);
+        const subscription = await tx.subscription.findFirst({ where: { orderId: order.id }, include: { purchasePlan: true } });
+        if (subscription?.purchasePlan.renewalBehavior === "AUTO_RENEW") {
+          const license = await tx.license.findFirst({ where: { orderItem: { orderId: order.id } }, orderBy: { createdAt: "asc" } });
+          if (license?.keyCiphertext) {
+            const predecessor = await tx.licenseLeaseRecord.findFirst({ where: { licenseId: license.id, status: "ACTIVE" }, orderBy: [{ generation: "desc" }, { serverRevision: "desc" }] });
+            if (predecessor) {
+              const operationId = `payment-renewal:${order.id}:${subscription.id}`;
+              await tx.commercialLeaseOperation.upsert({ where: { operationId }, create: { operationId, licenseId: license.id, action: "RENEWAL", status: "PREPARED", metadata: { subscriptionId: subscription.id, paymentEventId: event.eventId, installationId: predecessor.installationId, deviceId: predecessor.deviceId, predecessorLeaseId: predecessor.leaseId } }, update: {} });
+              renewalRequests.push({ licenseKey: decryptLicenseKey(license.keyCiphertext), installationId: predecessor.installationId, deviceId: predecessor.deviceId, operationId, productVersion: predecessor.version, action: "RENEWAL", predecessorLeaseId: predecessor.leaseId });
+            }
+          }
+        }
+        await queueCommerceEmail(tx, { type: "PAYMENT_RECEIPT", recipient: order.billingEmail, subject: `Payment received for ${order.number}`, payload: { orderId: order.id, orderNumber: order.number }, deduplicationKey: `payment-receipt:${event.eventId}` });
       }
     } else if (event.type === "payment.failed") {
-      if (["PENDING", "CANCELLED"].includes(order.status)) {
-        if (event.externalPaymentId) {
-          const payment = await tx.payment.upsert({ where: { provider_externalId: { provider: paymentProvider.name, externalId: event.externalPaymentId } }, create: { orderId: order.id, provider: paymentProvider.name, externalId: event.externalPaymentId, status: "FAILED", amountMinor: event.amountMinor!, currency: event.currency! }, update: { status: "FAILED" } });
-          paymentId = payment.id;
-        }
-        if (attempt) await tx.paymentAttempt.update({ where: { id: attempt.id }, data: { status: "FAILED" } });
-        const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-        await queueCommerceEmail(tx, { type: "PAYMENT_FAILED", recipient: account.billingEmail, subject: "BKE Digital Solutions payment failed", payload: { orderNumber: order.number }, deduplicationKey: `payment-failed:${order.id}` });
-        await tx.auditLog.create({ data: { accountId: order.accountId, action: "PAYMENT_FAILED", targetType: "Order", targetId: order.id, metadata: { provider: paymentProvider.name, webhookEventId: event.eventId } } });
-      }
-    } else if (event.type === "payment.refund.updated" && event.refundStatus !== "succeeded") {
-      if (event.externalRefundId) await tx.refundOperation.updateMany({ where: { externalRefundId: event.externalRefundId }, data: { status: event.refundStatus === "failed" ? "FAILED" : "PENDING", lastErrorCode: event.refundStatus === "failed" ? "PAYMENT_REFUND_NOT_ALLOWED" : null } });
-    } else {
-      if (order.status === "PAID") {
-        await tx.payment.updateMany({ where: { orderId: order.id, provider: paymentProvider.name, ...(event.externalPaymentId ? { externalId: event.externalPaymentId } : {}) }, data: { status: "REFUNDED" } });
-        await tx.order.update({ where: { id: order.id }, data: { status: "REFUNDED" } });
-        await tx.invoice.update({ where: { orderId: order.id }, data: { status: "VOID" } });
-        const licenses = await tx.license.findMany({ where: { OR: [{ orderId: order.id }, ...(order.renewalSubscriptionId ? [{ subscriptionId: order.renewalSubscriptionId }] : [])] }, select: { id: true } });
-        await tx.license.updateMany({ where: { id: { in: licenses.map((license) => license.id) } }, data: { status: "REVOKED" } });
-        await tx.deviceActivation.updateMany({ where: { licenseId: { in: licenses.map((license) => license.id) }, active: true }, data: { active: false, deactivatedAt: new Date() } });
-        await tx.subscription.updateMany({ where: { OR: [{ orderId: order.id }, ...(order.renewalSubscriptionId ? [{ id: order.renewalSubscriptionId }] : [])] }, data: { status: "CANCELLED" } });
-        await tx.offerRedemption.updateMany({ where: { orderId: order.id }, data: { status: "REFUNDED" } });
-        if (event.externalRefundId) await tx.refundOperation.updateMany({ where: { OR: [{ externalRefundId: event.externalRefundId }, { paymentId: paymentId ?? "" }] }, data: { externalRefundId: event.externalRefundId, status: "SUCCEEDED", completedAt: event.occurredAt, lastErrorCode: null } });
-        const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-        await queueCommerceEmail(tx, { type: "REFUND_CONFIRMED", recipient: account.billingEmail, subject: "BKE Digital Solutions refund confirmed", payload: { orderNumber: order.number }, deduplicationKey: `refund-confirmed:${order.id}` });
-        await tx.auditLog.create({ data: { accountId: order.accountId, action: "PAYMENT_REFUND_CONFIRMED", targetType: "Order", targetId: order.id, metadata: { provider: paymentProvider.name, webhookEventId: event.eventId } } });
-      } else if (order.status !== "REFUNDED") throw new PaymentLifecycleError("PAYMENT_REFUND_CONFLICT");
+      await tx.order.update({ where: { id: order.id }, data: { status: "PAYMENT_FAILED" } });
+    } else if (event.type === "payment.refund.updated") {
+      if (!knownPayment) throw new PaymentLifecycleError("PAYMENT_REFERENCE_MISMATCH");
+      await tx.payment.update({ where: { id: knownPayment.id }, data: { status: "REFUNDED", refundedAt: event.occurredAt } });
+      await tx.order.update({ where: { id: order.id }, data: { status: "REFUNDED" } });
     }
-    await tx.webhookEvent.update({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, data: { ...eventLink, paymentId, status: "PROCESSED", error: null, lastErrorCode: null, mismatchCategory: null, processedAt: new Date(), lastAttemptAt: new Date(), resolutionStatus: "RESOLVED" } });
-  }, { isolationLevel: "Serializable" });
-  for (const request of renewalRequests) {
-    try {
-      const license = await db.license.findUniqueOrThrow({
-        where: { id: request.licenseId },
-        select: {
-          keyCiphertext: true,
-          activations: { where: { active: true }, select: { deviceHash: true } },
-          leaseHistory: { where: { status: "ACTIVE" }, orderBy: { issuedAt: "desc" }, select: { installationId: true, deviceId: true, version: true } },
-        },
-      });
-      const activation = license.activations.find((candidate) => candidate.deviceHash === request.deviceHash);
-      const binding = license.leaseHistory.find((candidate) => activation && sha256(candidate.deviceId) === activation.deviceHash);
-      if (!license.keyCiphertext || !activation || !binding) continue;
-      await issueCommercialLease({ licenseKey: decryptLicenseKey(license.keyCiphertext), installationId: binding.installationId, deviceId: binding.deviceId, operationId: request.operationId, productVersion: binding.version, action: "RENEWAL" });
-    } catch { /* payment remains settled; prepared operation is retryable */ }
-  }
-  await dispatchEmailOutbox().catch(() => undefined);
-  return { processed: true as const };
+    await tx.webhookEvent.update({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, data: { status: "PROCESSED", processedAt: new Date(), orderId: eventLink.orderId, paymentAttemptId: eventLink.paymentAttemptId, providerCheckoutId: eventLink.providerCheckoutId, providerPaymentId: paymentId ? event.externalPaymentId : undefined, providerRefundId: eventLink.providerRefundId, resolutionStatus: "RESOLVED" } });
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
+  for (const renewal of renewalRequests) await issueCommercialLease(renewal);
+  await dispatchEmailOutbox(20);
+  return { ignored: false as const };
 }
 
-export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
-  const event = await paymentProvider.verifyAndParseWebhook(raw, headers);
-  const payloadHash = sha256(raw);
-  const inserted = await db.webhookEvent.createMany({ data: [{ provider: paymentProvider.name, externalEventId: event.eventId, rawEventType: event.rawType, eventType: event.type, livemode: event.livemode, payloadHash, normalizedData: normalizedData(event) as unknown as Prisma.InputJsonValue, status: "RECEIVED", occurredAt: event.occurredAt, processingAttempts: 1, lastAttemptAt: new Date(), providerCheckoutId: event.externalCheckoutId, providerPaymentId: event.externalPaymentId, providerRefundId: event.externalRefundId }], skipDuplicates: true });
-  if (inserted.count === 0) {
-    const existing = await db.webhookEvent.findUniqueOrThrow({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } } });
-    if (existing.payloadHash !== payloadHash) {
-      await db.webhookEvent.update({ where: { id: existing.id }, data: { conflictCount: { increment: 1 }, lastErrorCode: "PAYMENT_EVENT_REPLAY_CONFLICT", resolutionStatus: "OPEN" } });
-      throw new PaymentLifecycleError("PAYMENT_EVENT_REPLAY_CONFLICT");
-    }
-    if (existing.status !== "FAILED") return { duplicate: true as const };
-    await db.webhookEvent.update({ where: { id: existing.id }, data: { status: "RECEIVED", error: null, lastErrorCode: null, processedAt: null, processingAttempts: { increment: 1 }, lastAttemptAt: new Date() } });
-  }
+export async function ingestPaymentWebhook(request: Request) {
+  let event: PaymentEvent;
+  try { event = await paymentProvider.verifyWebhook(request); }
+  catch (error) { throw new PaymentLifecycleError(safePaymentError(error), { cause: error }); }
+  const stored = await db.webhookEvent.upsert({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, create: { provider: paymentProvider.name, externalEventId: event.eventId, type: event.type, status: "RECEIVED", rawPayload: normalizedData(event), lastAttemptAt: new Date() }, update: {} });
+  if (stored.status === "PROCESSED" || stored.status === "IGNORED") return { duplicate: true, ignored: stored.status === "IGNORED" };
   try { return await processVerifiedEvent(event); }
-  catch (error) {
-    const prismaRetry = error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
-    const code = prismaRetry ? "PAYMENT_PROCESSING_RETRYABLE" : safePaymentError(error);
-    await recordFailure(event.eventId, code, prismaRetry || (error instanceof PaymentLifecycleError && error.retryable));
-    throw new PaymentLifecycleError(code, prismaRetry || (error instanceof PaymentLifecycleError && error.retryable));
-  }
+  catch (error) { const code = safePaymentError(error); await recordFailure(event.eventId, code, error instanceof PaymentLifecycleError ? error.retryable : false); throw error; }
 }
 
-export async function retryStoredWebhook(webhookId: string) {
-  const row = await db.webhookEvent.findUnique({ where: { id: webhookId } });
-  if (!row) throw new Error("NOT_FOUND");
-  if (row.status !== "FAILED" || !row.normalizedData) throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
-  const event = fromStored(row.normalizedData);
-  await db.webhookEvent.update({ where: { id: row.id }, data: { status: "RECEIVED", processingAttempts: { increment: 1 }, lastAttemptAt: new Date(), error: null, lastErrorCode: null } });
-  try { return await processVerifiedEvent(event); }
-  catch (error) { const code = safePaymentError(error); await recordFailure(event.eventId, code, error instanceof PaymentLifecycleError && error.retryable); throw error; }
+export async function retryStoredWebhook(eventId: string) {
+  const row = await db.webhookEvent.findUniqueOrThrow({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: eventId } } });
+  const event = fromStored(row.rawPayload);
+  return processVerifiedEvent(event);
 }
