@@ -306,20 +306,30 @@ describe.sequential("saved renewal commercial truth", () => {
     await assertCommercialTruth((await createCheckout(userId, semiAnnual.id, accountId)).orderId, 114_000);
   });
 
-  it.each(["monthly disabled", "discount rounds away"])("rejects omitted-scope updates that would break an active six-month plan: %s", async (kind) => {
+  it("rejects omitted-scope updates that disable the monthly source of an active six-month plan", async () => {
     const { edition, monthly, semiAnnual } = await fixture();
     await db.purchasePlan.update({ where: { id: semiAnnual.id }, data: { semiAnnualDiscountBps: 1 } });
-    const input = { perpetual: { enabled: true, amountMinor: 100 }, monthly: { enabled: kind !== "monthly disabled", amountMinor: kind === "discount rounds away" ? 100 : 10_000 }, annual: { enabled: false } };
-    await expect(db.$transaction((tx) => syncEditionPlans(tx, edition.id, input))).rejects.toThrow(kind === "monthly disabled" ? "SEMI_ANNUAL_MONTHLY_PLAN_REQUIRED" : "SEMI_ANNUAL_DISCOUNT_TOO_SMALL");
+    const input = { perpetual: { enabled: true, amountMinor: 100 }, monthly: { enabled: false, amountMinor: 10_000 }, annual: { enabled: false } };
+    await expect(db.$transaction((tx) => syncEditionPlans(tx, edition.id, input))).rejects.toThrow("SEMI_ANNUAL_MONTHLY_PLAN_REQUIRED");
     expect(await db.purchasePlan.findUniqueOrThrow({ where: { id: monthly.id } })).toEqual(monthly);
   });
 
-  it("allows inactive unset six-month terms and rejects active missing or zero discounts in PostgreSQL", async () => {
+  it("allows omitted-scope updates when a tiny positive six-month rate rounds to zero savings", async () => {
+    const { edition, semiAnnual } = await fixture();
+    await db.purchasePlan.update({ where: { id: semiAnnual.id }, data: { semiAnnualDiscountBps: 1 } });
+    const input = { perpetual: { enabled: true, amountMinor: 100 }, monthly: { enabled: true, amountMinor: 100 }, annual: { enabled: false } };
+    await db.$transaction((tx) => syncEditionPlans(tx, edition.id, input));
+    expect(await db.purchasePlan.findUniqueOrThrow({ where: { id: semiAnnual.id } })).toMatchObject({ active: true, semiAnnualDiscountBps: 1 });
+    await assertCommercialTruth((await createCheckout(userId, semiAnnual.id, accountId)).orderId, 600);
+  });
+
+  it("allows inactive unset six-month terms, rejects active missing terms, and accepts active zero discount in PostgreSQL", async () => {
     const { semiAnnual } = await fixture();
     await db.purchasePlan.update({ where: { id: semiAnnual.id }, data: { active: false, semiAnnualDiscountBps: null } });
     await expect(db.purchasePlan.update({ where: { id: semiAnnual.id }, data: { active: true } })).rejects.toThrow();
-    await expect(db.purchasePlan.update({ where: { id: semiAnnual.id }, data: { active: true, semiAnnualDiscountBps: 0 } })).rejects.toThrow();
-    await expect(createCheckout(userId, semiAnnual.id, accountId)).rejects.toThrow("INVALID_PURCHASE_PLAN");
+    const zero = await db.purchasePlan.update({ where: { id: semiAnnual.id }, data: { active: true, semiAnnualDiscountBps: 0 } });
+    expect(zero).toMatchObject({ active: true, semiAnnualDiscountBps: 0 });
+    await assertCommercialTruth((await createCheckout(userId, semiAnnual.id, accountId)).orderId, 60_000);
     await expect(db.$executeRaw`UPDATE "PurchasePlan" SET "type" = 'TWO_MONTH' WHERE "id" = ${semiAnnual.id}`).rejects.toThrow();
   });
 
