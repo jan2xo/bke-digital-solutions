@@ -23,6 +23,9 @@
       }
     ],
     "paths": {
+      "@/lib/licensing/commercial-lease": [
+        "./v2/apps/web/licensing/commercial-lease.ts"
+      ],
       "@/*": [
         "./*"
       ]
