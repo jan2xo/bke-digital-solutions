@@ -4,6 +4,7 @@ import {
   createLoggingEmailProvider,
   createResendEmailProvider,
   dispatchEmailOutbox as dispatchPlatformEmailOutbox,
+  type EmailMessage,
   type EmailOutboxDispatchOptions,
   type EmailOutboxRecord,
   type EmailOutboxStatus,
@@ -50,7 +51,7 @@ const loggingProvider = createLoggingEmailProvider();
 const resendProvider = createResendEmailProvider({ resolveConfiguration: resolveResendConfiguration });
 
 const runtimeEmailProvider: EmailProvider = Object.freeze({
-  async send(message) {
+  async send(message: EmailMessage) {
     const disabled =
       process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true" ||
       (nodeEnv === "test" && !process.env.RESEND_SANDBOX_TO);
@@ -104,7 +105,7 @@ type DispatchRow = Readonly<{
 }>;
 
 const emailOutboxStore: EmailOutboxStore = Object.freeze({
-  async recoverExpiredClaims(now) {
+  async recoverExpiredClaims(now: Date) {
     const result = await getPostgresPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'FAILED', "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
@@ -114,7 +115,9 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     return result.rowCount ?? 0;
   },
 
-  async listDispatchable({ limit, maxAttempts }): Promise<readonly EmailOutboxRecord[]> {
+  async listDispatchable(
+    { limit, maxAttempts }: Readonly<{ limit: number; maxAttempts: number }>,
+  ): Promise<readonly EmailOutboxRecord[]> {
     const result = await getPostgresPool().query<DispatchRow>(
       `SELECT "id", "status"::text AS "status", "attempts", "recipient", "subject", "type", "payload"
          FROM "EmailOutbox"
@@ -135,7 +138,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     }));
   },
 
-  async claim(input) {
+  async claim(input: Parameters<EmailOutboxStore["claim"]>[0]) {
     const result = await getPostgresPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'PROCESSING', "claimedBy" = $4, "claimedAt" = $5, "claimExpiresAt" = $6
@@ -145,7 +148,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     return (result.rowCount ?? 0) > 0;
   },
 
-  async markSent(input) {
+  async markSent(input: Parameters<EmailOutboxStore["markSent"]>[0]) {
     const result = await getPostgresPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'SENT', "sentAt" = $3, "attempts" = $4, "lastError" = NULL,
@@ -156,7 +159,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     return (result.rowCount ?? 0) > 0;
   },
 
-  async markFailed(input) {
+  async markFailed(input: Parameters<EmailOutboxStore["markFailed"]>[0]) {
     const result = await getPostgresPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = $3::"EmailOutboxStatus", "attempts" = $4, "lastError" = $5,
