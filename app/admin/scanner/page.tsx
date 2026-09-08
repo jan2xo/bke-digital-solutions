@@ -1,10 +1,16 @@
-import { db } from "@/lib/db";
-import { getRuntimeEnvironment } from "@/lib/env";
-import { scannerHealth } from "@/lib/supply-chain/scanner";
-export const dynamic = "force-dynamic";
+import { requireAdmin } from "@/lib/auth";
+
 export default async function ScannerPage() {
-  const runtime = getRuntimeEnvironment();
-  const last = await db.supplyChainVerificationEvidence.findFirst({ where: { kind: "MALWARE_SCAN", result: "CLEAN" }, orderBy: { verifiedAt: "desc" }, select: { verifiedAt: true, scannerVersion: true } });
-  const status = await scannerHealth();
-  return <main className="shell py-10"><h1 className="text-4xl font-black">Malware scanner</h1><p className="mt-2 text-slate-600">Operational visibility only. Scanner lifecycle remains deployment-level.</p><div className="card mt-8 grid gap-2 p-6"><p><strong>Provider:</strong> {runtime.MALWARE_SCANNER_PROVIDER ?? "unknown"}</p><p><strong>Status:</strong> {status}</p><p><strong>Version:</strong> {last?.scannerVersion ?? runtime.MALWARE_SCANNER_VERSION ?? "unknown"}</p><p><strong>Last successful scan:</strong> {last?.verifiedAt.toLocaleString() ?? "—"}</p></div></main>;
+  await requireAdmin();
+  return (
+    <main className="shell py-10">
+      <h1 className="text-4xl font-black">Malware scanning</h1>
+      <div className="card mt-8 p-6">
+        <h2 className="text-2xl font-black">Managed in GitHub Actions</h2>
+        <p className="mt-2 text-slate-600">
+          Digital Solutions no longer runs or monitors the software-release malware scanner. Scan execution and release gating belong to each software repository&apos;s GitHub workflow.
+        </p>
+      </div>
+    </main>
+  );
 }
