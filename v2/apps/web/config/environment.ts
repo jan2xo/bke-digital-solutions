@@ -11,9 +11,29 @@ export interface WebHostEnvironment {
   readonly upstashRedisRestToken?: string;
 }
 
-function required(name: string): string {
+export interface CronEnvironment {
+  readonly cronSecret: string;
+}
+
+export interface LegalPresentationEnvironment {
+  readonly appUrl: string;
+  readonly supportEmail: string;
+  readonly businessAddress: string;
+}
+
+export interface ObjectStorageEnvironment {
+  readonly endpoint?: string;
+  readonly publicUploadEndpoint?: string;
+  readonly region: string;
+  readonly bucket: string;
+  readonly accessKeyId?: string;
+  readonly secretAccessKey?: string;
+  readonly forcePathStyle: boolean;
+}
+
+function required(name: string, minLength = 1): string {
   const value = process.env[name]?.trim();
-  if (!value) throw new Error(`Missing web host environment: ${name}`);
+  if (!value || value.length < minLength) throw new Error(`Missing web host environment: ${name}`);
   return value;
 }
 
@@ -39,6 +59,14 @@ function parseTrustProxyHops(): number {
   return value;
 }
 
+function parseBoolean(name: string, fallback: boolean): boolean {
+  const value = optional(name);
+  if (value === undefined) return fallback;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  throw new Error(`Invalid web host environment: ${name}`);
+}
+
 function canonicalOrigin(value: string, name: string): string {
   let parsed: URL;
   try {
@@ -47,6 +75,13 @@ function canonicalOrigin(value: string, name: string): string {
     throw new Error(`Invalid web host environment: ${name}`);
   }
   return parsed.origin;
+}
+
+function optionalUrl(name: string): string | undefined {
+  const value = optional(name);
+  if (!value) return undefined;
+  canonicalOrigin(value, name);
+  return value;
 }
 
 export function getWebHostEnvironment(): WebHostEnvironment {
@@ -73,5 +108,42 @@ export function getWebHostEnvironment(): WebHostEnvironment {
     redisKeyPrefix: optional("REDIS_KEY_PREFIX") ?? "bke-development",
     upstashRedisRestUrl,
     upstashRedisRestToken,
+  });
+}
+
+export function getCronEnvironment(): CronEnvironment {
+  return Object.freeze({ cronSecret: required("CRON_SECRET", 32) });
+}
+
+export function getLegalPresentationEnvironment(): LegalPresentationEnvironment {
+  const supportEmail = optional("SUPPORT_EMAIL") ?? "support@example.com";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(supportEmail)) {
+    throw new Error("Invalid web host environment: SUPPORT_EMAIL");
+  }
+  const businessAddress = optional("BUSINESS_ADDRESS") ?? "Business address to be supplied during legal review";
+  if (businessAddress.length < 3 || businessAddress.length > 500) {
+    throw new Error("Invalid web host environment: BUSINESS_ADDRESS");
+  }
+  return Object.freeze({
+    appUrl: getWebHostEnvironment().appUrl,
+    supportEmail,
+    businessAddress,
+  });
+}
+
+export function getObjectStorageEnvironment(): ObjectStorageEnvironment {
+  const accessKeyId = optional("S3_ACCESS_KEY_ID");
+  const secretAccessKey = optional("S3_SECRET_ACCESS_KEY");
+  if (Boolean(accessKeyId) !== Boolean(secretAccessKey)) {
+    throw new Error("Invalid web host environment: S3 credentials must be configured together");
+  }
+  return Object.freeze({
+    endpoint: optionalUrl("S3_ENDPOINT"),
+    publicUploadEndpoint: optionalUrl("S3_PUBLIC_UPLOAD_ENDPOINT"),
+    region: optional("S3_REGION") ?? "auto",
+    bucket: required("S3_BUCKET", 3),
+    accessKeyId,
+    secretAccessKey,
+    forcePathStyle: parseBoolean("S3_FORCE_PATH_STYLE", true),
   });
 }

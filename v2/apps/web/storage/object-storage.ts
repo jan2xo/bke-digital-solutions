@@ -1,53 +1,57 @@
 import "server-only";
 import { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectCommand, HeadBucketCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { env } from "@/lib/env";
+import { getObjectStorageEnvironment, type ObjectStorageEnvironment } from "@/v2/apps/web/config/environment";
 
-function client() {
-  if (!env.S3_ACCESS_KEY_ID || !env.S3_SECRET_ACCESS_KEY) throw new Error("STORAGE_NOT_CONFIGURED");
+function client(environment: ObjectStorageEnvironment) {
+  if (!environment.accessKeyId || !environment.secretAccessKey) throw new Error("STORAGE_NOT_CONFIGURED");
   return new S3Client({
-    region: env.S3_REGION,
-    endpoint: env.S3_ENDPOINT,
-    forcePathStyle: env.S3_FORCE_PATH_STYLE,
-    credentials: { accessKeyId: env.S3_ACCESS_KEY_ID, secretAccessKey: env.S3_SECRET_ACCESS_KEY },
+    region: environment.region,
+    endpoint: environment.endpoint,
+    forcePathStyle: environment.forcePathStyle,
+    credentials: { accessKeyId: environment.accessKeyId, secretAccessKey: environment.secretAccessKey },
   });
 }
 
-function publicUploadClient() {
-  if (!env.S3_ACCESS_KEY_ID || !env.S3_SECRET_ACCESS_KEY || !env.S3_PUBLIC_UPLOAD_ENDPOINT) throw new Error("DIRECT_UPLOAD_NOT_CONFIGURED");
+function publicUploadClient(environment: ObjectStorageEnvironment) {
+  if (!environment.accessKeyId || !environment.secretAccessKey || !environment.publicUploadEndpoint) throw new Error("DIRECT_UPLOAD_NOT_CONFIGURED");
   return new S3Client({
-    region: env.S3_REGION,
-    endpoint: env.S3_PUBLIC_UPLOAD_ENDPOINT,
-    forcePathStyle: env.S3_FORCE_PATH_STYLE,
+    region: environment.region,
+    endpoint: environment.publicUploadEndpoint,
+    forcePathStyle: environment.forcePathStyle,
     requestChecksumCalculation: "WHEN_REQUIRED",
-    credentials: { accessKeyId: env.S3_ACCESS_KEY_ID, secretAccessKey: env.S3_SECRET_ACCESS_KEY },
+    credentials: { accessKeyId: environment.accessKeyId, secretAccessKey: environment.secretAccessKey },
   });
 }
 
 export async function downloadObject(objectKey: string) {
-  const result = await client().send(new GetObjectCommand({ Bucket: env.S3_BUCKET, Key: objectKey }));
+  const environment = getObjectStorageEnvironment();
+  const result = await client(environment).send(new GetObjectCommand({ Bucket: environment.bucket, Key: objectKey }));
   if (!result.Body) throw new Error("OBJECT_NOT_FOUND");
   return result.Body.transformToByteArray();
 }
 
 export async function streamObject(objectKey: string): Promise<AsyncIterable<Uint8Array>> {
-  const result = await client().send(new GetObjectCommand({ Bucket: env.S3_BUCKET, Key: objectKey }));
+  const environment = getObjectStorageEnvironment();
+  const result = await client(environment).send(new GetObjectCommand({ Bucket: environment.bucket, Key: objectKey }));
   if (!result.Body) throw new Error("OBJECT_NOT_FOUND");
   return result.Body as AsyncIterable<Uint8Array>;
 }
 
 export async function uploadObject(objectKey: string, body: Uint8Array, contentType: string) {
-  await client().send(new PutObjectCommand({
-    Bucket: env.S3_BUCKET,
+  const environment = getObjectStorageEnvironment();
+  await client(environment).send(new PutObjectCommand({
+    Bucket: environment.bucket,
     Key: objectKey,
     Body: body,
     ContentType: contentType,
-    ServerSideEncryption: env.S3_ENDPOINT ? undefined : "AES256",
+    ServerSideEncryption: environment.endpoint ? undefined : "AES256",
   }));
 }
 
 export async function headObject(objectKey: string) {
-  return client().send(new HeadObjectCommand({ Bucket: env.S3_BUCKET, Key: objectKey }));
+  const environment = getObjectStorageEnvironment();
+  return client(environment).send(new HeadObjectCommand({ Bucket: environment.bucket, Key: objectKey }));
 }
 
 export async function assertObjectExists(objectKey: string) {
@@ -62,27 +66,31 @@ export async function createArtifactUploadUrl(
 ) {
   if (!Number.isInteger(contentLength) || contentLength < 1) throw new Error("INVALID_UPLOAD_LENGTH");
   if (!Number.isInteger(expiresIn) || expiresIn < 60 || expiresIn > 900) throw new Error("INVALID_UPLOAD_EXPIRY");
+  const environment = getObjectStorageEnvironment();
   const command = new PutObjectCommand({
-    Bucket: env.S3_BUCKET,
+    Bucket: environment.bucket,
     Key: objectKey,
     ContentType: contentType,
   });
-  return getSignedUrl(publicUploadClient(), command, { expiresIn });
+  return getSignedUrl(publicUploadClient(environment), command, { expiresIn });
 }
 
 export async function createDirectUploadUrl(objectKey: string, contentType: string, expiresInSeconds = 600) {
   if (!Number.isInteger(expiresInSeconds) || expiresInSeconds < 60 || expiresInSeconds > 900) throw new Error("INVALID_UPLOAD_EXPIRY");
-  return getSignedUrl(publicUploadClient(), new PutObjectCommand({
-    Bucket: env.S3_BUCKET,
+  const environment = getObjectStorageEnvironment();
+  return getSignedUrl(publicUploadClient(environment), new PutObjectCommand({
+    Bucket: environment.bucket,
     Key: objectKey,
     ContentType: contentType,
   }), { expiresIn: expiresInSeconds });
 }
 
 export async function deleteObject(objectKey: string) {
-  await client().send(new DeleteObjectCommand({ Bucket: env.S3_BUCKET, Key: objectKey }));
+  const environment = getObjectStorageEnvironment();
+  await client(environment).send(new DeleteObjectCommand({ Bucket: environment.bucket, Key: objectKey }));
 }
 
 export async function checkStorageReadiness(signal?: AbortSignal) {
-  await client().send(new HeadBucketCommand({ Bucket: env.S3_BUCKET }), { abortSignal: signal });
+  const environment = getObjectStorageEnvironment();
+  await client(environment).send(new HeadBucketCommand({ Bucket: environment.bucket }), { abortSignal: signal });
 }

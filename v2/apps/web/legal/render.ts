@@ -6,7 +6,7 @@ import {
   renderLegalMarkdown as renderPackageLegalMarkdown,
   type LegalRenderVariables,
 } from "@bke/legal/logic/render";
-import { env } from "@/lib/env";
+import { getLegalPresentationEnvironment } from "@/v2/apps/web/config/environment";
 
 export type LegalVariables = Record<
   "company_name" | "support_email" | "website" | "business_address",
@@ -14,11 +14,12 @@ export type LegalVariables = Record<
 >;
 
 export function legalVariables(): LegalVariables {
+  const environment = getLegalPresentationEnvironment();
   return {
     company_name: "BKE Digital Solutions",
-    support_email: env.SUPPORT_EMAIL,
-    website: env.APP_URL,
-    business_address: env.BUSINESS_ADDRESS,
+    support_email: environment.supportEmail,
+    website: environment.appUrl,
+    business_address: environment.businessAddress,
   };
 }
 
