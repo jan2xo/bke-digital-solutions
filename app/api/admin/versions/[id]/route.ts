@@ -75,7 +75,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           active: input.lifecycle === "ARCHIVED" ? false : undefined,
           publishedAt: input.published === true ? now : input.published === false ? null : undefined,
           isLatest: input.published === true ? true : input.published === false || input.lifecycle === "ARCHIVED" || input.lifecycle === "DEPRECATED" ? false : undefined,
-          deprecatedAt: input.lifecycle === "DEPRECATED" ? now : input.lifecycle && input.lifecycle !== "DEPRECATED" ? null : undefined,
+          deprecatedAt: input.lifecycle === "DEPRECATED" ? now : input.lifecycle ? null : undefined,
         },
       });
 
