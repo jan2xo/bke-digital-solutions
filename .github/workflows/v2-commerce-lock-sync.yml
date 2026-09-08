@@ -1,0 +1,50 @@
+name: V2 Commerce Lock Sync
+
+on:
+  push:
+    branches:
+      - feat/v2-host-standalone-convergence
+    paths:
+      - package.json
+      - .github/workflows/v2-commerce-lock-sync.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-standalone-convergence
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Regenerate lock metadata only
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Verify Commerce 0.7.0 lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const lock = require('./package-lock.json');
+          const root = lock.packages[''].dependencies['@bke/commerce'];
+          const pkg = lock.packages['node_modules/@bke/commerce'];
+          if (!root.includes('commerce-v0.7.0/bke-commerce-0.7.0.tgz')) throw new Error(`unexpected root pin: ${root}`);
+          if (pkg.version !== '0.7.0') throw new Error(`unexpected package version: ${pkg.version}`);
+          if (pkg.integrity !== 'sha512-102CkQHVpQLCKEyLCMczWc3yXma8bTCdRGDFoI36ATmgk/6EP0TTdt0Td+lw01G4rTeLccaKOHNP8UcGP9df5g==') throw new Error(`unexpected integrity: ${pkg.integrity}`);
+          NODE
+      - name: Commit lockfile
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- package-lock.json; then
+            echo 'package-lock.json already synchronized'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          git commit -m 'chore(v2 host): sync commerce 0.7.0 lock'
+          git push origin HEAD:feat/v2-host-standalone-convergence
