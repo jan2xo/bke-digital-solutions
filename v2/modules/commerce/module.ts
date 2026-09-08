@@ -23,6 +23,7 @@ import { createCommerceOfferRedemptionCapability } from "@bke/commerce/logic/off
 import { createCommerceOrderInvoiceCreationCapability } from "@bke/commerce/logic/order-invoice-creation";
 import { createCommercePurchasePlanLookupCapability } from "@bke/commerce/logic/purchase-plan-lookup";
 import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
+import { createCommerceRenewalCheckoutPricingCapability } from "@bke/commerce/logic/renewal-checkout-pricing";
 import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
 import { createCommerceSubscriptionStatusLookupCapability } from "@bke/commerce/logic/subscription-status-lookup";
 import type {
@@ -36,6 +37,7 @@ import { createPostgresCommerceOfferRedemptionRepository } from "@bke/commerce/p
 import { createPostgresCommerceOrderInvoiceCreationRepository } from "@bke/commerce/prisma/repositories/postgres-order-invoice-creation-repository";
 import { createPostgresCommerceOrderItemPolicyLookupCapability } from "@bke/commerce/prisma/repositories/postgres-order-item-policy-lookup-repository";
 import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
+import { createPostgresCommerceRenewalCheckoutPricingRepository } from "@bke/commerce/prisma/repositories/postgres-renewal-checkout-pricing-repository";
 import { createPostgresCommerceSettlementReactionRepository } from "@bke/commerce/prisma/repositories/postgres-settlement-reaction-repository";
 import { createPostgresCommerceSubscriptionStatusLookupRepository } from "@bke/commerce/prisma/repositories/postgres-subscription-status-lookup-repository";
 import { createPostgresCommerceZeroPaymentFulfillmentRepository } from "@bke/commerce/prisma/repositories/postgres-zero-payment-fulfillment-repository";
@@ -67,6 +69,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   );
   const orderInvoiceCreation = createCommerceOrderInvoiceCreationCapability(
     createPostgresCommerceOrderInvoiceCreationRepository(options.connectionString),
+  );
+  const renewalCheckoutPricing = createCommerceRenewalCheckoutPricingCapability(
+    createPostgresCommerceRenewalCheckoutPricingRepository(options.connectionString),
   );
   const checkoutOfferPricing = createCommerceCheckoutOfferPricingCapability(
     createPostgresCommerceCheckoutOfferPricingRepository(options.connectionString),
@@ -180,6 +185,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         accountAuthorizer,
         legalChecker,
         orderInvoiceCreation,
+        renewalCheckoutPricing,
         checkoutOfferPricing,
         zeroPaymentFulfillment,
         paymentStarter,
