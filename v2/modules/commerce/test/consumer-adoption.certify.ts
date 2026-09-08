@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.5.0/bke-commerce-0.5.0.tgz";
-const EXPECTED_VERSION = "0.5.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.7.0/bke-commerce-0.7.0.tgz";
+const EXPECTED_VERSION = "0.7.0";
 const EXPECTED_SHA256 =
-  "5e420c968a40c4fef912e7d5c4c3341bdce1a40ac6c5b1f2f1e5d985f57a3d37";
+  "975e18a6ec88b4fb2bcf3518946340f31fcc33fef788ad75708851524646207d";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -47,6 +47,9 @@ for (const marker of [
   "createCommerceCheckoutOfferPricingCapability",
   "createPostgresCommerceCheckoutOfferPricingRepository",
   "checkoutOfferPricing",
+  "createCommerceRenewalCheckoutPricingCapability",
+  "createPostgresCommerceRenewalCheckoutPricingRepository",
+  "renewalCheckoutPricing",
   "COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID",
   "createCommerceZeroPaymentFulfillmentCapability",
   "createPostgresCommerceZeroPaymentFulfillmentRepository",
