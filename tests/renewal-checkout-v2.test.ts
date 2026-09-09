@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 describe("V2 renewal checkout adoption", () => {
@@ -13,7 +13,11 @@ describe("V2 renewal checkout adoption", () => {
     expect(route).not.toContain('from "@/lib/checkout"');
   });
 
-  it("removes the legacy host-owned checkout implementation", () => {
-    expect(existsSync("lib/checkout.ts")).toBe(false);
+  it("keeps the legacy checkout implementation test-only", () => {
+    const compatibility = readFileSync("lib/checkout.ts", "utf8");
+    expect(compatibility).toContain("Test-only compatibility surface");
+    expect(compatibility).toContain("@/tests/support/legacy-checkout-fixture");
+    expect(compatibility).not.toContain("db.$transaction");
+    expect(compatibility).not.toContain("paymentProvider.createCheckout");
   });
 });
