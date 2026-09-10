@@ -2,9 +2,13 @@ import "server-only";
 import { createPayMongoPaymentsAdapter } from "@bke/payments/providers/paymongo/paymongo-adapter";
 import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-attempt-provider";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
+import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconciliation-provider";
 import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
 
-type WebPaymentsAdapter = PaymentsCheckoutProvider & PaymentsProviderEventVerifier & PaymentsRefundProvider;
+type WebPaymentsAdapter = PaymentsCheckoutProvider &
+  PaymentsProviderEventVerifier &
+  PaymentsRefundProvider &
+  PaymentsReconciliationProvider;
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -36,6 +40,9 @@ function createMockAdapter(): WebPaymentsAdapter {
         amountMinor: input.amountMinor,
         externalPaymentId: input.externalPaymentId,
       };
+    },
+    async retrievePayment() {
+      throw new Error("V2_MOCK_PAYMENT_RECONCILIATION_UNSUPPORTED");
     },
   };
   return Object.freeze(adapter);

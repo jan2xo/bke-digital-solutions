@@ -32,6 +32,15 @@ describe("V2 Payments reconciliation host adoption", () => {
     expect(runtime).toContain("reconciliationProvider: payments");
   });
 
+  it("exposes reconciliation retrieval through the real web provider and standalone boot", () => {
+    const provider = read("v2/apps/web/payments/provider.ts");
+    const standalone = read("v2/apps/standalone/bootstrap.ts");
+    expect(provider).toContain("PaymentsReconciliationProvider");
+    expect(provider).toContain("async retrievePayment");
+    expect(standalone).toContain("inertReconciliationProvider");
+    expect(standalone).toContain("reconciliationProvider: inertReconciliationProvider");
+  });
+
   it("retires the legacy reconciliation service", () => {
     expect(existsSync(resolve(root, "lib/reconciliation.ts"))).toBe(false);
   });
