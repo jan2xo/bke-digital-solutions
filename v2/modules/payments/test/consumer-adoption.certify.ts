@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.3.0/bke-payments-0.3.0.tgz";
-const EXPECTED_VERSION = "0.3.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.5.0/bke-payments-0.5.0.tgz";
+const EXPECTED_VERSION = "0.5.0";
 const EXPECTED_SHA256 =
-  "79255f3705ab884889a3f2ff5a0bf91f16bc530b16c55a554a4deb7d2951f587";
+  "be19e8c07bf89f3fe9b10d235acb13d5ca1b83c5a107ec6fa4a4d1160be48475";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -46,6 +46,9 @@ const requiredPackageSurfaces = [
   "@bke/payments/logic/",
   "@bke/payments/prisma/repositories/",
   "@bke/payments/module.manifest",
+  "PAYMENTS_RECONCILIATION_CAPABILITY_ID",
+  "createPaymentsReconciliationCapability",
+  "createPostgresPaymentsReconciliationRepository",
 ];
 for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
@@ -143,6 +146,7 @@ const requiredWorkflowMarkers = [
   "node_modules/@bke/payments/prisma/schema.prisma",
   "node_modules/@bke/payments/migrations",
   "Certify Payments consumer adoption and staging retirement",
+  "Certify reconciliation host adoption",
 ];
 for (const marker of requiredWorkflowMarkers) {
   if (!paymentsWorkflowSource.includes(marker)) {
