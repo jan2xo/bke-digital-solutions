@@ -36,6 +36,7 @@ async function composeWebApplication(): Promise<ComposedApplication> {
       provider: payments,
       eventVerifier: payments,
       refundProvider: payments,
+      reconciliationProvider: payments,
     }),
     createEntitlementsModule({ connectionString }),
     createLicensingModule({ connectionString, licensePepper }),
