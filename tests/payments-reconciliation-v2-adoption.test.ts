@@ -41,6 +41,19 @@ describe("V2 Payments reconciliation host adoption", () => {
     expect(standalone).toContain("reconciliationProvider: inertReconciliationProvider");
   });
 
+  it("moves operational reconciliation CLI usage onto the package capability", () => {
+    const cli = read("scripts/reconcile-payments.ts");
+    expect(cli).toContain("createPaymentsReconciliationCapability");
+    expect(cli).toContain("createPostgresPaymentsReconciliationRepository");
+    expect(cli).toContain("createPayMongoPaymentsAdapter");
+    expect(cli).not.toContain("../lib/reconciliation");
+  });
+
+  it("removes obsolete legacy reconciliation calls from host integration and sandbox tests", () => {
+    expect(read("tests/integration/lifecycle.test.ts")).not.toContain("@/lib/reconciliation");
+    expect(read("tests/sandbox/paymongo.sandbox.test.ts")).not.toContain("@/lib/reconciliation");
+  });
+
   it("retires the legacy reconciliation service", () => {
     expect(existsSync(resolve(root, "lib/reconciliation.ts"))).toBe(false);
   });
