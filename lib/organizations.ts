@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { db } from "@/v2/platform/host/db";
-import { AccountAuthorizationError, assertLastOwnerPreserved, requireAccountCapability, requireAccountAccess, type AccountRole, type AccountCapability } from "@/v2/apps/web/auth/sessionorization";
+import { AccountAuthorizationError, assertLastOwnerPreserved, requireAccountCapability, requireAccountAccess, type AccountRole, type AccountCapability } from "@/lib/authorization";
 
 export class OrganizationError extends Error {
   constructor(public readonly code: "ACCOUNT_NOT_ORGANIZATION" | "INVITATION_NOT_FOUND" | "INVITATION_NOT_PENDING" | "INVITATION_EXPIRED" | "INVITATION_EMAIL_MISMATCH" | "OWNER_CANNOT_LEAVE" | "CLOSED_ACCOUNT" | "SUSPENDED_ACCOUNT" | "LAST_OWNER_REQUIRED" | "MEMBER_NOT_FOUND") { super(code); }

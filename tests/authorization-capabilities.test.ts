@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { describe, expect, it } from "vitest";
-import { assertLastOwnerPreserved, roleHasCapability } from "@/v2/apps/web/auth/sessionorization";
+import { assertLastOwnerPreserved, roleHasCapability } from "@/lib/authorization";
 
 describe("customer account capability matrix", () => {
   it("limits billing members to financial and checkout capabilities", () => {
