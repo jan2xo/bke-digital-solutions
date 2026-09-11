@@ -3,11 +3,17 @@ import { randomUUID } from "node:crypto";
 import { db } from "@/lib/db";
 import { audit } from "@/v2/apps/web/audit";
 import { getBackupEnvironment } from "@/v2/apps/web/backups/config";
-import { expiresAt, retentionTier, retryAt, validateRestoreConfirmation } from "@/v2/platform/backups/policy";
-import { Prisma, type BackupOperationTrigger, type BackupOperationType, type BackupRetentionTier } from "@/generated/prisma/client";
+import { expiresAt, retentionTier, retryAt, validateRestoreConfirmation, type BackupRetentionTier } from "@/v2/platform/backups/policy";
+
+export type BackupOperationType = "CREATE" | "VERIFY" | "SIMULATE_RESTORE" | "RESTORE_ISOLATED" | "DELETE_EXPIRED";
+export type BackupOperationTrigger = "SCHEDULED" | "MANUAL" | "CLI";
 
 const environment = getBackupEnvironment();
 const retentionPolicy = { daily: environment.retentionDaily, weekly: environment.retentionWeekly, monthly: environment.retentionMonthly };
+
+function isUniqueConstraintError(error: unknown): boolean {
+  return Boolean(error && typeof error === "object" && "code" in error && (error as { code?: unknown }).code === "P2002");
+}
 
 export async function requestBackup(input: { actorId?: string; trigger: BackupOperationTrigger; dryRun?: boolean; tier?: BackupRetentionTier; idempotencyKey?: string; now?: Date }) {
   if (!input.dryRun && !environment.enabled) throw new Error("BACKUPS_DISABLED");
@@ -39,7 +45,7 @@ export async function requestBackup(input: { actorId?: string; trigger: BackupOp
       return { ...operation, backup };
     });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+    if (isUniqueConstraintError(error)) {
       const duplicate = await db.backupOperation.findUnique({ where: { idempotencyKey }, include: { backup: true } });
       if (duplicate) return duplicate;
     }
