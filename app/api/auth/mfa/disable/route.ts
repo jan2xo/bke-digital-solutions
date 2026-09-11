@@ -4,7 +4,7 @@ import {
   type IdentityMfaDisableCapability,
 } from "@bke/identity/contracts/mfa-disable.contract";
 import { audit } from "@/v2/apps/web/audit";
-import { createSession } from "@/lib/auth";
+import { createSession } from "@/v2/apps/web/auth/session";
 import { requireRecentIdentitySession } from "@/v2/apps/web/auth/session";
 import { IdentityCapabilityError } from "@/v2/apps/web/auth/mfa-challenge";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser } from "@/lib/auth";
+import { requireUser } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/v2/apps/web/legal/render";

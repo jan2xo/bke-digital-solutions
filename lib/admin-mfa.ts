@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { MfaChallengePurpose } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { env } from "@/v2/platform/host/env";
-import { createSession } from "@/lib/auth";
+import { createSession } from "@/v2/apps/web/auth/session";
 import { sendAdministratorLoginCode } from "@/lib/email";
 import { hashToken, randomToken } from "@/v2/platform/host/security/crypto";
 import { emailOtpForChallenge, hashEmailOtp, hashRecoveryCode, verifyHashedEmailOtp } from "@/lib/security/mfa";

@@ -20,7 +20,7 @@ let issueMagicLinkForExistingCustomer: (email: string) => Promise<boolean>;
 
 describe.sequential("magic-link account guardrail", () => {
   beforeAll(async () => {
-    ({ issueMagicLinkForExistingCustomer } = await import("@/lib/auth/magic-link"));
+    ({ issueMagicLinkForExistingCustomer } = await import("@/v2/apps/web/auth/session/magic-link"));
   });
   afterAll(() => db.$disconnect());
 

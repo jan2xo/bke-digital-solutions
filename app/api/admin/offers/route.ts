@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { normalizeCommerceOfferCode } from "@bke/commerce/logic/offer-redemption";
 import { validateCommerceOfferConfiguration } from "@bke/commerce/logic/offer-configuration";
-import { requireRecentAdmin as requireAdmin, requireRecentAdmin } from "@/lib/auth";
+import { requireRecentAdmin as requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";

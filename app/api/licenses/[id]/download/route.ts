@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/lib/auth";
+import { requireUser } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { apiError } from "@/v2/apps/web/http/api-error";

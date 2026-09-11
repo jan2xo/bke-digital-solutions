@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { assertLastOwnerPreserved, roleHasCapability } from "@/lib/authorization";
+import { assertLastOwnerPreserved, roleHasCapability } from "@/v2/apps/web/auth/sessionorization";
 
 const source = readFileSync(new URL("../lib/organizations.ts", import.meta.url), "utf8");
 

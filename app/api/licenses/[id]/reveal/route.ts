@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireRecentUser } from "@/lib/auth";
+import { requireRecentUser } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { decryptLicenseKey } from "@/v2/platform/host/security/crypto";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";

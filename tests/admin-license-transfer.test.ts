@@ -26,7 +26,7 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock("@/lib/auth", () => ({ requireRecentAdmin: mocks.requireRecentAdmin }));
+vi.mock("@/v2/apps/web/auth/session", () => ({ requireRecentAdmin: mocks.requireRecentAdmin }));
 vi.mock("@/v2/platform/host/db", () => ({ db: mocks.db }));
 vi.mock("@/v2/apps/web/http/request", () => ({ assertSameOrigin: mocks.assertSameOrigin }));
 vi.mock("@/v2/apps/web/audit", () => ({ audit: mocks.audit }));

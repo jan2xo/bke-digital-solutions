@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/v2/platform/host/db";
-import { createSession } from "@/lib/auth";
+import { createSession } from "@/v2/apps/web/auth/session";
 import { hashToken } from "@/v2/platform/host/security/crypto";
 import { getWebHostEnvironment } from "@/v2/apps/web/config/environment";
 import { securityEvent } from "@/v2/apps/web/security/events";

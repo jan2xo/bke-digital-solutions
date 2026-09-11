@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/v2/apps/web/auth/session";
 import { LogoutButton } from "@/components/logout-button";
 import { getSiteContent } from "@/v2/apps/web/site-content";
 

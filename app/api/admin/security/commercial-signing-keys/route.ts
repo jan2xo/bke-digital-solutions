@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createPrivateKey, createPublicKey } from "node:crypto";
-import { requireRecentAdmin } from "@/lib/auth";
+import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";

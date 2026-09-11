@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createSession } from "@/lib/auth";
+import { createSession } from "@/v2/apps/web/auth/session";
 import {
   IDENTITY_MFA_CHALLENGE_COOKIE,
   verifyIdentityLoginMfaChallenge,

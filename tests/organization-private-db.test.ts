@@ -19,7 +19,7 @@ import {
   updateOrganizationMemberRole,
   updateOrganizationProfile,
 } from "@/lib/organizations";
-import { requireAccountAccess } from "@/lib/authorization";
+import { requireAccountAccess } from "@/v2/apps/web/auth/sessionorization";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 beforeAll(async () => {
