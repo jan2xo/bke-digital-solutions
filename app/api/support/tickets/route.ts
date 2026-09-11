@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { apiError } from "@/lib/http";
-import { createSupportTicket, publicTicketSelect } from "@/lib/support";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { createSupportTicket, listCustomerTickets } from "@/v2/apps/web/support/capability";
 
 const schema = z.object({ accountId: z.string().min(1), category: z.enum(["ACCOUNT", "PAYMENT", "REFUND", "INVOICE", "LICENSE", "DEVICE", "DOWNLOAD", "SECURITY", "FEATURE_REQUEST", "OTHER"]), priority: z.enum(["LOW", "NORMAL", "HIGH", "URGENT"]).optional(), subject: z.string().trim().min(3).max(160), body: z.string().trim().min(5).max(8000), orderId: z.string().min(1).nullable().optional(), licenseId: z.string().min(1).nullable().optional() });
 
 export async function GET() {
   try {
     const user = await requireUser();
-    const tickets = await db.supportTicket.findMany({ where: { OR: [{ createdById: user.id }, { account: { memberships: { some: { userId: user.id } } } }] }, orderBy: { updatedAt: "desc" }, take: 100, select: publicTicketSelect(false) });
+    const tickets = await listCustomerTickets(user.id, 100);
     return NextResponse.json({ tickets }, { headers: { "cache-control": "no-store" } });
   } catch (error) { return apiError(error); }
 }

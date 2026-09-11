@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { activationSchema } from "@/lib/validation";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
-import { clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { activationSchema } from "@/v2/apps/web/http/validation";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
+import { clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { decryptLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
-import { activeCommercialSigningKey } from "@/lib/licensing/signing-registry";
-import { requireProductVersion } from "@/lib/licensing/lifecycle";
-import { refreshRequiresReplacement } from "@/lib/licensing/refresh-decision";
-import { CLOUD_AGENT_PROTOCOL_VERSION, CloudAgentProtocolError, requireCloudAgentVersion } from "@/lib/licensing/cloud-agent-contract";
+import { activeLicensingSigningKey } from "@/v2/apps/web/licensing/signing-key-registry";
+import { requireProductVersion } from "@bke/licensing/logic/lease-lifecycle";
+import { refreshRequiresReplacement } from "@bke/licensing/logic/refresh-decision";
+import { CLOUD_AGENT_PROTOCOL_VERSION, CloudAgentProtocolError, requireCloudAgentVersion } from "@/v2/apps/web/licensing/cloud-agent-contract";
 
 const schema = activationSchema.extend({ operationId: z.string().min(8).max(128), currentLeaseId: z.string().uuid() });
 
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     if (!license || license.status !== "ACTIVE" || (license.expiresAt && license.expiresAt < new Date())) throw new Error("INVALID_LICENSE");
     const current = license.leaseHistory.find((lease) => lease.leaseId === input.currentLeaseId && lease.installationId === input.installationId && lease.deviceId === input.deviceId);
     if (!current) throw new Error("REFRESH_BINDING_MISMATCH");
-    const signingKey = await activeCommercialSigningKey();
+    const signingKey = await activeLicensingSigningKey();
     const expectedVersion = requireProductVersion(current.version);
     if (!refreshRequiresReplacement(current, { version: expectedVersion, expiresAt: license.expiresAt, installationId: input.installationId, deviceId: input.deviceId, signerKeyId: signingKey.keyId })) {
       const operation = await db.commercialLeaseOperation.upsert({ where: { operationId: input.operationId }, create: { operationId: input.operationId, licenseId: license.id, action: "REFRESH", status: "COMPLETED", resultLeaseId: current.leaseId, metadata: { currentLeaseId: input.currentLeaseId, installationId: input.installationId, deviceId: input.deviceId, decision: "REUSED" }, completedAt: new Date() }, update: {} });

@@ -3,7 +3,7 @@ import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { clientIp } from "@/lib/security/request";
 import { CHECKOUT_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, type LegalDocumentType } from "@/lib/legal/constants";
-import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/lib/legal/render";
+import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
 
 type Tx = Prisma.TransactionClient;
 

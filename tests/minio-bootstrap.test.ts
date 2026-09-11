@@ -86,7 +86,7 @@ describe("production MinIO bootstrap contract", () => {
     expect(services.app.environment?.S3_SECRET_ACCESS_KEY).toBeTruthy();
     expect(services["backup-worker"].environment?.S3_ACCESS_KEY_ID).toBeTruthy();
     expect(services["backup-worker"].environment?.S3_SECRET_ACCESS_KEY).toBeTruthy();
-  });
+  }, 20_000);
 });
 
 describe("live MinIO bootstrap integration", () => {

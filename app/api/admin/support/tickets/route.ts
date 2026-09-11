@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { apiError } from "@/lib/http";
-import { adminUpdateTicket, publicTicketSelect } from "@/lib/support";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { adminUpdateTicket, listAdminTickets } from "@/v2/apps/web/support/capability";
 
 const updateSchema = z.object({ body: z.string().trim().min(1).max(8000).optional(), internalNote: z.string().trim().min(1).max(8000).optional(), state: z.enum(["OPEN", "TRIAGED", "WAITING_ON_CUSTOMER", "WAITING_ON_SUPPORT", "ESCALATED", "RESOLVED", "CLOSED"]).optional(), priority: z.enum(["LOW", "NORMAL", "HIGH", "URGENT"]).optional(), assignedToId: z.string().min(1).nullable().optional() });
 
 export async function GET() {
   try {
     await requireRecentAdmin();
-    const tickets = await db.supportTicket.findMany({ orderBy: [{ securityReport: "desc" }, { priority: "desc" }, { updatedAt: "desc" }], take: 200, select: publicTicketSelect(true) });
+    const tickets = await listAdminTickets(200);
     return NextResponse.json({ tickets }, { headers: { "cache-control": "no-store" } });
   } catch (error) { return apiError(error); }
 }

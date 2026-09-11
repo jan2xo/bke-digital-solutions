@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 import { transitionPrivacyRequest } from "@/lib/privacy/requests";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const schema = z.object({ status: z.enum(["IN_REVIEW", "FULFILLED", "REJECTED", "CANCELLED"]), responseSummary: z.string().trim().min(2).max(2_000) }).strict();
 

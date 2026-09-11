@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { SiteContentValues } from "@/lib/site-content";
+import type { SiteContentValues } from "@/v2/apps/web/site-content";
 
 const groups = { Brand: ["siteName"], Hero: ["heroEyebrow", "heroHeadline", "heroDescription", "heroPrimaryLabel", "heroPrimaryHref", "heroSecondaryLabel", "heroSecondaryHref"], Solutions: ["solutionsEyebrow", "solutionsHeading", "solutionsAccent", "solutionsLinkLabel"], Footer: ["footerText", "supportEmail"] } as const;
 const labels: Record<string,string> = { siteName: "Site name", heroEyebrow: "Eyebrow", heroHeadline: "Headline", heroDescription: "Description", heroPrimaryLabel: "Primary CTA label", heroPrimaryHref: "Primary CTA destination", heroSecondaryLabel: "Secondary CTA label", heroSecondaryHref: "Secondary CTA destination", solutionsEyebrow: "Section eyebrow", solutionsHeading: "Section heading", solutionsAccent: "Accent line", solutionsLinkLabel: "Catalog link label", footerText: "Footer copy", supportEmail: "Support email" };

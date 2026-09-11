@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { publicTicketSelect } from "@/lib/support";
+import { listCustomerTickets } from "@/v2/apps/web/support/capability";
 
 export default async function SupportPage() {
   const user = await requireUser();
   const accounts = await db.customerAccount.findMany({ where: { lifecycleState: "ACTIVE", OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id } } }] }, select: { id: true, displayName: true } });
-  const tickets = await db.supportTicket.findMany({ where: { OR: [{ createdById: user.id }, { account: { memberships: { some: { userId: user.id } } } }] }, orderBy: { updatedAt: "desc" }, take: 50, select: publicTicketSelect(false) });
+  const tickets = await listCustomerTickets(user.id, 50);
   return <main className="container py-10"><h1 className="text-3xl font-semibold">Support tickets</h1><p className="mt-2 text-sm text-muted-foreground">Private account-scoped support. Do not paste passwords, license keys, payment card data, or secrets.</p><section className="card mt-6"><h2 className="text-xl font-semibold">Open a request</h2><form action="/api/support/tickets" method="post" className="grid gap-3 mt-4"><label className="label">Account<select className="input" name="accountId">{accounts.map((a) => <option key={a.id} value={a.id}>{a.displayName}</option>)}</select></label><label className="label">Category<select className="input" name="category">{["ACCOUNT","PAYMENT","REFUND","INVOICE","LICENSE","DEVICE","DOWNLOAD","SECURITY","FEATURE_REQUEST","OTHER"].map((c) => <option key={c}>{c}</option>)}</select></label><label className="label">Subject<input className="input" name="subject" maxLength={160} /></label><label className="label">Message<textarea className="input min-h-32" name="body" maxLength={8000} /></label><p className="text-xs text-muted-foreground">The JSON API accepts optional orderId/licenseId and stores only safe context such as order number, status, totals, public license id, and key last four.</p></form></section><section className="mt-6 grid gap-3">{tickets.map((t) => <article className="card" key={t.id}><div className="flex justify-between gap-4"><h2 className="font-semibold">{t.publicId}: {t.subject}</h2><span>{t.state} · {t.priority}</span></div><p className="text-sm text-muted-foreground">{t.category}{t.securityReport ? " · security report" : ""}</p><Link className="link" href={`/support#${t.publicId}`}>View thread</Link></article>)}</section></main>;
 }

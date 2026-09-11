@@ -42,23 +42,16 @@ describe("dependency evidence operations", () => {
     expect(script).not.toContain("update({");
   });
 
-  it("provides an Admin-native server-authoritative backup certification path", () => {
+  it("retires the Admin-native backup release-certification path", () => {
     const route = readFileSync("app/api/admin/supply-chain/route.ts", "utf8");
-    const builder = readFileSync("lib/supply-chain/backup-certification.ts", "utf8");
     const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
-    const controls = readFileSync("components/release-evidence-controls.tsx", "utf8");
-    expect(route).toContain('"CERTIFY_BACKUP"');
-    expect(route).toContain("buildBackupCertificationDocument");
-    expect(route).toContain("SUPPLY_CHAIN_BACKUP_RECORDED");
-    expect(builder).toContain('archive.status !== "VERIFIED"');
-    expect(builder).toContain("missingObjectCount !== 0");
-    expect(builder).toContain('operation.type === "CREATE"');
-    expect(builder).toContain('operation.type === "VERIFY"');
-    expect(builder).toContain('operation.type === "SIMULATE_RESTORE"');
-    expect(builder).toContain("manifestHash(canonicalizeManifest(buildReleaseManifest");
-    expect(controls).toContain('action: "CERTIFY_BACKUP"');
-    expect(controls).toContain("backupOptions");
-    expect(page).toContain("backupArchive.findMany");
-    expect(page).toContain('status: "VERIFIED"');
+    expect(route).toContain("GITHUB_RELEASE_AUTHORITY");
+    expect(route).toContain("status: 410");
+    expect(route).not.toContain("CERTIFY_BACKUP");
+    expect(route).not.toContain("buildBackupCertificationDocument");
+    expect(route).not.toContain("SUPPLY_CHAIN_BACKUP_RECORDED");
+    expect(page).not.toContain("backupArchive.findMany");
+    expect(page).not.toContain("ReleaseEvidenceControls");
+    expect(page).toContain("GitHub Actions and GitHub Releases");
   });
 });

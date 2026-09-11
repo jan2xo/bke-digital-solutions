@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { requireRecentAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
-import { storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { storageCleanupIdempotencyKey } from "@/v2/apps/web/storage/cleanup";
 
 export async function PATCH() {
   return NextResponse.json({ error: "DIRECT_ARTIFACT_UPLOAD_REQUIRED", uploadEndpoint: "POST /api/admin/versions/:id/artifacts/uploads" }, { status: 410 });

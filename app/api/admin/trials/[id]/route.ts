@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
-import { assertSameOrigin } from "@/lib/security/request";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { changeTrial } from "@/lib/trials";
-import { apiError } from "@/lib/http";
+import { apiError } from "@/v2/apps/web/http/api-error";
 const schema=z.discriminatedUnion("action",[z.object({action:z.literal("SET_GRACE"),graceDays:z.number().int().min(0).max(14)}),z.object({action:z.literal("REVOKE")})]);
 export async function PATCH(request:Request,{params}:{params:Promise<{id:string}>}){try{assertSameOrigin(request);const admin=await requireRecentAdmin();const{id}=await params;const input=schema.parse(await request.json());return NextResponse.json(await changeTrial({trialId:id,actorId:admin.id,...input}))}catch(error){return apiError(error)}}

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { audit } from "@/lib/audit";
+import { audit } from "@/v2/apps/web/audit";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { assertSameOrigin } from "@/lib/security/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const fields = z.object({ version: z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/), releaseNotes: z.string().max(10000).default(""), operatingSystem: z.enum(["Windows", "macOS", "Linux"]), architecture: z.enum(["x64", "arm64", "universal"]) }).strict();
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

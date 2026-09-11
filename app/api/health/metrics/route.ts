@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { collectObservability } from "@/lib/observability/metrics";
+import { collectObservability } from "@/v2/apps/web/observability";
 
 export const dynamic = "force-dynamic";
 
