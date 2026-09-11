@@ -1,0 +1,52 @@
+name: Temporary V2 Prisma Host Move
+
+on:
+  push:
+    branches:
+      - feat/v2-host-infrastructure-finalization
+
+permissions:
+  contents: write
+
+jobs:
+  move:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-infrastructure-finalization
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Move generated Prisma client under V2 host ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          old = 'generated/prisma'
+          new = 'v2/platform/host/generated/prisma'
+          skip = {'.git', 'node_modules', '.next', 'generated'}
+          for path in Path('.').rglob('*'):
+              if not path.is_file() or any(part in skip for part in path.parts):
+                  continue
+              try:
+                  text = path.read_text()
+              except UnicodeDecodeError:
+                  continue
+              changed = text.replace(old, new)
+              if changed != text:
+                  path.write_text(changed)
+          PY
+          rm -rf generated/prisma
+          npm run db:generate
+          rm .github/workflows/temp-v2-prisma-host-move.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "refactor(v2 host): own generated Prisma client under v2"
+          git push origin HEAD:feat/v2-host-infrastructure-finalization
