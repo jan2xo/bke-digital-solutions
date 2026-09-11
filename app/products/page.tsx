@@ -1,20 +1,37 @@
+import {
+  COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
+  type CommercePurchasePlanPricingCapability,
+} from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import Link from "next/link";
 import { db } from "@/lib/db";
-import { resolvePurchasePlan } from "@/lib/pricing";
+import { getV2WebApplication } from "@/v2/apps/web/runtime";
 
 export const metadata = { title: "Products" };
 
 export default async function ProductsPage() {
-  const products = await db.product.findMany({
-    where: { active: true },
-    include: { editions: { where: { active: true }, include: { purchasePlans: { where: { active: true }, include: { monthlySource: true } } } } },
-  });
+  const [products, application] = await Promise.all([
+    db.product.findMany({
+      where: { active: true },
+      include: { editions: { where: { active: true }, include: { purchasePlans: { where: { active: true }, include: { monthlySource: true } } } } },
+    }),
+    getV2WebApplication(),
+  ]);
+  const pricing = application.get<CommercePurchasePlanPricingCapability>(
+    COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
+  );
+
   return <section className="shell py-16 motion-fade-up">
     <p className="font-bold text-[#ffe08a]">Product catalog</p>
     <h1 className="mt-2 text-5xl font-black">Software for work that matters.</h1>
     <div className="mt-12 grid gap-6 md:grid-cols-2 motion-stagger">{products.map((product) => {
       const plans = product.editions.flatMap((edition) => edition.purchasePlans);
-      const starting = plans.map((plan) => resolvePurchasePlan(plan).amountMinor).sort((a, b) => a - b)[0];
+      const starting = plans
+        .map((plan) => {
+          const result = pricing.resolve(plan);
+          if (result.status === "FAILED") throw new Error(result.code);
+          return result.pricing.amountMinor;
+        })
+        .sort((a, b) => a - b)[0];
       return <article className="card p-8" key={product.id}>
         <p className="text-xs font-bold tracking-widest text-[#ffe08a]">{product.type}</p>
         <h2 className="mt-3 text-3xl font-black">{product.name}</h2>
