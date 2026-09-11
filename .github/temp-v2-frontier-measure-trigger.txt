@@ -1,1 +1,0 @@
-trigger read-only V2 frontier measurement
