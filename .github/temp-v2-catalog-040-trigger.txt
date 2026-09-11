@@ -1,0 +1,1 @@
+trigger immutable Catalog 0.4.0 adoption
