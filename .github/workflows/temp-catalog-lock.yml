@@ -1,0 +1,36 @@
+name: Temporary Catalog lock regeneration
+
+on:
+  push:
+    branches:
+      - feat/v2-host-standalone-convergence
+    paths:
+      - package.json
+      - .github/workflows/temp-catalog-lock.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate-lock:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-standalone-convergence
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install --package-lock-only --ignore-scripts
+      - name: Commit generated lock only when changed
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            echo "package-lock.json already aligned"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(v2 host): regenerate catalog lock"
+          git push origin HEAD:feat/v2-host-standalone-convergence
