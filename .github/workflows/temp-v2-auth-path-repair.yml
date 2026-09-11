@@ -1,0 +1,50 @@
+name: Temporary V2 Auth Path Repair
+
+on:
+  push:
+    branches:
+      - feat/v2-host-infrastructure-finalization
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-infrastructure-finalization
+          fetch-depth: 0
+      - name: Repair exact paths only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          replacements = {
+            '@/v2/apps/web/auth/sessionorization': '@/lib/authorization',
+            '../lib/config/environment': '../v2/platform/host/config/environment',
+            '../lib/security/crypto': '../v2/platform/host/security/crypto',
+            '@/v2/apps/web/auth/session/magic-link': '@/lib/auth/magic-link',
+          }
+          for p in Path('.').rglob('*'):
+              if not p.is_file() or p.suffix not in {'.ts','.tsx','.js','.jsx','.mjs','.cjs'}:
+                  continue
+              if any(x in p.parts for x in {'.git','node_modules','.next'}):
+                  continue
+              text = p.read_text(errors='ignore')
+              new = text
+              for old, repl in replacements.items():
+                  new = new.replace(old, repl)
+              if new != text:
+                  p.write_text(new)
+          PY
+          rm .github/workflows/temp-v2-auth-path-repair.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "fix(v2 auth): repair exact compatibility paths"
+          git pull --rebase origin feat/v2-host-infrastructure-finalization
+          git push origin HEAD:feat/v2-host-infrastructure-finalization
