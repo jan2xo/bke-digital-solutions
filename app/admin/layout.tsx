@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import { AdminNav } from "@/components/admin-nav";
-import { currentSession } from "@/lib/auth";
+import { currentIdentitySession } from "@/v2/apps/web/auth/session";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await currentSession();
-  if (!session) redirect("/login");
-  if (session.user.role !== "ADMIN") redirect("/dashboard");
-  if (!session.user.administratorMfa?.enabledAt) redirect("/security/mfa");
-  if (!session.mfaVerifiedAt) redirect("/login");
+  const context = await currentIdentitySession();
+  if (!context) redirect("/login");
+  if (context.principal.role !== "ADMIN") redirect("/dashboard");
+  if (!context.administratorMfaEnabled) redirect("/security/mfa");
+  if (!context.session.mfaVerifiedAt) redirect("/login");
   return <div className="admin-layout"><AdminNav/><div className="admin-content">{children}</div></div>;
 }
