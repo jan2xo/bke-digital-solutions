@@ -35,6 +35,8 @@ jobs:
           for path in Path('.').rglob('*'):
               if not path.is_file() or any(part in skip for part in path.parts):
                   continue
+              if path.parts[:2] == ('.github', 'workflows'):
+                  continue
               try:
                   text = path.read_text()
               except UnicodeDecodeError:
