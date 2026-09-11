@@ -28,7 +28,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
+import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
