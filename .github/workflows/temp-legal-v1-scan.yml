@@ -1,0 +1,22 @@
+name: Temporary Legal V1 Scanner Certification
+
+on:
+  push:
+    branches:
+      - feat/v2-legal-service-convergence
+
+permissions:
+  contents: read
+
+jobs:
+  host-v1-free:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run unchanged production-host V1 scanner
+        run: node v2/tooling/check-host-v1-dependencies.mjs
