@@ -1,11 +1,14 @@
 import "server-only";
-import type { Prisma } from "@/generated/prisma/client";
+import type { LegalDocumentType } from "@bke/legal/contracts/checkout-requirements.contract";
 import { db } from "@/lib/db";
-import { clientIp } from "@/lib/security/request";
-import { CHECKOUT_LEGAL_TYPES, REGISTRATION_LEGAL_TYPES, SUBSCRIPTION_LEGAL_TYPES, type LegalDocumentType } from "@/lib/legal/constants";
+import { clientIp } from "@/v2/apps/web/http/request";
 import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
 
-type Tx = Prisma.TransactionClient;
+const REGISTRATION_LEGAL_TYPES: LegalDocumentType[] = ["TERMS_OF_SERVICE", "PRIVACY_POLICY"];
+const CHECKOUT_LEGAL_TYPES: LegalDocumentType[] = ["SOFTWARE_LICENSE_AGREEMENT", "REFUND_POLICY"];
+const SUBSCRIPTION_LEGAL_TYPES: LegalDocumentType[] = ["SUBSCRIPTION_TERMS"];
+
+type LegalClient = Pick<typeof db, "legalDocument" | "legalAcceptance">;
 
 export async function publishedLegalDocuments(types?: LegalDocumentType[]) {
   return db.legalDocument.findMany({
@@ -19,7 +22,7 @@ export function checkoutLegalTypes(planType: "PERPETUAL" | "MONTHLY" | "ANNUAL")
   return [...CHECKOUT_LEGAL_TYPES, ...(planType === "PERPETUAL" ? [] : SUBSCRIPTION_LEGAL_TYPES)];
 }
 
-async function requiredVersions(client: Tx | typeof db, types: LegalDocumentType[]) {
+async function requiredVersions(client: LegalClient, types: LegalDocumentType[]) {
   const documents = await client.legalDocument.findMany({
     where: { status: "ACTIVE", documentType: { in: types }, currentPublishedVersionId: { not: null } },
     include: { currentPublishedVersion: true },
@@ -28,14 +31,14 @@ async function requiredVersions(client: Tx | typeof db, types: LegalDocumentType
   return documents;
 }
 
-export async function validateLegalVersionSelection(client: Tx | typeof db, types: LegalDocumentType[], selectedVersionIds: string[]) {
+export async function validateLegalVersionSelection(client: LegalClient, types: LegalDocumentType[], selectedVersionIds: string[]) {
   const documents = await requiredVersions(client, types);
   const expected = documents.map((item) => item.currentPublishedVersionId!);
   if (selectedVersionIds.length !== expected.length || expected.some((id) => !selectedVersionIds.includes(id))) throw new Error("LEGAL_ACCEPTANCE_REQUIRED");
   return documents;
 }
 
-export async function recordLegalAcceptances(client: Tx, input: { userId: string; customerAccountId?: string; types: LegalDocumentType[]; selectedVersionIds: string[]; context: string; request: Request }) {
+export async function recordLegalAcceptances(client: LegalClient, input: { userId: string; customerAccountId?: string; types: LegalDocumentType[]; selectedVersionIds: string[]; context: string; request: Request }) {
   const documents = await validateLegalVersionSelection(client, input.types, input.selectedVersionIds);
   const variables = legalVariables();
   const ipAddress = clientIp(input.request).slice(0, 128);

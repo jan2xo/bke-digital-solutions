@@ -10,7 +10,7 @@ import { db } from "@/lib/db";
 import { CustomerLicenseCard } from "@/components/customer-license-card";
 import { PendingOrderActions } from "@/components/pending-order-actions";
 import { requireLegalClearance } from "@/v2/apps/web/legal/clearance";
-import { publishedLegalDocuments } from "@/lib/legal/service";
+import { publishedLegalDocuments } from "@/v2/apps/web/legal/service";
 import { SUBSCRIPTION_LEGAL_TYPES, CHECKOUT_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";
 import { SubscriptionRenewButton } from "@/components/subscription-renew-button";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";

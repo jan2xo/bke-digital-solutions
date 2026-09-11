@@ -28,7 +28,7 @@ describe.sequential("legal document persistence and immutable acceptance history
   afterAll(async () => db.$disconnect());
 
   it("records the exact current registration versions once", async () => {
-    const { recordLegalAcceptances } = await import("@/lib/legal/service");
+    const { recordLegalAcceptances } = await import("@/v2/apps/web/legal/service");
     const documents = await db.legalDocument.findMany({
       where: { documentType: { in: ["TERMS_OF_SERVICE", "PRIVACY_POLICY"] } },
       select: { currentPublishedVersionId: true },
@@ -62,7 +62,7 @@ describe.sequential("legal document persistence and immutable acceptance history
       db.legalDocumentVersion.update({ where: { id: second.id }, data: { status: "PUBLISHED", effectiveAt: new Date(), publishedAt: new Date() } }),
       db.legalDocument.update({ where: { id: document.id }, data: { currentPublishedVersionId: second.id } }),
     ]);
-    const { pendingReacceptance } = await import("@/lib/legal/service");
+    const { pendingReacceptance } = await import("@/v2/apps/web/legal/service");
     expect((await pendingReacceptance(userId)).some((item) => item.id === document.id)).toBe(true);
     const newerUser = await db.user.create({ data: { email: `legal-newer-${suffix}@bke.test`, name: "Newer Legal Customer", emailVerified: new Date() } });
     expect((await pendingReacceptance(newerUser.id)).some((item) => item.id === document.id)).toBe(false);

@@ -7,7 +7,7 @@ import { randomToken } from "@/lib/security/crypto";
 import { issueEntitlements } from "@/lib/licensing";
 import { queueCommerceEmail } from "@/lib/email";
 import type { Prisma } from "@/generated/prisma/client";
-import { checkoutLegalTypes, recordLegalAcceptances } from "@/lib/legal/service";
+import { checkoutLegalTypes, recordLegalAcceptances } from "@/v2/apps/web/legal/service";
 import { assertAccountOperational } from "@/lib/customer-lifecycle";
 
 export async function createCheckout(userId:string,purchasePlanId:string,accountId?:string,offerIdentifier?:string,renewalSubscriptionId?:string,legal?:{versionIds:string[];request:Request}){

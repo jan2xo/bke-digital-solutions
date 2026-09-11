@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
+import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 import { githubLatestReleaseUrl } from "@/v2/platform/distribution/github-releases";
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
