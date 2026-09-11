@@ -7,6 +7,7 @@ import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "@bke/commerce/con
 import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "@bke/commerce/contracts/offer-redemption.contract";
 import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "@bke/commerce/contracts/order-invoice-creation.contract";
 import { COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/order-item-policy-lookup.contract";
+import { COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID } from "@bke/commerce/contracts/public-promotion-preview.contract";
 import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-lookup.contract";
 import { COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "@bke/commerce/contracts/settlement-reaction.contract";
@@ -21,6 +22,7 @@ import type {
 } from "@bke/commerce/logic/checkout-orchestration-ports";
 import { createCommerceOfferRedemptionCapability } from "@bke/commerce/logic/offer-redemption";
 import { createCommerceOrderInvoiceCreationCapability } from "@bke/commerce/logic/order-invoice-creation";
+import { createCommercePublicPromotionPreviewCapability } from "@bke/commerce/logic/public-promotion-preview";
 import { createCommercePurchasePlanLookupCapability } from "@bke/commerce/logic/purchase-plan-lookup";
 import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
 import { createCommerceRenewalCheckoutPricingCapability } from "@bke/commerce/logic/renewal-checkout-pricing";
@@ -36,6 +38,7 @@ import { createPostgresCommerceCheckoutOfferPricingRepository } from "@bke/comme
 import { createPostgresCommerceOfferRedemptionRepository } from "@bke/commerce/prisma/repositories/postgres-offer-redemption-repository";
 import { createPostgresCommerceOrderInvoiceCreationRepository } from "@bke/commerce/prisma/repositories/postgres-order-invoice-creation-repository";
 import { createPostgresCommerceOrderItemPolicyLookupCapability } from "@bke/commerce/prisma/repositories/postgres-order-item-policy-lookup-repository";
+import { createPostgresCommercePublicPromotionPreviewRepository } from "@bke/commerce/prisma/repositories/postgres-public-promotion-preview-repository";
 import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
 import { createPostgresCommerceRenewalCheckoutPricingRepository } from "@bke/commerce/prisma/repositories/postgres-renewal-checkout-pricing-repository";
 import { createPostgresCommerceSettlementReactionRepository } from "@bke/commerce/prisma/repositories/postgres-settlement-reaction-repository";
@@ -75,6 +78,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   );
   const checkoutOfferPricing = createCommerceCheckoutOfferPricingCapability(
     createPostgresCommerceCheckoutOfferPricingRepository(options.connectionString),
+  );
+  const publicPromotionPreview = createCommercePublicPromotionPreviewCapability(
+    createPostgresCommercePublicPromotionPreviewRepository(options.connectionString),
   );
   const purchasePlanLookup = createCommercePurchasePlanLookupCapability(
     createPostgresCommercePurchasePlanLookupRepository(options.connectionString),
@@ -212,6 +218,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         { id: COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID, value: offerRedemption },
         { id: COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID, value: orderInvoiceCreation },
         { id: COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID, value: checkoutOfferPricing },
+        { id: COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID, value: publicPromotionPreview },
         { id: COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID, value: checkoutOrchestration },
         { id: COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID, value: settlementReaction },
         { id: COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID, value: zeroPaymentFulfillment },

@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.7.0/bke-commerce-0.7.0.tgz";
-const EXPECTED_VERSION = "0.7.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.8.0/bke-commerce-0.8.0.tgz";
+const EXPECTED_VERSION = "0.8.0";
 const EXPECTED_SHA256 =
-  "975e18a6ec88b4fb2bcf3518946340f31fcc33fef788ad75708851524646207d";
+  "865309da2d9b435a7ab3a2ea5ddbc7436cd529905923d33091c3719779d812ef";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -40,6 +40,12 @@ for (const marker of [
   "@bke/commerce/prisma/repositories/postgres-subscription-status-lookup-repository",
   "createPostgresCommerceSubscriptionStatusLookupRepository",
   "subscriptionStatusLookup",
+  "@bke/commerce/contracts/public-promotion-preview.contract",
+  "COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID",
+  "createCommercePublicPromotionPreviewCapability",
+  "@bke/commerce/prisma/repositories/postgres-public-promotion-preview-repository",
+  "createPostgresCommercePublicPromotionPreviewRepository",
+  "publicPromotionPreview",
   "@bke/commerce/logic/",
   "@bke/commerce/prisma/repositories/",
   "@bke/commerce/module.manifest",

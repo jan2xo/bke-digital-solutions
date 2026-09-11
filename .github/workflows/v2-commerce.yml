@@ -5,6 +5,11 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/commerce/**"
+      - "app/page.tsx"
+      - "app/products/[slug]/page.tsx"
+      - "app/api/admin/offers/**"
+      - "lib/pricing.ts"
+      - "lib/offers.ts"
       - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/platform/composition/**"
       - "v2/contracts/**"
@@ -49,11 +54,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-commerce-0.7.0.tgz
+          artifact=/tmp/bke-commerce-0.8.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.7.0/bke-commerce-0.7.0.tgz
-          echo "975e18a6ec88b4fb2bcf3518946340f31fcc33fef788ad75708851524646207d  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.8.0/bke-commerce-0.8.0.tgz
+          echo "865309da2d9b435a7ab3a2ea5ddbc7436cd529905923d33091c3719779d812ef  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Commerce consumer adoption and staging retirement
