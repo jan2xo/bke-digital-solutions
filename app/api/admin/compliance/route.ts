@@ -5,7 +5,7 @@ import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { COMPLIANCE_STATUSES } from "@/lib/compliance";
+import { COMPLIANCE_STATUSES } from "@/v2/apps/web/compliance/statuses";
 
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("STATUS"), id: z.string().min(1), status: z.enum(COMPLIANCE_STATUSES) }),
