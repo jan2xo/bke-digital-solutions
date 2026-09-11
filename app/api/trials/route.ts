@@ -6,7 +6,7 @@ import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { grantProductTrial } from "@/lib/trials";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
+import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 import { assertAccountOperational } from "@/lib/customer-lifecycle";
 
 const schema = z.object({ editionId: z.string().cuid(), accountId: z.string().cuid() }).strict();
