@@ -11,6 +11,8 @@ permissions:
 jobs:
   move:
     runs-on: ubuntu-24.04
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_generation_only
     steps:
       - uses: actions/checkout@v4
         with:
