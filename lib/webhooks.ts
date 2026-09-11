@@ -1,5 +1,5 @@
 import "server-only";
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { issueEntitlements, type RenewalLeaseRequest } from "@/lib/licensing";

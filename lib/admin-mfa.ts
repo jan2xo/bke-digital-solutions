@@ -1,6 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
-import type { MfaChallengePurpose } from "@/generated/prisma/client";
+import type { MfaChallengePurpose } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { env } from "@/v2/platform/host/env";
 import { createSession } from "@/lib/auth";

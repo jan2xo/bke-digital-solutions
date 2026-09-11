@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash, randomUUID } from "node:crypto";
-import type { StorageCleanupJobType } from "@/generated/prisma/client";
+import type { StorageCleanupJobType } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { deleteObject } from "@/lib/storage";
 

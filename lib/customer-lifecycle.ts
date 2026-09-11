@@ -1,6 +1,6 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { env } from "@/v2/platform/host/env";
 

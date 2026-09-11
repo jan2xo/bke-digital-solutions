@@ -1,6 +1,6 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import type { SecurityEventType } from "@/generated/prisma/client";
+import type { SecurityEventType } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { env } from "@/v2/platform/host/env";
 import { clientIp } from "@/v2/platform/host/security/request";

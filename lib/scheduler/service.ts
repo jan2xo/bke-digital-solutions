@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import type { Prisma, ScheduledJobTrigger } from "@/generated/prisma/client";
+import type { Prisma, ScheduledJobTrigger } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { acquireSchedulerLock, releaseSchedulerLock } from "@/lib/scheduler/lock";
 import { classifyJobFailure, retryDelayMs, safeJobErrorCode, scheduledIdempotencyKey, scheduledWindow } from "@/lib/scheduler/policy";

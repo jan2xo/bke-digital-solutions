@@ -10,7 +10,7 @@ import { env } from "@/v2/platform/host/env";
 import { audit } from "@/lib/audit";
 import { backupManifestSchema, canonicalJson, decryptBuffer, encryptBuffer, missingObjects, sha256, verifyManifest, type BackupManifest } from "@/lib/backups/integrity";
 import { retryAt } from "@/lib/backups/policy";
-import type { BackupOperation } from "@/generated/prisma/client";
+import type { BackupOperation } from "@/v2/platform/host/generated/prisma/client";
 
 const exec = promisify(execFile);
 

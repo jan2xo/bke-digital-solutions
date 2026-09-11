@@ -1,4 +1,4 @@
-import type { SecurityEventType, SecurityEventSeverity } from "@/generated/prisma/client";
+import type { SecurityEventType, SecurityEventSeverity } from "@/v2/platform/host/generated/prisma/client";
 
 type Event = { type: SecurityEventType; severity: SecurityEventSeverity; createdAt: Date };
 export function deriveSecurityReviewSignals(events: Event[]) {

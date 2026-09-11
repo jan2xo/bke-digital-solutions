@@ -2,7 +2,7 @@ import "dotenv/config";
 import argon2 from "argon2";
 import { expect, test } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
 import { enrollAndLoginAdmin } from "./mfa-helper";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });

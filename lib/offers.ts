@@ -1,5 +1,5 @@
 import "server-only";
-import { Prisma, type DiscountOffer } from "@/generated/prisma/client";
+import { Prisma, type DiscountOffer } from "@/v2/platform/host/generated/prisma/client";
 import { applyOfferDiscount, PRICING_VERSION } from "@/lib/pricing";
 
 export type OfferPlanContext = { id:string; type:"PERPETUAL"|"MONTHLY"|"ANNUAL"; editionId:string; productId:string; currency:string };

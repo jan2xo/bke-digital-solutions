@@ -132,7 +132,7 @@ Core documents correctly describe editions, simultaneous plans, derived annual p
 
 ## Generated Prisma policy
 
-Recommendation **A: continue versioning `generated/prisma`**. The generator writes outside `node_modules`, application imports target it, history consistently versions it, and generation is not guaranteed during every install/build outside CI. CI runs generation. Add `git diff --exit-code -- generated/prisma` afterward so stale generated output fails CI. Do not change policy until all install/build/deploy paths guarantee generation.
+Recommendation **A: continue versioning `v2/platform/host/generated/prisma`**. The generator writes outside `node_modules`, application imports target it, history consistently versions it, and generation is not guaranteed during every install/build outside CI. CI runs generation. Add `git diff --exit-code -- v2/platform/host/generated/prisma` afterward so stale generated output fails CI. Do not change policy until all install/build/deploy paths guarantee generation.
 
 ## Findings by decision class
 
