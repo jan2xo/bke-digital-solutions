@@ -1,0 +1,35 @@
+name: Temporary V2 Auth Import Inventory
+
+on:
+  push:
+    branches:
+      - feat/v2-host-infrastructure-finalization
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-host-infrastructure-finalization
+      - name: Inventory exact legacy auth import symbols
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          for p in sorted(Path('.').rglob('*')):
+              if not p.is_file() or p.suffix not in {'.ts','.tsx'} or any(x in p.parts for x in {'.git','node_modules','.next'}):
+                  continue
+              text = p.read_text(errors='ignore')
+              if '@/lib/auth' not in text:
+                  continue
+              lines = []
+              for m in re.finditer(r'import\s*\{([^}]*)\}\s*from\s*["\']@/lib/auth["\']', text, re.S):
+                  names = ' '.join(m.group(1).split())
+                  lines.append(names)
+              print(f'{p}: ' + ' | '.join(lines))
+          PY
