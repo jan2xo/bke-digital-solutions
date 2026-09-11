@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 
 export function summarizeUserAgent(value: string | null | undefined) {
   if (!value) return "Unknown browser and device";

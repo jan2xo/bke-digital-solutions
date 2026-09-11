@@ -1,7 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { Prisma } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { redact } from "@/lib/redaction";
 import { processStorageCleanupJob, storageCleanupIdempotencyKey } from "@/lib/storage-cleanup";
 

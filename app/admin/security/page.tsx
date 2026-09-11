@@ -1,7 +1,7 @@
 import { AdminSecurityActions } from "@/components/admin-security-actions";
 import { AdminSessionManager } from "@/components/admin-session-manager";
 import { currentSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { deriveSecurityReviewSignals, securityEventDefinition } from "@/v2/apps/web/security/presentation";
 import { redirect } from "next/navigation";
 

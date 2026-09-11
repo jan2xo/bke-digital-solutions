@@ -1,6 +1,6 @@
 import "server-only";
 
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { schedulerHealth } from "@/lib/scheduler/health";
 import { readiness } from "@/v2/apps/web/health/readiness";
 import {

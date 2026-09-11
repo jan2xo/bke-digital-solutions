@@ -1,10 +1,10 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { issueEntitlements, type RenewalLeaseRequest } from "@/lib/licensing";
 import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
-import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
+import { decryptLicenseKey, sha256 } from "@/v2/platform/host/security/crypto";
 import { paymentProvider } from "@/lib/payments";
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
 import type { PaymentEvent } from "@/lib/payments/types";

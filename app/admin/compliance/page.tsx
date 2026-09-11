@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { requireAdmin } from "@/lib/auth";
 import { ComplianceAdminControls } from "@/components/compliance-admin-controls";
 

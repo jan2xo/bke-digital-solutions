@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { BackupActions, CreateBackupActions } from "@/components/backups/admin-backup-actions";
 
 const when = (date: Date | null) => date ? date.toLocaleString() : "—";

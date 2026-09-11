@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
 
 type CertificationArtifact = { id: string; objectKey: string; sha256: string; sizeBytes: bigint | number; contentType: string; active?: boolean; removedAt?: Date | null };

@@ -4,7 +4,7 @@ import { normalizeCommerceOfferCode } from "@bke/commerce/logic/offer-redemption
 import { validateCommerceOfferConfiguration } from "@bke/commerce/logic/offer-configuration";
 import { requireRecentAdmin as requireAdmin, requireRecentAdmin } from "@/lib/auth";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 
 const optionalId = z.string().cuid().nullable().optional();

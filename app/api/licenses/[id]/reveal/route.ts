@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireRecentUser } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { decryptLicenseKey } from "@/lib/security/crypto";
+import { db } from "@/v2/platform/host/db";
+import { decryptLicenseKey } from "@/v2/platform/host/security/crypto";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";

@@ -3,7 +3,7 @@ import {
   type CommercePurchasePlanPricingCapability,
 } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { LandingExperience } from "@/app/landing-experience";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { getSiteContent } from "@/v2/apps/web/site-content";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 

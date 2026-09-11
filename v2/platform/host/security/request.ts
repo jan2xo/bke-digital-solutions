@@ -1,5 +1,5 @@
 import "server-only";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 
 export function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");

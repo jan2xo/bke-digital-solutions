@@ -1,6 +1,6 @@
 import "server-only";
 import { addDays, addMonths, addYears } from "@/lib/time";
-import { encryptLicenseKey, generateLicenseKey, hashLicenseKey } from "@/lib/security/crypto";
+import { encryptLicenseKey, generateLicenseKey, hashLicenseKey } from "@/v2/platform/host/security/crypto";
 import type { Prisma } from "@/generated/prisma/client";
 import { renewalExpiration } from "@/lib/licensing/renewal";
 

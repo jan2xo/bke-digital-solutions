@@ -1,5 +1,5 @@
 import "server-only";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { redact } from "@/lib/redaction";
 
 type Context = Record<string, unknown>;

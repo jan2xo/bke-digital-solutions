@@ -1,6 +1,6 @@
 import "server-only";
 import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 
 export const randomToken = (bytes = 32) => randomBytes(bytes).toString("base64url");
 export const sha256 = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");

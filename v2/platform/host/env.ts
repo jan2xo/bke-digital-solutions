@@ -1,5 +1,5 @@
 import "server-only";
-import { parseEnvironment } from "@/lib/config/environment";
+import { parseEnvironment } from "@/v2/platform/host/config/environment";
 
 export const env = parseEnvironment(process.env);
 

@@ -1,8 +1,8 @@
 import "server-only";
 import { createHmac } from "node:crypto";
 import { Prisma } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
 
 export type CustomerLifecycleErrorCode =
   | "NOT_FOUND" | "FORBIDDEN" | "CUSTOMER_CLOSURE_BLOCKED" | "CUSTOMER_ALREADY_CLOSED"

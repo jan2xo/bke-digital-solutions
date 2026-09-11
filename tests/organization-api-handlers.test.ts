@@ -29,7 +29,7 @@ vi.mock("@/v2/apps/web/accounts/organization-operations", () => ({
   transferOrganizationOwnership: mocks.transferOrganizationOwnership,
 }));
 vi.mock("@/v2/apps/web/runtime", () => ({ getV2WebApplication: mocks.getV2WebApplication }));
-vi.mock("@/lib/db", () => ({ db: mocks.db }));
+vi.mock("@/v2/platform/host/db", () => ({ db: mocks.db }));
 
 const appUrl = process.env.APP_URL!;
 const user = {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCronEnvironment } from "@/v2/apps/web/config/environment";
-import { safeEqual } from "@/lib/security/crypto";
+import { safeEqual } from "@/v2/platform/host/security/crypto";
 import { runDueScheduledJobs } from "@/lib/scheduler/service";
 
 export async function POST(request: Request) {

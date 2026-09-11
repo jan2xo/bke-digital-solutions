@@ -1,11 +1,11 @@
 import "server-only";
 import argon2 from "argon2";
 import { cookies } from "next/headers";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
-import { hashToken, randomToken } from "@/lib/security/crypto";
-import { clientIp } from "@/lib/security/request";
-import { safeNetworkHint, summarizeUserAgent } from "@/lib/security/session-display";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
+import { hashToken, randomToken } from "@/v2/platform/host/security/crypto";
+import { clientIp } from "@/v2/platform/host/security/request";
+import { safeNetworkHint, summarizeUserAgent } from "@/v2/platform/host/security/session-display";
 import { queueSecurityEmail } from "@/lib/email";
 
 const COOKIE = env.NODE_ENV === "production" ? "__Host-bke_session" : "bke_session";

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { createSession, hashPassword } from "@/lib/auth";
 import { registerSchema } from "@/v2/apps/web/http/validation";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { hashToken, randomToken } from "@/lib/security/crypto";
+import { hashToken, randomToken } from "@/v2/platform/host/security/crypto";
 import { sendVerificationEmail } from "@/v2/apps/web/email";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { recordLegalAcceptances } from "@/v2/apps/web/legal/service";

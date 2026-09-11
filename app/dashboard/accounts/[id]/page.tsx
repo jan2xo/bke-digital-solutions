@@ -6,7 +6,7 @@ import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authoriza
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { CustomerLicenseCard } from "@/components/customer-license-card";
 import { PendingOrderActions } from "@/components/pending-order-actions";
 import { requireLegalClearance } from "@/v2/apps/web/legal/clearance";

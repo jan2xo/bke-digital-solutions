@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { createSession, verifyPassword } from "@/lib/auth";
 import { IDENTITY_MFA_CHALLENGE_COOKIE, IDENTITY_MFA_CHALLENGE_COOKIE_OPTIONS, issueIdentityLoginMfaChallenge } from "@/v2/apps/web/auth/mfa-challenge";
 import { loginSchema } from "@/v2/apps/web/http/validation";

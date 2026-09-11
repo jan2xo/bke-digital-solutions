@@ -7,7 +7,7 @@ import {
   type CommercePurchasePlanPricingCapability,
 } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { PurchasePlanSelector } from "@/components/purchase-plan-selector";
 import { TrialStartButton } from "@/components/trial-start-button";
 import { listPurchaseAuthorizedAccounts } from "@/v2/apps/web/accounts/purchase-account-list";

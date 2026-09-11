@@ -1,5 +1,5 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 
 export type AccountRole = "OWNER" | "BILLING" | "LICENSE_MANAGER" | "MEMBER";
 export type AccountCapability =

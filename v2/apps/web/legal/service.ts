@@ -1,6 +1,6 @@
 import "server-only";
 import type { LegalDocumentType } from "@bke/legal/contracts/checkout-requirements.contract";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { clientIp } from "@/v2/apps/web/http/request";
 import { legalContentHash, legalVariables, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
 

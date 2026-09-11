@@ -1,9 +1,9 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { paymentProvider } from "@/lib/payments";
 import { applyOfferDiscount, PRICING_VERSION, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
 import { offerSnapshot, reservePublicPromotion, resolveAndReserveOffer } from "@/lib/offers";
-import { randomToken } from "@/lib/security/crypto";
+import { randomToken } from "@/v2/platform/host/security/crypto";
 import { issueEntitlements } from "@/lib/licensing";
 import { queueCommerceEmail } from "@/lib/email";
 import type { Prisma } from "@/generated/prisma/client";

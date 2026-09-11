@@ -3,7 +3,7 @@ import { extname } from "node:path";
 import { NextResponse } from "next/server";
 import { audit } from "@/v2/apps/web/audit";
 import { requireAdmin } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { deleteObject, uploadObject } from "@/v2/apps/web/storage/object-storage";

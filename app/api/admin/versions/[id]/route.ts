@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";

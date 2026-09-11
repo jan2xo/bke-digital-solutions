@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { paymentProvider } from "@/v2/apps/web/payments/compatibility-provider";
-import { randomToken } from "@/lib/security/crypto";
+import { randomToken } from "@/v2/platform/host/security/crypto";
 import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

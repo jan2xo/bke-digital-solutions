@@ -1,13 +1,13 @@
 import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
-import { env } from "@/lib/env";
-import { db } from "@/lib/db";
+import { env } from "@/v2/platform/host/env";
+import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { finalizeProductDeletion } from "@/lib/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/lib/storage-cleanup";
 import { retryStoredWebhook } from "@/lib/webhooks";
 import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
-import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
+import { decryptLicenseKey, sha256 } from "@/v2/platform/host/security/crypto";
 import type { JobContext, JobSummary } from "@/lib/scheduler/types";
 
 const DAY = 86_400_000;
