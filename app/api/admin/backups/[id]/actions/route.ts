@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireRecentAdmin } from "@/lib/auth";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { requestBackupOperation } from "@/lib/backups/service";
+import { requestBackupOperation } from "@/v2/apps/web/backups/service";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { clientIp } from "@/v2/apps/web/http/request";
 import { db } from "@/lib/db";
