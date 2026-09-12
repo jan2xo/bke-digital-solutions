@@ -3,10 +3,8 @@ import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { schedulerJobDefinitions } from "@/v2/apps/web/scheduler/job-definitions";
-import { computeSchedulerHealth } from "@/v2/platform/scheduler";
-import { readSchedulerHealthDefinitions } from "@/v2/platform/host/scheduler/health-reader";
-import { acknowledgeScheduledFailure, retryScheduledFailure, runScheduledJob, setScheduledJobEnabled, synchronizeScheduledJobs } from "@/lib/scheduler/service";
+import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
+import { acknowledgeScheduledFailure, retryScheduledFailure, runScheduledJob, setScheduledJobEnabled } from "@/lib/scheduler/service";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 
@@ -14,15 +12,7 @@ const inputSchema = z.discriminatedUnion("action", [
   z.object({ action: z.enum(["RUN", "DRY_RUN", "PAUSE", "RESUME"]), jobKey: z.string().min(3).max(100) }),
   z.object({ action: z.enum(["RETRY", "ACKNOWLEDGE"]), runId: z.string().cuid() }),
 ]);
-export async function GET() {
-  try {
-    await requireAdmin();
-    const now = new Date();
-    await synchronizeScheduledJobs(now);
-    const definitions = await readSchedulerHealthDefinitions(20);
-    return NextResponse.json(computeSchedulerHealth({ now, registeredJobs: schedulerJobDefinitions, definitions }));
-  } catch (error) { return apiError(error); }
-}
+export async function GET() { try { await requireAdmin(); return NextResponse.json(await schedulerHealth()); } catch (error) { return apiError(error); } }
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
