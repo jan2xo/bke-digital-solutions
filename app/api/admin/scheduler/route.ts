@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { schedulerHealth } from "@/lib/scheduler/health";
+import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
 import { acknowledgeScheduledFailure, retryScheduledFailure, runScheduledJob, setScheduledJobEnabled } from "@/lib/scheduler/service";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
