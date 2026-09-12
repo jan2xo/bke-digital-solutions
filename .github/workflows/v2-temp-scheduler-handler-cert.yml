@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
 
+# Rerun after rewiring the compatibility registry onto the V2 handler surface.
 jobs:
   certify:
     runs-on: ubuntu-latest
