@@ -49,6 +49,17 @@ describe("V2 Payments reconciliation host adoption", () => {
     expect(cli).not.toContain("../lib/reconciliation");
   });
 
+  it("routes webhook ingestion through the released Payments capability", () => {
+    const webhook = read("lib/webhooks.ts");
+    const ingestion = read("v2/apps/web/payments/webhook-ingestion.ts");
+    expect(webhook).toContain('from "@/v2/apps/web/payments/webhook-ingestion"');
+    expect(webhook).not.toContain('from "@/lib/payments"');
+    expect(webhook).not.toContain('from "@/lib/payments/types"');
+    expect(ingestion).toContain("createPaymentsProviderEventIngestionCapability");
+    expect(ingestion).toContain("createPayMongoPaymentsAdapter");
+    expect(ingestion).toContain("resolvePayMongoConfiguration");
+  });
+
   it("removes obsolete legacy reconciliation calls from host integration and sandbox tests", () => {
     expect(read("tests/integration/lifecycle.test.ts")).not.toContain("@/lib/reconciliation");
     expect(read("tests/sandbox/paymongo.sandbox.test.ts")).not.toContain("@/lib/reconciliation");
