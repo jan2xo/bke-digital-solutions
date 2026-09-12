@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { requireUser } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
 import { sendVerificationEmail } from "@/v2/apps/web/email";
 import { assertSameOrigin,clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { hashToken,randomToken } from "@/lib/security/crypto";
+import { hashToken,randomToken } from "@/v2/platform/host/security/crypto";
 import { apiError } from "@/v2/apps/web/http/api-error";
 
 export async function POST(request:Request){

@@ -1,5 +1,5 @@
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { currentApproval } from "@/lib/releases/approval";
 import { commissioningEvidenceDecision } from "@/lib/commissioning/types";
 import { isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";

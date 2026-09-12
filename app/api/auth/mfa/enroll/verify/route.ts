@@ -4,7 +4,7 @@ import {
   IDENTITY_MFA_ENROLLMENT_COMPLETION_CAPABILITY_ID,
   type IdentityMfaEnrollmentCompletionCapability,
 } from "@bke/identity/contracts/mfa-enrollment-completion.contract";
-import { createSession } from "@/lib/auth";
+import { createSession } from "@/v2/apps/web/auth/session";
 import { currentIdentitySession } from "@/v2/apps/web/auth/session";
 import {
   currentIdentityMfaChallengeToken,

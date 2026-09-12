@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/v2/apps/web/auth/session";
 
 export default async function ScannerPage() {
   await requireAdmin();

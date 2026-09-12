@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 

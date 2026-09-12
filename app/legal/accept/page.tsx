@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth";
+import { requireUser } from "@/v2/apps/web/auth/session";
 import { pendingReacceptance } from "@/v2/apps/web/legal/service";
 import { LegalReacceptanceForm } from "@/components/legal-reacceptance-form";
 const safeReturn = (value?: string) => value?.startsWith("/") && !value.startsWith("//") ? value : "/dashboard";

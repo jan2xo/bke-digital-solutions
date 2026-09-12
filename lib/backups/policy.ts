@@ -1,4 +1,4 @@
-import type { BackupRetentionTier } from "@/generated/prisma/client";
+import type { BackupRetentionTier } from "@/v2/platform/host/generated/prisma/client";
 
 export function retentionTier(now: Date): BackupRetentionTier {
   if (now.getUTCDate() === 1) return "MONTHLY";

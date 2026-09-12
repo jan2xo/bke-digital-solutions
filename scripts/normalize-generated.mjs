@@ -9,13 +9,13 @@ function files(directory) {
   });
 }
 
-const generatedFiles = files("generated/prisma").filter((path) => path.endsWith(".ts"));
+const generatedFiles = files("v2/platform/host/generated/prisma").filter((path) => path.endsWith(".ts"));
 let targets = generatedFiles;
 if (existsSync(".git")) {
   const outputs = [
-    execFileSync("git", ["diff", "--name-only", "--", "generated/prisma"], { encoding: "utf8" }),
-    execFileSync("git", ["diff", "--cached", "--name-only", "--", "generated/prisma"], { encoding: "utf8" }),
-    execFileSync("git", ["ls-files", "--others", "--exclude-standard", "--", "generated/prisma"], { encoding: "utf8" }),
+    execFileSync("git", ["diff", "--name-only", "--", "v2/platform/host/generated/prisma"], { encoding: "utf8" }),
+    execFileSync("git", ["diff", "--cached", "--name-only", "--", "v2/platform/host/generated/prisma"], { encoding: "utf8" }),
+    execFileSync("git", ["ls-files", "--others", "--exclude-standard", "--", "v2/platform/host/generated/prisma"], { encoding: "utf8" }),
   ];
   const changed = new Set(outputs.flatMap((output) => output.trim().split("\n").filter(Boolean)));
   targets = generatedFiles.filter((file) => changed.has(file));

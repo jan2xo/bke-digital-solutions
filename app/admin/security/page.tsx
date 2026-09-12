@@ -1,15 +1,16 @@
 import { AdminSecurityActions } from "@/components/admin-security-actions";
 import { AdminSessionManager } from "@/components/admin-session-manager";
-import { currentSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { currentIdentitySession } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
 import { deriveSecurityReviewSignals, securityEventDefinition } from "@/v2/apps/web/security/presentation";
 import { redirect } from "next/navigation";
 
 export default async function AdminSecurityPage({ searchParams }: { searchParams: Promise<{ type?: string; severity?: string; outcome?: string; provider?: string }> }) {
-  const session = await currentSession();
-  if (!session) redirect("/login");
-  if (session.user.role !== "ADMIN") redirect("/dashboard");
-  if (!session.user.administratorMfa?.enabledAt || !session.mfaVerifiedAt) redirect("/security/mfa");
+  const context = await currentIdentitySession();
+  if (!context) redirect("/login");
+  if (context.principal.role !== "ADMIN") redirect("/dashboard");
+  if (!context.administratorMfaEnabled || !context.session.mfaVerifiedAt) redirect("/security/mfa");
+  const session = context.session;
   const filters = await searchParams;
   const eventTypes = ["ADMIN_LOGIN_SUCCEEDED","ADMIN_LOGIN_FAILED","ADMIN_PASSWORD_ACCEPTED","ADMIN_PASSWORD_REJECTED","ADMIN_SESSION_CREATED","MFA_CHALLENGE_SUCCEEDED","MFA_CHALLENGE_FAILED","MFA_ENROLLED","MFA_DISABLED","MFA_RECOVERY_USED","MFA_RECOVERY_REGENERATED","RECENT_AUTH_SUCCEEDED","RECENT_AUTH_FAILED","ADMIN_SESSION_REVOKED","ADMIN_MAGIC_LOGIN_BLOCKED","MFA_ENROLLMENT_STARTED","PASSWORD_CHANGED","PASSWORD_RESET_COMPLETED","ADMIN_ALL_OTHER_SESSIONS_REVOKED","ADMIN_ALL_SESSIONS_REVOKED","SECURITY_RATE_LIMIT_TRIGGERED","PROVIDER_CREDENTIAL_REPLACED","PROVIDER_CREDENTIAL_REVOKED","PROVIDER_VALIDATION_SUCCEEDED","PROVIDER_VALIDATION_FAILED","LIVE_PAYMENT_ENABLE_BLOCKED"];
   const severities = ["INFORMATIONAL","LOW","MEDIUM","HIGH","CRITICAL"]; const outcomes = ["SUCCESS","FAILURE","BLOCKED","INFORMATIONAL"]; const providers = ["PAYMONGO","RESEND"];

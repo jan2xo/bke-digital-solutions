@@ -1,6 +1,6 @@
 import "server-only";
 import { createPrivateKey, createPublicKey, sign, verify } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { resolveTrustedSupplyChainKey } from "@/lib/supply-chain/keyring";
 import { buildReleaseManifest, canonicalizeManifest, manifestHash, type SignedReleaseManifest } from "@/lib/supply-chain/manifest";
 

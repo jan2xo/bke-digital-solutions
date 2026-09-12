@@ -1,6 +1,6 @@
 import "server-only";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
 import { decryptProviderCredential, encryptProviderCredential, providerCredentialHint } from "@/lib/provider-config/crypto";
 import { resolveProviderSource } from "@/lib/provider-config/policy";
 import type { ProviderContext, ProviderCredentialKind, ProviderName, ResolvedPayMongoConfiguration, ResolvedResendConfiguration } from "@/lib/provider-config/types";

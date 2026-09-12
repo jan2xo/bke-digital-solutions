@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { collectObservability, syncObservabilityAlerts } from "@/v2/apps/web/observability";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";

@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { audit } from "@/v2/apps/web/audit";
 import { getBackupEnvironment } from "@/v2/apps/web/backups/config";
 import { expiresAt, retentionTier, retryAt, validateRestoreConfirmation, type BackupRetentionTier } from "@/v2/platform/backups/policy";

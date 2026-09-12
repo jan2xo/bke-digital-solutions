@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { createSession } from "@/lib/auth";
-import { hashToken } from "@/lib/security/crypto";
+import { db } from "@/v2/platform/host/db";
+import { createSession } from "@/v2/apps/web/auth/session";
+import { hashToken } from "@/v2/platform/host/security/crypto";
 import { getWebHostEnvironment } from "@/v2/apps/web/config/environment";
 import { securityEvent } from "@/v2/apps/web/security/events";
 import { pendingReacceptance } from "@/v2/apps/web/legal/service";

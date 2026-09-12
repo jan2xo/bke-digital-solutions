@@ -1,13 +1,13 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/env", () => ({ env: { SESSION_SECRET: "integration-session-secret-value", DATABASE_URL: process.env.DATABASE_URL } }));
+vi.mock("@/v2/platform/host/env", () => ({ env: { SESSION_SECRET: "integration-session-secret-value", DATABASE_URL: process.env.DATABASE_URL } }));
 
 describe.sequential("administrator session administration", () => {
-  let db: typeof import("@/lib/db")["db"];
+  let db: typeof import("@/v2/platform/host/db")["db"];
   let userId = "";
   beforeAll(async () => {
-    db = (await import("@/lib/db")).db;
+    db = (await import("@/v2/platform/host/db")).db;
     userId = (await db.user.create({ data: { email: `session-admin-${Date.now()}@bke.test`, role: "ADMIN", emailVerified: new Date() } })).id;
   });
   afterAll(async () => {

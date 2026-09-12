@@ -5,7 +5,7 @@ import ts from "typescript";
 const root = process.cwd();
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
 const resolutionExtensions = ["", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json"];
-const forbiddenRoots = ["lib", "prisma", "generated/prisma"];
+const forbiddenRoots = ["lib", "prisma", "v2/platform/host/generated/prisma"];
 
 function normalize(path) {
   return relative(root, path).replaceAll("\\", "/");
@@ -141,7 +141,7 @@ function chainFor(file) {
 
 console.log(`V2 production host dependency graph: entrypoints=${entries.length} reachableLocalFiles=${seen.size}`);
 if (legacyFiles.length === 0) {
-  console.log("V2 PRODUCTION HOST V1-FREE GREEN: no reachable root lib/, prisma/, or generated/prisma implementation.");
+  console.log("V2 PRODUCTION HOST V1-FREE GREEN: no reachable root lib/, prisma/, or v2/platform/host/generated/prisma implementation.");
   process.exit(0);
 }
 

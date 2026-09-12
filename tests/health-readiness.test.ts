@@ -10,8 +10,8 @@ const mocks = vi.hoisted(() => ({
   resend: vi.fn(),
 }));
 
-vi.mock("@/lib/db", () => ({ db: { $queryRaw: mocks.query } }));
-vi.mock("@/lib/env", () => ({ env: { PAYMENT_PROVIDER: "paymongo", EMAIL_PROVIDER: "resend", REDIS_URL: "redis://valkey:6379" } }));
+vi.mock("@/v2/platform/host/db", () => ({ db: { $queryRaw: mocks.query } }));
+vi.mock("@/v2/platform/host/env", () => ({ env: { PAYMENT_PROVIDER: "paymongo", EMAIL_PROVIDER: "resend", REDIS_URL: "redis://valkey:6379" } }));
 vi.mock("@/lib/storage", () => ({ checkStorageReadiness: mocks.storage }));
 vi.mock("@/lib/provider-config/service", () => ({ resolvePayMongoConfiguration: mocks.paymongo, resolveResendConfiguration: mocks.resend }));
 vi.mock("@/lib/logger", () => ({ operationalLog: vi.fn() }));

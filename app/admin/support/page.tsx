@@ -1,4 +1,4 @@
-import { requireRecentAdmin } from "@/lib/auth";
+import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { listAdminTickets } from "@/v2/apps/web/support/capability";
 
 export default async function AdminSupportPage() {

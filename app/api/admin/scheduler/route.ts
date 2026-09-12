@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { schedulerHealth } from "@/lib/scheduler/health";
 import { acknowledgeScheduledFailure, retryScheduledFailure, runScheduledJob, setScheduledJobEnabled } from "@/lib/scheduler/service";

@@ -1,7 +1,7 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { addDays } from "@/lib/time";
-import { encryptLicenseKey, generateLicenseKey, hashLicenseKey, randomToken } from "@/lib/security/crypto";
+import { encryptLicenseKey, generateLicenseKey, hashLicenseKey, randomToken } from "@/v2/platform/host/security/crypto";
 
 export async function grantProductTrial(input: { accountId: string; editionId: string; source: "SELF_SERVICE" | "ADMIN"; actorId: string; graceDays?: number }) {
   const graceDays = input.graceDays ?? 0;

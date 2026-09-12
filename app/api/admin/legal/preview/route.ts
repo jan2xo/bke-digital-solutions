@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/v2/apps/web/auth/session";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { renderLegalMarkdown } from "@/v2/apps/web/legal/render";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";

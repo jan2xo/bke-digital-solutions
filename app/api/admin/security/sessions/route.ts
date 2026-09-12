@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { clearSessionCookie, requireRecentAdminSession } from "@/lib/auth";
+import { clearSessionCookie, requireRecentAdminSession } from "@/v2/apps/web/auth/session";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";

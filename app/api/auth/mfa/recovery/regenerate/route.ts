@@ -4,7 +4,7 @@ import {
   type IdentityMfaRecoveryRegenerationCapability,
 } from "@bke/identity/contracts/mfa-recovery-regeneration.contract";
 import { audit } from "@/v2/apps/web/audit";
-import { createSession } from "@/lib/auth";
+import { createSession } from "@/v2/apps/web/auth/session";
 import {
   currentIdentitySessionToken,
   requireRecentIdentitySession,

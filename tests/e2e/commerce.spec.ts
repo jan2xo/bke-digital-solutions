@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createHmac } from "node:crypto";
 import { test, expect } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
 
 const db=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.DATABASE_URL!})});
 test.beforeAll(async()=>{const{createClient}=await import("redis");const redis=createClient({url:process.env.REDIS_URL});await redis.connect();await redis.flushDb();await redis.quit();const cloudOps=await db.product.findUniqueOrThrow({where:{slug:"bke-cloudops"}});await db.productVersion.updateMany({where:{productId:cloudOps.id,version:"1.0.0"},data:{active:true,lifecycle:"STABLE",publishedAt:new Date(),isLatest:true}})});
