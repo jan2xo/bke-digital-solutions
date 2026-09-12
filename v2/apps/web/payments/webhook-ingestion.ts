@@ -190,5 +190,23 @@ export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promi
       result.code === "PERSISTENCE_UNAVAILABLE",
     );
   }
-  return { event, duplicate: result.disposition === "EXISTING" };
+  if (result.disposition === "EXISTING") {
+    const existing = await db.webhookEvent.findUniqueOrThrow({
+      where: { provider_externalEventId: { provider: verifier.name, externalEventId: event.eventId } },
+      select: { id: true, status: true },
+    });
+    if (existing.status !== "FAILED") return { event, duplicate: true };
+    await db.webhookEvent.update({
+      where: { id: existing.id },
+      data: {
+        status: "RECEIVED",
+        error: null,
+        lastErrorCode: null,
+        processedAt: null,
+        processingAttempts: { increment: 1 },
+        lastAttemptAt: new Date(),
+      },
+    });
+  }
+  return { event, duplicate: false };
 }
