@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
 
+# Rerun after converging Backup scheduler composition onto the existing V2 Backup service.
 jobs:
   certify:
     runs-on: ubuntu-latest
