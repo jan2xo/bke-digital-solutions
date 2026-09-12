@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { acceptedVersionSchema, assertProductIdChangeAllowed, isVersionAccepted, productIdSchema, validateAcceptedVersionRange } from "@/lib/product-identity";
+import { acceptedVersionSchema, assertProductIdChangeAllowed, isVersionAccepted, productIdSchema, validateAcceptedVersionRange } from "@/v2/apps/web/catalog/product-identity";
 
 describe("canonical product identity", () => {
   it("keeps database, catalog, and licensing identities conceptually distinct", () => {
