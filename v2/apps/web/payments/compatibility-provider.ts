@@ -1,7 +1,13 @@
 import "server-only";
 
+import { createHmac } from "node:crypto";
+import type {
+  PaymentsProviderEventVerifier,
+  PaymentsVerifiedProviderEvent,
+} from "@bke/payments/logic/provider-event-verifier";
 import { createPayMongoPaymentsAdapter } from "@bke/payments/providers/paymongo/paymongo-adapter";
 import { resolvePayMongoConfiguration } from "@/v2/apps/web/providers/capability";
+import { env } from "@/v2/platform/host/env";
 
 export type WebCheckoutInput = Readonly<{
   orderId: string;
@@ -36,6 +42,49 @@ function configuredProvider(): "mock" | "paymongo" {
   return value;
 }
 
+function headerValue(headers: Readonly<Record<string, string>>, name: string): string {
+  const target = name.toLowerCase();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() === target) return value;
+  }
+  return "";
+}
+
+function mockEventVerifier(): PaymentsProviderEventVerifier {
+  return Object.freeze({
+    name: "mock",
+    async verifyAndParse(rawBody, headers) {
+      const signature = headerValue(headers, "x-mock-signature");
+      const expected = createHmac("sha256", env.SESSION_SECRET).update(rawBody).digest("hex");
+      if (signature !== expected) throw new Error("PAYMENT_SIGNATURE_INVALID");
+      let body: Omit<PaymentsVerifiedProviderEvent, "occurredAt"> & { occurredAt: string };
+      try {
+        body = JSON.parse(Buffer.from(rawBody).toString("utf8")) as typeof body;
+      } catch {
+        throw new Error("PAYMENT_EVENT_INVALID");
+      }
+      return { ...body, occurredAt: new Date(body.occurredAt) };
+    },
+  });
+}
+
+async function payMongoAdapter() {
+  const configuration = await resolvePayMongoConfiguration();
+  const origin = appOrigin();
+  return createPayMongoPaymentsAdapter({
+    secretKey: configuration.secretKey,
+    webhookSecret: configuration.webhookSecret,
+    livemode: configuration.livemode,
+    paymentMethodTypes: ["qrph"],
+    successUrl: (input) => `${origin}/checkout/success?order=${encodeURIComponent(input.sourceReference)}`,
+    cancelUrl: (input) => `${origin}/checkout/cancel?order=${encodeURIComponent(input.sourceReference)}`,
+  });
+}
+
+export async function createPaymentEventVerifier(): Promise<PaymentsProviderEventVerifier> {
+  return configuredProvider() === "mock" ? mockEventVerifier() : payMongoAdapter();
+}
+
 export const paymentProvider = Object.freeze({
   get name() {
     return configuredProvider();
@@ -51,15 +100,7 @@ export const paymentProvider = Object.freeze({
       };
     }
 
-    const configuration = await resolvePayMongoConfiguration();
-    const adapter = createPayMongoPaymentsAdapter({
-      secretKey: configuration.secretKey,
-      webhookSecret: configuration.webhookSecret,
-      livemode: configuration.livemode,
-      paymentMethodTypes: ["qrph"],
-      successUrl: () => `${origin}/checkout/success?order=${encodeURIComponent(input.orderId)}`,
-      cancelUrl: () => `${origin}/checkout/cancel?order=${encodeURIComponent(input.orderId)}`,
-    });
+    const adapter = await payMongoAdapter();
     const checkout = await adapter.createCheckout({
       attemptId: input.idempotencyKey,
       sourceReference: input.orderId,
