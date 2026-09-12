@@ -6,7 +6,7 @@
   "engines": { "node": ">=22.12.0" },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run db:generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -14,7 +14,7 @@
     "certification:vitest": "vitest run --exclude tests/minio-bootstrap.test.ts",
     "certification:minio": "vitest run tests/minio-bootstrap.test.ts",
     "test:e2e": "playwright test",
-    "db:generate": "prisma generate && node scripts/normalize-generated.mjs",
+    "db:generate": "node scripts/generate-prisma-client-compat.mjs",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:status": "prisma migrate status",
