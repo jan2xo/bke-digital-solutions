@@ -2,7 +2,7 @@ import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
-import { schedulerHealth } from "@/lib/scheduler/health";
+import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
 import { acquireSchedulerLock, releaseSchedulerLock } from "@/lib/scheduler/lock";
 import { runScheduledJob, setScheduledJobEnabled, synchronizeScheduledJobs } from "@/lib/scheduler/service";
 
