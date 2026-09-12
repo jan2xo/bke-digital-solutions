@@ -1,5 +1,5 @@
 import { AdminSchedulerActions } from "@/components/admin-scheduler-actions";
-import { schedulerHealth } from "@/lib/scheduler/health";
+import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
 
 const when = (value: Date | null) => value ? value.toLocaleString() : "Never";
 export default async function SchedulerPage() {
