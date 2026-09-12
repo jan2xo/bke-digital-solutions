@@ -4,8 +4,8 @@ import { randomBytes } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 const script = readFileSync("scripts/minio-init.sh", "utf8");
-const minioImage = "minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e";
-const mcImage = "minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3";
+const minioImage = "quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e";
+const mcImage = "quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3";
 
 function docker(args: string[], options: { allowFailure?: boolean } = {}) {
   const result = spawnSync("docker", args, { encoding: "utf8", timeout: 15_000 });
