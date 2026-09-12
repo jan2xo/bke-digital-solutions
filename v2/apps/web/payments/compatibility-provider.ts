@@ -29,6 +29,9 @@ export type WebCheckoutResult = Readonly<{
   checkoutUrl: string;
 }>;
 
+type ProviderEventRawBody = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[0];
+type ProviderEventHeaders = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[1];
+
 function appOrigin(): string {
   const value = process.env.APP_URL?.trim();
   if (!value) throw new Error("APP_URL_REQUIRED");
@@ -53,7 +56,7 @@ function headerValue(headers: Readonly<Record<string, string>>, name: string): s
 function mockEventVerifier(): PaymentsProviderEventVerifier {
   return Object.freeze({
     name: "mock",
-    async verifyAndParse(rawBody, headers) {
+    async verifyAndParse(rawBody: ProviderEventRawBody, headers: ProviderEventHeaders) {
       const signature = headerValue(headers, "x-mock-signature");
       const expected = createHmac("sha256", env.SESSION_SECRET).update(rawBody).digest("hex");
       if (signature !== expected) throw new Error("PAYMENT_SIGNATURE_INVALID");
