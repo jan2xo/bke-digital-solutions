@@ -24,7 +24,7 @@ const jobs = schedulerJobDefinitions.map((definition) => {
   return { ...definition, handler };
 }) satisfies ScheduledJob[];
 
-const registry = new Map(jobs.map((job) => [job.key, job]));
+const registry = new Map<string, ScheduledJob>(jobs.map((job) => [job.key, job]));
 if (registry.size !== jobs.length) throw new Error("DUPLICATE_SCHEDULER_JOB_KEY");
 for (const job of jobs) {
   if (!/^[a-z][a-z0-9.-]+$/.test(job.key) || job.timeoutSeconds <= 0 || job.lockSeconds <= job.timeoutSeconds || job.maxAttempts < 1 || job.cadenceSeconds < 30) throw new Error(`INVALID_SCHEDULER_JOB:${job.key}`);
