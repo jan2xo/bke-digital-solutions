@@ -13,7 +13,7 @@ import {
   renewalReminders,
   securityCleanup,
   storageLifecycle,
-} from "@/lib/scheduler/handlers";
+} from "@/v2/apps/web/scheduler/handlers";
 import { backupCreation, backupRetention } from "@/v2/apps/web/backups/scheduler";
 import { schedulerStore } from "@/v2/platform/host/scheduler/store";
 import { schedulerLockProvider } from "@/v2/platform/host/scheduler/lock-provider";

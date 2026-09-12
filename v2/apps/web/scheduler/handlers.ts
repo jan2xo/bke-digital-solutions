@@ -2,15 +2,33 @@ import "server-only";
 import type { Prisma } from "@/v2/platform/host/generated/prisma/client";
 import { env } from "@/v2/platform/host/env";
 import { db } from "@/v2/platform/host/db";
-import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
+import { dispatchEmailOutbox } from "@/v2/apps/web/email";
 import { finalizeProductDeletion } from "@/lib/product-deletion";
-import { processReadyStorageCleanupJobs } from "@/lib/storage-cleanup";
+import { processReadyStorageCleanupJobs } from "@/v2/apps/web/storage/cleanup";
 import { retryStoredWebhook } from "@/lib/webhooks";
 import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/v2/platform/host/security/crypto";
-import type { JobContext, JobSummary } from "@/lib/scheduler/types";
+import type { JobContext, JobSummary } from "@/v2/platform/scheduler";
 
 const DAY = 86_400_000;
+
+async function queueCommerceEmail(
+  tx: Prisma.TransactionClient,
+  input: {
+    type: string;
+    recipient: string;
+    subject: string;
+    payload: Record<string, unknown>;
+    deduplicationKey?: string;
+  },
+) {
+  const data = { ...input, payload: input.payload as Prisma.InputJsonValue };
+  if (input.deduplicationKey) {
+    await tx.emailOutbox.createMany({ data: [data], skipDuplicates: true });
+    return;
+  }
+  await tx.emailOutbox.create({ data });
+}
 
 export async function storageLifecycle(context: JobContext): Promise<JobSummary> {
   const due = await db.storageCleanupJob.count({ where: { status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: context.now } } });
