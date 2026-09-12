@@ -1,5 +1,5 @@
 import "server-only";
-import { synchronizeScheduledJobs } from "@/lib/scheduler/service";
+import { synchronizeScheduledJobs } from "@/v2/apps/web/scheduler/service";
 import { computeSchedulerHealth } from "@/v2/platform/scheduler";
 import { readSchedulerHealthDefinitions } from "@/v2/platform/host/scheduler/health-reader";
 import { schedulerJobDefinitions } from "./job-definitions";

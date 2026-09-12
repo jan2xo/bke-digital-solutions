@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCronEnvironment } from "@/v2/apps/web/config/environment";
 import { safeEqual } from "@/v2/platform/host/security/crypto";
-import { runDueScheduledJobs } from "@/lib/scheduler/service";
+import { runDueScheduledJobs } from "@/v2/apps/web/scheduler/service";
 
 export async function POST(request: Request) {
   const provided = request.headers.get("authorization")?.replace(/^Bearer /, "") ?? "";
