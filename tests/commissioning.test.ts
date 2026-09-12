@@ -4,12 +4,10 @@ import { describe, expect, it } from "vitest";
 describe("Digital Solutions commissioning retirement", () => {
   it("removes software commissioning from the production scheduler", () => {
     const registry = readFileSync("lib/scheduler/registry.ts", "utf8");
-    const handlers = readFileSync("lib/scheduler/handlers.ts", "utf8");
 
     expect(registry).not.toContain("commissioning.evidence");
     expect(registry).not.toContain("commissioningLifecycle");
-    expect(handlers).not.toContain("processPendingCommissioning");
-    expect(handlers).not.toContain("commissioningLifecycle");
+    expect(existsSync("lib/scheduler/handlers.ts")).toBe(false);
   });
 
   it("removes Digital Solutions owned binary verification and commissioning implementations", () => {
