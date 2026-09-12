@@ -1,15 +1,12 @@
 import "server-only";
 
-import { createHmac } from "node:crypto";
 import type { PaymentsVerifiedProviderEvent } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsProviderEventRepository } from "@bke/payments/logic/provider-event-repository";
 import { createPaymentsProviderEventIngestionCapability } from "@bke/payments/logic/provider-event-ingestion";
 import { PaymentLifecycleError } from "@bke/payments/logic/payment-errors";
-import { createPayMongoPaymentsAdapter } from "@bke/payments/providers/paymongo/paymongo-adapter";
+import { createPaymentEventVerifier } from "@/v2/apps/web/payments/compatibility-provider";
 import { db } from "@/v2/platform/host/db";
-import { env } from "@/v2/platform/host/env";
-import { resolvePayMongoConfiguration } from "@/v2/apps/web/providers/capability";
 
 type StoredProviderEvent = Readonly<{
   eventId: string;
@@ -27,51 +24,10 @@ type StoredProviderEvent = Readonly<{
   eventFingerprint?: string;
 }>;
 
-type VerifyRawBody = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[0];
-type VerifyHeaders = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[1];
 type ProviderEventClaimInput = Parameters<PaymentsProviderEventRepository["claim"]>[0];
 
 function headerRecord(headers: Headers): Readonly<Record<string, string>> {
   return Object.freeze(Object.fromEntries(headers.entries()));
-}
-
-function headerValue(headers: Readonly<Record<string, string>>, name: string): string {
-  const target = name.toLowerCase();
-  for (const [key, value] of Object.entries(headers)) {
-    if (key.toLowerCase() === target) return value;
-  }
-  return "";
-}
-
-function mockVerifier(): PaymentsProviderEventVerifier {
-  if (process.env.NODE_ENV === "production") throw new Error("V2_MOCK_PAYMENTS_FORBIDDEN_IN_PRODUCTION");
-  return Object.freeze({
-    name: "mock",
-    async verifyAndParse(rawBody: VerifyRawBody, headers: VerifyHeaders) {
-      const signature = headerValue(headers, "x-mock-signature");
-      const expected = createHmac("sha256", env.SESSION_SECRET).update(rawBody).digest("hex");
-      if (signature !== expected) throw new Error("PAYMENT_SIGNATURE_INVALID");
-      const body = JSON.parse(Buffer.from(rawBody).toString("utf8")) as Omit<StoredProviderEvent, "occurredAt"> & { occurredAt: string };
-      return { ...body, occurredAt: new Date(body.occurredAt) };
-    },
-  });
-}
-
-async function providerEventVerifier(): Promise<PaymentsProviderEventVerifier> {
-  const provider = process.env.PAYMENT_PROVIDER?.trim() || "mock";
-  if (provider === "mock") return mockVerifier();
-  if (provider !== "paymongo") throw new Error("V2_PAYMENT_PROVIDER_UNSUPPORTED");
-
-  const configuration = await resolvePayMongoConfiguration();
-  const origin = new URL(env.APP_URL).origin;
-  return createPayMongoPaymentsAdapter({
-    secretKey: configuration.secretKey,
-    webhookSecret: configuration.webhookSecret,
-    livemode: configuration.livemode,
-    paymentMethodTypes: ["qrph"],
-    successUrl: (input) => `${origin}/checkout/success?order=${encodeURIComponent(input.commercialReference)}`,
-    cancelUrl: (input) => `${origin}/checkout/cancel?order=${encodeURIComponent(input.commercialReference)}`,
-  });
 }
 
 function storedEvent(input: ProviderEventClaimInput): StoredProviderEvent {
@@ -167,33 +123,47 @@ export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promi
 }> {
   const rawBody = new Uint8Array(raw);
   const normalizedHeaders = headerRecord(headers);
-  const verifier = await providerEventVerifier();
+  const verifier = await createPaymentEventVerifier();
+  let verifiedEvent: PaymentsVerifiedProviderEvent | undefined;
+  let verificationFailure: unknown;
 
-  let event: PaymentsVerifiedProviderEvent;
-  try {
-    event = await verifier.verifyAndParse(rawBody, normalizedHeaders);
-  } catch (error) {
-    throw verificationError(error);
-  }
-
-  const capability = createPaymentsProviderEventIngestionCapability(repository, Object.freeze({
+  const capturingVerifier: PaymentsProviderEventVerifier = Object.freeze({
     name: verifier.name,
-    async verifyAndParse() { return event; },
-  }));
+    async verifyAndParse(inputRawBody, inputHeaders) {
+      try {
+        const event = await verifier.verifyAndParse(inputRawBody, inputHeaders);
+        verifiedEvent = event;
+        return event;
+      } catch (error) {
+        verificationFailure = error;
+        throw error;
+      }
+    },
+  });
+
+  const capability = createPaymentsProviderEventIngestionCapability(repository, capturingVerifier);
   const result = await capability.ingest({ rawBody, headers: normalizedHeaders });
+
   if (result.status === "REJECTED") {
+    if (!verifiedEvent) throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
     await db.webhookEvent.updateMany({
-      where: { provider: verifier.name, externalEventId: event.eventId },
+      where: { provider: verifier.name, externalEventId: verifiedEvent.eventId },
       data: { conflictCount: { increment: 1 }, lastErrorCode: "PAYMENT_EVENT_REPLAY_CONFLICT", resolutionStatus: "OPEN" },
     });
     throw new PaymentLifecycleError("PAYMENT_EVENT_REPLAY_CONFLICT");
   }
+
   if (result.status === "FAILED") {
+    if (result.code === "VERIFICATION_FAILED" && verificationFailure) {
+      throw verificationError(verificationFailure);
+    }
     throw new PaymentLifecycleError(
       result.code === "PERSISTENCE_UNAVAILABLE" ? "PAYMENT_PROCESSING_RETRYABLE" : "PAYMENT_PROCESSING_FAILED",
       result.code === "PERSISTENCE_UNAVAILABLE",
     );
   }
+
+  const event: PaymentsVerifiedProviderEvent = result.value;
   if (result.disposition === "EXISTING") {
     const existing = await db.webhookEvent.findUniqueOrThrow({
       where: { provider_externalEventId: { provider: verifier.name, externalEventId: event.eventId } },
