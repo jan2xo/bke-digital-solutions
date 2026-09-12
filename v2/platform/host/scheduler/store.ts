@@ -2,8 +2,6 @@ import "server-only";
 
 import { db } from "@/v2/platform/host/db";
 import type {
-  JobFailureClass,
-  JobSummary,
   ScheduledJobDefinition,
   ScheduledJobRun,
   SchedulerStore,
@@ -51,7 +49,7 @@ function runSnapshot(row: {
   return row;
 }
 
-export const schedulerStore: SchedulerStore = Object.freeze({
+const store: SchedulerStore = {
   async synchronizeDefinition({ job, initialNextRunAt }) {
     await db.scheduledJobDefinition.upsert({
       where: { key: job.key },
@@ -166,7 +164,7 @@ export const schedulerStore: SchedulerStore = Object.freeze({
           completedAt,
           durationMs,
           errorCode,
-          failureClass: failureClass as JobFailureClass,
+          failureClass,
           retryAt,
         },
       }),
@@ -246,4 +244,6 @@ export const schedulerStore: SchedulerStore = Object.freeze({
       data: { acknowledgedAt, acknowledgedById: actorId },
     });
   },
-});
+};
+
+export const schedulerStore: SchedulerStore = Object.freeze(store);
