@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "@/v2/platform/host/db";
 import type { SchedulerEventSink } from "@/v2/platform/scheduler";
 
-export const schedulerEventSink: SchedulerEventSink = Object.freeze({
+const eventSink: SchedulerEventSink = {
   async emit(event) {
     await db.auditLog.create({
       data: {
@@ -15,4 +15,6 @@ export const schedulerEventSink: SchedulerEventSink = Object.freeze({
       },
     });
   },
-});
+};
+
+export const schedulerEventSink: SchedulerEventSink = Object.freeze(eventSink);
