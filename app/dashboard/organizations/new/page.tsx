@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth";
+import { requireUser } from "@/v2/apps/web/auth/session";
 import { requireLegalClearance } from "@/v2/apps/web/legal/clearance";
 import { OrganizationCreateForm } from "@/components/organization-create-form";
 

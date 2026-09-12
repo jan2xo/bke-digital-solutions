@@ -1,4 +1,4 @@
-import { sha256 } from "@/lib/security/crypto";
+import { sha256 } from "@/v2/platform/host/security/crypto";
 
 /** Stable commercial identity used for limits and history. Agent binding remains separate. */
 export function canonicalIdentity(value: string, code = "INVALID_DEVICE_ID"): string {

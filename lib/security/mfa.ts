@@ -1,6 +1,6 @@
 import "server-only";
 import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 const key = () => createHash("sha256").update(env.MFA_ENCRYPTION_KEY ?? env.SESSION_SECRET).digest();

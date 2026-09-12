@@ -1,6 +1,6 @@
 import "server-only";
-import { db } from "@/lib/db";
-import { clientIp } from "@/lib/security/request";
+import { db } from "@/v2/platform/host/db";
+import { clientIp } from "@/v2/platform/host/security/request";
 
 export const PRIVACY_REQUEST_TYPES = ["ACCESS", "CORRECTION", "EXPORT", "DELETION", "RESTRICTION", "OBJECTION", "BREACH_REPORT"] as const;
 export type PrivacyRequestType = typeof PRIVACY_REQUEST_TYPES[number];

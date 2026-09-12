@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { requestBackup } from "@/v2/apps/web/backups/service";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
 import { clientIp } from "@/v2/apps/web/http/request";

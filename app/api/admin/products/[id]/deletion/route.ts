@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { audit } from "@/v2/apps/web/audit";
 import { evaluateProductDeletionEligibility, finalizeProductDeletion, requestProductDeletion, ProductDeletionError } from "@/lib/product-deletion";
 import { processStorageCleanupJob } from "@/v2/apps/web/storage/cleanup";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { apiError } from "@/v2/apps/web/http/api-error";
 

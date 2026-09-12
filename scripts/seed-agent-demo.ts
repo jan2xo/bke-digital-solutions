@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "../v2/platform/host/generated/prisma/client";
 import { randomBytes } from "node:crypto";
-import { decryptLicenseKey, encryptLicenseKey, hashLicenseKey } from "../lib/security/crypto";
+import { decryptLicenseKey, encryptLicenseKey, hashLicenseKey } from "../v2/platform/host/security/crypto";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const PRODUCT_SLUG = "bke-agent-integration-test-product";

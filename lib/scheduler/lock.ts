@@ -2,7 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { Redis as UpstashRedis } from "@upstash/redis";
 import { createClient, type RedisClientType } from "redis";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 
 const upstash = env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
   ? new UpstashRedis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN }) : null;

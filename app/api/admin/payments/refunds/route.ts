@@ -4,7 +4,7 @@ import {
 } from "@bke/payments/contracts/refund-initiation.contract";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRecentAdmin } from "@/lib/auth";
+import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";

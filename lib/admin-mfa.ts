@@ -1,11 +1,11 @@
 import "server-only";
 import { cookies } from "next/headers";
-import type { MfaChallengePurpose } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
-import { createSession } from "@/lib/auth";
+import type { MfaChallengePurpose } from "@/v2/platform/host/generated/prisma/client";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
+import { createSession } from "@/v2/apps/web/auth/session";
 import { sendAdministratorLoginCode } from "@/lib/email";
-import { hashToken, randomToken } from "@/lib/security/crypto";
+import { hashToken, randomToken } from "@/v2/platform/host/security/crypto";
 import { emailOtpForChallenge, hashEmailOtp, hashRecoveryCode, verifyHashedEmailOtp } from "@/lib/security/mfa";
 import { safeEmailFailureCode } from "@/lib/email/failures";
 import { audit } from "@/lib/audit";

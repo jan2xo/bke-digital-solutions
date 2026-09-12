@@ -1,6 +1,6 @@
 import "server-only";
 import { z } from "zod";
-import type { Prisma } from "@/generated/prisma/client";
+import type { Prisma } from "@/v2/platform/host/generated/prisma/client";
 
 const optionalAmount = z.number().int().min(100).max(2_000_000_000).optional();
 export const editionPlanSchema = z.object({

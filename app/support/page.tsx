@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { requireUser } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
 import { listCustomerTickets } from "@/v2/apps/web/support/capability";
 
 export default async function SupportPage() {

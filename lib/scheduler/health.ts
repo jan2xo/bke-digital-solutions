@@ -1,5 +1,5 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { scheduledJob, scheduledJobs } from "@/lib/scheduler/registry";
 import { synchronizeScheduledJobs } from "@/lib/scheduler/service";
 

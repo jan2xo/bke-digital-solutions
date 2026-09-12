@@ -21,7 +21,7 @@ describe("GitHub software release authority", () => {
     expect(route).toContain("RELEASE_EVIDENCE_INGESTION_RETIRED");
     expect(route).toContain("GitHub is the software release authority");
     expect(route).toContain("status: 410");
-    expect(route).not.toContain("@/lib/db");
+    expect(route).not.toContain("@/v2/platform/host/db");
     expect(route).not.toContain("supplyChainEvidence");
   });
 

@@ -69,6 +69,6 @@ describe("V2 logout session termination", () => {
     expect(source).toContain("@/v2/apps/web/http/request");
     expect(source).toContain("@/v2/apps/web/http/api-error");
     expect(source).not.toMatch(/from\s+["']@\/lib\/auth["']/);
-    expect(source).not.toContain("@/lib/security/request");
+    expect(source).not.toContain("@/v2/platform/host/security/request");
   });
 });
