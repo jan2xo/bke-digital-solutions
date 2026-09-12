@@ -5,6 +5,7 @@ import {
   normalizeCatalogProductId,
 } from "@bke/catalog/logic/product-identity-policy";
 import {
+  isVersionAccepted as isLicensingVersionAccepted,
   validateAcceptedVersionRange as validateLicensingAcceptedVersionRange,
 } from "@bke/licensing/logic/accepted-version-policy";
 
@@ -27,4 +28,5 @@ export const acceptedVersionSchema = z
   }, "Invalid semantic version");
 
 export const validateAcceptedVersionRange = validateLicensingAcceptedVersionRange;
+export const isVersionAccepted = isLicensingVersionAccepted;
 export const assertProductIdChangeAllowed = assertCatalogProductIdChangeAllowed;
