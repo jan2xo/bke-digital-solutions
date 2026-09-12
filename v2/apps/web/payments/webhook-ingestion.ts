@@ -27,6 +27,10 @@ type StoredProviderEvent = Readonly<{
   eventFingerprint?: string;
 }>;
 
+type VerifyRawBody = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[0];
+type VerifyHeaders = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[1];
+type ProviderEventClaimInput = Parameters<PaymentsProviderEventRepository["claim"]>[0];
+
 function headerRecord(headers: Headers): Readonly<Record<string, string>> {
   return Object.freeze(Object.fromEntries(headers.entries()));
 }
@@ -43,7 +47,7 @@ function mockVerifier(): PaymentsProviderEventVerifier {
   if (process.env.NODE_ENV === "production") throw new Error("V2_MOCK_PAYMENTS_FORBIDDEN_IN_PRODUCTION");
   return Object.freeze({
     name: "mock",
-    async verifyAndParse(rawBody, headers) {
+    async verifyAndParse(rawBody: VerifyRawBody, headers: VerifyHeaders) {
       const signature = headerValue(headers, "x-mock-signature");
       const expected = createHmac("sha256", env.SESSION_SECRET).update(rawBody).digest("hex");
       if (signature !== expected) throw new Error("PAYMENT_SIGNATURE_INVALID");
@@ -70,7 +74,7 @@ async function providerEventVerifier(): Promise<PaymentsProviderEventVerifier> {
   });
 }
 
-function storedEvent(input: Parameters<PaymentsProviderEventRepository["claim"]>[0]): StoredProviderEvent {
+function storedEvent(input: ProviderEventClaimInput): StoredProviderEvent {
   return Object.freeze({
     eventId: input.eventId,
     ...(input.rawType ? { rawType: input.rawType } : {}),
@@ -95,7 +99,7 @@ function storedFingerprint(value: unknown): string | null {
 }
 
 const repository: PaymentsProviderEventRepository = Object.freeze({
-  async claim(input) {
+  async claim(input: ProviderEventClaimInput) {
     const inserted = await db.webhookEvent.createMany({
       data: [{
         id: input.id,
