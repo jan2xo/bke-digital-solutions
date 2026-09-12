@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
 
+# Rerun after health consumer convergence fixes.
 jobs:
   certify:
     runs-on: ubuntu-latest
