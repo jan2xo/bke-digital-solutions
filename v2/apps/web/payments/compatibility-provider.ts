@@ -70,14 +70,13 @@ function mockEventVerifier(): PaymentsProviderEventVerifier {
 
 async function payMongoAdapter() {
   const configuration = await resolvePayMongoConfiguration();
-  const origin = appOrigin();
   return createPayMongoPaymentsAdapter({
     secretKey: configuration.secretKey,
     webhookSecret: configuration.webhookSecret,
     livemode: configuration.livemode,
     paymentMethodTypes: ["qrph"],
-    successUrl: (input) => `${origin}/checkout/success?order=${encodeURIComponent(input.sourceReference)}`,
-    cancelUrl: (input) => `${origin}/checkout/cancel?order=${encodeURIComponent(input.sourceReference)}`,
+    successUrl: (input) => `${appOrigin()}/checkout/success?order=${encodeURIComponent(input.sourceReference)}`,
+    cancelUrl: (input) => `${appOrigin()}/checkout/cancel?order=${encodeURIComponent(input.sourceReference)}`,
   });
 }
 
