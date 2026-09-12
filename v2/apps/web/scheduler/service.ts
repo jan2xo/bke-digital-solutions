@@ -14,7 +14,7 @@ import {
   securityCleanup,
   storageLifecycle,
 } from "@/lib/scheduler/handlers";
-import { backupCreation, backupRetention } from "@/lib/backups/scheduler";
+import { backupCreation, backupRetention } from "@/v2/apps/web/backups/scheduler";
 import { schedulerStore } from "@/v2/platform/host/scheduler/store";
 import { schedulerLockProvider } from "@/v2/platform/host/scheduler/lock-provider";
 import { schedulerEventSink } from "@/v2/platform/host/scheduler/event-sink";
