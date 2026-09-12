@@ -25,6 +25,8 @@ type StoredProviderEvent = Readonly<{
 }>;
 
 type ProviderEventClaimInput = Parameters<PaymentsProviderEventRepository["claim"]>[0];
+type VerifyRawBody = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[0];
+type VerifyHeaders = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[1];
 
 function headerRecord(headers: Headers): Readonly<Record<string, string>> {
   return Object.freeze(Object.fromEntries(headers.entries()));
@@ -129,7 +131,7 @@ export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promi
 
   const capturingVerifier: PaymentsProviderEventVerifier = Object.freeze({
     name: verifier.name,
-    async verifyAndParse(inputRawBody, inputHeaders) {
+    async verifyAndParse(inputRawBody: VerifyRawBody, inputHeaders: VerifyHeaders) {
       try {
         const event = await verifier.verifyAndParse(inputRawBody, inputHeaders);
         verifiedEvent = event;
