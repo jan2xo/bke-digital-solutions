@@ -30,7 +30,7 @@ jobs:
       - run: npm ci
       - run: npm run db:generate
       - run: git diff --exit-code -- v2/platform/host/generated/prisma
-      - run: npx vitest run v2/platform/scheduler/test/scheduler.test.ts v2/platform/scheduler/test/health.test.ts
+      - run: npx vitest run --config v2/vitest.config.ts v2/platform/scheduler/test/scheduler.test.ts v2/platform/scheduler/test/health.test.ts
       - run: npm run typecheck
       - name: Generate disposable build signing keys
         run: |
