@@ -5,7 +5,11 @@ import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { createEdition, editionPlanSchema } from "@/lib/edition-plans";
+import {
+  createEditionWithCommerce,
+  editionPlanInputSchema,
+  normalizeEditionPlanForHost,
+} from "@/v2/apps/web/commerce/edition-plan-management";
 import { acceptedVersionSchema, productIdSchema, validateAcceptedVersionRange } from "@/v2/apps/web/catalog/product-identity";
 
 const schema = z.object({
@@ -22,7 +26,7 @@ const schema = z.object({
   featured: z.boolean().default(false),
   imageKey: z.string().trim().max(500).optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
-  edition: editionPlanSchema,
+  edition: editionPlanInputSchema,
 }).strict();
 
 export async function GET() {
@@ -38,12 +42,13 @@ export async function POST(request: Request) {
     const admin = await requireAdmin();
     const input = schema.parse(await request.json());
     validateAcceptedVersionRange(input.minimumAcceptedVersion, input.maximumAcceptedVersion);
+    const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {
       const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
-      await createEdition(tx, created.id, input.edition);
+      await createEditionWithCommerce(tx, created.id, editionInput);
       return created;
     });
-    await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, edition: input.edition.name, planTypes: Object.entries(input.edition.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
+    await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, edition: editionInput.name, planTypes: Object.entries(editionInput.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
     return NextResponse.json(product, { status: 201 });
   } catch (error) { return apiError(error); }
 }
