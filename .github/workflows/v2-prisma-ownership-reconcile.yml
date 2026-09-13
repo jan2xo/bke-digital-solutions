@@ -1,0 +1,88 @@
+name: V2 Prisma Ownership Reconcile
+
+on:
+  pull_request:
+    branches: [feat/v2-privacy-catalog-frontier-retirement]
+    paths:
+      - ".github/workflows/v2-prisma-ownership-reconcile.yml"
+      - "prisma/schema.prisma"
+      - "scripts/normalize-generated.mjs"
+      - ".github/workflows/ci.yml"
+      - "v2/platform/host/db.ts"
+      - "v2/apps/web/catalog/product-deletion.ts"
+      - "v2/apps/web/scheduler/handlers.ts"
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Move Prisma generation ownership into V2 persistence platform
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          replacements = {
+              'prisma/schema.prisma': [
+                  ('../v2/platform/host/generated/prisma', '../v2/platform/persistence/generated/prisma'),
+              ],
+              'scripts/normalize-generated.mjs': [
+                  ('v2/platform/host/generated/prisma', 'v2/platform/persistence/generated/prisma'),
+              ],
+              '.github/workflows/ci.yml': [
+                  ('v2/platform/host/generated/prisma', 'v2/platform/persistence/generated/prisma'),
+              ],
+              'v2/platform/host/db.ts': [
+                  ('@/v2/platform/host/generated/prisma/client', '@/v2/platform/persistence/generated/prisma/client'),
+              ],
+              'v2/apps/web/catalog/product-deletion.ts': [
+                  ('@/v2/platform/host/generated/prisma/client', '@/v2/platform/persistence/generated/prisma/client'),
+              ],
+              'v2/apps/web/scheduler/handlers.ts': [
+                  ('@/v2/platform/host/generated/prisma/client', '@/v2/platform/persistence/generated/prisma/client'),
+              ],
+          }
+          for name, pairs in replacements.items():
+              path = Path(name)
+              text = path.read_text()
+              for old, new in pairs:
+                  if old not in text:
+                      raise SystemExit(f'expected ownership path not found in {name}: {old}')
+                  text = text.replace(old, new)
+              path.write_text(text)
+          PY
+          rm -rf v2/platform/host/generated/prisma
+          npm run db:generate
+      - name: Commit mechanically generated ownership move
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            prisma/schema.prisma \
+            scripts/normalize-generated.mjs \
+            .github/workflows/ci.yml \
+            v2/platform/host/db.ts \
+            v2/apps/web/catalog/product-deletion.ts \
+            v2/apps/web/scheduler/handlers.ts \
+            v2/platform/host/generated/prisma \
+            v2/platform/persistence/generated/prisma
+          if git diff --cached --quiet; then
+            echo "Prisma ownership already reconciled."
+            exit 0
+          fi
+          git commit -m "refactor(v2 persistence): own generated Prisma client"
+          git push origin "HEAD:${{ github.head_ref }}"
