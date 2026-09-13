@@ -7,7 +7,6 @@ on:
       - ".github/workflows/v2-prisma-ownership-reconcile.yml"
       - "prisma/schema.prisma"
       - "scripts/normalize-generated.mjs"
-      - ".github/workflows/ci.yml"
       - "v2/platform/host/db.ts"
       - "v2/apps/web/catalog/product-deletion.ts"
       - "v2/apps/web/scheduler/handlers.ts"
@@ -43,9 +42,6 @@ jobs:
               'scripts/normalize-generated.mjs': [
                   ('v2/platform/host/generated/prisma', 'v2/platform/persistence/generated/prisma'),
               ],
-              '.github/workflows/ci.yml': [
-                  ('v2/platform/host/generated/prisma', 'v2/platform/persistence/generated/prisma'),
-              ],
               'v2/platform/host/db.ts': [
                   ('@/v2/platform/host/generated/prisma/client', '@/v2/platform/persistence/generated/prisma/client'),
               ],
@@ -76,7 +72,6 @@ jobs:
           git add \
             prisma/schema.prisma \
             scripts/normalize-generated.mjs \
-            .github/workflows/ci.yml \
             v2/platform/host/db.ts \
             v2/apps/web/catalog/product-deletion.ts \
             v2/apps/web/scheduler/handlers.ts \
