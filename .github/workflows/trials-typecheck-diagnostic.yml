@@ -1,0 +1,32 @@
+name: Trials Typecheck Diagnostic
+
+on:
+  push:
+    branches:
+      - feat/v2-trials-release-adoption
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Capture typecheck output
+        shell: bash
+        run: |
+          set +e
+          npm run typecheck > typecheck.log 2>&1
+          code=$?
+          cat typecheck.log
+          echo "$code" > typecheck.exit
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trials-typecheck-diagnostic
+          path: |
+            typecheck.log
+            typecheck.exit
