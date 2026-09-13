@@ -35,6 +35,8 @@ describe("V2 Privacy + Catalog released-package adoption", () => {
     expect(adapter).toContain("planCatalogProductDeletionRequest");
     expect(adapter).toContain("planCatalogProductDeletionFinalization");
     expect(adapter).toContain("@/v2/apps/web/storage/cleanup");
+    expect(adapter).toContain("@/v2/platform/host/security/redaction");
+    expect(adapter).not.toContain("@/lib/redaction");
   });
 
   it("pins only immutable released Privacy and Catalog artifacts", () => {
