@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { z } from "zod";
 import {
   assertSelfServiceTrialAvailable,
   createTrialChangePlan,
@@ -9,6 +10,8 @@ import {
 } from "@bke/trials/logic/trial-policy";
 import { db } from "@/v2/platform/host/db";
 import { encryptLicenseKey, generateLicenseKey, hashLicenseKey, randomToken } from "@/v2/platform/host/security/crypto";
+
+const trialFeaturesSchema = z.array(z.string());
 
 export async function grantProductTrial(input: {
   accountId: string;
@@ -41,7 +44,7 @@ export async function grantProductTrial(input: {
           editionId: edition.id,
           productName: edition.product.name,
           editionName: edition.name,
-          features: edition.features,
+          features: trialFeaturesSchema.parse(edition.features),
           maxUsers: edition.maxUsers,
           maxDevicesPerUser: edition.maxDevicesPerUser,
           updatePolicy: edition.updatePolicy,
