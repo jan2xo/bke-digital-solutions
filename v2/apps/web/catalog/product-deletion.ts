@@ -6,6 +6,7 @@ import type {
   CatalogProductDeletionEligibility,
   CatalogProductDeletionResources,
   CatalogProductDeletionSnapshot,
+  CatalogStorageCleanupStatus,
 } from "@bke/catalog/contracts/product-deletion-policy.contract";
 import {
   CatalogProductDeletionDecisionError,
@@ -15,7 +16,7 @@ import {
 } from "@bke/catalog/logic/product-deletion-policy";
 import { Prisma } from "@/v2/platform/host/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
-import { redact } from "@/lib/redaction";
+import { redact } from "@/v2/platform/host/security/redaction";
 import { processStorageCleanupJob, storageCleanupIdempotencyKey } from "@/v2/apps/web/storage/cleanup";
 
 export { CatalogProductDeletionDecisionError as ProductDeletionError };
@@ -72,6 +73,21 @@ const emptyResources = (): CatalogProductDeletionResources => ({
   images: 0,
   storageObjects: 0,
 });
+
+function catalogCleanupStatus(value: string): CatalogStorageCleanupStatus {
+  switch (value) {
+    case "PENDING":
+    case "PROCESSING":
+    case "RETRYING":
+    case "SUCCEEDED":
+    case "FAILED":
+      return value;
+    case "CANCELLED":
+      throw new CatalogProductDeletionDecisionError("STORAGE_CLEANUP_PENDING");
+    default:
+      throw new Error("INVALID_STORAGE_CLEANUP_STATUS");
+  }
+}
 
 async function snapshotWithClient(client: EligibilityClient, productId: string): Promise<CatalogProductDeletionSnapshot> {
   const product = await client.product.findUnique({
@@ -247,7 +263,7 @@ export async function finalizeProductDeletion(input: { productId: string; actorI
     const jobs = await tx.storageCleanupJob.findMany({ where: { productId: input.productId }, select: { status: true } });
     const plan = planCatalogProductDeletionFinalization({
       snapshot,
-      cleanupStatuses: jobs.map((job) => job.status),
+      cleanupStatuses: jobs.map((job) => catalogCleanupStatus(job.status)),
     });
 
     if (plan.deleteCatalogResources) {
@@ -283,6 +299,6 @@ export async function permanentlyDeleteProduct(input: {
     where: { productId: input.productId, status: { not: "SUCCEEDED" } },
     select: { id: true },
   });
-  for (const job of jobs) await processStorageCleanupJob(job.id);
+  for (const job of jobs) await processStorageCleanupJob(job.id, input.deleteStorageObject);
   return finalizeProductDeletion({ productId: input.productId, actorId: input.actorId });
 }
