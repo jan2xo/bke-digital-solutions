@@ -1,0 +1,52 @@
+name: Materialize Edition Plan Lockfile
+
+on:
+  push:
+    branches:
+      - feat/v2-edition-plans-commerce-adoption
+    paths:
+      - ".github/workflows/edition-plan-lockfile-materialize.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Point Commerce at released 0.9.0 artifact in runner only
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'package.json';
+          const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
+          pkg.dependencies['@bke/commerce'] = 'https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.9.0/bke-commerce-0.9.0.tgz';
+          fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
+          NODE
+      - name: Regenerate lockfile from immutable release
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Verify Commerce 0.9.0 lock identity
+        shell: bash
+        run: |
+          node <<'NODE'
+          const lock = require('./package-lock.json');
+          const root = lock.packages[''].dependencies['@bke/commerce'];
+          const entry = lock.packages['node_modules/@bke/commerce'];
+          const expected = 'https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.9.0/bke-commerce-0.9.0.tgz';
+          if (root !== expected) throw new Error(`unexpected root Commerce spec: ${root}`);
+          if (entry.version !== '0.9.0') throw new Error(`unexpected Commerce version: ${entry.version}`);
+          if (entry.resolved !== expected) throw new Error(`unexpected Commerce resolved URL: ${entry.resolved}`);
+          if (!entry.integrity) throw new Error('missing Commerce integrity');
+          console.log(entry.integrity);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: edition-plan-canonical-lockfile
+          path: package-lock.json
+          if-no-files-found: error
