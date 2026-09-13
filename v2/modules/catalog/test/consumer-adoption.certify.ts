@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.3.0/bke-catalog-0.3.0.tgz";
-const EXPECTED_VERSION = "0.3.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.6.0/bke-catalog-0.6.0.tgz";
+const EXPECTED_VERSION = "0.6.0";
 const EXPECTED_SHA256 =
-  "806fa9702322cc716b3f749821bf26a7c74407df07681254ac9335580694f5aa";
+  "31d31b91928e1e33c5ed4bb1e09278e91e65ab0eeb677b3994bcd858c60113f5";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
