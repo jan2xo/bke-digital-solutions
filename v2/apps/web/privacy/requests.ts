@@ -19,6 +19,11 @@ import { clientIp } from "@/v2/platform/host/security/request";
 export { PRIVACY_REQUEST_STATUSES, PRIVACY_REQUEST_TYPES, normalizePrivacyRequestType };
 export type { PrivacyRequestStatus, PrivacyRequestTransitionStatus, PrivacyRequestType };
 
+function privacyRequestStatus(value: string): PrivacyRequestStatus {
+  if ((PRIVACY_REQUEST_STATUSES as readonly string[]).includes(value)) return value as PrivacyRequestStatus;
+  throw new Error("INVALID_PRIVACY_REQUEST_STATUS");
+}
+
 export function publicPrivacyRequestSnapshot(request: Request) {
   return normalizePrivacyRequestNetworkSnapshot({
     ipAddress: clientIp(request),
@@ -87,7 +92,7 @@ export async function transitionPrivacyRequest(input: {
     const plan = planPrivacyRequestTransition({
       actorId: input.actorId,
       accountId: current.customerAccountId,
-      currentStatus: current.status,
+      currentStatus: privacyRequestStatus(current.status),
       targetStatus: input.status,
       responseSummary: input.responseSummary,
     });
