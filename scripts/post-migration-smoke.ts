@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../v2/platform/host/generated/prisma/client";
+import { PrismaClient } from "../v2/platform/persistence/generated/prisma/client";
 import { parseEnvironment } from "../v2/platform/host/config/environment";
 
 const environment = parseEnvironment(process.env);

@@ -1,5 +1,5 @@
 import "server-only";
-import type { Prisma } from "@/v2/platform/host/generated/prisma/client";
+import type { Prisma } from "@/v2/platform/persistence/generated/prisma/client";
 import { env } from "@/v2/platform/host/env";
 import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox } from "@/v2/apps/web/email";

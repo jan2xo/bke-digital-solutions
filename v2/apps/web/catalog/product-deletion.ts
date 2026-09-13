@@ -14,7 +14,7 @@ import {
   planCatalogProductDeletionFinalization,
   planCatalogProductDeletionRequest,
 } from "@bke/catalog/logic/product-deletion-policy";
-import { Prisma } from "@/v2/platform/host/generated/prisma/client";
+import { Prisma } from "@/v2/platform/persistence/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { redact } from "@/v2/platform/host/security/redaction";
 import { processStorageCleanupJob, storageCleanupIdempotencyKey } from "@/v2/apps/web/storage/cleanup";
