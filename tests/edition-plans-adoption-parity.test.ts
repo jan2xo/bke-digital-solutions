@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { editionPlanSchema, syncEditionPlans } from "@/lib/edition-plans";
+import { CommerceEditionPlanValidationError } from "@bke/commerce/logic/edition-plan-management";
+import {
+  createEditionPlanRepository,
+  editionPlanValidationMessage,
+  normalizeEditionPlanForHost,
+  synchronizeEditionPlansWithCommerce,
+} from "@/v2/apps/web/commerce/edition-plan-management";
 
 const baseEdition = {
   name: "Professional",
@@ -12,9 +18,34 @@ const baseEdition = {
   active: true,
 };
 
-describe("edition plan adoption parity", () => {
-  it("preserves the legacy purchase-plan validation invariants", () => {
-    expect(() => editionPlanSchema.parse({
+describe("edition plan owner adoption parity", () => {
+  it("maps owner validation reasons to the legacy admin presentation", () => {
+    expect(editionPlanValidationMessage("PURCHASE_PLAN_REQUIRED")).toBe("At least one purchase plan is required");
+    expect(editionPlanValidationMessage("ANNUAL_REQUIRES_MONTHLY")).toBe("Annual requires an enabled monthly plan");
+    expect(editionPlanValidationMessage("ANNUAL_DISCOUNT_REQUIRED")).toBe("Annual discount is required");
+    expect(editionPlanValidationMessage("PERPETUAL_PRICE_REQUIRED")).toBe("Perpetual price is required");
+    expect(editionPlanValidationMessage("MONTHLY_PRICE_REQUIRED")).toBe("Monthly price is required");
+  });
+
+  it("preserves Commerce-owned defaults and trimmed blank descriptions", () => {
+    const normalized = normalizeEditionPlanForHost({
+      ...baseEdition,
+      description: "   ",
+      features: undefined,
+      active: undefined,
+      plans: {
+        perpetual: { enabled: true, amountMinor: 100 },
+        monthly: { enabled: false },
+        annual: { enabled: false },
+      },
+    });
+    expect(normalized.description).toBe("");
+    expect(normalized.features).toEqual([]);
+    expect(normalized.active).toBe(true);
+  });
+
+  it("presents typed Commerce validation errors instead of raw domain codes", () => {
+    expect(() => normalizeEditionPlanForHost({
       ...baseEdition,
       plans: {
         perpetual: { enabled: false },
@@ -22,43 +53,18 @@ describe("edition plan adoption parity", () => {
         annual: { enabled: false },
       },
     })).toThrow("At least one purchase plan is required");
-
-    expect(() => editionPlanSchema.parse({
-      ...baseEdition,
-      plans: {
-        perpetual: { enabled: true, amountMinor: 1000 },
-        monthly: { enabled: false },
-        annual: { enabled: true, discountBps: 500 },
-      },
-    })).toThrow("Annual requires an enabled monthly plan");
-
-    expect(() => editionPlanSchema.parse({
-      ...baseEdition,
-      plans: {
-        perpetual: { enabled: false },
-        monthly: { enabled: true, amountMinor: 1000 },
-        annual: { enabled: true },
-      },
-    })).toThrow("Annual discount is required");
-
-    expect(() => editionPlanSchema.parse({
-      ...baseEdition,
-      plans: {
-        perpetual: { enabled: true },
-        monthly: { enabled: false },
-        annual: { enabled: false },
-      },
-    })).toThrow("Perpetual price is required");
+    const typed = new CommerceEditionPlanValidationError("PURCHASE_PLAN_REQUIRED");
+    expect(typed.message).toBe("INVALID_EDITION_PLAN:PURCHASE_PLAN_REQUIRED");
   });
 
-  it("preserves the three-plan synchronization contract", async () => {
+  it("preserves exact Prisma three-plan synchronization writes", async () => {
     const upsert = vi.fn()
       .mockResolvedValueOnce({ id: "perpetual-plan" })
       .mockResolvedValueOnce({ id: "monthly-plan" })
       .mockResolvedValueOnce({ id: "annual-plan" });
     const tx = { purchasePlan: { upsert } } as never;
 
-    await syncEditionPlans(tx, "edition-1", {
+    await synchronizeEditionPlansWithCommerce(tx, "edition-1", {
       perpetual: { enabled: true, amountMinor: 5000 },
       monthly: { enabled: true, amountMinor: 1000 },
       annual: { enabled: true, discountBps: 500 },
@@ -80,5 +86,30 @@ describe("edition plan adoption parity", () => {
       create: { editionId: "edition-1", type: "ANNUAL", amountMinor: null, annualDiscountBps: 500, monthlySourcePlanId: "monthly-plan", renewalBehavior: "CUSTOMER_AUTHORIZED", active: true },
       update: { amountMinor: null, annualDiscountBps: 500, monthlySourcePlanId: "monthly-plan", renewalBehavior: "CUSTOMER_AUTHORIZED", active: true },
     });
+  });
+
+  it("uses create fallback 100 while omitting disabled-plan amount updates", async () => {
+    const upsert = vi.fn()
+      .mockResolvedValueOnce({ id: "perpetual-plan" })
+      .mockResolvedValueOnce({ id: "monthly-plan" })
+      .mockResolvedValueOnce({ id: "annual-plan" });
+    const tx = { purchasePlan: { upsert } } as never;
+
+    await synchronizeEditionPlansWithCommerce(tx, "edition-1", {
+      perpetual: { enabled: false },
+      monthly: { enabled: true, amountMinor: 200 },
+      annual: { enabled: false },
+    });
+
+    expect(upsert.mock.calls[0]![0].create.amountMinor).toBe(100);
+    expect(upsert.mock.calls[0]![0].update).not.toHaveProperty("amountMinor");
+  });
+
+  it("keeps the Prisma repository adapter as host-owned HOW", () => {
+    const tx = { edition: { create: vi.fn() }, purchasePlan: { upsert: vi.fn() } } as never;
+    expect(createEditionPlanRepository(tx)).toEqual(expect.objectContaining({
+      createEdition: expect.any(Function),
+      upsertPurchasePlan: expect.any(Function),
+    }));
   });
 });
