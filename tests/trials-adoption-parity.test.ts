@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { changeTrial, grantProductTrial } from "@/lib/trials";
+import { changeTrial, grantProductTrial } from "@/v2/apps/web/trials/service";
 
 describe("trial adoption parity", () => {
   it("preserves the 0..14 day grace boundary before persistence", async () => {
@@ -28,8 +28,8 @@ describe("trial adoption parity", () => {
     })).rejects.toThrow("INVALID_GRACE_PERIOD");
   });
 
-  it("locks the legacy lifecycle vocabulary needed for immutable-package adoption", () => {
-    const source = readFileSync("lib/trials.ts", "utf8");
+  it("locks the immutable owner lifecycle vocabulary", () => {
+    const source = readFileSync("node_modules/@bke/trials/logic/trial-policy.ts", "utf8");
     for (const invariant of [
       "TRIAL_ALREADY_USED_THIS_YEAR",
       "TRIAL_ISSUED",
