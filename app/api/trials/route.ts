@@ -4,7 +4,7 @@ import { requireUser } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { grantProductTrial } from "@/lib/trials";
+import { grantProductTrial } from "@/v2/apps/web/trials/service";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 import { assertAccountOperational } from "@/lib/customer-lifecycle";
