@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { releaseEvidenceSummary } from "@/lib/supply-chain/release-ui-state";
+import { releaseEvidenceSummary } from "@/v2/apps/web/releases/evidence-ui";
 type EvidenceKind = "SBOM" | "PROVENANCE" | "DEPENDENCIES" | "BACKUP" | "COMPLIANCE" | "MIGRATION";
 type BackupOption = { id: string; verifiedAt: string | null };
 export function ReleaseEvidenceControls({ versionId, blocked, backupOptions = [], approvalStatus: suppliedApprovalStatus = "Awaiting human approval" }: { versionId: string; blocked: EvidenceKind[]; backupOptions?: BackupOption[]; approvalStatus?: string }) {

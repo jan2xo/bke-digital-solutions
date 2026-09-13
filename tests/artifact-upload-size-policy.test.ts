@@ -1,25 +1,33 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const MAX_SUPPORTED_ARTIFACT_BYTES = 536_870_912; // 512 MiB
+const retiredRoutes = [
+  "app/api/admin/versions/[id]/artifacts/route.ts",
+  "app/api/admin/versions/[id]/artifacts/uploads/route.ts",
+  "app/api/admin/versions/[id]/artifacts/uploads/[uploadId]/complete/route.ts",
+];
 
-describe("direct artifact upload size policy", () => {
-  it("keeps production artifact and malware ceilings aligned at 512 MiB", () => {
-    const productionEnv = readFileSync(".env.production.example", "utf8");
-    const artifactBytes = Number(productionEnv.match(/^MAX_ARTIFACT_BYTES=(\d+)$/m)?.[1]);
-    const malwareBytes = Number(productionEnv.match(/^MALWARE_SCANNER_MAX_BYTES=(\d+)$/m)?.[1]);
-
-    expect(artifactBytes).toBe(MAX_SUPPORTED_ARTIFACT_BYTES);
-    expect(malwareBytes).toBe(MAX_SUPPORTED_ARTIFACT_BYTES);
+describe("software artifact ingestion retirement", () => {
+  it("returns a stable 410 from every former software artifact ingestion endpoint", () => {
+    for (const path of retiredRoutes) {
+      const source = readFileSync(path, "utf8");
+      expect(source).toContain("ARTIFACT_INGESTION_RETIRED");
+      expect(source).toContain("GitHub Releases is the software distribution authority");
+      expect(source).toContain("status: 410");
+    }
   });
 
-  it("keeps the direct Caddy upload ceiling above the canonical artifact ceiling", () => {
-    const caddyfile = readFileSync("Caddyfile", "utf8");
-    const uploadBlock = caddyfile.split("{$APP_DOMAIN}")[0];
-    const caddyMegabytes = Number(uploadBlock.match(/max_size\s+(\d+)MB/)?.[1]);
-    const caddyBytes = caddyMegabytes * 1_000_000;
+  it("does not hide Digital Solutions upload or verification authority behind the retired routes", () => {
+    const start = readFileSync(retiredRoutes[1], "utf8");
+    const complete = readFileSync(retiredRoutes[2], "utf8");
+    const uploader = readFileSync("components/direct-artifact-uploader.tsx", "utf8");
 
-    expect(caddyMegabytes).toBeGreaterThan(0);
-    expect(caddyBytes).toBeGreaterThanOrEqual(MAX_SUPPORTED_ARTIFACT_BYTES);
+    expect(start).not.toContain("createArtifactUploadUrl");
+    expect(start).not.toContain("artifactUploadSession.create");
+    expect(complete).not.toContain("verifyStoredArtifact");
+    expect(complete).not.toContain("ensureCommissioningRun");
+    expect(complete).not.toContain("productArtifact.create");
+    expect(uploader).not.toContain("/artifacts/uploads");
+    expect(uploader).toContain("GitHub Releases");
   });
 });

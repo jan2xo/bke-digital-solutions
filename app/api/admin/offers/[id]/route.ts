@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRecentAdmin } from "@/lib/auth";
-import { assertSameOrigin } from "@/lib/security/request";
-import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
+import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { db } from "@/v2/platform/host/db";
+import { apiError } from "@/v2/apps/web/http/api-error";
 
 const schema = z.object({ action: z.enum(["ENABLE", "DISABLE", "REVOKE"]) }).strict();
 

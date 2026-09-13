@@ -1,62 +1,75 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import type { LicensingGraceAtomicEffectTransaction } from "@bke/licensing/logic/grace-period-ports";
+import {
+  parseLicensingGraceBoolean,
+  parseLicensingGraceProduct,
+} from "@bke/licensing/logic/grace-period";
+import { createLicensingGraceAuditEffect } from "@/v2/modules/licensing/grace-audit";
 
-const mocks = vi.hoisted(() => ({
-  findMany: vi.fn(), findUnique: vi.fn(), upsert: vi.fn(), auditCreate: vi.fn(), transaction: vi.fn(),
-}));
-vi.mock("@/lib/db", () => ({
-  db: {
-    productGraceOverride: { findMany: mocks.findMany, findUnique: mocks.findUnique, upsert: mocks.upsert },
-    auditLog: { create: mocks.auditCreate }, $transaction: mocks.transaction,
-  },
-}));
-
-import { parseGraceBoolean, parseGraceProduct, readGraceStatuses, setGraceState } from "@/lib/grace-period";
-
-describe("operational grace control", () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-    mocks.transaction.mockImplementation(async (callback) => callback({
-      productGraceOverride: { findUnique: mocks.findUnique, upsert: mocks.upsert },
-      auditLog: { create: mocks.auditCreate },
-    }));
+describe("operational grace control host adoption", () => {
+  it("uses the released Licensing parser contract", () => {
+    expect(parseLicensingGraceProduct("airstack")).toBe("airstack");
+    expect(parseLicensingGraceProduct("renderdock")).toBe("renderdock");
+    expect(parseLicensingGraceBoolean("true")).toBe(true);
+    expect(parseLicensingGraceBoolean("false")).toBe(false);
+    expect(() => parseLicensingGraceProduct("unknown")).toThrow("Unknown grace product: unknown");
+    expect(() => parseLicensingGraceBoolean("on")).toThrow("Grace value must be exactly true or false.");
+    expect(() => parseLicensingGraceBoolean("1")).toThrow("Grace value must be exactly true or false.");
   });
 
-  it("accepts only supported products and explicit booleans", () => {
-    expect(parseGraceProduct("airstack")).toBe("airstack");
-    expect(parseGraceBoolean("true")).toBe(true);
-    expect(parseGraceBoolean("false")).toBe(false);
-    expect(() => parseGraceProduct("unknown")).toThrow();
-    expect(() => parseGraceBoolean("on")).toThrow();
-    expect(() => parseGraceBoolean("1")).toThrow();
+  it("maps the Licensing mutation to the exact legacy audit event inside the supplied transaction", async () => {
+    const execute = vi.fn().mockResolvedValue(undefined);
+    const transaction: LicensingGraceAtomicEffectTransaction = Object.freeze({ execute });
+    const effect = createLicensingGraceAuditEffect();
+
+    await effect.record(
+      Object.freeze({
+        productKey: "airstack",
+        oldValue: false,
+        newValue: true,
+        operationSource: "VPS_CLI",
+      }),
+      transaction,
+    );
+
+    expect(execute).toHaveBeenCalledTimes(1);
+    const [statement, values] = execute.mock.calls[0] as [string, readonly unknown[]];
+    expect(statement).toContain('INSERT INTO "AuditLog"');
+    expect(values[1]).toBeNull();
+    expect(values[2]).toBeNull();
+    expect(values[3]).toBe("GRACE_OVERRIDE_SET");
+    expect(values[4]).toBe("ProductGraceOverride");
+    expect(values[5]).toBe("airstack");
+    expect(JSON.parse(String(values[6]))).toEqual({
+      product: "airstack",
+      oldValue: false,
+      newValue: true,
+      operationSource: "VPS_CLI",
+    });
   });
 
-  it("reports missing rows as false for both products", async () => {
-    mocks.findMany.mockResolvedValue([]);
-    await expect(readGraceStatuses()).resolves.toEqual({ airstack: false, renderdock: false });
-  });
+  it("preserves idempotent-set audit facts without inventing an actor", async () => {
+    const execute = vi.fn().mockResolvedValue(undefined);
+    const effect = createLicensingGraceAuditEffect();
 
-  it("preserves independent persisted values", async () => {
-    mocks.findMany.mockResolvedValue([
-      { productKey: "airstack", graceEnabled: true },
-      { productKey: "renderdock", graceEnabled: false },
-    ]);
-    await expect(readGraceStatuses()).resolves.toEqual({ airstack: true, renderdock: false });
-  });
+    await effect.record(
+      Object.freeze({
+        productKey: "renderdock",
+        oldValue: false,
+        newValue: false,
+        operationSource: "VPS_CLI",
+      }),
+      Object.freeze({ execute }),
+    );
 
-  it("sets a value and writes an audit event without an actor", async () => {
-    mocks.findUnique.mockResolvedValue({ graceEnabled: false });
-    await expect(setGraceState("airstack", true)).resolves.toBe(false);
-    expect(mocks.upsert).toHaveBeenCalledWith(expect.objectContaining({
-      where: { productKey: "airstack" }, update: { graceEnabled: true }, create: { productKey: "airstack", graceEnabled: true },
-    }));
-    expect(mocks.auditCreate).toHaveBeenCalledWith({ data: expect.objectContaining({
-      action: "GRACE_OVERRIDE_SET", targetType: "ProductGraceOverride", targetId: "airstack",
-    }) });
-  });
-
-  it("is idempotent when setting the existing value", async () => {
-    mocks.findUnique.mockResolvedValue({ graceEnabled: false });
-    await expect(setGraceState("renderdock", false)).resolves.toBe(false);
-    expect(mocks.upsert).toHaveBeenCalledTimes(1);
+    const [, values] = execute.mock.calls[0] as [string, readonly unknown[]];
+    expect(values[1]).toBeNull();
+    expect(values[2]).toBeNull();
+    expect(values[5]).toBe("renderdock");
+    expect(JSON.parse(String(values[6]))).toMatchObject({
+      oldValue: false,
+      newValue: false,
+      operationSource: "VPS_CLI",
+    });
   });
 });

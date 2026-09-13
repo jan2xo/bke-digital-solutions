@@ -4,8 +4,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.3.0/bke-legal-0.3.0.tgz";
-const EXPECTED_VERSION = "0.3.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz";
+const EXPECTED_VERSION = "0.4.0";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -136,11 +136,23 @@ if (!nextConfigSource.includes('"@bke/legal"')) {
 if (
   !legalWorkflowSource.includes("node_modules/@bke/legal/prisma/schema.prisma") ||
   !legalWorkflowSource.includes("node_modules/@bke/legal/migrations") ||
-  !legalWorkflowSource.includes("legal-v0.3.0") ||
-  !legalWorkflowSource.includes("f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3")
+  !legalWorkflowSource.includes("legal-v0.4.0") ||
+  !legalWorkflowSource.includes("9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9")
 ) {
-  throw new Error("Legal CI must certify and compose persistence from the exact installed @bke/legal v0.3.0 artifact.");
+  throw new Error("Legal CI must certify and compose persistence from the exact installed @bke/legal v0.4.0 artifact.");
 }
+
+const productionLegalConstantConsumers = await Promise.all([
+  "../../../../app/admin/releases/[id]/page.tsx",
+  "../../../../app/api/admin/legal/route.ts",
+  "../../../../app/api/admin/supply-chain/route.ts",
+  "../../../../app/api/auth/register/route.ts",
+  "../../../../app/dashboard/accounts/[id]/page.tsx",
+].map((path) => readFile(new URL(path, import.meta.url), "utf8")));
+const productionLegalConstantSource = productionLegalConstantConsumers.join("\n");
+if (productionLegalConstantSource.includes('"@/lib/legal/constants"')) throw new Error("Production host still reaches through the legacy Legal constants module.");
+if (!productionLegalConstantSource.includes('"@bke/legal/logic/document-catalog"')) throw new Error("Production host is not consuming the released Legal document catalog.");
+if (!productionLegalConstantSource.includes('"@bke/legal/contracts/checkout-requirements.contract"')) throw new Error("Production host is not consuming the released Legal document type contract.");
 
 if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
   throw new Error("The migration compositor must support module-owned external migration roots.");

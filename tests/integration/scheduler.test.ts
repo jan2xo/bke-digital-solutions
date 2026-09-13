@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
-import { schedulerHealth } from "@/lib/scheduler/health";
-import { acquireSchedulerLock, releaseSchedulerLock } from "@/lib/scheduler/lock";
-import { runScheduledJob, setScheduledJobEnabled, synchronizeScheduledJobs } from "@/lib/scheduler/service";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
+import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
+import { schedulerLockProvider } from "@/v2/platform/host/scheduler/lock-provider";
+import { runScheduledJob, setScheduledJobEnabled, synchronizeScheduledJobs } from "@/v2/apps/web/scheduler/service";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
@@ -38,33 +38,35 @@ describe.sequential("durable scheduler", () => {
       runScheduledJob({ key: "email.outbox", trigger: "SCHEDULED", scheduledFor: window, dryRun: true }),
       runScheduledJob({ key: "email.outbox", trigger: "SCHEDULED", scheduledFor: window, dryRun: true }),
     ]);
-    for (const result of [first, second]) if ("runId" in result && result.runId) runIds.push(result.runId);
-    expect([first, second].filter((result) => "duplicate" in result)).toHaveLength(1);
+    for (const result of [first, second]) if (result && typeof result === "object" && "runId" in result && typeof result.runId === "string") runIds.push(result.runId);
+    expect([first, second].filter((result) => result && typeof result === "object" && "duplicate" in result)).toHaveLength(1);
   });
   it("releases a distributed lock only for its owner", async () => {
-    const first = await acquireSchedulerLock(`test-${suffix}`, 10_000); expect(first).not.toBeNull();
-    expect(await acquireSchedulerLock(`test-${suffix}`, 10_000)).toBeNull();
-    await releaseSchedulerLock({ key: first!.key, owner: "not-the-owner" });
-    expect(await acquireSchedulerLock(`test-${suffix}`, 10_000)).toBeNull();
-    await releaseSchedulerLock(first!);
-    const next = await acquireSchedulerLock(`test-${suffix}`, 10_000); expect(next).not.toBeNull(); await releaseSchedulerLock(next!);
+    const first = await schedulerLockProvider.acquire(`test-${suffix}`, 10_000); expect(first).not.toBeNull();
+    expect(await schedulerLockProvider.acquire(`test-${suffix}`, 10_000)).toBeNull();
+    await schedulerLockProvider.release({ key: first!.key, owner: "not-the-owner" });
+    expect(await schedulerLockProvider.acquire(`test-${suffix}`, 10_000)).toBeNull();
+    await schedulerLockProvider.release(first!);
+    const next = await schedulerLockProvider.acquire(`test-${suffix}`, 10_000); expect(next).not.toBeNull(); await schedulerLockProvider.release(next!);
   });
   it("pauses and resumes a job with audit history", async () => {
     await setScheduledJobEnabled("commerce.lifecycle", false, adminId);
-    expect((await runScheduledJob({ key: "commerce.lifecycle", trigger: "MANUAL", dryRun: true })).reason).toBe("JOB_PAUSED");
+    const paused = await runScheduledJob({ key: "commerce.lifecycle", trigger: "MANUAL", dryRun: true });
+    expect(paused).toMatchObject({ reason: "JOB_PAUSED" });
     await setScheduledJobEnabled("commerce.lifecycle", true, adminId);
     expect((await db.scheduledJobDefinition.findUniqueOrThrow({ where: { key: "commerce.lifecycle" } })).enabled).toBe(true);
+    expect(await db.auditLog.count({ where: { actorId: adminId, action: { in: ["SCHEDULER_JOB_DISABLED", "SCHEDULER_JOB_ENABLED"] } } })).toBe(2);
   });
   it("deduplicates renewal reminders and expires entitlement state", async () => {
-    const first = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if ("runId" in first && first.runId) runIds.push(first.runId);
-    const second = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if ("runId" in second && second.runId) runIds.push(second.runId);
+    const first = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (first && typeof first === "object" && "runId" in first && typeof first.runId === "string") runIds.push(first.runId);
+    const second = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (second && typeof second === "object" && "runId" in second && typeof second.runId === "string") runIds.push(second.runId);
     expect(await db.emailOutbox.count({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } })).toBe(1);
     const reminder = await db.emailOutbox.findFirstOrThrow({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } });
     expect(String((reminder.payload as Record<string, unknown>).renewalUrl)).toContain(`/dashboard/accounts/${accountId}#subscriptions`);
-    const expiration = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if ("runId" in expiration && expiration.runId) runIds.push(expiration.runId);
+    const expiration = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if (expiration && typeof expiration === "object" && "runId" in expiration && typeof expiration.runId === "string") runIds.push(expiration.runId);
     expect((await db.license.findUniqueOrThrow({ where: { id: licenseId } })).status).toBe("EXPIRED");
     expect(await db.licenseEvent.count({ where: { licenseId, type: "LICENSE_EXPIRED" } })).toBe(1);
-    const again = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if ("runId" in again && again.runId) runIds.push(again.runId);
+    const again = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if (again && typeof again === "object" && "runId" in again && typeof again.runId === "string") runIds.push(again.runId);
     expect(await db.licenseEvent.count({ where: { licenseId, type: "LICENSE_EXPIRED" } })).toBe(1);
   });
   it("reports durable job health", async () => {

@@ -1,8 +1,53 @@
 import Link from "next/link";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { AdminTable } from "@/components/admin-table";
 import { AdminActionButton } from "@/components/admin-action-button";
+
 export default async function Releases() {
-  const rows = await db.productVersion.findMany({ include: { product: true, artifacts: true, approvals: { orderBy: { createdAt: "desc" }, take: 1 }, supplyChainEvidence: true }, orderBy: { releasedAt: "desc" }, take: 250 });
-  return <section className="shell py-10"><h1 className="mb-2 text-4xl font-black">Release center</h1><p className="mb-7 text-slate-600">Promotions are forward-only. Stable/LTS releases require independently verified evidence and approval separation.</p><AdminTable headers={["Release", "Product", "Lifecycle", "Approval", "Integrity", "Assets", "Actions"]} rows={rows.map(v => [<Link className="font-bold text-[#3D75A7]" href={`/admin/releases/${v.id}`} key={v.id}>{v.version}</Link>, v.product.name, v.lifecycle, v.approvals[0]?.approvedAt ? "Approved" : "Pending", v.supplyChainEvidence ? `${v.supplyChainEvidence.malwareStatus} / ${v.supplyChainEvidence.signatureVerified ? "signed" : "unsigned"}` : "Missing evidence", String(v.artifacts.length), [<AdminActionButton key="p" url={`/api/admin/versions/${v.id}`} label="Promote" body={{ lifecycle: v.lifecycle === "DRAFT" ? "INTERNAL" : v.lifecycle === "INTERNAL" ? "ALPHA" : v.lifecycle === "ALPHA" ? "BETA" : v.lifecycle === "BETA" ? "RELEASE_CANDIDATE" : "STABLE", approve: v.lifecycle === "RELEASE_CANDIDATE" }} confirmText="Promote this release?"/>]])}/></section>;
+  const rows = await db.productVersion.findMany({
+    include: { product: true, artifacts: true },
+    orderBy: { releasedAt: "desc" },
+    take: 250,
+  });
+
+  return (
+    <section className="shell py-10">
+      <h1 className="mb-2 text-4xl font-black">Release catalog</h1>
+      <p className="mb-7 text-slate-600">
+        GitHub owns software release authority. Digital Solutions records catalog lifecycle and commercial availability only.
+      </p>
+      <AdminTable
+        headers={["Release", "Product", "Lifecycle", "Published", "Assets", "Actions"]}
+        rows={rows.map((version) => [
+          <Link className="font-bold text-[#3D75A7]" href={`/admin/releases/${version.id}`} key={version.id}>
+            {version.version}
+          </Link>,
+          version.product.name,
+          version.lifecycle,
+          version.publishedAt ? "Published" : "Hidden",
+          String(version.artifacts.length),
+          [
+            <AdminActionButton
+              key="promote"
+              url={`/api/admin/versions/${version.id}`}
+              label="Promote"
+              body={{
+                lifecycle:
+                  version.lifecycle === "DRAFT"
+                    ? "INTERNAL"
+                    : version.lifecycle === "INTERNAL"
+                      ? "ALPHA"
+                      : version.lifecycle === "ALPHA"
+                        ? "BETA"
+                        : version.lifecycle === "BETA"
+                          ? "RELEASE_CANDIDATE"
+                          : "STABLE",
+              }}
+              confirmText="Advance this catalog lifecycle?"
+            />,
+          ],
+        ])}
+      />
+    </section>
+  );
 }

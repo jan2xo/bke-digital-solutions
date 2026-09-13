@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth";
+import { db } from "@/v2/platform/host/db";
+import { requireAdmin } from "@/v2/apps/web/auth/session";
 import { ComplianceAdminControls } from "@/components/compliance-admin-controls";
 
 export default async function CompliancePage() {

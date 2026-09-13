@@ -1,9 +1,9 @@
 import { buildReleaseManifest, canonicalizeManifest, manifestHash } from "@/lib/supply-chain/manifest";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { currentApproval } from "@/lib/releases/approval";
 import { commissioningEvidenceDecision } from "@/lib/commissioning/types";
 import { isCommercialComplianceEvidence } from "@/lib/supply-chain/compliance-certification";
-import { evaluateSupplyChainSecurity } from "@/lib/supply-chain/controls";
+import { evaluateSupplyChainSecurity } from "@/v2/platform/security/supply-chain-controls";
 export type ReadinessItem = { key: string; label: string; status: "PASS" | "PENDING" | "BLOCKED"; detail: string };
 export function releaseReadiness(version: { id?: string; productId: string; version: string; product: { slug: string }; artifacts: Array<{ id: string; objectKey: string; sha256: string; sizeBytes: bigint; contentType: string }>; supplyChainEvidence: { signatureVerified: boolean; signatureKeyId: string | null; sbomReference: string | null; provenanceStatus: string; dependencyVerified: boolean; malwareStatus: string; certificateStatus?: string | null; verificationEvidence: Array<{ kind: string; result: string; artifactHash: string; metadata: unknown }> } | null; backupEvidence: string | null; complianceEvidence: string | null; migrationEvidence: string | null; approvals: Array<{ payloadHash?: string | null; approvedAt: Date | null; approvedById?: string | null; reviewedAt?: Date | null; reviewedById?: string | null; createdById?: string }> }, options: { complianceCurrent?: boolean; pendingComplianceCount?: number } = {}): { items: ReadinessItem[]; publishable: boolean; payloadHash: string } {
   const manifest = buildReleaseManifest({ productId: version.productId, productSlug: version.product.slug, versionId: version.id ?? "", version: version.version, signingKeyId: env.SUPPLY_CHAIN_SIGNING_KEY_ID, artifacts: version.artifacts.map((a) => ({ id: a.id, objectKey: a.objectKey, sha256: a.sha256, sizeBytes: Number(a.sizeBytes), contentType: a.contentType })) });

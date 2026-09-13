@@ -1,5 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
-import { parseEnvironment } from "@/lib/config/environment";
+import { parseEnvironment } from "@/v2/platform/host/config/environment";
 import { createHmac, randomBytes } from "node:crypto";
 const tokenHash = (token: string) => createHmac("sha256", parseEnvironment(process.env).SESSION_SECRET).update(token).digest("hex");
 const randomToken = (bytes = 32) => randomBytes(bytes).toString("base64url");

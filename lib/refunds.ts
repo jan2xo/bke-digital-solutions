@@ -1,5 +1,5 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { paymentProvider } from "@/lib/payments";
 import { PaymentLifecycleError, safePaymentError } from "@/lib/payments/errors";
 import type { PaymentProvider, RefundInput } from "@/lib/payments/types";

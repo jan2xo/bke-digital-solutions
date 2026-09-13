@@ -1,6 +1,6 @@
 import "server-only";
-import type { Prisma, SupportTicketCategory, SupportTicketPriority, SupportTicketState } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
+import type { Prisma, SupportTicketCategory, SupportTicketPriority, SupportTicketState } from "@/v2/platform/host/generated/prisma/client";
+import { db } from "@/v2/platform/host/db";
 import { audit, redact } from "@/lib/audit";
 import { queueCommerceEmail } from "@/lib/email";
 

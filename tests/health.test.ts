@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const readiness = vi.fn();
-vi.mock("@/lib/health", () => ({ readiness }));
+vi.mock("@/v2/apps/web/health/readiness", () => ({ readiness }));
 
 describe("operational health endpoints", () => {
   beforeEach(() => readiness.mockReset());

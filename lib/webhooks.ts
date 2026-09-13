@@ -1,17 +1,17 @@
 import "server-only";
-import { Prisma } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
+import { Prisma } from "@/v2/platform/host/generated/prisma/client";
+import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox, queueCommerceEmail } from "@/lib/email";
 import { issueEntitlements, type RenewalLeaseRequest } from "@/lib/licensing";
-import { issueCommercialLease } from "@/lib/licensing/commercial-lease";
-import { decryptLicenseKey, sha256 } from "@/lib/security/crypto";
-import { paymentProvider } from "@/lib/payments";
-import { PaymentLifecycleError, safePaymentError } from "@/lib/payments/errors";
-import type { PaymentEvent } from "@/lib/payments/types";
+import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
+import { decryptLicenseKey, sha256 } from "@/v2/platform/host/security/crypto";
+import { paymentProvider } from "@/v2/apps/web/payments/compatibility-provider";
+import { ingestPaymentWebhook } from "@/v2/apps/web/payments/webhook-ingestion";
+import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
+import type { PaymentsVerifiedProviderEvent } from "@bke/payments/logic/provider-event-verifier";
 
-type StoredEvent = Omit<PaymentEvent, "occurredAt"> & { occurredAt: string };
-const normalizedData = (event: PaymentEvent): StoredEvent => ({ ...event, occurredAt: event.occurredAt.toISOString() });
-const fromStored = (value: unknown): PaymentEvent => {
+type StoredEvent = Omit<PaymentsVerifiedProviderEvent, "occurredAt"> & { occurredAt: string; eventFingerprint?: string };
+const fromStored = (value: unknown): PaymentsVerifiedProviderEvent => {
   const event = value as StoredEvent | null;
   if (!event?.eventId || !event.type || !event.occurredAt) throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
   return { ...event, occurredAt: new Date(event.occurredAt) };
@@ -24,7 +24,7 @@ async function recordFailure(eventId: string, code: string, retryable: boolean) 
   });
 }
 
-async function resolveOrder(tx: Prisma.TransactionClient, event: PaymentEvent) {
+async function resolveOrder(tx: Prisma.TransactionClient, event: PaymentsVerifiedProviderEvent) {
   const attempt = event.externalCheckoutId ? await tx.paymentAttempt.findUnique({ where: { externalCheckoutId: event.externalCheckoutId }, include: { order: true } }) : null;
   const byReference = event.reference ? await tx.order.findUnique({ where: { number: event.reference } }) : null;
   const knownPayment = event.externalPaymentId ? await tx.payment.findUnique({ where: { provider_externalId: { provider: paymentProvider.name, externalId: event.externalPaymentId } }, include: { order: true } }) : null;
@@ -39,7 +39,7 @@ async function resolveOrder(tx: Prisma.TransactionClient, event: PaymentEvent) {
   return { order, attempt, knownPayment };
 }
 
-async function processVerifiedEvent(event: PaymentEvent) {
+async function processVerifiedEvent(event: PaymentsVerifiedProviderEvent) {
   if (event.livemode !== (process.env.PAYMONGO_LIVEMODE === "true")) throw new PaymentLifecycleError("PAYMENT_MODE_MISMATCH");
   if (event.type === "unknown") {
     await db.webhookEvent.update({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } }, data: { status: "IGNORED", lastErrorCode: "PAYMENT_EVENT_UNSUPPORTED", processedAt: new Date(), resolutionStatus: "ACKNOWLEDGED" } });
@@ -121,18 +121,9 @@ async function processVerifiedEvent(event: PaymentEvent) {
 }
 
 export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
-  const event = await paymentProvider.verifyAndParseWebhook(raw, headers);
-  const payloadHash = sha256(raw);
-  const inserted = await db.webhookEvent.createMany({ data: [{ provider: paymentProvider.name, externalEventId: event.eventId, rawEventType: event.rawType, eventType: event.type, livemode: event.livemode, payloadHash, normalizedData: normalizedData(event) as unknown as Prisma.InputJsonValue, status: "RECEIVED", occurredAt: event.occurredAt, processingAttempts: 1, lastAttemptAt: new Date(), providerCheckoutId: event.externalCheckoutId, providerPaymentId: event.externalPaymentId, providerRefundId: event.externalRefundId }], skipDuplicates: true });
-  if (inserted.count === 0) {
-    const existing = await db.webhookEvent.findUniqueOrThrow({ where: { provider_externalEventId: { provider: paymentProvider.name, externalEventId: event.eventId } } });
-    if (existing.payloadHash !== payloadHash) {
-      await db.webhookEvent.update({ where: { id: existing.id }, data: { conflictCount: { increment: 1 }, lastErrorCode: "PAYMENT_EVENT_REPLAY_CONFLICT", resolutionStatus: "OPEN" } });
-      throw new PaymentLifecycleError("PAYMENT_EVENT_REPLAY_CONFLICT");
-    }
-    if (existing.status !== "FAILED") return { duplicate: true as const };
-    await db.webhookEvent.update({ where: { id: existing.id }, data: { status: "RECEIVED", error: null, lastErrorCode: null, processedAt: null, processingAttempts: { increment: 1 }, lastAttemptAt: new Date() } });
-  }
+  const ingestion = await ingestPaymentWebhook(raw, headers);
+  const event = ingestion.event;
+  if (ingestion.duplicate) return { duplicate: true as const };
   try { return await processVerifiedEvent(event); }
   catch (error) {
     const prismaRetry = error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
