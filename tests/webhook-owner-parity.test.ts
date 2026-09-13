@@ -3,6 +3,10 @@ import { describe, expect, it } from "vitest";
 
 const webhookSource = readFileSync("lib/webhooks.ts", "utf8");
 const ingestionSource = readFileSync("v2/apps/web/payments/webhook-ingestion.ts", "utf8");
+const payMongoSource = readFileSync(
+  "node_modules/@bke/payments/providers/paymongo/paymongo-adapter.ts",
+  "utf8",
+);
 
 describe("payment webhook owner-adoption parity", () => {
   it("locks provider-mode and commercial matching precedence", () => {
@@ -16,6 +20,11 @@ describe("payment webhook owner-adoption parity", () => {
 
   it("locks the known-payment missing-currency exception to refund.updated only", () => {
     expect(webhookSource).toContain('event.type !== "payment.refund.updated" || !knownPayment');
+  });
+
+  it("locks provider normalization of the legacy payment.refunded event", () => {
+    expect(payMongoSource).toContain('rawType === "payment.refunded"');
+    expect(payMongoSource).toContain('? "payment.refunded"');
   });
 
   it("locks settlement event branches and unknown-event acknowledgement", () => {
