@@ -5,6 +5,7 @@ import {
   createTrialChangePlan,
   createTrialGrantPlan,
   normalizeSelfServiceTrialPersistenceConflict,
+  validateTrialGraceDays,
 } from "@bke/trials/logic/trial-policy";
 import { db } from "@/v2/platform/host/db";
 import { encryptLicenseKey, generateLicenseKey, hashLicenseKey, randomToken } from "@/v2/platform/host/security/crypto";
@@ -16,6 +17,7 @@ export async function grantProductTrial(input: {
   actorId: string;
   graceDays?: number;
 }) {
+  validateTrialGraceDays(input.graceDays ?? 0);
   const now = new Date();
   const key = generateLicenseKey();
 
@@ -175,6 +177,7 @@ export async function changeTrial(input: {
   action: "SET_GRACE" | "REVOKE";
   graceDays?: number;
 }) {
+  if (input.action === "SET_GRACE") validateTrialGraceDays(input.graceDays as number);
   return db.$transaction(async (tx) => {
     const trial = await tx.trialGrant.findUnique({ where: { id: input.trialId } });
     if (!trial) throw new Error("NOT_FOUND");
