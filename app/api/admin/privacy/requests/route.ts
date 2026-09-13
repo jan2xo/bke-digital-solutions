@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { transitionPrivacyRequest } from "@/lib/privacy/requests";
+import { transitionPrivacyRequest } from "@/v2/apps/web/privacy/requests";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const schema = z.object({ status: z.enum(["IN_REVIEW", "FULFILLED", "REJECTED", "CANCELLED"]), responseSummary: z.string().trim().min(2).max(2_000) }).strict();

@@ -174,44 +174,48 @@ const store: StorageCleanupStore = {
   },
 };
 
-const platform = createStorageCleanupPlatform({
-  store,
-  eligibility: {
-    async canDelete(candidate) {
-      if (candidate.type !== "ARTIFACT_REPLACEMENT" && candidate.type !== "ARTIFACT_REMOVAL") {
-        return { allowed: true };
-      }
-      const active = await getPostgresPool().query(
-        `SELECT 1 FROM "ProductArtifact"
-          WHERE "objectKey" = $1 AND "active" = true AND "removedAt" IS NULL
-          LIMIT 1`,
-        [candidate.objectKey],
-      );
-      return active.rowCount ? { allowed: false, code: "ACTIVE_ARTIFACT_REFERENCE" } : { allowed: true };
-    },
-  },
-  objects: { deleteObject },
-  events: {
-    async emit(event) {
-      await audit({
-        actorId: event.actorId ?? undefined,
-        action: event.action,
-        targetType: event.targetType,
-        targetId: event.targetId,
-        metadata: { cleanupJobId: event.jobId, attempts: event.attempts },
-      });
-      if (event.action === "STORAGE_CLEANUP_FAILED") {
-        await getPostgresPool().query(
-          `INSERT INTO "SecurityEvent"
-             ("id", "userId", "type", "outcome", "severity", "metadata", "createdAt")
-           VALUES ($1, $2, 'STORAGE_CLEANUP_FAILED'::"SecurityEventType", 'FAILURE'::"SecurityEventOutcome",
-                   'HIGH'::"SecurityEventSeverity", $3::jsonb, NOW())`,
-          [randomUUID(), event.actorId ?? null, JSON.stringify({ count: event.attempts })],
+function createPlatform(removeObject: (objectKey: string) => Promise<void>) {
+  return createStorageCleanupPlatform({
+    store,
+    eligibility: {
+      async canDelete(candidate) {
+        if (candidate.type !== "ARTIFACT_REPLACEMENT" && candidate.type !== "ARTIFACT_REMOVAL") {
+          return { allowed: true };
+        }
+        const active = await getPostgresPool().query(
+          `SELECT 1 FROM "ProductArtifact"
+            WHERE "objectKey" = $1 AND "active" = true AND "removedAt" IS NULL
+            LIMIT 1`,
+          [candidate.objectKey],
         );
-      }
+        return active.rowCount ? { allowed: false, code: "ACTIVE_ARTIFACT_REFERENCE" } : { allowed: true };
+      },
     },
-  },
-});
+    objects: { deleteObject: removeObject },
+    events: {
+      async emit(event) {
+        await audit({
+          actorId: event.actorId ?? undefined,
+          action: event.action,
+          targetType: event.targetType,
+          targetId: event.targetId,
+          metadata: { cleanupJobId: event.jobId, attempts: event.attempts },
+        });
+        if (event.action === "STORAGE_CLEANUP_FAILED") {
+          await getPostgresPool().query(
+            `INSERT INTO "SecurityEvent"
+               ("id", "userId", "type", "outcome", "severity", "metadata", "createdAt")
+             VALUES ($1, $2, 'STORAGE_CLEANUP_FAILED'::"SecurityEventType", 'FAILURE'::"SecurityEventOutcome",
+                     'HIGH'::"SecurityEventSeverity", $3::jsonb, NOW())`,
+            [randomUUID(), event.actorId ?? null, JSON.stringify({ count: event.attempts })],
+          );
+        }
+      },
+    },
+  });
+}
+
+const platform = createPlatform(deleteObject);
 
 export function queueStorageCleanup(input: QueueStorageCleanupInput) {
   return platform.queue(input);
@@ -225,8 +229,8 @@ export function retryStorageCleanupJob(id: string, actorId: string) {
   return platform.retry(id, actorId);
 }
 
-export function processStorageCleanupJob(id: string) {
-  return platform.process(id);
+export function processStorageCleanupJob(id: string, removeObject: (objectKey: string) => Promise<void> = deleteObject) {
+  return removeObject === deleteObject ? platform.process(id) : createPlatform(removeObject).process(id);
 }
 
 export function processReadyStorageCleanupJobs(limit = 20) {

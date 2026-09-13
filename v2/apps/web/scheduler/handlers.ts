@@ -3,7 +3,7 @@ import type { Prisma } from "@/v2/platform/host/generated/prisma/client";
 import { env } from "@/v2/platform/host/env";
 import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox } from "@/v2/apps/web/email";
-import { finalizeProductDeletion } from "@/lib/product-deletion";
+import { finalizeProductDeletion } from "@/v2/apps/web/catalog/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/v2/apps/web/storage/cleanup";
 import { retryStoredWebhook } from "@/lib/webhooks";
 import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";

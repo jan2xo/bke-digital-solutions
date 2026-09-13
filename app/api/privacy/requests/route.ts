@@ -7,7 +7,11 @@ import { z } from "zod";
 import { requireUser } from "@/v2/apps/web/auth/session";
 import { db } from "@/v2/platform/host/db";
 import { apiError } from "@/v2/apps/web/http/api-error";
-import { createPrivacyRequest, normalizePrivacyRequestType, PRIVACY_REQUEST_TYPES } from "@/lib/privacy/requests";
+import {
+  createPrivacyRequest,
+  normalizePrivacyRequestType,
+  PRIVACY_REQUEST_TYPES,
+} from "@/v2/apps/web/privacy/requests";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
 

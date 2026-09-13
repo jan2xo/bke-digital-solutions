@@ -50,11 +50,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-catalog-0.3.0.tgz
+          artifact=/tmp/bke-catalog-0.6.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.3.0/bke-catalog-0.3.0.tgz
-          echo "806fa9702322cc716b3f749821bf26a7c74407df07681254ac9335580694f5aa  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.6.0/bke-catalog-0.6.0.tgz
+          echo "31d31b91928e1e33c5ed4bb1e09278e91e65ab0eeb677b3994bcd858c60113f5  $artifact" | sha256sum -c -
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Catalog consumer adoption and staging retirement

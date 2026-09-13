@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
 import { audit } from "@/v2/apps/web/audit";
-import { evaluateProductDeletionEligibility, finalizeProductDeletion, requestProductDeletion, ProductDeletionError } from "@/lib/product-deletion";
+import {
+  evaluateProductDeletionEligibility,
+  finalizeProductDeletion,
+  requestProductDeletion,
+  ProductDeletionError,
+} from "@/v2/apps/web/catalog/product-deletion";
 import { processStorageCleanupJob } from "@/v2/apps/web/storage/cleanup";
 import { db } from "@/v2/platform/host/db";
 import { assertSameOrigin } from "@/v2/apps/web/http/request";
@@ -40,7 +45,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       if (admin && productId && error.code !== "NOT_FOUND") {
         await audit({
           actorId: admin.id,
-        action: error.code === "STORAGE_CLEANUP_FAILED" ? "PRODUCT_DELETE_STORAGE_CLEANUP_FAILED" : "PRODUCT_DELETE_BLOCKED",
+          action: error.code === "STORAGE_CLEANUP_FAILED" ? "PRODUCT_DELETE_STORAGE_CLEANUP_FAILED" : "PRODUCT_DELETE_BLOCKED",
           targetType: "Product",
           targetId: productId,
           metadata: {
