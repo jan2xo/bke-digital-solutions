@@ -19,6 +19,8 @@ jobs:
   reconcile:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_generation_only
     steps:
       - uses: actions/checkout@v4
         with:
