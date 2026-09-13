@@ -75,6 +75,7 @@
     "@bke/payments": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.5.0/bke-payments-0.5.0.tgz",
     "@bke/privacy": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/privacy-v0.1.0/bke-privacy-0.1.0.tgz",
     "@bke/support": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/support-v0.1.0/bke-support-0.1.0.tgz",
+    "@bke/trials": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/trials-v0.1.0/bke-trials-0.1.0.tgz",
     "@prisma/adapter-pg": "7.9.1",
     "@prisma/client": "7.9.1",
     "@upstash/redis": "^1.35.3",
