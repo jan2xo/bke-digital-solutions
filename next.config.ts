@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     "@bke/notifications",
     "@bke/support",
     "@bke/privacy",
+    "@bke/trials",
   ],
 };
 
