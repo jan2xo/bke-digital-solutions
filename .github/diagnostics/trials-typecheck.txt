@@ -1,0 +1,6 @@
+
+> bke-digital-solutions@0.1.0 typecheck
+> tsc --noEmit
+
+v2/apps/web/trials/service.ts(44,11): error TS2322: Type 'JsonValue' is not assignable to type 'readonly string[]'.
+  Type 'null' is not assignable to type 'readonly string[]'.
