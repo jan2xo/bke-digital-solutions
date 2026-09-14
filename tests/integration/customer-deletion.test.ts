@@ -2,7 +2,7 @@ import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
-import { closeCustomer, customerRetentionBlockers, CustomerLifecycleError, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, requestPrivacyDeletion, setLegalHold } from "@/lib/customer-lifecycle";
+import { closeCustomer, customerRetentionBlockers, CustomerLifecycleError, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, requestPrivacyDeletion, setLegalHold } from "@/v2/apps/web/accounts/customer-lifecycle-operations";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
