@@ -32,7 +32,6 @@ import {
 } from "@bke/licensing/logic/commercial-signing-registry";
 import { createLicensingGracePeriodCapability } from "@bke/licensing/logic/grace-period";
 import { createLicensingLicenseKeyRevealCapability } from "@bke/licensing/logic/license-key-reveal";
-import { licensingModuleManifest } from "@bke/licensing/module.manifest";
 import { createPostgresCommercialLeaseStore } from "@bke/licensing/prisma/repositories/postgres-commercial-lease-store";
 import { createPostgresCommercialSigningKeyProvider } from "@bke/licensing/prisma/repositories/postgres-commercial-signing-key-provider";
 import { createPostgresLicensingGracePeriodStore } from "@bke/licensing/prisma/repositories/postgres-grace-period-store";
@@ -89,12 +88,19 @@ export function createLicensingModule(options: LicensingModuleOptions): Capabili
   const transferPolicy = createPostgresLicensingTransferPolicyCapability(options.connectionString);
 
   const hostManifest = Object.freeze({
-    ...licensingModuleManifest,
+    moduleId: "bke.licensing",
     needs: [
       ACCOUNTS_ACCOUNT_LIFECYCLE_CAPABILITY_ID,
       CATALOG_LICENSING_VERSION_FACTS_CAPABILITY_ID,
       COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID,
       COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID,
+    ],
+    provides: [
+      LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID,
+      LICENSING_COMMERCIAL_LEASE_CAPABILITY_ID,
+      LICENSING_TRANSFER_POLICY_CAPABILITY_ID,
+      LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID,
+      LICENSING_GRACE_PERIOD_CAPABILITY_ID,
     ],
   });
 
