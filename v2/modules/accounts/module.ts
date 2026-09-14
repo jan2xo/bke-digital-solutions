@@ -1,6 +1,12 @@
 import type { CapabilityModule } from "../../contracts/capability";
 import { ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID } from "@bke/accounts/contracts/account-access.contract";
 import { ACCOUNTS_ACCOUNT_LIFECYCLE_CAPABILITY_ID } from "@bke/accounts/contracts/account-lifecycle.contract";
+import {
+  ACCOUNTS_CUSTOMER_LIFECYCLE_TRANSITION_POLICY_CAPABILITY_ID,
+} from "@bke/accounts/contracts/customer-lifecycle-transition-policy.contract";
+import {
+  ACCOUNTS_CUSTOMER_RETENTION_POLICY_CAPABILITY_ID,
+} from "@bke/accounts/contracts/customer-retention-policy.contract";
 import { ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID } from "@bke/accounts/contracts/purchase-access.contract";
 import { ACCOUNTS_INDIVIDUAL_ACCOUNT_CREATION_CAPABILITY_ID } from "@bke/accounts/contracts/individual-account-creation.contract";
 import { ACCOUNTS_INVITATION_ACCEPTANCE_CAPABILITY_ID } from "@bke/accounts/contracts/invitation-acceptance.contract";
@@ -20,6 +26,8 @@ import { ACCOUNTS_OWNERSHIP_TRANSFER_CAPABILITY_ID } from "@bke/accounts/contrac
 import { ACCOUNTS_SWITCHABLE_ACCOUNT_LIST_CAPABILITY_ID } from "@bke/accounts/contracts/switchable-account-list.contract";
 import { createAccountsAccountAccessCapability } from "@bke/accounts/logic/account-access";
 import { createAccountsAccountLifecycleCapability } from "@bke/accounts/logic/account-lifecycle";
+import { createAccountsCustomerLifecycleTransitionPolicyCapability } from "@bke/accounts/logic/customer-lifecycle-transition-policy";
+import { createAccountsCustomerRetentionPolicyCapability } from "@bke/accounts/logic/customer-retention-policy";
 import { createAccountsPurchaseAccessCapability } from "@bke/accounts/logic/purchase-access";
 import { createAccountsIndividualAccountCreationCapability } from "@bke/accounts/logic/individual-account-creation";
 import { createAccountsInvitationAcceptanceCapability } from "@bke/accounts/logic/invitation-acceptance";
@@ -66,6 +74,9 @@ export interface AccountsModuleOptions {
 }
 
 export function createAccountsModule(options: AccountsModuleOptions): CapabilityModule {
+  const customerRetentionPolicy = createAccountsCustomerRetentionPolicyCapability();
+  const customerLifecycleTransitionPolicy =
+    createAccountsCustomerLifecycleTransitionPolicyCapability();
   const individualAccountCreationRepository =
     createPostgresAccountsIndividualAccountCreationRepository(options.connectionString);
   const accountAccessRepository = createPostgresAccountsAccountAccessRepository(
@@ -193,6 +204,14 @@ export function createAccountsModule(options: AccountsModuleOptions): Capability
       {
         id: ACCOUNTS_ACCOUNT_LIFECYCLE_CAPABILITY_ID,
         value: accountLifecycle,
+      },
+      {
+        id: ACCOUNTS_CUSTOMER_RETENTION_POLICY_CAPABILITY_ID,
+        value: customerRetentionPolicy,
+      },
+      {
+        id: ACCOUNTS_CUSTOMER_LIFECYCLE_TRANSITION_POLICY_CAPABILITY_ID,
+        value: customerLifecycleTransitionPolicy,
       },
       {
         id: ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
