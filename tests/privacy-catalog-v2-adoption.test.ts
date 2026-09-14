@@ -42,7 +42,7 @@ describe("V2 Privacy + Catalog released-package adoption", () => {
   it("pins only immutable released Privacy and Catalog artifacts", () => {
     const pkg = JSON.parse(read("package.json")) as { dependencies: Record<string, string> };
     expect(pkg.dependencies["@bke/privacy"]).toBe(
-      "https://github.com/jan2xo/bke-libraries-typescript/releases/download/privacy-v0.1.0/bke-privacy-0.1.0.tgz",
+      "https://github.com/jan2xo/bke-libraries-typescript/releases/download/privacy-v0.2.0/bke-privacy-0.2.0.tgz",
     );
     expect(pkg.dependencies["@bke/catalog"]).toBe(
       "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.6.0/bke-catalog-0.6.0.tgz",
