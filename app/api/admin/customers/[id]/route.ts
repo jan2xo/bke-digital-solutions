@@ -6,7 +6,7 @@ import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 import { audit } from "@/v2/apps/web/audit";
 import { apiError } from "@/v2/apps/web/http/api-error";
 import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { closeCustomer, customerRetentionBlockers, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, reopenCustomer, requestPrivacyDeletion, setLegalHold } from "@/lib/customer-lifecycle";
+import { closeCustomer, customerRetentionBlockers, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, reopenCustomer, requestPrivacyDeletion, setLegalHold } from "@/v2/apps/web/accounts/customer-lifecycle-operations";
 import { securityEvent } from "@/v2/apps/web/security/events";
 
 const schema = z.discriminatedUnion("action", [
