@@ -11,7 +11,7 @@ import {
   type AccountsCustomerRetentionPolicyCapability,
 } from "@bke/accounts/contracts/customer-retention-policy.contract";
 import { planPrivacyCustomerMinimization } from "@bke/privacy/logic/customer-minimization";
-import { Prisma } from "@/v2/platform/host/generated/prisma/client";
+import { Prisma } from "@/v2/platform/persistence/generated/prisma/client";
 import { db } from "@/v2/platform/host/db";
 import { env } from "@/v2/platform/host/env";
 import { getV2WebApplication } from "@/v2/apps/web/runtime";
