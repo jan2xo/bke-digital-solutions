@@ -13,10 +13,10 @@ const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const [moduleSource, packageSource, lockSource, nextConfigSource, workflowSource, standaloneSource] =
   await Promise.all([
     readFile(new URL("../module.ts", import.meta.url), "utf8"),
-    readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-    readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-    readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
-    readFile(new URL("../../../../.github/workflows/v2-notifications.yml", import.meta.url), "utf8"),
+    readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../../../package-lock.json", import.meta.url), "utf8"),
+    readFile(new URL("../../../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../../../.github/workflows/v2-notifications.yml", import.meta.url), "utf8"),
     readFile(new URL("../../../apps/standalone/bootstrap.ts", import.meta.url), "utf8"),
   ]);
 
