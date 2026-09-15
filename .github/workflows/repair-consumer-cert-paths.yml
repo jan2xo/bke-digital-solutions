@@ -1,11 +1,11 @@
 name: Repair consumer certification paths
 
 on:
-  push:
-    branches:
-      - refactor/flatten-v2-layout
+  pull_request:
+    branches: [main]
     paths:
       - ".github/workflows/repair-consumer-cert-paths.yml"
+      - "modules/*/test/consumer-adoption.certify.ts"
   workflow_dispatch:
 
 permissions:
@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   repair:
+    if: github.head_ref == 'refactor/flatten-v2-layout'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
