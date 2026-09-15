@@ -10,6 +10,10 @@ import { createCheckout as createLegacyCheckout } from "@/tests/support/legacy-c
  * The old fixture still creates the host PaymentAttempt directly. Mirror that completed fixture
  * result into the released Payments owner persistence shape so integration tests exercise the same
  * settlement facts as production without moving checkout policy back into the host.
+ *
+ * Legacy mock/provider fixtures use the public order number as their provider-facing commercial
+ * reference. The transaction-bound Commerce persistence adapter accepts either the canonical
+ * internal order id or this historical order number as an opaque lookup key.
  */
 export async function createCheckout(...args: Parameters<typeof createLegacyCheckout>) {
   const result = await createLegacyCheckout(...args);
@@ -29,7 +33,7 @@ export async function createCheckout(...args: Parameters<typeof createLegacyChec
       "amountMinor", "currency", "payerSnapshot", "itemsSnapshot", "status",
       "externalCheckoutId", "checkoutUrl", "createdAt", "updatedAt"
     ) VALUES (
-      ${attempt.id}, ${sourceReference}, ${order.id}, ${attempt.provider}, ${attempt.idempotencyKey},
+      ${attempt.id}, ${sourceReference}, ${order.number}, ${attempt.provider}, ${attempt.idempotencyKey},
       ${order.totalMinor}, ${order.currency}, ${JSON.stringify(order.billingSnapshot)}::jsonb,
       ${JSON.stringify(order.items.map((item) => ({
         orderItemId: item.id,
