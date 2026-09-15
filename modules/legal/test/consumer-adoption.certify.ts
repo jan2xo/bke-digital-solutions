@@ -17,10 +17,10 @@ const [
   migrationCompositorSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../.github/workflows/v2-legal.yml", import.meta.url), "utf8"),
+  readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../package-lock.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../next.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../.github/workflows/v2-legal.yml", import.meta.url), "utf8"),
   readFile(new URL("../../../platform/persistence/migration-compositor.mjs", import.meta.url), "utf8"),
 ]);
 
@@ -143,11 +143,11 @@ if (
 }
 
 const productionLegalConstantConsumers = await Promise.all([
-  "../../../../app/admin/releases/[id]/page.tsx",
-  "../../../../app/api/admin/legal/route.ts",
-  "../../../../app/api/admin/supply-chain/route.ts",
-  "../../../../app/api/auth/register/route.ts",
-  "../../../../app/dashboard/accounts/[id]/page.tsx",
+  "../../../app/admin/releases/[id]/page.tsx",
+  "../../../app/api/admin/legal/route.ts",
+  "../../../app/api/admin/supply-chain/route.ts",
+  "../../../app/api/auth/register/route.ts",
+  "../../../app/dashboard/accounts/[id]/page.tsx",
 ].map((path) => readFile(new URL(path, import.meta.url), "utf8")));
 const productionLegalConstantSource = productionLegalConstantConsumers.join("\n");
 if (productionLegalConstantSource.includes('"@/lib/legal/constants"')) throw new Error("Production host still reaches through the legacy Legal constants module.");

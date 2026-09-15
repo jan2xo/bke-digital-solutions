@@ -19,11 +19,11 @@ const [
   graceCliSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../package-lock.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../next.config.ts", import.meta.url), "utf8"),
   readFile(
-    new URL("../../../../.github/workflows/v2-licensing.yml", import.meta.url),
+    new URL("../../../.github/workflows/v2-licensing.yml", import.meta.url),
     "utf8",
   ),
   readFile(
@@ -31,11 +31,11 @@ const [
     "utf8",
   ),
   readFile(new URL("../../../apps/web/licensing/signing-key-registry.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../app/api/licensing/keys/route.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../app/api/licenses/refresh/route.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../app/api/graceperiod/airstack/route.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../app/api/graceperiod/renderdock/route.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../scripts/grace-period.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../app/api/licensing/keys/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../app/api/licenses/refresh/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../app/api/graceperiod/airstack/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../app/api/graceperiod/renderdock/route.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../scripts/grace-period.ts", import.meta.url), "utf8"),
 ]);
 
 if (

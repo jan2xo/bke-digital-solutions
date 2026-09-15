@@ -19,11 +19,11 @@ const [
   migrationCompositorSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../package-lock.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../next.config.ts", import.meta.url), "utf8"),
   readFile(
-    new URL("../../../../.github/workflows/v2-entitlements.yml", import.meta.url),
+    new URL("../../../.github/workflows/v2-entitlements.yml", import.meta.url),
     "utf8",
   ),
   readFile(

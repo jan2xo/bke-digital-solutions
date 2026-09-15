@@ -21,11 +21,11 @@ const [
   standaloneBootstrapSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../.github/workflows/v2-catalog.yml", import.meta.url), "utf8"),
-  readFile(new URL("../../../../.github/workflows/v2-standalone.yml", import.meta.url), "utf8"),
+  readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../package-lock.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../next.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../.github/workflows/v2-catalog.yml", import.meta.url), "utf8"),
+  readFile(new URL("../../../.github/workflows/v2-standalone.yml", import.meta.url), "utf8"),
   readFile(new URL("../../../apps/web/runtime.ts", import.meta.url), "utf8"),
   readFile(new URL("../../../apps/standalone/bootstrap.ts", import.meta.url), "utf8"),
 ]);
