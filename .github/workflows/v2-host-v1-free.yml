@@ -1,20 +1,24 @@
-name: V2 Production Host - V1 Free
+name: Production Host - Legacy Free
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
       - "app/**"
+      - "apps/**"
       - "components/**"
+      - "contracts/**"
       - "lib/**"
+      - "modules/**"
+      - "platform/**"
       - "prisma/**"
+      - "tooling/**"
       - "generated/prisma/**"
       - "middleware.ts"
       - "middleware.tsx"
       - "proxy.ts"
       - "instrumentation.ts"
       - "instrumentation-client.ts"
-      - "v2/**"
       - "package.json"
       - "package-lock.json"
       - "next.config.ts"
@@ -34,5 +38,5 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Certify production host has zero V1 runtime reach-through
-        run: node v2/tooling/check-host-v1-dependencies.mjs
+      - name: Certify production host has zero legacy runtime reach-through
+        run: node tooling/check-host-v1-dependencies.mjs
