@@ -24,7 +24,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Flatten V2 namespaces into repository root
+      - name: Flatten source architecture into repository root
         shell: bash
         run: |
           set -euo pipefail
@@ -57,13 +57,10 @@ jobs:
               ("v2/tooling/", "tooling/"),
               ("v2/tsconfig.json", "tsconfig.architecture.json"),
               ("v2/vitest.config.ts", "vitest.architecture.config.ts"),
-              (".github/workflows/v2-", ".github/workflows/"),
-              ("branches: [develop/v2]", "branches: [main]"),
-              ("branches: [\"develop/v2\"]", "branches: [\"main\"]"),
           ]
 
           for name in tracked:
-              if not name:
+              if not name or name.startswith('.github/workflows/'):
                   continue
               p = Path(name)
               if not p.exists() or p.is_dir():
@@ -116,46 +113,17 @@ jobs:
             },
           });
           ''')
-
-          ci = Path(".github/workflows/ci.yml")
-          text = ci.read_text()
-          marker = "permissions:\n"
-          before, after = text.split(marker, 1)
-          name_line = before.splitlines()[0]
-          ci.write_text(f"{name_line}\non: [push, pull_request]\n\n{marker}{after}")
           PY
-
-          for file in .github/workflows/v2-*.yml; do
-            [ -e "$file" ] || continue
-            base="$(basename "$file")"
-            git mv "$file" ".github/workflows/${base#v2-}"
-          done
-
-          python <<'PY'
-          from pathlib import Path
-          for p in Path('.github/workflows').glob('*.yml'):
-              text = p.read_text()
-              text = text.replace('name: V2 Module - ', 'name: Module - ')
-              text = text.replace('name: V2 Platform - ', 'name: Platform - ')
-              text = text.replace('name: V2 Production Host - V1 Free', 'name: Production Host - Legacy Free')
-              text = text.replace('name: V2 Standalone', 'name: Standalone')
-              text = text.replace('name: V2 Composition', 'name: Composition')
-              text = text.replace('name: V2 Prisma Isolation', 'name: Prisma Isolation')
-              text = text.replace('name: V2 Echo', 'name: Echo')
-              p.write_text(text)
-          PY
-
-          rm .github/workflows/flatten-v2-layout.yml
 
           test ! -d v2
 
-          if git grep -n '@/v2/' -- ':!package-lock.json'; then
-            echo 'stale @/v2 import remains' >&2
+          if git grep -n '@/v2/' -- ':!package-lock.json' ':!.github/workflows/**'; then
+            echo 'stale @/v2 source import remains' >&2
             exit 1
           fi
 
-          if git grep -nE 'v2/(apps|contracts|modules|platform|tooling)/' -- ':!docs/**' ':!CHANGELOG.md' ':!ROADMAP.md' ':!TRUTHCHECK.md'; then
-            echo 'stale active v2 path remains' >&2
+          if git grep -nE 'v2/(apps|contracts|modules|platform|tooling)/' -- ':!.github/workflows/**' ':!docs/**' ':!CHANGELOG.md' ':!ROADMAP.md' ':!TRUTHCHECK.md'; then
+            echo 'stale active source path remains' >&2
             exit 1
           fi
 
@@ -170,12 +138,12 @@ jobs:
       - name: Typecheck architecture root
         run: npx tsc -p tsconfig.architecture.json --noEmit
 
-      - name: Commit flattened repository layout
+      - name: Commit flattened source layout
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "jan2xo"
           git config user.email "163499503+jan2xo@users.noreply.github.com"
-          git add -A
-          git commit -m "refactor: make V2 the repository root"
+          git add -A -- ':!.github/workflows/**'
+          git commit -m "refactor: make V2 source the repository root"
           git push origin HEAD:refactor/flatten-v2-layout
