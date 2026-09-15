@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/env", () => ({ env: { SESSION_SECRET: "security-dashboard-test-secret-value", TRUST_PROXY_HOPS: 1 } }));
+vi.mock("@/v2/platform/host/env", () => ({ env: { SESSION_SECRET: "security-dashboard-test-secret-value", TRUST_PROXY_HOPS: 1 } }));
 
 describe("security dashboard safety", () => {
   it("summarizes user agents without returning the raw value", async () => {
-    const { summarizeUserAgent } = await import("@/lib/security/session-display");
+    const { summarizeUserAgent } = await import("@/v2/platform/host/security/session-display");
     const raw = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit Safari/605.1.15 private-marker";
     expect(summarizeUserAgent(raw)).toBe("Safari on macOS");
     expect(summarizeUserAgent(raw)).not.toContain("private-marker");

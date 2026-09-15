@@ -5,7 +5,7 @@ import { releaseReadiness } from "@/lib/supply-chain/readiness";
 import { currentApproval } from "@/lib/releases/approval";
 import { isCommercialComplianceEvidence, validateComplianceCertification } from "@/lib/supply-chain/compliance-certification";
 
-vi.mock("@/lib/env", () => ({ env: { SUPPLY_CHAIN_SIGNING_KEY_ID: "supply-test" } }));
+vi.mock("@/v2/platform/host/env", () => ({ env: { SUPPLY_CHAIN_SIGNING_KEY_ID: "supply-test" } }));
 
 describe("customer release eligibility", () => {
   it("keeps drafts and unpublished versions out of the customer release set", () => {

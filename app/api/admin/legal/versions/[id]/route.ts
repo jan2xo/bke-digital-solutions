@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
-import { assertSameOrigin } from "@/lib/security/request";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { legalContentHash, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
 
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("EDIT"), markdownContent: z.string().min(1).max(200_000), changeSummary: z.string().trim().min(2).max(500), requiresReacceptance: z.boolean() }),

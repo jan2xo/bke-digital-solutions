@@ -1,5 +1,5 @@
 import "server-only";
-import { Prisma, type DiscountOffer } from "@/generated/prisma/client";
+import { Prisma, type DiscountOffer } from "@/v2/platform/host/generated/prisma/client";
 import { applyOfferDiscount, PRICING_VERSION } from "@/lib/pricing";
 
 export type OfferPlanContext = { id:string; type:"PERPETUAL"|"MONTHLY"|"ANNUAL"; editionId:string; productId:string; currency:string };
@@ -36,7 +36,7 @@ export function publicPromotionMatches(offer:DiscountOffer,plan:OfferPlanContext
   return true;
 }
 
-export async function findPublicPromotion(tx:Prisma.TransactionClient|typeof import("@/lib/db")["db"],plan:OfferPlanContext,now=new Date()){
+export async function findPublicPromotion(tx:Prisma.TransactionClient|typeof import("@/v2/platform/host/db")["db"],plan:OfferPlanContext,now=new Date()){
   const candidates=await tx.discountOffer.findMany({where:{type:"GENERAL_PROMOTION",status:"ACTIVE",codeNormalized:null,customerAccountId:null,revokedAt:null,startsAt:{lte:now},OR:[{endsAt:null},{endsAt:{gt:now}}]},orderBy:[{discountBps:"desc"},{createdAt:"asc"}]});
   return candidates.find(offer=>publicPromotionMatches(offer,plan,now))??null;
 }

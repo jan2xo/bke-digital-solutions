@@ -1,9 +1,9 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import type { SecurityEventType } from "@/generated/prisma/client";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
-import { clientIp } from "@/lib/security/request";
+import type { SecurityEventType } from "@/v2/platform/host/generated/prisma/client";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
+import { clientIp } from "@/v2/platform/host/security/request";
 import { securityEventDefinition } from "@/lib/security/catalog";
 
 type SafeMetadata = Record<string, string | number | boolean>;

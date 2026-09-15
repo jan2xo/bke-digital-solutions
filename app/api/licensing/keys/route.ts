@@ -1,7 +1,42 @@
 import { createPublicKey } from "node:crypto";
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { ensureCommercialSigningKey } from "@/lib/licensing/signing-registry";
-import { CLOUD_AGENT_PROTOCOL_VERSION } from "@/lib/licensing/cloud-agent-contract";
-function canonicalPublicKey(value: string) { const decoded = value.includes("BEGIN") ? value : Buffer.from(value, "base64").toString("utf8"); return createPublicKey(decoded).export({ format: "pem", type: "spki" }).toString(); }
-export async function GET() { try { await ensureCommercialSigningKey(); const keys = await db.commercialSigningKey.findMany({ where: { status: { in: ["ACTIVE", "RETIRED"] } }, orderBy: { createdAt: "asc" }, select: { keyId: true, algorithm: true, publicKey: true, status: true, activatedAt: true, retiredAt: true } }); const active = keys.filter((key) => key.status === "ACTIVE"); if (active.length !== 1 || keys.some((key) => key.algorithm !== "Ed25519")) throw new Error("INVALID_SIGNING_KEY_REGISTRY"); return NextResponse.json({ keys: keys.filter((key) => key.algorithm === "Ed25519").map((key) => ({ key_id: key.keyId, algorithm: key.algorithm, public_key: canonicalPublicKey(key.publicKey) })) }, { headers: { "cache-control": "public, max-age=300", "x-bke-licensing-version": CLOUD_AGENT_PROTOCOL_VERSION } }); } catch { return NextResponse.json({ error: "LEASE_SIGNING_NOT_CONFIGURED" }, { status: 503 }); } }
+import { CLOUD_AGENT_PROTOCOL_VERSION } from "@/v2/apps/web/licensing/cloud-agent-contract";
+import {
+  ensureLicensingSigningKey,
+  listPublicLicensingSigningKeys,
+} from "@/v2/apps/web/licensing/signing-key-registry";
+
+function canonicalPublicKey(value: string) {
+  const decoded = value.includes("BEGIN") ? value : Buffer.from(value, "base64").toString("utf8");
+  return createPublicKey(decoded).export({ format: "pem", type: "spki" }).toString();
+}
+
+export async function GET() {
+  try {
+    await ensureLicensingSigningKey();
+    const keys = await listPublicLicensingSigningKeys();
+    const active = keys.filter((key) => key.status === "ACTIVE");
+    if (active.length !== 1 || keys.some((key) => key.algorithm !== "Ed25519")) {
+      throw new Error("INVALID_SIGNING_KEY_REGISTRY");
+    }
+    return NextResponse.json(
+      {
+        keys: keys
+          .filter((key) => key.algorithm === "Ed25519")
+          .map((key) => ({
+            key_id: key.keyId,
+            algorithm: key.algorithm,
+            public_key: canonicalPublicKey(key.publicKey),
+          })),
+      },
+      {
+        headers: {
+          "cache-control": "public, max-age=300",
+          "x-bke-licensing-version": CLOUD_AGENT_PROTOCOL_VERSION,
+        },
+      },
+    );
+  } catch {
+    return NextResponse.json({ error: "LEASE_SIGNING_NOT_CONFIGURED" }, { status: 503 });
+  }
+}

@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { AccountAuthorizationError, assertLastOwnerPreserved, requireAccountCapability, requireAccountAccess, type AccountRole, type AccountCapability } from "@/lib/authorization";
 
 export class OrganizationError extends Error {

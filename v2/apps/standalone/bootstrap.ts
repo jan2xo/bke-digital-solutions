@@ -1,5 +1,6 @@
 import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-attempt-provider";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
+import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconciliation-provider";
 import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
 import { createAccountsModule } from "../../modules/accounts/module";
 import { createCatalogModule } from "../../modules/catalog/module";
@@ -43,6 +44,13 @@ const inertRefundProvider: PaymentsRefundProvider = {
   },
 };
 
+const inertReconciliationProvider: PaymentsReconciliationProvider = {
+  name: "standalone-certification",
+  async retrievePayment() {
+    throw new Error("Standalone composition boot must not invoke payment reconciliation.");
+  },
+};
+
 const application = await composeCapabilities([
   createIdentityModule({ connectionString, sessionSecret }),
   createAccountsModule({ connectionString }),
@@ -54,6 +62,7 @@ const application = await composeCapabilities([
     provider: inertCheckoutProvider,
     eventVerifier: inertEventVerifier,
     refundProvider: inertRefundProvider,
+    reconciliationProvider: inertReconciliationProvider,
   }),
   createEntitlementsModule({ connectionString }),
   createLicensingModule({ connectionString, licensePepper }),

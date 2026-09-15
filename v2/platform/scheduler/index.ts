@@ -2,6 +2,13 @@ export { createSchedulerEngine } from "./scheduler";
 export type { SchedulerEngine } from "./scheduler";
 export { createSchedulerRegistry } from "./registry";
 export type { SchedulerRegistry } from "./registry";
+export { computeSchedulerHealth } from "./health";
+export type {
+  SchedulerHealthDefinition,
+  SchedulerHealthJob,
+  SchedulerHealthRun,
+  SchedulerHealthStatus,
+} from "./health";
 export {
   boundedJobSummary,
   classifyJobFailure,

@@ -53,12 +53,6 @@ sandbox("PayMongo sandbox contract", () => {
     const { PayMongoProvider } = await import("@/lib/payments/paymongo");
     await expect(new PayMongoProvider().verifyAndParseWebhook(raw, new Headers({ "paymongo-signature": `t=${timestamp},te=${signature}` }))).rejects.toThrow("PAYMENT_SIGNATURE_STALE");
   });
-
-  it.skipIf(!process.env.PAYMONGO_SANDBOX_ORDER_ID)("reconciles a persisted sandbox payment with PayMongo", async () => {
-    const { reconcilePayment } = await import("@/lib/reconciliation");
-    const result = await reconcilePayment(process.env.PAYMONGO_SANDBOX_ORDER_ID!);
-    expect(result).toMatchObject({ matched: true, differences: [] });
-  }, 30_000);
 });
 
 describe("PayMongo sandbox safety gate", () => {

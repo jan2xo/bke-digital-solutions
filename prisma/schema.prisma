@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../v2/platform/persistence/generated/prisma"
 }
 
 datasource db {

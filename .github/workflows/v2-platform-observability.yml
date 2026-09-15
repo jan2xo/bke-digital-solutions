@@ -5,6 +5,10 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/platform/observability/**"
+      - "v2/apps/web/observability.ts"
+      - "app/admin/observability/page.tsx"
+      - "app/api/admin/observability/route.ts"
+      - "app/api/health/metrics/route.ts"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
@@ -41,6 +45,14 @@ jobs:
           set -euo pipefail
           if grep -R -nE '(application|database|valkey|object_storage|scheduler|backups|payments|licensing|email|security|infrastructure)' v2/platform/observability --include='*.ts' --exclude='*.test.ts'; then
             echo "V2 Observability must aggregate publisher-owned health, not own domain cards."
+            exit 1
+          fi
+      - name: Reject legacy Observability implementation reach-through in web adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE '(@/lib/observability|generated/prisma|from ["'"'"']@prisma/)' v2/apps/web/observability.ts; then
+            echo "The V2 web Observability adapter must not reach through the retired V1 Observability implementation or generated Prisma."
             exit 1
           fi
       - name: Enforce V2 module boundaries

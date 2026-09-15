@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { parseEnvironment } from "@/lib/config/environment";
+import { parseEnvironment } from "@/v2/platform/host/config/environment";
 
 const base = {
   NODE_ENV: "production",

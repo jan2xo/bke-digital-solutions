@@ -1,4 +1,4 @@
-import type { ScheduledJobTrigger } from "@/generated/prisma/client";
+import type { ScheduledJobTrigger } from "@/v2/platform/host/generated/prisma/client";
 
 export type JobCategory = "STORAGE" | "EMAIL" | "COMMERCE" | "ENTITLEMENTS" | "CUSTOMER" | "SECURITY" | "PAYMENTS" | "BACKUP" | "COMMISSIONING";
 export type JobFailureClass = "TRANSIENT" | "PERMANENT" | "CONFIGURATION" | "DEPENDENCY_UNAVAILABLE" | "VALIDATION" | "CONCURRENCY_CONFLICT";

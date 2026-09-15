@@ -6,6 +6,7 @@ import {
   IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
 } from "@bke/identity/contracts/identity.contract";
 import { IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/login-mfa-challenge.contract";
+import { IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID } from "@bke/identity/contracts/login-mfa-challenge-reissue.contract";
 import { IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID } from "@bke/identity/contracts/login-mfa-verification.contract";
 import { IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID } from "@bke/identity/contracts/magic-login-consume.contract";
 import { IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID } from "@bke/identity/contracts/magic-login-request.contract";
@@ -19,6 +20,7 @@ import { IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID } from "@bke/identity/
 import { IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID } from "@bke/identity/contracts/password-reset-request.contract";
 import { IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/recent-auth-challenge.contract";
 import { IDENTITY_RECENT_AUTH_COMPLETION_CAPABILITY_ID } from "@bke/identity/contracts/recent-auth-completion.contract";
+import { IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID } from "@bke/identity/contracts/session-administration.contract";
 import { IDENTITY_SESSION_TERMINATION_CAPABILITY_ID } from "@bke/identity/contracts/session-termination.contract";
 import { IDENTITY_SESSION_VALIDATION_CAPABILITY_ID } from "@bke/identity/contracts/session-validation.contract";
 import { IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/session.contract";
@@ -26,6 +28,7 @@ import { createIdentityEmailVerificationCompletionCapability } from "@bke/identi
 import { createIdentityEmailVerificationIssuanceCapability } from "@bke/identity/logic/email-verification-issuance";
 import { createIdentityLookupCapability } from "@bke/identity/logic/identity-service";
 import { createIdentityLoginMfaChallengeIssuanceCapability } from "@bke/identity/logic/login-mfa-challenge-issuance";
+import { createIdentityLoginMfaChallengeReissueCapability } from "@bke/identity/logic/login-mfa-challenge-reissue";
 import { createIdentityLoginMfaVerificationCapability } from "@bke/identity/logic/login-mfa-verification";
 import { createIdentityMagicLoginConsumeCapability } from "@bke/identity/logic/magic-login-consume";
 import { createIdentityMagicLoginRequestCapability } from "@bke/identity/logic/magic-login-request";
@@ -50,6 +53,7 @@ import { createHmacSessionTokenProvider } from "@bke/identity/providers/hmac-ses
 import { createIdentityRecentAuthChallengeIssuanceCapability } from "@bke/identity/logic/recent-auth-challenge-issuance";
 import { createIdentityRecentAuthCompletionCapability } from "@bke/identity/logic/recent-auth-completion";
 import { createIdentitySessionIssuanceCapability } from "@bke/identity/logic/session-issuance";
+import { createIdentitySessionAdministrationCapability } from "@bke/identity/logic/session-administration";
 import { createIdentitySessionTerminationCapability } from "@bke/identity/logic/session-termination";
 import { createIdentitySessionValidationCapability } from "@bke/identity/logic/session-validation";
 import { identityModuleManifest } from "@bke/identity/module.manifest";
@@ -71,6 +75,7 @@ import { createPostgresIdentityRecentAuthChallengeRepository } from "@bke/identi
 import { createPostgresIdentityRecentAuthCompletionRepository } from "@bke/identity/prisma/repositories/postgres-recent-auth-completion-repository";
 import { createPostgresIdentityRepository } from "@bke/identity/prisma/repositories/postgres-identity-repository";
 import { createPostgresIdentitySessionRepository } from "@bke/identity/prisma/repositories/postgres-session-repository";
+import { createPostgresIdentitySessionAdministrationRepository } from "@bke/identity/prisma/repositories/postgres-session-administration-repository";
 import { createPostgresIdentitySessionTerminationRepository } from "@bke/identity/prisma/repositories/postgres-session-termination-repository";
 
 export interface IdentityModuleOptions {
@@ -93,6 +98,8 @@ export function createIdentityModule(
   );
   const sessionTerminationRepository =
     createPostgresIdentitySessionTerminationRepository(options.connectionString);
+  const sessionAdministrationRepository =
+    createPostgresIdentitySessionAdministrationRepository(options.connectionString);
   const loginMfaRepository = createPostgresIdentityLoginMfaRepository(
     options.connectionString,
   );
@@ -157,9 +164,29 @@ export function createIdentityModule(
     sessionRepository,
     sessionTokenProvider,
   );
+  const sessionAdministration = createIdentitySessionAdministrationCapability(
+    sessionAdministrationRepository,
+  );
+  const loginMfaChallengeIssuance = createIdentityLoginMfaChallengeIssuanceCapability(
+    loginMfaChallengeRepository,
+    emailMfaChallengeMaterialProvider,
+  );
+  const loginMfaChallengeReissue = createIdentityLoginMfaChallengeReissueCapability(
+    loginMfaRepository,
+    emailMfaProofProvider,
+    loginMfaChallengeIssuance,
+  );
+  const hostManifest = Object.freeze({
+    ...identityModuleManifest,
+    provides: [
+      ...identityModuleManifest.provides,
+      IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
+      IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
+    ],
+  });
 
   return Object.freeze({
-    manifest: identityModuleManifest,
+    manifest: hostManifest,
     start() {
       return [
         {
@@ -223,6 +250,10 @@ export function createIdentityModule(
           value: sessionValidation,
         },
         {
+          id: IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
+          value: sessionAdministration,
+        },
+        {
           id: IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
           value: createIdentitySessionTerminationCapability(
             sessionTerminationRepository,
@@ -238,10 +269,11 @@ export function createIdentityModule(
         },
         {
           id: IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
-          value: createIdentityLoginMfaChallengeIssuanceCapability(
-            loginMfaChallengeRepository,
-            emailMfaChallengeMaterialProvider,
-          ),
+          value: loginMfaChallengeIssuance,
+        },
+        {
+          id: IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
+          value: loginMfaChallengeReissue,
         },
         {
           id: IDENTITY_MFA_ENROLLMENT_START_CAPABILITY_ID,

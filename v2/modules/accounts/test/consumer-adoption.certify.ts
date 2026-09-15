@@ -2,8 +2,8 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.2.0/bke-accounts-0.2.0.tgz";
-const EXPECTED_VERSION = "0.2.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.3.0/bke-accounts-0.3.0.tgz";
+const EXPECTED_VERSION = "0.3.0";
 
 const [
   moduleSource,
@@ -38,11 +38,18 @@ if (
 
 const requiredPackageSurfaces = [
   "@bke/accounts/contracts/",
+  "@bke/accounts/contracts/account-lifecycle.contract",
+  "ACCOUNTS_ACCOUNT_LIFECYCLE_CAPABILITY_ID",
   "@bke/accounts/contracts/purchase-access.contract",
   "@bke/accounts/logic/",
+  "@bke/accounts/logic/account-lifecycle",
+  "createAccountsAccountLifecycleCapability",
   "@bke/accounts/logic/purchase-access",
   "@bke/accounts/providers/",
   "@bke/accounts/prisma/repositories/",
+  "@bke/accounts/prisma/repositories/postgres-account-lifecycle-repository",
+  "createPostgresAccountsAccountLifecycleRepository",
+  "accountLifecycle",
   "@bke/accounts/module.manifest",
 ];
 for (const marker of requiredPackageSurfaces) {

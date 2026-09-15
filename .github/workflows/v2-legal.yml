@@ -5,6 +5,15 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/modules/legal/**"
+      - "v2/apps/web/legal/**"
+      - "lib/legal/service.ts"
+      - "lib/legal/constants.ts"
+      - "app/admin/releases/[id]/page.tsx"
+      - "app/api/admin/legal/route.ts"
+      - "app/api/admin/supply-chain/route.ts"
+      - "app/api/auth/register/route.ts"
+      - "app/dashboard/accounts/[id]/page.tsx"
+      - "tests/legal.test.ts"
       - "v2/platform/persistence/migration-compositor.mjs"
       - "v2/platform/composition/**"
       - "v2/contracts/**"
@@ -50,11 +59,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-legal-0.3.0.tgz
+          artifact=/tmp/bke-legal-0.4.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.3.0/bke-legal-0.3.0.tgz
-          echo "f331fe0a813a7f8d0e139a389ee15f5ae3a060234d483d465abbef3e59301ae3  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz
+          echo "9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9  $artifact" | sha256sum -c -
+      - name: Reject legacy Legal implementation reach-through in web adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib/legal|generated/prisma|from ["'"'"']@prisma/)' v2/apps/web/legal --include='*.ts'; then
+            echo "V2 web Legal adapters must route Legal behavior through released @bke/legal capabilities."
+            exit 1
+          fi
       - name: Enforce V2 module boundaries
         run: node v2/tooling/check-module-boundaries.mjs
       - name: Certify Legal standalone consumer adoption and staging retirement

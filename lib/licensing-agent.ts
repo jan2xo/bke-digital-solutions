@@ -1,6 +1,6 @@
 import "server-only";
 import { createPrivateKey, createPublicKey, generateKeyPairSync, sign, verify } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 
 export type LeasePayload = { license_id: string; lease_id: string; generation: number; server_revision: number; product_id: string; installation_id: string; device_id: string; version: string; issuer: string; issued_at: string; not_before: string; expires_at: string; key_id: string; algorithm: "Ed25519"; revoked: boolean; superseded_by: string | null };
 const testKeys = !env.LICENSE_SIGNING_PRIVATE_KEY && env.NODE_ENV !== "production" ? generateKeyPairSync("ed25519") : null;

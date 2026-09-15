@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { COMPLIANCE_STATUS_LABELS, COMPLIANCE_STATUSES } from "@/lib/compliance";
+import { COMPLIANCE_STATUS_LABELS, COMPLIANCE_STATUSES } from "@/v2/apps/web/compliance/statuses";
 
 export function ComplianceAdminControls({ requirementId, currentStatus }: { requirementId: string; currentStatus: string }) {
   const router = useRouter();

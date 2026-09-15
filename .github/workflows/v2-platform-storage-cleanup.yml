@@ -5,6 +5,7 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/platform/storage-cleanup/**"
+      - "v2/apps/web/storage/cleanup.ts"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"
@@ -33,6 +34,14 @@ jobs:
           set -euo pipefail
           if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' v2/platform/storage-cleanup --include='*.ts'; then
             echo "V2 Storage Cleanup must receive persistence, storage, and eligibility through ports."
+            exit 1
+          fi
+      - name: Reject legacy persistence reach-through in web adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE '(@/lib|generated/prisma|from ["'"'"']@prisma/)' v2/apps/web/storage/cleanup.ts; then
+            echo "V2 web Storage Cleanup adapter must use V2 ports and V2 PostgreSQL persistence only."
             exit 1
           fi
       - name: Reject domain deletion-policy ownership

@@ -5,6 +5,7 @@ on:
     branches: [develop/v2]
     paths:
       - "v2/platform/email/**"
+      - "v2/apps/web/email.ts"
       - "v2/tooling/check-module-boundaries.mjs"
       - "v2/tsconfig.json"
       - "v2/vitest.config.ts"

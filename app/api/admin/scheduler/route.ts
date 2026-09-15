@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { apiError } from "@/lib/http";
-import { schedulerHealth } from "@/lib/scheduler/health";
-import { acknowledgeScheduledFailure, retryScheduledFailure, runScheduledJob, setScheduledJobEnabled } from "@/lib/scheduler/service";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
+import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
+import { acknowledgeScheduledFailure, retryScheduledFailure, runScheduledJob, setScheduledJobEnabled } from "@/v2/apps/web/scheduler/service";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
 
 const inputSchema = z.discriminatedUnion("action", [
   z.object({ action: z.enum(["RUN", "DRY_RUN", "PAUSE", "RESUME"]), jobKey: z.string().min(3).max(100) }),

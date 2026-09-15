@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { claimBackupOperation, recoverAbandonedBackupOperations } from "@/lib/backups/service";
 import { executeBackupOperation } from "@/lib/backups/engine";
 

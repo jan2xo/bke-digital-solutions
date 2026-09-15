@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { ProductDeletionDependencies, ProductDeletionEligibility } from "@/lib/product-deletion";
+import type {
+  CatalogProductDeletionDependencies as ProductDeletionDependencies,
+  CatalogProductDeletionEligibility as ProductDeletionEligibility,
+} from "@bke/catalog/contracts/product-deletion-policy.contract";
 
 const labels: Record<keyof ProductDeletionDependencies, string> = {
   carts: "Customer carts",
@@ -72,7 +75,7 @@ export function AdminProductDelete({ productId, productName }: { productId: stri
   }
 
   const blockers = eligibility
-    ? Object.entries(eligibility.blockingDependencies).filter((entry): entry is [keyof ProductDeletionDependencies, number] => entry[1] > 0)
+    ? (Object.entries(eligibility.blockingDependencies) as [keyof ProductDeletionDependencies, number][]).filter(([, count]) => count > 0)
     : [];
 
   return <>

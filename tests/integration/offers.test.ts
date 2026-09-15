@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createHmac } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 let adminId = "";
@@ -30,7 +30,7 @@ async function confirmPayment(orderId: string) {
   };
   const raw = Buffer.from(JSON.stringify(event));
   const signature = createHmac("sha256", process.env.SESSION_SECRET!).update(raw).digest("hex");
-  const { processPaymentWebhook } = await import("@/lib/webhooks");
+  const { processPaymentWebhook } = await import("@/v2/apps/web/payments/webhook-processing");
   await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }));
   expect(await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }))).toEqual({ duplicate: true });
 }

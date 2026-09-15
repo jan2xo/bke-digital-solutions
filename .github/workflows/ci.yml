@@ -41,7 +41,7 @@ jobs:
         env:
           DEPLOYMENT_ENV: test
       - run: npm run db:generate
-      - run: git diff --exit-code -- generated/prisma
+      - run: git diff --exit-code -- v2/platform/persistence/generated/prisma
       - run: npx prisma validate
       - run: npm run db:deploy
       - run: npm run db:status

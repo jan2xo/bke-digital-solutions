@@ -1,14 +1,14 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
 
 vi.hoisted(() => {
   process.env.PAYMENT_PROVIDER = "mock";
   process.env.EMAIL_PROVIDER = "log";
   process.env.BKE_DISABLE_EXTERNAL_EMAIL = "true";
 });
-vi.mock("@/lib/env", () => ({ env: { DATABASE_URL: process.env.DATABASE_URL, NODE_ENV: "test", SESSION_SECRET: process.env.SESSION_SECRET } }));
+vi.mock("@/v2/platform/host/env", () => ({ env: { DATABASE_URL: process.env.DATABASE_URL, NODE_ENV: "test", SESSION_SECRET: process.env.SESSION_SECRET } }));
 vi.mock("@/lib/email", () => ({ sendMagicLink: vi.fn().mockResolvedValue(undefined) }));
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });

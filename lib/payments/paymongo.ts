@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { env } from "@/lib/env";
+import { env } from "@/v2/platform/host/env";
 import { resolvePayMongoConfiguration } from "@/lib/provider-config/service";
 import type { ResolvedPayMongoConfiguration } from "@/lib/provider-config/types";
 import type { CheckoutInput, PaymentEvent, PaymentProvider, ProviderPayment } from "./types";

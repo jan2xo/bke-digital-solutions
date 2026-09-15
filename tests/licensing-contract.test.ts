@@ -30,7 +30,7 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
   });
 
   it("validates the exact signed lease envelope and strict payload", async () => {
-    const { leaseEnvelopeSchema, leasePayloadSchema, parseLeaseEnvelope } = await import("@/lib/licensing/cloud-agent-contract");
+    const { leaseEnvelopeSchema, leasePayloadSchema, parseLeaseEnvelope } = await import("@/v2/apps/web/licensing/cloud-agent-contract");
     const payload = JSON.stringify({ license_id: "lic-1", lease_id: "l1", generation: 1, server_revision: 1, product_id: "p1", installation_id: "i1", device_id: "d1", version: "1.0.0", issuer: "BKE Digital Solutions", issued_at: "2026-01-01T00:00:00.000Z", not_before: "2026-01-01T00:00:00.000Z", expires_at: "2026-02-01T00:00:00.000Z", key_id: "k1", algorithm: "Ed25519", revoked: false, superseded_by: null });
     const envelope = { payload, signature: "sig", key_id: "k1", algorithm: "Ed25519" };
     expect(parseLeaseEnvelope(envelope)).toEqual(envelope);
@@ -39,7 +39,7 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
   });
 
   it("enforces the versioned cloud boundary and lifecycle request rules", async () => {
-    const { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, cloudAgentRequestSchema, validateLifecycleRequest, CloudAgentProtocolError } = await import("@/lib/licensing/cloud-agent-contract");
+    const { CLOUD_AGENT_PROTOCOL_VERSION, requireCloudAgentVersion, cloudAgentRequestSchema, validateLifecycleRequest, CloudAgentProtocolError } = await import("@/v2/apps/web/licensing/cloud-agent-contract");
     expect(CLOUD_AGENT_PROTOCOL_VERSION).toBe("bke.licensing.v3");
     expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v2" } }))).toThrow("UNSUPPORTED_PROTOCOL_VERSION");
     expect(() => requireCloudAgentVersion(new Request("http://local", { headers: { "x-bke-licensing-version": "bke.licensing.v3" } }))).not.toThrow();
@@ -49,18 +49,20 @@ describe("Digital Solutions identity and Cloud-Agent contract", () => {
   });
 
   it("requires direct lease issuance to receive an explicit requested version", () => {
-    const source = readFileSync("lib/licensing/commercial-lease.ts", "utf8");
-    expect(source).toContain("productVersion: string;");
-    expect(source).toContain("requireProductVersion(input.productVersion)");
-    expect(source).not.toContain("input.productVersion ?? license.product.versions[0]?.version");
+    const contract = readFileSync("node_modules/@bke/licensing/contracts/commercial-lease.contract.ts", "utf8");
+    const logic = readFileSync("node_modules/@bke/licensing/logic/commercial-lease.ts", "utf8");
+    expect(contract).toContain("productVersion: string;");
+    expect(logic).toContain("requireProductVersion(input.productVersion)");
+    expect(logic).not.toContain("input.productVersion ??");
   });
 
   it("keeps runtime licensing independent from release lifecycle while requiring an active registered version", () => {
-    const source = readFileSync("lib/licensing/commercial-lease.ts", "utf8");
-    expect(source).toContain("versions: { where: { version: input.productVersion, active: true }");
-    expect(source).not.toContain('lifecycle: { in: ["STABLE", "LTS"] }');
-    expect(source).toContain('throw new Error("VERSION_NOT_ELIGIBLE")');
-    expect(source).toContain("isVersionAccepted(version, license.product.minimumAcceptedVersion, license.product.maximumAcceptedVersion)");
+    const logic = readFileSync("node_modules/@bke/licensing/logic/commercial-lease.ts", "utf8");
+    expect(logic).toContain('if (!context.productVersionEligible) throw new Error("VERSION_NOT_ELIGIBLE")');
+    expect(logic).not.toContain('lifecycle: { in: ["STABLE", "LTS"] }');
+    expect(logic).toContain("isVersionAccepted(");
+    expect(logic).toContain("context.minimumAcceptedVersion");
+    expect(logic).toContain("context.maximumAcceptedVersion");
   });
 
   it("self-verifies newly issued signed leases", async () => {

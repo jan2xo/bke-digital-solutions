@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { parseEnvironment } from "../lib/config/environment";
+import { parseEnvironment } from "../v2/platform/host/config/environment";
 
 const environment = parseEnvironment(process.env);
 const target = new URL(process.argv[2] ?? "/api/health/ready", environment.APP_URL);

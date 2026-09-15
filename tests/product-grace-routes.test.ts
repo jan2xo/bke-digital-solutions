@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ findUnique: vi.fn() }));
-vi.mock("@/lib/db", () => ({ db: { productGraceOverride: { findUnique: mocks.findUnique } } }));
+const mocks = vi.hoisted(() => ({ readState: vi.fn(), get: vi.fn() }));
+vi.mock("@/v2/apps/web/runtime", () => ({
+  getV2WebApplication: vi.fn(async () => ({ get: mocks.get })),
+}));
 
 async function getRoute(product: "airstack" | "renderdock") {
   const route = product === "airstack"
@@ -11,35 +13,39 @@ async function getRoute(product: "airstack" | "renderdock") {
 }
 
 describe("product grace endpoints", () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+    mocks.get.mockReturnValue({ readState: mocks.readState });
+  });
 
-  it("defaults both products to false when rows are missing", async () => {
-    mocks.findUnique.mockResolvedValue(null);
+  it("defaults both products to false when the capability reports false", async () => {
+    mocks.readState.mockResolvedValue(false);
     expect(await (await getRoute("airstack")).json()).toEqual({ grace: false });
     expect(await (await getRoute("renderdock")).json()).toEqual({ grace: false });
+    expect(mocks.readState).toHaveBeenNthCalledWith(1, "airstack");
+    expect(mocks.readState).toHaveBeenNthCalledWith(2, "renderdock");
   });
 
   it("returns explicit false and true values", async () => {
-    mocks.findUnique.mockResolvedValueOnce({ graceEnabled: false });
+    mocks.readState.mockResolvedValueOnce(false);
     expect(await (await getRoute("airstack")).json()).toEqual({ grace: false });
-    mocks.findUnique.mockResolvedValueOnce({ graceEnabled: true });
+    mocks.readState.mockResolvedValueOnce(true);
     expect(await (await getRoute("airstack")).json()).toEqual({ grace: true });
   });
 
   it("keeps product values independent", async () => {
-    mocks.findUnique.mockImplementation(({ where }: { where: { productKey: string } }) =>
-      Promise.resolve({ graceEnabled: where.productKey === "airstack" }));
+    mocks.readState.mockImplementation((product: string) => Promise.resolve(product === "airstack"));
     expect(await (await getRoute("airstack")).json()).toEqual({ grace: true });
     expect(await (await getRoute("renderdock")).json()).toEqual({ grace: false });
   });
 
-  it("fails closed when the database read fails", async () => {
-    mocks.findUnique.mockRejectedValue(new Error("database unavailable"));
+  it("propagates only the fail-closed value returned by the Licensing capability", async () => {
+    mocks.readState.mockResolvedValue(false);
     expect(await (await getRoute("airstack")).json()).toEqual({ grace: false });
   });
 
   it("preserves no-store caching headers", async () => {
-    mocks.findUnique.mockResolvedValue(null);
+    mocks.readState.mockResolvedValue(false);
     const response = await getRoute("renderdock");
     expect(response.headers.get("cache-control")).toBe("no-store");
   });

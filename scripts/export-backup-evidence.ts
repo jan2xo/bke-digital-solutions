@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { buildBackupCertificationDocument } from "@/lib/supply-chain/backup-certification";
 
 const versionId = process.argv[2];
