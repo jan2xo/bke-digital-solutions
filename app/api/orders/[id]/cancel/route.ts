@@ -20,6 +20,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       if (!order) throw new Error("NOT_FOUND");
       await tx.order.update({ where: { id }, data: { status: "CANCELLED" } });
       await tx.paymentAttempt.updateMany({ where: { orderId: id, status: { in: ["CREATING", "PENDING"] } }, data: { status: "CANCELLED" } });
+      await tx.$executeRaw`
+        UPDATE "PaymentCheckoutAttempt"
+           SET "status" = 'CANCELLED', "updatedAt" = NOW()
+         WHERE "commercialReference" = ${id}
+           AND "status" IN ('CREATING', 'PENDING')
+      `;
       await tx.auditLog.create({ data: { actorId: user.id, accountId: order.accountId, action: "ORDER_CANCELLED", targetType: "Order", targetId: order.id } });
     }, { isolationLevel: "Serializable" });
     return NextResponse.json({ status: "CANCELLED" });
