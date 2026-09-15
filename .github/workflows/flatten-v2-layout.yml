@@ -1,0 +1,197 @@
+name: Flatten V2 repository layout
+
+on:
+  push:
+    branches: [refactor/flatten-v2-layout]
+    paths:
+      - ".github/workflows/flatten-v2-layout.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  flatten:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/flatten-v2-layout
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Flatten V2 namespaces into repository root
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p apps
+          git mv v2/apps/orchestrator apps/orchestrator
+          git mv v2/apps/standalone apps/standalone
+          git mv v2/apps/web apps/web
+          git mv v2/contracts contracts
+          git mv v2/modules modules
+          git mv v2/platform platform
+          git mv v2/tooling tooling
+          git mv v2/tsconfig.json tsconfig.architecture.json
+          git mv v2/vitest.config.ts vitest.architecture.config.ts
+          git rm v2/README.md
+          rmdir v2
+
+          python <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          replacements = [
+              ("@/v2/", "@/"),
+              ("v2/apps/", "apps/"),
+              ("v2/contracts/", "contracts/"),
+              ("v2/modules/", "modules/"),
+              ("v2/platform/", "platform/"),
+              ("v2/tooling/", "tooling/"),
+              ("v2/tsconfig.json", "tsconfig.architecture.json"),
+              ("v2/vitest.config.ts", "vitest.architecture.config.ts"),
+              (".github/workflows/v2-", ".github/workflows/"),
+              ("branches: [develop/v2]", "branches: [main]"),
+              ("branches: [\"develop/v2\"]", "branches: [\"main\"]"),
+          ]
+
+          for name in tracked:
+              if not name:
+                  continue
+              p = Path(name)
+              if not p.exists() or p.is_dir():
+                  continue
+              try:
+                  data = p.read_text()
+              except (UnicodeDecodeError, OSError):
+                  continue
+              new = data
+              for old, repl in replacements:
+                  new = new.replace(old, repl)
+              if new != data:
+                  p.write_text(new)
+
+          # The repository itself is now the canonical architecture root.
+          Path("tsconfig.architecture.json").write_text('''{
+            "extends": "./tsconfig.json",
+            "compilerOptions": {
+              "incremental": false,
+              "plugins": []
+            },
+            "include": [
+              "apps/**/*.ts",
+              "apps/**/*.tsx",
+              "contracts/**/*.ts",
+              "contracts/**/*.tsx",
+              "modules/**/*.ts",
+              "modules/**/*.tsx",
+              "platform/**/*.ts",
+              "platform/**/*.tsx",
+              "tooling/**/*.ts",
+              "tooling/**/*.tsx"
+            ],
+            "exclude": ["node_modules"]
+          }
+          ''')
+
+          Path("vitest.architecture.config.ts").write_text('''import { defineConfig } from "vitest/config";
+
+          export default defineConfig({
+            test: {
+              environment: "node",
+              include: [
+                "apps/**/*.test.ts",
+                "contracts/**/*.test.ts",
+                "modules/**/*.test.ts",
+                "platform/**/*.test.ts",
+                "tooling/**/*.test.ts",
+              ],
+              fileParallelism: false,
+            },
+          });
+          ''')
+
+          # Generic CI must no longer ignore the architecture tree: the root is V2 now.
+          ci = Path(".github/workflows/ci.yml")
+          text = ci.read_text()
+          marker = "permissions:\n"
+          before, after = text.split(marker, 1)
+          name_line = before.splitlines()[0]
+          ci.write_text(f"{name_line}\non: [push, pull_request]\n\n{marker}{after}")
+          PY
+
+          # Workflow filenames no longer carry a V2 namespace.
+          for file in .github/workflows/v2-*.yml; do
+            [ -e "$file" ] || continue
+            base="$(basename "$file")"
+            git mv "$file" ".github/workflows/${base#v2-}"
+          done
+
+          # Remove V2 wording from active workflow display names where it only denotes the old folder namespace.
+          python <<'PY'
+          from pathlib import Path
+          for p in Path('.github/workflows').glob('*.yml'):
+              text = p.read_text()
+              text = text.replace('name: V2 Module - ', 'name: Module - ')
+              text = text.replace('name: V2 Platform - ', 'name: Platform - ')
+              text = text.replace('name: V2 Production Host - V1 Free', 'name: Production Host - Legacy Free')
+              text = text.replace('name: V2 Standalone', 'name: Standalone')
+              text = text.replace('name: V2 Composition', 'name: Composition')
+              text = text.replace('name: V2 Prisma Isolation', 'name: Prisma Isolation')
+              text = text.replace('name: V2 Echo', 'name: Echo')
+              p.write_text(text)
+          PY
+
+          # The helper must not survive the migration commit.
+          rm .github/workflows/flatten-v2-layout.yml
+
+          if find . -path './.git' -prune -o -path './node_modules' -prune -o -path './v2' -print | grep -q .; then
+            echo 'v2/ still exists' >&2
+            exit 1
+          fi
+
+          if git grep -n '@/v2/' -- ':!package-lock.json'; then
+            echo 'stale @/v2 import remains' >&2
+            exit 1
+          fi
+
+          if git grep -nE 'v2/(apps|contracts|modules|platform|tooling)/' -- ':!docs/**' ':!CHANGELOG.md' ':!ROADMAP.md' ':!TRUTHCHECK.md'; then
+            echo 'stale active v2 path remains' >&2
+            exit 1
+          fi
+
+          git diff --check
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Architecture typecheck
+        run: npx tsc -p tsconfig.architecture.json --noEmit
+
+      - name: Full test suite
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+      - name: Legacy runtime scanner
+        run: node tooling/check-host-v1-dependencies.mjs
+
+      - name: Commit flattened repository layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "jan2xo"
+          git config user.email "163499503+jan2xo@users.noreply.github.com"
+          git add -A
+          git commit -m "refactor: make V2 the repository root"
+          git push origin HEAD:refactor/flatten-v2-layout
