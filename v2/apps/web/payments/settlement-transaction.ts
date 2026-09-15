@@ -258,7 +258,13 @@ function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlem
         return { status: "REJECTED" as const, code: "ORDER_NOT_SETTLEABLE" as const };
       }
       const redemption = order.offerRedemption;
-      if (redemption && redemption.status !== "RESERVED" && redemption.status !== "APPLIED") {
+      const releasedAfterLocalCancellation = order.status === "CANCELLED" && redemption?.status === "RELEASED";
+      if (
+        redemption
+        && redemption.status !== "RESERVED"
+        && redemption.status !== "APPLIED"
+        && !releasedAfterLocalCancellation
+      ) {
         return { status: "REJECTED" as const, code: "ORDER_NOT_SETTLEABLE" as const };
       }
 
@@ -266,7 +272,7 @@ function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlem
         await tx.order.update({ where: { id: order.id }, data: { status: "PAID", paidAt: input.settledAt } });
         await tx.invoice.update({ where: { id: invoice.id }, data: { status: "FINAL", issuedAt: input.settledAt } });
       }
-      if (redemption?.status === "RESERVED") {
+      if (redemption?.status === "RESERVED" || releasedAfterLocalCancellation) {
         await tx.offerRedemption.update({ where: { id: redemption.id }, data: { status: "APPLIED", appliedAt: input.settledAt } });
       }
 
