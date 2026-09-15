@@ -22,11 +22,11 @@ const [
   mfaChallengeRouteSource,
 ] = await Promise.all([
   readFile(new URL("../module.ts", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../package-lock.json", import.meta.url), "utf8"),
-  readFile(new URL("../../../../next.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../package-lock.json", import.meta.url), "utf8"),
+  readFile(new URL("../../../next.config.ts", import.meta.url), "utf8"),
   readFile(
-    new URL("../../../../.github/workflows/v2-identity.yml", import.meta.url),
+    new URL("../../../.github/workflows/v2-identity.yml", import.meta.url),
     "utf8",
   ),
   readFile(
@@ -34,11 +34,11 @@ const [
     "utf8",
   ),
   readFile(
-    new URL("../../../../node_modules/@bke/identity/contracts/identity.contract.ts", import.meta.url),
+    new URL("../../../node_modules/@bke/identity/contracts/identity.contract.ts", import.meta.url),
     "utf8",
   ),
   readFile(
-    new URL("../../../../node_modules/@bke/identity/contracts/session-administration.contract.ts", import.meta.url),
+    new URL("../../../node_modules/@bke/identity/contracts/session-administration.contract.ts", import.meta.url),
     "utf8",
   ),
   readFile(
@@ -46,11 +46,11 @@ const [
     "utf8",
   ),
   readFile(
-    new URL("../../../../app/api/admin/security/sessions/route.ts", import.meta.url),
+    new URL("../../../app/api/admin/security/sessions/route.ts", import.meta.url),
     "utf8",
   ),
   readFile(
-    new URL("../../../../node_modules/@bke/identity/contracts/login-mfa-challenge-reissue.contract.ts", import.meta.url),
+    new URL("../../../node_modules/@bke/identity/contracts/login-mfa-challenge-reissue.contract.ts", import.meta.url),
     "utf8",
   ),
   readFile(
@@ -58,15 +58,15 @@ const [
     "utf8",
   ),
   readFile(
-    new URL("../../../../app/api/auth/login/route.ts", import.meta.url),
+    new URL("../../../app/api/auth/login/route.ts", import.meta.url),
     "utf8",
   ),
   readFile(
-    new URL("../../../../app/api/auth/mfa/challenge/request/route.ts", import.meta.url),
+    new URL("../../../app/api/auth/mfa/challenge/request/route.ts", import.meta.url),
     "utf8",
   ),
   readFile(
-    new URL("../../../../app/api/auth/mfa/challenge/route.ts", import.meta.url),
+    new URL("../../../app/api/auth/mfa/challenge/route.ts", import.meta.url),
     "utf8",
   ),
 ]);
