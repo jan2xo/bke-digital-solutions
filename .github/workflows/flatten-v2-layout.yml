@@ -40,7 +40,8 @@ jobs:
           git mv v2/tsconfig.json tsconfig.architecture.json
           git mv v2/vitest.config.ts vitest.architecture.config.ts
           git rm v2/README.md
-          rmdir v2
+          find v2 -depth -type d -empty -delete
+          test ! -d v2
 
           python <<'PY'
           from pathlib import Path
@@ -77,7 +78,6 @@ jobs:
               if new != data:
                   p.write_text(new)
 
-          # The repository itself is now the canonical architecture root.
           Path("tsconfig.architecture.json").write_text('''{
             "extends": "./tsconfig.json",
             "compilerOptions": {
@@ -117,7 +117,6 @@ jobs:
           });
           ''')
 
-          # Generic CI must no longer ignore the architecture tree: the root is V2 now.
           ci = Path(".github/workflows/ci.yml")
           text = ci.read_text()
           marker = "permissions:\n"
@@ -126,14 +125,12 @@ jobs:
           ci.write_text(f"{name_line}\non: [push, pull_request]\n\n{marker}{after}")
           PY
 
-          # Workflow filenames no longer carry a V2 namespace.
           for file in .github/workflows/v2-*.yml; do
             [ -e "$file" ] || continue
             base="$(basename "$file")"
             git mv "$file" ".github/workflows/${base#v2-}"
           done
 
-          # Remove V2 wording from active workflow display names where it only denotes the old folder namespace.
           python <<'PY'
           from pathlib import Path
           for p in Path('.github/workflows').glob('*.yml'):
@@ -148,7 +145,6 @@ jobs:
               p.write_text(text)
           PY
 
-          # The helper must not survive the migration commit.
           rm .github/workflows/flatten-v2-layout.yml
 
           if find . -path './.git' -prune -o -path './node_modules' -prune -o -path './v2' -print | grep -q .; then
