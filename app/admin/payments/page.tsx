@@ -4,8 +4,8 @@ import {
 } from "@bke/payments/contracts/reconciliation.contract";
 import { AdminTable } from "@/components/admin-table";
 import { ReconcileButton, WebhookAction } from "@/components/admin-payment-actions";
-import { db } from "@/v2/platform/host/db";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { db } from "@/platform/host/db";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 async function listRecentReconciliations() {
   const application = await getV2WebApplication();

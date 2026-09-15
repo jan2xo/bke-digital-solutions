@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { currentIdentitySession } from "@/v2/apps/web/auth/session";
+import { currentIdentitySession } from "@/apps/web/auth/session";
 import { RecentAuthenticationForm } from "@/components/recent-authentication-form";
 
 export default async function RecentAuthenticationPage() {

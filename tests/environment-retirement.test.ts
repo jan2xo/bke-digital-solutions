@@ -8,22 +8,22 @@ const runtimeConsumers = [
   "app/api/cron/expirations/route.ts",
   "app/api/cron/renewals/route.ts",
   "app/api/cron/scheduler/route.ts",
-  "v2/apps/web/legal/render.ts",
-  "v2/apps/web/storage/object-storage.ts",
+  "apps/web/legal/render.ts",
+  "apps/web/storage/object-storage.ts",
 ];
 
 describe("legacy environment adapter retirement", () => {
   it("routes surviving runtime configuration through the V2 web host contract", async () => {
     for (const path of runtimeConsumers) {
       const source = await readFile(path, "utf8");
-      expect(source).not.toContain("@/v2/platform/host/env");
-      expect(source).toContain("@/v2/apps/web/config/environment");
+      expect(source).not.toContain("@/platform/host/env");
+      expect(source).toContain("@/apps/web/config/environment");
     }
   });
 
   it("keeps the V2 environment contract independent of the legacy parser", async () => {
-    const source = await readFile("v2/apps/web/config/environment.ts", "utf8");
-    expect(source).not.toContain("@/v2/platform/host/config/environment");
+    const source = await readFile("apps/web/config/environment.ts", "utf8");
+    expect(source).not.toContain("@/platform/host/config/environment");
     expect(source).not.toContain("parseEnvironment");
   });
 });

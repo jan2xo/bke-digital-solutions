@@ -1,14 +1,6 @@
 name: CI
 
-on:
-  push:
-    paths-ignore:
-      - "v2/**"
-      - ".github/workflows/v2-*.yml"
-  pull_request:
-    paths-ignore:
-      - "v2/**"
-      - ".github/workflows/v2-*.yml"
+on: [push, pull_request]
 
 permissions:
   contents: read
@@ -41,7 +33,7 @@ jobs:
         env:
           DEPLOYMENT_ENV: test
       - run: npm run db:generate
-      - run: git diff --exit-code -- v2/platform/persistence/generated/prisma
+      - run: git diff --exit-code -- platform/persistence/generated/prisma
       - run: npx prisma validate
       - run: npm run db:deploy
       - run: npm run db:status

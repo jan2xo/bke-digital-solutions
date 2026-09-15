@@ -1,17 +1,17 @@
-name: V2 Module - Licensing
+name: Module - Licensing
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/modules/licensing/**"
+      - "modules/licensing/**"
       - "app/api/licenses/refresh/route.ts"
       - "tests/unit/refresh-decision.test.ts"
-      - "v2/platform/persistence/migration-compositor.mjs"
-      - "v2/contracts/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "platform/persistence/migration-compositor.mjs"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - ".github/workflows/v2-licensing.yml"
       - "next.config.ts"
       - "package.json"
@@ -51,22 +51,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-licensing-0.7.0.tgz
+          artifact=/tmp/bke-licensing-0.9.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.7.0/bke-licensing-0.7.0.tgz
-          echo "0e5b8495acba7d462064114c122d395eeb544ea2d40f2e8d89e0678b7027f19a  $artifact" | sha256sum -c -
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz
+          echo "afb66b9c2c7ae514b3a9afcc7b6eeccbb697e1a6f361cd85fc765b356b978e89  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
       - name: Certify Licensing standalone consumer adoption and staging retirement
-        run: npx tsx v2/modules/licensing/test/consumer-adoption.certify.ts
+        run: npx tsx modules/licensing/test/consumer-adoption.certify.ts
       - name: Certify released refresh decision parity
         run: npx vitest run tests/unit/refresh-decision.test.ts
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Licensing Prisma schema
         run: npx prisma validate --schema node_modules/@bke/licensing/prisma/schema.prisma
       - name: Apply installed Licensing baseline
-        run: node v2/platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
+        run: node platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
       - name: Prove installed Licensing migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations
+        run: node platform/persistence/migration-compositor.mjs licensing node_modules/@bke/licensing/migrations

@@ -1,16 +1,16 @@
-name: V2 Module - Payments
+name: Module - Payments
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/modules/payments/**"
-      - "v2/platform/persistence/migration-compositor.mjs"
-      - "v2/platform/composition/**"
-      - "v2/contracts/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "modules/payments/**"
+      - "platform/persistence/migration-compositor.mjs"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - "app/api/admin/payments/reconcile/route.ts"
       - "app/admin/payments/page.tsx"
       - "lib/reconciliation.ts"
@@ -54,22 +54,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-payments-0.5.0.tgz
+          artifact=/tmp/bke-payments-0.7.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.5.0/bke-payments-0.5.0.tgz
-          echo "be19e8c07bf89f3fe9b10d235acb13d5ca1b83c5a107ec6fa4a4d1160be48475  $artifact" | sha256sum -c -
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.7.0/bke-payments-0.7.0.tgz
+          echo "f078bb4e655e44bc929e03af20db20fb849480c7a13ef5c7dc5095381d5b02f6  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
       - name: Certify Payments consumer adoption and staging retirement
-        run: npx tsx v2/modules/payments/test/consumer-adoption.certify.ts
+        run: npx tsx modules/payments/test/consumer-adoption.certify.ts
       - name: Certify reconciliation host adoption
         run: npx vitest run tests/payments-reconciliation-v2-adoption.test.ts
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Payments Prisma schema
         run: npx prisma validate --schema node_modules/@bke/payments/prisma/schema.prisma
       - name: Apply installed Payments migrations
-        run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+        run: node platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
       - name: Prove installed Payments migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+        run: node platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { db } from "@/v2/platform/host/db";
+import { db } from "@/platform/host/db";
 import { createCheckout as createLegacyCheckout } from "@/tests/support/legacy-checkout-fixture";
 
 /**

@@ -1,6 +1,6 @@
 import "server-only";
-import { db } from "@/v2/platform/host/db";
-import { env } from "@/v2/platform/host/env";
+import { db } from "@/platform/host/db";
+import { env } from "@/platform/host/env";
 
 export function resolveCommercialPrivateKey(reference: string) {
   const prefix = "env:";

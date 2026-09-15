@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { AdminNav } from "@/components/admin-nav";
-import { currentIdentitySession } from "@/v2/apps/web/auth/session";
+import { currentIdentitySession } from "@/apps/web/auth/session";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const context = await currentIdentitySession();

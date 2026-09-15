@@ -12,10 +12,10 @@ describe("V2 Privacy + Catalog released-package adoption", () => {
   it("routes privacy through the V2 released-package adapter", () => {
     const publicRoute = read("app/api/privacy/requests/route.ts");
     const adminRoute = read("app/api/admin/privacy/requests/route.ts");
-    const adapter = read("v2/apps/web/privacy/requests.ts");
+    const adapter = read("apps/web/privacy/requests.ts");
 
-    expect(publicRoute).toContain("@/v2/apps/web/privacy/requests");
-    expect(adminRoute).toContain("@/v2/apps/web/privacy/requests");
+    expect(publicRoute).toContain("@/apps/web/privacy/requests");
+    expect(adminRoute).toContain("@/apps/web/privacy/requests");
     expect(publicRoute).not.toContain("@/lib/privacy/requests");
     expect(adminRoute).not.toContain("@/lib/privacy/requests");
     expect(adapter).toContain("@bke/privacy/contracts/privacy-request-policy.contract");
@@ -26,16 +26,16 @@ describe("V2 Privacy + Catalog released-package adoption", () => {
 
   it("routes product deletion through the V2 released-package adapter", () => {
     const route = read("app/api/admin/products/[id]/deletion/route.ts");
-    const adapter = read("v2/apps/web/catalog/product-deletion.ts");
+    const adapter = read("apps/web/catalog/product-deletion.ts");
 
-    expect(route).toContain("@/v2/apps/web/catalog/product-deletion");
+    expect(route).toContain("@/apps/web/catalog/product-deletion");
     expect(route).not.toContain("@/lib/product-deletion");
     expect(adapter).toContain("@bke/catalog/contracts/product-deletion-policy.contract");
     expect(adapter).toContain("@bke/catalog/logic/product-deletion-policy");
     expect(adapter).toContain("planCatalogProductDeletionRequest");
     expect(adapter).toContain("planCatalogProductDeletionFinalization");
-    expect(adapter).toContain("@/v2/apps/web/storage/cleanup");
-    expect(adapter).toContain("@/v2/platform/host/security/redaction");
+    expect(adapter).toContain("@/apps/web/storage/cleanup");
+    expect(adapter).toContain("@/platform/host/security/redaction");
     expect(adapter).not.toContain("@/lib/redaction");
   });
 

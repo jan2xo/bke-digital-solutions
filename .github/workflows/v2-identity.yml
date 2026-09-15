@@ -1,14 +1,14 @@
-name: V2 Module - Identity
+name: Module - Identity
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/modules/identity/**"
-      - "v2/platform/persistence/migration-compositor.mjs"
-      - "v2/contracts/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
+      - "modules/identity/**"
+      - "platform/persistence/migration-compositor.mjs"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
       - ".github/workflows/v2-identity.yml"
       - "next.config.ts"
       - "package.json"
@@ -53,15 +53,15 @@ jobs:
             -o "$artifact" \
             https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz
           echo "5d8820122de15e0b500f6e3cccfdeeec6b63afbb361daa1dee3fc217e1c3f139  $artifact" | sha256sum -c -
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
       - name: Certify Identity standalone consumer adoption
-        run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+        run: npx tsx modules/identity/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Identity Prisma schema
         run: npx prisma validate --schema node_modules/@bke/identity/prisma/schema.prisma
       - name: Apply installed Identity baseline
-        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
+        run: node platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
       - name: Prove installed Identity migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations
+        run: node platform/persistence/migration-compositor.mjs identity node_modules/@bke/identity/migrations

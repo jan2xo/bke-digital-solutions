@@ -3,7 +3,7 @@ import {
   LICENSING_GRACE_PERIOD_CAPABILITY_ID,
   type LicensingGracePeriodCapability,
 } from "@bke/licensing/contracts/grace-period.contract";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 export const dynamic = "force-dynamic";
 

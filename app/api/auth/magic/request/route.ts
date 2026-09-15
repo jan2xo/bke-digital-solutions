@@ -3,11 +3,11 @@ import {
   IDENTITY_MAGIC_LOGIN_REQUEST_CAPABILITY_ID,
   type IdentityMagicLoginRequestCapability,
 } from "@bke/identity/contracts/magic-login-request.contract";
-import { sendMagicLink } from "@/v2/apps/web/email";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
-import { emailSchema } from "@/v2/apps/web/http/validation";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { sendMagicLink } from "@/apps/web/email";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { emailSchema } from "@/apps/web/http/validation";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
 
 export async function POST(request: Request) {
   assertSameOrigin(request);

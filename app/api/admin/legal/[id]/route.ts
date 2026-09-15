@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { requireAdmin } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin } from "@/apps/web/http/request";
 
 const schema = z.object({ title: z.string().trim().min(2).max(160).optional(), status: z.enum(["ACTIVE", "ARCHIVED"]).optional() }).strict();
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {

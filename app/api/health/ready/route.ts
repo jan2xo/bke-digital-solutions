@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readiness } from "@/v2/apps/web/health/readiness";
+import { readiness } from "@/apps/web/health/readiness";
 
 export const dynamic = "force-dynamic";
 export async function GET(request?: Request) {

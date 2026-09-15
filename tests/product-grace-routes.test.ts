@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ readState: vi.fn(), get: vi.fn() }));
-vi.mock("@/v2/apps/web/runtime", () => ({
+vi.mock("@/apps/web/runtime", () => ({
   getV2WebApplication: vi.fn(async () => ({ get: mocks.get })),
 }));
 

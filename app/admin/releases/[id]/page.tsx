@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { db } from "@/v2/platform/host/db";
+import { db } from "@/platform/host/db";
 import { ReleaseArtifactControls } from "@/components/release-artifact-controls";
 import { AdminActionButton } from "@/components/admin-action-button";
 

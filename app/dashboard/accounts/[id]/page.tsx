@@ -5,16 +5,16 @@ import {
 import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authorization-policy";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
+import { requireUser } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
 import { CustomerLicenseCard } from "@/components/customer-license-card";
 import { PendingOrderActions } from "@/components/pending-order-actions";
-import { requireLegalClearance } from "@/v2/apps/web/legal/clearance";
-import { publishedLegalDocuments } from "@/v2/apps/web/legal/service";
+import { requireLegalClearance } from "@/apps/web/legal/clearance";
+import { publishedLegalDocuments } from "@/apps/web/legal/service";
 import { SUBSCRIPTION_LEGAL_TYPES, CHECKOUT_LEGAL_TYPES } from "@bke/legal/logic/document-catalog";
 import { SubscriptionRenewButton } from "@/components/subscription-renew-button";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
-import { githubLatestReleaseUrl } from "@/v2/platform/distribution/github-releases";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { githubLatestReleaseUrl } from "@/platform/distribution/github-releases";
 
 export default async function AccountPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser().catch(() => redirect("/login"));

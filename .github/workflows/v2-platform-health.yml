@@ -1,13 +1,13 @@
-name: V2 Platform - Health
+name: Platform - Health
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/platform/health/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "platform/health/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/v2-platform-health.yml"
@@ -27,17 +27,17 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Reject V1/domain/persistence/observability reach-through
+      - name: Reject legacy/domain/persistence/observability reach-through
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/|process\.env|observability|metrics)' v2/platform/health --include='*.ts'; then
-            echo "V2 Health must remain a generic liveness/readiness seam."
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env|observability|metrics)' platform/health --include='*.ts'; then
+            echo "Health must remain a generic liveness/readiness seam."
             exit 1
           fi
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Certify Health platform behavior
-        run: npx vitest run --config v2/vitest.config.ts v2/platform/health/test/health.test.ts
+        run: npx vitest run --config vitest.architecture.config.ts platform/health/test/health.test.ts

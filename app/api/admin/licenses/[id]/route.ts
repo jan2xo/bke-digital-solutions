@@ -1,13 +1,13 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
-import {requireRecentAdmin} from "@/v2/apps/web/auth/session";
-import {db} from "@/v2/platform/host/db";
-import {assertSameOrigin} from "@/v2/apps/web/http/request";
-import {audit} from "@/v2/apps/web/audit";
-import {apiError} from "@/v2/apps/web/http/api-error";
-import {decryptLicenseKey, sha256} from "@/v2/platform/host/security/crypto";
-import {addDays} from "@/v2/apps/web/time";
-import {issueCommercialLease} from "@/v2/apps/web/licensing/commercial-lease";
+import {requireRecentAdmin} from "@/apps/web/auth/session";
+import {db} from "@/platform/host/db";
+import {assertSameOrigin} from "@/apps/web/http/request";
+import {audit} from "@/apps/web/audit";
+import {apiError} from "@/apps/web/http/api-error";
+import {decryptLicenseKey, sha256} from "@/platform/host/security/crypto";
+import {addDays} from "@/apps/web/time";
+import {issueCommercialLease} from "@/apps/web/licensing/commercial-lease";
 
 const schema=z.discriminatedUnion("action",[
   z.object({action:z.enum(["ACTIVATE","SUSPEND","REVOKE","EXPIRE"])}),

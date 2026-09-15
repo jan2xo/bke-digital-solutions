@@ -1,7 +1,7 @@
 import "server-only";
 import { Redis } from "@upstash/redis";
 import { createClient, type RedisClientType } from "redis";
-import { env } from "@/v2/platform/host/env";
+import { env } from "@/platform/host/env";
 
 const redis = env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
   ? new Redis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN }) : null;

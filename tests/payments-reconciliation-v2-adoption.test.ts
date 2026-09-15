@@ -25,16 +25,16 @@ describe("V2 Payments reconciliation host adoption", () => {
   });
 
   it("keeps reconciliation composed in the V2 Payments runtime", () => {
-    const moduleSource = read("v2/modules/payments/module.ts");
-    const runtime = read("v2/apps/web/runtime.ts");
+    const moduleSource = read("modules/payments/module.ts");
+    const runtime = read("apps/web/runtime.ts");
     expect(moduleSource).toContain("createPaymentsReconciliationCapability");
     expect(moduleSource).toContain("createPostgresPaymentsReconciliationRepository");
     expect(runtime).toContain("reconciliationProvider: payments");
   });
 
   it("exposes reconciliation retrieval through the real web provider and standalone boot", () => {
-    const provider = read("v2/apps/web/payments/provider.ts");
-    const standalone = read("v2/apps/standalone/bootstrap.ts");
+    const provider = read("apps/web/payments/provider.ts");
+    const standalone = read("apps/standalone/bootstrap.ts");
     expect(provider).toContain("PaymentsReconciliationProvider");
     expect(provider).toContain("async retrievePayment");
     expect(standalone).toContain("inertReconciliationProvider");
@@ -50,10 +50,10 @@ describe("V2 Payments reconciliation host adoption", () => {
   });
 
   it("routes webhook ingestion through the released Payments capability", () => {
-    const webhook = read("v2/apps/web/payments/webhook-processing.ts");
-    const ingestion = read("v2/apps/web/payments/webhook-ingestion.ts");
-    const compatibilityProvider = read("v2/apps/web/payments/compatibility-provider.ts");
-    expect(webhook).toContain('from "@/v2/apps/web/payments/webhook-ingestion"');
+    const webhook = read("apps/web/payments/webhook-processing.ts");
+    const ingestion = read("apps/web/payments/webhook-ingestion.ts");
+    const compatibilityProvider = read("apps/web/payments/compatibility-provider.ts");
+    expect(webhook).toContain('from "@/apps/web/payments/webhook-ingestion"');
     expect(webhook).not.toContain('from "@/lib/payments"');
     expect(webhook).not.toContain('from "@/lib/payments/types"');
     expect(ingestion).toContain("createPaymentsProviderEventIngestionCapability");

@@ -1,8 +1,8 @@
 import "server-only";
-import type { ScheduledJob } from "@/v2/platform/scheduler";
-import { schedulerJobDefinitions } from "@/v2/apps/web/scheduler/job-definitions";
-import { commerceLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, preparedRenewalRecovery, renewalReminders, securityCleanup, storageLifecycle } from "@/v2/apps/web/scheduler/handlers";
-import { backupCreation, backupRetention } from "@/v2/apps/web/backups/scheduler";
+import type { ScheduledJob } from "@/platform/scheduler";
+import { schedulerJobDefinitions } from "@/apps/web/scheduler/job-definitions";
+import { commerceLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, preparedRenewalRecovery, renewalReminders, securityCleanup, storageLifecycle } from "@/apps/web/scheduler/handlers";
+import { backupCreation, backupRetention } from "@/apps/web/backups/scheduler";
 
 const handlers = new Map<string, ScheduledJob["handler"]>([
   ["storage.lifecycle", storageLifecycle],

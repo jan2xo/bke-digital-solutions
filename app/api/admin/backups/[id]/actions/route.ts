@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { requestBackupOperation } from "@/v2/apps/web/backups/service";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { clientIp } from "@/v2/apps/web/http/request";
-import { db } from "@/v2/platform/host/db";
+import { requireRecentAdmin } from "@/apps/web/auth/session";
+import { assertSameOrigin } from "@/apps/web/http/request";
+import { apiError } from "@/apps/web/http/api-error";
+import { requestBackupOperation } from "@/apps/web/backups/service";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { clientIp } from "@/apps/web/http/request";
+import { db } from "@/platform/host/db";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) { try { await requireRecentAdmin(); const operations = await db.backupOperation.findMany({ where: { backupId: (await params).id }, orderBy: { createdAt: "desc" }, take: 10 }); return NextResponse.json({ operations }); } catch (error) { return apiError(error); } }
 

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { apiError } from "@/v2/apps/web/http/api-error";
+import { requireAdmin } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { apiError } from "@/apps/web/http/api-error";
 import { LEGAL_DOCUMENT_TYPES } from "@bke/legal/contracts/checkout-requirements.contract";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { assertSameOrigin } from "@/apps/web/http/request";
 
 const createSchema = z.object({ title: z.string().trim().min(2).max(160), slug: z.string().regex(/^[a-z0-9-]+$/).max(100), documentType: z.enum(LEGAL_DOCUMENT_TYPES).or(z.string().regex(/^[A-Z][A-Z0-9_]{2,80}$/)) }).strict();
 
