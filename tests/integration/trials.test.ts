@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
-import { changeTrial, grantProductTrial } from "@/lib/trials";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
+import { changeTrial, grantProductTrial } from "@/v2/apps/web/trials/service";
 
 const db=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.DATABASE_URL!})});
 let userId="",adminId="",accountId="",editionId="",trialId="",licenseId="";

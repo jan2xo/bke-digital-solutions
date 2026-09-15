@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createHmac } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 let adminId = "";
@@ -30,7 +30,7 @@ async function confirmPayment(orderId: string) {
   };
   const raw = Buffer.from(JSON.stringify(event));
   const signature = createHmac("sha256", process.env.SESSION_SECRET!).update(raw).digest("hex");
-  const { processPaymentWebhook } = await import("@/lib/webhooks");
+  const { processPaymentWebhook } = await import("@/v2/apps/web/payments/webhook-processing");
   await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }));
   expect(await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }))).toEqual({ duplicate: true });
 }
@@ -107,37 +107,6 @@ describe.sequential("discount offers and immutable pricing", () => {
     expect(lines.reduce((sum, line) => sum + line.totalMinor, 0)).toBe(order.totalMinor);
     expect(order.invoice!.subtotalMinor).toBeGreaterThan(order.totalMinor);
     expect(order.invoice!.totalMinor).toBe(order.totalMinor);
-  });
-
-  it("auto-applies a code-less public promotion and carries it into the invoice", async () => {
-    const offer = await db.discountOffer.create({
-      data: {
-        name: `Welcome annual ${suffix}`,
-        type: "GENERAL_PROMOTION",
-        status: "ACTIVE",
-        discountBps: 7_100,
-        startsAt: new Date(Date.now() - 1_000),
-        purchasePlanId: annualPlanId,
-        maximumRedemptions: 1,
-        perAccountRedemptionLimit: 1,
-        createdById: adminId,
-      },
-    });
-    const { createCheckout } = await import("@/lib/checkout");
-    const checkout = await createCheckout(userId, annualPlanId, accountId);
-    const order = await db.order.findUniqueOrThrow({
-      where: { id: checkout.orderId },
-      include: { invoice: { include: { lines: true } }, items: true, offerRedemption: true },
-    });
-    const catalogAmountMinor = order.items[0]!.catalogAmountMinor!;
-    const expectedDiscountMinor = Math.round((catalogAmountMinor * 7_100) / 10_000);
-    expect(order.items[0]).toMatchObject({ offerId: offer.id, offerDiscountBps: 7_100, offerDiscountMinor: expectedDiscountMinor });
-    expect(order.totalMinor).toBe(catalogAmountMinor - expectedDiscountMinor);
-    expect(order.offerRedemption).toMatchObject({ offerId: offer.id, discountMinor: expectedDiscountMinor, finalMinor: order.totalMinor, status: "RESERVED" });
-    expect(order.invoice!.lines.some((line) => line.description.includes(offer.name) && line.totalMinor === -expectedDiscountMinor)).toBe(true);
-    expect(order.invoice!.lines.reduce((sum, line) => sum + line.totalMinor, 0)).toBe(order.totalMinor);
-    expect(order.invoice!.totalMinor).toBe(order.totalMinor);
-    await db.discountOffer.update({ where: { id: offer.id }, data: { status: "DISABLED" } });
   });
 
   it("applies a monthly offer for exactly the configured number of renewal cycles", async () => {

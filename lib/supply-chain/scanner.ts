@@ -1,6 +1,6 @@
 import "server-only";
 import net from "node:net";
-import { env, getRuntimeEnvironment } from "@/lib/env";
+import { env, getRuntimeEnvironment } from "@/v2/platform/host/env";
 
 export type MalwareScanResult = {
   scannerId: string;

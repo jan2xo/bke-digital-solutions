@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../v2/platform/persistence/generated/prisma"
 }
 
 datasource db {
@@ -181,7 +181,6 @@ enum PurchasePlanType {
   PERPETUAL
   MONTHLY
   ANNUAL
-  SEMI_ANNUAL
 }
 
 enum RenewalBehavior {
@@ -834,7 +833,6 @@ model PurchasePlan {
   currency            String           @default("PHP")
   amountMinor         Int?
   annualDiscountBps   Int?
-  semiAnnualDiscountBps Int?
   renewalBehavior     RenewalBehavior  @default(NONE)
   active              Boolean          @default(true)
   monthlySourcePlanId String?

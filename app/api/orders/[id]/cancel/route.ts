@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { assertSameOrigin } from "@/lib/security/request";
-import { apiError } from "@/lib/http";
-import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
+import { requireUser } from "@/v2/apps/web/auth/session";
+import { db } from "@/v2/platform/host/db";
+import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -20,6 +20,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       if (!order) throw new Error("NOT_FOUND");
       await tx.order.update({ where: { id }, data: { status: "CANCELLED" } });
       await tx.paymentAttempt.updateMany({ where: { orderId: id, status: { in: ["CREATING", "PENDING"] } }, data: { status: "CANCELLED" } });
+      await tx.$executeRaw`
+        UPDATE "PaymentCheckoutAttempt"
+           SET "status" = 'CANCELLED', "updatedAt" = NOW()
+         WHERE "commercialReference" = ${id}
+           AND "status" IN ('CREATING', 'PENDING')
+      `;
       await tx.auditLog.create({ data: { actorId: user.id, accountId: order.accountId, action: "ORDER_CANCELLED", targetType: "Order", targetId: order.id } });
     }, { isolationLevel: "Serializable" });
     return NextResponse.json({ status: "CANCELLED" });

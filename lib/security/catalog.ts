@@ -1,4 +1,4 @@
-import type { SecurityEventOutcome, SecurityEventSeverity, SecurityEventType } from "@/generated/prisma/client";
+import type { SecurityEventOutcome, SecurityEventSeverity, SecurityEventType } from "@/v2/platform/host/generated/prisma/client";
 
 type Definition = { label: string; outcome: SecurityEventOutcome; severity: SecurityEventSeverity; explanation: string };
 

@@ -1,10 +1,10 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
 import { audit } from "@/lib/audit";
 import { expiresAt, retentionTier, retryAt, validateRestoreConfirmation } from "@/lib/backups/policy";
-import { Prisma, type BackupOperationTrigger, type BackupOperationType, type BackupRetentionTier } from "@/generated/prisma/client";
+import { Prisma, type BackupOperationTrigger, type BackupOperationType, type BackupRetentionTier } from "@/v2/platform/host/generated/prisma/client";
 
 const retentionPolicy = { daily: env.BACKUP_RETENTION_DAILY, weekly: env.BACKUP_RETENTION_WEEKLY, monthly: env.BACKUP_RETENTION_MONTHLY };
 

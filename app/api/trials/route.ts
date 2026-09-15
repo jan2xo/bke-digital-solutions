@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { assertSameOrigin, clientIp } from "@/lib/security/request";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { grantProductTrial } from "@/lib/trials";
-import { apiError } from "@/lib/http";
-import { assertLegalAcceptanceCurrent } from "@/lib/legal/service";
-import { assertAccountOperational } from "@/lib/customer-lifecycle";
+import {
+  ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
+  type AccountsPurchaseAccessCapability,
+} from "@bke/accounts/contracts/purchase-access.contract";
+import { requireUser } from "@/v2/apps/web/auth/session";
+import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { grantProductTrial } from "@/v2/apps/web/trials/service";
+import { apiError } from "@/v2/apps/web/http/api-error";
+import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
 
 const schema = z.object({ editionId: z.string().cuid(), accountId: z.string().cuid() }).strict();
 export async function POST(request: Request) {
@@ -18,10 +21,13 @@ export async function POST(request: Request) {
     if (!user.emailVerified) throw new Error("EMAIL_NOT_VERIFIED");
     if (!(await rateLimit(`trial:${user.id}:${clientIp(request)}`, 5, 3600)).allowed) throw new Error("RATE_LIMITED");
     const input = schema.parse(await request.json());
-    const account = await db.customerAccount.findFirst({ where: { id: input.accountId, OR: [{ ownerId: user.id }, { memberships: { some: { userId: user.id, role: { in: ["OWNER", "BILLING"] } } } }] } });
-    if (!account) throw new Error("NOT_FOUND");
-    assertAccountOperational(account);
-    const trial = await grantProductTrial({ accountId: account.id, editionId: input.editionId, source: "SELF_SERVICE", actorId: user.id });
+    const application = await getV2WebApplication();
+    const purchaseAccess = application.get<AccountsPurchaseAccessCapability>(
+      ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
+    );
+    const access = await purchaseAccess.authorize({ principalId: user.id, accountId: input.accountId });
+    if (access.status !== "AUTHORIZED") throw new Error(access.code);
+    const trial = await grantProductTrial({ accountId: access.account.id, editionId: input.editionId, source: "SELF_SERVICE", actorId: user.id });
     return NextResponse.json({ trialId: trial.id, expiresAt: trial.graceEndsAt }, { status: 201 });
   } catch (error) { return apiError(error); }
 }

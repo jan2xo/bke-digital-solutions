@@ -1,5 +1,5 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { db } from "@/v2/platform/host/db";
 import { securityEventDefinition } from "@/lib/security/catalog";
 import { sanitizeSecurityMetadata } from "@/lib/security/events";
 import { queueSecurityEmail } from "@/lib/email";

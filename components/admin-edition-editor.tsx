@@ -1,11 +1,13 @@
 "use client";
 
+import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { calculateAnnualPricing } from "@/lib/pricing";
 
-type Plan = { id: string; type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL"; amountMinor: number | null; annualDiscountBps: number | null; semiAnnualDiscountBps?: number | null; active: boolean };
+type Plan = { id: string; type: "PERPETUAL" | "MONTHLY" | "ANNUAL"; amountMinor: number | null; annualDiscountBps: number | null; active: boolean };
 type Edition = { id: string; name: string; slug: string; description: string | null; features: unknown; maxUsers: number; maxDevicesPerUser: number; updatePolicy: "LIFETIME" | "ACTIVE_TERM" | "MAJOR_VERSION"; active: boolean; purchasePlans: Plan[] };
+
+const pricing = createCommercePurchasePlanPricingCapability();
 
 export function AdminEditionEditor({ edition }: { edition: Edition }) {
   const router = useRouter();
@@ -13,12 +15,25 @@ export function AdminEditionEditor({ edition }: { edition: Edition }) {
   const perpetual = plan("PERPETUAL");
   const monthly = plan("MONTHLY");
   const annual = plan("ANNUAL");
-  const semiAnnual = plan("SEMI_ANNUAL");
   const [monthlyPesos, setMonthlyPesos] = useState((monthly?.amountMinor ?? 49_900) / 100);
   const [discountPercent, setDiscountPercent] = useState((annual?.annualDiscountBps ?? 1_000) / 100);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const preview = calculateAnnualPricing(Math.max(1, Math.round(monthlyPesos * 100)), Math.max(0, Math.min(1_000, Math.round(discountPercent * 100))));
+  const previewResult = pricing.resolve({
+    id: "admin-annual-preview",
+    type: "ANNUAL",
+    currency: "PHP",
+    amountMinor: null,
+    annualDiscountBps: Math.max(0, Math.min(1_000, Math.round(discountPercent * 100))),
+    renewalBehavior: "CUSTOMER_AUTHORIZED",
+    monthlySource: {
+      amountMinor: Math.max(1, Math.round(monthlyPesos * 100)),
+      active: true,
+      type: "MONTHLY",
+    },
+  });
+  if (previewResult.status === "FAILED") throw new Error(previewResult.code);
+  const preview = previewResult.pricing;
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError("");
@@ -40,8 +55,7 @@ export function AdminEditionEditor({ edition }: { edition: Edition }) {
     <div className="mt-5 grid gap-4 border-t pt-5 md:grid-cols-3">
       <PlanToggle name="perpetualEnabled" label="Perpetual" checked={perpetual?.active ?? false}><Field name="perpetualPrice" label="Price (PHP)" value={String((perpetual?.amountMinor ?? 999_900) / 100)} type="number"/></PlanToggle>
       <PlanToggle name="monthlyEnabled" label="Monthly" checked={monthly?.active ?? false}><label className="label">Monthly price (PHP)<input className="input" name="monthlyPrice" type="number" min="1" step="0.01" value={monthlyPesos} onChange={(event) => setMonthlyPesos(Number(event.target.value))}/></label></PlanToggle>
-      <PlanToggle name="semiAnnualEnabled" label="Semi-annual (6 months)" checked={semiAnnual?.active ?? false}><label className="label">Discount (0–10%)<input className="input" name="semiAnnualDiscount" type="number" min="0" max="10" step="0.01" defaultValue={semiAnnual?.semiAnnualDiscountBps == null ? "" : String(semiAnnual.semiAnnualDiscountBps / 100)}/></label><p className="text-xs text-slate-600">Use 0% when six-month billing has no catalog discount.</p></PlanToggle>
-      <PlanToggle name="annualEnabled" label="Annual" checked={annual?.active ?? false}><label className="label">Discount (0–10%)<input className="input" name="annualDiscount" type="number" min="0" max="10" step="0.01" value={discountPercent} onChange={(event) => setDiscountPercent(Number(event.target.value))}/></label><p className="text-xs text-slate-600">Calculated: {money(preview.annualAmountMinor)}/year · save {money(preview.savingsMinor)} · {money(preview.effectiveMonthlyMinor)}/month</p></PlanToggle>
+      <PlanToggle name="annualEnabled" label="Annual" checked={annual?.active ?? false}><label className="label">Discount (0–10%)<input className="input" name="annualDiscount" type="number" min="0" max="10" step="0.01" value={discountPercent} onChange={(event) => setDiscountPercent(Number(event.target.value))}/></label><p className="text-xs text-slate-600">Calculated: {money(preview.amountMinor)}/year · save {money(preview.savingsMinor)} · {preview.effectiveMonthlyMinor === null ? "—" : money(preview.effectiveMonthlyMinor)}/month</p></PlanToggle>
     </div>
     {error && <p className="mt-3 text-red-700" role="alert">{error}</p>}
     <button className="button mt-4" disabled={busy}>{busy ? "Saving plans…" : "Save edition and plans"}</button>
@@ -58,7 +72,6 @@ export function editionBody(fields: FormData) {
     plans: {
       perpetual: { enabled: enabled("perpetualEnabled"), amountMinor: amount("perpetualPrice") },
       monthly: { enabled: enabled("monthlyEnabled"), amountMinor: amount("monthlyPrice") },
-      semiAnnual: { enabled: enabled("semiAnnualEnabled"), discountBps: String(fields.get("semiAnnualDiscount") ?? "").trim() ? Math.round(Number(fields.get("semiAnnualDiscount")) * 100) : undefined },
       annual: { enabled: enabled("annualEnabled"), discountBps: Math.round(Number(fields.get("annualDiscount")) * 100) },
     },
   };

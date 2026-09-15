@@ -59,12 +59,3 @@ export function verifySignedEnvelope(envelope: unknown, keyringRaw: string | und
     return { manifest, payloadHash: manifestHash(payload), keyId: resolved.keyId };
   } catch (error) { if (error instanceof Error && error.message.startsWith("SUPPLY_CHAIN_")) throw error; throw new Error("SUPPLY_CHAIN_KEY_INVALID"); }
 }
-
-export function requireManifestArtifact(manifest: SignedReleaseManifest, artifact: SignedArtifact): void {
-  const matches = manifest.artifacts.filter((signed) =>
-    signed.id === artifact.id && signed.objectKey === artifact.objectKey &&
-    signed.sha256 === artifact.sha256.toLowerCase() && signed.sizeBytes === artifact.sizeBytes &&
-    signed.contentType === artifact.contentType,
-  );
-  if (matches.length !== 1) throw new Error("SUPPLY_CHAIN_MANIFEST_ARTIFACT_MISMATCH");
-}

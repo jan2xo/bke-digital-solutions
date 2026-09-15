@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createHmac } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 let userId = "";
@@ -39,7 +39,7 @@ describe.sequential("pending-order recovery", () => {
     const event = { eventId: `evt_pending_late_${order.id}`, type: "payment.paid", externalPaymentId: `pay_pending_late_${order.id}`, externalCheckoutId: order.attempts[0]!.externalCheckoutId, reference: order.number, amountMinor: order.totalMinor, currency: order.currency, livemode: false, occurredAt: new Date().toISOString() };
     const raw = Buffer.from(JSON.stringify(event));
     const signature = createHmac("sha256", process.env.SESSION_SECRET!).update(raw).digest("hex");
-    const { processPaymentWebhook } = await import("@/lib/webhooks");
+    const { processPaymentWebhook } = await import("@/v2/apps/web/payments/webhook-processing");
     expect(await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }))).toEqual({ processed: true });
     expect(await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }))).toEqual({ duplicate: true });
     expect((await db.order.findUniqueOrThrow({ where: { id: order.id } })).status).toBe("PAID");

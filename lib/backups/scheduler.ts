@@ -1,6 +1,6 @@
 import "server-only";
-import { db } from "@/lib/db";
-import { env } from "@/lib/env";
+import { db } from "@/v2/platform/host/db";
+import { env } from "@/v2/platform/host/env";
 import { requestBackup, requestBackupOperation } from "@/lib/backups/service";
 import { retentionTier } from "@/lib/backups/policy";
 import type { JobContext, JobSummary } from "@/lib/scheduler/types";

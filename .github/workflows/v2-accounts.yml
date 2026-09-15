@@ -1,0 +1,67 @@
+name: V2 Module - Accounts
+
+on:
+  pull_request:
+    branches: [develop/v2]
+    paths:
+      - "v2/modules/accounts/**"
+      - "v2/platform/persistence/migration-compositor.mjs"
+      - "v2/contracts/**"
+      - "v2/tooling/check-module-boundaries.mjs"
+      - "v2/tsconfig.json"
+      - ".github/workflows/v2-accounts.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accounts:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_accounts
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_accounts"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_accounts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Accounts package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-accounts-0.3.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.3.0/bke-accounts-0.3.0.tgz
+          echo "57905c79432b121bdb269a4a3f51416aef3f9d80d979515e437b7ebbf629e26e  $artifact" | sha256sum -c -
+      - name: Enforce V2 module boundaries
+        run: node v2/tooling/check-module-boundaries.mjs
+      - name: Certify Accounts standalone consumer adoption
+        run: npx tsx v2/modules/accounts/test/consumer-adoption.certify.ts
+      - name: Typecheck V2
+        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Validate installed Accounts Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/accounts/prisma/schema.prisma
+      - name: Apply installed Accounts baseline
+        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
+      - name: Prove installed Accounts migration idempotence
+        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations

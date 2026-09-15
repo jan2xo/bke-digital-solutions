@@ -1,7 +1,5 @@
 export const ANNUAL_DISCOUNT_MIN_BPS = 0;
 export const ANNUAL_DISCOUNT_MAX_BPS = 1_000;
-export const SEMI_ANNUAL_DISCOUNT_MIN_BPS = ANNUAL_DISCOUNT_MIN_BPS;
-export const SEMI_ANNUAL_DISCOUNT_MAX_BPS = ANNUAL_DISCOUNT_MAX_BPS;
 export const OFFER_DISCOUNT_MIN_BPS = 0;
 export const OFFER_DISCOUNT_MAX_BPS = 10_000;
 export const PRICING_VERSION = "OFFER_V1";
@@ -14,19 +12,6 @@ export type AnnualPricing = {
   savingsMinor: number;
   effectiveMonthlyMinor: number;
 };
-
-export type TermPricing = {
-  monthlyAmountMinor: number;
-  discountBps: number;
-  grossAmountMinor: number;
-  amountMinor: number;
-  savingsMinor: number;
-  effectiveMonthlyMinor: number;
-};
-
-function annualTermPricing(pricing: AnnualPricing): TermPricing {
-  return { monthlyAmountMinor: pricing.monthlyAmountMinor, discountBps: pricing.discountBps, grossAmountMinor: pricing.grossAnnualMinor, amountMinor: pricing.annualAmountMinor, savingsMinor: pricing.savingsMinor, effectiveMonthlyMinor: pricing.effectiveMonthlyMinor };
-}
 
 function assertMinorUnits(value: number, field: string) {
   if (!Number.isSafeInteger(value) || value < 1) throw new Error(`INVALID_${field}`);
@@ -58,50 +43,6 @@ export function calculateAnnualPricing(monthlyAmountMinor: number, discountBps: 
   };
 }
 
-// Historical invoice components are usable only when their stored inputs and
-// amounts prove the subscription's saved normal recurring charge.
-export function resolveAnnualRenewalPricing(normalAmountMinor: number, currency: string, snapshot: unknown): AnnualPricing | null {
-  if (!snapshot || typeof snapshot !== "object" || Array.isArray(snapshot)) return null;
-  const saved = snapshot as Record<string, unknown>;
-  if (saved.pricingVersion !== PRICING_VERSION || saved.planType !== "ANNUAL" || saved.currency !== currency || saved.catalogAmountMinor !== normalAmountMinor
-    || typeof saved.monthlyBaseAmountMinor !== "number" || typeof saved.annualCatalogDiscountBps !== "number") return null;
-  try {
-    const pricing = calculateAnnualPricing(saved.monthlyBaseAmountMinor, saved.annualCatalogDiscountBps);
-    return pricing.annualAmountMinor === normalAmountMinor
-      && pricing.grossAnnualMinor === saved.grossAnnualAmountMinor
-      && pricing.savingsMinor === saved.annualCatalogDiscountMinor ? pricing : null;
-  } catch {
-    return null;
-  }
-}
-
-export function calculateSemiAnnualPricing(monthlyAmountMinor: number, discountBps: number): TermPricing {
-  assertMinorUnits(monthlyAmountMinor, "MONTHLY_AMOUNT");
-  if (!Number.isInteger(discountBps) || discountBps < SEMI_ANNUAL_DISCOUNT_MIN_BPS || discountBps > SEMI_ANNUAL_DISCOUNT_MAX_BPS) throw new Error("INVALID_SEMI_ANNUAL_DISCOUNT");
-  const grossAmountMinor = monthlyAmountMinor * 6;
-  if (!Number.isSafeInteger(grossAmountMinor) || grossAmountMinor > 2_147_483_647) throw new Error("MONEY_OVERFLOW");
-  const amountMinor = roundRatioHalfUp(BigInt(grossAmountMinor) * BigInt(10_000 - discountBps), 10_000n);
-  return { monthlyAmountMinor, discountBps, grossAmountMinor, amountMinor, savingsMinor: grossAmountMinor - amountMinor, effectiveMonthlyMinor: roundRatioHalfUp(BigInt(amountMinor), 6n) };
-}
-
-export function resolveRenewalTermPricing(type: "ANNUAL" | "SEMI_ANNUAL", normalAmountMinor: number, currency: string, snapshot: unknown): TermPricing | null {
-  if (type === "ANNUAL") {
-    const pricing = resolveAnnualRenewalPricing(normalAmountMinor, currency, snapshot);
-    return pricing ? annualTermPricing(pricing) : null;
-  }
-  if (!snapshot || typeof snapshot !== "object" || Array.isArray(snapshot)) return null;
-  const saved = snapshot as Record<string, unknown>;
-  if (saved.pricingVersion !== PRICING_VERSION || saved.planType !== type || saved.currency !== currency || saved.catalogAmountMinor !== normalAmountMinor
-    || typeof saved.monthlyBaseAmountMinor !== "number" || typeof saved.semiAnnualCatalogDiscountBps !== "number") return null;
-  try {
-    const pricing = calculateSemiAnnualPricing(saved.monthlyBaseAmountMinor, saved.semiAnnualCatalogDiscountBps);
-    return pricing.amountMinor === normalAmountMinor && pricing.grossAmountMinor === saved.grossSemiAnnualAmountMinor
-      && pricing.savingsMinor === saved.semiAnnualCatalogDiscountMinor ? pricing : null;
-  } catch {
-    return null;
-  }
-}
-
 export function applyOfferDiscount(catalogAmountMinor: number, discountBps: number) {
   assertMinorUnits(catalogAmountMinor, "CATALOG_AMOUNT");
   if (!Number.isInteger(discountBps) || discountBps < OFFER_DISCOUNT_MIN_BPS || discountBps > OFFER_DISCOUNT_MAX_BPS) throw new Error("INVALID_OFFER_DISCOUNT");
@@ -113,13 +54,12 @@ export function applyOfferDiscount(catalogAmountMinor: number, discountBps: numb
 export type ResolvablePlan = {
   id: string;
   editionId?: string;
-  type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL";
+  type: "PERPETUAL" | "MONTHLY" | "ANNUAL";
   currency: string;
   amountMinor: number | null;
   annualDiscountBps: number | null;
-  semiAnnualDiscountBps?: number | null;
   renewalBehavior: "NONE" | "CUSTOMER_AUTHORIZED";
-  monthlySource?: { amountMinor: number | null; active: boolean; type?: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL"; editionId?: string } | null;
+  monthlySource?: { amountMinor: number | null; active: boolean; type?: "PERPETUAL" | "MONTHLY" | "ANNUAL"; editionId?: string } | null;
 };
 
 export function resolvePurchasePlan(plan: ResolvablePlan) {
@@ -128,13 +68,7 @@ export function resolvePurchasePlan(plan: ResolvablePlan) {
       throw new Error("ANNUAL_MONTHLY_PLAN_REQUIRED");
     }
     const pricing = calculateAnnualPricing(plan.monthlySource.amountMinor, plan.annualDiscountBps ?? 0);
-    return { ...pricing, amountMinor: pricing.annualAmountMinor, intervalUnit: "YEAR" as const, intervalCount: 1, billingType: "SUBSCRIPTION" as const, termPricing: annualTermPricing(pricing) };
-  }
-  if (plan.type === "SEMI_ANNUAL") {
-    if (!plan.monthlySource?.active || plan.monthlySource.amountMinor === null || plan.monthlySource.type !== "MONTHLY" || (plan.editionId && plan.monthlySource.editionId !== plan.editionId)) throw new Error("SEMI_ANNUAL_MONTHLY_PLAN_REQUIRED");
-    if (plan.semiAnnualDiscountBps === null || plan.semiAnnualDiscountBps === undefined) throw new Error("SEMI_ANNUAL_DISCOUNT_REQUIRED");
-    const pricing = calculateSemiAnnualPricing(plan.monthlySource.amountMinor, plan.semiAnnualDiscountBps);
-    return { ...pricing, intervalUnit: "MONTH" as const, intervalCount: 6, billingType: "SUBSCRIPTION" as const, grossAnnualMinor: null, annualAmountMinor: null, termPricing: pricing };
+    return { ...pricing, amountMinor: pricing.annualAmountMinor, intervalUnit: "YEAR" as const, intervalCount: 1, billingType: "SUBSCRIPTION" as const };
   }
   if (plan.amountMinor === null) throw new Error("PLAN_AMOUNT_REQUIRED");
   assertMinorUnits(plan.amountMinor, "PLAN_AMOUNT");
@@ -149,10 +83,9 @@ export function resolvePurchasePlan(plan: ResolvablePlan) {
     annualAmountMinor: null,
     savingsMinor: 0,
     effectiveMonthlyMinor: plan.type === "MONTHLY" ? plan.amountMinor : null,
-    termPricing: null,
   };
 }
 
 export function purchasePlanLabel(type: ResolvablePlan["type"]) {
-  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : type === "SEMI_ANNUAL" ? "Semi-annual" : "Annual";
+  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : "Annual";
 }

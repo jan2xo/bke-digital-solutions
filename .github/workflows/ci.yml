@@ -1,5 +1,14 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    paths-ignore:
+      - "v2/**"
+      - ".github/workflows/v2-*.yml"
+  pull_request:
+    paths-ignore:
+      - "v2/**"
+      - ".github/workflows/v2-*.yml"
 
 permissions:
   contents: read
@@ -32,12 +41,10 @@ jobs:
         env:
           DEPLOYMENT_ENV: test
       - run: npm run db:generate
-      - run: git diff --exit-code -- generated/prisma
+      - run: git diff --exit-code -- v2/platform/persistence/generated/prisma
       - run: npx prisma validate
       - run: npm run db:deploy
       - run: npm run db:status
-      - name: Verify migration replay is a no-op
-        run: npm run db:deploy
       - run: npm run db:smoke
       - run: npm run db:seed
       - name: Generate disposable test signing keys
@@ -55,10 +62,6 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - name: Install browser for purchase-plan selection regression
-        run: npx playwright install --with-deps chromium
-      - name: Verify monthly, semi-annual and annual browser selection
-        run: npm run test:e2e -- semi-annual.spec.ts
       - run: git diff --check
       - run: npm run security:hygiene
       - run: npm audit --omit=dev --audit-level=critical

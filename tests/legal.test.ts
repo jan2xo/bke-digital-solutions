@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { applyLegalVariables, legalContentHash, renderLegalMarkdown } from "@/lib/legal/render";
-import { checkoutLegalTypes } from "@/lib/legal/service";
-import { normalizePrivacyRequestType, PRIVACY_REQUEST_STATUSES, publicPrivacyRequestSnapshot } from "@/lib/privacy/requests";
+import { applyLegalVariables, legalContentHash, renderLegalMarkdown } from "@/v2/apps/web/legal/render";
+import { checkoutLegalTypes } from "@/v2/apps/web/legal/service";
+import { normalizePrivacyRequestType, PRIVACY_REQUEST_STATUSES, publicPrivacyRequestSnapshot } from "@/v2/apps/web/privacy/requests";
 
 const variables = {
   company_name: "BKE Digital Solutions",
