@@ -331,6 +331,19 @@ export async function reactToPaidSettlement(
     throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
   }
 
+  const resolvedOrder = await tx.order.findFirst({
+    where: {
+      OR: [
+        { id: settlement.value.commercialReference },
+        { number: settlement.value.commercialReference },
+      ],
+    },
+    select: { id: true },
+  });
+  if (!resolvedOrder) {
+    throw new PaymentLifecycleError("PAYMENT_REFERENCE_MISMATCH");
+  }
+
   const entitlements = createEntitlementsDurableRightGrantCapability(createEntitlementsRepository(tx));
   const commerce = createCommerceSettlementReactionCapability({
     payments: Object.freeze({
@@ -339,7 +352,7 @@ export async function reactToPaidSettlement(
           status: "SETTLED" as const,
           value: {
             settlementFactId: settlement.value.settlementFactId,
-            commercialReference: settlement.value.commercialReference,
+            commercialReference: resolvedOrder.id,
             amountMinor: settlement.value.amountMinor,
             currency: settlement.value.currency,
             settledAt: settlement.value.settledAt,
