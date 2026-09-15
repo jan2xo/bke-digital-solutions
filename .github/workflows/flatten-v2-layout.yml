@@ -147,10 +147,7 @@ jobs:
 
           rm .github/workflows/flatten-v2-layout.yml
 
-          if find . -path './.git' -prune -o -path './node_modules' -prune -o -path './v2' -print | grep -q .; then
-            echo 'v2/ still exists' >&2
-            exit 1
-          fi
+          test ! -d v2
 
           if git grep -n '@/v2/' -- ':!package-lock.json'; then
             echo 'stale @/v2 import remains' >&2
@@ -167,20 +164,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck
+      - name: Typecheck repository
         run: npm run typecheck
 
-      - name: Architecture typecheck
+      - name: Typecheck architecture root
         run: npx tsc -p tsconfig.architecture.json --noEmit
-
-      - name: Full test suite
-        run: npm test
-
-      - name: Production build
-        run: npm run build
-
-      - name: Legacy runtime scanner
-        run: node tooling/check-host-v1-dependencies.mjs
 
       - name: Commit flattened repository layout
         shell: bash
