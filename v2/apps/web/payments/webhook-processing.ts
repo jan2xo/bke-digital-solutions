@@ -283,46 +283,48 @@ async function processPaidEvent(
     await tx.paymentAttempt.update({ where: { id: hostAttempt.id }, data: { status: "COMPLETED" } });
   }
 
-  await fulfillOrderLicensing(
-    tx,
-    order.id,
-    { paymentId: payment.id, paymentEventId: event.eventId },
-    renewalRequests,
-  );
-  const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-  const invoice = await tx.invoice.findUniqueOrThrow({ where: { id: settlement.invoiceId } });
-  await queueCommerceEmail(tx, {
-    type: "PAYMENT_RECEIPT",
-    recipient: account.billingEmail,
-    subject: "BKE Digital Solutions payment receipt",
-    payload: { orderNumber: order.number },
-    deduplicationKey: `payment-receipt:${order.id}`,
-  });
-  await queueCommerceEmail(tx, {
-    type: "INVOICE_ISSUED",
-    recipient: account.billingEmail,
-    subject: "Your BKE Digital Solutions invoice",
-    payload: { orderNumber: order.number, invoiceNumber: invoice.number },
-    deduplicationKey: `invoice-issued:${order.id}`,
-  });
-  await queueCommerceEmail(tx, {
-    type: "LICENSE_ISSUED",
-    recipient: account.billingEmail,
-    subject: "Your BKE Digital Solutions license is ready",
-    payload: { orderNumber: order.number },
-    deduplicationKey: `entitlement-issued:${order.id}`,
-  });
-  await tx.auditLog.create({
-    data: {
-      accountId: order.accountId,
-      action: settlement.settlementDisposition === "AFTER_LOCAL_CANCELLATION"
-        ? "PAYMENT_SETTLED_AFTER_LOCAL_CANCELLATION"
-        : "PAYMENT_SETTLED",
-      targetType: "Order",
-      targetId: order.id,
-      metadata: { provider: event.provider, webhookEventId: event.eventId },
-    },
-  });
+  if (settlement.paymentSettlementDisposition === "CREATED") {
+    await fulfillOrderLicensing(
+      tx,
+      order.id,
+      { paymentId: payment.id, paymentEventId: event.eventId },
+      renewalRequests,
+    );
+    const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
+    const invoice = await tx.invoice.findUniqueOrThrow({ where: { id: settlement.invoiceId } });
+    await queueCommerceEmail(tx, {
+      type: "PAYMENT_RECEIPT",
+      recipient: account.billingEmail,
+      subject: "BKE Digital Solutions payment receipt",
+      payload: { orderNumber: order.number },
+      deduplicationKey: `payment-receipt:${order.id}`,
+    });
+    await queueCommerceEmail(tx, {
+      type: "INVOICE_ISSUED",
+      recipient: account.billingEmail,
+      subject: "Your BKE Digital Solutions invoice",
+      payload: { orderNumber: order.number, invoiceNumber: invoice.number },
+      deduplicationKey: `invoice-issued:${order.id}`,
+    });
+    await queueCommerceEmail(tx, {
+      type: "LICENSE_ISSUED",
+      recipient: account.billingEmail,
+      subject: "Your BKE Digital Solutions license is ready",
+      payload: { orderNumber: order.number },
+      deduplicationKey: `entitlement-issued:${order.id}`,
+    });
+    await tx.auditLog.create({
+      data: {
+        accountId: order.accountId,
+        action: settlement.settlementDisposition === "AFTER_LOCAL_CANCELLATION"
+          ? "PAYMENT_SETTLED_AFTER_LOCAL_CANCELLATION"
+          : "PAYMENT_SETTLED",
+        targetType: "Order",
+        targetId: order.id,
+        metadata: { provider: event.provider, webhookEventId: event.eventId },
+      },
+    });
+  }
   return { order, paymentId: payment.id, hostAttemptId: hostAttempt?.id };
 }
 

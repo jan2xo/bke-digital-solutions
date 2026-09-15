@@ -392,5 +392,8 @@ export async function reactToPaidSettlement(
   if (result.status === "FAILED") {
     throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
   }
-  return result.value;
+  return Object.freeze({
+    ...result.value,
+    paymentSettlementDisposition: settlement.disposition,
+  });
 }
