@@ -1,0 +1,28 @@
+name: Temporary Webhooks Lock Refresh
+
+on:
+  push:
+    branches:
+      - feat/v2-webhooks-owner-adoption
+
+permissions:
+  contents: read
+
+jobs:
+  refresh-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Regenerate package lock only
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Verify lock is valid JSON
+        run: node -e 'JSON.parse(require("node:fs").readFileSync("package-lock.json", "utf8")); console.log("package-lock JSON valid")'
+      - name: Upload regenerated lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: webhooks-package-lock
+          path: package-lock.json
+          if-no-files-found: error
