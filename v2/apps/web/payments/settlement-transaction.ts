@@ -177,8 +177,20 @@ function createPaymentsRepository(tx: Prisma.TransactionClient): PaymentsSettlem
   });
 }
 
+function canonicalJson(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalJson);
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
+        .map(([key, nested]) => [key, canonicalJson(nested)]),
+    );
+  }
+  return value ?? null;
+}
+
 function jsonEquivalent(left: unknown, right: unknown): boolean {
-  return JSON.stringify(left ?? null) === JSON.stringify(right ?? null);
+  return JSON.stringify(canonicalJson(left)) === JSON.stringify(canonicalJson(right));
 }
 
 function entitlementSnapshot(row: EntitlementRow) {
