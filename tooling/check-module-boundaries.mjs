@@ -2,9 +2,15 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const v2Root = resolve(repositoryRoot, "v2");
-const modulesRoot = resolve(v2Root, "modules");
+const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const modulesRoot = resolve(repositoryRoot, "modules");
+const architectureRoots = [
+  resolve(repositoryRoot, "apps"),
+  resolve(repositoryRoot, "contracts"),
+  modulesRoot,
+  resolve(repositoryRoot, "platform"),
+  resolve(repositoryRoot, "tooling"),
+];
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".mjs"]);
 
 function extension(path) {
@@ -60,6 +66,10 @@ function isWithin(parent, child) {
   return path === "" || (!path.startsWith(`..${sep}`) && path !== "..");
 }
 
+function isWithinArchitecture(target) {
+  return architectureRoots.some((root) => isWithin(root, target));
+}
+
 const violations = [];
 
 for (const sourceFile of collectFiles(modulesRoot)) {
@@ -73,9 +83,9 @@ for (const sourceFile of collectFiles(modulesRoot)) {
       continue;
     }
 
-    if (!isWithin(v2Root, target)) {
+    if (!isWithinArchitecture(target)) {
       violations.push(
-        `${relative(repositoryRoot, sourceFile)} imports V1/root implementation ${specifier}`,
+        `${relative(repositoryRoot, sourceFile)} imports legacy/root implementation ${specifier}`,
       );
       continue;
     }
@@ -99,11 +109,11 @@ for (const sourceFile of collectFiles(modulesRoot)) {
 }
 
 if (violations.length > 0) {
-  console.error("V2 module boundary violations:");
+  console.error("Module boundary violations:");
   for (const violation of violations) {
     console.error(`- ${violation}`);
   }
   process.exit(1);
 }
 
-console.log("V2 module boundaries GREEN");
+console.log("Module boundaries GREEN");
