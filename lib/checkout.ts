@@ -39,7 +39,7 @@ export async function createCheckout(...args: Parameters<typeof createLegacyChec
         amountMinor: item.totalMinor,
       })))}::jsonb,
       'PENDING'::"PaymentCheckoutAttemptStatus", ${attempt.externalCheckoutId}, ${attempt.checkoutUrl},
-      ${attempt.createdAt}, ${attempt.updatedAt}
+      ${attempt.createdAt}, ${attempt.createdAt}
     )
     ON CONFLICT ("sourceReference") DO UPDATE SET
       "commercialReference" = EXCLUDED."commercialReference",
