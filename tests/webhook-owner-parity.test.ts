@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
+// Final owner-adoption parity runs against released Commerce 0.11.0 and Payments 0.6.0.
 const processorSource = readFileSync("v2/apps/web/payments/webhook-processing.ts", "utf8");
 const ingestionSource = readFileSync("v2/apps/web/payments/webhook-ingestion.ts", "utf8");
 const settlementSource = readFileSync("v2/apps/web/payments/settlement-transaction.ts", "utf8");
