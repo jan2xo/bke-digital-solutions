@@ -38,7 +38,7 @@ describe.sequential("edition and multi-plan commerce", () => {
       const event = { eventId: `evt_plan_${type}_${order.id}`, type: "payment.paid", externalPaymentId: `pay_plan_${type}_${order.id}`, externalCheckoutId: order.attempts[0]!.externalCheckoutId, reference: order.number, amountMinor: order.totalMinor, currency: order.currency, livemode: false, occurredAt: new Date().toISOString() };
       const raw = Buffer.from(JSON.stringify(event));
       const signature = createHmac("sha256", process.env.SESSION_SECRET!).update(raw).digest("hex");
-      const { processPaymentWebhook } = await import("@/lib/webhooks");
+      const { processPaymentWebhook } = await import("@/v2/apps/web/payments/webhook-processing");
       await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }));
       expect(await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }))).toEqual({ duplicate: true });
 

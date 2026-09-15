@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
 import type { CommerceSettlementReactionRepository } from "@bke/commerce/logic/settlement-reaction-repository";
+import type { CommerceSettlementEntitlementInput } from "@bke/commerce/logic/settlement-reaction-ports";
 import { createEntitlementsDurableRightGrantCapability } from "@bke/entitlements/logic/durable-right-grant";
 import type {
   EntitlementsDurableRightGrantRepository,
@@ -16,7 +17,7 @@ import type {
 import type { PaymentsCheckoutAttemptRecord } from "@bke/payments/logic/checkout-attempt-repository";
 import type { PaymentsProviderEventRecord } from "@bke/payments/logic/provider-event-repository";
 import type { PaymentsSettlementFactSnapshot } from "@bke/payments/contracts/settlement-fact.contract";
-import { PaymentLifecycleError } from "@bke/payments/logic/payment-errors";
+import { PaymentLifecycleError, type PaymentErrorCode } from "@bke/payments/logic/payment-errors";
 import type { Prisma } from "@/v2/platform/persistence/generated/prisma/client";
 
 type ProviderEventRow = Readonly<{
@@ -72,6 +73,9 @@ type SettlementFactRow = Readonly<{
   settledAt: Date;
   createdAt: Date;
 }>;
+
+type EntitlementsGrantRepositoryInput = Parameters<EntitlementsDurableRightGrantRepository["grant"]>[0];
+type CommerceSettlementRepositoryInput = Parameters<CommerceSettlementReactionRepository["settle"]>[0];
 
 type EntitlementRow = Readonly<{
   id: string;
@@ -195,7 +199,7 @@ function entitlementSnapshot(row: EntitlementRow) {
 
 function createEntitlementsRepository(tx: Prisma.TransactionClient): EntitlementsDurableRightGrantRepository {
   return Object.freeze({
-    async grant(input): Promise<EntitlementsDurableRightGrantRepositoryResult> {
+    async grant(input: EntitlementsGrantRepositoryInput): Promise<EntitlementsDurableRightGrantRepositoryResult> {
       const inserted = await tx.$queryRaw<EntitlementRow[]>`
         INSERT INTO "Entitlement" (
           "id", "subjectId", "resourceId", "sourceReference", "status", "quantity",
@@ -237,7 +241,7 @@ function createEntitlementsRepository(tx: Prisma.TransactionClient): Entitlement
 
 function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlementReactionRepository {
   return Object.freeze({
-    async settle(input) {
+    async settle(input: CommerceSettlementRepositoryInput) {
       await tx.$queryRaw`SELECT "id" FROM "Order" WHERE "id" = ${input.orderId} FOR UPDATE`;
       const order = await tx.order.findUnique({
         where: { id: input.orderId },
@@ -301,7 +305,7 @@ function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlem
   });
 }
 
-function rejectionCode(code: string): string {
+function rejectionCode(code: string): PaymentErrorCode {
   switch (code) {
     case "MODE_MISMATCH": return "PAYMENT_MODE_MISMATCH";
     case "CHECKOUT_MISMATCH": return "PAYMENT_CHECKOUT_MISMATCH";
@@ -345,7 +349,7 @@ export async function reactToPaidSettlement(
     }),
     repository: createCommerceRepository(tx),
     entitlements: Object.freeze({
-      async grant(input) {
+      async grant(input: CommerceSettlementEntitlementInput) {
         const result = await entitlements.grant(input);
         if (result.status === "GRANTED" || result.status === "EXISTING") return { status: result.status };
         if (result.status === "REJECTED") return { status: "REJECTED" as const };

@@ -26,6 +26,9 @@ type PaymentEvidence = Readonly<{
   paymentEventId?: string;
 }>;
 
+type LicensingIssueRepositoryInput = Parameters<LicensingEntitlementManagementRepository["issue"]>[0];
+type LicensingRenewRepositoryInput = Parameters<LicensingEntitlementManagementRepository["renewSubscription"]>[0];
+
 function addDays(value: Date, count: number): Date {
   return new Date(value.getTime() + count * 86_400_000);
 }
@@ -39,7 +42,7 @@ function addBillingInterval(value: Date, unit: "MONTH" | "YEAR", count: number):
 
 function createRepository(tx: Prisma.TransactionClient): LicensingEntitlementManagementRepository {
   return Object.freeze({
-    async issue(input) {
+    async issue(input: LicensingIssueRepositoryInput) {
       const license = await tx.license.create({
         data: {
           publicId: input.publicId,
@@ -74,7 +77,7 @@ function createRepository(tx: Prisma.TransactionClient): LicensingEntitlementMan
       });
     },
 
-    async renewSubscription(input) {
+    async renewSubscription(input: LicensingRenewRepositoryInput) {
       const durationMs = input.periodEnd.getTime() - input.periodStart.getTime();
       const licenses = await tx.license.findMany({
         where: { subscriptionId: input.subscriptionId },
