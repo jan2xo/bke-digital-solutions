@@ -1,0 +1,91 @@
+name: Temporary Webhooks Type Fix
+
+on:
+  push:
+    branches:
+      - feat/v2-webhooks-owner-adoption
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-webhooks-owner-adoption
+      - name: Apply exact mechanical fixes
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          v2_webhook = '@/v2/apps/web/payments/webhook-processing'
+          for name in [
+              'tests/integration/lifecycle.test.ts',
+              'tests/integration/multi-plan.test.ts',
+              'tests/integration/offers.test.ts',
+              'tests/integration/pending-orders.test.ts',
+          ]:
+              p = Path(name)
+              s = p.read_text()
+              old = '@/lib/webhooks'
+              if old not in s:
+                  raise SystemExit(f'missing legacy import in {name}')
+              p.write_text(s.replace(old, v2_webhook))
+
+          p = Path('v2/apps/web/licensing/entitlement-management.ts')
+          s = p.read_text()
+          anchor = 'type PaymentEvidence = Readonly<{\n  paymentId?: string;\n  paymentEventId?: string;\n}>;\n'
+          insert = anchor + '\ntype LicensingIssueRepositoryInput = Parameters<LicensingEntitlementManagementRepository["issue"]>[0];\ntype LicensingRenewRepositoryInput = Parameters<LicensingEntitlementManagementRepository["renewSubscription"]>[0];\n'
+          if anchor not in s:
+              raise SystemExit('licensing type anchor missing')
+          s = s.replace(anchor, insert, 1)
+          s = s.replace('    async issue(input) {', '    async issue(input: LicensingIssueRepositoryInput) {', 1)
+          s = s.replace('    async renewSubscription(input) {', '    async renewSubscription(input: LicensingRenewRepositoryInput) {', 1)
+          p.write_text(s)
+
+          p = Path('v2/apps/web/payments/settlement-transaction.ts')
+          s = p.read_text()
+          s = s.replace(
+              'import type { CommerceSettlementReactionRepository } from "@bke/commerce/logic/settlement-reaction-repository";\n',
+              'import type { CommerceSettlementReactionRepository } from "@bke/commerce/logic/settlement-reaction-repository";\nimport type { CommerceSettlementEntitlementInput } from "@bke/commerce/logic/settlement-reaction-ports";\n',
+              1,
+          )
+          s = s.replace(
+              'import { PaymentLifecycleError } from "@bke/payments/logic/payment-errors";',
+              'import { PaymentLifecycleError, type PaymentErrorCode } from "@bke/payments/logic/payment-errors";',
+              1,
+          )
+          anchor = 'type EntitlementRow = Readonly<{\n'
+          aliases = 'type EntitlementsGrantRepositoryInput = Parameters<EntitlementsDurableRightGrantRepository["grant"]>[0];\ntype CommerceSettlementRepositoryInput = Parameters<CommerceSettlementReactionRepository["settle"]>[0];\n\n'
+          if anchor not in s:
+              raise SystemExit('settlement type anchor missing')
+          s = s.replace(anchor, aliases + anchor, 1)
+          s = s.replace(
+              '    async grant(input): Promise<EntitlementsDurableRightGrantRepositoryResult> {',
+              '    async grant(input: EntitlementsGrantRepositoryInput): Promise<EntitlementsDurableRightGrantRepositoryResult> {',
+              1,
+          )
+          s = s.replace('    async settle(input) {', '    async settle(input: CommerceSettlementRepositoryInput) {', 1)
+          s = s.replace('function rejectionCode(code: string): string {', 'function rejectionCode(code: string): PaymentErrorCode {', 1)
+          # The second grant is the Commerce adapter, not the Entitlements repository.
+          marker = '    entitlements: Object.freeze({\n      async grant(input) {'
+          replacement = '    entitlements: Object.freeze({\n      async grant(input: CommerceSettlementEntitlementInput) {'
+          if marker not in s:
+              raise SystemExit('commerce entitlement adapter anchor missing')
+          s = s.replace(marker, replacement, 1)
+          p.write_text(s)
+          PY
+      - name: Verify legacy webhook imports are gone from integration tests
+        run: |
+          if grep -R '@/lib/webhooks' tests/integration; then exit 1; fi
+      - name: Commit fixes and remove helper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/integration/lifecycle.test.ts tests/integration/multi-plan.test.ts tests/integration/offers.test.ts tests/integration/pending-orders.test.ts v2/apps/web/licensing/entitlement-management.ts v2/apps/web/payments/settlement-transaction.ts
+          git rm .github/workflows/temp-webhooks-type-fix.yml
+          git commit -m "fix(v2 webhooks): type owner transaction adapters"
+          git push origin HEAD:feat/v2-webhooks-owner-adoption
