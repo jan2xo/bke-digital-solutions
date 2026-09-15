@@ -1,8 +1,15 @@
 import "server-only";
 
+import type {
+  PaymentsVerifiedProviderEventSnapshot,
+} from "@bke/payments/contracts/provider-event-ingestion.contract";
 import type { PaymentsVerifiedProviderEvent } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
-import type { PaymentsProviderEventRepository } from "@bke/payments/logic/provider-event-repository";
+import type {
+  PaymentsProviderEventClaim,
+  PaymentsProviderEventRecord,
+  PaymentsProviderEventRepository,
+} from "@bke/payments/logic/provider-event-repository";
 import { createPaymentsProviderEventIngestionCapability } from "@bke/payments/logic/provider-event-ingestion";
 import { PaymentLifecycleError } from "@bke/payments/logic/payment-errors";
 import { createPaymentEventVerifier } from "@/v2/apps/web/payments/compatibility-provider";
@@ -24,7 +31,26 @@ type StoredProviderEvent = Readonly<{
   eventFingerprint?: string;
 }>;
 
-type ProviderEventClaimInput = Parameters<PaymentsProviderEventRepository["claim"]>[0];
+type ProviderEventRow = Readonly<{
+  id: string;
+  provider: string;
+  eventId: string;
+  payloadHash: string;
+  eventFingerprint: string;
+  rawType: string | null;
+  type: PaymentsProviderEventRecord["type"];
+  externalPaymentId: string | null;
+  externalCheckoutId: string | null;
+  reference: string | null;
+  externalRefundId: string | null;
+  refundStatus: PaymentsProviderEventRecord["refundStatus"];
+  amountMinor: number | null;
+  currency: string | null;
+  livemode: boolean;
+  occurredAt: Date;
+  receivedAt: Date;
+}>;
+
 type VerifyRawBody = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[0];
 type VerifyHeaders = Parameters<PaymentsProviderEventVerifier["verifyAndParse"]>[1];
 
@@ -32,7 +58,7 @@ function headerRecord(headers: Headers): Readonly<Record<string, string>> {
   return Object.freeze(Object.fromEntries(headers.entries()));
 }
 
-function storedEvent(input: ProviderEventClaimInput): StoredProviderEvent {
+function storedEvent(input: PaymentsProviderEventClaim): StoredProviderEvent {
   return Object.freeze({
     eventId: input.eventId,
     ...(input.rawType ? { rawType: input.rawType } : {}),
@@ -56,55 +82,73 @@ function storedFingerprint(value: unknown): string | null {
   return typeof fingerprint === "string" && fingerprint.length > 0 ? fingerprint : null;
 }
 
+function ownerRecord(row: ProviderEventRow): PaymentsProviderEventRecord {
+  return Object.freeze({ ...row });
+}
+
 const repository: PaymentsProviderEventRepository = Object.freeze({
-  async claim(input: ProviderEventClaimInput) {
-    const inserted = await db.webhookEvent.createMany({
-      data: [{
-        id: input.id,
-        provider: input.provider,
-        externalEventId: input.eventId,
-        rawEventType: input.rawType,
-        eventType: input.type,
-        livemode: input.livemode,
-        payloadHash: input.payloadHash,
-        normalizedData: storedEvent(input),
-        status: "RECEIVED",
-        occurredAt: input.occurredAt,
-        processingAttempts: 1,
-        lastAttemptAt: new Date(),
-        providerCheckoutId: input.externalCheckoutId,
-        providerPaymentId: input.externalPaymentId,
-        providerRefundId: input.externalRefundId,
-      }],
-      skipDuplicates: true,
-    });
-    const row = await db.webhookEvent.findUniqueOrThrow({
-      where: { provider_externalEventId: { provider: input.provider, externalEventId: input.eventId } },
-    });
-    const fingerprint = storedFingerprint(row.normalizedData)
-      ?? (row.payloadHash === input.payloadHash ? input.eventFingerprint : "LEGACY_EVENT_FINGERPRINT_MISMATCH");
-    return {
-      created: inserted.count === 1,
-      record: {
-        id: row.id,
-        provider: row.provider,
-        eventId: row.externalEventId,
-        payloadHash: row.payloadHash,
-        eventFingerprint: fingerprint,
-        rawType: row.rawEventType,
-        type: input.type,
-        externalPaymentId: row.providerPaymentId ?? input.externalPaymentId,
-        externalCheckoutId: row.providerCheckoutId ?? input.externalCheckoutId,
-        reference: input.reference,
-        externalRefundId: row.providerRefundId ?? input.externalRefundId,
-        refundStatus: input.refundStatus,
-        amountMinor: input.amountMinor,
-        currency: input.currency,
-        livemode: row.livemode,
-        occurredAt: row.occurredAt ?? input.occurredAt,
-        receivedAt: row.receivedAt,
-      },
-    };
+  async claim(input: PaymentsProviderEventClaim) {
+    return db.$transaction(async (tx) => {
+      const inserted = await tx.webhookEvent.createMany({
+        data: [{
+          id: input.id,
+          provider: input.provider,
+          externalEventId: input.eventId,
+          rawEventType: input.rawType,
+          eventType: input.type,
+          livemode: input.livemode,
+          payloadHash: input.payloadHash,
+          normalizedData: storedEvent(input),
+          status: "RECEIVED",
+          occurredAt: input.occurredAt,
+          processingAttempts: 1,
+          lastAttemptAt: new Date(),
+          providerCheckoutId: input.externalCheckoutId,
+          providerPaymentId: input.externalPaymentId,
+          providerRefundId: input.externalRefundId,
+        }],
+        skipDuplicates: true,
+      });
+      const operational = await tx.webhookEvent.findUniqueOrThrow({
+        where: {
+          provider_externalEventId: {
+            provider: input.provider,
+            externalEventId: input.eventId,
+          },
+        },
+      });
+      const fingerprint = storedFingerprint(operational.normalizedData)
+        ?? (operational.payloadHash === input.payloadHash
+          ? input.eventFingerprint
+          : "LEGACY_EVENT_FINGERPRINT_MISMATCH");
+
+      await tx.$executeRaw`
+        INSERT INTO "PaymentProviderEvent" (
+          "id", "provider", "eventId", "payloadHash", "eventFingerprint", "rawType", "type",
+          "externalPaymentId", "externalCheckoutId", "reference", "externalRefundId", "refundStatus",
+          "amountMinor", "currency", "livemode", "occurredAt"
+        ) VALUES (
+          ${operational.id}, ${input.provider}, ${input.eventId}, ${operational.payloadHash}, ${fingerprint},
+          ${input.rawType}, ${input.type}, ${input.externalPaymentId}, ${input.externalCheckoutId}, ${input.reference},
+          ${input.externalRefundId}, ${input.refundStatus}, ${input.amountMinor}, ${input.currency},
+          ${operational.livemode}, ${operational.occurredAt ?? input.occurredAt}
+        )
+        ON CONFLICT ("provider", "eventId") DO NOTHING
+      `;
+      const ownerRows = await tx.$queryRaw<ProviderEventRow[]>`
+        SELECT "id", "provider", "eventId", "payloadHash", "eventFingerprint", "rawType", "type",
+               "externalPaymentId", "externalCheckoutId", "reference", "externalRefundId", "refundStatus",
+               "amountMinor", "currency", "livemode", "occurredAt", "receivedAt"
+          FROM "PaymentProviderEvent"
+         WHERE "provider" = ${input.provider} AND "eventId" = ${input.eventId}
+         LIMIT 1
+      `;
+      if (!ownerRows[0]) throw new Error("PAYMENTS_PROVIDER_EVENT_DISAPPEARED");
+      return {
+        created: inserted.count === 1,
+        record: ownerRecord(ownerRows[0]),
+      };
+    }, { isolationLevel: "Serializable" });
   },
 });
 
@@ -120,7 +164,7 @@ function verificationError(error: unknown): PaymentLifecycleError {
 }
 
 export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promise<{
-  event: PaymentsVerifiedProviderEvent;
+  event: PaymentsVerifiedProviderEventSnapshot;
   duplicate: boolean;
 }> {
   const rawBody = new Uint8Array(raw);
@@ -150,7 +194,11 @@ export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promi
     if (!verifiedEvent) throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
     await db.webhookEvent.updateMany({
       where: { provider: verifier.name, externalEventId: verifiedEvent.eventId },
-      data: { conflictCount: { increment: 1 }, lastErrorCode: "PAYMENT_EVENT_REPLAY_CONFLICT", resolutionStatus: "OPEN" },
+      data: {
+        conflictCount: { increment: 1 },
+        lastErrorCode: "PAYMENT_EVENT_REPLAY_CONFLICT",
+        resolutionStatus: "OPEN",
+      },
     });
     throw new PaymentLifecycleError("PAYMENT_EVENT_REPLAY_CONFLICT");
   }
@@ -160,15 +208,22 @@ export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promi
       throw verificationError(verificationFailure);
     }
     throw new PaymentLifecycleError(
-      result.code === "PERSISTENCE_UNAVAILABLE" ? "PAYMENT_PROCESSING_RETRYABLE" : "PAYMENT_PROCESSING_FAILED",
+      result.code === "PERSISTENCE_UNAVAILABLE"
+        ? "PAYMENT_PROCESSING_RETRYABLE"
+        : "PAYMENT_PROCESSING_FAILED",
       result.code === "PERSISTENCE_UNAVAILABLE",
     );
   }
 
-  const event: PaymentsVerifiedProviderEvent = result.value;
+  const event = result.value;
   if (result.disposition === "EXISTING") {
     const existing = await db.webhookEvent.findUniqueOrThrow({
-      where: { provider_externalEventId: { provider: verifier.name, externalEventId: event.eventId } },
+      where: {
+        provider_externalEventId: {
+          provider: event.provider,
+          externalEventId: event.eventId,
+        },
+      },
       select: { id: true, status: true },
     });
     if (existing.status !== "FAILED") return { event, duplicate: true };
