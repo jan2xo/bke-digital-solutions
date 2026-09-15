@@ -1,24 +1,24 @@
-name: V2 Composition
+name: Composition
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/apps/orchestrator/**"
-      - "v2/platform/composition/**"
-      - "v2/contracts/**"
-      - "v2/modules/*/module.ts"
-      - "v2/modules/*/module.manifest.ts"
-      - "v2/modules/*/contracts/**"
-      - "v2/modules/identity/test/consumer-adoption.certify.ts"
-      - "v2/modules/accounts/test/consumer-adoption.certify.ts"
-      - "v2/modules/legal/test/consumer-adoption.certify.ts"
-      - "v2/modules/licensing/test/consumer-adoption.certify.ts"
-      - "v2/modules/entitlements/test/consumer-adoption.certify.ts"
-      - "v2/modules/payments/test/consumer-adoption.certify.ts"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "apps/orchestrator/**"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "modules/*/module.ts"
+      - "modules/*/module.manifest.ts"
+      - "modules/*/contracts/**"
+      - "modules/identity/test/consumer-adoption.certify.ts"
+      - "modules/accounts/test/consumer-adoption.certify.ts"
+      - "modules/legal/test/consumer-adoption.certify.ts"
+      - "modules/licensing/test/consumer-adoption.certify.ts"
+      - "modules/entitlements/test/consumer-adoption.certify.ts"
+      - "modules/payments/test/consumer-adoption.certify.ts"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - ".github/workflows/v2-composition.yml"
       - "next.config.ts"
       - "package.json"
@@ -43,72 +43,60 @@ jobs:
         run: |
           set -euo pipefail
           artifact=/tmp/bke-identity-0.3.0.tgz
-          curl -fL --retry 3 --retry-all-errors \
-            -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz
+          curl -fL --retry 3 --retry-all-errors -o "$artifact" https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz
           echo "5d8820122de15e0b500f6e3cccfdeeec6b63afbb361daa1dee3fc217e1c3f139  $artifact" | sha256sum -c -
       - name: Verify certified Accounts package artifact
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-accounts-0.3.0.tgz
-          curl -fL --retry 3 --retry-all-errors \
-            -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.3.0/bke-accounts-0.3.0.tgz
-          echo "57905c79432b121bdb269a4a3f51416aef3f9d80d979515e437b7ebbf629e26e  $artifact" | sha256sum -c -
+          artifact=/tmp/bke-accounts-0.4.0.tgz
+          curl -fL --retry 3 --retry-all-errors -o "$artifact" https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.4.0/bke-accounts-0.4.0.tgz
+          echo "59503141f2b7bbbe561db643b1df090907844781b9cf8464ee5e1569a425ae98  $artifact" | sha256sum -c -
       - name: Verify certified Legal package artifact
         shell: bash
         run: |
           set -euo pipefail
           artifact=/tmp/bke-legal-0.4.0.tgz
-          curl -fL --retry 3 --retry-all-errors \
-            -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz
+          curl -fL --retry 3 --retry-all-errors -o "$artifact" https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz
           echo "9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9  $artifact" | sha256sum -c -
       - name: Verify certified Licensing package artifact
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-licensing-0.6.0.tgz
-          curl -fL --retry 3 --retry-all-errors \
-            -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.6.0/bke-licensing-0.6.0.tgz
-          echo "188ced2d76f76bc722dab8dca6c9ab5d0a193789a7d6a4b4f979eac0c0d92ee5  $artifact" | sha256sum -c -
+          artifact=/tmp/bke-licensing-0.9.0.tgz
+          curl -fL --retry 3 --retry-all-errors -o "$artifact" https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz
+          echo "afb66b9c2c7ae514b3a9afcc7b6eeccbb697e1a6f361cd85fc765b356b978e89  $artifact" | sha256sum -c -
       - name: Verify certified Entitlements package artifact
         shell: bash
         run: |
           set -euo pipefail
           artifact=/tmp/bke-entitlements-0.1.0.tgz
-          curl -fL --retry 3 --retry-all-errors \
-            -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors -o "$artifact" https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz
           echo "f9c0bb1d464c9271076333a6c5012478cd9bc3cec9e9571a3ba4c2b0d2b1257b  $artifact" | sha256sum -c -
       - name: Verify certified Payments package artifact
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-payments-0.2.0.tgz
-          curl -fL --retry 3 --retry-all-errors \
-            -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.2.0/bke-payments-0.2.0.tgz
-          echo "5553cb18c57353add174417813e276e301e991758a38971dd046eea2bb3037d3  $artifact" | sha256sum -c -
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
+          artifact=/tmp/bke-payments-0.7.0.tgz
+          curl -fL --retry 3 --retry-all-errors -o "$artifact" https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.7.0/bke-payments-0.7.0.tgz
+          echo "f078bb4e655e44bc929e03af20db20fb849480c7a13ef5c7dc5095381d5b02f6  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
       - name: Certify Identity standalone consumer adoption
-        run: npx tsx v2/modules/identity/test/consumer-adoption.certify.ts
+        run: npx tsx modules/identity/test/consumer-adoption.certify.ts
       - name: Certify Accounts standalone consumer adoption
-        run: npx tsx v2/modules/accounts/test/consumer-adoption.certify.ts
+        run: npx tsx modules/accounts/test/consumer-adoption.certify.ts
       - name: Certify Legal standalone consumer adoption
-        run: npx tsx v2/modules/legal/test/consumer-adoption.certify.ts
+        run: npx tsx modules/legal/test/consumer-adoption.certify.ts
       - name: Certify Licensing standalone consumer adoption
-        run: npx tsx v2/modules/licensing/test/consumer-adoption.certify.ts
+        run: npx tsx modules/licensing/test/consumer-adoption.certify.ts
       - name: Certify Entitlements standalone consumer adoption
-        run: npx tsx v2/modules/entitlements/test/consumer-adoption.certify.ts
+        run: npx tsx modules/entitlements/test/consumer-adoption.certify.ts
       - name: Certify Payments standalone consumer adoption
-        run: npx tsx v2/modules/payments/test/consumer-adoption.certify.ts
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+        run: npx tsx modules/payments/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Test composition root
-        run: npx vitest run --config v2/vitest.config.ts v2/platform/composition/test/composer.test.ts
+        run: npx vitest run --config vitest.architecture.config.ts platform/composition/test/composer.test.ts
       - name: Boot disposable composition
-        run: npx tsx v2/apps/orchestrator/bootstrap.ts
+        run: npx tsx apps/orchestrator/bootstrap.ts
