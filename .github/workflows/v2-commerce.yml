@@ -1,20 +1,20 @@
-name: V2 Module - Commerce
+name: Module - Commerce
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/modules/commerce/**"
+      - "modules/commerce/**"
       - "app/page.tsx"
       - "app/products/[slug]/page.tsx"
       - "app/api/admin/offers/**"
       - "lib/pricing.ts"
       - "lib/offers.ts"
-      - "v2/platform/persistence/migration-compositor.mjs"
-      - "v2/platform/composition/**"
-      - "v2/contracts/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
+      - "platform/persistence/migration-compositor.mjs"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
       - "package.json"
       - "package-lock.json"
       - "next.config.ts"
@@ -54,20 +54,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-commerce-0.8.0.tgz
+          artifact=/tmp/bke-commerce-0.11.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.8.0/bke-commerce-0.8.0.tgz
-          echo "865309da2d9b435a7ab3a2ea5ddbc7436cd529905923d33091c3719779d812ef  $artifact" | sha256sum -c -
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.11.0/bke-commerce-0.11.0.tgz
+          echo "ec0ccc587a9a31b94cf5fedb3be4757cca6d453a3569a7ad6ce7c6b932ff5604  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
       - name: Certify Commerce consumer adoption and staging retirement
-        run: npx tsx v2/modules/commerce/test/consumer-adoption.certify.ts
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+        run: npx tsx modules/commerce/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate package-backed Commerce Prisma schema
         run: npx prisma validate --schema node_modules/@bke/commerce/prisma/schema.prisma
       - name: Apply package-backed Commerce migrations
-        run: node v2/platform/persistence/migration-compositor.mjs commerce node_modules/@bke/commerce/migrations
+        run: node platform/persistence/migration-compositor.mjs commerce node_modules/@bke/commerce/migrations
       - name: Prove package-backed Commerce migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs commerce node_modules/@bke/commerce/migrations
+        run: node platform/persistence/migration-compositor.mjs commerce node_modules/@bke/commerce/migrations
