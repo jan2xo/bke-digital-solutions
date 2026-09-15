@@ -5,7 +5,7 @@ import { db } from "@/v2/platform/host/db";
 import { dispatchEmailOutbox } from "@/v2/apps/web/email";
 import { finalizeProductDeletion } from "@/v2/apps/web/catalog/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/v2/apps/web/storage/cleanup";
-import { retryStoredWebhook } from "@/lib/webhooks";
+import { retryStoredWebhook } from "@/v2/apps/web/payments/webhook-processing";
 import { issueCommercialLease } from "@/v2/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/v2/platform/host/security/crypto";
 import type { JobContext, JobSummary } from "@/v2/platform/scheduler";
