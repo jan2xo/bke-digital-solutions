@@ -6,23 +6,38 @@ on:
       - feat/v2-webhooks-owner-adoption
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   refresh-lock:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feat/v2-webhooks-owner-adoption
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Regenerate package lock only
         run: npm install --package-lock-only --ignore-scripts
-      - name: Verify lock is valid JSON
-        run: node -e 'JSON.parse(require("node:fs").readFileSync("package-lock.json", "utf8")); console.log("package-lock JSON valid")'
-      - name: Upload regenerated lock
-        uses: actions/upload-artifact@v4
-        with:
-          name: webhooks-package-lock
-          path: package-lock.json
-          if-no-files-found: error
+      - name: Verify released owner pins
+        run: |
+          node <<'NODE'
+          const lock = require('./package-lock.json');
+          const commerce = lock.packages['node_modules/@bke/commerce'];
+          const payments = lock.packages['node_modules/@bke/payments'];
+          if (commerce?.version !== '0.11.0') throw new Error('Commerce lock did not refresh to 0.11.0');
+          if (commerce?.integrity !== 'sha512-K+NgaB7BK+oBi+v5GdGmmdIEBXlVMwezNCB+pRPZcAeuDd+bAV6DI31xUKY/RAh0LFNPbXUzICPzxFHx7lh01Q==') throw new Error('Commerce SRI mismatch');
+          if (payments?.version !== '0.6.0') throw new Error('Payments lock did not refresh to 0.6.0');
+          if (payments?.integrity !== 'sha512-ctaobhyImvDFTQPB859kg+FBfAT89cw3dt+ufEZJLmdgN7RqFfXjucLIsRUlrCctFhNMHx3h+3+DZaJQqTR1dA==') throw new Error('Payments SRI mismatch');
+          console.log('owner dependency lock verified');
+          NODE
+      - name: Commit regenerated lock and remove helper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git rm .github/workflows/temp-webhooks-lock-refresh.yml
+          git commit -m "build(v2): refresh owner dependency lock"
+          git push origin HEAD:feat/v2-webhooks-owner-adoption
