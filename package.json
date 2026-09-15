@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.12.0" },
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -72,7 +74,7 @@
     "@bke/legal": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz",
     "@bke/licensing": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz",
     "@bke/notifications": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.1.0/bke-notifications-0.1.0.tgz",
-    "@bke/payments": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.6.0/bke-payments-0.6.0.tgz",
+    "@bke/payments": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.7.0/bke-payments-0.7.0.tgz",
     "@bke/privacy": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/privacy-v0.2.0/bke-privacy-0.2.0.tgz",
     "@bke/support": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/support-v0.1.0/bke-support-0.1.0.tgz",
     "@bke/trials": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/trials-v0.1.0/bke-trials-0.1.0.tgz",
