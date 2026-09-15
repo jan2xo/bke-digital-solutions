@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { extname } from "node:path";
 import { NextResponse } from "next/server";
-import { audit } from "@/v2/apps/web/audit";
-import { requireAdmin } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { deleteObject, uploadObject } from "@/v2/apps/web/storage/object-storage";
-import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/v2/apps/web/storage/cleanup";
+import { audit } from "@/apps/web/audit";
+import { requireAdmin } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin } from "@/apps/web/http/request";
+import { deleteObject, uploadObject } from "@/apps/web/storage/object-storage";
+import { queueStorageCleanup, storageCleanupIdempotencyKey } from "@/apps/web/storage/cleanup";
 
 const allowed = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

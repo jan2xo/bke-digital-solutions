@@ -1,10 +1,10 @@
 import { createPublicKey } from "node:crypto";
 import { NextResponse } from "next/server";
-import { CLOUD_AGENT_PROTOCOL_VERSION } from "@/v2/apps/web/licensing/cloud-agent-contract";
+import { CLOUD_AGENT_PROTOCOL_VERSION } from "@/apps/web/licensing/cloud-agent-contract";
 import {
   ensureLicensingSigningKey,
   listPublicLicensingSigningKeys,
-} from "@/v2/apps/web/licensing/signing-key-registry";
+} from "@/apps/web/licensing/signing-key-registry";
 
 function canonicalPublicKey(value: string) {
   const decoded = value.includes("BEGIN") ? value : Buffer.from(value, "base64").toString("utf8");

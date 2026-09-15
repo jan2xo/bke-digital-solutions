@@ -4,10 +4,10 @@ import {
   IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID,
   type IdentityPasswordResetCompletionCapability,
 } from "@bke/identity/contracts/password-reset-completion.contract";
-import { securityEvent } from "@/v2/apps/web/security/events";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { passwordSchema } from "@/v2/apps/web/http/validation";
+import { securityEvent } from "@/apps/web/security/events";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { assertSameOrigin } from "@/apps/web/http/request";
+import { passwordSchema } from "@/apps/web/http/validation";
 
 const schema = z.object({ token: z.string().min(20), password: passwordSchema });
 

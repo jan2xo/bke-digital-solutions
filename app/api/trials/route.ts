@@ -4,13 +4,13 @@ import {
   ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
   type AccountsPurchaseAccessCapability,
 } from "@bke/accounts/contracts/purchase-access.contract";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { grantProductTrial } from "@/v2/apps/web/trials/service";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
+import { requireUser } from "@/apps/web/auth/session";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { grantProductTrial } from "@/apps/web/trials/service";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertLegalAcceptanceCurrent } from "@/apps/web/legal/service";
 
 const schema = z.object({ editionId: z.string().cuid(), accountId: z.string().cuid() }).strict();
 export async function POST(request: Request) {

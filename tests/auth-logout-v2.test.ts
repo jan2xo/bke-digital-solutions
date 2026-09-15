@@ -17,7 +17,7 @@ vi.mock("next/headers", () => ({
   })),
 }));
 
-vi.mock("../v2/apps/web/runtime", () => ({
+vi.mock("../apps/web/runtime", () => ({
   getV2WebApplication: vi.fn(async () => ({ get: mocks.applicationGet })),
 }));
 
@@ -31,7 +31,7 @@ beforeEach(() => {
 describe("V2 logout session termination", () => {
   it("clears the cookie without touching persistence when there is no session token", async () => {
     mocks.cookieGet.mockReturnValue(undefined);
-    const { terminateCurrentIdentitySession } = await import("../v2/apps/web/auth/session");
+    const { terminateCurrentIdentitySession } = await import("../apps/web/auth/session");
 
     await terminateCurrentIdentitySession();
 
@@ -41,7 +41,7 @@ describe("V2 logout session termination", () => {
   });
 
   it("terminates through Identity before clearing the session cookie", async () => {
-    const { terminateCurrentIdentitySession } = await import("../v2/apps/web/auth/session");
+    const { terminateCurrentIdentitySession } = await import("../apps/web/auth/session");
 
     await terminateCurrentIdentitySession();
 
@@ -55,7 +55,7 @@ describe("V2 logout session termination", () => {
     "fails closed on %s without clearing the cookie",
     async (code) => {
       mocks.terminate.mockResolvedValue({ status: "FAILED", code });
-      const { terminateCurrentIdentitySession } = await import("../v2/apps/web/auth/session");
+      const { terminateCurrentIdentitySession } = await import("../apps/web/auth/session");
 
       await expect(terminateCurrentIdentitySession()).rejects.toMatchObject({ code, status: 503 });
       expect(mocks.cookieDelete).not.toHaveBeenCalled();
@@ -65,10 +65,10 @@ describe("V2 logout session termination", () => {
   it("keeps the production logout route on V2-owned host seams", () => {
     const source = readFileSync("app/api/auth/logout/route.ts", "utf8");
     expect(source).toContain("terminateCurrentIdentitySession");
-    expect(source).toContain("@/v2/apps/web/auth/session");
-    expect(source).toContain("@/v2/apps/web/http/request");
-    expect(source).toContain("@/v2/apps/web/http/api-error");
+    expect(source).toContain("@/apps/web/auth/session");
+    expect(source).toContain("@/apps/web/http/request");
+    expect(source).toContain("@/apps/web/http/api-error");
     expect(source).not.toMatch(/from\s+["']@\/lib\/auth["']/);
-    expect(source).not.toContain("@/v2/platform/host/security/request");
+    expect(source).not.toContain("@/platform/host/security/request");
   });
 });

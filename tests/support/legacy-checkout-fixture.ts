@@ -1,14 +1,14 @@
 import "server-only";
-import { db } from "@/v2/platform/host/db";
+import { db } from "@/platform/host/db";
 import { paymentProvider } from "@/lib/payments";
 import { applyOfferDiscount, PRICING_VERSION, purchasePlanLabel, resolvePurchasePlan } from "@/lib/pricing";
 import { offerSnapshot, reservePublicPromotion, resolveAndReserveOffer } from "@/lib/offers";
-import { randomToken } from "@/v2/platform/host/security/crypto";
+import { randomToken } from "@/platform/host/security/crypto";
 import { issueEntitlements } from "@/lib/licensing";
 import { queueCommerceEmail } from "@/lib/email";
-import type { Prisma } from "@/v2/platform/host/generated/prisma/client";
-import { checkoutLegalTypes, recordLegalAcceptances } from "@/v2/apps/web/legal/service";
-import { listPurchaseAuthorizedAccounts } from "@/v2/apps/web/accounts/purchase-account-list";
+import type { Prisma } from "@/platform/host/generated/prisma/client";
+import { checkoutLegalTypes, recordLegalAcceptances } from "@/apps/web/legal/service";
+import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-account-list";
 
 export async function createCheckout(userId:string,purchasePlanId:string,accountId?:string,offerIdentifier?:string,renewalSubscriptionId?:string,legal?:{versionIds:string[];request:Request}){
   const idempotencyKey=randomToken();

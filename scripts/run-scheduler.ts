@@ -1,5 +1,5 @@
-import { runDueScheduledJobs, runScheduledJob } from "../v2/apps/web/scheduler/service";
-import { schedulerJobDefinitions } from "../v2/apps/web/scheduler/job-definitions";
+import { runDueScheduledJobs, runScheduledJob } from "../apps/web/scheduler/service";
+import { schedulerJobDefinitions } from "../apps/web/scheduler/job-definitions";
 
 const key = process.argv.find((argument) => argument.startsWith("--job="))?.slice(6);
 const dryRun = process.argv.includes("--dry-run");

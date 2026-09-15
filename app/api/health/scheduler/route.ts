@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
+import { schedulerHealth } from "@/apps/web/scheduler/health";
 
 export async function GET() {
   const health = await schedulerHealth();

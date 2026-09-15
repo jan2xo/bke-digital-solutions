@@ -4,7 +4,7 @@ import {
   parseLicensingGraceBoolean,
   parseLicensingGraceProduct,
 } from "@bke/licensing/logic/grace-period";
-import { createLicensingGraceAuditEffect } from "@/v2/modules/licensing/grace-audit";
+import { createLicensingGraceAuditEffect } from "@/modules/licensing/grace-audit";
 
 describe("operational grace control host adoption", () => {
   it("uses the released Licensing parser contract", () => {

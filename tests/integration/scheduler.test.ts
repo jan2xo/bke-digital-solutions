@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../v2/platform/host/generated/prisma/client";
-import { schedulerHealth } from "@/v2/apps/web/scheduler/health";
-import { schedulerLockProvider } from "@/v2/platform/host/scheduler/lock-provider";
-import { runScheduledJob, setScheduledJobEnabled, synchronizeScheduledJobs } from "@/v2/apps/web/scheduler/service";
+import { PrismaClient } from "../../platform/host/generated/prisma/client";
+import { schedulerHealth } from "@/apps/web/scheduler/health";
+import { schedulerLockProvider } from "@/platform/host/scheduler/lock-provider";
+import { runScheduledJob, setScheduledJobEnabled, synchronizeScheduledJobs } from "@/apps/web/scheduler/service";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;

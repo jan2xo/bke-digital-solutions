@@ -1,8 +1,8 @@
 import { AdminSecurityActions } from "@/components/admin-security-actions";
 import { AdminSessionManager } from "@/components/admin-session-manager";
-import { currentIdentitySession } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { deriveSecurityReviewSignals, securityEventDefinition } from "@/v2/apps/web/security/presentation";
+import { currentIdentitySession } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { deriveSecurityReviewSignals, securityEventDefinition } from "@/apps/web/security/presentation";
 import { redirect } from "next/navigation";
 
 export default async function AdminSecurityPage({ searchParams }: { searchParams: Promise<{ type?: string; severity?: string; outcome?: string; provider?: string }> }) {

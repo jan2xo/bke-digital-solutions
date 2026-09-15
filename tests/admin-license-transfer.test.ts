@@ -26,12 +26,12 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock("@/v2/apps/web/auth/session", () => ({ requireRecentAdmin: mocks.requireRecentAdmin }));
-vi.mock("@/v2/platform/host/db", () => ({ db: mocks.db }));
-vi.mock("@/v2/apps/web/http/request", () => ({ assertSameOrigin: mocks.assertSameOrigin }));
-vi.mock("@/v2/apps/web/audit", () => ({ audit: mocks.audit }));
-vi.mock("@/v2/platform/host/security/crypto", () => ({ decryptLicenseKey: mocks.decryptLicenseKey, sha256: mocks.sha256 }));
-vi.mock("@/v2/apps/web/licensing/commercial-lease", () => ({ issueCommercialLease: mocks.issueCommercialLease }));
+vi.mock("@/apps/web/auth/session", () => ({ requireRecentAdmin: mocks.requireRecentAdmin }));
+vi.mock("@/platform/host/db", () => ({ db: mocks.db }));
+vi.mock("@/apps/web/http/request", () => ({ assertSameOrigin: mocks.assertSameOrigin }));
+vi.mock("@/apps/web/audit", () => ({ audit: mocks.audit }));
+vi.mock("@/platform/host/security/crypto", () => ({ decryptLicenseKey: mocks.decryptLicenseKey, sha256: mocks.sha256 }));
+vi.mock("@/apps/web/licensing/commercial-lease", () => ({ issueCommercialLease: mocks.issueCommercialLease }));
 
 const accountId = "cm1234567890123456789012345";
 const licenseId = "license-1";

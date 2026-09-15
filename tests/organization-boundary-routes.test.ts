@@ -22,7 +22,7 @@ describe("customer-facing organization boundary routes", () => {
       if (source.includes("POST") || source.includes("PATCH") || source.includes("DELETE")) {
         expect(source).toContain("assertSameOrigin");
       }
-      expect(source).toContain("@/v2/apps/web/accounts/organization-operations");
+      expect(source).toContain("@/apps/web/accounts/organization-operations");
       expect(source).not.toContain("@/lib/organizations");
       expect(source).not.toMatch(/from\s+["']@\/lib\/auth["']/);
       expect(source).not.toContain("support");
@@ -41,7 +41,7 @@ describe("customer-facing organization boundary routes", () => {
     );
     expect(read("app/api/organizations/route.ts")).toContain("listSwitchableAccounts");
     expect(read("app/api/organizations/[id]/route.ts")).toMatch(/VIEW_PAYMENTS|VIEW_LICENSES/);
-    const apiErrors = read("v2/apps/web/http/api-error.ts");
+    const apiErrors = read("apps/web/http/api-error.ts");
     expect(apiErrors).toContain("INVITATION_EXPIRED: 410");
     expect(apiErrors).toContain("LAST_OWNER_REQUIRED: 409");
   });

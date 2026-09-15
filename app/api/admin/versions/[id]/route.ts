@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { audit } from "@/v2/apps/web/audit";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { requireRecentAdmin } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { assertSameOrigin } from "@/apps/web/http/request";
+import { audit } from "@/apps/web/audit";
+import { apiError } from "@/apps/web/http/api-error";
+import { rateLimit } from "@/apps/web/http/rate-limit";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
 const schema = z.object({

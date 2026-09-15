@@ -33,12 +33,12 @@ import {
   type LegalReacceptanceStatusCapability,
 } from "@bke/legal/contracts/reacceptance-status.contract";
 import { NextResponse } from "next/server";
-import { requireIdentityUser } from "@/v2/apps/web/auth/session";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { checkoutSchema } from "@/v2/apps/web/http/validation";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { requireIdentityUser } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { checkoutSchema } from "@/apps/web/http/validation";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 class CheckoutHttpError extends Error {
   constructor(

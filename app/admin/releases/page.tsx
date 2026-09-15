@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { db } from "@/v2/platform/host/db";
+import { db } from "@/platform/host/db";
 import { AdminTable } from "@/components/admin-table";
 import { AdminActionButton } from "@/components/admin-action-button";
 

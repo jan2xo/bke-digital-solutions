@@ -4,18 +4,18 @@ import {
   IDENTITY_RECENT_AUTH_CHALLENGE_ISSUANCE_CAPABILITY_ID,
   type IdentityRecentAuthChallengeIssuanceCapability,
 } from "@bke/identity/contracts/recent-auth-challenge.contract";
-import { currentIdentitySession } from "@/v2/apps/web/auth/session";
+import { currentIdentitySession } from "@/apps/web/auth/session";
 import {
   deliverIdentityMfaChallenge,
   IDENTITY_MFA_CHALLENGE_COOKIE,
   IDENTITY_MFA_CHALLENGE_COOKIE_OPTIONS,
   IdentityCapabilityError,
   reissueIdentityLoginMfaChallenge,
-} from "@/v2/apps/web/auth/mfa-challenge";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+} from "@/apps/web/auth/mfa-challenge";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { apiError } from "@/apps/web/http/api-error";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 
 export async function POST(request: Request) {
   try {

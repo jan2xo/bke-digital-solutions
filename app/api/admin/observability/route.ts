@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { db } from "@/v2/platform/host/db";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { collectObservability, syncObservabilityAlerts } from "@/v2/apps/web/observability";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
+import { requireAdmin, requireRecentAdmin } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { db } from "@/platform/host/db";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { collectObservability, syncObservabilityAlerts } from "@/apps/web/observability";
+import { rateLimit } from "@/apps/web/http/rate-limit";
 
 const actionSchema = z.object({ id: z.string().cuid(), action: z.enum(["ACKNOWLEDGE", "RESOLVE"]) });
 

@@ -1,8 +1,8 @@
 import "server-only";
 import { Resend } from "resend";
-import { env } from "@/v2/platform/host/env";
-import { db } from "@/v2/platform/host/db";
-import type { Prisma } from "@/v2/platform/host/generated/prisma/client";
+import { env } from "@/platform/host/env";
+import { db } from "@/platform/host/db";
+import type { Prisma } from "@/platform/host/generated/prisma/client";
 import { resolveResendConfiguration } from "@/lib/provider-config/service";
 import { EmailDeliveryError, normalizeEmailFailure, safeEmailFailureCode } from "@/lib/email/failures";
 

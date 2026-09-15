@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { releaseEvidenceSummary } from "../v2/apps/web/releases/evidence-ui";
+import { releaseEvidenceSummary } from "../apps/web/releases/evidence-ui";
 
 describe("trusted key discovery and release UI", () => {
   it("exposes the Agent-compatible root route without authentication", () => {

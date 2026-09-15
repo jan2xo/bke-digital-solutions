@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { LICENSING_ENTITLEMENT_MANAGEMENT_CAPABILITY_ID } from "@bke/licensing/contracts/entitlement-management.contract";
 import { licensingModuleManifest } from "@bke/licensing/module.manifest";
-import { createLicensingModule } from "@/v2/modules/licensing/module";
+import { createLicensingModule } from "@/modules/licensing/module";
 
 describe("Licensing entitlement owner adoption boundary", () => {
   it("keeps entitlement management package-owned but transaction-bound outside the singleton runtime manifest", () => {

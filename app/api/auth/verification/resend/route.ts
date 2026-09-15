@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { sendVerificationEmail } from "@/v2/apps/web/email";
-import { assertSameOrigin,clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { hashToken,randomToken } from "@/v2/platform/host/security/crypto";
-import { apiError } from "@/v2/apps/web/http/api-error";
+import { requireUser } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { sendVerificationEmail } from "@/apps/web/email";
+import { assertSameOrigin,clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { hashToken,randomToken } from "@/platform/host/security/crypto";
+import { apiError } from "@/apps/web/http/api-error";
 
 export async function POST(request:Request){
   try{

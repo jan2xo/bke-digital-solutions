@@ -17,8 +17,8 @@ const mocks = vi.hoisted(() => ({
   db: { customerAccount: { findUniqueOrThrow: vi.fn() } },
 }));
 
-vi.mock("@/v2/apps/web/auth/session", () => ({ requireIdentityUser: mocks.requireIdentityUser }));
-vi.mock("@/v2/apps/web/accounts/organization-operations", () => ({
+vi.mock("@/apps/web/auth/session", () => ({ requireIdentityUser: mocks.requireIdentityUser }));
+vi.mock("@/apps/web/accounts/organization-operations", () => ({
   listSwitchableAccounts: mocks.listSwitchableAccounts,
   createOrganizationAccount: mocks.createOrganizationAccount,
   listOrganizationInvitations: mocks.listOrganizationInvitations,
@@ -28,8 +28,8 @@ vi.mock("@/v2/apps/web/accounts/organization-operations", () => ({
   revokeOrganizationInvitation: mocks.revokeOrganizationInvitation,
   transferOrganizationOwnership: mocks.transferOrganizationOwnership,
 }));
-vi.mock("@/v2/apps/web/runtime", () => ({ getV2WebApplication: mocks.getV2WebApplication }));
-vi.mock("@/v2/platform/host/db", () => ({ db: mocks.db }));
+vi.mock("@/apps/web/runtime", () => ({ getV2WebApplication: mocks.getV2WebApplication }));
+vi.mock("@/platform/host/db", () => ({ db: mocks.db }));
 
 const appUrl = process.env.APP_URL!;
 const user = {

@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest";
 
 // Final owner-adoption parity runs against released Commerce 0.11.0 and Payments 0.6.0.
 // Transaction adapters are explicitly typed against the released owner repository ports.
-const processorSource = readFileSync("v2/apps/web/payments/webhook-processing.ts", "utf8");
-const ingestionSource = readFileSync("v2/apps/web/payments/webhook-ingestion.ts", "utf8");
-const settlementSource = readFileSync("v2/apps/web/payments/settlement-transaction.ts", "utf8");
-const licensingSource = readFileSync("v2/apps/web/licensing/entitlement-management.ts", "utf8");
+const processorSource = readFileSync("apps/web/payments/webhook-processing.ts", "utf8");
+const ingestionSource = readFileSync("apps/web/payments/webhook-ingestion.ts", "utf8");
+const settlementSource = readFileSync("apps/web/payments/settlement-transaction.ts", "utf8");
+const licensingSource = readFileSync("apps/web/licensing/entitlement-management.ts", "utf8");
 const publicRouteSource = readFileSync("app/api/webhooks/payments/route.ts", "utf8");
 const adminRouteSource = readFileSync("app/api/admin/payments/webhooks/[id]/route.ts", "utf8");
-const schedulerSource = readFileSync("v2/apps/web/scheduler/handlers.ts", "utf8");
+const schedulerSource = readFileSync("apps/web/scheduler/handlers.ts", "utf8");
 const payMongoSource = readFileSync(
   "node_modules/@bke/payments/providers/paymongo/paymongo-adapter.ts",
   "utf8",
@@ -69,7 +69,7 @@ describe("payment webhook owner-adoption parity", () => {
   });
 
   it("locks all production callers onto the V2 processor and retires lib/webhooks.ts", () => {
-    const ownerPath = '@/v2/apps/web/payments/webhook-processing';
+    const ownerPath = '@/apps/web/payments/webhook-processing';
     expect(publicRouteSource).toContain(ownerPath);
     expect(adminRouteSource).toContain(ownerPath);
     expect(schedulerSource).toContain(ownerPath);

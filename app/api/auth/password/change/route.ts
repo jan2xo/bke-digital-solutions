@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { audit } from "@/v2/apps/web/audit";
-import { createSession, hashPassword, requireRecentSession, verifyPassword } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { securityEvent } from "@/v2/apps/web/security/events";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { passwordSchema } from "@/v2/apps/web/http/validation";
+import { audit } from "@/apps/web/audit";
+import { createSession, hashPassword, requireRecentSession, verifyPassword } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { apiError } from "@/apps/web/http/api-error";
+import { securityEvent } from "@/apps/web/security/events";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { passwordSchema } from "@/apps/web/http/validation";
 
 const schema = z.object({ currentPassword: z.string().min(1).max(128), newPassword: passwordSchema });
 export async function POST(request: Request) {

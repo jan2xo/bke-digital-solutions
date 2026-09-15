@@ -20,9 +20,9 @@ import {
 } from "@bke/legal/contracts/reacceptance-status.contract";
 import { notFound, redirect } from "next/navigation";
 import { CheckoutStartButton } from "@/components/checkout-start-button";
-import { listPurchaseAuthorizedAccounts } from "@/v2/apps/web/accounts/purchase-account-list";
-import { currentIdentitySession } from "@/v2/apps/web/auth/session";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-account-list";
+import { currentIdentitySession } from "@/apps/web/auth/session";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 export default async function CheckoutReview({
   searchParams,

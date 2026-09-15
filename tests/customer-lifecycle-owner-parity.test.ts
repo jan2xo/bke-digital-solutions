@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const source = readFileSync("v2/apps/web/accounts/customer-lifecycle-operations.ts", "utf8");
-const accountsModule = readFileSync("v2/modules/accounts/module.ts", "utf8");
+const source = readFileSync("apps/web/accounts/customer-lifecycle-operations.ts", "utf8");
+const accountsModule = readFileSync("modules/accounts/module.ts", "utf8");
 
 describe("customer lifecycle owner-adoption parity", () => {
   it("resolves Accounts retention and transition policies through the composed application", () => {

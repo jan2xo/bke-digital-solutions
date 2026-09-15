@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { readLimitedBody, clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { processPaymentWebhook } from "@/v2/apps/web/payments/webhook-processing";
+import { readLimitedBody, clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { processPaymentWebhook } from "@/apps/web/payments/webhook-processing";
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
 export const runtime="nodejs";
 export async function POST(request:Request){try{if(!(await rateLimit(`webhook:${clientIp(request)}`,240,60)).allowed)return NextResponse.json({error:"RATE_LIMITED"},{status:429});const raw=await readLimitedBody(request);const result=await processPaymentWebhook(raw,request.headers);return NextResponse.json(result)}catch(error){
