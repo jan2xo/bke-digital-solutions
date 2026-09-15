@@ -50,7 +50,7 @@ describe("V2 Payments reconciliation host adoption", () => {
   });
 
   it("routes webhook ingestion through the released Payments capability", () => {
-    const webhook = read("lib/webhooks.ts");
+    const webhook = read("v2/apps/web/payments/webhook-processing.ts");
     const ingestion = read("v2/apps/web/payments/webhook-ingestion.ts");
     const compatibilityProvider = read("v2/apps/web/payments/compatibility-provider.ts");
     expect(webhook).toContain('from "@/v2/apps/web/payments/webhook-ingestion"');
@@ -64,6 +64,7 @@ describe("V2 Payments reconciliation host adoption", () => {
     expect(compatibilityProvider).toContain("createPaymentEventVerifier");
     expect(compatibilityProvider).toContain("createPayMongoPaymentsAdapter");
     expect(compatibilityProvider).toContain("mockEventVerifier");
+    expect(existsSync(resolve(root, "lib/webhooks.ts"))).toBe(false);
   });
 
   it("removes obsolete legacy reconciliation calls from host integration and sandbox tests", () => {
