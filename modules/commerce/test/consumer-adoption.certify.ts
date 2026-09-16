@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.8.0/bke-commerce-0.8.0.tgz";
-const EXPECTED_VERSION = "0.8.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.11.0/bke-commerce-0.11.0.tgz";
+const EXPECTED_VERSION = "0.11.0";
 const EXPECTED_SHA256 =
-  "865309da2d9b435a7ab3a2ea5ddbc7436cd529905923d33091c3719779d812ef";
+  "ec0ccc587a9a31b94cf5fedb3be4757cca6d453a3569a7ad6ce7c6b932ff5604";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
