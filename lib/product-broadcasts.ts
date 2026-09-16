@@ -14,6 +14,7 @@ export const PRODUCT_BROADCAST_CODES = [
 
 export const PRODUCT_BROADCAST_PRIORITIES = ["LOW", "NORMAL", "HIGH", "URGENT"] as const;
 export const PRODUCT_BROADCAST_AUDIENCES = ["ALL_ACTIVE_CLIENTS"] as const;
+export const PRODUCT_BROADCAST_DELIVERY_MODES = ["ONCE", "EVERY_LAUNCH"] as const;
 
 const BROADCAST_GROUP = "product-broadcasts";
 const BROADCAST_KEY_PREFIX = "product-broadcast:";
@@ -25,6 +26,7 @@ export const productBroadcastPublishInput = z.object({
   code: z.enum(PRODUCT_BROADCAST_CODES),
   audience: z.enum(PRODUCT_BROADCAST_AUDIENCES).default("ALL_ACTIVE_CLIENTS"),
   priority: z.enum(PRODUCT_BROADCAST_PRIORITIES).default("HIGH"),
+  deliveryMode: z.enum(PRODUCT_BROADCAST_DELIVERY_MODES).default("ONCE"),
   minimumVersion: semverSchema.nullable().optional(),
   maximumVersion: semverSchema.nullable().optional(),
   startsAt: z.iso.datetime().optional(),
@@ -43,6 +45,7 @@ const storedBroadcastSchema = z.object({
   code: z.enum(PRODUCT_BROADCAST_CODES),
   audience: z.enum(PRODUCT_BROADCAST_AUDIENCES),
   priority: z.enum(PRODUCT_BROADCAST_PRIORITIES),
+  deliveryMode: z.enum(PRODUCT_BROADCAST_DELIVERY_MODES).default("ONCE"),
   active: z.boolean(),
   minimumVersion: semverSchema.nullable(),
   maximumVersion: semverSchema.nullable(),
@@ -118,6 +121,7 @@ export async function publishProductBroadcast(
     code: input.code,
     audience: input.audience,
     priority: input.priority,
+    deliveryMode: input.deliveryMode,
     active: true,
     minimumVersion: input.minimumVersion ?? null,
     maximumVersion: input.maximumVersion ?? null,
@@ -153,6 +157,7 @@ export async function publishProductBroadcast(
           code: record.code,
           audience: record.audience,
           priority: record.priority,
+          deliveryMode: record.deliveryMode,
           minimumVersion: record.minimumVersion,
           maximumVersion: record.maximumVersion,
           startsAt: record.startsAt,
