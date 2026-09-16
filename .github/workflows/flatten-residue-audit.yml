@@ -1,0 +1,52 @@
+name: Flatten Residue Audit (temporary)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inventory physical root lib
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== ROOT_LIB_FILES ==="
+          git ls-files 'lib/**' || true
+          echo "=== ROOT_LIB_COUNT ==="
+          git ls-files 'lib/**' | wc -l
+
+      - name: Find references to root lib outside lib
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== ROOT_LIB_REFERENCES_OUTSIDE_LIB ==="
+          git grep -n -F 'lib/' -- ':!lib/**' ':!package-lock.json' || true
+          echo "=== ROOT_LIB_ALIAS_REFERENCES_OUTSIDE_LIB ==="
+          git grep -n -E '(@/lib/|\.\.?/.*lib/)' -- ':!lib/**' ':!package-lock.json' || true
+
+      - name: Audit stale flattened-layout paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== STALE_V2_SOURCE_PATH_REFERENCES ==="
+          git grep -n -E 'v2/(apps|modules|platform|contracts|tooling)|v2/tsconfig\.json|v2/vitest\.config\.ts|develop/v2' -- . || true
+
+      - name: Verify physical layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -d v2
+          test -d apps
+          test -d contracts
+          test -d modules
+          test -d platform
+          test -d tooling
+          echo "FLATTEN_PHYSICAL_LAYOUT=GREEN"
