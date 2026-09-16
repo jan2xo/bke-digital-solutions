@@ -1,4 +1,4 @@
-# V2 Platform — Storage Cleanup
+# Platform — Storage Cleanup
 
 Storage Cleanup is host/platform infrastructure.
 
@@ -27,7 +27,7 @@ The platform therefore requires an injected `StorageCleanupEligibilityGuard`. It
 This seam does not:
 
 - decide whether Catalog artifacts, uploads, products, or other domain objects are deletable
-- import `@/lib`, Prisma, `v2/modules`, or `@bke/*`
+- import `@/lib`, Prisma, root domain modules, or `@bke/*`
 - own object-storage configuration
 - own scheduler invocation
 - persist audit/security events directly
