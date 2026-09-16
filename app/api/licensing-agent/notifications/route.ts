@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
           code: broadcast.code,
           audience: broadcast.audience,
           priority: broadcast.priority,
+          deliveryMode: broadcast.deliveryMode,
           minimumVersion: broadcast.minimumVersion,
           maximumVersion: broadcast.maximumVersion,
           publishedAt: broadcast.publishedAt,
