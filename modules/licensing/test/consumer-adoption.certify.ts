@@ -1,8 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.8.1/bke-licensing-0.8.1.tgz";
-const EXPECTED_VERSION = "0.8.1";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz";
+const EXPECTED_VERSION = "0.9.0";
 
 const [
   moduleSource,
@@ -53,6 +53,7 @@ const requiredPackageSurfaces = [
   "LICENSING_TRANSFER_POLICY_CAPABILITY_ID",
   "LICENSING_SIGNING_KEY_REGISTRY_CAPABILITY_ID",
   "LICENSING_GRACE_PERIOD_CAPABILITY_ID",
+  "LICENSING_LICENSE_KEY_REVEAL_CAPABILITY_ID",
   "@bke/licensing/logic/",
   "@bke/licensing/logic/commercial-lease",
   "createCommercialLeaseCapability",
@@ -60,6 +61,8 @@ const requiredPackageSurfaces = [
   "createCommercialLicenseContextProvider",
   "@bke/licensing/logic/grace-period",
   "createLicensingGracePeriodCapability",
+  "@bke/licensing/logic/license-key-reveal",
+  "createLicensingLicenseKeyRevealCapability",
   "@bke/licensing/providers/",
   "@bke/licensing/prisma/repositories/",
   "@bke/licensing/prisma/repositories/postgres-commercial-lease-store",
@@ -68,6 +71,8 @@ const requiredPackageSurfaces = [
   "createPostgresCommercialSigningKeyProvider",
   "@bke/licensing/prisma/repositories/postgres-signing-key-registry-repository",
   "createPostgresLicensingSigningKeyRegistryCapability",
+  "@bke/licensing/prisma/repositories/postgres-license-key-reveal-repository",
+  "createPostgresLicensingLicenseKeyRevealRepository",
   "@bke/licensing/prisma/repositories/postgres-license-lookup-repository",
   "createPostgresLicensingLicenseLookupRepository",
   "@bke/licensing/prisma/repositories/postgres-transfer-policy-repository",
@@ -79,11 +84,20 @@ const requiredPackageSurfaces = [
   "COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID",
   "COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID",
   'createHmac("sha256", options.licensePepper)',
-  "@bke/licensing/module.manifest",
 ];
 for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Licensing host adapter is missing standalone package surface: ${marker}`);
+  }
+}
+
+for (const marker of [
+  'moduleId: "bke.licensing"',
+  "const hostManifest = Object.freeze",
+  "manifest: hostManifest",
+]) {
+  if (!moduleSource.includes(marker)) {
+    throw new Error(`Licensing host adapter is missing host-owned manifest surface: ${marker}`);
   }
 }
 
@@ -93,6 +107,7 @@ const forbiddenStagingSpecifiers = [
   '"./providers/',
   '"./prisma/repositories/',
   '"./module.manifest"',
+  '"@bke/licensing/module.manifest"',
 ];
 for (const marker of forbiddenStagingSpecifiers) {
   if (moduleSource.includes(marker)) {
