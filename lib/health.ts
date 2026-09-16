@@ -1,8 +1,8 @@
 import "server-only";
 import { Redis as UpstashRedis } from "@upstash/redis";
 import { createClient } from "redis";
-import { db } from "@/v2/platform/host/db";
-import { env } from "@/v2/platform/host/env";
+import { db } from "@/platform/host/db";
+import { env } from "@/platform/host/env";
 import { checkStorageReadiness } from "@/lib/storage";
 import { operationalLog } from "@/lib/logger";
 import { resolvePayMongoConfiguration, resolveResendConfiguration } from "@/lib/provider-config/service";

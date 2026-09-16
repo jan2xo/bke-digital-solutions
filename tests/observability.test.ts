@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const collectObservability = vi.fn();
-vi.mock("@/v2/apps/web/observability", () => ({ collectObservability }));
+vi.mock("@/apps/web/observability", () => ({ collectObservability }));
 
 describe("metrics health endpoint", () => {
   beforeEach(() => collectObservability.mockReset());

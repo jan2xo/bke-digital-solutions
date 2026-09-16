@@ -1,13 +1,13 @@
-name: V2 Prisma Isolation
+name: Prisma Isolation
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/modules/spike-alpha/**"
-      - "v2/modules/spike-beta/**"
-      - "v2/platform/persistence/migration-compositor.mjs"
-      - "v2/tooling/certify-prisma-isolation.mjs"
+      - "modules/spike-alpha/**"
+      - "modules/spike-beta/**"
+      - "platform/persistence/migration-compositor.mjs"
+      - "tooling/certify-prisma-isolation.mjs"
       - ".github/workflows/v2-prisma-isolation.yml"
       - "package.json"
       - "package-lock.json"
@@ -57,4 +57,4 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Certify module-owned Prisma isolation
-        run: node v2/tooling/certify-prisma-isolation.mjs "${{ matrix.scenario }}"
+        run: node tooling/certify-prisma-isolation.mjs "${{ matrix.scenario }}"

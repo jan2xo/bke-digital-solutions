@@ -1,5 +1,5 @@
 import { AdminProviderManager } from "@/components/admin-provider-manager";
-import { safeProviderStatuses } from "@/v2/apps/web/providers/capability";
+import { safeProviderStatuses } from "@/apps/web/providers/capability";
 
 export const dynamic = "force-dynamic";
 export default async function ProvidersPage() {

@@ -7,12 +7,12 @@ import {
   type CommercePurchasePlanPricingCapability,
 } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { notFound } from "next/navigation";
-import { db } from "@/v2/platform/host/db";
+import { db } from "@/platform/host/db";
 import { PurchasePlanSelector } from "@/components/purchase-plan-selector";
 import { TrialStartButton } from "@/components/trial-start-button";
-import { listPurchaseAuthorizedAccounts } from "@/v2/apps/web/accounts/purchase-account-list";
-import { currentIdentitySession } from "@/v2/apps/web/auth/session";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-account-list";
+import { currentIdentitySession } from "@/apps/web/auth/session";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { clearSessionCookie, requireRecentAdminSession } from "@/v2/apps/web/auth/session";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { revokeAdministratorSessions } from "@/v2/apps/web/security/session-administration";
+import { clearSessionCookie, requireRecentAdminSession } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { revokeAdministratorSessions } from "@/apps/web/security/session-administration";
 
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("ONE"), sessionId: z.string().min(1) }),

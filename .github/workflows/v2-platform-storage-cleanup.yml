@@ -1,14 +1,14 @@
-name: V2 Platform - Storage Cleanup
+name: Platform - Storage Cleanup
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/platform/storage-cleanup/**"
-      - "v2/apps/web/storage/cleanup.ts"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "platform/storage-cleanup/**"
+      - "apps/web/storage/cleanup.ts"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/v2-platform-storage-cleanup.yml"
@@ -28,33 +28,33 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Reject V1/domain/persistence reach-through
+      - name: Reject legacy/domain/persistence reach-through
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' v2/platform/storage-cleanup --include='*.ts'; then
-            echo "V2 Storage Cleanup must receive persistence, storage, and eligibility through ports."
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' platform/storage-cleanup --include='*.ts'; then
+            echo "Storage Cleanup must receive persistence, storage, and eligibility through ports."
             exit 1
           fi
       - name: Reject legacy persistence reach-through in web adapter
         shell: bash
         run: |
           set -euo pipefail
-          if grep -nE '(@/lib|generated/prisma|from ["'"'"']@prisma/)' v2/apps/web/storage/cleanup.ts; then
-            echo "V2 web Storage Cleanup adapter must use V2 ports and V2 PostgreSQL persistence only."
+          if grep -nE '(@/lib|generated/prisma|from ["'"'"']@prisma/)' apps/web/storage/cleanup.ts; then
+            echo "Web Storage Cleanup adapter must use platform ports and PostgreSQL persistence only."
             exit 1
           fi
       - name: Reject domain deletion-policy ownership
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(productArtifact|activeReference|Catalog|catalog|entitlement|license|order)' v2/platform/storage-cleanup --include='*.ts' --exclude='*.test.ts'; then
-            echo "V2 Storage Cleanup must not decide domain deletion eligibility."
+          if grep -R -nE '(productArtifact|activeReference|Catalog|catalog|entitlement|license|order)' platform/storage-cleanup --include='*.ts' --exclude='*.test.ts'; then
+            echo "Storage Cleanup must not decide domain deletion eligibility."
             exit 1
           fi
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Certify Storage Cleanup platform behavior
-        run: npx vitest run --config v2/vitest.config.ts v2/platform/storage-cleanup/test/storage-cleanup.test.ts
+        run: npx vitest run --config vitest.architecture.config.ts platform/storage-cleanup/test/storage-cleanup.test.ts

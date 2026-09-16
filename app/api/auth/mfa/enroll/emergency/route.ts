@@ -8,11 +8,11 @@ import {
   currentIdentitySession,
   currentIdentitySessionToken,
   writeIdentitySessionCookie,
-} from "@/v2/apps/web/auth/session";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+} from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 const schema = z.object({ token: z.string().min(40).max(256) });
 

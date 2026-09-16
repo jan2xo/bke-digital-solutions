@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
+import { requireUser } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { assertSameOrigin } from "@/apps/web/http/request";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertLegalAcceptanceCurrent } from "@/apps/web/legal/service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {

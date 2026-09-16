@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/v2/platform/host/env", () => ({ env: {
+vi.mock("@/platform/host/env", () => ({ env: {
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: "test",
   DEPLOYMENT_ENV: "staging",
@@ -21,10 +21,10 @@ vi.mock("@/v2/platform/host/env", () => ({ env: {
 
 describe.sequential("database provider configuration service", () => {
   let actorId = "";
-  let db: typeof import("@/v2/platform/host/db")["db"];
+  let db: typeof import("@/platform/host/db")["db"];
   let service: typeof import("@/lib/provider-config/service");
   beforeAll(async () => {
-    db = (await import("@/v2/platform/host/db")).db;
+    db = (await import("@/platform/host/db")).db;
     service = await import("@/lib/provider-config/service");
     actorId = (await db.user.create({ data: { email: `provider-service-${Date.now()}@bke.test`, role: "ADMIN", emailVerified: new Date() } })).id;
   });

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { requireLegalClearance } from "@/v2/apps/web/legal/clearance";
+import { requireUser } from "@/apps/web/auth/session";
+import { requireLegalClearance } from "@/apps/web/legal/clearance";
 import { OrganizationCreateForm } from "@/components/organization-create-form";
 
 export default async function NewOrganizationPage() {

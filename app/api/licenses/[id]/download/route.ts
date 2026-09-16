@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
-import { githubLatestReleaseUrl } from "@/v2/platform/distribution/github-releases";
+import { requireUser } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertLegalAcceptanceCurrent } from "@/apps/web/legal/service";
+import { githubLatestReleaseUrl } from "@/platform/distribution/github-releases";
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   try {

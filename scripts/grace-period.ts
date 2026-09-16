@@ -8,7 +8,7 @@ import {
   parseLicensingGraceProduct,
 } from "@bke/licensing/logic/grace-period";
 import { createPostgresLicensingGracePeriodStore } from "@bke/licensing/prisma/repositories/postgres-grace-period-store";
-import { createLicensingGraceAuditEffect } from "../v2/modules/licensing/grace-audit";
+import { createLicensingGraceAuditEffect } from "../modules/licensing/grace-audit";
 
 function usage(): never {
   throw new Error("Usage: grace:status | grace:set <airstack|renderdock> <true|false>");

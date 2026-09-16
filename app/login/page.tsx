@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AuthForm } from "@/components/auth-form";
 import { MagicLinkForm } from "@/components/magic-link-form";
-import { safeLocalRedirect } from "@/v2/apps/web/security/redirect";
+import { safeLocalRedirect } from "@/apps/web/security/redirect";
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ returnTo?: string }> }) {
   const { returnTo } = await searchParams;

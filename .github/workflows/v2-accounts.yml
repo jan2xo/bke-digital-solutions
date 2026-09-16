@@ -1,14 +1,14 @@
-name: V2 Module - Accounts
+name: Module - Accounts
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/modules/accounts/**"
-      - "v2/platform/persistence/migration-compositor.mjs"
-      - "v2/contracts/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
+      - "modules/accounts/**"
+      - "platform/persistence/migration-compositor.mjs"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
       - ".github/workflows/v2-accounts.yml"
       - "next.config.ts"
       - "package.json"
@@ -48,20 +48,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-accounts-0.3.0.tgz
+          artifact=/tmp/bke-accounts-0.4.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.3.0/bke-accounts-0.3.0.tgz
-          echo "57905c79432b121bdb269a4a3f51416aef3f9d80d979515e437b7ebbf629e26e  $artifact" | sha256sum -c -
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.4.0/bke-accounts-0.4.0.tgz
+          echo "59503141f2b7bbbe561db643b1df090907844781b9cf8464ee5e1569a425ae98  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
       - name: Certify Accounts standalone consumer adoption
-        run: npx tsx v2/modules/accounts/test/consumer-adoption.certify.ts
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+        run: npx tsx modules/accounts/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Accounts Prisma schema
         run: npx prisma validate --schema node_modules/@bke/accounts/prisma/schema.prisma
       - name: Apply installed Accounts baseline
-        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
+        run: node platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
       - name: Prove installed Accounts migration idempotence
-        run: node v2/platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations
+        run: node platform/persistence/migration-compositor.mjs accounts node_modules/@bke/accounts/migrations

@@ -7,17 +7,17 @@ import {
 import {
   currentIdentitySession,
   currentIdentitySessionToken,
-} from "@/v2/apps/web/auth/session";
+} from "@/apps/web/auth/session";
 import {
   currentIdentityMfaChallengeToken,
   IDENTITY_MFA_CHALLENGE_COOKIE,
   IdentityCapabilityError,
-} from "@/v2/apps/web/auth/mfa-challenge";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { securityEvent } from "@/v2/apps/web/security/events";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
+} from "@/apps/web/auth/mfa-challenge";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { apiError } from "@/apps/web/http/api-error";
+import { securityEvent } from "@/apps/web/security/events";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 
 const schema = z.object({
   password: z.string().min(1).max(128),

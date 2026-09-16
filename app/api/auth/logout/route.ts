@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { terminateCurrentIdentitySession } from "@/v2/apps/web/auth/session";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { terminateCurrentIdentitySession } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin } from "@/apps/web/http/request";
 
 export async function POST(request: Request) {
   try {

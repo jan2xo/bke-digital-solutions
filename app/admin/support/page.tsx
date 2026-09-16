@@ -1,5 +1,5 @@
-import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { listAdminTickets } from "@/v2/apps/web/support/capability";
+import { requireRecentAdmin } from "@/apps/web/auth/session";
+import { listAdminTickets } from "@/apps/web/support/capability";
 
 export default async function AdminSupportPage() {
   await requireRecentAdmin();

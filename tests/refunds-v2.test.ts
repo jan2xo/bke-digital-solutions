@@ -15,6 +15,6 @@ describe("V2 admin refund adoption", () => {
   it("retains host admin confirmation and audit responsibilities", () => {
     expect(route).toContain("REFUND_CONFIRMATION_REQUIRED");
     expect(route).toContain("PAYMENT_REFUND_REQUESTED");
-    expect(route).toContain('from "@/v2/apps/web/audit"');
+    expect(route).toContain('from "@/apps/web/audit"');
   });
 });

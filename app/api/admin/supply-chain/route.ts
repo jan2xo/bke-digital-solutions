@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { requireAdmin, requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertSameOrigin } from "@/v2/apps/web/http/request";
+import { requireAdmin, requireRecentAdmin } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin } from "@/apps/web/http/request";
 
 function retired() {
   return NextResponse.json(

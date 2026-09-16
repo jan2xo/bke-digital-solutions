@@ -1,7 +1,7 @@
 import "server-only";
-import { db } from "@/v2/platform/host/db";
+import { db } from "@/platform/host/db";
 import { sendMagicLink } from "@/lib/email";
-import { hashToken, randomToken } from "@/v2/platform/host/security/crypto";
+import { hashToken, randomToken } from "@/platform/host/security/crypto";
 
 export async function issueMagicLinkForExistingCustomer(email: string) {
   const user = await db.user.findFirst({

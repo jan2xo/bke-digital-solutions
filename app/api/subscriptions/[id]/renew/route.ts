@@ -26,12 +26,12 @@ import {
 } from "@bke/legal/contracts/checkout-requirements.contract";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { assertLegalAcceptanceCurrent } from "@/v2/apps/web/legal/service";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { getV2WebApplication } from "@/v2/apps/web/runtime";
+import { requireUser } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { assertLegalAcceptanceCurrent } from "@/apps/web/legal/service";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { getV2WebApplication } from "@/apps/web/runtime";
 
 class RenewalCheckoutHttpError extends Error {
   constructor(

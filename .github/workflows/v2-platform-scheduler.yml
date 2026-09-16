@@ -1,13 +1,13 @@
-name: V2 Platform - Scheduler
+name: Platform - Scheduler
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/platform/scheduler/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "platform/scheduler/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/v2-platform-scheduler.yml"
@@ -27,25 +27,25 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Reject V1/domain/persistence reach-through
+      - name: Reject legacy/domain/persistence reach-through
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/)' v2/platform/scheduler --include='*.ts'; then
-            echo "V2 Scheduler platform seam must not reach through V1, domain packages, or Prisma."
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/)' platform/scheduler --include='*.ts'; then
+            echo "Scheduler platform seam must not reach through legacy, domain packages, or Prisma."
             exit 1
           fi
       - name: Reject domain job ownership
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(commissioning\.evidence|storage\.lifecycle|email\.outbox|subscriptions\.renewal-reminders|entitlements\.expiration|commerce\.lifecycle|customers\.retention-review|security\.expired-records|payments\.operations|renewals\.prepared-recovery|backups\.daily|backups\.retention)' v2/platform/scheduler --include='*.ts' --exclude='*.test.ts'; then
-            echo "V2 Scheduler platform seam must not own concrete domain job registry entries."
+          if grep -R -nE '(commissioning\.evidence|storage\.lifecycle|email\.outbox|subscriptions\.renewal-reminders|entitlements\.expiration|commerce\.lifecycle|customers\.retention-review|security\.expired-records|payments\.operations|renewals\.prepared-recovery|backups\.daily|backups\.retention)' platform/scheduler --include='*.ts' --exclude='*.test.ts'; then
+            echo "Scheduler platform seam must not own concrete domain job registry entries."
             exit 1
           fi
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Certify Scheduler platform behavior
-        run: npx vitest run --config v2/vitest.config.ts v2/platform/scheduler/test/scheduler.test.ts
+        run: npx vitest run --config vitest.architecture.config.ts platform/scheduler/test/scheduler.test.ts

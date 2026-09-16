@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createSession } from "@/v2/apps/web/auth/session";
+import { createSession } from "@/apps/web/auth/session";
 import {
   IDENTITY_MFA_CHALLENGE_COOKIE,
   verifyIdentityLoginMfaChallenge,
-} from "@/v2/apps/web/auth/mfa-challenge";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { securityEvent } from "@/v2/apps/web/security/events";
+} from "@/apps/web/auth/mfa-challenge";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { securityEvent } from "@/apps/web/security/events";
 
 export async function POST(request: Request) {
   try {

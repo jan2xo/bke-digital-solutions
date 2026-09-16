@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { adminUpdateTicket, listAdminTickets } from "@/v2/apps/web/support/capability";
+import { requireRecentAdmin } from "@/apps/web/auth/session";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { apiError } from "@/apps/web/http/api-error";
+import { adminUpdateTicket, listAdminTickets } from "@/apps/web/support/capability";
 
 const updateSchema = z.object({ body: z.string().trim().min(1).max(8000).optional(), internalNote: z.string().trim().min(1).max(8000).optional(), state: z.enum(["OPEN", "TRIAGED", "WAITING_ON_CUSTOMER", "WAITING_ON_SUPPORT", "ESCALATED", "RESOLVED", "CLOSED"]).optional(), priority: z.enum(["LOW", "NORMAL", "HIGH", "URGENT"]).optional(), assignedToId: z.string().min(1).nullable().optional() });
 

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser } from "@/v2/apps/web/auth/session";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { createSupportTicket, listCustomerTickets } from "@/v2/apps/web/support/capability";
+import { requireUser } from "@/apps/web/auth/session";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { apiError } from "@/apps/web/http/api-error";
+import { createSupportTicket, listCustomerTickets } from "@/apps/web/support/capability";
 
 const schema = z.object({ accountId: z.string().min(1), category: z.enum(["ACCOUNT", "PAYMENT", "REFUND", "INVOICE", "LICENSE", "DEVICE", "DOWNLOAD", "SECURITY", "FEATURE_REQUEST", "OTHER"]), priority: z.enum(["LOW", "NORMAL", "HIGH", "URGENT"]).optional(), subject: z.string().trim().min(3).max(160), body: z.string().trim().min(5).max(8000), orderId: z.string().min(1).nullable().optional(), licenseId: z.string().min(1).nullable().optional() });
 

@@ -5,7 +5,7 @@ import {
   editionPlanValidationMessage,
   normalizeEditionPlanForHost,
   synchronizeEditionPlansWithCommerce,
-} from "@/v2/apps/web/commerce/edition-plan-management";
+} from "@/apps/web/commerce/edition-plan-management";
 
 const baseEdition = {
   name: "Professional",

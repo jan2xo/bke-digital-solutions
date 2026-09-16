@@ -1,13 +1,13 @@
-name: V2 Platform - Providers
+name: Platform - Providers
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/platform/providers/**"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "platform/providers/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/v2-platform-providers.yml"
@@ -27,17 +27,17 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Reject V1/domain/persistence reach-through
+      - name: Reject legacy/domain/persistence reach-through
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' v2/platform/providers --include='*.ts'; then
-            echo "V2 Provider platform seam must receive persistence/runtime configuration through ports."
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' platform/providers --include='*.ts'; then
+            echo "Provider platform seam must receive persistence/runtime configuration through ports."
             exit 1
           fi
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Certify Provider platform behavior
-        run: npx vitest run --config v2/vitest.config.ts v2/platform/providers/test/providers.test.ts
+        run: npx vitest run --config vitest.architecture.config.ts platform/providers/test/providers.test.ts

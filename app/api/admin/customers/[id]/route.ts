@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRecentAdmin } from "@/v2/apps/web/auth/session";
-import { db } from "@/v2/platform/host/db";
-import { assertSameOrigin, clientIp } from "@/v2/apps/web/http/request";
-import { audit } from "@/v2/apps/web/audit";
-import { apiError } from "@/v2/apps/web/http/api-error";
-import { rateLimit } from "@/v2/apps/web/http/rate-limit";
-import { closeCustomer, customerRetentionBlockers, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, reopenCustomer, requestPrivacyDeletion, setLegalHold } from "@/v2/apps/web/accounts/customer-lifecycle-operations";
-import { securityEvent } from "@/v2/apps/web/security/events";
+import { requireRecentAdmin } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { audit } from "@/apps/web/audit";
+import { apiError } from "@/apps/web/http/api-error";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { closeCustomer, customerRetentionBlockers, executeFinalPurge, markPurgeEligible, pseudonymizeCustomer, reopenCustomer, requestPrivacyDeletion, setLegalHold } from "@/apps/web/accounts/customer-lifecycle-operations";
+import { securityEvent } from "@/apps/web/security/events";
 
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("SUSPEND") }), z.object({ action: z.literal("REACTIVATE") }), z.object({ action: z.literal("RESET_DEVICES") }),

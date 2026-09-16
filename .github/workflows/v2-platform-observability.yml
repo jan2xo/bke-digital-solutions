@@ -1,17 +1,17 @@
-name: V2 Platform - Observability
+name: Platform - Observability
 
 on:
   pull_request:
-    branches: [develop/v2]
+    branches: [main]
     paths:
-      - "v2/platform/observability/**"
-      - "v2/apps/web/observability.ts"
+      - "platform/observability/**"
+      - "apps/web/observability.ts"
       - "app/admin/observability/page.tsx"
       - "app/api/admin/observability/route.ts"
       - "app/api/health/metrics/route.ts"
-      - "v2/tooling/check-module-boundaries.mjs"
-      - "v2/tsconfig.json"
-      - "v2/vitest.config.ts"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/v2-platform-observability.yml"
@@ -31,33 +31,33 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Reject V1/domain/persistence reach-through
+      - name: Reject legacy/domain/persistence reach-through
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(@/lib|@bke/|v2/modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' v2/platform/observability --include='*.ts'; then
-            echo "V2 Observability must receive publishers and alert persistence through ports."
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' platform/observability --include='*.ts'; then
+            echo "Observability must receive publishers and alert persistence through ports."
             exit 1
           fi
       - name: Reject concrete publisher ownership
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE '(application|database|valkey|object_storage|scheduler|backups|payments|licensing|email|security|infrastructure)' v2/platform/observability --include='*.ts' --exclude='*.test.ts'; then
-            echo "V2 Observability must aggregate publisher-owned health, not own domain cards."
+          if grep -R -nE '(application|database|valkey|object_storage|scheduler|backups|payments|licensing|email|security|infrastructure)' platform/observability --include='*.ts' --exclude='*.test.ts'; then
+            echo "Observability must aggregate publisher-owned health, not own domain cards."
             exit 1
           fi
       - name: Reject legacy Observability implementation reach-through in web adapter
         shell: bash
         run: |
           set -euo pipefail
-          if grep -nE '(@/lib/observability|generated/prisma|from ["'"'"']@prisma/)' v2/apps/web/observability.ts; then
-            echo "The V2 web Observability adapter must not reach through the retired V1 Observability implementation or generated Prisma."
+          if grep -nE '(@/lib/observability|generated/prisma|from ["'"'"']@prisma/)' apps/web/observability.ts; then
+            echo "The web Observability adapter must not reach through legacy Observability or generated Prisma."
             exit 1
           fi
-      - name: Enforce V2 module boundaries
-        run: node v2/tooling/check-module-boundaries.mjs
-      - name: Typecheck V2
-        run: npx tsc -p v2/tsconfig.json --noEmit
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Certify Observability platform behavior
-        run: npx vitest run --config v2/vitest.config.ts v2/platform/observability/test/observability.test.ts
+        run: npx vitest run --config vitest.architecture.config.ts platform/observability/test/observability.test.ts

@@ -5,12 +5,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { db } from "@/v2/platform/host/db";
-import { env } from "@/v2/platform/host/env";
+import { db } from "@/platform/host/db";
+import { env } from "@/platform/host/env";
 import { audit } from "@/lib/audit";
 import { backupManifestSchema, canonicalJson, decryptBuffer, encryptBuffer, missingObjects, sha256, verifyManifest, type BackupManifest } from "@/lib/backups/integrity";
 import { retryAt } from "@/lib/backups/policy";
-import type { BackupOperation } from "@/v2/platform/host/generated/prisma/client";
+import type { BackupOperation } from "@/platform/host/generated/prisma/client";
 
 const exec = promisify(execFile);
 

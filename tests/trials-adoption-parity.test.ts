@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { changeTrial, grantProductTrial } from "@/v2/apps/web/trials/service";
+import { changeTrial, grantProductTrial } from "@/apps/web/trials/service";
 
 describe("trial adoption parity", () => {
   it("preserves the 0..14 day grace boundary before persistence", async () => {
