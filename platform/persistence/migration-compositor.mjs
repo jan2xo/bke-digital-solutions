@@ -12,7 +12,7 @@ if (!moduleName || !/^[a-z0-9-]+$/.test(moduleName)) {
 
 const migrationsRoot = configuredMigrationsRoot
   ? resolve(configuredMigrationsRoot)
-  : resolve("v2", "modules", moduleName, "prisma", "migrations");
+  : resolve("modules", moduleName, "prisma", "migrations");
 
 if (!statSync(migrationsRoot, { throwIfNoEntry: false })?.isDirectory()) {
   throw new Error(
