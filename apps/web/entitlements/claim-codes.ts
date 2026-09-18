@@ -3,7 +3,14 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { env } from "@/platform/host/env";
-import { generateClaimCode, hashClaimCode, normalizeClaimCode, validClaimCode } from "./claim-code-material";
+import {
+  decryptClaimCode,
+  encryptClaimCode,
+  generateClaimCode,
+  hashClaimCode,
+  normalizeClaimCode,
+  validClaimCode,
+} from "./claim-code-material";
 
 export type ClaimCodeIssueInput = Readonly<{
   orderId: string;
@@ -23,7 +30,13 @@ export type ClaimCodeIssueInput = Readonly<{
 
 export type ClaimCodeIssueResult =
   | { readonly status: "ISSUED"; readonly codes: readonly string[] }
-  | { readonly status: "REJECTED"; readonly code: "INVALID_INPUT" | "ALREADY_ISSUED" };
+  | { readonly status: "REJECTED"; readonly code: "INVALID_INPUT" | "ALREADY_ISSUED" }
+  | { readonly status: "FAILED"; readonly code: "DELIVERY_KEY_UNAVAILABLE" };
+
+export type ClaimCodeRevealResult =
+  | { readonly status: "AVAILABLE"; readonly code: string }
+  | { readonly status: "REJECTED"; readonly code: "NOT_FOUND" | "ALREADY_CLAIMED" | "REVOKED" | "EXPIRED" }
+  | { readonly status: "FAILED"; readonly code: "DELIVERY_KEY_UNAVAILABLE" | "INVALID_CIPHERTEXT" };
 
 export type ClaimCodeConsumeResult =
   | { readonly status: "CLAIMED"; readonly entitlementId: string; readonly accountId: string }
@@ -66,6 +79,8 @@ export async function issueClaimCodes(
   input: ClaimCodeIssueInput,
 ): Promise<ClaimCodeIssueResult> {
   if (!validIssueInput(input)) return { status: "REJECTED", code: "INVALID_INPUT" };
+  const deliveryKey = env.CLAIM_CODE_ENCRYPTION_KEY?.trim();
+  if (!deliveryKey) return { status: "FAILED", code: "DELIVERY_KEY_UNAVAILABLE" };
 
   const existing = await tx.$queryRaw<Array<{ count: bigint }>>`
     SELECT COUNT(*)::bigint AS "count"
@@ -73,8 +88,8 @@ export async function issueClaimCodes(
      WHERE "orderItemId" = ${input.orderItemId}
   `;
   if (Number(existing[0]?.count ?? 0n) > 0) {
-    // Plaintext claim secrets are intentionally not persisted, so retries cannot
-    // silently regenerate a different set of codes for the same paid item.
+    // Existing units are durable. A caller must reveal or resend them rather than
+    // minting a second set for the same paid order item.
     return { status: "REJECTED", code: "ALREADY_ISSUED" };
   }
 
@@ -83,15 +98,16 @@ export async function issueClaimCodes(
     const plaintext = generateClaimCode();
     const normalized = normalizeClaimCode(plaintext);
     const codeHash = hashClaimCode(normalized, env.LICENSE_PEPPER);
+    const codeCiphertext = encryptClaimCode(normalized, deliveryKey);
     await tx.$executeRaw`
       INSERT INTO "ClaimCode" (
         "id", "orderId", "orderItemId", "unitIndex", "purchaserAccountId",
-        "codeHash", "codeLastFour", "status", "resourceId", "productId",
+        "codeHash", "codeCiphertext", "codeLastFour", "status", "resourceId", "productId",
         "editionId", "purchasePlanId", "scopeSnapshot", "grantSnapshot",
         "validFrom", "validUntil", "expiresAt", "createdAt", "updatedAt"
       ) VALUES (
         ${randomUUID()}, ${input.orderId}, ${input.orderItemId}, ${unitIndex}, ${input.purchaserAccountId},
-        ${codeHash}, ${normalized.slice(-4)}, 'AVAILABLE', ${input.resourceId}, ${input.productId},
+        ${codeHash}, ${codeCiphertext}, ${normalized.slice(-4)}, 'AVAILABLE', ${input.resourceId}, ${input.productId},
         ${input.editionId ?? null}, ${input.purchasePlanId ?? null},
         ${JSON.stringify(input.scopeSnapshot ?? null)}::jsonb,
         ${JSON.stringify(input.grantSnapshot ?? null)}::jsonb,
@@ -102,6 +118,49 @@ export async function issueClaimCodes(
   }
 
   return { status: "ISSUED", codes: Object.freeze(codes) };
+}
+
+export async function revealClaimCode(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ claimCodeId: string; purchaserAccountId: string }>,
+): Promise<ClaimCodeRevealResult> {
+  if (!input.claimCodeId.trim() || !input.purchaserAccountId.trim()) {
+    return { status: "REJECTED", code: "NOT_FOUND" };
+  }
+  const rows = await tx.$queryRaw<Array<{
+    id: string;
+    status: "AVAILABLE" | "CLAIMED" | "REVOKED" | "EXPIRED";
+    codeCiphertext: string | null;
+    expiresAt: Date | null;
+  }>>`
+    SELECT "id", "status", "codeCiphertext", "expiresAt"
+      FROM "ClaimCode"
+     WHERE "id" = ${input.claimCodeId}
+       AND "purchaserAccountId" = ${input.purchaserAccountId}
+     LIMIT 1
+  `;
+  const claim = rows[0];
+  if (!claim) return { status: "REJECTED", code: "NOT_FOUND" };
+  if (claim.status === "CLAIMED") return { status: "REJECTED", code: "ALREADY_CLAIMED" };
+  if (claim.status === "REVOKED") return { status: "REJECTED", code: "REVOKED" };
+
+  if (claim.status === "EXPIRED" || (claim.expiresAt && claim.expiresAt <= new Date())) {
+    await tx.$executeRaw`
+      UPDATE "ClaimCode"
+         SET "status" = 'EXPIRED', "codeCiphertext" = NULL, "updatedAt" = NOW()
+       WHERE "id" = ${claim.id} AND "status" = 'AVAILABLE'
+    `;
+    return { status: "REJECTED", code: "EXPIRED" };
+  }
+
+  const deliveryKey = env.CLAIM_CODE_ENCRYPTION_KEY?.trim();
+  if (!deliveryKey) return { status: "FAILED", code: "DELIVERY_KEY_UNAVAILABLE" };
+  if (!claim.codeCiphertext) return { status: "FAILED", code: "INVALID_CIPHERTEXT" };
+  try {
+    return { status: "AVAILABLE", code: decryptClaimCode(claim.codeCiphertext, deliveryKey) };
+  } catch {
+    return { status: "FAILED", code: "INVALID_CIPHERTEXT" };
+  }
 }
 
 export async function consumeClaimCode(
@@ -130,7 +189,7 @@ export async function consumeClaimCode(
   if (claim.status === "EXPIRED" || (claim.expiresAt && claim.expiresAt <= now)) {
     await tx.$executeRaw`
       UPDATE "ClaimCode"
-         SET "status" = 'EXPIRED', "updatedAt" = NOW()
+         SET "status" = 'EXPIRED', "codeCiphertext" = NULL, "updatedAt" = NOW()
        WHERE "id" = ${claim.id} AND "status" = 'AVAILABLE'
     `;
     return { status: "REJECTED", code: "EXPIRED" };
@@ -167,6 +226,7 @@ export async function consumeClaimCode(
            "claimedByUserId" = ${input.userId},
            "claimedToAccountId" = ${input.accountId},
            "entitlementId" = ${entitlementId},
+           "codeCiphertext" = NULL,
            "updatedAt" = NOW()
      WHERE "id" = ${claim.id} AND "status" = 'AVAILABLE'
   `;
