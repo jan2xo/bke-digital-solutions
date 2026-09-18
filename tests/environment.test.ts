@@ -48,6 +48,16 @@ const validatedProductionRuntimeNames = [
   "MFA_ENCRYPTION_KEY",
   "LICENSE_PEPPER",
   "CRON_SECRET",
+  "BKE_AGENT_UPDATE_LATEST_VERSION",
+  "BKE_AGENT_UPDATE_MINIMUM_SUPPORTED_VERSION",
+  "BKE_AGENT_UPDATE_REVISION",
+  "BKE_AGENT_UPDATE_SIGNING_KEY_ID",
+  "BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY",
+  "BKE_AGENT_UPDATE_PUBLISHED_AT",
+  "BKE_AGENT_UPDATE_WINDOWS_X64_SHA256",
+  "BKE_AGENT_UPDATE_WINDOWS_X64_SIZE",
+  "BKE_AGENT_UPDATE_WINDOWS_ARM64_SHA256",
+  "BKE_AGENT_UPDATE_WINDOWS_ARM64_SIZE",
   "PROVIDER_CREDENTIALS_ENCRYPTION_KEY",
   "PAYMONGO_SECRET_KEY",
   "PAYMONGO_WEBHOOK_SECRET",
@@ -72,6 +82,26 @@ describe("deployment environment validation", () => {
   it("accepts database provider configuration without environment provider credentials", () => expect(parseEnvironment({ ...base, PROVIDER_CONFIG_SOURCE: "database", PROVIDER_CREDENTIALS_ENCRYPTION_KEY: "k".repeat(64), PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, RESEND_API_KEY: undefined })).toMatchObject({ PROVIDER_CONFIG_SOURCE: "database" }));
   it("requires a strong master key for database provider configuration", () => expect(() => parseEnvironment({ ...base, PROVIDER_CONFIG_SOURCE: "database", PROVIDER_CREDENTIALS_ENCRYPTION_KEY: undefined, PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, RESEND_API_KEY: undefined })).toThrow("PROVIDER_CREDENTIALS_ENCRYPTION_KEY"));
   it("requires environment credentials when database fallback is explicitly enabled", () => expect(() => parseEnvironment({ ...base, PROVIDER_CONFIG_SOURCE: "database", PROVIDER_CONFIG_ALLOW_ENV_FALLBACK: "true", PROVIDER_CREDENTIALS_ENCRYPTION_KEY: "k".repeat(64), PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, RESEND_API_KEY: undefined })).toThrow(/PAYMONGO_SECRET_KEY|RESEND_API_KEY/));
+  it("accepts an absent Agent update authority bundle and rejects partial configuration", () => {
+    expect(parseEnvironment(base).BKE_AGENT_UPDATE_LATEST_VERSION).toBeUndefined();
+    expect(() => parseEnvironment({ ...base, BKE_AGENT_UPDATE_LATEST_VERSION: "2.0.1" })).toThrow("BKE_AGENT_UPDATE_");
+  });
+  it("accepts a complete Agent update authority configuration bundle", () => {
+    const configured = parseEnvironment({
+      ...base,
+      BKE_AGENT_UPDATE_LATEST_VERSION: "2.0.1",
+      BKE_AGENT_UPDATE_MINIMUM_SUPPORTED_VERSION: "2.0.0",
+      BKE_AGENT_UPDATE_REVISION: "1",
+      BKE_AGENT_UPDATE_SIGNING_KEY_ID: "agent-update-test-v1",
+      BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY: "p".repeat(96),
+      BKE_AGENT_UPDATE_PUBLISHED_AT: "2026-09-19T00:00:00Z",
+      BKE_AGENT_UPDATE_WINDOWS_X64_SHA256: "a".repeat(64),
+      BKE_AGENT_UPDATE_WINDOWS_X64_SIZE: "100",
+      BKE_AGENT_UPDATE_WINDOWS_ARM64_SHA256: "b".repeat(64),
+      BKE_AGENT_UPDATE_WINDOWS_ARM64_SIZE: "200",
+    });
+    expect(configured.BKE_AGENT_UPDATE_REVISION).toBe(1);
+  });
   it("accepts separately keyed offsite backup configuration", () => expect(parseEnvironment({ ...base, BACKUP_ENABLED: "true", BACKUP_S3_ENDPOINT: "https://offsite.example", BACKUP_BUCKET: "bke-production-backups", BACKUP_S3_ACCESS_KEY_ID: "backup-access", BACKUP_S3_SECRET_ACCESS_KEY: "backup-secret", BACKUP_ENCRYPTION_KEY: Buffer.alloc(32, 1).toString("base64"), BACKUP_OFFSITE_ACK: "SEPARATE_FAILURE_DOMAIN" })).toMatchObject({ BACKUP_ENABLED: true, BACKUP_BUCKET: "bke-production-backups" }));
   it("rejects HTTP offsite backup storage in production", () => expect(() => parseEnvironment({ ...base, BACKUP_ENABLED: "true", BACKUP_S3_ENDPOINT: "http://offsite.example", BACKUP_BUCKET: "bke-production-backups", BACKUP_S3_ACCESS_KEY_ID: "backup-access", BACKUP_S3_SECRET_ACCESS_KEY: "backup-secret", BACKUP_ENCRYPTION_KEY: Buffer.alloc(32, 1).toString("base64"), BACKUP_OFFSITE_ACK: "SEPARATE_FAILURE_DOMAIN" })).toThrow("BACKUP_S3_ENDPOINT"));
   it("rejects source-bucket reuse and invalid backup encryption keys", () => expect(() => parseEnvironment({ ...base, BACKUP_ENABLED: "true", BACKUP_BUCKET: base.S3_BUCKET, BACKUP_S3_ACCESS_KEY_ID: "backup-access", BACKUP_S3_SECRET_ACCESS_KEY: "backup-secret", BACKUP_ENCRYPTION_KEY: "not-a-32-byte-base64-key", BACKUP_OFFSITE_ACK: "SEPARATE_FAILURE_DOMAIN" })).toThrow(/BACKUP_BUCKET|BACKUP_ENCRYPTION_KEY/));
