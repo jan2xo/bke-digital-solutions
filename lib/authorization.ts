@@ -35,7 +35,6 @@ async function requireAccountAccessWithClient(
     include: { memberships: { where: { userId }, take: 1 } },
   });
   if (!account) throw new AccountAuthorizationError("NOT_FOUND");
-  if (account.lifecycleState !== "ACTIVE") throw new Error("ACCOUNT_NOT_ACTIVE");
   const role = (account.ownerId === userId ? "OWNER" : account.memberships[0]?.role) as AccountRole | undefined;
   if (!role || (capability && !roleHasCapability(role, capability))) throw new AccountAuthorizationError("ACCOUNT_ROLE_FORBIDDEN");
   return Object.assign(account, { effectiveRole: role });
