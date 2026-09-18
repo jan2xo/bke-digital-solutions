@@ -228,18 +228,6 @@ enum OrderStatus {
   PARTIALLY_REFUNDED
 }
 
-enum PurchaseFulfillmentMode {
-  ACCOUNT_ENTITLEMENT
-  CLAIM_CODE
-}
-
-enum ClaimCodeStatus {
-  AVAILABLE
-  CLAIMED
-  REVOKED
-  EXPIRED
-}
-
 enum PaymentStatus {
   PENDING
   PAID
@@ -456,7 +444,6 @@ model User {
   supportTicketsAssigned          SupportTicket[]   @relation("SupportTicketAssignee")
   supportMessages                 SupportTicketMessage[] @relation("SupportMessageAuthor")
   supportEvents                   SupportTicketEvent[] @relation("SupportEventActor")
-  claimCodesClaimed               ClaimCode[]          @relation("ClaimCodeClaimant")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -633,8 +620,6 @@ model CustomerAccount {
   legalAcceptances   LegalAcceptance[]
   privacyRequests    PrivacyRequest[]
   supportTickets     SupportTicket[]
-  claimCodesPurchased ClaimCode[] @relation("ClaimCodePurchaser")
-  claimCodesClaimedTo ClaimCode[] @relation("ClaimCodeDestination")
 
   @@index([ownerId])
   @@index([lifecycleState])
@@ -1133,7 +1118,6 @@ model Order {
   createdAt             DateTime                @default(now())
   paidAt                DateTime?
   renewalSubscriptionId String?
-  fulfillmentMode       PurchaseFulfillmentMode @default(ACCOUNT_ENTITLEMENT)
   account               CustomerAccount         @relation(fields: [accountId], references: [id])
   items                 OrderItem[]
   payments              Payment[]
@@ -1147,7 +1131,6 @@ model Order {
   refundOperations      RefundOperation[]
   reconciliations       PaymentReconciliation[]
   supportTickets        SupportTicket[]
-  claimCodes            ClaimCode[]
 
   @@index([accountId, createdAt])
   @@index([renewalSubscriptionId])
@@ -1182,45 +1165,6 @@ model OrderItem {
   offerDiscountMinor  Int?
   pricingVersion      String?
   order               Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  claimCodes          ClaimCode[]
-}
-
-model ClaimCode {
-  id                   String          @id @default(cuid())
-  orderId              String
-  orderItemId          String
-  unitIndex            Int
-  purchaserAccountId   String
-  codeHash             String          @unique
-  codeLastFour         String
-  status               ClaimCodeStatus @default(AVAILABLE)
-  resourceId           String
-  productId            String
-  editionId            String?
-  purchasePlanId       String?
-  scopeSnapshot        Json
-  grantSnapshot        Json
-  validFrom            DateTime
-  validUntil           DateTime?
-  expiresAt            DateTime?
-  claimedAt            DateTime?
-  claimedByUserId      String?
-  claimedToAccountId   String?
-  entitlementId        String?         @unique
-  revokedAt            DateTime?
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-  order                Order           @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  orderItem            OrderItem       @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
-  purchaserAccount     CustomerAccount @relation("ClaimCodePurchaser", fields: [purchaserAccountId], references: [id], onDelete: Restrict)
-  claimedByUser        User?           @relation("ClaimCodeClaimant", fields: [claimedByUserId], references: [id], onDelete: Restrict)
-  claimedToAccount     CustomerAccount? @relation("ClaimCodeDestination", fields: [claimedToAccountId], references: [id], onDelete: Restrict)
-
-  @@unique([orderItemId, unitIndex])
-  @@index([purchaserAccountId, status])
-  @@index([claimedToAccountId, claimedAt])
-  @@index([orderId])
-  @@index([status, expiresAt])
 }
 
 model Payment {
