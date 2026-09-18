@@ -29,8 +29,12 @@ export type ClaimCodeIssueInput = Readonly<{
 }>;
 
 export type ClaimCodeIssueResult =
-  | { readonly status: "ISSUED"; readonly codes: readonly string[] }
-  | { readonly status: "REJECTED"; readonly code: "INVALID_INPUT" | "ALREADY_ISSUED" }
+  | {
+      readonly status: "ISSUED" | "EXISTING";
+      readonly unitCount: number;
+      readonly claimCodeIds: readonly string[];
+    }
+  | { readonly status: "REJECTED"; readonly code: "INVALID_INPUT" | "SOURCE_CONFLICT" }
   | { readonly status: "FAILED"; readonly code: "DELIVERY_KEY_UNAVAILABLE" };
 
 export type ClaimCodeRevealResult =
@@ -82,23 +86,49 @@ export async function issueClaimCodes(
   const deliveryKey = env.CLAIM_CODE_ENCRYPTION_KEY?.trim();
   if (!deliveryKey) return { status: "FAILED", code: "DELIVERY_KEY_UNAVAILABLE" };
 
-  const existing = await tx.$queryRaw<Array<{ count: bigint }>>`
-    SELECT COUNT(*)::bigint AS "count"
+  const existing = await tx.$queryRaw<Array<{
+    id: string;
+    orderId: string;
+    unitIndex: number;
+    purchaserAccountId: string;
+    productId: string;
+    editionId: string | null;
+    purchasePlanId: string | null;
+    resourceId: string;
+  }>>`
+    SELECT "id", "orderId", "unitIndex", "purchaserAccountId", "productId",
+           "editionId", "purchasePlanId", "resourceId"
       FROM "ClaimCode"
      WHERE "orderItemId" = ${input.orderItemId}
+     ORDER BY "unitIndex" ASC
   `;
-  if (Number(existing[0]?.count ?? 0n) > 0) {
-    // Existing units are durable. A caller must reveal or resend them rather than
-    // minting a second set for the same paid order item.
-    return { status: "REJECTED", code: "ALREADY_ISSUED" };
+  if (existing.length > 0) {
+    const sameSource =
+      existing.length === input.units &&
+      existing.every((row, index) =>
+        row.orderId === input.orderId &&
+        row.unitIndex === index &&
+        row.purchaserAccountId === input.purchaserAccountId &&
+        row.productId === input.productId &&
+        row.editionId === (input.editionId ?? null) &&
+        row.purchasePlanId === (input.purchasePlanId ?? null) &&
+        row.resourceId === input.resourceId
+      );
+    if (!sameSource) return { status: "REJECTED", code: "SOURCE_CONFLICT" };
+    return {
+      status: "EXISTING",
+      unitCount: existing.length,
+      claimCodeIds: Object.freeze(existing.map((row) => row.id)),
+    };
   }
 
-  const codes: string[] = [];
+  const claimCodeIds: string[] = [];
   for (let unitIndex = 0; unitIndex < input.units; unitIndex += 1) {
     const plaintext = generateClaimCode();
     const normalized = normalizeClaimCode(plaintext);
     const codeHash = hashClaimCode(normalized, env.LICENSE_PEPPER);
     const codeCiphertext = encryptClaimCode(normalized, deliveryKey);
+    const claimCodeId = randomUUID();
     await tx.$executeRaw`
       INSERT INTO "ClaimCode" (
         "id", "orderId", "orderItemId", "unitIndex", "purchaserAccountId",
@@ -106,7 +136,7 @@ export async function issueClaimCodes(
         "editionId", "purchasePlanId", "scopeSnapshot", "grantSnapshot",
         "validFrom", "validUntil", "expiresAt", "createdAt", "updatedAt"
       ) VALUES (
-        ${randomUUID()}, ${input.orderId}, ${input.orderItemId}, ${unitIndex}, ${input.purchaserAccountId},
+        ${claimCodeId}, ${input.orderId}, ${input.orderItemId}, ${unitIndex}, ${input.purchaserAccountId},
         ${codeHash}, ${codeCiphertext}, ${normalized.slice(-4)}, 'AVAILABLE', ${input.resourceId}, ${input.productId},
         ${input.editionId ?? null}, ${input.purchasePlanId ?? null},
         ${JSON.stringify(input.scopeSnapshot ?? null)}::jsonb,
@@ -114,10 +144,14 @@ export async function issueClaimCodes(
         ${input.validFrom}, ${input.validUntil ?? null}, ${input.expiresAt ?? null}, NOW(), NOW()
       )
     `;
-    codes.push(normalized);
+    claimCodeIds.push(claimCodeId);
   }
 
-  return { status: "ISSUED", codes: Object.freeze(codes) };
+  return {
+    status: "ISSUED",
+    unitCount: claimCodeIds.length,
+    claimCodeIds: Object.freeze(claimCodeIds),
+  };
 }
 
 export async function revealClaimCode(
