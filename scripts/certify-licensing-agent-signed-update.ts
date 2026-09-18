@@ -17,7 +17,7 @@ const rawPublic = Buffer.from(publicJwk.x, "base64url");
 if (rawPublic.length !== 32) throw new Error("Ed25519 public key is not 32 bytes");
 
 const version = "2.0.1-phase9-cert.1";
-const issuedAt = new Date("2026-09-19T01:00:00Z");
+const issuedAt = new Date();
 const artifacts: Record<LicensingAgentArchitecture, Buffer> = {
   x86_64: Buffer.from("MZphase9-cross-repo-x64", "ascii"),
   arm64: Buffer.from("MZphase9-cross-repo-arm64", "ascii"),
