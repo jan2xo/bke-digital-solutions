@@ -30,12 +30,15 @@ export async function POST(request: Request) {
     const input = schema.parse(await request.json());
 
     const result = await db.$transaction(async (tx) => {
-      await requireAccountCapabilityInTransaction(
+      const account = await requireAccountCapabilityInTransaction(
         tx,
         principal.id,
         input.customerAccountId,
         "CLAIM_ENTITLEMENT",
       );
+      if (account.lifecycleState === "SUSPENDED") reject("SUSPENDED_ACCOUNT", 409);
+      if (account.lifecycleState === "CLOSED") reject("CLOSED_ACCOUNT", 409);
+      if (account.lifecycleState !== "ACTIVE") reject("ACCOUNT_NOT_ACTIVE", 403);
 
       const claim = await consumeClaimCode(tx, {
         code: input.code,
