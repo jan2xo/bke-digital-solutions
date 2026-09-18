@@ -159,7 +159,7 @@ export function resolveSignedLicensingAgentUpdate(
 }
 
 export function canonicalUnsignedPolicy(policy: UnsignedPolicy): Buffer {
-  const entries = Object.entries(policy).sort(([left], [right]) => left.localeCompare(right));
+  const entries = Object.entries(policy).sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0);
   return Buffer.from(JSON.stringify(Object.fromEntries(entries)), "utf8");
 }
 
