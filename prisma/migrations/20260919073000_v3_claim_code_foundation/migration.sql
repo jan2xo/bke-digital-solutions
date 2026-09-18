@@ -15,6 +15,7 @@ CREATE TABLE "ClaimCode" (
   "unitIndex" INTEGER NOT NULL,
   "purchaserAccountId" TEXT NOT NULL,
   "codeHash" TEXT NOT NULL,
+  "codeCiphertext" TEXT,
   "codeLastFour" TEXT NOT NULL,
   "status" "ClaimCodeStatus" NOT NULL DEFAULT 'AVAILABLE',
   "resourceId" TEXT NOT NULL,
@@ -42,6 +43,11 @@ CREATE TABLE "ClaimCode" (
   ),
   CONSTRAINT "ClaimCode_revoked_shape_check" CHECK (
     ("status" <> 'REVOKED') OR "revokedAt" IS NOT NULL
+  ),
+  CONSTRAINT "ClaimCode_secret_shape_check" CHECK (
+    (("status" = 'AVAILABLE') AND "codeCiphertext" IS NOT NULL)
+    OR
+    (("status" <> 'AVAILABLE') AND "codeCiphertext" IS NULL)
   )
 );
 
