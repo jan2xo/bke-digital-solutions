@@ -27,6 +27,16 @@ export const environmentSchema = z.object({
   SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
   SUPPLY_CHAIN_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-supply-chain-ed25519-v1"),
   SUPPLY_CHAIN_TRUSTED_KEYS: z.preprocess(optional, z.string().optional()),
+  BKE_AGENT_UPDATE_LATEST_VERSION: z.preprocess(optional, z.string().min(1).optional()),
+  BKE_AGENT_UPDATE_MINIMUM_SUPPORTED_VERSION: z.preprocess(optional, z.string().min(1).optional()),
+  BKE_AGENT_UPDATE_REVISION: z.preprocess(optional, z.coerce.number().int().min(1).optional()),
+  BKE_AGENT_UPDATE_SIGNING_KEY_ID: z.preprocess(optional, z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional()),
+  BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
+  BKE_AGENT_UPDATE_PUBLISHED_AT: z.preprocess(optional, z.string().min(1).optional()),
+  BKE_AGENT_UPDATE_WINDOWS_X64_SHA256: z.preprocess(optional, z.string().regex(/^[a-f0-9]{64}$/).optional()),
+  BKE_AGENT_UPDATE_WINDOWS_X64_SIZE: z.preprocess(optional, z.coerce.number().int().min(2).max(536870912).optional()),
+  BKE_AGENT_UPDATE_WINDOWS_ARM64_SHA256: z.preprocess(optional, z.string().regex(/^[a-f0-9]{64}$/).optional()),
+  BKE_AGENT_UPDATE_WINDOWS_ARM64_SIZE: z.preprocess(optional, z.coerce.number().int().min(2).max(536870912).optional()),
   RELEASE_EVIDENCE_INGESTION_TOKEN: z.preprocess(optional, secret.optional()),
   RELEASE_EVIDENCE_TRUSTED_REPOSITORY: z.preprocess(optional, z.string().min(1).optional()),
   RELEASE_EVIDENCE_TRUSTED_WORKFLOW: z.preprocess(optional, z.string().min(1).optional()),
@@ -89,6 +99,27 @@ export const environmentSchema = z.object({
 }).superRefine((value, context) => {
   const origin = new URL(value.APP_URL);
   const protectedEnvironment = value.DEPLOYMENT_ENV === "staging" || value.DEPLOYMENT_ENV === "production";
+  const agentUpdateFields = [
+    "BKE_AGENT_UPDATE_LATEST_VERSION",
+    "BKE_AGENT_UPDATE_MINIMUM_SUPPORTED_VERSION",
+    "BKE_AGENT_UPDATE_REVISION",
+    "BKE_AGENT_UPDATE_SIGNING_KEY_ID",
+    "BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY",
+    "BKE_AGENT_UPDATE_PUBLISHED_AT",
+    "BKE_AGENT_UPDATE_WINDOWS_X64_SHA256",
+    "BKE_AGENT_UPDATE_WINDOWS_X64_SIZE",
+    "BKE_AGENT_UPDATE_WINDOWS_ARM64_SHA256",
+    "BKE_AGENT_UPDATE_WINDOWS_ARM64_SIZE",
+  ] as const;
+  const configuredAgentUpdateFields = agentUpdateFields.filter((key) => value[key] !== undefined);
+  if (configuredAgentUpdateFields.length > 0 && configuredAgentUpdateFields.length !== agentUpdateFields.length) {
+    for (const key of agentUpdateFields) {
+      if (value[key] === undefined) context.addIssue({ code: "custom", path: [key], message: "is required when Licensing Agent update authority is configured" });
+    }
+  }
+  if (value.BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY && placeholder.test(value.BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY)) {
+    context.addIssue({ code: "custom", path: ["BKE_AGENT_UPDATE_SIGNING_PRIVATE_KEY"], message: "must not be a placeholder" });
+  }
   if (value.LOCAL_PRODUCTION_SIMULATION && value.DEPLOYMENT_ENV !== "staging") context.addIssue({ code: "custom", path: ["DEPLOYMENT_ENV"], message: "local production simulation must use staging" });
   if (value.INTERNAL_APP_URL && new URL(value.INTERNAL_APP_URL).protocol !== "http:") context.addIssue({ code: "custom", path: ["INTERNAL_APP_URL"], message: "must be an internal HTTP service origin" });
   if (value.PUBLIC_WEBHOOK_ORIGIN && new URL(value.PUBLIC_WEBHOOK_ORIGIN).protocol !== "https:") context.addIssue({ code: "custom", path: ["PUBLIC_WEBHOOK_ORIGIN"], message: "must use HTTPS" });
