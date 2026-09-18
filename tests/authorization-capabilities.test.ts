@@ -8,6 +8,7 @@ describe("customer account capability matrix", () => {
     expect(roleHasCapability("BILLING", "PURCHASE")).toBe(true);
     expect(roleHasCapability("BILLING", "REVEAL_LICENSE")).toBe(false);
     expect(roleHasCapability("BILLING", "DEACTIVATE_DEVICE")).toBe(false);
+    expect(roleHasCapability("BILLING", "CLAIM_ENTITLEMENT")).toBe(true);
   });
 
   it("limits license managers to entitlement operations", () => {
@@ -15,12 +16,14 @@ describe("customer account capability matrix", () => {
     expect(roleHasCapability("LICENSE_MANAGER", "DOWNLOAD_INSTALLER")).toBe(true);
     expect(roleHasCapability("LICENSE_MANAGER", "VIEW_PAYMENTS")).toBe(false);
     expect(roleHasCapability("LICENSE_MANAGER", "PURCHASE")).toBe(false);
+    expect(roleHasCapability("LICENSE_MANAGER", "CLAIM_ENTITLEMENT")).toBe(true);
   });
 
   it("does not grant plain members broad commerce or licensing access", () => {
     expect(roleHasCapability("MEMBER", "VIEW_ORDERS")).toBe(false);
     expect(roleHasCapability("MEMBER", "VIEW_LICENSES")).toBe(false);
     expect(roleHasCapability("MEMBER", "DOWNLOAD_INSTALLER")).toBe(false);
+    expect(roleHasCapability("MEMBER", "CLAIM_ENTITLEMENT")).toBe(false);
   });
 
   it("protects the last organization owner", () => {
