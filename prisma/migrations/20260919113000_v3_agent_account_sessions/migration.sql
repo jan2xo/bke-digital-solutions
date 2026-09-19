@@ -90,7 +90,6 @@ CREATE TABLE "AgentAccountSession" (
   "accountId" TEXT NOT NULL,
   "deviceId" TEXT NOT NULL,
   "accessTokenHash" TEXT NOT NULL,
-  "refreshTokenHash" TEXT NOT NULL,
   "accessExpiresAt" TIMESTAMP(3) NOT NULL,
   "refreshExpiresAt" TIMESTAMP(3) NOT NULL,
   "refreshGeneration" INTEGER NOT NULL DEFAULT 0,
@@ -107,8 +106,6 @@ CREATE UNIQUE INDEX "AgentAccountSession_deviceAuthorizationId_key"
   ON "AgentAccountSession"("deviceAuthorizationId");
 CREATE UNIQUE INDEX "AgentAccountSession_accessTokenHash_key"
   ON "AgentAccountSession"("accessTokenHash");
-CREATE UNIQUE INDEX "AgentAccountSession_refreshTokenHash_key"
-  ON "AgentAccountSession"("refreshTokenHash");
 CREATE INDEX "AgentAccountSession_userId_revokedAt_idx"
   ON "AgentAccountSession"("userId","revokedAt");
 CREATE INDEX "AgentAccountSession_accountId_revokedAt_idx"
@@ -127,3 +124,37 @@ ALTER TABLE "AgentAccountSession"
 ALTER TABLE "AgentAccountSession"
   ADD CONSTRAINT "AgentAccountSession_accountId_fkey"
   FOREIGN KEY ("accountId") REFERENCES "CustomerAccount"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+
+CREATE TABLE "AgentAccountRefreshToken" (
+  "id" TEXT NOT NULL,
+  "sessionId" TEXT NOT NULL,
+  "tokenHash" TEXT NOT NULL,
+  "generation" INTEGER NOT NULL,
+  "status" TEXT NOT NULL DEFAULT 'ACTIVE',
+  "expiresAt" TIMESTAMP(3) NOT NULL,
+  "rotatedAt" TIMESTAMP(3),
+  "revokedAt" TIMESTAMP(3),
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "AgentAccountRefreshToken_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "AgentAccountRefreshToken_generation_check" CHECK ("generation" >= 0),
+  CONSTRAINT "AgentAccountRefreshToken_status_check"
+    CHECK ("status" IN ('ACTIVE','ROTATED','REVOKED')),
+  CONSTRAINT "AgentAccountRefreshToken_rotated_shape_check"
+    CHECK ("status" <> 'ROTATED' OR "rotatedAt" IS NOT NULL),
+  CONSTRAINT "AgentAccountRefreshToken_revoked_shape_check"
+    CHECK ("status" <> 'REVOKED' OR "revokedAt" IS NOT NULL)
+);
+
+CREATE UNIQUE INDEX "AgentAccountRefreshToken_tokenHash_key"
+  ON "AgentAccountRefreshToken"("tokenHash");
+CREATE UNIQUE INDEX "AgentAccountRefreshToken_sessionId_generation_key"
+  ON "AgentAccountRefreshToken"("sessionId","generation");
+CREATE INDEX "AgentAccountRefreshToken_sessionId_status_idx"
+  ON "AgentAccountRefreshToken"("sessionId","status");
+CREATE INDEX "AgentAccountRefreshToken_expiresAt_status_idx"
+  ON "AgentAccountRefreshToken"("expiresAt","status");
+
+ALTER TABLE "AgentAccountRefreshToken"
+  ADD CONSTRAINT "AgentAccountRefreshToken_sessionId_fkey"
+  FOREIGN KEY ("sessionId") REFERENCES "AgentAccountSession"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
