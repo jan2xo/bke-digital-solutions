@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   launcherExecutionTypes,
@@ -48,6 +49,19 @@ describe("V3 Agent software catalog contract", () => {
       latestVersion: "1.0.0",
       entitled: true,
     }).installable).toBe(true);
+  });
+
+  it("treats durable Entitlement as the source of ownership for both direct and claim-code acquisition", () => {
+    const source = readFileSync(
+      "apps/web/catalog/agent-software-catalog.ts",
+      "utf8",
+    );
+
+    expect(source).toContain('FROM "Entitlement" e');
+    expect(source).toContain('e."resourceId" = p."id"');
+    expect(source).toContain('entitlement_edition."id" = e."resourceId"');
+    expect(source).toContain('entitlement_edition."productId" = p."id"');
+    expect(source).not.toContain('JOIN "ClaimCode"');
   });
 
   it("fails closed on unknown execution values", () => {
