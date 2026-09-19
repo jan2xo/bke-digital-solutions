@@ -127,6 +127,14 @@ export const environmentSchema = z.object({
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Claim Code checkout is enabled" });
     }
   }
+  if (value.V3_AGENT_ACCOUNT_SESSION_ENABLED) {
+    if (!value.AGENT_ACCOUNT_SESSION_PEPPER || value.AGENT_ACCOUNT_SESSION_PEPPER.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_PEPPER)) {
+      context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_PEPPER"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Agent account sessions are enabled" });
+    }
+    if (!value.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY || value.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY)) {
+      context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Agent account sessions are enabled" });
+    }
+  }
   if (environmentCredentialsRequired && value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required for the selected provider source" });
   if (value.DEPLOYMENT_ENV === "production" && value.EMAIL_PROVIDER === "log") context.addIssue({ code: "custom", path: ["EMAIL_PROVIDER"], message: "log email transport is forbidden in production" });
   if (value.PROVIDER_CONFIG_SOURCE === "database" && !value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "is required for database provider configuration" });
