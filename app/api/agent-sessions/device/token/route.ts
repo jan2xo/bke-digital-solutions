@@ -60,6 +60,10 @@ export async function POST(request: Request) {
         1,
         Math.floor((new Date(result.accessExpiresAt).getTime() - Date.now()) / 1000),
       ),
+      refresh_expires_in: Math.max(
+        1,
+        Math.floor((new Date(result.refreshExpiresAt).getTime() - Date.now()) / 1000),
+      ),
       session_id: result.sessionId,
       user_id: result.userId,
       email: result.email,
