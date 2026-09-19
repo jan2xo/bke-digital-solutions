@@ -79,6 +79,26 @@ describe("V3 Agent software catalog contract", () => {
     expect(source).toContain("IN ('i386', 'i686')");
   });
 
+  it("keeps version compatibility owner-editable only through the unpublished release boundary", () => {
+    const route = readFileSync(
+      "app/api/admin/versions/[id]/route.ts",
+      "utf8",
+    );
+    const manager = readFileSync(
+      "components/admin-product-manager.tsx",
+      "utf8",
+    );
+
+    expect(route).toContain('operatingSystem: z.enum(["Windows", "macOS", "Linux"]).optional()');
+    expect(route).toContain('architecture: z.enum(["x64", "arm64", "universal"]).optional()');
+    expect(route).toContain("RELEASE_COMPATIBILITY_EDIT_REQUIRES_UNPUBLISH");
+    expect(route).toContain("compatibilityChange && current.publishedAt !== null");
+    expect(manager).toContain('fetch(\`/api/admin/versions/\${id}\`');
+    expect(manager).toContain('operatingSystem:fields.get("operatingSystem")');
+    expect(manager).toContain('architecture:fields.get("architecture")');
+    expect(manager).toContain("Unpublish this release before changing operating system or architecture.");
+  });
+
   it("fails closed on unknown execution values", () => {
     expect(projectAgentSoftwareCatalogRow({
       productId: "future-product",
