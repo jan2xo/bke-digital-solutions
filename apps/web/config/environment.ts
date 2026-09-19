@@ -11,6 +11,14 @@ export interface WebHostEnvironment {
   readonly upstashRedisRestToken?: string;
 }
 
+export interface GoogleOidcEnvironment {
+  readonly enabled: boolean;
+  readonly clientId?: string;
+  readonly clientSecret?: string;
+  readonly transactionSecret?: string;
+  readonly redirectUri: string;
+}
+
 export interface CronEnvironment {
   readonly cronSecret: string;
 }
@@ -108,6 +116,24 @@ export function getWebHostEnvironment(): WebHostEnvironment {
     redisKeyPrefix: optional("REDIS_KEY_PREFIX") ?? "bke-development",
     upstashRedisRestUrl,
     upstashRedisRestToken,
+  });
+}
+
+export function getGoogleOidcEnvironment(): GoogleOidcEnvironment {
+  const { appUrl } = getWebHostEnvironment();
+  const enabled = parseBoolean("V3_GOOGLE_AUTH_ENABLED", false);
+  const clientId = optional("GOOGLE_OIDC_CLIENT_ID");
+  const clientSecret = optional("GOOGLE_OIDC_CLIENT_SECRET");
+  const transactionSecret = optional("GOOGLE_OIDC_TRANSACTION_SECRET");
+  if (enabled && (!clientId || !clientSecret || !transactionSecret || transactionSecret.length < 32)) {
+    throw new Error("Invalid web host environment: Google OIDC configuration is incomplete");
+  }
+  return Object.freeze({
+    enabled,
+    clientId,
+    clientSecret,
+    transactionSecret,
+    redirectUri: new URL("/api/auth/google/callback", appUrl).toString(),
   });
 }
 
