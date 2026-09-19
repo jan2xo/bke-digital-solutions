@@ -89,9 +89,31 @@ export async function readAgentSoftwareCatalog(
        WHERE pv."productId" = p."id"
          AND pv."active" = TRUE
          AND pv."lifecycle" IN ('STABLE', 'LTS')
-         AND LOWER(pv."operatingSystem") = ${input.platform}
-         AND LOWER(pv."architecture") = ${input.architecture}
-       ORDER BY pv."isLatest" DESC, pv."releasedAt" DESC
+         AND (
+           LOWER(pv."operatingSystem") = ${input.platform}
+           OR LOWER(pv."operatingSystem") IN ('any', 'universal')
+         )
+         AND (
+           LOWER(pv."architecture") = ${input.architecture}
+           OR LOWER(pv."architecture") IN ('any', 'universal')
+           OR (
+             ${input.architecture} = 'x64'
+             AND LOWER(pv."architecture") IN ('amd64', 'x86_64')
+           )
+           OR (
+             ${input.architecture} = 'arm64'
+             AND LOWER(pv."architecture") = 'aarch64'
+           )
+           OR (
+             ${input.architecture} = 'x86'
+             AND LOWER(pv."architecture") IN ('i386', 'i686')
+           )
+         )
+       ORDER BY
+         pv."isLatest" DESC,
+         pv."releasedAt" DESC,
+         CASE WHEN LOWER(pv."operatingSystem") = ${input.platform} THEN 0 ELSE 1 END,
+         CASE WHEN LOWER(pv."architecture") = ${input.architecture} THEN 0 ELSE 1 END
        LIMIT 1
     ) release ON TRUE
     WHERE p."productId" IS NOT NULL
