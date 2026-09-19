@@ -4,7 +4,7 @@ import { consumeClaimCode } from "@/apps/web/entitlements/claim-codes";
 import { requireIdentityUser } from "@/apps/web/auth/session";
 import { apiError } from "@/apps/web/http/api-error";
 import { assertSameOrigin } from "@/apps/web/http/request";
-import { requireAccountCapabilityInTransaction } from "@/lib/authorization";
+import { requireClaimAccountCapabilityInTransaction } from "@/apps/web/accounts/claim-code-authorization";
 import { db } from "@/platform/host/db";
 
 const schema = z.object({
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const input = schema.parse(await request.json());
 
     const result = await db.$transaction(async (tx) => {
-      const account = await requireAccountCapabilityInTransaction(
+      const account = await requireClaimAccountCapabilityInTransaction(
         tx,
         principal.id,
         input.customerAccountId,
