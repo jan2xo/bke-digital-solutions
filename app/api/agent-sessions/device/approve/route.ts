@@ -54,7 +54,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "DEVICE_AUTHORIZATION_EXPIRED" }, { status: 410 });
     }
     if (result.status !== "APPROVED") {
-      return NextResponse.json({ error: `DEVICE_AUTHORIZATION_${result.status}` }, { status: 409 });
+      return NextResponse.json(
+        {
+          error: result.status === "ALREADY_APPROVED"
+            ? "DEVICE_AUTHORIZATION_ALREADY_APPROVED"
+            : `DEVICE_AUTHORIZATION_${result.status}`,
+        },
+        { status: 409 },
+      );
     }
 
     return NextResponse.json({
