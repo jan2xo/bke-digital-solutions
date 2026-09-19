@@ -28,6 +28,7 @@ type DeviceAuthorizationRow = Readonly<{
   status: "PENDING" | "APPROVED" | "DENIED" | "EXPIRED" | "CONSUMED";
   expiresAt: Date;
   pollIntervalSeconds: number;
+  lastPollAt: Date | null;
   approvedByUserId: string | null;
   approvedAccountId: string | null;
   approvedAt: Date | null;
@@ -123,7 +124,7 @@ export async function approveAgentDeviceAuthorization(
   const userCodeHash = hashAgentUserCode(input.userCode, input.pepper);
   const rows = await tx.$queryRaw<DeviceAuthorizationRow[]>`
     SELECT "id", "deviceId", "status", "expiresAt", "pollIntervalSeconds",
-           "approvedByUserId", "approvedAccountId", "approvedAt",
+           "lastPollAt", "approvedByUserId", "approvedAccountId", "approvedAt",
            "handoffExpiresAt", "sessionId", "tokenBundleCiphertext"
       FROM "AgentDeviceAuthorization"
      WHERE "userCodeHash" = ${userCodeHash}
@@ -195,13 +196,13 @@ export async function pollAgentDeviceAuthorization(
     encryptionKey: string;
   }>,
 ): Promise<
-  | { readonly status: "authorization_pending" | "access_denied" | "expired_token" }
+  | { readonly status: "authorization_pending" | "slow_down" | "access_denied" | "expired_token" }
   | ({ readonly status: "approved" } & AgentAccountTokenBundle)
 > {
   const deviceCodeHash = hashAgentDeviceCode(input.deviceCode, input.pepper);
   const rows = await tx.$queryRaw<DeviceAuthorizationRow[]>`
     SELECT "id", "deviceId", "status", "expiresAt", "pollIntervalSeconds",
-           "approvedByUserId", "approvedAccountId", "approvedAt",
+           "lastPollAt", "approvedByUserId", "approvedAccountId", "approvedAt",
            "handoffExpiresAt", "sessionId", "tokenBundleCiphertext"
       FROM "AgentDeviceAuthorization"
      WHERE "deviceCodeHash" = ${deviceCodeHash}
@@ -221,6 +222,28 @@ export async function pollAgentDeviceAuthorization(
       `;
       return { status: "expired_token" };
     }
+
+    if (
+      authorization.lastPollAt &&
+      now.getTime() <
+        authorization.lastPollAt.getTime() + authorization.pollIntervalSeconds * 1000
+    ) {
+      const nextInterval = Math.min(60, authorization.pollIntervalSeconds + 5);
+      await tx.$executeRaw`
+        UPDATE "AgentDeviceAuthorization"
+           SET "pollIntervalSeconds" = ${nextInterval},
+               "lastPollAt" = ${now},
+               "updatedAt" = NOW()
+         WHERE "id" = ${authorization.id}
+      `;
+      return { status: "slow_down" };
+    }
+
+    await tx.$executeRaw`
+      UPDATE "AgentDeviceAuthorization"
+         SET "lastPollAt" = ${now}, "updatedAt" = NOW()
+       WHERE "id" = ${authorization.id}
+    `;
     return { status: "authorization_pending" };
   }
 
