@@ -15,6 +15,8 @@ const schema = z.object({
   releaseNotes: z.string().max(10000).optional(),
   changelog: z.string().max(20000).optional(),
   channel: z.enum(["STABLE", "BETA"]).optional(),
+  operatingSystem: z.enum(["Windows", "macOS", "Linux"]).optional(),
+  architecture: z.enum(["x64", "arm64", "universal"]).optional(),
   deprecated: z.boolean().optional(),
   rollback: z.boolean().optional(),
   notes: z.string().trim().max(4000).optional(),
@@ -34,6 +36,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     const current = await db.productVersion.findUniqueOrThrow({ where: { id } });
     const targetLifecycle = input.lifecycle ?? current.lifecycle;
+    const compatibilityChange =
+      input.operatingSystem !== undefined ||
+      input.architecture !== undefined;
+
+    if (compatibilityChange && current.publishedAt !== null) {
+      throw new Error("RELEASE_COMPATIBILITY_EDIT_REQUIRES_UNPUBLISH");
+    }
 
     if (input.published === true && !["STABLE", "LTS"].includes(targetLifecycle)) {
       throw new Error("RELEASE_PUBLICATION_REQUIRES_STABLE");
@@ -72,6 +81,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           releaseNotes: input.releaseNotes,
           changelog: input.changelog,
           channel: input.channel,
+          operatingSystem: input.operatingSystem,
+          architecture: input.architecture,
           active: input.lifecycle === "ARCHIVED" ? false : undefined,
           publishedAt: input.published === true ? now : input.published === false ? null : undefined,
           isLatest: input.published === true ? true : input.published === false || input.lifecycle === "ARCHIVED" || input.lifecycle === "DEPRECATED" ? false : undefined,
@@ -105,6 +116,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         lifecycle: input.lifecycle,
         published: input.published,
         channel: input.channel,
+        operatingSystem: input.operatingSystem,
+        architecture: input.architecture,
         releaseAuthority: "GITHUB",
         notes: input.notes ?? "",
       },
