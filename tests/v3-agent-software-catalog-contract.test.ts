@@ -64,6 +64,21 @@ describe("V3 Agent software catalog contract", () => {
     expect(source).not.toContain('JOIN "ClaimCode"');
   });
 
+  it("allows one ProductVersion to advertise universal platform/architecture compatibility", () => {
+    const source = readFileSync(
+      "apps/web/catalog/agent-software-catalog.ts",
+      "utf8",
+    );
+    const schema = readFileSync("prisma/schema.prisma", "utf8");
+
+    expect(schema).toContain("@@unique([productId, version])");
+    expect(source).toContain('LOWER(pv."operatingSystem") IN (\'any\', \'universal\')');
+    expect(source).toContain('LOWER(pv."architecture") IN (\'any\', \'universal\')');
+    expect(source).toContain("IN ('amd64', 'x86_64')");
+    expect(source).toContain("= 'aarch64'");
+    expect(source).toContain("IN ('i386', 'i686')");
+  });
+
   it("fails closed on unknown execution values", () => {
     expect(projectAgentSoftwareCatalogRow({
       productId: "future-product",
