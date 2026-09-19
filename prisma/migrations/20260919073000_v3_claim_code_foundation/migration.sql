@@ -2,11 +2,11 @@
 -- Existing orders remain direct account entitlements by default.
 -- Claim-code checkout is not exposed until settlement routing is wired.
 
-CREATE TYPE "PurchaseFulfillmentMode" AS ENUM ('ACCOUNT_ENTITLEMENT', 'CLAIM_CODE');
+CREATE TYPE "CommerceFulfillmentMode" AS ENUM ('ACCOUNT_ENTITLEMENT', 'CLAIM_CODE');
 CREATE TYPE "ClaimCodeStatus" AS ENUM ('AVAILABLE', 'CLAIMED', 'REVOKED', 'EXPIRED');
 
 ALTER TABLE "Order"
-  ADD COLUMN "fulfillmentMode" "PurchaseFulfillmentMode" NOT NULL DEFAULT 'ACCOUNT_ENTITLEMENT';
+  ADD COLUMN "fulfillmentMode" "CommerceFulfillmentMode" NOT NULL DEFAULT 'ACCOUNT_ENTITLEMENT';
 
 CREATE TABLE "ClaimCode" (
   "id" TEXT NOT NULL,
