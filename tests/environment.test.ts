@@ -79,7 +79,7 @@ describe("deployment environment validation", () => {
     expect(parseEnvironment({
       ...base,
       V3_GOOGLE_AUTH_ENABLED: "true",
-      GOOGLE_OIDC_CLIENT_ID: "1234567890-example.apps.googleusercontent.com",
+      GOOGLE_OIDC_CLIENT_ID: "1234567890-abcxyz.apps.googleusercontent.com",
       GOOGLE_OIDC_CLIENT_SECRET: "google-client-secret-value",
       GOOGLE_OIDC_TRANSACTION_SECRET: "g".repeat(64),
     })).toMatchObject({ V3_GOOGLE_AUTH_ENABLED: true });
