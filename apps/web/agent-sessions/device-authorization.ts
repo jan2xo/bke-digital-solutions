@@ -341,14 +341,22 @@ export async function pollAgentDeviceAuthorization(
   await tx.$executeRaw`
     INSERT INTO "AgentAccountSession" (
       "id", "deviceAuthorizationId", "userId", "accountId", "deviceId",
-      "accessTokenHash", "refreshTokenHash", "accessExpiresAt", "refreshExpiresAt",
+      "accessTokenHash", "accessExpiresAt", "refreshExpiresAt",
       "refreshGeneration", "createdAt", "updatedAt"
     ) VALUES (
       ${sessionId}, ${authorization.id}, ${user.id}, ${account.id},
       ${authorization.deviceId},
       ${hashAgentAccessToken(accessToken, input.pepper)},
-      ${hashAgentRefreshToken(refreshToken, input.pepper)},
       ${accessExpiresAt}, ${refreshExpiresAt}, 0, NOW(), NOW()
+    )
+  `;
+
+  await tx.$executeRaw`
+    INSERT INTO "AgentAccountRefreshToken" (
+      "id", "sessionId", "tokenHash", "generation", "status", "expiresAt", "createdAt"
+    ) VALUES (
+      ${randomUUID()}, ${sessionId}, ${hashAgentRefreshToken(refreshToken, input.pepper)},
+      0, 'ACTIVE', ${refreshExpiresAt}, NOW()
     )
   `;
 
@@ -365,4 +373,270 @@ export async function pollAgentDeviceAuthorization(
   `;
 
   return Object.freeze({ status: "approved" as const, ...bundle });
+}
+
+
+type AgentAccountSessionRow = Readonly<{
+  id: string;
+  deviceAuthorizationId: string;
+  userId: string;
+  accountId: string;
+  deviceId: string;
+  accessExpiresAt: Date;
+  refreshExpiresAt: Date;
+  refreshGeneration: number;
+  revokedAt: Date | null;
+}>;
+
+type AgentRefreshTokenRow = Readonly<{
+  id: string;
+  sessionId: string;
+  generation: number;
+  status: "ACTIVE" | "ROTATED" | "REVOKED";
+  expiresAt: Date;
+}>;
+
+async function revokeAgentSessionFamily(
+  tx: Prisma.TransactionClient,
+  sessionId: string,
+  now: Date,
+): Promise<void> {
+  await tx.$executeRaw`
+    UPDATE "AgentAccountSession"
+       SET "revokedAt" = COALESCE("revokedAt", ${now}),
+           "updatedAt" = NOW()
+     WHERE "id" = ${sessionId}
+  `;
+  await tx.$executeRaw`
+    UPDATE "AgentAccountRefreshToken"
+       SET "status" = 'REVOKED',
+           "revokedAt" = COALESCE("revokedAt", ${now})
+     WHERE "sessionId" = ${sessionId}
+       AND "status" <> 'REVOKED'
+  `;
+  await tx.$executeRaw`
+    UPDATE "AgentDeviceAuthorization"
+       SET "tokenBundleCiphertext" = NULL,
+           "handoffExpiresAt" = ${now},
+           "updatedAt" = NOW()
+     WHERE "sessionId" = ${sessionId}
+  `;
+}
+
+export async function refreshAgentAccountSession(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{
+    refreshToken: string;
+    pepper: string;
+  }>,
+): Promise<
+  | ({ readonly status: "refreshed" } & AgentAccountTokenBundle)
+  | { readonly status: "invalid_grant" | "replay_detected" }
+> {
+  const tokenHash = hashAgentRefreshToken(input.refreshToken, input.pepper);
+  const tokens = await tx.$queryRaw<AgentRefreshTokenRow[]>`
+    SELECT "id", "sessionId", "generation", "status", "expiresAt"
+      FROM "AgentAccountRefreshToken"
+     WHERE "tokenHash" = ${tokenHash}
+     FOR UPDATE
+  `;
+  const token = tokens[0];
+  if (!token) return { status: "invalid_grant" };
+
+  const sessions = await tx.$queryRaw<AgentAccountSessionRow[]>`
+    SELECT "id", "deviceAuthorizationId", "userId", "accountId", "deviceId",
+           "accessExpiresAt", "refreshExpiresAt", "refreshGeneration", "revokedAt"
+      FROM "AgentAccountSession"
+     WHERE "id" = ${token.sessionId}
+     FOR UPDATE
+  `;
+  const session = sessions[0];
+  if (!session) return { status: "invalid_grant" };
+
+  const now = new Date();
+
+  if (token.status !== "ACTIVE") {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "replay_detected" };
+  }
+
+  if (
+    token.expiresAt <= now ||
+    session.refreshExpiresAt <= now ||
+    session.revokedAt
+  ) {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "invalid_grant" };
+  }
+
+  let account;
+  try {
+    account = await requireAgentDeviceAccountAccessInTransaction(
+      tx,
+      session.userId,
+      session.accountId,
+    );
+  } catch {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "invalid_grant" };
+  }
+
+  const user = await tx.user.findUnique({
+    where: { id: session.userId },
+    select: { id: true, email: true, emailVerified: true, lifecycleState: true },
+  });
+  if (!user || !user.emailVerified || user.lifecycleState !== "ACTIVE") {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "invalid_grant" };
+  }
+
+  const nextGeneration = session.refreshGeneration + 1;
+  const accessToken = generateAgentSessionToken();
+  const refreshToken = generateAgentSessionToken();
+  const accessExpiresAt = new Date(now.getTime() + ACCESS_TOKEN_TTL_MS);
+
+  await tx.$executeRaw`
+    UPDATE "AgentAccountRefreshToken"
+       SET "status" = 'ROTATED', "rotatedAt" = ${now}
+     WHERE "id" = ${token.id}
+       AND "status" = 'ACTIVE'
+  `;
+
+  await tx.$executeRaw`
+    INSERT INTO "AgentAccountRefreshToken" (
+      "id", "sessionId", "tokenHash", "generation", "status", "expiresAt", "createdAt"
+    ) VALUES (
+      ${randomUUID()}, ${session.id},
+      ${hashAgentRefreshToken(refreshToken, input.pepper)},
+      ${nextGeneration}, 'ACTIVE', ${session.refreshExpiresAt}, NOW()
+    )
+  `;
+
+  await tx.$executeRaw`
+    UPDATE "AgentAccountSession"
+       SET "accessTokenHash" = ${hashAgentAccessToken(accessToken, input.pepper)},
+           "accessExpiresAt" = ${accessExpiresAt},
+           "refreshGeneration" = ${nextGeneration},
+           "lastSeenAt" = ${now},
+           "updatedAt" = NOW()
+     WHERE "id" = ${session.id}
+  `;
+
+  await tx.$executeRaw`
+    UPDATE "AgentDeviceAuthorization"
+       SET "tokenBundleCiphertext" = NULL,
+           "handoffExpiresAt" = ${now},
+           "updatedAt" = NOW()
+     WHERE "sessionId" = ${session.id}
+  `;
+
+  return Object.freeze({
+    status: "refreshed" as const,
+    sessionId: session.id,
+    accessToken,
+    refreshToken,
+    accessExpiresAt: accessExpiresAt.toISOString(),
+    refreshExpiresAt: session.refreshExpiresAt.toISOString(),
+    userId: user.id,
+    email: user.email,
+    accountId: account.id,
+    accountType: account.type,
+    accountDisplayName: account.displayName,
+  });
+}
+
+export async function authenticateAgentAccessToken(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ accessToken: string; pepper: string }>,
+): Promise<
+  | {
+      readonly status: "authenticated";
+      readonly sessionId: string;
+      readonly userId: string;
+      readonly accountId: string;
+      readonly deviceId: string;
+    }
+  | { readonly status: "invalid_token" }
+> {
+  const hash = hashAgentAccessToken(input.accessToken, input.pepper);
+  const sessions = await tx.$queryRaw<AgentAccountSessionRow[]>`
+    SELECT "id", "deviceAuthorizationId", "userId", "accountId", "deviceId",
+           "accessExpiresAt", "refreshExpiresAt", "refreshGeneration", "revokedAt"
+      FROM "AgentAccountSession"
+     WHERE "accessTokenHash" = ${hash}
+     FOR UPDATE
+  `;
+  const session = sessions[0];
+  const now = new Date();
+  if (!session || session.revokedAt || session.accessExpiresAt <= now) {
+    return { status: "invalid_token" };
+  }
+
+  try {
+    await requireAgentDeviceAccountAccessInTransaction(
+      tx,
+      session.userId,
+      session.accountId,
+    );
+  } catch {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "invalid_token" };
+  }
+
+  const user = await tx.user.findUnique({
+    where: { id: session.userId },
+    select: { emailVerified: true, lifecycleState: true },
+  });
+  if (!user?.emailVerified || user.lifecycleState !== "ACTIVE") {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "invalid_token" };
+  }
+
+  await tx.$executeRaw`
+    UPDATE "AgentAccountSession"
+       SET "lastSeenAt" = ${now}, "updatedAt" = NOW()
+     WHERE "id" = ${session.id}
+  `;
+
+  return Object.freeze({
+    status: "authenticated" as const,
+    sessionId: session.id,
+    userId: session.userId,
+    accountId: session.accountId,
+    deviceId: session.deviceId,
+  });
+}
+
+export async function acknowledgeAgentSessionHandoff(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ accessToken: string; pepper: string }>,
+): Promise<"acknowledged" | "invalid_token"> {
+  const authenticated = await authenticateAgentAccessToken(tx, input);
+  if (authenticated.status !== "authenticated") return "invalid_token";
+
+  await tx.$executeRaw`
+    UPDATE "AgentDeviceAuthorization"
+       SET "tokenBundleCiphertext" = NULL,
+           "handoffExpiresAt" = NOW(),
+           "updatedAt" = NOW()
+     WHERE "sessionId" = ${authenticated.sessionId}
+  `;
+  return "acknowledged";
+}
+
+export async function revokeAgentAccountSession(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ refreshToken: string; pepper: string }>,
+): Promise<"revoked" | "not_found"> {
+  const tokenHash = hashAgentRefreshToken(input.refreshToken, input.pepper);
+  const rows = await tx.$queryRaw<Array<{ sessionId: string }>>`
+    SELECT "sessionId"
+      FROM "AgentAccountRefreshToken"
+     WHERE "tokenHash" = ${tokenHash}
+     FOR UPDATE
+  `;
+  const row = rows[0];
+  if (!row) return "not_found";
+  await revokeAgentSessionFamily(tx, row.sessionId, new Date());
+  return "revoked";
 }
