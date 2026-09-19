@@ -47,6 +47,10 @@ const validatedProductionRuntimeNames = [
   "SESSION_SECRET",
   "MFA_ENCRYPTION_KEY",
   "LICENSE_PEPPER",
+  "V3_GOOGLE_AUTH_ENABLED",
+  "GOOGLE_OIDC_CLIENT_ID",
+  "GOOGLE_OIDC_CLIENT_SECRET",
+  "GOOGLE_OIDC_TRANSACTION_SECRET",
   "CRON_SECRET",
   "PROVIDER_CREDENTIALS_ENCRYPTION_KEY",
   "PAYMONGO_SECRET_KEY",
@@ -69,6 +73,17 @@ describe("deployment environment validation", () => {
   it("rejects paths on the canonical origin", () => expect(() => parseEnvironment({ ...base, APP_URL: "https://commerce.bke.example/app" })).toThrow("APP_URL"));
   it("rejects shared storage and Valkey namespaces", () => expect(() => parseEnvironment({ ...base, S3_BUCKET: "shared-private", REDIS_KEY_PREFIX: "shared" })).toThrow(/S3_BUCKET|REDIS_KEY_PREFIX/));
   it("rejects placeholder secrets", () => expect(() => parseEnvironment({ ...base, SESSION_SECRET: "replace-with-a-production-session-secret-value-123456" })).toThrow("SESSION_SECRET"));
+  it("keeps Google authentication disabled without provider credentials", () => expect(parseEnvironment(base)).toMatchObject({ V3_GOOGLE_AUTH_ENABLED: false }));
+  it("requires complete Google OIDC configuration only when explicitly enabled", () => {
+    expect(() => parseEnvironment({ ...base, V3_GOOGLE_AUTH_ENABLED: "true" })).toThrow(/GOOGLE_OIDC_CLIENT_ID|GOOGLE_OIDC_CLIENT_SECRET|GOOGLE_OIDC_TRANSACTION_SECRET/);
+    expect(parseEnvironment({
+      ...base,
+      V3_GOOGLE_AUTH_ENABLED: "true",
+      GOOGLE_OIDC_CLIENT_ID: "1234567890-example.apps.googleusercontent.com",
+      GOOGLE_OIDC_CLIENT_SECRET: "google-client-secret-value",
+      GOOGLE_OIDC_TRANSACTION_SECRET: "g".repeat(64),
+    })).toMatchObject({ V3_GOOGLE_AUTH_ENABLED: true });
+  });
   it("accepts database provider configuration without environment provider credentials", () => expect(parseEnvironment({ ...base, PROVIDER_CONFIG_SOURCE: "database", PROVIDER_CREDENTIALS_ENCRYPTION_KEY: "k".repeat(64), PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, RESEND_API_KEY: undefined })).toMatchObject({ PROVIDER_CONFIG_SOURCE: "database" }));
   it("requires a strong master key for database provider configuration", () => expect(() => parseEnvironment({ ...base, PROVIDER_CONFIG_SOURCE: "database", PROVIDER_CREDENTIALS_ENCRYPTION_KEY: undefined, PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, RESEND_API_KEY: undefined })).toThrow("PROVIDER_CREDENTIALS_ENCRYPTION_KEY"));
   it("requires environment credentials when database fallback is explicitly enabled", () => expect(() => parseEnvironment({ ...base, PROVIDER_CONFIG_SOURCE: "database", PROVIDER_CONFIG_ALLOW_ENV_FALLBACK: "true", PROVIDER_CREDENTIALS_ENCRYPTION_KEY: "k".repeat(64), PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, RESEND_API_KEY: undefined })).toThrow(/PAYMONGO_SECRET_KEY|RESEND_API_KEY/));
