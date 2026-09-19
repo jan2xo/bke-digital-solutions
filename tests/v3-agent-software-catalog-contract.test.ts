@@ -101,6 +101,9 @@ describe("V3 Agent software catalog contract", () => {
     expect(manager).toContain('operatingSystem:fields.get("operatingSystem")');
     expect(manager).toContain('architecture:fields.get("architecture")');
     expect(manager).toContain("Unpublish this release before changing operating system or architecture.");
+    expect(manager).toContain('version.publishedAt?"Published":"Unpublished"');
+    expect(manager).toContain("disabled={Boolean(version.publishedAt)}");
+    expect(manager).toContain('href={\`/admin/releases/\${version.id}\`}');
     expect(apiError).toContain("RELEASE_COMPATIBILITY_EDIT_REQUIRES_UNPUBLISH: 409");
   });
 
