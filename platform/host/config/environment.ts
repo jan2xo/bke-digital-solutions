@@ -22,6 +22,10 @@ export const environmentSchema = z.object({
   LICENSE_PEPPER: secret,
   V3_CLAIM_CODE_CHECKOUT_ENABLED: bool.default(false),
   CLAIM_CODE_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
+  V3_GOOGLE_AUTH_ENABLED: bool.default(false),
+  GOOGLE_OIDC_CLIENT_ID: z.preprocess(optional, z.string().min(10).max(512).optional()),
+  GOOGLE_OIDC_CLIENT_SECRET: z.preprocess(optional, z.string().min(8).max(512).optional()),
+  GOOGLE_OIDC_TRANSACTION_SECRET: z.preprocess(optional, secret.optional()),
   LICENSE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
   LICENSE_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   LICENSE_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-ed25519-v1"),
@@ -122,6 +126,17 @@ export const environmentSchema = z.object({
   if (value.V3_CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Claim Code checkout is enabled" });
+    }
+  }
+  if (value.V3_GOOGLE_AUTH_ENABLED) {
+    if (!value.GOOGLE_OIDC_CLIENT_ID || placeholder.test(value.GOOGLE_OIDC_CLIENT_ID)) {
+      context.addIssue({ code: "custom", path: ["GOOGLE_OIDC_CLIENT_ID"], message: "must be configured when V3 Google authentication is enabled" });
+    }
+    if (!value.GOOGLE_OIDC_CLIENT_SECRET || placeholder.test(value.GOOGLE_OIDC_CLIENT_SECRET)) {
+      context.addIssue({ code: "custom", path: ["GOOGLE_OIDC_CLIENT_SECRET"], message: "must be configured when V3 Google authentication is enabled" });
+    }
+    if (!value.GOOGLE_OIDC_TRANSACTION_SECRET || value.GOOGLE_OIDC_TRANSACTION_SECRET.length < 48 || placeholder.test(value.GOOGLE_OIDC_TRANSACTION_SECRET)) {
+      context.addIssue({ code: "custom", path: ["GOOGLE_OIDC_TRANSACTION_SECRET"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Google authentication is enabled" });
     }
   }
   if (environmentCredentialsRequired && value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required for the selected provider source" });
