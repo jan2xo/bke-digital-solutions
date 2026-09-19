@@ -67,12 +67,17 @@ export async function readAgentSoftwareCatalog(
       release."version" AS "latestVersion",
       EXISTS (
         SELECT 1
-          FROM "ClaimCode" cc
-          JOIN "Entitlement" e
-            ON e."id" = cc."entitlementId"
-         WHERE cc."claimedToAccountId" = ${input.accountId}
-           AND cc."productId" = p."productId"
-           AND e."subjectId" = ${input.accountId}
+          FROM "Entitlement" e
+         WHERE e."subjectId" = ${input.accountId}
+           AND (
+             e."resourceId" = p."id"
+             OR EXISTS (
+               SELECT 1
+                 FROM "Edition" entitlement_edition
+                WHERE entitlement_edition."id" = e."resourceId"
+                  AND entitlement_edition."productId" = p."id"
+             )
+           )
            AND e."status" = 'ACTIVE'
            AND e."validFrom" <= NOW()
            AND (e."validUntil" IS NULL OR e."validUntil" > NOW())
