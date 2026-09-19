@@ -12,6 +12,7 @@ CREATE TABLE "AgentDeviceAuthorization" (
   "status" TEXT NOT NULL DEFAULT 'PENDING',
   "expiresAt" TIMESTAMP(3) NOT NULL,
   "pollIntervalSeconds" INTEGER NOT NULL,
+  "lastPollAt" TIMESTAMP(3),
   "approvedByUserId" TEXT,
   "approvedAccountId" TEXT,
   "approvedAt" TIMESTAMP(3),
