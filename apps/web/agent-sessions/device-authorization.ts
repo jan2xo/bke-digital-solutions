@@ -644,3 +644,21 @@ export async function revokeAgentAccountSession(
   await revokeAgentSessionFamily(tx, row.sessionId, new Date());
   return "revoked";
 }
+
+
+export async function cancelAgentDeviceAuthorization(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ deviceCode: string; pepper: string }>,
+): Promise<"cancelled" | "not_found"> {
+  const deviceCodeHash = hashAgentDeviceCode(input.deviceCode, input.pepper);
+  const changed = await tx.$executeRaw`
+    UPDATE "AgentDeviceAuthorization"
+       SET "status" = 'DENIED',
+           "deniedAt" = NOW(),
+           "tokenBundleCiphertext" = NULL,
+           "updatedAt" = NOW()
+     WHERE "deviceCodeHash" = ${deviceCodeHash}
+       AND "status" IN ('PENDING','APPROVED')
+  `;
+  return changed > 0 ? "cancelled" : "not_found";
+}
