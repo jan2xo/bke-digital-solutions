@@ -6161,6 +6161,7 @@ export const ProductScalarFieldEnum = {
   summary: 'summary',
   description: 'description',
   type: 'type',
+  launcherExecutionType: 'launcherExecutionType',
   category: 'category',
   licenseType: 'licenseType',
   featured: 'featured',
@@ -7467,6 +7468,20 @@ export type EnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'ProductType[]'
  */
 export type ListEnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType[]'>
+
+
+
+/**
+ * Reference to a field of type 'LauncherExecutionType'
+ */
+export type EnumLauncherExecutionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LauncherExecutionType'>
+
+
+
+/**
+ * Reference to a field of type 'LauncherExecutionType[]'
+ */
+export type ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LauncherExecutionType[]'>
 
 
 

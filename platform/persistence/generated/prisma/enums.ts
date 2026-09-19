@@ -206,6 +206,14 @@ export const ProductType = {
 export type ProductType = (typeof ProductType)[keyof typeof ProductType]
 
 
+export const LauncherExecutionType = {
+  LAUNCHER_PLUGIN: 'LAUNCHER_PLUGIN',
+  STANDALONE: 'STANDALONE'
+} as const
+
+export type LauncherExecutionType = (typeof LauncherExecutionType)[keyof typeof LauncherExecutionType]
+
+
 export const ReleaseChannel = {
   STABLE: 'STABLE',
   BETA: 'BETA'

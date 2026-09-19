@@ -505,6 +505,13 @@ export type EnumProductTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumProductTypeFilter<$PrismaModel> | $Enums.ProductType
 }
 
+export type EnumLauncherExecutionTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.LauncherExecutionType | Prisma.EnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel> | $Enums.LauncherExecutionType | null
+}
+
 export type EnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ProductType | Prisma.EnumProductTypeFieldRefInput<$PrismaModel>
   in?: $Enums.ProductType[] | Prisma.ListEnumProductTypeFieldRefInput<$PrismaModel>
@@ -513,6 +520,16 @@ export type EnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumProductTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumProductTypeFilter<$PrismaModel>
+}
+
+export type EnumLauncherExecutionTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LauncherExecutionType | Prisma.EnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLauncherExecutionTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.LauncherExecutionType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel>
 }
 
 export type EnumUpdatePolicyFilter<$PrismaModel = never> = {
@@ -1682,6 +1699,13 @@ export type NestedEnumProductTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumProductTypeFilter<$PrismaModel> | $Enums.ProductType
 }
 
+export type NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.LauncherExecutionType | Prisma.EnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel> | $Enums.LauncherExecutionType | null
+}
+
 export type NestedEnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ProductType | Prisma.EnumProductTypeFieldRefInput<$PrismaModel>
   in?: $Enums.ProductType[] | Prisma.ListEnumProductTypeFieldRefInput<$PrismaModel>
@@ -1690,6 +1714,16 @@ export type NestedEnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumProductTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumProductTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumLauncherExecutionTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LauncherExecutionType | Prisma.EnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LauncherExecutionType[] | Prisma.ListEnumLauncherExecutionTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLauncherExecutionTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.LauncherExecutionType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLauncherExecutionTypeNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumUpdatePolicyFilter<$PrismaModel = never> = {
