@@ -447,6 +447,7 @@ export const ProductScalarFieldEnum = {
   summary: 'summary',
   description: 'description',
   type: 'type',
+  launcherExecutionType: 'launcherExecutionType',
   category: 'category',
   licenseType: 'licenseType',
   featured: 'featured',
