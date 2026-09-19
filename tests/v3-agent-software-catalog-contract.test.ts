@@ -88,6 +88,10 @@ describe("V3 Agent software catalog contract", () => {
       "components/admin-product-manager.tsx",
       "utf8",
     );
+    const apiError = readFileSync(
+      "apps/web/http/api-error.ts",
+      "utf8",
+    );
 
     expect(route).toContain('operatingSystem: z.enum(["Windows", "macOS", "Linux"]).optional()');
     expect(route).toContain('architecture: z.enum(["x64", "arm64", "universal"]).optional()');
@@ -97,6 +101,7 @@ describe("V3 Agent software catalog contract", () => {
     expect(manager).toContain('operatingSystem:fields.get("operatingSystem")');
     expect(manager).toContain('architecture:fields.get("architecture")');
     expect(manager).toContain("Unpublish this release before changing operating system or architecture.");
+    expect(apiError).toContain("RELEASE_COMPATIBILITY_EDIT_REQUIRES_UNPUBLISH: 409");
   });
 
   it("fails closed on unknown execution values", () => {
