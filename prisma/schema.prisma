@@ -150,6 +150,11 @@ enum ProductType {
   HYBRID
 }
 
+enum LauncherExecutionType {
+  LAUNCHER_PLUGIN
+  STANDALONE
+}
+
 enum ReleaseChannel {
   STABLE
   BETA
@@ -774,6 +779,7 @@ model Product {
   summary             String
   description         String
   type                ProductType
+  launcherExecutionType LauncherExecutionType?
   category            String              @default("General")
   licenseType         String              @default("Commercial")
   featured            Boolean             @default(false)
@@ -798,6 +804,7 @@ model Product {
   cleanupJobs         StorageCleanupJob[]
   commissioningRuns   CommissioningRun[]
 
+  @@index([launcherExecutionType])
   @@index([deletionRequestedAt])
 }
 
