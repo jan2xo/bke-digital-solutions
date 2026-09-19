@@ -147,7 +147,11 @@ export async function approveAgentDeviceAuthorization(
   }
 
   if (authorization.status !== "PENDING") {
-    return { status: authorization.status as "APPROVED" | "DENIED" | "CONSUMED" };
+    return {
+      status: authorization.status === "APPROVED"
+        ? "ALREADY_APPROVED" as const
+        : authorization.status as "DENIED" | "CONSUMED",
+    };
   }
 
   const account = await requireAgentDeviceAccountAccessInTransaction(
