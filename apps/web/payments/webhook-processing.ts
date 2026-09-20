@@ -4,7 +4,6 @@ import type { PaymentsVerifiedProviderEventSnapshot } from "@bke/payments/contra
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
 import { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { db } from "@/platform/host/db";
-import { dispatchEmailOutbox } from "@/apps/web/email";
 import { issueCommercialLease } from "@/apps/web/licensing/commercial-lease";
 import {
   fulfillOrderLicensing,
@@ -152,29 +151,6 @@ async function recordFailure(eventId: string, code: string, retryable: boolean) 
   });
 }
 
-async function queueCommerceEmail(
-  tx: Prisma.TransactionClient,
-  input: Readonly<{
-    type: string;
-    recipient: string;
-    subject: string;
-    payload: Record<string, unknown>;
-    deduplicationKey: string;
-  }>,
-) {
-  await tx.emailOutbox.upsert({
-    where: { deduplicationKey: input.deduplicationKey },
-    create: {
-      type: input.type,
-      recipient: input.recipient,
-      subject: input.subject,
-      payload: input.payload as Prisma.InputJsonValue,
-      deduplicationKey: input.deduplicationKey,
-    },
-    update: {},
-  });
-}
-
 async function resolveOperationalOrder(
   tx: Prisma.TransactionClient,
   event: PaymentsVerifiedProviderEventSnapshot,
@@ -290,29 +266,6 @@ async function processPaidEvent(
       { paymentId: payment.id, paymentEventId: event.eventId },
       renewalRequests,
     );
-    const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-    const invoice = await tx.invoice.findUniqueOrThrow({ where: { id: settlement.invoiceId } });
-    await queueCommerceEmail(tx, {
-      type: "PAYMENT_RECEIPT",
-      recipient: account.billingEmail,
-      subject: "BKE Digital Solutions payment receipt",
-      payload: { orderNumber: order.number },
-      deduplicationKey: `payment-receipt:${order.id}`,
-    });
-    await queueCommerceEmail(tx, {
-      type: "INVOICE_ISSUED",
-      recipient: account.billingEmail,
-      subject: "Your BKE Digital Solutions invoice",
-      payload: { orderNumber: order.number, invoiceNumber: invoice.number },
-      deduplicationKey: `invoice-issued:${order.id}`,
-    });
-    await queueCommerceEmail(tx, {
-      type: "LICENSE_ISSUED",
-      recipient: account.billingEmail,
-      subject: "Your BKE Digital Solutions license is ready",
-      payload: { orderNumber: order.number },
-      deduplicationKey: `entitlement-issued:${order.id}`,
-    });
     await tx.auditLog.create({
       data: {
         accountId: order.accountId,
@@ -400,14 +353,6 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
                WHERE "id" = ${packageAttempt.id}
             `;
           }
-          const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-          await queueCommerceEmail(tx, {
-            type: "PAYMENT_FAILED",
-            recipient: account.billingEmail,
-            subject: "BKE Digital Solutions payment failed",
-            payload: { orderNumber: order.number },
-            deduplicationKey: `payment-failed:${order.id}`,
-          });
           await tx.auditLog.create({
             data: {
               accountId: order.accountId,
@@ -485,14 +430,6 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
             },
           });
         }
-        const account = await tx.customerAccount.findUniqueOrThrow({ where: { id: order.accountId } });
-        await queueCommerceEmail(tx, {
-          type: "REFUND_CONFIRMED",
-          recipient: account.billingEmail,
-          subject: "BKE Digital Solutions refund confirmed",
-          payload: { orderNumber: order.number },
-          deduplicationKey: `refund-confirmed:${order.id}`,
-        });
         await tx.auditLog.create({
           data: {
             accountId: order.accountId,
@@ -568,7 +505,6 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
       // Payment remains settled; the PREPARED lease operation stays retryable.
     }
   }
-  await dispatchEmailOutbox().catch(() => undefined);
   return { processed: true as const };
 }
 
