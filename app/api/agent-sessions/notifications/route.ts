@@ -72,11 +72,11 @@ export async function GET(request: Request) {
 
       const product = await tx.product.findFirst({
         where: {
-          id: input.product_id,
+          productId: input.product_id,
           active: true,
           archivedAt: null,
         },
-        select: { id: true },
+        select: { id: true, productId: true },
       });
       if (!product) {
         return { status: "not_found" as const };
@@ -116,7 +116,7 @@ export async function GET(request: Request) {
       return {
         status: "ok" as const,
         accountId: session.accountId,
-        productId: product.id,
+        productId: product.productId!,
         notifications,
       };
     }, { isolationLevel: "Serializable" });
