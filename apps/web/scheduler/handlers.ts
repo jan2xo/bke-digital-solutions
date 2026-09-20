@@ -26,13 +26,75 @@ export async function storageLifecycle(context: JobContext): Promise<JobSummary>
   return { due, abandoned, processed: results.length, finalized };
 }
 
+const RETIRED_COMMERCE_EMAIL_TYPES = [
+  "PAYMENT_RECEIPT",
+  "LICENSE_ISSUED",
+  "PAYMENT_FAILED",
+  "REFUND_CONFIRMED",
+  "RENEWAL_REMINDER",
+  "SUBSCRIPTION_EXPIRED",
+  "TRIAL_ENDING",
+  "TRIAL_EXPIRED",
+  "LICENSE_EXPIRED",
+  "CUSTOMER_LIFECYCLE_REVIEW",
+  "PAYMENT_RECONCILIATION_REVIEW",
+] as const;
+
 export async function emailLifecycle(context: JobContext): Promise<JobSummary> {
-  const pending = await db.emailOutbox.count({ where: { status: { in: ["PENDING", "FAILED"] }, attempts: { lt: 5 } } });
-  const terminal = await db.emailOutbox.count({ where: { OR: [{ status: "PERMANENTLY_FAILED" }, { status: "FAILED", attempts: { gte: 5 } }] } });
-  if (context.dryRun) return { pending, terminal };
+  const retired = await db.emailOutbox.count({
+    where: {
+      type: { in: [...RETIRED_COMMERCE_EMAIL_TYPES] },
+      status: { in: ["PENDING", "FAILED"] },
+    },
+  });
+  const pending = await db.emailOutbox.count({
+    where: {
+      type: {
+        in: [
+          "INVOICE_ISSUED",
+          "SECURITY_SESSIONS_REVOKED",
+          "SECURITY_NEW_SESSION",
+          "SECURITY_ACCOUNT_CHANGED",
+        ],
+      },
+      status: { in: ["PENDING", "FAILED"] },
+      attempts: { lt: 5 },
+    },
+  });
+  const terminal = await db.emailOutbox.count({
+    where: {
+      OR: [
+        { status: "PERMANENTLY_FAILED" },
+        { status: "FAILED", attempts: { gte: 5 } },
+      ],
+    },
+  });
+  if (context.dryRun) return { pending, terminal, retired };
+
+  const retiredResult = await db.emailOutbox.updateMany({
+    where: {
+      type: { in: [...RETIRED_COMMERCE_EMAIL_TYPES] },
+      status: { in: ["PENDING", "FAILED"] },
+    },
+    data: {
+      status: "PERMANENTLY_FAILED",
+      lastError: "EMAIL_CHANNEL_RETIRED",
+      claimedBy: null,
+      claimedAt: null,
+      claimExpiresAt: null,
+    },
+  });
+
   const result = await dispatchEmailOutbox(100);
-  await db.emailOutbox.updateMany({ where: { status: "FAILED", attempts: { gte: 5 } }, data: { status: "PERMANENTLY_FAILED" } });
-  return { ...result, terminalBefore: terminal };
+  await db.emailOutbox.updateMany({
+    where: { status: "FAILED", attempts: { gte: 5 } },
+    data: { status: "PERMANENTLY_FAILED" },
+  });
+  return {
+    ...result,
+    terminalBefore: terminal,
+    retired: retiredResult.count,
+  };
 }
 
 export async function renewalReminders(context: JobContext): Promise<JobSummary> {
