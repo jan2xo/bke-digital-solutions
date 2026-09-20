@@ -62,6 +62,10 @@ describe.sequential("durable scheduler", () => {
     const second = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (second && typeof second === "object" && "runId" in second && typeof second.runId === "string") runIds.push(second.runId);
     expect(await db.emailOutbox.count({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } })).toBe(0);
     expect(await db.notificationMessage.count({ where: { idempotencyKey: { startsWith: `renewal-approaching:${subscriptionId}:` } } })).toBe(1);
+    await db.subscription.update({
+      where: { id: subscriptionId },
+      data: { currentPeriodEnd: new Date(Date.now() - 1_000) },
+    });
     const expiration = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if (expiration && typeof expiration === "object" && "runId" in expiration && typeof expiration.runId === "string") runIds.push(expiration.runId);
     expect((await db.license.findUniqueOrThrow({ where: { id: licenseId } })).status).toBe("EXPIRED");
     expect(await db.licenseEvent.count({ where: { licenseId, type: "LICENSE_EXPIRED" } })).toBe(1);
