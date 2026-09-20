@@ -24,7 +24,7 @@ access, and signing-key custody remain owner/provider actions.
 **New empty VPS:** follow FRESH-VPS-BOOTSTRAP, then PRODUCTION-DEPLOYMENT; stop
 on any health or migration failure.
 
-The read-only preflight is `npm run ops:validate -- .env.vps`; it validates the
+The read-only preflight is `npm run ops:validate`; it validates the
 merged Compose configuration, topology, and restart policies without starting
 or changing services. After deployment, run
 `npm run ops:health -- https://production-host`.

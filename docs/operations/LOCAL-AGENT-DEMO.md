@@ -1,6 +1,6 @@
 # Local Agent activation demo
 
-This procedure is TEST/LOCAL ONLY. It must never use `.env.production`, VPS
+This procedure is TEST/LOCAL ONLY. It must never use production runtime secrets, VPS
 resources, production signing keys, or real customer records.
 
 ## Terminal 1: Digital Solutions

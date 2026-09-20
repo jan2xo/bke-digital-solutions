@@ -21,14 +21,14 @@ They return only `{ "grace": true }` or `{ "grace": false }` and use `Cache-Cont
 
 ## VPS commands
 
-The `operations` Compose service uses the production application image, including Node dependencies and the generated Prisma client. Run these commands from the deployed repository directory. They reuse `.env.production`; output never prints that file or its secrets.
+The `operations` Compose service uses the production application image, including Node dependencies and the generated Prisma client. Run these commands from the deployed repository directory. They reuse `.env`; output never prints that file or its secrets.
 
 ```bash
-docker compose --env-file .env.production -f docker-compose.production.yml --profile operations run --rm operations npm run grace:status
-docker compose --env-file .env.production -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- airstack true
-docker compose --env-file .env.production -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- airstack false
-docker compose --env-file .env.production -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- renderdock true
-docker compose --env-file .env.production -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- renderdock false
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm operations npm run grace:status
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- airstack true
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- airstack false
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- renderdock true
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm operations npm run grace:set -- renderdock false
 ```
 
 Only exact lowercase `true` and `false` are accepted. Unknown products and malformed commands fail without changing state. Repeating a value is safe and idempotent. Each set operation records old value, new value, product, timestamp, and `VPS_CLI` source in the existing audit log without inventing a user actor.

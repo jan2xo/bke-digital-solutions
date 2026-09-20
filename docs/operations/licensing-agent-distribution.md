@@ -23,8 +23,8 @@ sudo install -d -m 0755 /opt/bkes/licensing-agent/windows /opt/bkes/licensing-ag
 sudo install -m 0644 BKELicensingAgentSetup.exe /opt/bkes/licensing-agent/windows/BKELicensingAgentSetup.exe
 sudo install -m 0644 BKELicensingAgentSetup.pkg /opt/bkes/licensing-agent/macos/BKELicensingAgentSetup.pkg
 sudo install -m 0644 BKELicensingAgentSetup.deb /opt/bkes/licensing-agent/linux/BKELicensingAgentSetup.deb
-docker compose --env-file .env.production -f docker-compose.production.yml config
-docker compose --env-file .env.production -f docker-compose.production.yml up -d --build migrate app caddy
+docker compose --env-file .env -f docker-compose.production.yml config
+docker compose --env-file .env -f docker-compose.production.yml up -d --build migrate app caddy
 ```
 
 The first deployment creates the static mount and Caddy routes. It is the only application deployment required to introduce this capability.

@@ -278,7 +278,7 @@ Workers involved:
 Commits:
 - `f3b01e3` Wire admin recovery env into production compose.
 Verification:
-- Effective production Compose configuration rendered successfully with `.env.production.example`; no secret values were recorded.
+- Effective production Compose configuration rendered successfully with the canonical `.env.example` template; no secret values were recorded.
 - Effective app, scheduler, and backup-worker environment key sets include ADMIN_OWNER_RECOVERY_KEY and ADMIN_OWNER_RECOVERY_KEY_VERSION.
 - Environment regression tests passed: 21/21.
 - TypeScript passed.

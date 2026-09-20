@@ -28,8 +28,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
-      - name: Prepare canonical runtime environment
-        run: cp .env.example .env
       - run: npm ci
       - run: npm run config:validate
         env:
@@ -59,6 +57,8 @@ jobs:
       - run: git diff --check
       - run: npm run security:hygiene
       - run: npm audit --omit=dev --audit-level=critical
+      - name: Prepare canonical runtime environment
+        run: cp .env.example .env
       - run: npm run deployment:verify-restart
       - run: npm run deployment:verify-manifest
       - run: docker compose --env-file .env -f docker-compose.production.yml config --quiet

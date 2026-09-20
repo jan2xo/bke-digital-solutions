@@ -64,7 +64,7 @@ describe("production MinIO bootstrap contract", () => {
   });
 
   it("keeps the production storage topology and credential boundary", () => {
-    const resolved: { services: Record<string, { depends_on?: Record<string, { condition: string }>; environment?: Record<string, string | null>; ports?: unknown[]; volumes?: Array<{ type?: string; source?: string; target?: string }> }> } = JSON.parse(execFileSync("docker", ["compose", "--env-file", ".env.production.example", "-f", "docker-compose.production.yml", "config", "--format", "json"], { encoding: "utf8" }));
+    const resolved: { services: Record<string, { depends_on?: Record<string, { condition: string }>; environment?: Record<string, string | null>; ports?: unknown[]; volumes?: Array<{ type?: string; source?: string; target?: string }> }> } = JSON.parse(execFileSync("docker", ["compose", "--env-file", ".env.example", "-f", "docker-compose.production.yml", "config", "--format", "json"], { encoding: "utf8" }));
     const services = resolved.services;
     expect(services.minio).toBeDefined();
     expect(services["minio-init"]?.depends_on?.minio?.condition).toBe("service_healthy");
