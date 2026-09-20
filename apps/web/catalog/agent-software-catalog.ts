@@ -88,6 +88,7 @@ export async function readAgentSoftwareCatalog(
         FROM "ProductVersion" pv
        WHERE pv."productId" = p."id"
          AND pv."active" = TRUE
+         AND pv."publishedAt" IS NOT NULL
          AND pv."lifecycle" IN ('STABLE', 'LTS')
          AND (
            LOWER(pv."operatingSystem") = ${input.platform}
