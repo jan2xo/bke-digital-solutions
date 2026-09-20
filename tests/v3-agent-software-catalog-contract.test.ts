@@ -107,6 +107,15 @@ describe("V3 Agent software catalog contract", () => {
     expect(apiError).toContain("RELEASE_COMPATIBILITY_EDIT_REQUIRES_UNPUBLISH: 409");
   });
 
+  it("never exposes an unpublished ProductVersion as installable", () => {
+    const source = readFileSync(
+      "apps/web/catalog/agent-software-catalog.ts",
+      "utf8",
+    );
+
+    expect(source).toContain('pv."publishedAt" IS NOT NULL');
+  });
+
   it("fails closed on unknown execution values", () => {
     expect(projectAgentSoftwareCatalogRow({
       productId: "future-product",
