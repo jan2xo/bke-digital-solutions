@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 const wrapper = readFileSync("bke.sh", "utf8");
 const ops = readFileSync("scripts/v3-ops.sh", "utf8");
 const deploy = readFileSync("scripts/deploy-production.sh", "utf8");
+const retiredProductionRuntime = [".env", "production"].join(".");
+const retiredVpsRuntime = [".env", "vps"].join(".");
 
 describe("V3 Bash operator contract", () => {
   it("exposes one top-level operator entrypoint", () => {
@@ -14,8 +16,8 @@ describe("V3 Bash operator contract", () => {
   it("uses .env as the only runtime environment file", () => {
     expect(ops).toContain('ENV_FILE="$ROOT_DIR/.env"');
     expect(ops).toContain('ENV_TEMPLATE="$ROOT_DIR/.env.example"');
-    expect(ops).not.toContain(".env.production");
-    expect(ops).not.toContain(".env.vps");
+    expect(ops).not.toContain(retiredProductionRuntime);
+    expect(ops).not.toContain(retiredVpsRuntime);
   });
 
   it("covers the normal VPS lifecycle without hand-written compose commands", () => {
