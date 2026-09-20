@@ -13,6 +13,7 @@ import { decryptLicenseKey, sha256 } from "@/platform/host/security/crypto";
 import { paymentProvider } from "@/apps/web/payments/compatibility-provider";
 import { ingestPaymentWebhook } from "@/apps/web/payments/webhook-ingestion";
 import { reactToPaidSettlement } from "@/apps/web/payments/settlement-transaction";
+import { persistNotification } from "@/apps/web/notifications/center";
 
 type StoredEvent = Readonly<{
   eventId: string;
@@ -278,6 +279,99 @@ async function processPaidEvent(
       },
     });
   }
+
+  await persistNotification(tx, {
+    source: {
+      moduleId: "payments",
+      event: "PAYMENT_RECEIVED",
+      sourceReference: payment.id,
+    },
+    audience: { kind: "ACCOUNT", accountId: order.accountId },
+    content: {
+      title: "Payment received",
+      body: `Payment for order ${order.number} was confirmed.`,
+      category: "TRANSACTIONAL",
+      data: {
+        orderId: order.id,
+        orderNumber: order.number,
+        paymentId: payment.id,
+      },
+    },
+    context: {
+      trigger: "PAYMENT_SETTLED",
+      placementHint: "digital-solutions-inbox",
+    },
+    priority: "NORMAL",
+    idempotencyKey: `payment-received:${payment.id}`,
+    createdAt: event.occurredAt,
+  });
+
+  const invoice = await tx.invoice.findUnique({
+    where: { orderId: order.id },
+    select: { id: true, number: true, status: true, issuedAt: true },
+  });
+  if (invoice?.status === "FINAL") {
+    await persistNotification(tx, {
+      source: {
+        moduleId: "commerce",
+        event: "INVOICE_READY",
+        sourceReference: invoice.id,
+      },
+      audience: { kind: "ACCOUNT", accountId: order.accountId },
+      content: {
+        title: "Invoice ready",
+        body: `Invoice ${invoice.number} is available in your customer portal.`,
+        category: "TRANSACTIONAL",
+        data: {
+          invoiceId: invoice.id,
+          invoiceNumber: invoice.number,
+          orderId: order.id,
+          orderNumber: order.number,
+        },
+      },
+      context: {
+        trigger: "PAYMENT_SETTLED",
+        placementHint: "digital-solutions-inbox",
+      },
+      priority: "NORMAL",
+      idempotencyKey: `invoice-ready:${invoice.id}`,
+      createdAt: invoice.issuedAt ?? event.occurredAt,
+    });
+  }
+
+  const activeLicenses = await tx.license.findMany({
+    where: { orderId: order.id, status: "ACTIVE" },
+    select: { id: true, productId: true },
+  });
+  for (const license of activeLicenses) {
+    await persistNotification(tx, {
+      source: {
+        moduleId: "licensing",
+        event: "LICENSE_READY",
+        sourceReference: license.id,
+      },
+      audience: { kind: "ACCOUNT", accountId: order.accountId },
+      content: {
+        title: "License ready",
+        body: `Licensed access for order ${order.number} is ready.`,
+        category: "LICENSE",
+        data: {
+          licenseId: license.id,
+          orderId: order.id,
+          orderNumber: order.number,
+        },
+      },
+      context: {
+        trigger: "LICENSE_EVENT",
+        placementHint: "product-inbox",
+      },
+      priority: "NORMAL",
+      idempotencyKey: `license-ready:${license.id}`,
+      productId: license.productId,
+      createdAt: event.occurredAt,
+    });
+  }
+
   return { order, paymentId: payment.id, hostAttemptId: hostAttempt?.id };
 }
 
@@ -362,6 +456,31 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
               metadata: { provider: event.provider, webhookEventId: event.eventId },
             },
           });
+          await persistNotification(tx, {
+            source: {
+              moduleId: "payments",
+              event: "PAYMENT_FAILED",
+              sourceReference: paymentId ?? event.eventId,
+            },
+            audience: { kind: "ACCOUNT", accountId: order.accountId },
+            content: {
+              title: "Payment failed",
+              body: `Payment for order ${order.number} was not completed.`,
+              category: "TRANSACTIONAL",
+              data: {
+                orderId: order.id,
+                orderNumber: order.number,
+                paymentId: paymentId ?? null,
+              },
+            },
+            context: {
+              trigger: "CUSTOM",
+              placementHint: "digital-solutions-inbox",
+            },
+            priority: "HIGH",
+            idempotencyKey: `payment-failed:${paymentId ?? event.eventId}`,
+            createdAt: event.occurredAt,
+          });
         }
       } else if (event.type === "payment.refund.updated" && event.refundStatus !== "succeeded") {
         if (event.externalRefundId) {
@@ -438,6 +557,32 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
             targetId: order.id,
             metadata: { provider: event.provider, webhookEventId: event.eventId },
           },
+        });
+        await persistNotification(tx, {
+          source: {
+            moduleId: "payments",
+            event: "REFUND_CONFIRMED",
+            sourceReference: event.externalRefundId ?? event.eventId,
+          },
+          audience: { kind: "ACCOUNT", accountId: order.accountId },
+          content: {
+            title: "Refund confirmed",
+            body: `The refund for order ${order.number} was confirmed.`,
+            category: "TRANSACTIONAL",
+            data: {
+              orderId: order.id,
+              orderNumber: order.number,
+              paymentId: paymentId ?? null,
+              refundId: event.externalRefundId ?? null,
+            },
+          },
+          context: {
+            trigger: "CUSTOM",
+            placementHint: "digital-solutions-inbox",
+          },
+          priority: "NORMAL",
+          idempotencyKey: `refund-confirmed:${event.externalRefundId ?? event.eventId}`,
+          createdAt: event.occurredAt,
         });
       } else if (order.status !== "REFUNDED") {
         throw new PaymentLifecycleError("PAYMENT_REFUND_CONFLICT");

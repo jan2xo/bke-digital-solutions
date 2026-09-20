@@ -9,6 +9,7 @@ import {
 import { getPostgresPool } from "../persistence/postgres";
 import { getV2WebApplication } from "../runtime";
 import { securityEvent } from "./events";
+import { persistNotificationOutsideTransaction } from "@/apps/web/notifications/center";
 
 class SessionAdministrationProtocolError extends Error {
   readonly code: string;
@@ -78,6 +79,37 @@ export async function revokeAdministratorSessions(input: {
       `security-session-revocation:${input.userId}:${input.action}:${outboxId}`,
     ],
   );
+
+  await persistNotificationOutsideTransaction({
+    source: {
+      moduleId: "identity",
+      event: "ADMIN_SESSIONS_REVOKED",
+      sourceReference: outboxId,
+    },
+    audience: {
+      kind: "PRINCIPAL",
+      principalId: input.userId,
+    },
+    content: {
+      title: "Administrator session access changed",
+      body: input.action === "ONE"
+        ? "An administrator session was revoked."
+        : input.action === "OTHERS"
+          ? "All other administrator sessions were revoked."
+          : "All administrator sessions were revoked.",
+      category: "SECURITY",
+      data: {
+        action: input.action,
+      },
+    },
+    context: {
+      trigger: "CUSTOM",
+      placementHint: "admin-inbox",
+    },
+    priority: input.action === "ONE" ? "NORMAL" : "HIGH",
+    idempotencyKey: `security-session-revocation:${input.userId}:${input.action}:${outboxId}`,
+    createdAt: new Date(),
+  });
 
   return { signedOut: result.signedOut };
 }

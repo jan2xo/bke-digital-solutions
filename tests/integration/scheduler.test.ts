@@ -61,13 +61,16 @@ describe.sequential("durable scheduler", () => {
     const first = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (first && typeof first === "object" && "runId" in first && typeof first.runId === "string") runIds.push(first.runId);
     const second = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (second && typeof second === "object" && "runId" in second && typeof second.runId === "string") runIds.push(second.runId);
     expect(await db.emailOutbox.count({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } })).toBe(0);
-    const subscription = await db.subscription.findUniqueOrThrow({ where: { id: subscriptionId }, select: { productId: true } });
-    const { readAccountProductNotifications } = await import("@/apps/web/notifications/account-notifications");
-    const projected = await db.$transaction((tx) => readAccountProductNotifications(tx, { accountId, productId: subscription.productId, limit: 50 }));
-    expect(projected.some((item) => item.event === "RENEWAL_APPROACHING")).toBe(true);
+    expect(await db.notificationMessage.count({ where: { idempotencyKey: { startsWith: `renewal-approaching:${subscriptionId}:` } } })).toBe(1);
+    await db.subscription.update({
+      where: { id: subscriptionId },
+      data: { currentPeriodEnd: new Date(Date.now() - 1_000) },
+    });
     const expiration = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if (expiration && typeof expiration === "object" && "runId" in expiration && typeof expiration.runId === "string") runIds.push(expiration.runId);
     expect((await db.license.findUniqueOrThrow({ where: { id: licenseId } })).status).toBe("EXPIRED");
     expect(await db.licenseEvent.count({ where: { licenseId, type: "LICENSE_EXPIRED" } })).toBe(1);
+    expect(await db.notificationMessage.count({ where: { idempotencyKey: { startsWith: `license-expired:${licenseId}:` } } })).toBe(1);
+    expect(await db.notificationMessage.count({ where: { idempotencyKey: { startsWith: `subscription-expired:${subscriptionId}:` } } })).toBe(1);
     const again = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if (again && typeof again === "object" && "runId" in again && typeof again.runId === "string") runIds.push(again.runId);
     expect(await db.licenseEvent.count({ where: { licenseId, type: "LICENSE_EXPIRED" } })).toBe(1);
   });

@@ -6,7 +6,7 @@ import {
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
 import { authenticateAgentAccessToken } from "@/apps/web/agent-sessions/device-authorization";
-import { readAccountProductNotifications } from "@/apps/web/notifications/account-notifications";
+import { listAccountProductNotifications } from "@/apps/web/notifications/center";
 import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
@@ -107,17 +107,11 @@ export async function GET(request: Request) {
         return { status: "not_found" as const };
       }
 
-      const notifications = await readAccountProductNotifications(tx, {
-        accountId: session.accountId,
-        productId: product.id,
-        limit: input.limit,
-      });
-
       return {
         status: "ok" as const,
         accountId: session.accountId,
+        productInternalId: product.id,
         productId: product.productId!,
-        notifications,
       };
     }, { isolationLevel: "Serializable" });
 
@@ -128,11 +122,17 @@ export async function GET(request: Request) {
       return json({ status: "not_found" }, 404);
     }
 
+    const notifications = await listAccountProductNotifications({
+      accountId: result.accountId,
+      productId: result.productInternalId,
+      limit: input.limit,
+    });
+
     return json({
       status: "ok",
       account_id: result.accountId,
       product_id: result.productId,
-      notifications: result.notifications.map((notification) => ({
+      notifications: notifications.map((notification) => ({
         id: notification.id,
         source: notification.source,
         event: notification.event,

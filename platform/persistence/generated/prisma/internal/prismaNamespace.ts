@@ -467,6 +467,8 @@ export const ModelName = {
   BackupOperation: 'BackupOperation',
   ObservabilityAlert: 'ObservabilityAlert',
   EmailOutbox: 'EmailOutbox',
+  NotificationMessage: 'NotificationMessage',
+  NotificationReceipt: 'NotificationReceipt',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
 } as const
@@ -484,7 +486,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "artifactUploadSession" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "commissioningRun" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "artifactUploadSession" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "commissioningRun" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "notificationMessage" | "notificationReceipt" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5668,6 +5670,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    NotificationMessage: {
+      payload: Prisma.$NotificationMessagePayload<ExtArgs>
+      fields: Prisma.NotificationMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotificationMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotificationMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.NotificationMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotificationMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>
+        }
+        findMany: {
+          args: Prisma.NotificationMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>[]
+        }
+        create: {
+          args: Prisma.NotificationMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>
+        }
+        createMany: {
+          args: Prisma.NotificationMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotificationMessageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>[]
+        }
+        delete: {
+          args: Prisma.NotificationMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>
+        }
+        update: {
+          args: Prisma.NotificationMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.NotificationMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotificationMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotificationMessageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>[]
+        }
+        upsert: {
+          args: Prisma.NotificationMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.NotificationMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotificationMessage>
+        }
+        groupBy: {
+          args: Prisma.NotificationMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotificationMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationMessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    NotificationReceipt: {
+      payload: Prisma.$NotificationReceiptPayload<ExtArgs>
+      fields: Prisma.NotificationReceiptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotificationReceiptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotificationReceiptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>
+        }
+        findFirst: {
+          args: Prisma.NotificationReceiptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotificationReceiptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>
+        }
+        findMany: {
+          args: Prisma.NotificationReceiptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>[]
+        }
+        create: {
+          args: Prisma.NotificationReceiptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>
+        }
+        createMany: {
+          args: Prisma.NotificationReceiptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotificationReceiptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>[]
+        }
+        delete: {
+          args: Prisma.NotificationReceiptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>
+        }
+        update: {
+          args: Prisma.NotificationReceiptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>
+        }
+        deleteMany: {
+          args: Prisma.NotificationReceiptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotificationReceiptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotificationReceiptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>[]
+        }
+        upsert: {
+          args: Prisma.NotificationReceiptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationReceiptPayload>
+        }
+        aggregate: {
+          args: Prisma.NotificationReceiptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotificationReceipt>
+        }
+        groupBy: {
+          args: Prisma.NotificationReceiptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationReceiptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotificationReceiptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationReceiptCountAggregateOutputType> | number
+        }
+      }
+    }
     ExternalProviderConfiguration: {
       payload: Prisma.$ExternalProviderConfigurationPayload<ExtArgs>
       fields: Prisma.ExternalProviderConfigurationFieldRefs
@@ -7133,6 +7283,46 @@ export const EmailOutboxScalarFieldEnum = {
 export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
 
 
+export const NotificationMessageScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  sourceModule: 'sourceModule',
+  sourceEvent: 'sourceEvent',
+  sourceReference: 'sourceReference',
+  audienceKind: 'audienceKind',
+  audiencePrincipalId: 'audiencePrincipalId',
+  audienceAccountId: 'audienceAccountId',
+  audienceSegmentKey: 'audienceSegmentKey',
+  audienceVisitorId: 'audienceVisitorId',
+  title: 'title',
+  body: 'body',
+  category: 'category',
+  priority: 'priority',
+  trigger: 'trigger',
+  placementHint: 'placementHint',
+  attributes: 'attributes',
+  data: 'data',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type NotificationMessageScalarFieldEnum = (typeof NotificationMessageScalarFieldEnum)[keyof typeof NotificationMessageScalarFieldEnum]
+
+
+export const NotificationReceiptScalarFieldEnum = {
+  notificationId: 'notificationId',
+  userId: 'userId',
+  state: 'state',
+  readAt: 'readAt',
+  dismissedAt: 'dismissedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationReceiptScalarFieldEnum = (typeof NotificationReceiptScalarFieldEnum)[keyof typeof NotificationReceiptScalarFieldEnum]
+
+
 export const ExternalProviderConfigurationScalarFieldEnum = {
   id: 'id',
   provider: 'provider',
@@ -8237,6 +8427,8 @@ export type GlobalOmitConfig = {
   backupOperation?: Prisma.BackupOperationOmit
   observabilityAlert?: Prisma.ObservabilityAlertOmit
   emailOutbox?: Prisma.EmailOutboxOmit
+  notificationMessage?: Prisma.NotificationMessageOmit
+  notificationReceipt?: Prisma.NotificationReceiptOmit
   externalProviderConfiguration?: Prisma.ExternalProviderConfigurationOmit
   externalProviderCredential?: Prisma.ExternalProviderCredentialOmit
 }

@@ -10,7 +10,7 @@ const licensingSource = readFileSync("apps/web/licensing/entitlement-management.
 const publicRouteSource = readFileSync("app/api/webhooks/payments/route.ts", "utf8");
 const adminRouteSource = readFileSync("app/api/admin/payments/webhooks/[id]/route.ts", "utf8");
 const schedulerSource = readFileSync("apps/web/scheduler/handlers.ts", "utf8");
-const notificationProjectionSource = readFileSync("apps/web/notifications/account-notifications.ts", "utf8");
+const notificationCenterSource = readFileSync("apps/web/notifications/center.ts", "utf8");
 const payMongoSource = readFileSync(
   "node_modules/@bke/payments/providers/paymongo/paymongo-adapter.ts",
   "utf8",
@@ -68,8 +68,10 @@ describe("payment webhook owner-adoption parity", () => {
     expect(processorSource).toContain('issueCommercialLease');
     expect(processorSource).not.toContain('dispatchEmailOutbox');
     expect(processorSource).not.toContain('queueCommerceEmail');
-    expect(notificationProjectionSource).toContain('NOTIFICATIONS_INTENT_CAPABILITY_ID');
-    expect(notificationProjectionSource).toContain('event: "PAYMENT_RECEIVED"');
+    expect(processorSource).toContain("persistNotification");
+    expect(processorSource).toContain('event: "PAYMENT_RECEIVED"');
+    expect(notificationCenterSource).toContain("NOTIFICATIONS_INTENT_CAPABILITY_ID");
+    expect(notificationCenterSource).toContain("NOTIFICATIONS_INBOX_POLICY_CAPABILITY_ID");
   });
 
   it("locks all production callers onto the V2 processor and retires lib/webhooks.ts", () => {
