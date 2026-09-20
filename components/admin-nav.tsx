@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const groups = [
-  { label: "Workspace", links: [["Overview", "/admin"], ["Observability", "/admin/observability"]] },
+  { label: "Workspace", links: [["Overview", "/admin"], ["Notifications", "/admin/notifications"], ["Observability", "/admin/observability"]] },
   { label: "Catalog & Releases", links: [["Products", "/admin/products"], ["Offers", "/admin/offers"], ["Releases", "/admin/releases"], ["Supply Chain", "/admin/supply-chain"], ["Artifacts", "/admin/artifacts"]] },
   { label: "Customers & Access", links: [["Customers", "/admin/customers"], ["Subscriptions", "/admin/subscriptions"], ["Trials", "/admin/trials"], ["Licenses", "/admin/licenses"], ["Devices", "/admin/devices"]] },
   { label: "Commerce", links: [["Orders", "/admin/orders"], ["Payments", "/admin/payments"], ["Invoices", "/admin/invoices"], ["Records", "/admin/records"]] },
