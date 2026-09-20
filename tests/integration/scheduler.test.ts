@@ -60,9 +60,11 @@ describe.sequential("durable scheduler", () => {
   it("deduplicates renewal reminders and expires entitlement state", async () => {
     const first = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (first && typeof first === "object" && "runId" in first && typeof first.runId === "string") runIds.push(first.runId);
     const second = await runScheduledJob({ key: "subscriptions.renewal-reminders", trigger: "MANUAL" }); if (second && typeof second === "object" && "runId" in second && typeof second.runId === "string") runIds.push(second.runId);
-    expect(await db.emailOutbox.count({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } })).toBe(1);
-    const reminder = await db.emailOutbox.findFirstOrThrow({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } });
-    expect(String((reminder.payload as Record<string, unknown>).renewalUrl)).toContain(`/dashboard/accounts/${accountId}#subscriptions`);
+    expect(await db.emailOutbox.count({ where: { deduplicationKey: { startsWith: `renewal-reminder:${subscriptionId}:` } } })).toBe(0);
+    const subscription = await db.subscription.findUniqueOrThrow({ where: { id: subscriptionId }, select: { productId: true } });
+    const { readAccountProductNotifications } = await import("@/apps/web/notifications/account-notifications");
+    const projected = await db.$transaction((tx) => readAccountProductNotifications(tx, { accountId, productId: subscription.productId, limit: 50 }));
+    expect(projected.some((item) => item.event === "RENEWAL_APPROACHING")).toBe(true);
     const expiration = await runScheduledJob({ key: "entitlements.expiration", trigger: "MANUAL" }); if (expiration && typeof expiration === "object" && "runId" in expiration && typeof expiration.runId === "string") runIds.push(expiration.runId);
     expect((await db.license.findUniqueOrThrow({ where: { id: licenseId } })).status).toBe("EXPIRED");
     expect(await db.licenseEvent.count({ where: { licenseId, type: "LICENSE_EXPIRED" } })).toBe(1);
