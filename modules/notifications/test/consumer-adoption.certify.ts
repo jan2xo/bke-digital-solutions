@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.1.0/bke-notifications-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.2.0/bke-notifications-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 const EXPECTED_SHA256 =
-  "9a9c5640ed27332886e54c491cb6b54fdcc6561ec100ddd2476adb02d93ee406";
+  "11bd533b523a72d1fdeac67f97f9c518715ca2a97d60ce3c9e7887284279c7bc";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, workflowSource, standaloneSource] =
@@ -26,7 +26,9 @@ if (!moduleSource.includes("CapabilityModule") || !moduleSource.includes('"../..
 
 for (const marker of [
   "@bke/notifications/contracts/notification-intent.contract",
+  "@bke/notifications/contracts/notification-inbox.contract",
   "@bke/notifications/logic/notification-intent",
+  "@bke/notifications/logic/notification-inbox",
   "@bke/notifications/module.manifest",
 ]) {
   if (!moduleSource.includes(marker)) {
