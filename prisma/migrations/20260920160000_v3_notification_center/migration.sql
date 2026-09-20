@@ -70,3 +70,17 @@ FOREIGN KEY ("userId")
 REFERENCES "User"("id")
 ON DELETE CASCADE
 ON UPDATE CASCADE;
+
+ALTER TABLE "NotificationMessage"
+ADD CONSTRAINT "NotificationMessage_audiencePrincipalId_fkey"
+FOREIGN KEY ("audiencePrincipalId")
+REFERENCES "User"("id")
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE "NotificationMessage"
+ADD CONSTRAINT "NotificationMessage_audienceAccountId_fkey"
+FOREIGN KEY ("audienceAccountId")
+REFERENCES "CustomerAccount"("id")
+ON DELETE CASCADE
+ON UPDATE CASCADE;
