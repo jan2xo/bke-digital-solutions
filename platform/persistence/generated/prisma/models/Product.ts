@@ -34,6 +34,7 @@ export type ProductMinAggregateOutputType = {
   summary: string | null
   description: string | null
   type: $Enums.ProductType | null
+  launcherExecutionType: $Enums.LauncherExecutionType | null
   category: string | null
   licenseType: string | null
   featured: boolean | null
@@ -56,6 +57,7 @@ export type ProductMaxAggregateOutputType = {
   summary: string | null
   description: string | null
   type: $Enums.ProductType | null
+  launcherExecutionType: $Enums.LauncherExecutionType | null
   category: string | null
   licenseType: string | null
   featured: boolean | null
@@ -78,6 +80,7 @@ export type ProductCountAggregateOutputType = {
   summary: number
   description: number
   type: number
+  launcherExecutionType: number
   category: number
   licenseType: number
   featured: number
@@ -103,6 +106,7 @@ export type ProductMinAggregateInputType = {
   summary?: true
   description?: true
   type?: true
+  launcherExecutionType?: true
   category?: true
   licenseType?: true
   featured?: true
@@ -125,6 +129,7 @@ export type ProductMaxAggregateInputType = {
   summary?: true
   description?: true
   type?: true
+  launcherExecutionType?: true
   category?: true
   licenseType?: true
   featured?: true
@@ -147,6 +152,7 @@ export type ProductCountAggregateInputType = {
   summary?: true
   description?: true
   type?: true
+  launcherExecutionType?: true
   category?: true
   licenseType?: true
   featured?: true
@@ -243,6 +249,7 @@ export type ProductGroupByOutputType = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType: $Enums.LauncherExecutionType | null
   category: string
   licenseType: string
   featured: boolean
@@ -287,6 +294,7 @@ export type ProductWhereInput = {
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   type?: Prisma.EnumProductTypeFilter<"Product"> | $Enums.ProductType
+  launcherExecutionType?: Prisma.EnumLauncherExecutionTypeNullableFilter<"Product"> | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFilter<"Product"> | string
   licenseType?: Prisma.StringFilter<"Product"> | string
   featured?: Prisma.BoolFilter<"Product"> | boolean
@@ -322,6 +330,7 @@ export type ProductOrderByWithRelationInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  launcherExecutionType?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   licenseType?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -360,6 +369,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   summary?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   type?: Prisma.EnumProductTypeFilter<"Product"> | $Enums.ProductType
+  launcherExecutionType?: Prisma.EnumLauncherExecutionTypeNullableFilter<"Product"> | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFilter<"Product"> | string
   licenseType?: Prisma.StringFilter<"Product"> | string
   featured?: Prisma.BoolFilter<"Product"> | boolean
@@ -395,6 +405,7 @@ export type ProductOrderByWithAggregationInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  launcherExecutionType?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   licenseType?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -424,6 +435,7 @@ export type ProductScalarWhereWithAggregatesInput = {
   summary?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
   type?: Prisma.EnumProductTypeWithAggregatesFilter<"Product"> | $Enums.ProductType
+  launcherExecutionType?: Prisma.EnumLauncherExecutionTypeNullableWithAggregatesFilter<"Product"> | $Enums.LauncherExecutionType | null
   category?: Prisma.StringWithAggregatesFilter<"Product"> | string
   licenseType?: Prisma.StringWithAggregatesFilter<"Product"> | string
   featured?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
@@ -447,6 +459,7 @@ export type ProductCreateInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -482,6 +495,7 @@ export type ProductUncheckedCreateInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -517,6 +531,7 @@ export type ProductUpdateInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -552,6 +567,7 @@ export type ProductUncheckedUpdateInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -587,6 +603,7 @@ export type ProductCreateManyInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -610,6 +627,7 @@ export type ProductUpdateManyMutationInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -633,6 +651,7 @@ export type ProductUncheckedUpdateManyInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -664,6 +683,7 @@ export type ProductCountOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  launcherExecutionType?: Prisma.SortOrder
   category?: Prisma.SortOrder
   licenseType?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -687,6 +707,7 @@ export type ProductMaxOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  launcherExecutionType?: Prisma.SortOrder
   category?: Prisma.SortOrder
   licenseType?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -709,6 +730,7 @@ export type ProductMinOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  launcherExecutionType?: Prisma.SortOrder
   category?: Prisma.SortOrder
   licenseType?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -737,6 +759,10 @@ export type ProductCreatetagsInput = {
 
 export type EnumProductTypeFieldUpdateOperationsInput = {
   set?: $Enums.ProductType
+}
+
+export type NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput = {
+  set?: $Enums.LauncherExecutionType | null
 }
 
 export type ProductUpdatetagsInput = {
@@ -926,6 +952,7 @@ export type ProductCreateWithoutEditionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -960,6 +987,7 @@ export type ProductUncheckedCreateWithoutEditionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1010,6 +1038,7 @@ export type ProductUpdateWithoutEditionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1044,6 +1073,7 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1078,6 +1108,7 @@ export type ProductCreateWithoutVersionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1112,6 +1143,7 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1162,6 +1194,7 @@ export type ProductUpdateWithoutVersionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1196,6 +1229,7 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1230,6 +1264,7 @@ export type ProductCreateWithoutArtifactUploadSessionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1264,6 +1299,7 @@ export type ProductUncheckedCreateWithoutArtifactUploadSessionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1314,6 +1350,7 @@ export type ProductUpdateWithoutArtifactUploadSessionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1348,6 +1385,7 @@ export type ProductUncheckedUpdateWithoutArtifactUploadSessionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1382,6 +1420,7 @@ export type ProductCreateWithoutPoliciesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1416,6 +1455,7 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1466,6 +1506,7 @@ export type ProductUpdateWithoutPoliciesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1500,6 +1541,7 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1534,6 +1576,7 @@ export type ProductCreateWithoutPricesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1568,6 +1611,7 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1618,6 +1662,7 @@ export type ProductUpdateWithoutPricesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1652,6 +1697,7 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1686,6 +1732,7 @@ export type ProductCreateWithoutArtifactsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1720,6 +1767,7 @@ export type ProductUncheckedCreateWithoutArtifactsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1770,6 +1818,7 @@ export type ProductUpdateWithoutArtifactsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1804,6 +1853,7 @@ export type ProductUncheckedUpdateWithoutArtifactsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1838,6 +1888,7 @@ export type ProductCreateWithoutCommissioningRunsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1872,6 +1923,7 @@ export type ProductUncheckedCreateWithoutCommissioningRunsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -1922,6 +1974,7 @@ export type ProductUpdateWithoutCommissioningRunsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1956,6 +2009,7 @@ export type ProductUncheckedUpdateWithoutCommissioningRunsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1990,6 +2044,7 @@ export type ProductCreateWithoutCleanupJobsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2024,6 +2079,7 @@ export type ProductUncheckedCreateWithoutCleanupJobsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2074,6 +2130,7 @@ export type ProductUpdateWithoutCleanupJobsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2108,6 +2165,7 @@ export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2142,6 +2200,7 @@ export type ProductCreateWithoutSubscriptionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2176,6 +2235,7 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2226,6 +2286,7 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2260,6 +2321,7 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2294,6 +2356,7 @@ export type ProductCreateWithoutOffersInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2328,6 +2391,7 @@ export type ProductUncheckedCreateWithoutOffersInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2378,6 +2442,7 @@ export type ProductUpdateWithoutOffersInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2412,6 +2477,7 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2446,6 +2512,7 @@ export type ProductCreateWithoutLicensesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2480,6 +2547,7 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2530,6 +2598,7 @@ export type ProductUpdateWithoutLicensesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2564,6 +2633,7 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2598,6 +2668,7 @@ export type ProductCreateWithoutTrialsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2632,6 +2703,7 @@ export type ProductUncheckedCreateWithoutTrialsInput = {
   summary: string
   description: string
   type: $Enums.ProductType
+  launcherExecutionType?: $Enums.LauncherExecutionType | null
   category?: string
   licenseType?: string
   featured?: boolean
@@ -2682,6 +2754,7 @@ export type ProductUpdateWithoutTrialsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2716,6 +2789,7 @@ export type ProductUncheckedUpdateWithoutTrialsInput = {
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   licenseType?: Prisma.StringFieldUpdateOperationsInput | string
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2880,6 +2954,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   summary?: boolean
   description?: boolean
   type?: boolean
+  launcherExecutionType?: boolean
   category?: boolean
   licenseType?: boolean
   featured?: boolean
@@ -2916,6 +2991,7 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   summary?: boolean
   description?: boolean
   type?: boolean
+  launcherExecutionType?: boolean
   category?: boolean
   licenseType?: boolean
   featured?: boolean
@@ -2939,6 +3015,7 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   summary?: boolean
   description?: boolean
   type?: boolean
+  launcherExecutionType?: boolean
   category?: boolean
   licenseType?: boolean
   featured?: boolean
@@ -2962,6 +3039,7 @@ export type ProductSelectScalar = {
   summary?: boolean
   description?: boolean
   type?: boolean
+  launcherExecutionType?: boolean
   category?: boolean
   licenseType?: boolean
   featured?: boolean
@@ -2975,7 +3053,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "productId" | "minimumAcceptedVersion" | "maximumAcceptedVersion" | "name" | "summary" | "description" | "type" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "productId" | "minimumAcceptedVersion" | "maximumAcceptedVersion" | "name" | "summary" | "description" | "type" | "launcherExecutionType" | "category" | "licenseType" | "featured" | "imageKey" | "tags" | "active" | "publishedAt" | "archivedAt" | "deletionRequestedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.Product$versionsArgs<ExtArgs>
   editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
@@ -3020,6 +3098,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     summary: string
     description: string
     type: $Enums.ProductType
+    launcherExecutionType: $Enums.LauncherExecutionType | null
     category: string
     licenseType: string
     featured: boolean
@@ -3475,6 +3554,7 @@ export interface ProductFieldRefs {
   readonly summary: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
   readonly type: Prisma.FieldRef<"Product", 'ProductType'>
+  readonly launcherExecutionType: Prisma.FieldRef<"Product", 'LauncherExecutionType'>
   readonly category: Prisma.FieldRef<"Product", 'String'>
   readonly licenseType: Prisma.FieldRef<"Product", 'String'>
   readonly featured: Prisma.FieldRef<"Product", 'Boolean'>
