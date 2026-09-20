@@ -5,11 +5,13 @@ import { dispatchEmailOutbox } from "@/apps/web/email";
 import { finalizeProductDeletion } from "@/apps/web/catalog/product-deletion";
 import { processReadyStorageCleanupJobs } from "@/apps/web/storage/cleanup";
 import { retryStoredWebhook } from "@/apps/web/payments/webhook-processing";
+import { persistNotification } from "@/apps/web/notifications/center";
 import { issueCommercialLease } from "@/apps/web/licensing/commercial-lease";
 import { decryptLicenseKey, sha256 } from "@/platform/host/security/crypto";
 import type { JobContext, JobSummary } from "@/platform/scheduler";
 
 const DAY = 86_400_000;
+const dayKey = (value: Date) => value.toISOString().slice(0, 10);
 
 export async function storageLifecycle(context: JobContext): Promise<JobSummary> {
   const due = await db.storageCleanupJob.count({ where: { status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: context.now } } });
@@ -114,7 +116,8 @@ export async function renewalReminders(context: JobContext): Promise<JobSummary>
     include: { purchasePlan: true },
     take: 500,
   });
-  let eligible = 0;
+
+  const eligible: Array<{ subscription: (typeof subscriptions)[number]; window: number }> = [];
   for (const subscription of subscriptions) {
     const days = Math.ceil(
       (subscription.currentPeriodEnd.getTime() - context.now.getTime()) / DAY,
@@ -125,13 +128,49 @@ export async function renewalReminders(context: JobContext): Promise<JobSummary>
     const window = windows.find(
       (candidate) => days <= candidate && days > candidate - 1,
     );
-    if (window) eligible += 1;
+    if (window) eligible.push({ subscription, window });
   }
+
+  if (!context.dryRun && eligible.length) {
+    await db.$transaction(async (tx) => {
+      for (const { subscription, window } of eligible) {
+        await persistNotification(tx, {
+          source: {
+            moduleId: "commerce",
+            event: "RENEWAL_APPROACHING",
+            sourceReference: subscription.id,
+          },
+          audience: { kind: "ACCOUNT", accountId: subscription.accountId },
+          content: {
+            title: "Renewal approaching",
+            body: `Your subscription period ends in about ${window} day${window === 1 ? "" : "s"}. Renew from your customer portal when ready.`,
+            category: "TRANSACTIONAL",
+            data: {
+              subscriptionId: subscription.id,
+              windowDays: window,
+              currentPeriodEnd: subscription.currentPeriodEnd.toISOString(),
+            },
+          },
+          context: {
+            trigger: "CUSTOM",
+            placementHint: "product-inbox",
+          },
+          priority: window === 1 ? "HIGH" : "NORMAL",
+          idempotencyKey: `renewal-approaching:${subscription.id}:${subscription.currentPeriodEnd.toISOString()}:${window}`,
+          expiresAt: subscription.currentPeriodEnd,
+          productId: subscription.productId,
+          createdAt: context.now,
+        });
+      }
+    });
+  }
+
   return {
     candidates: subscriptions.length,
-    eligible,
+    eligible: eligible.length,
     emailQueued: 0,
-    delivery: "account-notification-projection",
+    notificationsQueued: context.dryRun ? 0 : eligible.length,
+    delivery: "durable-notification-center",
   };
 }
 export async function entitlementExpirations(context: JobContext): Promise<JobSummary> {
@@ -147,7 +186,7 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
     include: { trialGrant: true },
     take: 1000,
   });
-  const endingTrials = await db.trialGrant.count({
+  const endingTrials = await db.trialGrant.findMany({
     where: {
       revokedAt: null,
       trialEndsAt: {
@@ -155,6 +194,13 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
         lte: new Date(context.now.getTime() + DAY),
       },
     },
+    select: {
+      id: true,
+      accountId: true,
+      productId: true,
+      trialEndsAt: true,
+    },
+    take: 1000,
   });
   const expiredGrants = await db.downloadGrant.count({
     where: { expiresAt: { lte: context.now } },
@@ -170,16 +216,47 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
     return {
       subscriptions: subscriptions.length,
       licenses: licenses.length,
-      endingTrials,
+      endingTrials: endingTrials.length,
       expiredDownloadGrants: expiredGrants,
       inactiveDevicesForReview: inactiveDevices,
       emailQueued: 0,
     };
   }
 
+  let notificationCount = 0;
   await db.$transaction(async (tx) => {
+    for (const trial of endingTrials) {
+      await persistNotification(tx, {
+        source: {
+          moduleId: "trials",
+          event: "TRIAL_ENDING",
+          sourceReference: trial.id,
+        },
+        audience: { kind: "ACCOUNT", accountId: trial.accountId },
+        content: {
+          title: "Trial ending soon",
+          body: "Your product trial is approaching its end. Review purchase options in your customer portal.",
+          category: "LICENSE",
+          data: {
+            trialId: trial.id,
+            trialEndsAt: trial.trialEndsAt.toISOString(),
+          },
+        },
+        context: {
+          trigger: "LICENSE_EVENT",
+          placementHint: "product-inbox",
+        },
+        priority: "NORMAL",
+        idempotencyKey: `trial-ending:${trial.id}:${trial.trialEndsAt.toISOString()}`,
+        expiresAt: trial.trialEndsAt,
+        productId: trial.productId,
+        createdAt: context.now,
+      });
+      notificationCount += 1;
+    }
+
     for (const subscription of subscriptions) {
-      await tx.subscription.updateMany({
+      const changed = await tx.subscription.updateMany({
         where: {
           id: subscription.id,
           status: { in: ["ACTIVE", "PAST_DUE"] },
@@ -187,6 +264,33 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
         },
         data: { status: "EXPIRED" },
       });
+      if (!changed.count) continue;
+      await persistNotification(tx, {
+        source: {
+          moduleId: "commerce",
+          event: "SUBSCRIPTION_EXPIRED",
+          sourceReference: subscription.id,
+        },
+        audience: { kind: "ACCOUNT", accountId: subscription.accountId },
+        content: {
+          title: "Subscription expired",
+          body: "Your subscription period has expired. Review your current access and renewal options.",
+          category: "TRANSACTIONAL",
+          data: {
+            subscriptionId: subscription.id,
+            currentPeriodEnd: subscription.currentPeriodEnd.toISOString(),
+          },
+        },
+        context: {
+          trigger: "CUSTOM",
+          placementHint: "product-inbox",
+        },
+        priority: "HIGH",
+        idempotencyKey: `subscription-expired:${subscription.id}:${subscription.currentPeriodEnd.toISOString()}`,
+        productId: subscription.productId,
+        createdAt: subscription.currentPeriodEnd,
+      });
+      notificationCount += 1;
     }
 
     for (const license of licenses) {
@@ -207,6 +311,58 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
         }],
         skipDuplicates: true,
       });
+
+      if (license.trialGrant) {
+        await persistNotification(tx, {
+          source: {
+            moduleId: "trials",
+            event: "TRIAL_EXPIRED",
+            sourceReference: license.trialGrant.id,
+          },
+          audience: { kind: "ACCOUNT", accountId: license.accountId },
+          content: {
+            title: "Trial ended",
+            body: "Your product trial has ended. Review your entitlement or available purchase options.",
+            category: "LICENSE",
+            data: {
+              trialId: license.trialGrant.id,
+              licenseId: license.id,
+            },
+          },
+          context: {
+            trigger: "LICENSE_EVENT",
+            placementHint: "product-inbox",
+          },
+          priority: "HIGH",
+          idempotencyKey: `trial-expired:${license.trialGrant.id}`,
+          productId: license.productId,
+          createdAt: license.expiresAt ?? context.now,
+        });
+      } else {
+        await persistNotification(tx, {
+          source: {
+            moduleId: "licensing",
+            event: "LICENSE_EXPIRED",
+            sourceReference: license.id,
+          },
+          audience: { kind: "ACCOUNT", accountId: license.accountId },
+          content: {
+            title: "License expired",
+            body: "This license has expired. Review your current access in the customer portal.",
+            category: "LICENSE",
+            data: { licenseId: license.id },
+          },
+          context: {
+            trigger: "LICENSE_EVENT",
+            placementHint: "product-inbox",
+          },
+          priority: "HIGH",
+          idempotencyKey: `license-expired:${license.id}:${license.expiresAt?.toISOString() ?? "unknown"}`,
+          productId: license.productId,
+          createdAt: license.expiresAt ?? context.now,
+        });
+      }
+      notificationCount += 1;
     }
 
     await tx.downloadGrant.deleteMany({
@@ -217,11 +373,12 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
   return {
     expiredSubscriptions: subscriptions.length,
     expiredLicenses: licenses.length,
-    trialReminders: endingTrials,
+    trialReminders: endingTrials.length,
     deletedDownloadGrants: expiredGrants,
     inactiveDevicesForReview: inactiveDevices,
     emailQueued: 0,
-    delivery: "account-notification-projection",
+    notificationsQueued: notificationCount,
+    delivery: "durable-notification-center",
   };
 }
 export async function commerceLifecycle(context: JobContext): Promise<JobSummary> {
@@ -257,13 +414,38 @@ export async function customerLifecycleReview(context: JobContext): Promise<JobS
     where: { lifecycleState: "PRIVACY_REVIEW" },
   });
 
+  const reviewRequired = retentionDue > 0 || legalHolds > 0 || privacyPending > 0;
+  if (!context.dryRun && reviewRequired) {
+    await db.$transaction((tx) => persistNotification(tx, {
+      source: {
+        moduleId: "privacy",
+        event: "CUSTOMER_LIFECYCLE_REVIEW",
+      },
+      audience: { kind: "ADMINISTRATORS" },
+      content: {
+        title: "Customer lifecycle review required",
+        body: `Retention due: ${retentionDue}. Legal holds: ${legalHolds}. Privacy reviews: ${privacyPending}.`,
+        category: "SYSTEM",
+        data: { retentionDue, legalHolds, privacyPending },
+      },
+      context: {
+        trigger: "CUSTOM",
+        placementHint: "admin-inbox",
+      },
+      priority: retentionDue > 0 || legalHolds > 0 ? "HIGH" : "NORMAL",
+      idempotencyKey: `customer-lifecycle-review:${dayKey(context.now)}`,
+      createdAt: context.now,
+    }));
+  }
+
   return {
     retentionDue,
     legalHoldsForReview: legalHolds,
     privacyReviews: privacyPending,
     automaticPurge: false,
     emailQueued: 0,
-    reviewSurface: "admin-dashboard",
+    notificationsQueued: !context.dryRun && reviewRequired ? 1 : 0,
+    reviewSurface: "admin-notifications",
   };
 }
 export async function securityCleanup(context: JobContext): Promise<JobSummary> {
@@ -319,13 +501,44 @@ export async function paymentOperations(context: JobContext): Promise<JobSummary
       failedRetries += 1;
     }
   }
+
+  const reviewRequired = failedRetries > 0 || reconciliationCandidates > 0;
+  if (reviewRequired) {
+    await db.$transaction((tx) => persistNotification(tx, {
+      source: {
+        moduleId: "payments",
+        event: "PAYMENT_OPERATIONS_REVIEW",
+      },
+      audience: { kind: "ADMINISTRATORS" },
+      content: {
+        title: "Payment operations review required",
+        body: `Failed retries: ${failedRetries}. Reconciliation candidates: ${reconciliationCandidates}.`,
+        category: "SYSTEM",
+        data: {
+          retryableWebhooks: failed.length,
+          retried,
+          failedRetries,
+          reconciliationCandidates,
+        },
+      },
+      context: {
+        trigger: "CUSTOM",
+        placementHint: "admin-inbox",
+      },
+      priority: failedRetries > 0 ? "HIGH" : "NORMAL",
+      idempotencyKey: `payment-operations-review:${dayKey(context.now)}`,
+      createdAt: context.now,
+    }));
+  }
+
   return {
     retriedWebhooks: retried,
     failedRetries,
     reconciliationReminders: reconciliationCandidates,
     automaticSettlement: false,
     emailQueued: 0,
-    reviewSurface: "admin-dashboard",
+    notificationsQueued: reviewRequired ? 1 : 0,
+    reviewSurface: "admin-notifications",
   };
 }
 
