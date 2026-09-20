@@ -9,7 +9,7 @@ on:
       - ".github/workflows/temp-prisma-generation-capture.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   capture:
@@ -18,15 +18,24 @@ jobs:
       DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_codegen
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feat/v3-digital-notification-center
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run db:generate
-      - uses: actions/upload-artifact@v4
-        with:
-          name: notification-center-generated-prisma
-          path: platform/persistence/generated/prisma
-          if-no-files-found: error
-          retention-days: 1
+      - name: Commit canonical generated Prisma client
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add platform/persistence/generated/prisma
+          if git diff --cached --quiet; then
+            echo "Generated Prisma client already canonical."
+            exit 0
+          fi
+          git commit -m "chore(prisma): regenerate notification center client"
+          git push origin HEAD:feat/v3-digital-notification-center
