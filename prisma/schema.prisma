@@ -449,6 +449,7 @@ model User {
   supportTicketsAssigned          SupportTicket[]   @relation("SupportTicketAssignee")
   supportMessages                 SupportTicketMessage[] @relation("SupportMessageAuthor")
   supportEvents                   SupportTicketEvent[] @relation("SupportEventActor")
+  notificationReceipts            NotificationReceipt[] @relation("NotificationReceiptUser")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -1882,6 +1883,53 @@ model EmailOutbox {
 
   @@index([status, createdAt])
   @@index([status, claimExpiresAt])
+}
+
+
+model NotificationMessage {
+  id                  String                @id
+  idempotencyKey      String                @unique
+  sourceModule        String
+  sourceEvent         String
+  sourceReference     String?
+  audienceKind        String
+  audiencePrincipalId String?
+  audienceAccountId   String?
+  audienceSegmentKey  String?
+  audienceVisitorId   String?
+  title               String
+  body                String
+  category            String
+  priority            String
+  trigger             String?
+  placementHint       String?
+  attributes          Json                  @default("{}")
+  data                Json?
+  productId           String?
+  createdAt           DateTime
+  expiresAt           DateTime?
+  receipts            NotificationReceipt[]
+
+  @@index([audienceKind, createdAt(sort: Desc)])
+  @@index([audienceAccountId, createdAt(sort: Desc)])
+  @@index([audiencePrincipalId, createdAt(sort: Desc)])
+  @@index([productId, createdAt(sort: Desc)])
+  @@index([expiresAt])
+}
+
+model NotificationReceipt {
+  notificationId String
+  userId         String
+  state          String   @default("UNREAD")
+  readAt         DateTime?
+  dismissedAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  notification   NotificationMessage @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  user           User                @relation("NotificationReceiptUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([notificationId, userId])
+  @@index([userId, state, updatedAt(sort: Desc)])
 }
 
 model ExternalProviderConfiguration {
