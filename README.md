@@ -37,7 +37,7 @@ npm run db:seed
 npm run dev
 ```
 
-**V3 environment contract:** `.env.example` is the committed template and `.env` is the only runtime/deployment environment filename. Specialized certification/demo env files are test tooling only; do not create `.env.production` or `.env.vps` aliases.
+**V3 environment contract:** `.env.example` is the committed template and `.env` is the only runtime/deployment environment filename. Specialized certification/demo env files are test tooling only; do not create alternate production runtime aliases.
 
 The mock payment provider is the safe local default. Development email transport logs only a non-sensitive subject; it never prints recipients, authentication tokens, license keys, or message bodies. Resend is the production transactional email provider and `jl-bke.com` is its verified sending domain; API credentials and delivery certification remain environment-specific.
 
