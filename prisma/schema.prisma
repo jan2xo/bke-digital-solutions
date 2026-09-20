@@ -1,0 +1,1931 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../platform/persistence/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum GlobalRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum AccountType {
+  INDIVIDUAL
+  ORGANIZATION
+}
+
+enum MemberRole {
+  OWNER
+  BILLING
+  LICENSE_MANAGER
+  MEMBER
+}
+
+enum CustomerLifecycleState {
+  ACTIVE
+  SUSPENDED
+  CLOSURE_REQUESTED
+  CLOSED
+  PRIVACY_REVIEW
+  PSEUDONYMIZED
+  PURGE_ELIGIBLE
+}
+
+enum StorageCleanupStatus {
+  PENDING
+  PROCESSING
+  RETRYING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum ArtifactUploadState {
+  PENDING
+  UPLOADED
+  VERIFYING
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+enum CommissioningStatus {
+  PENDING
+  VERIFYING
+  ANALYZING
+  EVIDENCE_READY
+  FAILED
+  SUPERSEDED
+}
+
+enum ScheduledJobRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  RETRYING
+  ABANDONED
+  CANCELLED
+  SKIPPED
+}
+
+enum ScheduledJobTrigger {
+  SCHEDULED
+  RETRY
+  MANUAL
+  CRON
+  CLI
+  CERTIFICATION
+}
+
+enum BackupArchiveStatus {
+  PENDING
+  CREATING
+  AVAILABLE
+  VERIFIED
+  INCOMPLETE
+  CORRUPT
+  FAILED
+  EXPIRED
+  DELETED
+}
+
+enum BackupRetentionTier {
+  MANUAL
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum BackupOperationType {
+  CREATE
+  VERIFY
+  SIMULATE_RESTORE
+  RESTORE_ISOLATED
+  DELETE_EXPIRED
+}
+
+enum BackupOperationStatus {
+  PENDING
+  PROCESSING
+  RETRYING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum BackupOperationTrigger {
+  SCHEDULED
+  MANUAL
+  CLI
+}
+
+enum ObservabilityAlertSeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+enum ObservabilityAlertStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+enum StorageCleanupJobType {
+  PRODUCT_DELETION
+  ARTIFACT_REPLACEMENT
+  ARTIFACT_REMOVAL
+  ABANDONED_UPLOAD
+  ORPHANED_OBJECT
+}
+
+enum ProductType {
+  SOFTWARE
+  SAAS
+  HYBRID
+}
+
+enum LauncherExecutionType {
+  LAUNCHER_PLUGIN
+  STANDALONE
+}
+
+enum ReleaseChannel {
+  STABLE
+  BETA
+}
+
+enum ReleaseLifecycle {
+  DRAFT
+  INTERNAL
+  ALPHA
+  BETA
+  RELEASE_CANDIDATE
+  STABLE
+  LTS
+  DEPRECATED
+  ARCHIVED
+}
+
+enum BillingType {
+  ONE_TIME
+  SUBSCRIPTION
+}
+
+enum IntervalUnit {
+  MONTH
+  YEAR
+}
+
+enum PurchasePlanType {
+  PERPETUAL
+  MONTHLY
+  ANNUAL
+}
+
+enum RenewalBehavior {
+  NONE
+  CUSTOMER_AUTHORIZED
+}
+
+enum UpdatePolicy {
+  LIFETIME
+  ACTIVE_TERM
+  MAJOR_VERSION
+}
+
+enum TrialSource {
+  SELF_SERVICE
+  ADMIN
+}
+
+enum DiscountType {
+  GENERAL_PROMOTION
+  CUSTOMER_ACCOUNT_OFFER
+  ADMINISTRATIVE_ADJUSTMENT
+}
+
+enum DiscountStatus {
+  DRAFT
+  ACTIVE
+  DISABLED
+  REVOKED
+  EXPIRED
+}
+
+enum OfferRedemptionStatus {
+  RESERVED
+  APPLIED
+  RELEASED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  FINAL
+  VOID
+}
+
+enum LicenseStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  REVOKED
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  PAST_DUE
+  EXPIRED
+  CANCELLED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+enum MfaChallengePurpose {
+  LOGIN
+  ENROLLMENT
+  RECENT_AUTH
+}
+
+enum SecurityEventType {
+  ADMIN_LOGIN_SUCCEEDED
+  ADMIN_LOGIN_FAILED
+  ADMIN_PASSWORD_ACCEPTED
+  ADMIN_PASSWORD_REJECTED
+  ADMIN_SESSION_CREATED
+  MFA_CHALLENGE_SUCCEEDED
+  MFA_CHALLENGE_FAILED
+  MFA_ENROLLED
+  MFA_DISABLED
+  MFA_RECOVERY_USED
+  MFA_RECOVERY_REGENERATED
+  RECENT_AUTH_SUCCEEDED
+  RECENT_AUTH_FAILED
+  ADMIN_SESSION_REVOKED
+  ADMIN_MAGIC_LOGIN_BLOCKED
+  MFA_ENROLLMENT_STARTED
+  PASSWORD_CHANGED
+  PASSWORD_RESET_COMPLETED
+  ADMIN_ALL_OTHER_SESSIONS_REVOKED
+  ADMIN_ALL_SESSIONS_REVOKED
+  SECURITY_RATE_LIMIT_TRIGGERED
+  PROVIDER_CREDENTIAL_REPLACED
+  PROVIDER_CREDENTIAL_REVOKED
+  PROVIDER_VALIDATION_SUCCEEDED
+  PROVIDER_VALIDATION_FAILED
+  LIVE_PAYMENT_ENABLE_BLOCKED
+  CUSTOMER_LIFECYCLE_CHANGED
+  CUSTOMER_PURGE_EXECUTED
+  STORAGE_CLEANUP_FAILED
+}
+
+enum SecurityEventOutcome {
+  SUCCESS
+  FAILURE
+  BLOCKED
+  INFORMATIONAL
+}
+
+enum SecurityEventSeverity {
+  INFORMATIONAL
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum SessionAuthenticationMethod {
+  PASSWORD
+  PASSWORD_TOTP
+  PASSWORD_EMAIL_OTP
+  PASSWORD_RECOVERY
+  MAGIC_LINK
+  MFA_ENROLLMENT
+}
+
+enum SessionAssuranceLevel {
+  BASIC
+  MFA_VERIFIED
+  RECENTLY_AUTHENTICATED
+}
+
+enum ExternalProvider {
+  PAYMONGO
+  RESEND
+}
+
+enum ProviderEnvironment {
+  TEST
+  LIVE
+}
+
+enum ProviderCredentialType {
+  SECRET_KEY
+  WEBHOOK_SECRET
+  API_KEY
+}
+
+enum ProviderValidationStatus {
+  NOT_VALIDATED
+  VALID
+  INVALID
+}
+
+enum SupportTicketCategory {
+  ACCOUNT
+  PAYMENT
+  REFUND
+  INVOICE
+  LICENSE
+  DEVICE
+  DOWNLOAD
+  SECURITY
+  FEATURE_REQUEST
+  OTHER
+}
+
+enum SupportTicketState {
+  OPEN
+  TRIAGED
+  WAITING_ON_CUSTOMER
+  WAITING_ON_SUPPORT
+  ESCALATED
+  RESOLVED
+  CLOSED
+}
+
+enum SupportTicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupportMessageVisibility {
+  PUBLIC
+  INTERNAL
+}
+
+model User {
+  id                              String                          @id @default(cuid())
+  email                           String                          @unique
+  name                            String?
+  emailVerified                   DateTime?
+  role                            GlobalRole                      @default(CUSTOMER)
+  createdAt                       DateTime                        @default(now())
+  updatedAt                       DateTime                        @updatedAt
+  suspendedAt                     DateTime?
+  lifecycleState                  CustomerLifecycleState          @default(ACTIVE)
+  privacyRequestedAt              DateTime?
+  pseudonymizedAt                 DateTime?
+  retentionExpiresAt              DateTime?
+  legalHoldAt                     DateTime?
+  legalHoldReason                 String?
+  emailHash                       String?
+  credential                      PasswordCredential?
+  sessions                        Session[]
+  ownedAccounts                   CustomerAccount[]               @relation("AccountOwner")
+  memberships                     Membership[]
+  assignments                     LicenseAssignment[]
+  auditLogs                       AuditLog[]                      @relation("AuditActor")
+  siteContentEdits                SiteContent[]                   @relation("SiteContentEditor")
+  createdOffers                   DiscountOffer[]                 @relation("OfferCreator")
+  administratorMfa                AdministratorMfaMethod?
+  recoveryCodes                   AdministratorRecoveryCode[]
+  mfaChallenges                   MfaChallenge[]
+  emergencyMfaAuthorizations     EmergencyMfaEnrollmentAuthorization[]
+  securityEvents                  SecurityEvent[]
+  artifactUploadSessions          ArtifactUploadSession[]          @relation("ArtifactUploadCreator")
+  providerConfigurationsCreated   ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
+  providerConfigurationsUpdated   ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
+  providerCredentialsCreated      ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
+  legalVersionsAuthored           LegalDocumentVersion[]          @relation("LegalVersionAuthor")
+  legalAcceptances                LegalAcceptance[]
+  storageCleanupJobsCreated       StorageCleanupJob[]             @relation("StorageCleanupCreator")
+  refundOperationsRequested       RefundOperation[]               @relation("RefundRequester")
+  reconciliationsRun              PaymentReconciliation[]         @relation("ReconciliationRunner")
+  reconciliationsAcknowledged     PaymentReconciliation[]         @relation("ReconciliationAcknowledger")
+  webhookEventsAcknowledged       WebhookEvent[]                  @relation("WebhookAcknowledger")
+  scheduledRunsAcknowledged       ScheduledJobRun[]
+  backupOperationsRequested       BackupOperation[]               @relation("BackupOperationRequester")
+  observabilityAlertsAcknowledged ObservabilityAlert[]            @relation("ObservabilityAlertAcknowledger")
+  observabilityAlertsResolved     ObservabilityAlert[]            @relation("ObservabilityAlertResolver")
+  complianceEvidenceRecorded      ComplianceEvidence[]
+  privacyRequests                 PrivacyRequest[]            @relation("PrivacyRequestUser")
+  privacyRequestsReviewed         PrivacyRequest[]            @relation("PrivacyRequestReviewer")
+  privacyRequestEvents            PrivacyRequestEvent[]       @relation("PrivacyRequestEventActor")
+  releaseApprovalsCreated         ReleaseApproval[] @relation("ReleaseApprovalCreator")
+  releaseApprovalsReviewed        ReleaseApproval[] @relation("ReleaseApprovalReviewer")
+  releaseApprovalsApproved        ReleaseApproval[] @relation("ReleaseApprovalApprover")
+  supportTicketsCreated           SupportTicket[]   @relation("SupportTicketCreator")
+  supportTicketsAssigned          SupportTicket[]   @relation("SupportTicketAssignee")
+  supportMessages                 SupportTicketMessage[] @relation("SupportMessageAuthor")
+  supportEvents                   SupportTicketEvent[] @relation("SupportEventActor")
+
+  @@index([lifecycleState])
+  @@index([retentionExpiresAt])
+  @@index([legalHoldAt])
+}
+
+model PasswordCredential {
+  userId       String   @id
+  passwordHash String
+  changedAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id                    String                      @id @default(cuid())
+  tokenHash             String                      @unique
+  userId                String
+  expiresAt             DateTime
+  lastAuthenticatedAt   DateTime                    @default(now())
+  mfaVerifiedAt         DateTime?
+  recentAuthenticatedAt DateTime?
+  lastSeenAt            DateTime                    @default(now())
+  absoluteExpiresAt     DateTime
+  ipHash                String?
+  userAgent             String?
+  userAgentSummary      String?
+  networkHint           String?
+  authenticationMethod  SessionAuthenticationMethod @default(PASSWORD)
+  assuranceLevel        SessionAssuranceLevel       @default(BASIC)
+  revokedAt             DateTime?
+  revocationReason      String?
+  createdAt             DateTime                    @default(now())
+  user                  User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  securityEvents        SecurityEvent[]
+
+  @@index([userId, expiresAt])
+  @@index([userId, revokedAt])
+  @@index([userId, absoluteExpiresAt])
+  @@index([userId, lastSeenAt])
+}
+
+model AdministratorMfaMethod {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  encryptedSecret  String?
+  keyVersion       Int       @default(1)
+  pendingExpiresAt DateTime?
+  enabledAt        DateTime?
+  verifiedAt       DateTime?
+  disabledAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AdministratorRecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  codeHash  String    @unique
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
+}
+
+model MfaChallenge {
+  id           String              @id @default(cuid())
+  userId       String
+  purpose      MfaChallengePurpose @default(LOGIN)
+  tokenHash    String              @unique
+  codeHash     String?
+  expiresAt    DateTime
+  consumedAt   DateTime?
+  attemptCount Int                 @default(0)
+  createdAt    DateTime            @default(now())
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model EmergencyMfaEnrollmentAuthorization {
+  id                 String    @id @default(cuid())
+  userId             String
+  tokenHash          String    @unique
+  createdAt          DateTime  @default(now())
+  expiresAt          DateTime
+  consumedAt         DateTime?
+  revokedAt          DateTime?
+  recoveryReason     String
+  operatorIdentity   String
+  ownerKeyVersion    Int
+  deploymentEnvironment String
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt, consumedAt])
+}
+
+model SecurityEvent {
+  id                   String                       @id @default(cuid())
+  userId               String?
+  type                 SecurityEventType
+  outcome              SecurityEventOutcome         @default(INFORMATIONAL)
+  severity             SecurityEventSeverity        @default(INFORMATIONAL)
+  sessionId            String?
+  provider             ExternalProvider?
+  authenticationMethod SessionAuthenticationMethod?
+  ipHint               String?
+  userAgentHint        String?
+  metadata             Json?
+  createdAt            DateTime                     @default(now())
+  user                 User?                        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  session              Session?                     @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+  @@index([severity, createdAt])
+  @@index([outcome, createdAt])
+  @@index([provider, createdAt])
+}
+
+model VerificationToken {
+  id         String    @id @default(cuid())
+  identifier String
+  purpose    String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([identifier, purpose])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, expiresAt])
+}
+
+model CustomerAccount {
+  id                 String                 @id @default(cuid())
+  type               AccountType
+  displayName        String
+  ownerId            String
+  billingEmail       String
+  taxId              String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  lifecycleState     CustomerLifecycleState @default(ACTIVE)
+  closureRequestedAt DateTime?
+  closedAt           DateTime?
+  privacyRequestedAt DateTime?
+  pseudonymizedAt    DateTime?
+  retentionExpiresAt DateTime?
+  legalHoldAt        DateTime?
+  legalHoldReason    String?
+  owner              User                   @relation("AccountOwner", fields: [ownerId], references: [id])
+  organization       OrganizationProfile?
+  memberships        Membership[]
+  invitations        Invitation[]
+  carts              Cart[]
+  orders             Order[]
+  licenses           License[]
+  subscriptions      Subscription[]
+  auditLogs          AuditLog[]
+  trials             TrialGrant[]
+  offers             DiscountOffer[]
+  offerRedemptions   OfferRedemption[]
+  legalAcceptances   LegalAcceptance[]
+  privacyRequests    PrivacyRequest[]
+  supportTickets     SupportTicket[]
+
+  @@index([ownerId])
+  @@index([lifecycleState])
+  @@index([closedAt])
+  @@index([retentionExpiresAt])
+  @@index([legalHoldAt])
+}
+
+model LegalDocument {
+  id                        String                 @id @default(cuid())
+  title                     String
+  slug                      String                 @unique
+  documentType              String                 @unique
+  status                    String                 @default("ACTIVE")
+  currentPublishedVersionId String?                @unique
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+  versions                  LegalDocumentVersion[] @relation("LegalDocumentVersions")
+  currentPublishedVersion   LegalDocumentVersion?  @relation("CurrentPublishedLegalVersion", fields: [currentPublishedVersionId], references: [id], onDelete: SetNull)
+
+  @@index([documentType, status])
+}
+
+model LegalDocumentVersion {
+  id                   String            @id @default(cuid())
+  documentId           String
+  versionNumber        Int
+  markdownContent      String
+  renderedHtml         String?
+  status               String            @default("DRAFT")
+  effectiveAt          DateTime?
+  publishedAt          DateTime?
+  archivedAt           DateTime?
+  authorId             String?
+  changeSummary        String
+  requiresReacceptance Boolean           @default(false)
+  contentHash          String
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  document             LegalDocument     @relation("LegalDocumentVersions", fields: [documentId], references: [id], onDelete: Restrict)
+  currentForDocument   LegalDocument?    @relation("CurrentPublishedLegalVersion")
+  author               User?             @relation("LegalVersionAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  acceptances          LegalAcceptance[]
+
+  @@unique([documentId, versionNumber])
+  @@index([documentId, status, publishedAt])
+}
+
+model LegalAcceptance {
+  id                  String               @id @default(cuid())
+  userId              String
+  customerAccountId   String?
+  documentVersionId   String
+  acceptanceContext   String
+  acceptedAt          DateTime             @default(now())
+  ipAddress           String?
+  userAgent           String?
+  renderedContentHash String
+  variablesSnapshot   Json                 @default("{}")
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+  customerAccount     CustomerAccount?     @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  documentVersion     LegalDocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, customerAccountId, documentVersionId, acceptanceContext], map: "LegalAcceptance_userId_customerAccountId_documentVersionId_acce")
+  @@index([userId, acceptedAt])
+  @@index([customerAccountId, acceptedAt])
+  @@index([documentVersionId, acceptedAt])
+}
+
+model PrivacyRequest {
+  id                String           @id @default(cuid())
+  userId            String
+  customerAccountId String?
+  requestType       String
+  status            String           @default("OPEN")
+  summary           String
+  responseSummary   String?
+  ipAddress         String?
+  userAgent         String?
+  reviewedById      String?
+  reviewedAt        DateTime?
+  closedAt          DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  user              User             @relation("PrivacyRequestUser", fields: [userId], references: [id], onDelete: Restrict)
+  customerAccount   CustomerAccount? @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  reviewedBy        User?            @relation("PrivacyRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  events            PrivacyRequestEvent[]
+
+  @@index([userId, createdAt])
+  @@index([customerAccountId, createdAt])
+  @@index([status, createdAt])
+  @@index([requestType, status])
+}
+
+model PrivacyRequestEvent {
+  id               String         @id @default(cuid())
+  privacyRequestId String
+  actorId          String?
+  eventType        String
+  fromStatus       String?
+  toStatus         String?
+  metadata         Json           @default("{}")
+  createdAt        DateTime       @default(now())
+  privacyRequest   PrivacyRequest @relation(fields: [privacyRequestId], references: [id], onDelete: Restrict)
+  actor            User?          @relation("PrivacyRequestEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([privacyRequestId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model OrganizationProfile {
+  accountId          String          @id
+  legalName          String
+  registrationNumber String?
+  account            CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model Membership {
+  accountId String
+  userId    String
+  role      MemberRole
+  createdAt DateTime        @default(now())
+  account   CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([accountId, userId])
+  @@index([userId])
+}
+
+model Invitation {
+  id        String           @id @default(cuid())
+  accountId String
+  email     String
+  role      MemberRole
+  tokenHash String           @unique
+  status    InvitationStatus @default(PENDING)
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+  account   CustomerAccount  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, email])
+}
+
+model Product {
+  id                  String              @id @default(cuid())
+  slug                String              @unique
+  productId           String?             @unique
+  minimumAcceptedVersion String?
+  maximumAcceptedVersion String?
+  name                String
+  summary             String
+  description         String
+  type                ProductType
+  launcherExecutionType LauncherExecutionType?
+  category            String              @default("General")
+  licenseType         String              @default("Commercial")
+  featured            Boolean             @default(false)
+  imageKey            String?
+  tags                String[]            @default([])
+  active              Boolean             @default(true)
+  publishedAt         DateTime?
+  archivedAt          DateTime?
+  deletionRequestedAt DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  versions            ProductVersion[]
+  editions            Edition[]
+  prices              Price[]
+  policies            LicensePolicy[]
+  artifacts           ProductArtifact[]
+  artifactUploadSessions ArtifactUploadSession[]
+  licenses            License[]
+  subscriptions       Subscription[]
+  trials              TrialGrant[]
+  offers              DiscountOffer[]
+  cleanupJobs         StorageCleanupJob[]
+  commissioningRuns   CommissioningRun[]
+
+  @@index([launcherExecutionType])
+  @@index([deletionRequestedAt])
+}
+
+model Edition {
+  id                String          @id @default(cuid())
+  productId         String
+  slug              String
+  name              String
+  description       String?
+  features          Json            @default("[]")
+  maxUsers          Int             @default(1)
+  maxDevicesPerUser Int             @default(1)
+  updatePolicy      UpdatePolicy    @default(LIFETIME)
+  active            Boolean         @default(true)
+  sortOrder         Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  purchasePlans     PurchasePlan[]
+  licenses          License[]
+  subscriptions     Subscription[]
+  trials            TrialGrant[]
+  offers            DiscountOffer[]
+
+  @@unique([productId, slug])
+  @@index([productId, active, sortOrder])
+}
+
+model PurchasePlan {
+  id                  String           @id @default(cuid())
+  editionId           String
+  type                PurchasePlanType
+  currency            String           @default("PHP")
+  amountMinor         Int?
+  annualDiscountBps   Int?
+  renewalBehavior     RenewalBehavior  @default(NONE)
+  active              Boolean          @default(true)
+  monthlySourcePlanId String?
+  legacyPriceId       String?          @unique
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  edition             Edition          @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  monthlySource       PurchasePlan?    @relation("AnnualMonthlySource", fields: [monthlySourcePlanId], references: [id], onDelete: Cascade)
+  annualPlans         PurchasePlan[]   @relation("AnnualMonthlySource")
+  legacyPrice         Price?           @relation(fields: [legacyPriceId], references: [id], onDelete: SetNull)
+  licenses            License[]
+  subscriptions       Subscription[]
+  offers              DiscountOffer[]
+
+  @@unique([editionId, type])
+  @@index([editionId, active])
+}
+
+model ProductVersion {
+  id              String            @id @default(cuid())
+  productId       String
+  version         String
+  releaseNotes    String?
+  changelog       String?
+  channel         ReleaseChannel    @default(STABLE)
+  lifecycle       ReleaseLifecycle  @default(DRAFT)
+  deprecatedAt    DateTime?
+  active          Boolean           @default(true)
+  operatingSystem String
+  architecture    String
+  isLatest        Boolean           @default(false)
+  publishedAt     DateTime?
+  releasedAt      DateTime          @default(now())
+  product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+  artifacts       ProductArtifact[]
+  artifactUploadSessions ArtifactUploadSession[]
+  supplyChainEvidence SupplyChainEvidence?
+  approvals       ReleaseApproval[]
+  backupEvidence  String?
+  complianceEvidence String?
+  migrationEvidence String?
+  commissioningRuns CommissioningRun[]
+
+  @@unique([productId, version])
+}
+
+model ArtifactUploadSession {
+  id               String              @id @default(cuid())
+  productId        String
+  versionId        String
+  objectKey        String              @unique
+  originalFilename String
+  extension        String
+  contentType      String
+  expectedSize     BigInt
+  expectedSha256   String?
+  state            ArtifactUploadState  @default(PENDING)
+  createdById      String
+  expiresAt        DateTime
+  completedAt      DateTime?
+  failedAt         DateTime?
+  failureReason    String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  product          Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version          ProductVersion      @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  createdBy        User                @relation("ArtifactUploadCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([versionId, state])
+  @@index([expiresAt, state])
+}
+
+model ReleaseApproval {
+  id          String        @id @default(cuid())
+  versionId   String
+  stage       ReleaseLifecycle
+  createdById String
+  reviewedById String?
+  approvedById String?
+  approvedAt  DateTime?
+  reviewedAt  DateTime?
+  payloadHash String?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  version     ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  createdBy   User          @relation("ReleaseApprovalCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  reviewedBy  User?         @relation("ReleaseApprovalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  approvedBy  User?         @relation("ReleaseApprovalApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  @@index([versionId, stage])
+}
+
+model SupplyChainEvidence {
+  id                 String   @id @default(cuid())
+  versionId          String   @unique
+  releaseIdentifier  String
+  commitHash         String
+  branch             String
+  buildEnvironment   String
+  builderIdentity    String
+  builtAt            DateTime
+  manifestJson       Json     @default("{}")
+  sbomReference      String?
+  sbomFormat         String?
+  manifestSignature  String?
+  signatureVerified  Boolean  @default(false)
+  canonicalPayloadHash String?
+  signatureAlgorithm String?
+  signatureKeyId    String?
+  signedAt          DateTime?
+  dependencyVerified Boolean  @default(false)
+  malwareStatus      String   @default("PENDING_SCAN")
+  certificateStatus  String   @default("PENDING_PROVISIONING")
+  provenanceStatus   String   @default("RECORDED")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  version            ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  verificationEvidence SupplyChainVerificationEvidence[]
+  @@index([malwareStatus, certificateStatus])
+}
+
+model SupplyChainVerificationEvidence {
+  id                String   @id @default(cuid())
+  evidenceId        String
+  kind              String
+  artifactHash      String
+  signerKeyId       String?
+  scannerId         String?
+  scannerVersion    String?
+  result            String
+  reference         String?
+  documentObjectKey String?
+  documentSha256    String?
+  failureReason     String?
+  verifiedAt        DateTime @default(now())
+  metadata          Json     @default("{}")
+  evidence          SupplyChainEvidence @relation(fields: [evidenceId], references: [id], onDelete: Restrict)
+  @@index([evidenceId, kind, verifiedAt])
+  @@index([documentObjectKey])
+}
+
+model LicensePolicy {
+  id                String  @id @default(cuid())
+  productId         String
+  name              String
+  maxSeats          Int     @default(1)
+  maxDevicesPerSeat Int     @default(1)
+  validityDays      Int?
+  transferable      Boolean @default(false)
+  rules             Json    @default("{}")
+  product           Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  prices            Price[]
+}
+
+model Price {
+  id              String        @id @default(cuid())
+  productId       String
+  licensePolicyId String
+  name            String
+  amountMinor     Int
+  currency        String        @default("PHP")
+  billingType     BillingType
+  intervalUnit    IntervalUnit?
+  intervalCount   Int?
+  active          Boolean       @default(true)
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  licensePolicy   LicensePolicy @relation(fields: [licensePolicyId], references: [id])
+  cartItems       CartItem[]
+  purchasePlan    PurchasePlan?
+
+  @@index([productId, active])
+}
+
+model ProductArtifact {
+  id            String              @id @default(cuid())
+  productId     String
+  versionId     String?
+  name          String
+  objectKey     String              @unique
+  sha256        String
+  sizeBytes     BigInt
+  contentType   String
+  active        Boolean             @default(true)
+  downloadCount Int                 @default(0)
+  removedAt     DateTime?
+  createdAt     DateTime            @default(now())
+  product       Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version       ProductVersion?     @relation(fields: [versionId], references: [id])
+  grants        DownloadGrant[]
+  cleanupJobs   StorageCleanupJob[]
+  commissioningRuns CommissioningRun[]
+}
+
+model CommissioningRun {
+  id                 String             @id @default(cuid())
+  productId          String
+  versionId          String
+  artifactId         String
+  artifactSha256     String
+  artifactSizeBytes  BigInt
+  payloadHash        String?
+  policyVersion      String
+  generatorVersion   String
+  status             CommissioningStatus @default(PENDING)
+  classification     String
+  sbomStatus         String             @default("UNDETERMINED")
+  dependencyStatus   String             @default("UNDETERMINED")
+  migrationCategory  String             @default("UNKNOWN")
+  migrationStatus    String             @default("UNDETERMINED")
+  evidence           Json               @default("{}")
+  limitations        Json               @default("[]")
+  errorCode          String?
+  attempts           Int                @default(0)
+  startedAt          DateTime?
+  completedAt        DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  product            Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version            ProductVersion     @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  artifact           ProductArtifact   @relation(fields: [artifactId], references: [id], onDelete: Restrict)
+  @@unique([artifactId, artifactSha256, payloadHash, policyVersion, generatorVersion])
+  @@index([status, createdAt])
+  @@index([versionId, status])
+}
+
+model StorageCleanupJob {
+  id               String                @id @default(cuid())
+  type             StorageCleanupJobType
+  status           StorageCleanupStatus  @default(PENDING)
+  targetType       String
+  targetId         String
+  objectKey        String
+  idempotencyKey   String                @unique
+  attempts         Int                   @default(0)
+  nextAttemptAt    DateTime              @default(now())
+  lastErrorCode    String?
+  correlationId    String
+  productId        String?
+  artifactId       String?
+  createdByAdminId String?
+  createdAt        DateTime              @default(now())
+  startedAt        DateTime?
+  completedAt      DateTime?
+  product          Product?              @relation(fields: [productId], references: [id], onDelete: SetNull)
+  artifact         ProductArtifact?      @relation(fields: [artifactId], references: [id], onDelete: SetNull)
+  createdByAdmin   User?                 @relation("StorageCleanupCreator", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@index([targetType, targetId])
+  @@index([productId, status])
+  @@index([artifactId, status])
+}
+
+model Cart {
+  id        String          @id @default(cuid())
+  accountId String
+  expiresAt DateTime
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  account   CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  cartId   String
+  priceId  String
+  quantity Int
+  cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  price    Price  @relation(fields: [priceId], references: [id])
+
+  @@id([cartId, priceId])
+}
+
+model Order {
+  id                    String                  @id @default(cuid())
+  number                String                  @unique
+  accountId             String
+  status                OrderStatus             @default(PENDING)
+  currency              String
+  subtotalMinor         Int
+  taxMinor              Int
+  totalMinor            Int
+  billingSnapshot       Json
+  createdAt             DateTime                @default(now())
+  paidAt                DateTime?
+  renewalSubscriptionId String?
+  account               CustomerAccount         @relation(fields: [accountId], references: [id])
+  items                 OrderItem[]
+  payments              Payment[]
+  attempts              PaymentAttempt[]
+  invoice               Invoice?
+  licenses              License[]
+  subscriptions         Subscription[]
+  renewalSubscription   Subscription?           @relation("SubscriptionRenewalOrders", fields: [renewalSubscriptionId], references: [id], onDelete: Restrict)
+  offerRedemption       OfferRedemption?
+  webhookEvents         WebhookEvent[]
+  refundOperations      RefundOperation[]
+  reconciliations       PaymentReconciliation[]
+  supportTickets        SupportTicket[]
+
+  @@index([accountId, createdAt])
+  @@index([renewalSubscriptionId])
+}
+
+model OrderItem {
+  id                  String            @id @default(cuid())
+  orderId             String
+  productId           String
+  priceId             String
+  policyId            String
+  productName         String
+  priceName           String
+  quantity            Int
+  unitAmountMinor     Int
+  totalMinor          Int
+  billingType         BillingType
+  policySnapshot      Json
+  editionId           String?
+  purchasePlanId      String?
+  editionName         String?
+  planName            String?
+  planType            PurchasePlanType?
+  intervalUnit        IntervalUnit?
+  intervalCount       Int?
+  renewalBehavior     RenewalBehavior?
+  entitlementSnapshot Json?
+  pricingSnapshot     Json?
+  catalogAmountMinor  Int?
+  offerId             String?
+  offerDiscountBps    Int?
+  offerDiscountMinor  Int?
+  pricingVersion      String?
+  order               Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id               String                  @id @default(cuid())
+  orderId          String
+  provider         String
+  externalId       String
+  status           PaymentStatus
+  amountMinor      Int
+  currency         String
+  paidAt           DateTime?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  order            Order                   @relation(fields: [orderId], references: [id])
+  webhookEvents    WebhookEvent[]
+  refundOperations RefundOperation[]
+  reconciliations  PaymentReconciliation[]
+
+  @@unique([provider, externalId])
+  @@index([orderId])
+}
+
+model PaymentAttempt {
+  id                 String         @id @default(cuid())
+  orderId            String
+  provider           String
+  idempotencyKey     String         @unique
+  externalCheckoutId String?        @unique
+  checkoutUrl        String?
+  status             String
+  createdAt          DateTime       @default(now())
+  order              Order          @relation(fields: [orderId], references: [id])
+  webhookEvents      WebhookEvent[]
+}
+
+model WebhookEvent {
+  id                 String          @id @default(cuid())
+  provider           String
+  externalEventId    String
+  rawEventType       String?
+  eventType          String
+  livemode           Boolean
+  payloadHash        String
+  normalizedData     Json?
+  status             String
+  error              String?
+  lastErrorCode      String?
+  mismatchCategory   String?
+  processingAttempts Int             @default(0)
+  conflictCount      Int             @default(0)
+  receivedAt         DateTime        @default(now())
+  lastAttemptAt      DateTime?
+  processedAt        DateTime?
+  occurredAt         DateTime?
+  orderId            String?
+  paymentAttemptId   String?
+  paymentId          String?
+  providerCheckoutId String?
+  providerPaymentId  String?
+  providerRefundId   String?
+  resolutionStatus   String          @default("OPEN")
+  resolutionCode     String?
+  resolvedAt         DateTime?
+  resolvedById       String?
+  order              Order?          @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  paymentAttempt     PaymentAttempt? @relation(fields: [paymentAttemptId], references: [id], onDelete: SetNull)
+  payment            Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  resolvedBy         User?           @relation("WebhookAcknowledger", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@unique([provider, externalEventId])
+  @@index([status, receivedAt])
+  @@index([mismatchCategory, receivedAt])
+  @@index([orderId, receivedAt])
+}
+
+model RefundOperation {
+  id               String    @id @default(cuid())
+  orderId          String
+  paymentId        String
+  provider         String
+  amountMinor      Int
+  currency         String
+  reasonCode       String
+  idempotencyKey   String    @unique
+  externalRefundId String?   @unique
+  status           String    @default("REQUESTED")
+  lastErrorCode    String?
+  requestedById    String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  completedAt      DateTime?
+  order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  payment          Payment   @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  requestedBy      User      @relation("RefundRequester", fields: [requestedById], references: [id], onDelete: Restrict)
+
+  @@index([orderId, createdAt])
+  @@index([status, createdAt])
+}
+
+model PaymentReconciliation {
+  id               String    @id @default(cuid())
+  orderId          String
+  paymentId        String?
+  provider         String
+  classification   String
+  differences      Json      @default("[]")
+  localStatus      String
+  providerStatus   String?
+  status           String    @default("OPEN")
+  correlationId    String    @unique
+  lastErrorCode    String?
+  runById          String
+  acknowledgedById String?
+  acknowledgedAt   DateTime?
+  createdAt        DateTime  @default(now())
+  order            Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  payment          Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  runBy            User      @relation("ReconciliationRunner", fields: [runById], references: [id], onDelete: Restrict)
+  acknowledgedBy   User?     @relation("ReconciliationAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@index([orderId, createdAt])
+  @@index([status, createdAt])
+  @@index([classification, createdAt])
+}
+
+model Invoice {
+  id               String        @id @default(cuid())
+  number           String        @unique
+  orderId          String        @unique
+  status           InvoiceStatus @default(DRAFT)
+  customerSnapshot Json
+  currency         String
+  subtotalMinor    Int
+  taxMinor         Int
+  totalMinor       Int
+  issuedAt         DateTime?
+  createdAt        DateTime      @default(now())
+  order            Order         @relation(fields: [orderId], references: [id])
+  lines            InvoiceLine[]
+}
+
+model InvoiceLine {
+  id              String  @id @default(cuid())
+  invoiceId       String
+  description     String
+  quantity        Int
+  unitAmountMinor Int
+  totalMinor      Int
+  invoice         Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id                             String             @id @default(cuid())
+  accountId                      String
+  orderId                        String
+  productId                      String
+  editionId                      String?
+  purchasePlanId                 String?
+  status                         SubscriptionStatus @default(PENDING)
+  seats                          Int
+  currentPeriodStart             DateTime
+  currentPeriodEnd               DateTime
+  renewalReminderAt              DateTime
+  currency                       String?
+  normalRecurringAmountMinor     Int?
+  discountedRecurringAmountMinor Int?
+  promotionalDiscountBps         Int?
+  discountedCyclesTotal          Int?
+  discountedCyclesConsumed       Int                @default(0)
+  offerId                        String?
+  offerSnapshot                  Json?
+  pricingVersion                 String?
+  createdAt                      DateTime           @default(now())
+  updatedAt                      DateTime           @updatedAt
+  account                        CustomerAccount    @relation(fields: [accountId], references: [id])
+  order                          Order              @relation(fields: [orderId], references: [id])
+  product                        Product            @relation(fields: [productId], references: [id])
+  edition                        Edition?           @relation(fields: [editionId], references: [id])
+  purchasePlan                   PurchasePlan?      @relation(fields: [purchasePlanId], references: [id])
+  renewalOrders                  Order[]            @relation("SubscriptionRenewalOrders")
+  licenses                       License[]
+
+  @@index([accountId, status])
+}
+
+model DiscountOffer {
+  id                        String            @id @default(cuid())
+  codeNormalized            String?           @unique
+  name                      String
+  description               String?
+  type                      DiscountType
+  status                    DiscountStatus    @default(DRAFT)
+  discountBps               Int
+  startsAt                  DateTime
+  endsAt                    DateTime?
+  productId                 String?
+  editionId                 String?
+  purchasePlanId            String?
+  customerAccountId         String?
+  maximumRedemptions        Int?
+  perAccountRedemptionLimit Int?
+  discountedBillingCycles   Int?
+  allowZeroTotal            Boolean           @default(false)
+  createdById               String
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
+  revokedAt                 DateTime?
+  product                   Product?          @relation(fields: [productId], references: [id], onDelete: Restrict)
+  edition                   Edition?          @relation(fields: [editionId], references: [id], onDelete: Restrict)
+  purchasePlan              PurchasePlan?     @relation(fields: [purchasePlanId], references: [id], onDelete: Restrict)
+  customerAccount           CustomerAccount?  @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  createdBy                 User              @relation("OfferCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  redemptions               OfferRedemption[]
+
+  @@index([status, startsAt, endsAt])
+  @@index([customerAccountId, status])
+  @@index([purchasePlanId, status])
+}
+
+model OfferRedemption {
+  id             String                @id @default(cuid())
+  offerId        String
+  accountId      String
+  orderId        String                @unique
+  status         OfferRedemptionStatus @default(RESERVED)
+  discountBps    Int
+  baseMinor      Int
+  discountMinor  Int
+  finalMinor     Int
+  currency       String
+  pricingVersion String
+  reservedAt     DateTime              @default(now())
+  appliedAt      DateTime?
+  releasedAt     DateTime?
+  offer          DiscountOffer         @relation(fields: [offerId], references: [id], onDelete: Restrict)
+  account        CustomerAccount       @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  order          Order                 @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([offerId, status])
+  @@index([offerId, accountId, status])
+}
+
+model License {
+  id                String              @id @default(cuid())
+  publicId          String              @unique
+  keyHash           String              @unique
+  keyLastFour       String
+  keyCiphertext     String?
+  keyRevealedAt     DateTime?
+  accountId         String
+  orderId           String
+  orderItemId       String
+  productId         String
+  editionId         String?
+  purchasePlanId    String?
+  subscriptionId    String?
+  status            LicenseStatus       @default(ACTIVE)
+  maxSeats          Int
+  maxDevicesPerSeat Int
+  expiresAt         DateTime?
+  createdAt         DateTime            @default(now())
+  account           CustomerAccount     @relation(fields: [accountId], references: [id])
+  order             Order               @relation(fields: [orderId], references: [id])
+  subscription      Subscription?       @relation(fields: [subscriptionId], references: [id])
+  product           Product             @relation(fields: [productId], references: [id])
+  edition           Edition?            @relation(fields: [editionId], references: [id])
+  purchasePlan      PurchasePlan?       @relation(fields: [purchasePlanId], references: [id])
+  assignments       LicenseAssignment[]
+  activations       DeviceActivation[]
+  grants            DownloadGrant[]
+  events            LicenseEvent[]
+  leaseHistory      LicenseLeaseRecord[]
+  leaseOperations   CommercialLeaseOperation[]
+  trialGrant        TrialGrant?
+  supportTickets    SupportTicket[]
+
+  @@unique([orderItemId])
+  @@index([accountId, status])
+}
+
+model SupportTicket {
+  id              String                @id @default(cuid())
+  publicId        String                @unique
+  createdById     String
+  accountId       String
+  orderId         String?
+  licenseId       String?
+  category        SupportTicketCategory
+  state           SupportTicketState    @default(OPEN)
+  priority        SupportTicketPriority @default(NORMAL)
+  subject         String
+  safeContext     Json                  @default("{}")
+  securityReport  Boolean               @default(false)
+  assignedToId    String?
+  escalatedAt     DateTime?
+  resolvedAt      DateTime?
+  closedAt        DateTime?
+  lastCustomerReplyAt DateTime?
+  lastAdminReplyAt    DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  createdBy       User                  @relation("SupportTicketCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  account         CustomerAccount       @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  order           Order?                @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  license         License?              @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  assignedTo      User?                 @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  messages        SupportTicketMessage[]
+  events          SupportTicketEvent[]
+
+  @@index([createdById, createdAt])
+  @@index([accountId, createdAt])
+  @@index([state, priority, createdAt])
+  @@index([assignedToId, state])
+  @@index([securityReport, state])
+}
+
+model SupportTicketMessage {
+  id          String                   @id @default(cuid())
+  ticketId    String
+  authorId    String
+  body        String
+  visibility  SupportMessageVisibility @default(PUBLIC)
+  createdAt   DateTime                 @default(now())
+  ticket      SupportTicket            @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  author      User                     @relation("SupportMessageAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, createdAt])
+  @@index([authorId, createdAt])
+}
+
+model SupportTicketEvent {
+  id        String        @id @default(cuid())
+  ticketId  String
+  actorId   String?
+  eventType String
+  metadata  Json          @default("{}")
+  createdAt DateTime      @default(now())
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  actor     User?         @relation("SupportEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+  @@index([actorId, createdAt])
+  @@index([eventType, createdAt])
+}
+
+model LicenseLeaseRecord {
+  id              String   @id @default(cuid())
+  licenseId       String
+  leaseId         String   @unique
+  generation      Int
+  serverRevision  Int
+  installationId  String
+  deviceId        String
+  version         String
+  status          String
+  action          String
+  operationId     String?  @unique
+  signerKeyId     String?
+  expiresAt       DateTime?
+  leasePayload    String?
+  leaseSignature  String?
+  supersededById  String?
+  issuedAt        DateTime @default(now())
+  createdAt       DateTime @default(now())
+  license         License  @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  operation       CommercialLeaseOperation? @relation("LeaseOperationReference", fields: [operationId], references: [operationId], onDelete: Restrict)
+  operationResult CommercialLeaseOperation? @relation("LeaseOperationResult")
+  supersededBy    LicenseLeaseRecord? @relation("LeaseSupersession", fields: [supersededById], references: [id], onDelete: Restrict)
+  supersedes      LicenseLeaseRecord[] @relation("LeaseSupersession")
+  @@index([licenseId, installationId, deviceId, generation, serverRevision])
+}
+
+model CommercialLeaseOperation {
+  id             String   @id @default(cuid())
+  operationId    String   @unique
+  licenseId      String?
+  action         String
+  status         String   @default("PENDING")
+  resultLeaseId  String?  @unique
+  metadata       Json     @default("{}")
+  createdAt      DateTime @default(now())
+  completedAt    DateTime?
+  license        License? @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+  resultLease    LicenseLeaseRecord? @relation("LeaseOperationResult", fields: [resultLeaseId], references: [leaseId], onDelete: Restrict)
+  leaseRecords   LicenseLeaseRecord[] @relation("LeaseOperationReference")
+  @@index([licenseId, action, status])
+}
+
+model CommercialSigningKey {
+  id                  String   @id @default(cuid())
+  keyId               String   @unique
+  algorithm           String   @default("Ed25519")
+  status              String   @default("ACTIVE")
+  publicKey           String
+  privateKeyReference String
+  createdAt           DateTime @default(now())
+  activatedAt         DateTime @default(now())
+  retiredAt           DateTime?
+  rotationReason      String?
+  createdBy           String?
+  @@index([status])
+}
+
+model TrialGrant {
+  id              String          @id @default(cuid())
+  accountId       String
+  productId       String
+  editionId       String
+  licenseId       String          @unique
+  source          TrialSource
+  selfServiceYear Int?
+  trialStartsAt   DateTime
+  trialEndsAt     DateTime
+  graceEndsAt     DateTime
+  revokedAt       DateTime?
+  createdById     String?
+  createdAt       DateTime        @default(now())
+  account         CustomerAccount @relation(fields: [accountId], references: [id])
+  product         Product         @relation(fields: [productId], references: [id])
+  edition         Edition         @relation(fields: [editionId], references: [id])
+  license         License         @relation(fields: [licenseId], references: [id])
+
+  @@unique([accountId, productId, selfServiceYear])
+  @@index([accountId, graceEndsAt])
+  @@index([productId, createdAt])
+}
+
+model LicenseAssignment {
+  id        String   @id @default(cuid())
+  licenseId String
+  userId    String
+  createdAt DateTime @default(now())
+  license   License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([licenseId, userId])
+}
+
+model DeviceActivation {
+  id              String    @id @default(cuid())
+  licenseId       String
+  deviceHash      String
+  label           String?
+  machineIdHint   String?
+  operatingSystem String?
+  architecture    String?
+  lastSeenAt      DateTime  @default(now())
+  active          Boolean   @default(true)
+  activatedAt     DateTime  @default(now())
+  deactivatedAt   DateTime?
+  license         License   @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+
+  @@unique([licenseId, deviceHash])
+  @@index([licenseId, active])
+}
+
+model DownloadGrant {
+  id         String          @id @default(cuid())
+  licenseId  String
+  artifactId String
+  tokenHash  String          @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  processingAt DateTime?
+  license    License         @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  artifact   ProductArtifact @relation(fields: [artifactId], references: [id])
+}
+
+model LicenseEvent {
+  id        String   @id @default(cuid())
+  licenseId String
+  type      String
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+  license   License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String           @id @default(cuid())
+  actorId    String?
+  accountId  String?
+  action     String
+  targetType String
+  targetId   String?
+  requestId  String?
+  ipHash     String?
+  metadata   Json             @default("{}")
+  createdAt  DateTime         @default(now())
+  actor      User?            @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  account    CustomerAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+
+  @@index([accountId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model ProductGraceOverride {
+  id           String   @id @default(cuid())
+  productKey   String   @unique
+  graceEnabled Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  group     String
+  value     String
+  updatedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  editor    User?    @relation("SiteContentEditor", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([group])
+}
+
+model ComplianceRequirement {
+  id          String               @id @default(cuid())
+  key         String               @unique
+  title       String
+  category    String
+  status      String               @default("IMPLEMENTED")
+  owner       String?
+  reviewer    String?
+  description String
+  decision    String?
+  dueAt       DateTime?
+  reviewedAt  DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  evidence    ComplianceEvidence[]
+
+  @@index([category, status])
+  @@index([status, dueAt])
+}
+
+model ComplianceEvidence {
+  id            String                @id @default(cuid())
+  requirementId String
+  kind          String
+  summary       String
+  reference     String?
+  recordedBy    String?
+  createdAt     DateTime              @default(now())
+  requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id], onDelete: Restrict)
+  recorder      User?                 @relation(fields: [recordedBy], references: [id], onDelete: SetNull)
+
+  @@index([requirementId, createdAt])
+}
+
+model JobRun {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  jobType     String
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model ScheduledJobDefinition {
+  key                 String            @id
+  enabled             Boolean           @default(true)
+  cadenceSeconds      Int
+  timeoutSeconds      Int
+  maxAttempts         Int
+  nextRunAt           DateTime
+  lastRunAt           DateTime?
+  lastSuccessAt       DateTime?
+  lastFailureAt       DateTime?
+  consecutiveFailures Int               @default(0)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  runs                ScheduledJobRun[]
+
+  @@index([enabled, nextRunAt])
+  @@index([consecutiveFailures, lastFailureAt])
+}
+
+model ScheduledJobRun {
+  id               String                 @id @default(cuid())
+  jobKey           String
+  status           ScheduledJobRunStatus  @default(QUEUED)
+  scheduledFor     DateTime
+  startedAt        DateTime?
+  completedAt      DateTime?
+  durationMs       Int?
+  attempt          Int                    @default(1)
+  trigger          ScheduledJobTrigger
+  dryRun           Boolean                @default(false)
+  lockOwner        String?
+  correlationId    String                 @unique
+  idempotencyKey   String                 @unique
+  parentRunId      String?
+  retryAt          DateTime?
+  resultSummary    Json                   @default("{}")
+  errorCode        String?
+  failureClass     String?
+  acknowledgedAt   DateTime?
+  acknowledgedById String?
+  createdAt        DateTime               @default(now())
+  definition       ScheduledJobDefinition @relation(fields: [jobKey], references: [key], onDelete: Restrict)
+  acknowledgedBy   User?                  @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@index([jobKey, createdAt])
+  @@index([status, retryAt])
+  @@index([status, startedAt])
+}
+
+model BackupArchive {
+  id                   String              @id @default(cuid())
+  status               BackupArchiveStatus @default(PENDING)
+  retentionTier        BackupRetentionTier
+  deploymentId         String
+  formatVersion        Int                 @default(1)
+  storagePrefix        String              @unique
+  manifestObjectKey    String?
+  manifestChecksum     String?
+  databaseObjectKey    String?
+  databaseChecksum     String?
+  encryptedChecksum    String?
+  encryptionKeyVersion Int?
+  objectCount          Int                 @default(0)
+  missingObjectCount   Int                 @default(0)
+  sizeBytes            BigInt              @default(0)
+  startedAt            DateTime?
+  completedAt          DateTime?
+  verifiedAt           DateTime?
+  expiresAt            DateTime?
+  deletedAt            DateTime?
+  durationMs           Int?
+  errorCode            String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  operations           BackupOperation[]
+
+  @@index([status, createdAt])
+  @@index([expiresAt, status])
+  @@index([deploymentId, createdAt])
+}
+
+model BackupOperation {
+  id                String                 @id @default(cuid())
+  backupId          String?
+  type              BackupOperationType
+  status            BackupOperationStatus  @default(PENDING)
+  trigger           BackupOperationTrigger
+  requestedById     String?
+  dryRun            Boolean                @default(false)
+  attempts          Int                    @default(0)
+  maxAttempts       Int                    @default(3)
+  nextAttemptAt     DateTime               @default(now())
+  startedAt         DateTime?
+  completedAt       DateTime?
+  durationMs        Int?
+  claimedBy         String?
+  correlationId     String                 @unique
+  idempotencyKey    String                 @unique
+  targetFingerprint String?
+  resultSummary     Json                   @default("{}")
+  errorCode         String?
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  backup            BackupArchive?         @relation(fields: [backupId], references: [id], onDelete: Restrict)
+  requestedBy       User?                  @relation("BackupOperationRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@index([backupId, createdAt])
+  @@index([requestedById, createdAt])
+}
+
+model ObservabilityAlert {
+  id               String                     @id @default(cuid())
+  fingerprint      String
+  source           String
+  title            String
+  detail           String?
+  severity         ObservabilityAlertSeverity
+  status           ObservabilityAlertStatus   @default(OPEN)
+  firstSeenAt      DateTime                   @default(now())
+  lastSeenAt       DateTime                   @default(now())
+  acknowledgedAt   DateTime?
+  resolvedAt       DateTime?
+  acknowledgedById String?
+  resolvedById     String?
+  metadata         Json                       @default("{}")
+  acknowledgedBy   User?                      @relation("ObservabilityAlertAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  resolvedBy       User?                      @relation("ObservabilityAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@unique([fingerprint, status])
+  @@index([status, severity, lastSeenAt])
+  @@index([source, lastSeenAt])
+}
+
+model EmailOutbox {
+  id               String    @id @default(cuid())
+  type             String
+  recipient        String
+  subject          String
+  payload          Json
+  status           String    @default("PENDING")
+  attempts         Int       @default(0)
+  lastError        String?
+  createdAt        DateTime  @default(now())
+  sentAt           DateTime?
+  claimedBy        String?
+  claimedAt        DateTime?
+  claimExpiresAt   DateTime?
+  deduplicationKey String?   @unique
+
+  @@index([status, createdAt])
+  @@index([status, claimExpiresAt])
+}
+
+model ExternalProviderConfiguration {
+  id                 String                       @id @default(cuid())
+  provider           ExternalProvider
+  environment        ProviderEnvironment
+  enabled            Boolean                      @default(false)
+  senderName         String?
+  senderEmail        String?
+  supportEmail       String?
+  metadata           Json                         @default("{}")
+  validationStatus   ProviderValidationStatus     @default(NOT_VALIDATED)
+  lastValidatedAt    DateTime?
+  lastValidationCode String?
+  lastRotatedAt      DateTime?
+  createdByUserId    String
+  updatedByUserId    String
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
+  createdBy          User                         @relation("ProviderConfigurationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedBy          User                         @relation("ProviderConfigurationUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  credentials        ExternalProviderCredential[]
+
+  @@unique([provider, environment])
+  @@index([enabled, provider, environment])
+}
+
+model ExternalProviderCredential {
+  id                     String                        @id @default(cuid())
+  configurationId        String
+  credentialType         ProviderCredentialType
+  encryptedValue         String
+  encryptionKeyVersion   Int
+  maskedHint             String
+  createdAt              DateTime                      @default(now())
+  activatedAt            DateTime                      @default(now())
+  revokedAt              DateTime?
+  replacedByCredentialId String?
+  createdByUserId        String
+  configuration          ExternalProviderConfiguration @relation(fields: [configurationId], references: [id], onDelete: Cascade)
+  createdBy              User                          @relation("ProviderCredentialCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  replacedByCredential   ExternalProviderCredential?   @relation("ProviderCredentialReplacement", fields: [replacedByCredentialId], references: [id], onDelete: SetNull)
+  replaces               ExternalProviderCredential[]  @relation("ProviderCredentialReplacement")
+
+  @@index([configurationId, credentialType, revokedAt], map: "ExternalProviderCredential_config_type_revoked_idx")
+  @@index([encryptionKeyVersion, revokedAt])
+}

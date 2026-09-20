@@ -1,0 +1,57 @@
+import { NextResponse } from "next/server";
+import {
+  IDENTITY_MFA_DISABLE_CAPABILITY_ID,
+  type IdentityMfaDisableCapability,
+} from "@bke/identity/contracts/mfa-disable.contract";
+import { audit } from "@/apps/web/audit";
+import { createSession } from "@/apps/web/auth/session";
+import { requireRecentIdentitySession } from "@/apps/web/auth/session";
+import { IdentityCapabilityError } from "@/apps/web/auth/mfa-challenge";
+import { getV2WebApplication } from "@/apps/web/runtime";
+import { apiError } from "@/apps/web/http/api-error";
+import { securityEvent } from "@/apps/web/security/events";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+
+export async function POST(request: Request) {
+  try {
+    assertSameOrigin(request);
+    const session = await requireRecentIdentitySession();
+    if (
+      session.principal.role !== "ADMIN" ||
+      !session.session.mfaVerifiedAt ||
+      !session.administratorMfaEnabled
+    ) {
+      throw new Error("FORBIDDEN");
+    }
+    if (!(await rateLimit(`mfa-disable:${session.principal.id}:${clientIp(request)}`, 3, 3600)).allowed) {
+      throw new Error("RATE_LIMITED");
+    }
+
+    const application = await getV2WebApplication();
+    const disable = application.get<IdentityMfaDisableCapability>(
+      IDENTITY_MFA_DISABLE_CAPABILITY_ID,
+    );
+    const result = await disable.disable({ userId: session.principal.id });
+    if (result.status === "INVALID") {
+      if (result.code === "NOT_FOUND") throw new Error("UNAUTHENTICATED");
+      throw new Error(result.code);
+    }
+    if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
+
+    await createSession(result.userId, request, {
+      recent: true,
+      authenticationMethod: "MFA_ENROLLMENT",
+    });
+    await securityEvent("MFA_DISABLED", request, result.userId);
+    await audit({
+      actorId: result.userId,
+      action: "MFA_DISABLED",
+      targetType: "User",
+      targetId: result.userId,
+    });
+    return NextResponse.json({ enrollmentRequired: result.enrollmentRequired });
+  } catch (error) {
+    return apiError(error);
+  }
+}

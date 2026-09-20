@@ -1,0 +1,46 @@
+name: Module - Notifications
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "modules/notifications/**"
+      - "apps/standalone/**"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/v2-notifications.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notifications:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Notifications package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-notifications-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.1.0/bke-notifications-0.1.0.tgz
+          echo "9a9c5640ed27332886e54c491cb6b54fdcc6561ec100ddd2476adb02d93ee406  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Notifications consumer adoption and staging retirement
+        run: npx tsx modules/notifications/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit

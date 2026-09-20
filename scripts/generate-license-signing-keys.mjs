@@ -1,0 +1,11 @@
+import { generateKeyPairSync } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+const output = resolve(process.argv[2] ?? ".certification-secrets");
+mkdirSync(output, { recursive: true, mode: 0o700 });
+const { privateKey, publicKey } = generateKeyPairSync("ed25519", { privateKeyEncoding: { format: "pem", type: "pkcs8" }, publicKeyEncoding: { format: "pem", type: "spki" } });
+writeFileSync(resolve(output, "license-signing-private.pem"), privateKey, { mode: 0o600 });
+writeFileSync(resolve(output, "license-signing-public.pem"), publicKey, { mode: 0o644 });
+console.log(`Generated certification Ed25519 keys in ${output}`);
+console.log("Copy the private PEM to LICENSE_SIGNING_PRIVATE_KEY and keep it outside Git.");
+console.log("Copy the public PEM to LICENSE_SIGNING_PUBLIC_KEY.");

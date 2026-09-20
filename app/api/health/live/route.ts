@@ -1,0 +1,6 @@
+import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+export function GET() {
+  return NextResponse.json({ status: "alive" }, { headers: { "cache-control": "no-store" } });
+}

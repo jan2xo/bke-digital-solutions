@@ -1,0 +1,75 @@
+name: Module - Payments
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "modules/payments/**"
+      - "platform/persistence/migration-compositor.mjs"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
+      - "app/api/admin/payments/reconcile/route.ts"
+      - "app/admin/payments/page.tsx"
+      - "lib/reconciliation.ts"
+      - "tests/payments-reconciliation-v2-adoption.test.ts"
+      - ".github/workflows/v2-payments.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  payments:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_payments
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_payments"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_payments
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Payments package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-payments-0.7.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.7.0/bke-payments-0.7.0.tgz
+          echo "f078bb4e655e44bc929e03af20db20fb849480c7a13ef5c7dc5095381d5b02f6  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Payments consumer adoption and staging retirement
+        run: npx tsx modules/payments/test/consumer-adoption.certify.ts
+      - name: Certify reconciliation host adoption
+        run: npx vitest run tests/payments-reconciliation-v2-adoption.test.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
+      - name: Validate installed Payments Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/payments/prisma/schema.prisma
+      - name: Apply installed Payments migrations
+        run: node platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations
+      - name: Prove installed Payments migration idempotence
+        run: node platform/persistence/migration-compositor.mjs payments node_modules/@bke/payments/migrations

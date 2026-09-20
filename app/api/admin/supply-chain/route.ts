@@ -1,0 +1,33 @@
+import { NextResponse } from "next/server";
+import { requireAdmin, requireRecentAdmin } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { assertSameOrigin } from "@/apps/web/http/request";
+
+function retired() {
+  return NextResponse.json(
+    {
+      error: "GITHUB_RELEASE_AUTHORITY",
+      message: "Software release certification and supply-chain execution are managed by GitHub Actions and GitHub Releases.",
+    },
+    { status: 410 },
+  );
+}
+
+export async function GET() {
+  try {
+    await requireAdmin();
+    return retired();
+  } catch (error) {
+    return apiError(error);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    assertSameOrigin(request);
+    await requireRecentAdmin();
+    return retired();
+  } catch (error) {
+    return apiError(error);
+  }
+}

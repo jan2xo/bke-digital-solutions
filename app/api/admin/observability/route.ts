@@ -1,0 +1,26 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { requireAdmin, requireRecentAdmin } from "@/apps/web/auth/session";
+import { apiError } from "@/apps/web/http/api-error";
+import { db } from "@/platform/host/db";
+import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
+import { collectObservability, syncObservabilityAlerts } from "@/apps/web/observability";
+import { rateLimit } from "@/apps/web/http/rate-limit";
+
+const actionSchema = z.object({ id: z.string().cuid(), action: z.enum(["ACKNOWLEDGE", "RESOLVE"]) });
+
+export async function GET() { try { await requireAdmin(); const snapshot = await collectObservability(); return NextResponse.json({ ...snapshot, alerts: await syncObservabilityAlerts(snapshot) }); } catch (error) { return apiError(error); } }
+
+export async function POST(request: Request) {
+  try {
+    assertSameOrigin(request);
+    const admin = await requireRecentAdmin();
+    if (!(await rateLimit(`admin-observability:${admin.id}:${clientIp(request)}`, 60, 3600)).allowed) throw new Error("RATE_LIMITED");
+    const input = actionSchema.parse(await request.json());
+    const now = new Date();
+    const data = input.action === "ACKNOWLEDGE" ? { status: "ACKNOWLEDGED" as const, acknowledgedAt: now, acknowledgedById: admin.id } : { status: "RESOLVED" as const, resolvedAt: now, resolvedById: admin.id };
+    const alert = await db.observabilityAlert.update({ where: { id: input.id }, data });
+    await db.auditLog.create({ data: { actorId: admin.id, action: `OBSERVABILITY_ALERT_${input.action}`, targetType: "ObservabilityAlert", targetId: alert.id } });
+    return NextResponse.json({ ok: true });
+  } catch (error) { return apiError(error); }
+}

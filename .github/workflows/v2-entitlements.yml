@@ -1,0 +1,69 @@
+name: Module - Entitlements
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "modules/entitlements/**"
+      - "platform/persistence/migration-compositor.mjs"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
+      - ".github/workflows/v2-entitlements.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  entitlements:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_entitlements
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_entitlements"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_entitlements
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Entitlements package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-entitlements-0.1.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz
+          echo "f9c0bb1d464c9271076333a6c5012478cd9bc3cec9e9571a3ba4c2b0d2b1257b  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Entitlements consumer adoption and staging retirement
+        run: npx tsx modules/entitlements/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
+      - name: Validate installed Entitlements Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/entitlements/prisma/schema.prisma
+      - name: Apply installed Entitlements baseline
+        run: node platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations
+      - name: Prove installed Entitlements migration idempotence
+        run: node platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations

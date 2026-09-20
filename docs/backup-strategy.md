@@ -1,0 +1,72 @@
+# Backup Strategy
+
+Phase 6.4 protects the PostgreSQL system of record and every private object in the configured application bucket. A full database dump includes commerce, licensing, legal acceptance, customer, audit, scheduler, provider-configuration ciphertext, and backup metadata. It deliberately excludes Valkey cache, environment files, plaintext provider secrets, API credentials, cloud credentials, and encryption keys.
+
+## Architecture
+
+The scheduler queues a daily durable `BackupOperation`; it never performs the archive inline. A dedicated `backup-worker` claims work with `FOR UPDATE SKIP LOCKED`, recovers abandoned operations, and records retry state. PostgreSQL custom-format dumps are compressed, AES-256-GCM encrypted, and uploaded with private objects to a distinct backup bucket. A canonical manifest records migration names, safe table counts, object hashes, encrypted hashes, source-object gaps, retention tier, and safe runtime identifiers.
+
+Production backup storage must use dedicated credentials, a bucket different from the source bucket, and a separately managed 32-byte encryption key. `BACKUP_OFFSITE_ACK=SEPARATE_FAILURE_DOMAIN` documents the operator's confirmation that backup storage is outside the application storage failure domain. The repository cannot independently prove a provider's physical failure domain.
+
+## Schedules and recovery objectives
+
+- Daily archives: retain 7 days by default.
+- Weekly archives: retain 4 weeks by default.
+- Monthly archives: retain 12 months by default.
+- Manual archives: no automatic expiry.
+
+These defaults are configuration, not a legal retention decision. Phase 6.7 must approve final tax, privacy, and legal retention. The target RPO is 24 hours after the daily scheduler is enabled. RTO is not yet asserted; it must be measured by repeated production-sized restore drills.
+
+## Commands
+
+`npm run backups:create -- --dry-run` creates a durable dry-run request. `npm run backups:create` queues a real archive. `npm run backups:worker` runs the worker. Administrators can use `/admin/backups` after password, email-code MFA, and recent authentication.
+
+Never put `BACKUP_ENCRYPTION_KEY`, storage secrets, or restore credentials in source control, manifests, logs, or database metadata. Store the encryption key separately from the archive and include it in the offline recovery key ceremony.
+
+## Trusted-release evidence durability
+
+SBOM, provenance, dependency, backup, compliance, and migration documents are
+ingested through the authenticated supply-chain workflow as byte content. The
+server hashes the received bytes, stores them under collision-resistant private
+object keys (`evidence/<version>/<kind>/<uuid>.json`), and persists the object
+key, SHA-256, evidence kind, and canonical payload hash in
+`SupplyChainVerificationEvidence`. Local paths, `/tmp` references, filenames,
+and client-asserted digests are not proof. Replaying identical current bytes is
+idempotent; changing artifact bytes invalidates the payload-bound evidence.
+
+The backup worker includes every referenced evidence object in the encrypted
+source-object inventory. Isolated restore decrypts and checksum-validates those
+objects, then compares restored database references and persisted document
+hashes to the backup manifest before reporting success. On a clean VPS, restore
+PostgreSQL and the private object bucket from the same verified archive, retain
+the offline backup-encryption key, run migrations, and execute VERIFY followed
+by SIMULATE_RESTORE/RESTORE_ISOLATED. Re-run the evidence integrity check before
+promoting a release; an infrastructure restart with unchanged artifact bytes
+does not require recertification.
+
+## Certification backup consistency closeout — 2026-08-12
+
+The certification database contained twelve archived, inactive `delete-*` products
+created by product-deletion integration runs. Each had one synthetic historical
+order item and license, so the governed deletion service correctly refused to
+remove the product or its commerce/licensing history. Their `ProductArtifact` rows
+referenced `tests/...zip` keys never uploaded to certification MinIO. The seeded
+`installers/bke-installer.bin` object was present and was not missing.
+
+Certification-only cleanup removed only those twelve orphan `ProductArtifact` rows,
+preserving products, orders, payments, invoices, licenses, audits, and history. No
+production database, MinIO bucket, or R2 bucket was touched. Certification CREATE,
+VERIFY, and SIMULATE_RESTORE subsequently passed with zero missing objects.
+Disposable isolated restore targets were provisioned and safety-validated;
+RESTORE_ISOLATED passed against the certification archive. Production RPO/RTO
+evidence remains pending.
+
+The backup engine remains correct: it derives expected source keys from current
+`ProductArtifact.objectKey` and `Product.imageKey` values, preserves extensions,
+compares them with the primary bucket, and records `SOURCE_OBJECTS_MISSING` when a
+referenced source object is absent. The root cause was persistent integration-test
+fixture data, not an `installer.bin` assumption or extension-handling defect.
+
+## Capacity boundary
+
+The Phase 6.4 worker uses encrypted temporary files for the database archive and processes source objects sequentially, but the current implementation still materializes each database dump and each individual object in memory during encryption or verification. The production Compose scratch volume is also capped at 1 GiB. Before production data approaches either boundary, replace the buffer-based encryption and verification path with streaming or multipart processing and size scratch storage from a measured production dump. A production-sized backup and restore drill is a launch gate, not an optional optimization.

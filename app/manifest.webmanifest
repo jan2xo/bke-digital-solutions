@@ -1,0 +1,16 @@
+{
+  "name": "BKE Digital Solutions",
+  "short_name": "BKE",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0c13",
+  "theme_color": "#0a0c13",
+  "icons": [
+    {
+      "src": "/bke-icon.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

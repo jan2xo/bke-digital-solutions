@@ -1,0 +1,86 @@
+name: Module - Legal
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "modules/legal/**"
+      - "apps/web/legal/**"
+      - "lib/legal/service.ts"
+      - "lib/legal/constants.ts"
+      - "app/admin/releases/[id]/page.tsx"
+      - "app/api/admin/legal/route.ts"
+      - "app/api/admin/supply-chain/route.ts"
+      - "app/api/auth/register/route.ts"
+      - "app/dashboard/accounts/[id]/page.tsx"
+      - "tests/legal.test.ts"
+      - "platform/persistence/migration-compositor.mjs"
+      - "platform/composition/**"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "vitest.architecture.config.ts"
+      - ".github/workflows/v2-legal.yml"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  legal:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_legal
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_legal"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_legal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Legal package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-legal-0.4.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz
+          echo "9217b9dc617ac1c4621b0fc0f933ea5e49ea336175380d99153e1511f7714cc9  $artifact" | sha256sum -c -
+      - name: Reject legacy Legal implementation reach-through in web adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib/legal|generated/prisma|from ["'"'"']@prisma/)' apps/web/legal --include='*.ts'; then
+            echo "Web Legal adapters must route Legal behavior through released @bke/legal capabilities."
+            exit 1
+          fi
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Legal standalone consumer adoption and staging retirement
+        run: npx tsx modules/legal/test/consumer-adoption.certify.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
+      - name: Validate installed Legal Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/legal/prisma/schema.prisma
+      - name: Apply installed Legal baseline
+        run: node platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations
+      - name: Prove installed Legal migration idempotence
+        run: node platform/persistence/migration-compositor.mjs legal node_modules/@bke/legal/migrations

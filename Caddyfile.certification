@@ -1,0 +1,20 @@
+{
+	admin off
+}
+
+https://jl-bke.localhost, https://caddy {
+	tls internal
+	encode zstd gzip
+
+	reverse_proxy app:3000 {
+		header_up X-Real-IP {remote_host}
+	}
+
+	log {
+		output stdout
+		format filter {
+			request>headers>Paymongo-Signature delete
+			wrap json
+		}
+	}
+}
