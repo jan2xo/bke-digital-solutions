@@ -45,6 +45,16 @@ The certification suites explicitly load ignored `.env.certification`. `npm run 
 
 Create the first administrator interactively with `npm run admin:create`. Do not place `ADMIN_PASSWORD` in committed files or shell history. Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` before deployment.
 
+## V3 operator
+
+Normal VPS/runtime operations use the Bash operator instead of hand-written Compose command chains:
+
+```bash
+./bke.sh
+```
+
+Run it without arguments for the interactive menu, or use commands such as `./bke.sh setup`, `./bke.sh deploy`, `./bke.sh update`, `./bke.sh status`, and `./bke.sh logs`. The operator always uses canonical ignored `.env`.
+
 ## Production checklist
 
 1. Provision PostgreSQL, Upstash-compatible Redis, and a private S3-compatible bucket. Production intentionally refuses an in-memory rate limiter.

@@ -8,6 +8,21 @@ ENV_INPUT=".env"
 COMPOSE_INPUT="docker-compose.production.yml"
 HEALTH_URL="${BKE_HEALTH_URL:-}"
 
+read_env_value() {
+  local key="$1"
+  awk -F= -v key="$key" '
+    $1 == key {
+      value = substr($0, index($0, "=") + 1)
+      gsub(/\r$/, "", value)
+      if ((value ~ /^".*"$/) || (value ~ /^'\''.*'\''$/)) {
+        value = substr(value, 2, length(value) - 2)
+      }
+      print value
+      exit
+    }
+  ' "$ENV_FILE"
+}
+
 resolve_path() {
   case "$1" in
     /*) printf '%s\n' "$1" ;;
@@ -20,8 +35,11 @@ COMPOSE_FILE="$(resolve_path "$COMPOSE_INPUT")"
 
 [[ -f "$ENV_FILE" ]] || { echo "Missing production environment file: $ENV_INPUT" >&2; exit 1; }
 [[ -f "$COMPOSE_FILE" ]] || { echo "Missing production Compose file: $COMPOSE_INPUT" >&2; exit 1; }
-[[ -n "$HEALTH_URL" ]] || { echo "BKE_HEALTH_URL is required; refusing deployment without an explicit health URL." >&2; exit 1; }
-[[ "$HEALTH_URL" =~ ^https:// ]] || { echo "BKE_HEALTH_URL must use https://." >&2; exit 1; }
+if [[ -z "$HEALTH_URL" ]]; then
+  HEALTH_URL="$(read_env_value APP_URL)"
+fi
+[[ -n "$HEALTH_URL" ]] || { echo "APP_URL is missing from .env and BKE_HEALTH_URL is not set." >&2; exit 1; }
+[[ "$HEALTH_URL" =~ ^https:// ]] || { echo "Production health URL must use https://." >&2; exit 1; }
 
 if [[ -n "$(git status --porcelain=v1 --untracked-files=all)" ]]; then
   echo "Refusing deployment: working tree is dirty." >&2

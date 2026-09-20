@@ -52,6 +52,8 @@ jobs:
           } >> "$GITHUB_ENV"
       - run: npm run lint
       - run: npm run typecheck
+      - name: Validate Bash operator syntax
+        run: bash -n bke.sh scripts/v3-ops.sh scripts/deploy-production.sh
       - run: npm test
       - run: npm run build
       - run: git diff --check
