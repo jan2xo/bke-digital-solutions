@@ -1,9 +1,0 @@
-tunnel: REPLACE_WITH_TUNNEL_NAME_OR_UUID
-credentials-file: /absolute/path/to/tunnel-credentials.json
-
-ingress:
-  - hostname: jl-bke.com
-    service: http://localhost:8080
-    originRequest:
-      httpHostHeader: jl-bke.localhost
-  - service: http_status:404
