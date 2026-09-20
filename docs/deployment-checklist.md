@@ -100,7 +100,7 @@ Do not mark a deployment ready until every applicable box has an owner, evidence
 
 ## Secret rotation and release gate
 
-- [ ] Store all production secrets in the deployment platform's secret manager; no `.env` files on shared hosts.
+- [ ] Keep the canonical runtime `.env` owner-readable only (`chmod 600`) and populate it from the owner secret store; never commit, share, or print it.
 - [ ] Assign rotation intervals and owners for database, Redis, PayMongo, Resend, S3, cron, session, and license keys.
 - [ ] Rotate `SESSION_SECRET` with planned session revocation; rotate `LICENSE_PEPPER` only with a license-key migration plan.
 - [ ] Run migrations, seed safely, bootstrap administrators through controlled access, and remove temporary credentials.

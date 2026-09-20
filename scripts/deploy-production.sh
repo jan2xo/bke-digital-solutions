@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd "$ROOT_DIR"
 
-ENV_INPUT="${1:-.env.production}"
-COMPOSE_INPUT="${2:-docker-compose.production.yml}"
+ENV_INPUT=".env"
+COMPOSE_INPUT="docker-compose.production.yml"
 HEALTH_URL="${BKE_HEALTH_URL:-}"
 
 resolve_path() {

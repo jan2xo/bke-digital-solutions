@@ -27,7 +27,7 @@ The application container runs as a non-root user, uses the Next.js standalone o
 - Script-only: administrator bootstrap inputs and acknowledgement. They are consumed by the script, not the web runtime.
 - Deprecated: none intentionally supported. Remove obsolete deployment variables rather than silently aliasing them.
 
-The committed `.env.production.example` is a documented template, not a runnable secret file. It must be copied to an ignored deployment environment and every placeholder replaced. Never run `docker compose config` in a retained log when real secrets are loaded because resolved Compose output can contain secret values; use `npm run certification:check` and the quiet validation wrapper.
+The committed `.env.example` is the canonical V3 runtime template. Copy it to the ignored `.env` file and replace every placeholder required by the target environment. Never run `docker compose config` in a retained log when real secrets are loaded because resolved Compose output can contain secret values; use `npm run certification:check` and the quiet validation wrapper.
 
 ## Database and generated-client parity
 

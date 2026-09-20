@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 
-const envFile = process.argv[2] ?? ".env.vps";
-const compose = "docker-compose.production.yml";
+const envFile = process.env.DEPLOYMENT_ENV_FILE ?? ".env";
+const compose = process.env.DEPLOYMENT_COMPOSE_FILE ?? "docker-compose.production.yml";
 const run = (command, args) => execFileSync(command, args, { stdio: "inherit", env: { ...process.env, DEPLOYMENT_ENV_FILE: envFile, DEPLOYMENT_COMPOSE_FILE: compose } });
 
 console.log(`Validating production topology with ${envFile}; no services are changed.`);

@@ -8,21 +8,21 @@ key. Then:
 git clone <repository-url> bke-digital-solutions
 cd bke-digital-solutions
 git checkout <approved-commit>
-cp .env.production.example .env.vps
-chmod 600 .env.vps
-docker compose --env-file .env.vps -f docker-compose.production.yml config --quiet
+cp .env.example .env
+chmod 600 .env
+docker compose --env-file .env -f docker-compose.production.yml config --quiet
 npm run config:validate
 npm run deployment:verify-manifest
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d postgres valkey
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile self-hosted-storage up -d minio minio-init
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile operations run --rm migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app scheduler backup-worker caddy
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
+docker compose --env-file .env -f docker-compose.production.yml up -d postgres valkey
+docker compose --env-file .env -f docker-compose.production.yml --profile self-hosted-storage up -d minio minio-init
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm migrate
+docker compose --env-file .env -f docker-compose.production.yml up -d app scheduler backup-worker caddy
+docker compose --env-file .env -f docker-compose.production.yml ps
 curl --fail https://<production-host>/api/health/live
 curl --fail https://<production-host>/api/health/ready
 ```
 
-Populate `.env.vps` from the owner secret store; never use placeholders. MinIO
+Populate `.env` from the owner secret store; never use placeholders. MinIO
 is private and Caddy is the public HTTPS entry point. Enable Docker at boot with
 `sudo systemctl enable --now docker`; do not run `prisma migrate dev`, seed
 production, or expose PostgreSQL/Valkey/MinIO ports.

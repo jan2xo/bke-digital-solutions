@@ -23,7 +23,7 @@ See the independent [VPS production deployment guide](vps-production-deployment.
 
 ## Configuration
 
-Copy `.env.example` for local development. Copy `.env.production.example` to an ignored secret file for staging or production, replace every placeholder, and inject it through a secret manager where possible. Never commit that file. Validate before deployment:
+Copy `.env.example` to `.env` for every V3 runtime environment. `.env` is the single runtime/deployment filename for development, staging, and production; change its values for the target environment and populate protected secrets from the owner secret store. Never commit `.env`. Validate before deployment:
 
 ```bash
 npm ci
@@ -59,10 +59,10 @@ The initializer verifies exact direct policy assignment and rejects identities w
 Managed PostgreSQL, Valkey, and S3-compatible services can replace the bundled services by changing connection variables; the domain layer does not change. For Compose validation:
 
 ```bash
-docker compose --env-file .env.production.example -f docker-compose.production.yml config --quiet
+docker compose --env-file .env -f docker-compose.production.yml config --quiet
 ```
 
-For a real deployment set `BKE_ENV_FILE` to the ignored runtime file and supply the Compose interpolation values with `--env-file`.
+For a real deployment use the ignored `.env` file directly; application tooling and Compose must read the same canonical runtime file.
 
 ## Deployment workflow
 

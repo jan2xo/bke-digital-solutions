@@ -10,18 +10,14 @@ git pull --ff-only origin main
 BKE_HEALTH_URL=https://<canonical-production-health-host> npm run deploy
 ```
 
-The script defaults to `.env.production` and
-`docker-compose.production.yml`. An explicit environment or Compose file may
-be supplied as positional arguments:
-
-```bash
-BKE_HEALTH_URL=https://<canonical-production-health-host> \
-  npm run deploy -- /absolute/path/.env.production /absolute/path/docker-compose.production.yml
-```
+The script requires the canonical runtime file `.env` and
+`docker-compose.production.yml`. V3 does not use alternate production
+environment filenames. Create `.env` from `.env.example`, keep it ignored,
+and populate it from the owner secret store.
 
 `BKE_HEALTH_URL` is required because this repository does not define a single
-canonical production hostname. The script verifies that the environment file
-exists but never reads or prints its values.
+canonical production hostname. The script verifies that `.env` exists but
+never reads or prints its values.
 
 The script performs, in order:
 
@@ -44,24 +40,24 @@ non-secret status and the deployed Git SHA.
 Equivalent manual commands, for diagnosis or recovery only:
 
 ```bash
-DEPLOYMENT_ENV_FILE=/absolute/path/.env.production \
-DEPLOYMENT_COMPOSE_FILE=/absolute/path/docker-compose.production.yml \
+DEPLOYMENT_ENV_FILE=.env \
+DEPLOYMENT_COMPOSE_FILE=docker-compose.production.yml \
 npm run ops:validate
 
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml config --quiet
+docker compose --env-file .env \
+  -f docker-compose.production.yml config --quiet
 
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml build app scheduler backup-worker migrate
+docker compose --env-file .env \
+  -f docker-compose.production.yml build app scheduler backup-worker migrate
 
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml --profile operations run --rm migrate
+docker compose --env-file .env \
+  -f docker-compose.production.yml --profile operations run --rm migrate
 
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml up -d app scheduler backup-worker caddy
+docker compose --env-file .env \
+  -f docker-compose.production.yml up -d app scheduler backup-worker caddy
 
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml ps
+docker compose --env-file .env \
+  -f docker-compose.production.yml ps
 
 npm run ops:health -- https://<canonical-production-health-host>
 ```

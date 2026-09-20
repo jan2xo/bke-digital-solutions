@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 const composeFile = process.env.DEPLOYMENT_COMPOSE_FILE ?? "docker-compose.production.yml";
-const envFile = process.env.DEPLOYMENT_ENV_FILE ?? ".env.production.example";
+const envFile = process.env.DEPLOYMENT_ENV_FILE ?? ".env";
 
 const allowedCapabilityAdds = {
   caddy: ["NET_BIND_SERVICE"],

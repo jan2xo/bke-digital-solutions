@@ -8,7 +8,7 @@ It does **not** certify the platform for live payments. Start with mock payments
 
 ## Automatic recovery after reboot
 
-Before the first reboot drill, run `sudo systemctl enable --now docker` and confirm `systemctl is-enabled docker` returns `enabled`. All long-running production services use `restart: unless-stopped`: app, scheduler, backup-worker, PostgreSQL, Valkey, optional MinIO, and Caddy. `migrate` is a one-shot operations service and intentionally does not restart. After reboot, verify `docker compose --env-file .env.vps -f docker-compose.production.yml ps`, `/api/health/ready`, scheduler health, and backup-worker logs. Record the observed boot and readiness times; do not claim recovery from Compose inspection alone.
+Before the first reboot drill, run `sudo systemctl enable --now docker` and confirm `systemctl is-enabled docker` returns `enabled`. All long-running production services use `restart: unless-stopped`: app, scheduler, backup-worker, PostgreSQL, Valkey, optional MinIO, and Caddy. `migrate` is a one-shot operations service and intentionally does not restart. After reboot, verify `docker compose --env-file .env -f docker-compose.production.yml ps`, `/api/health/ready`, scheduler health, and backup-worker logs. Record the observed boot and readiness times; do not claim recovery from Compose inspection alone.
 
 ## 1. Choose the deployment mode
 
@@ -123,15 +123,11 @@ On the VPS:
 
 ```bash
 cd /opt/bke-digital-solutions
-cp .env.production.example .env.vps
-chmod 600 .env.vps
+cp .env.example .env
+chmod 600 .env
 ```
 
-Edit `.env.vps`. It is ignored by Git and must never be committed. Add this line so Compose services load the same file:
-
-```env
-BKE_ENV_FILE=.env.vps
-```
+Edit `.env`. It is ignored by Git and must never be committed. This is the canonical V3 runtime environment file used by both application tooling and Compose.
 
 At minimum, replace and verify:
 
@@ -193,7 +189,6 @@ Install Node.js 22.12 or newer on the VPS because the seed and administrator boo
 
 ```bash
 cd /opt/bke-digital-solutions
-cp .env.vps .env
 chmod 600 .env
 npm ci
 npm run config:validate
@@ -204,13 +199,13 @@ Validate Compose interpolation without printing the resolved environment:
 
 ```bash
 cd /opt/bke-digital-solutions
-docker compose --env-file .env.vps -f docker-compose.production.yml config --quiet
+docker compose --env-file .env -f docker-compose.production.yml config --quiet
 ```
 
 Build the application and migration images:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml build app migrate
+docker compose --env-file .env -f docker-compose.production.yml build app migrate
 ```
 
 The build must finish successfully. Do not continue after a configuration or image-build failure.
@@ -220,13 +215,13 @@ The build must finish successfully. Do not continue after a configuration or ima
 For managed S3-compatible storage:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d postgres valkey
+docker compose --env-file .env -f docker-compose.production.yml up -d postgres valkey
 ```
 
 For temporary self-hosted MinIO smoke testing:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile self-hosted-storage up -d postgres valkey minio
+docker compose --env-file .env -f docker-compose.production.yml --profile self-hosted-storage up -d postgres valkey minio
 ```
 
 Create the private bucket before starting the application. The bucket name must exactly match `S3_BUCKET`. Use the MinIO client or your storage provider console, keep public access disabled, and confirm the application credentials can list, upload, download, and delete only objects in that bucket.
@@ -234,7 +229,7 @@ Create the private bucket before starting the application. The bucket name must 
 Check service status:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
+docker compose --env-file .env -f docker-compose.production.yml ps
 ```
 
 ## 7. Apply migrations exactly once
@@ -242,7 +237,7 @@ docker compose --env-file .env.vps -f docker-compose.production.yml ps
 Take a database backup before upgrading an existing deployment. For a new empty staging database, run:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile operations run --rm migrate
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm migrate
 ```
 
 Never use `prisma migrate dev` on the VPS. The migration job must exit with status zero before starting the application.
@@ -257,7 +252,7 @@ npm run db:seed
 ADMIN_BOOTSTRAP_ACK=I_UNDERSTAND_THIS_CREATES_A_PRIVILEGED_ACCOUNT npm run admin:create
 ```
 
-The administrator password must contain at least 12 characters. Interactive input may be visible in the terminal, so perform this over a private SSH session and clear the terminal afterward. Do not put the administrator password in `.env.vps`, shell history, Docker Compose, Git, or deployment logs. On first sign-in, complete mandatory email-code enrollment and store the one-time recovery codes offline before performing any administrator operation.
+The administrator password must contain at least 12 characters. Interactive input may be visible in the terminal, so perform this over a private SSH session and clear the terminal afterward. Do not put the administrator password in `.env`, shell history, Docker Compose, Git, or deployment logs. On first sign-in, complete mandatory email-code enrollment and store the one-time recovery codes offline before performing any administrator operation.
 
 After bootstrapping, the host `node_modules` directory may be removed if desired; it is not used by the production application container.
 
@@ -266,7 +261,7 @@ After bootstrapping, the host `node_modules` directory may be removed if desired
 With a real hostname and HTTPS:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app caddy
+docker compose --env-file .env -f docker-compose.production.yml up -d app caddy
 ```
 
 For the no-domain HTTP smoke mode, the same command works when `APP_DOMAIN=:80`, but it must never be treated as a secure staging or production environment.
@@ -274,8 +269,8 @@ For the no-domain HTTP smoke mode, the same command works when `APP_DOMAIN=:80`,
 Inspect status and redacted logs:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
-docker compose --env-file .env.vps -f docker-compose.production.yml logs --tail=100 app caddy
+docker compose --env-file .env -f docker-compose.production.yml ps
+docker compose --env-file .env -f docker-compose.production.yml logs --tail=100 app caddy
 ```
 
 Do not paste environment dumps, checkout URLs, webhook signatures, license keys, or customer data into support messages.
@@ -325,9 +320,9 @@ For Git deployments:
 cd /opt/bke-digital-solutions
 git fetch origin
 git pull --ff-only origin main
-docker compose --env-file .env.vps -f docker-compose.production.yml build app migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml --profile operations run --rm migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app caddy
+docker compose --env-file .env -f docker-compose.production.yml build app migrate
+docker compose --env-file .env -f docker-compose.production.yml --profile operations run --rm migrate
+docker compose --env-file .env -f docker-compose.production.yml up -d app caddy
 ```
 
 For local-copy deployments, repeat the `rsync` command first, then run the same build, migration, and start commands.
@@ -341,8 +336,8 @@ Application rollback is commit/image based:
 ```bash
 git log --oneline -10
 git checkout PREVIOUS_VERIFIED_COMMIT
-docker compose --env-file .env.vps -f docker-compose.production.yml build app
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app caddy
+docker compose --env-file .env -f docker-compose.production.yml build app
+docker compose --env-file .env -f docker-compose.production.yml up -d app caddy
 ```
 
 Database migrations are forward-only. Do not run destructive manual SQL or remove a migration record. If an applied migration is incompatible with an older application image, deploy a reviewed forward fix or follow the verified database restore procedure.
@@ -352,7 +347,7 @@ Database migrations are forward-only. Do not run destructive manual SQL or remov
 Stop containers while preserving PostgreSQL, Valkey, certificates, and object data:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml down
+docker compose --env-file .env -f docker-compose.production.yml down
 ```
 
 Do **not** add `--volumes` unless you intentionally want to permanently erase the staging database, Valkey state, Caddy certificates, and self-hosted object storage.

@@ -12,11 +12,10 @@ Only Caddy binds a host port: `127.0.0.1:8080`. The real domain works only while
 
 ## Environment model
 
-- `.env`: ordinary localhost development; mock/log providers by default.
-- `.env.certification.example`: safe committed template.
-- `.env.certification`: ignored owner-managed test credentials and certification values.
-- `.env.production.example`: safe future VPS template.
-- `.env.production`: future ignored VPS values.
+- `.env.example`: canonical committed V3 runtime template.
+- `.env`: the only ignored runtime/deployment environment file for development, staging, and production.
+- `.env.certification.example`: safe committed certification template.
+- `.env.certification`: ignored owner-managed certification credentials and values; test tooling only.
 
 The certification canonical origin is `https://jl-bke.com`; internal Docker traffic uses `http://app:3000`. Changing `.env.certification` requires `npm run certification:compose -- refresh` because existing containers do not reload environment files.
 
