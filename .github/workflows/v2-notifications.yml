@@ -33,11 +33,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-notifications-0.1.0.tgz
+          artifact=/tmp/bke-notifications-0.2.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.1.0/bke-notifications-0.1.0.tgz
-          echo "9a9c5640ed27332886e54c491cb6b54fdcc6561ec100ddd2476adb02d93ee406  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.2.0/bke-notifications-0.2.0.tgz
+          echo "11bd533b523a72d1fdeac67f97f9c518715ca2a97d60ce3c9e7887284279c7bc  $artifact" | sha256sum -c -
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Notifications consumer adoption and staging retirement
