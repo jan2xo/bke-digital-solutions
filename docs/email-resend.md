@@ -1,6 +1,38 @@
 # Email and Resend certification
 
-Resend is the configured production transport and `jl-bke.com` is verified. Sending identity does not create an inbound mailbox.
+Resend is the configured production email transport. Email is intentionally reserved for communication that requires an email channel:
+
+- account verification
+- magic sign-in links
+- password reset
+- administrator MFA/login codes
+- critical administrator security notices
+- explicit administrator-requested invoice email
+
+Normal commerce and product lifecycle events do **not** use Resend. Payment received, payment failed, refund confirmed, invoice ready, license ready, renewal approaching, subscription expiry, trial lifecycle, and license expiry are projected as authenticated BKE account notifications from canonical domain state.
+
+The durable email outbox accepts only:
+
+- `INVOICE_ISSUED`
+- `SECURITY_SESSIONS_REVOKED`
+- `SECURITY_NEW_SESSION`
+- `SECURITY_ACCOUNT_CHANGED`
+
+Older queued commerce/lifecycle email types are retired by the email lifecycle job with `EMAIL_CHANNEL_RETIRED` and are never selected by the dispatcher.
+
+## Account notifications
+
+The Licensing Agent reads customer notifications through the authenticated Agent account-session authority:
+
+```text
+GET /api/agent-sessions/notifications?product_id=<public-product-id>&limit=<1..200>
+Authorization: Bearer <Agent-owned access token>
+x-bke-account-session-version: bke.account-session.v1
+```
+
+The endpoint derives notifications from authoritative payment, invoice, license, subscription, and trial state. It does not create a second cloud notification database. Notification intent normalization remains owned by `@bke/notifications`.
+
+## Resend certification
 
 Run genuine owner-authorized delivery from the host, not the slim production image:
 
@@ -10,27 +42,10 @@ npm run certification:test:resend
 
 This command explicitly loads ignored `.env.certification`; it does not fall back to `.env`. Missing requirements skip clearly, while invalid present credentials or sender configuration fail. The general test suite does not intentionally send external mail.
 
-Registration, verification resend, magic link, and password reset currently send immediately. Registration returns `emailSent:false` if provider delivery fails. Commerce settlement transactionally queues payment, invoice, license, failure, and refund messages in `EmailOutbox`, then attempts dispatch. A cron-authenticated processor handles retries:
+Registration, verification resend, magic link, password reset, and administrator MFA delivery send immediately. Manual invoice email and security notices use the durable outbox. A cron-authenticated processor handles retries:
 
 ```bash
 npm run certification:outbox
 ```
 
-For an owner-controlled outbox smoke message:
-
-```bash
-npm run certification:compose -- queue-email
-npm run certification:outbox
-```
-
-Phase 5.2 genuine results: direct Resend delivery passed; public registration returned HTTP 201 with `emailSent:true`; password-reset delivery returned HTTP 200; one queued message became `SENT` with one attempt, and a second processor call did not resend it. Inbox placement is not guaranteed by API acceptance.
-# Database credential source
-
-Resend may resolve its API key and sender identity from the encrypted provider store. Save and validate the `@jl-bke.com` sender before enablement. Status APIs show only a masked hint. Genuine delivery certification remains separate from credential validation.
-# Phase 5.5 resilience
-
-Resend failures are normalized into BKE-owned categories before they reach
-outbox persistence or operational audit evidence. User-facing MFA responses
-remain generic and fail closed; provider status, request identifiers, and
-credentials are never exposed. The certification incident (quota exhaustion)
-must be handled with a saved recovery code or later retry.
+Resend may resolve its API key and sender identity from the encrypted provider store. Status APIs expose only masked credential hints. Provider error bodies and credentials are never exposed to callers.
