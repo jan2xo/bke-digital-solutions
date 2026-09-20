@@ -368,6 +368,16 @@ export type ObservabilityAlert = Prisma.ObservabilityAlertModel
  */
 export type EmailOutbox = Prisma.EmailOutboxModel
 /**
+ * Model NotificationMessage
+ *
+ */
+export type NotificationMessage = Prisma.NotificationMessageModel
+/**
+ * Model NotificationReceipt
+ *
+ */
+export type NotificationReceipt = Prisma.NotificationReceiptModel
+/**
  * Model ExternalProviderConfiguration
  *
  */

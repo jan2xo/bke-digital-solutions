@@ -121,6 +121,8 @@ export const ModelName = {
   BackupOperation: 'BackupOperation',
   ObservabilityAlert: 'ObservabilityAlert',
   EmailOutbox: 'EmailOutbox',
+  NotificationMessage: 'NotificationMessage',
+  NotificationReceipt: 'NotificationReceipt',
   ExternalProviderConfiguration: 'ExternalProviderConfiguration',
   ExternalProviderCredential: 'ExternalProviderCredential'
 } as const
@@ -1417,6 +1419,46 @@ export const EmailOutboxScalarFieldEnum = {
 } as const
 
 export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
+
+
+export const NotificationMessageScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  sourceModule: 'sourceModule',
+  sourceEvent: 'sourceEvent',
+  sourceReference: 'sourceReference',
+  audienceKind: 'audienceKind',
+  audiencePrincipalId: 'audiencePrincipalId',
+  audienceAccountId: 'audienceAccountId',
+  audienceSegmentKey: 'audienceSegmentKey',
+  audienceVisitorId: 'audienceVisitorId',
+  title: 'title',
+  body: 'body',
+  category: 'category',
+  priority: 'priority',
+  trigger: 'trigger',
+  placementHint: 'placementHint',
+  attributes: 'attributes',
+  data: 'data',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type NotificationMessageScalarFieldEnum = (typeof NotificationMessageScalarFieldEnum)[keyof typeof NotificationMessageScalarFieldEnum]
+
+
+export const NotificationReceiptScalarFieldEnum = {
+  notificationId: 'notificationId',
+  userId: 'userId',
+  state: 'state',
+  readAt: 'readAt',
+  dismissedAt: 'dismissedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationReceiptScalarFieldEnum = (typeof NotificationReceiptScalarFieldEnum)[keyof typeof NotificationReceiptScalarFieldEnum]
 
 
 export const ExternalProviderConfigurationScalarFieldEnum = {
