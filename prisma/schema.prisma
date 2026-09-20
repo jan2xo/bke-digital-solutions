@@ -450,6 +450,7 @@ model User {
   supportMessages                 SupportTicketMessage[] @relation("SupportMessageAuthor")
   supportEvents                   SupportTicketEvent[] @relation("SupportEventActor")
   notificationReceipts            NotificationReceipt[] @relation("NotificationReceiptUser")
+  principalNotifications          NotificationMessage[] @relation("PrincipalNotifications")
 
   @@index([lifecycleState])
   @@index([retentionExpiresAt])
@@ -626,6 +627,7 @@ model CustomerAccount {
   legalAcceptances   LegalAcceptance[]
   privacyRequests    PrivacyRequest[]
   supportTickets     SupportTicket[]
+  notifications      NotificationMessage[] @relation("AccountNotifications")
 
   @@index([ownerId])
   @@index([lifecycleState])
@@ -1909,6 +1911,8 @@ model NotificationMessage {
   createdAt           DateTime
   expiresAt           DateTime?
   receipts            NotificationReceipt[]
+  audiencePrincipal   User?                 @relation("PrincipalNotifications", fields: [audiencePrincipalId], references: [id], onDelete: Cascade)
+  audienceAccount     CustomerAccount?      @relation("AccountNotifications", fields: [audienceAccountId], references: [id], onDelete: Cascade)
 
   @@index([audienceKind, createdAt(sort: Desc)])
   @@index([audienceAccountId, createdAt(sort: Desc)])
