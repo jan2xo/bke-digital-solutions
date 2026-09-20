@@ -75,16 +75,35 @@ export async function GET(request: Request) {
           id: input.product_id,
           active: true,
           archivedAt: null,
-          OR: [
-            { licenses: { some: { accountId: session.accountId } } },
-            { subscriptions: { some: { accountId: session.accountId } } },
-            { trials: { some: { accountId: session.accountId } } },
-            { orderItems: { some: { order: { accountId: session.accountId } } } },
-          ],
         },
         select: { id: true },
       });
       if (!product) {
+        return { status: "not_found" as const };
+      }
+
+      const [license, subscription, trial, orderItem] = await Promise.all([
+        tx.license.findFirst({
+          where: { accountId: session.accountId, productId: product.id },
+          select: { id: true },
+        }),
+        tx.subscription.findFirst({
+          where: { accountId: session.accountId, productId: product.id },
+          select: { id: true },
+        }),
+        tx.trialGrant.findFirst({
+          where: { accountId: session.accountId, productId: product.id },
+          select: { id: true },
+        }),
+        tx.orderItem.findFirst({
+          where: {
+            productId: product.id,
+            order: { accountId: session.accountId },
+          },
+          select: { id: true },
+        }),
+      ]);
+      if (!license && !subscription && !trial && !orderItem) {
         return { status: "not_found" as const };
       }
 
