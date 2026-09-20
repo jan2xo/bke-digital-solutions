@@ -53,34 +53,34 @@ git status --short                         # expected: empty
 
 ## 3. Production secrets
 
-Create an ignored file outside Git:
+Create the canonical ignored runtime file:
 
 ```bash
-install -m 600 /dev/null /opt/bke-digital-solutions/.env.vps
-${EDITOR:-vi} /opt/bke-digital-solutions/.env.vps
+install -m 600 /dev/null /opt/bke-digital-solutions/.env
+${EDITOR:-vi} /opt/bke-digital-solutions/.env
 ```
 
-Set every required value from `.env.production.example`, including a real HTTPS `APP_URL`, unique deployment ID, database credentials, session/license/MFA secrets, storage credentials, `PAYMENT_PROVIDER=paymongo`, `PAYMONGO_LIVEMODE=false` until live certification is approved, Resend credentials, backup encryption/key settings, and `APP_DOMAIN=jl-bke.com`. Do not use example placeholders.
+Set every required value from `.env.example`, including a real HTTPS `APP_URL`, unique deployment ID, database credentials, session/license/MFA secrets, storage credentials, `PAYMENT_PROVIDER=paymongo`, `PAYMONGO_LIVEMODE=false` until live certification is approved, Resend credentials, backup encryption/key settings, and `APP_DOMAIN=jl-bke.com`. Do not use example placeholders.
 
 Validate without printing resolved configuration:
 
 ```bash
 cd /opt/bke-digital-solutions
-BKE_ENV_FILE=.env.vps npm run config:validate
-docker compose --env-file .env.vps -f docker-compose.production.yml config --quiet
+npm run config:validate
+docker compose --env-file .env -f docker-compose.production.yml config --quiet
 ```
 
 ## 4. Build, volumes, migrations, and startup
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml build app scheduler backup-worker migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d postgres valkey
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d minio minio-init
+docker compose --env-file .env -f docker-compose.production.yml build app scheduler backup-worker migrate
+docker compose --env-file .env -f docker-compose.production.yml up -d postgres valkey
+docker compose --env-file .env -f docker-compose.production.yml up -d minio minio-init
 # Wait for minio-init to exit with code 0 before starting application services.
-docker compose --env-file .env.vps -f docker-compose.production.yml ps minio minio-init
-docker compose --env-file .env.vps -f docker-compose.production.yml run --rm migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app scheduler backup-worker caddy
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
+docker compose --env-file .env -f docker-compose.production.yml ps minio minio-init
+docker compose --env-file .env -f docker-compose.production.yml run --rm migrate
+docker compose --env-file .env -f docker-compose.production.yml up -d app scheduler backup-worker caddy
+docker compose --env-file .env -f docker-compose.production.yml ps
 ```
 
 Expected: PostgreSQL/Valkey/MinIO report healthy, app is healthy, and scheduler/backup-worker/Caddy are running. `migrate` is intentionally a one-shot service with `restart: "no"`; every long-running service uses `restart: unless-stopped`.
@@ -88,7 +88,7 @@ Expected: PostgreSQL/Valkey/MinIO report healthy, app is healthy, and scheduler/
 Verify the repository guarantee:
 
 ```bash
-BKE_ENV_FILE=.env.vps npm run deployment:verify-restart
+npm run deployment:verify-restart
 ```
 
 ## 5. Cloudflare and HTTPS
@@ -111,7 +111,7 @@ Run the documented admin bootstrap with an acknowledgement and temporary passwor
 Record UTC timestamps and run:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
+docker compose --env-file .env -f docker-compose.production.yml ps
 sudo reboot
 ```
 
@@ -120,9 +120,9 @@ After reconnecting:
 ```bash
 systemctl is-active docker
 cd /opt/bke-digital-solutions
-docker compose --env-file .env.vps -f docker-compose.production.yml ps
+docker compose --env-file .env -f docker-compose.production.yml ps
 curl --fail https://jl-bke.com/api/health/ready
-docker compose --env-file .env.vps -f docker-compose.production.yml logs --tail=100 app scheduler backup-worker caddy
+docker compose --env-file .env -f docker-compose.production.yml logs --tail=100 app scheduler backup-worker caddy
 ```
 
 Expected: Docker is active, all long-running services return automatically, readiness is 200, scheduler resumes, and no crash loop appears. This is owner evidence; repository inspection alone cannot certify it.
@@ -132,9 +132,9 @@ Expected: Docker is active, all long-running services return automatically, read
 ```bash
 git fetch origin
 git checkout APPROVED_COMMIT
-docker compose --env-file .env.vps -f docker-compose.production.yml build app scheduler backup-worker migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml run --rm migrate
-docker compose --env-file .env.vps -f docker-compose.production.yml up -d app scheduler backup-worker caddy
+docker compose --env-file .env -f docker-compose.production.yml build app scheduler backup-worker migrate
+docker compose --env-file .env -f docker-compose.production.yml run --rm migrate
+docker compose --env-file .env -f docker-compose.production.yml up -d app scheduler backup-worker caddy
 ```
 
 If migration or health checks fail, stop traffic, preserve logs, do not run `migrate dev`, and follow the disaster-recovery runbook. Roll back application code only when the schema remains compatible; otherwise restore an isolated copy and apply a reviewed forward migration.
@@ -144,8 +144,8 @@ If migration or health checks fail, stop traffic, preserve logs, do not run `mig
 Confirm `BACKUP_ENABLED=true`, the backup worker is running, archives are encrypted, manifests verify, and the configured backup bucket is separate from live storage:
 
 ```bash
-docker compose --env-file .env.vps -f docker-compose.production.yml logs --tail=200 backup-worker
-docker compose --env-file .env.vps -f docker-compose.production.yml run --rm migrate npm run db:status
+docker compose --env-file .env -f docker-compose.production.yml logs --tail=200 backup-worker
+docker compose --env-file .env -f docker-compose.production.yml run --rm migrate npm run db:status
 ```
 
 A successful backup is not a restore certification. Perform the isolated restore drill in `docs/restore-procedure.md` and record the evidence before declaring recovery ready.

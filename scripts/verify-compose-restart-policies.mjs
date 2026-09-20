@@ -27,6 +27,8 @@ export function verifyRestartPolicies(compose) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const raw = execFileSync("docker", ["compose", "--env-file", ".env.production.example", "-f", "docker-compose.production.yml", "config", "--format", "json"], { encoding: "utf8" });
+  const envFile = process.env.DEPLOYMENT_ENV_FILE ?? ".env";
+  const composeFile = process.env.DEPLOYMENT_COMPOSE_FILE ?? "docker-compose.production.yml";
+  const raw = execFileSync("docker", ["compose", "--env-file", envFile, "-f", composeFile, "config", "--format", "json"], { encoding: "utf8" });
   console.log(JSON.stringify(verifyRestartPolicies(JSON.parse(raw))));
 }

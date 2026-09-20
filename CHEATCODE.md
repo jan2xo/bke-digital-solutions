@@ -9,7 +9,7 @@ full prerequisites, failure handling, rollback, and verification.
 Run from the repository checkout:
 
 ```bash
-npm run ops:validate -- .env.production
+npm run ops:validate
 npm run ops:health -- https://<production-host>
 npm run deployment:verify-manifest
 npm run deployment:verify-restart
@@ -59,7 +59,7 @@ supply-chain workflow. Do not submit only a filename or local path.
 From the production checkout, first obtain the server's current payload hash:
 
 ```bash
-docker compose --env-file .env.production \
+docker compose --env-file .env \
   -f docker-compose.production.yml exec -T postgres \
   sh -c 'psql -X -U "$POSTGRES_USER" -d "$POSTGRES_DB"' <<'SQL'
 SELECT "canonicalPayloadHash"
@@ -98,7 +98,7 @@ paste a stale hash or manually edit database evidence.
 Verify the durable result:
 
 ```bash
-docker compose --env-file .env.production \
+docker compose --env-file .env \
   -f docker-compose.production.yml exec -T postgres \
   sh -c 'psql -X -U "$POSTGRES_USER" -d "$POSTGRES_DB"' <<'SQL'
 SELECT "dependencyStatus", "canonicalPayloadHash"

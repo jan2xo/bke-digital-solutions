@@ -1,77 +1,67 @@
 # Production Deployment
 
-Deploy only an approved, checked-out commit. Source acquisition and deployment
-are separate operations; this procedure never performs an implicit pull.
+BKE Digital Solutions V3 is operated through the repository Bash launcher. Operators should not hand-type Docker Compose command chains for normal deployment work.
 
-The canonical operator path is:
+## Normal operator path
 
-```bash
-git pull --ff-only origin main
-BKE_HEALTH_URL=https://<canonical-production-health-host> npm run deploy
-```
-
-The script defaults to `.env.production` and
-`docker-compose.production.yml`. An explicit environment or Compose file may
-be supplied as positional arguments:
+Run the interactive menu:
 
 ```bash
-BKE_HEALTH_URL=https://<canonical-production-health-host> \
-  npm run deploy -- /absolute/path/.env.production /absolute/path/docker-compose.production.yml
+./bke.sh
 ```
 
-`BKE_HEALTH_URL` is required because this repository does not define a single
-canonical production hostname. The script verifies that the environment file
-exists but never reads or prints its values.
-
-The script performs, in order:
-
-1. Verify the working tree is clean and display the branch and exact commit.
-2. Run `npm run ops:validate` as the read-only production preflight.
-3. Validate the effective Compose configuration.
-4. Build `app`, `scheduler`, `backup-worker`, and `migrate`.
-5. Run the one-shot `migrate` service through the `operations` profile.
-6. Start `app`, `scheduler`, `backup-worker`, and `caddy`; Compose dependency
-   conditions govern PostgreSQL, Valkey, MinIO initialization, and ClamAV.
-7. Show Compose service status.
-8. Run `npm run ops:health -- <health-url>`, which verifies both live and ready
-   contracts and all ready dependencies.
-
-Every mandatory command fails the deployment immediately. The script prints only
-non-secret status and the deployed Git SHA.
-
-## Troubleshooting and recovery reference
-
-Equivalent manual commands, for diagnosis or recovery only:
+Or run one explicit action:
 
 ```bash
-DEPLOYMENT_ENV_FILE=/absolute/path/.env.production \
-DEPLOYMENT_COMPOSE_FILE=/absolute/path/docker-compose.production.yml \
-npm run ops:validate
-
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml config --quiet
-
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml build app scheduler backup-worker migrate
-
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml --profile operations run --rm migrate
-
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml up -d app scheduler backup-worker caddy
-
-docker compose --env-file /absolute/path/.env.production \
-  -f /absolute/path/docker-compose.production.yml ps
-
-npm run ops:health -- https://<canonical-production-health-host>
+./bke.sh deploy
+./bke.sh update
+./bke.sh status
+./bke.sh logs
+./bke.sh restart
+./bke.sh health
 ```
 
-Review service logs without printing environment values. For self-hosted MinIO,
-ensure `minio-init` completes before application readiness. Roll back only to
-an approved schema-compatible commit; never delete persistent volumes during an
-incident.
+The canonical runtime configuration is always `.env`. The first-time flow is:
 
-Any feature that changes production topology, migration requirements, service
-dependencies, initialization, deployment ordering, readiness semantics, backup
-requirements, or post-deployment verification must update this canonical
-production deployment automation in the same change.
+```bash
+./bke.sh setup
+./bke.sh env
+./bke.sh validate
+./bke.sh deploy
+```
+
+`setup` copies `.env.example` to ignored `.env` only when `.env` does not already exist and sets mode 600. It never overwrites existing owner secrets.
+
+## What deploy does
+
+`./bke.sh deploy` delegates to the guarded production deployment script. It:
+
+1. Requires the canonical `.env` and production Compose file.
+2. Derives the health origin from `APP_URL` unless `BKE_HEALTH_URL` is explicitly supplied.
+3. Refuses a dirty Git working tree.
+4. Runs the read-only production preflight and Compose validation.
+5. Builds app, scheduler, backup-worker, and migration images.
+6. Runs the one-shot production migration.
+7. Starts the runtime services.
+8. Shows service status.
+9. Runs deterministic live/readiness health verification.
+
+## Updating
+
+Use:
+
+```bash
+./bke.sh update
+```
+
+The update action refuses a dirty tree, performs `git fetch origin` and `git pull --ff-only origin main`, then runs the same guarded deployment path.
+
+## Operational actions
+
+Use `./bke.sh status` for service state, `./bke.sh logs [service]` for logs, `./bke.sh restart` to restart runtime services, and `./bke.sh stop` to stop the stack without deleting persistent volumes.
+
+Use `./bke.sh doctor` to print the current Git identity, validate the V3 configuration, and show Compose status.
+
+The operator does not expose destructive volume deletion, hard Git reset, force push, or `prisma migrate dev`.
+
+Any feature that changes production topology, migration requirements, service dependencies, initialization, deployment ordering, readiness semantics, backup requirements, or post-deployment verification must update `scripts/v3-ops.sh` and the guarded deployment script in the same change.
