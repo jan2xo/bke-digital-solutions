@@ -4,8 +4,12 @@ const GITHUB_RELEASE_REPOSITORIES: Readonly<Record<string, string>> = {
   "bke-render-dock": "jan2xo/BKE_RENDER_DOCK",
 };
 
-export function githubLatestReleaseUrl(productId: string | null | undefined) {
+export function githubReleaseRepository(productId: string | null | undefined) {
   if (!productId) return null;
-  const repository = GITHUB_RELEASE_REPOSITORIES[productId];
+  return GITHUB_RELEASE_REPOSITORIES[productId] ?? null;
+}
+
+export function githubLatestReleaseUrl(productId: string | null | undefined) {
+  const repository = githubReleaseRepository(productId);
   return repository ? `https://github.com/${repository}/releases/latest` : null;
 }
