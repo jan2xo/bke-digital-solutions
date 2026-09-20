@@ -61,37 +61,27 @@ const runtimeEmailProvider: EmailProvider = Object.freeze({
   },
 });
 
+const DURABLE_EMAIL_TYPES = Object.freeze([
+  "INVOICE_ISSUED",
+  "SECURITY_SESSIONS_REVOKED",
+  "SECURITY_NEW_SESSION",
+  "SECURITY_ACCOUNT_CHANGED",
+] as const);
+
 function render(type: string, payload: Record<string, unknown>) {
-  const order = String(payload.orderNumber ?? "");
   const invoice = String(payload.invoiceNumber ?? "");
-  const renewalUrl = String(payload.renewalUrl ?? "");
-  return type === "PAYMENT_RECEIPT"
-    ? `Payment for order ${order} was confirmed.`
-    : type === "INVOICE_ISSUED"
-      ? `Commercial invoice ${invoice} is available in your customer portal.`
-      : type === "LICENSE_ISSUED"
-        ? `Your license for order ${order} is ready. View the full key in your secure portal.`
-        : type === "PAYMENT_FAILED"
-          ? `Payment for order ${order} failed. No license was issued.`
-          : type === "REFUND_CONFIRMED"
-            ? `The refund for order ${order} was confirmed and its access was revoked.`
-            : type === "RENEWAL_REMINDER"
-              ? `Your BKE subscription is approaching renewal. Authorize renewal from your secure portal: ${renewalUrl}`
-              : type === "SUBSCRIPTION_EXPIRED"
-                ? "Your BKE subscription has expired. Access remains governed by the current entitlement status in your portal."
-                : type === "TRIAL_ENDING"
-                  ? "Your BKE product trial is ending soon. Review available purchase plans in your portal."
-                  : type === "TRIAL_EXPIRED"
-                    ? "Your BKE product trial and grace period have expired."
-                    : type === "LICENSE_EXPIRED"
-                      ? "Your BKE license has expired and can no longer activate devices or authorize downloads."
-                      : type === "SECURITY_SESSIONS_REVOKED"
-                        ? "Administrator session access was revoked. If this was not you, reset your password and review the security dashboard."
-                        : type === "SECURITY_NEW_SESSION"
-                          ? "A new administrator session was created. Review the security dashboard if this was not you."
-                          : type === "SECURITY_ACCOUNT_CHANGED"
-                            ? "A high-impact administrator security setting changed. Review the security dashboard if this was not you."
-                            : "BKE Digital Solutions account notification.";
+  switch (type) {
+    case "INVOICE_ISSUED":
+      return `Commercial invoice ${invoice} is available in your customer portal.`;
+    case "SECURITY_SESSIONS_REVOKED":
+      return "Administrator session access was revoked. If this was not you, reset your password and review the security dashboard.";
+    case "SECURITY_NEW_SESSION":
+      return "A new administrator session was created. Review the security dashboard if this was not you.";
+    case "SECURITY_ACCOUNT_CHANGED":
+      return "A high-impact administrator security setting changed. Review the security dashboard if this was not you.";
+    default:
+      throw new Error("EMAIL_TYPE_NOT_DELIVERABLE");
+  }
 }
 
 type DispatchRow = Readonly<{
@@ -121,10 +111,12 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     const result = await getPostgresPool().query<DispatchRow>(
       `SELECT "id", "status"::text AS "status", "attempts", "recipient", "subject", "type", "payload"
          FROM "EmailOutbox"
-        WHERE "status" IN ('PENDING', 'FAILED') AND "attempts" < $1
+        WHERE "status" IN ('PENDING', 'FAILED')
+          AND "attempts" < $1
+          AND "type" = ANY($3::text[])
         ORDER BY "createdAt" ASC
         LIMIT $2`,
-      [maxAttempts, limit],
+      [maxAttempts, limit, DURABLE_EMAIL_TYPES],
     );
     return result.rows.map((row) => Object.freeze({
       id: row.id,
