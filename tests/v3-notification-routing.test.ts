@@ -13,8 +13,16 @@ const email = readFileSync(
   "apps/web/email.ts",
   "utf8",
 );
-const notificationProjection = readFileSync(
-  "apps/web/notifications/account-notifications.ts",
+const notificationCenter = readFileSync(
+  "apps/web/notifications/center.ts",
+  "utf8",
+);
+const notificationsModule = readFileSync(
+  "modules/notifications/module.ts",
+  "utf8",
+);
+const securitySessions = readFileSync(
+  "apps/web/security/session-administration.ts",
   "utf8",
 );
 const agentRoute = readFileSync(
@@ -43,7 +51,7 @@ describe("V3 notification routing", () => {
 
   it("retires stale commerce email rows and keeps the durable email allowlist narrow", () => {
     expect(scheduler).toContain("EMAIL_CHANNEL_RETIRED");
-    expect(scheduler).toContain("account-notification-projection");
+    expect(scheduler).toContain("durable-notification-center");
     expect(scheduler).not.toContain("queueCommerceEmail");
 
     for (const allowed of [
@@ -60,10 +68,28 @@ describe("V3 notification routing", () => {
     expect(email).not.toContain('"TRIAL_ENDING"');
   });
 
-  it("projects customer lifecycle communication through Notifications capability", () => {
-    expect(notificationProjection).toContain(
+  it("uses released Notifications package for durable inbox policy", () => {
+    expect(notificationsModule).toContain(
+      "NOTIFICATIONS_INBOX_POLICY_CAPABILITY_ID",
+    );
+    expect(notificationsModule).toContain(
+      "createNotificationsInboxPolicyCapability",
+    );
+    expect(notificationCenter).toContain(
       "NOTIFICATIONS_INTENT_CAPABILITY_ID",
     );
+    expect(notificationCenter).toContain(
+      "NOTIFICATIONS_INBOX_POLICY_CAPABILITY_ID",
+    );
+    expect(notificationCenter).toContain("transitionReceipt");
+    expect(notificationCenter).toContain("notificationMessage");
+    expect(notificationCenter).toContain("notificationReceipt");
+  });
+
+  it("routes account admin and principal notification scopes without email", () => {
+    expect(paymentWebhook).toContain('kind: "ACCOUNT"');
+    expect(scheduler).toContain('kind: "ADMINISTRATORS"');
+    expect(securitySessions).toContain('kind: "PRINCIPAL"');
     for (const event of [
       "PAYMENT_RECEIVED",
       "PAYMENT_FAILED",
@@ -75,15 +101,23 @@ describe("V3 notification routing", () => {
       "TRIAL_ENDING",
       "TRIAL_EXPIRED",
       "LICENSE_EXPIRED",
+      "CUSTOMER_LIFECYCLE_REVIEW",
+      "PAYMENT_OPERATIONS_REVIEW",
+      "ADMIN_SESSIONS_REVOKED",
     ]) {
-      expect(notificationProjection).toContain(`event: "${event}"`);
+      expect(
+        paymentWebhook.includes(`event: "${event}"`) ||
+        scheduler.includes(`event: "${event}"`) ||
+        securitySessions.includes(`event: "${event}"`),
+      ).toBe(true);
     }
   });
 
-  it("requires the Agent account-session authority for customer notifications", () => {
+  it("requires the Agent account-session authority for durable customer notifications", () => {
     expect(agentRoute).toContain("requireAgentAccountSessionProtocol");
     expect(agentRoute).toContain("authenticateAgentAccessToken");
     expect(agentRoute).toContain("AGENT_ACCOUNT_SESSION_PEPPER");
+    expect(agentRoute).toContain("listAccountProductNotifications");
     expect(agentRoute).toContain('productId: input.product_id');
     expect(agentRoute).toContain('"cache-control": "no-store"');
   });
