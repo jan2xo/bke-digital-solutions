@@ -1,0 +1,45 @@
+services:
+  app:
+    depends_on: !override
+      postgres: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+      valkey: { condition: service_healthy }
+
+  seed:
+    build:
+      context: .
+      target: operations
+    command: ["npm", "run", "db:seed"]
+    env_file: .env.certification
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+    networks: [private]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+
+  smoke:
+    build:
+      context: .
+      target: operations
+    command: ["npm", "run", "db:smoke"]
+    env_file: .env.certification
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [private]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+
+  caddy:
+    ports: !override
+      - "0.0.0.0:8443:443"
+    volumes: !override
+      - ./Caddyfile.disposable:/etc/caddy/Caddyfile:ro
+      - ./.bke-disposable/tls/bke-v3.test.crt.pem:/etc/caddy/tls/bke-v3.test.crt.pem:ro
+      - ./.bke-disposable/tls/bke-v3.test.key.pem:/etc/caddy/tls/bke-v3.test.key.pem:ro
+      - caddy_data:/data
+      - caddy_config:/config

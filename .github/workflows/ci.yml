@@ -54,6 +54,11 @@ jobs:
       - run: npm run typecheck
       - name: Validate Bash operator syntax
         run: bash -n bke.sh scripts/v3-ops.sh scripts/deploy-production.sh
+      - name: Validate disposable operator syntax
+        run: |
+          node --check scripts/v3-disposable-env.mjs
+          node --check scripts/v3-disposable-compose.mjs
+          node --check scripts/v3-disposable-doctor.mjs
       - run: npm test
       - run: npm run build
       - run: git diff --check
@@ -64,4 +69,9 @@ jobs:
       - run: npm run deployment:verify-restart
       - run: npm run deployment:verify-manifest
       - run: docker compose --env-file .env -f docker-compose.production.yml config --quiet
+      - name: Validate disposable Compose overlay
+        run: |
+          cp .env.example .env.certification
+          docker compose --env-file .env.certification -f docker-compose.production.yml -f docker-compose.disposable.yml config --quiet
+          rm .env.certification
       - run: docker build --target runner -t bke-digital-solutions:ci .
