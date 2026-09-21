@@ -180,6 +180,13 @@ cmd_doctor() {
   cmd_status
 }
 
+cmd_disposable() {
+  require_base_tools
+  local action="$1"
+  shift || true
+  node "$ROOT_DIR/scripts/v3-disposable-compose.mjs" "$action" "$@"
+}
+
 usage() {
   cat <<'EOF'
 BKE Digital Solutions V3 operator
@@ -199,10 +206,18 @@ Usage:
   ./bke.sh restart         Restart runtime services
   ./bke.sh stop            Stop stack without deleting volumes
   ./bke.sh health          Run live/readiness verification
-  ./bke.sh doctor          Validate configuration and show status
-  ./bke.sh help            Show this help
+  ./bke.sh doctor              Validate configuration and show status
+  ./bke.sh disposable-up       Build/start disposable LAN certification and run doctor
+  ./bke.sh disposable-doctor   Verify TLS, readiness dependencies, and Agent session start
+  ./bke.sh disposable-status   Show disposable service status
+  ./bke.sh disposable-logs     Show disposable logs
+  ./bke.sh disposable-smoke    Run disposable DB smoke check
+  ./bke.sh disposable-down     Stop disposable stack without deleting volumes
+  ./bke.sh disposable-reset    Remove disposable containers and volumes
+  ./bke.sh help                Show this help
 
-The canonical runtime environment file is always .env.
+The canonical production/runtime environment file is always .env.
+Disposable LAN certification materializes ignored .env.certification from .bke-disposable.
 EOF
 }
 
@@ -224,6 +239,12 @@ BKE DIGITAL SOLUTIONS V3
 11) Migrate
 12) Health
 13) Doctor
+14) Disposable Up + Doctor
+15) Disposable Doctor
+16) Disposable Status
+17) Disposable Logs
+18) Disposable Down
+19) Disposable Reset
 0) Exit
 EOF
     printf '> '
@@ -242,6 +263,12 @@ EOF
       11) cmd_migrate ;;
       12) cmd_health ;;
       13) cmd_doctor ;;
+      14) cmd_disposable up ;;
+      15) cmd_disposable doctor ;;
+      16) cmd_disposable status ;;
+      17) cmd_disposable logs ;;
+      18) cmd_disposable down ;;
+      19) cmd_disposable reset ;;
       0) exit 0 ;;
       *) printf 'Unknown selection.\n' >&2 ;;
     esac
@@ -274,6 +301,14 @@ case "$command" in
   stop|down) cmd_stop "$@" ;;
   health) cmd_health "$@" ;;
   doctor) cmd_doctor "$@" ;;
+  disposable-up) cmd_disposable up "$@" ;;
+  disposable-refresh) cmd_disposable refresh "$@" ;;
+  disposable-doctor) cmd_disposable doctor "$@" ;;
+  disposable-status) cmd_disposable status "$@" ;;
+  disposable-logs) cmd_disposable logs "$@" ;;
+  disposable-smoke) cmd_disposable smoke "$@" ;;
+  disposable-down) cmd_disposable down "$@" ;;
+  disposable-reset) cmd_disposable reset "$@" ;;
   help|-h|--help) usage ;;
   *) usage; die "Unknown command: $command" ;;
 esac

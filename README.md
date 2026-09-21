@@ -55,6 +55,18 @@ Normal VPS/runtime operations use the Bash operator instead of hand-written Comp
 
 Run it without arguments for the interactive menu, or use commands such as `./bke.sh setup`, `./bke.sh deploy`, `./bke.sh update`, `./bke.sh status`, and `./bke.sh logs`. The operator always uses canonical ignored `.env`.
 
+### Disposable LAN certification
+
+For Mac-hosted V3 plus a disposable Windows integration machine, use the isolated LAN profile:
+
+```bash
+./bke.sh disposable-up
+```
+
+It materializes ignored test-only configuration from `.bke-disposable`, keeps PayMongo on `mock` and email on `log`, starts the full local dependency stack, terminates HTTPS at `https://bke-v3.test:8443`, and runs readiness plus a real Agent account-session start probe. Use `./bke.sh disposable-doctor` for repeat verification. See [V3 disposable LAN certification](docs/disposable-certification.md).
+
+This profile is not a production deployment path and its CA, TLS keys, application secrets, and signing keys must never be committed or trusted by production machines.
+
 ## Production checklist
 
 1. Provision PostgreSQL, Upstash-compatible Redis, and a private S3-compatible bucket. Production intentionally refuses an in-memory rate limiter.

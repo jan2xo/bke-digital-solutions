@@ -1,0 +1,22 @@
+{
+	admin off
+}
+
+https://bke-v3.test {
+	tls /etc/caddy/tls/bke-v3.test.crt.pem /etc/caddy/tls/bke-v3.test.key.pem
+	encode zstd gzip
+
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-Host {host}
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Real-IP {remote_host}
+	}
+
+	log {
+		output stdout
+		format filter {
+			request>headers>Paymongo-Signature delete
+			wrap json
+		}
+	}
+}
