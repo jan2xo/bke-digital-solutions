@@ -28,10 +28,28 @@ export const checkoutSchema = z
   .object({
     purchasePlanId: z.string().cuid(),
     customerAccountId: z.string().cuid(),
+    purchaseFor: z.enum(["SELF", "OTHER"]).default("SELF"),
+    recipientEmail: emailSchema.optional(),
     offerIdentifier: z.string().trim().min(1).max(100).optional(),
     legalVersionIds: z.array(z.string().cuid()).min(2).max(3),
   })
-  .strict();
+  .strict()
+  .superRefine((value, context) => {
+    if (value.purchaseFor === "OTHER" && !value.recipientEmail) {
+      context.addIssue({
+        code: "custom",
+        path: ["recipientEmail"],
+        message: "Recipient email is required when purchasing for someone else.",
+      });
+    }
+    if (value.purchaseFor === "SELF" && value.recipientEmail) {
+      context.addIssue({
+        code: "custom",
+        path: ["recipientEmail"],
+        message: "Recipient email is only valid for purchases for someone else.",
+      });
+    }
+  });
 
 export const activationSchema = z.object({
   licenseKey: z.string().regex(/^BKE-[A-F0-9-]{40,}$/),
