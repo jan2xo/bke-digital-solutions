@@ -126,7 +126,27 @@ async function main() {
   }
   pass("TLS trust", "disposable CA available");
 
-  if (!runCheck("environment schema", "npm", ["run", "certification:check"])) return;
+  if (!runCheck("environment schema", "docker", [
+    "compose",
+    "-p",
+    "bke-v3-disposable",
+    "--env-file",
+    ".env.certification",
+    "-f",
+    "docker-compose.production.yml",
+    "-f",
+    "docker-compose.disposable.yml",
+    "--profile",
+    "operations",
+    "run",
+    "--rm",
+    "--no-deps",
+    "--build",
+    "operations",
+    "npm",
+    "run",
+    "config:validate",
+  ])) return;
   if (!runCheck("Compose configuration", "docker", [
     "compose",
     "-p",
