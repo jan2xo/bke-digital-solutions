@@ -44,6 +44,7 @@ export async function POST(request: Request) {
         code: input.code,
         userId: principal.id,
         accountId: input.customerAccountId,
+        verifiedEmail: principal.email,
       });
 
       if (claim.status === "CLAIMED") {
@@ -69,6 +70,7 @@ export async function POST(request: Request) {
         case "ALREADY_CLAIMED": reject("CLAIM_CODE_ALREADY_USED", 409);
         case "REVOKED": reject("CLAIM_CODE_REVOKED", 409);
         case "EXPIRED": reject("CLAIM_CODE_EXPIRED", 410);
+        case "RECIPIENT_MISMATCH": reject("CLAIM_CODE_RECIPIENT_MISMATCH", 403);
       }
     }
 
