@@ -1,8 +1,8 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
-import type { CommerceSettlementReactionRepository } from "@bke/commerce/logic/settlement-reaction-repository";
+import { createCommerceSettlementFulfillmentCapability } from "@bke/commerce/logic/settlement-fulfillment";
+import type { CommerceSettlementFulfillmentRepository } from "@bke/commerce/logic/settlement-fulfillment-repository";
 import type { CommerceSettlementEntitlementInput } from "@bke/commerce/logic/settlement-reaction-ports";
 import { createEntitlementsDurableRightGrantCapability } from "@bke/entitlements/logic/durable-right-grant";
 import type {
@@ -19,6 +19,7 @@ import type { PaymentsProviderEventRecord } from "@bke/payments/logic/provider-e
 import type { PaymentsSettlementFactSnapshot } from "@bke/payments/contracts/settlement-fact.contract";
 import { PaymentLifecycleError, type PaymentErrorCode } from "@bke/payments/logic/payment-errors";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
+import { createTransactionalClaimUnitIssuer } from "@/apps/web/entitlements/claim-unit-issuer";
 
 type ProviderEventRow = Readonly<{
   id: string;
@@ -75,7 +76,12 @@ type SettlementFactRow = Readonly<{
 }>;
 
 type EntitlementsGrantRepositoryInput = Parameters<EntitlementsDurableRightGrantRepository["grant"]>[0];
-type CommerceSettlementRepositoryInput = Parameters<CommerceSettlementReactionRepository["settle"]>[0];
+type CommerceSettlementRepositoryInput = Parameters<CommerceSettlementFulfillmentRepository["settle"]>[0];
+
+type OrderFulfillmentRow = Readonly<{
+  fulfillmentMode: "ACCOUNT_ENTITLEMENT" | "CLAIM_CODE";
+  fulfillmentSnapshot: unknown;
+}>;
 
 type EntitlementRow = Readonly<{
   id: string;
@@ -251,10 +257,17 @@ function createEntitlementsRepository(tx: Prisma.TransactionClient): Entitlement
   });
 }
 
-function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlementReactionRepository {
+function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlementFulfillmentRepository {
   return Object.freeze({
     async settle(input: CommerceSettlementRepositoryInput) {
-      await tx.$queryRaw`SELECT "id" FROM "Order" WHERE "id" = ${input.orderId} FOR UPDATE`;
+      const fulfillmentRows = await tx.$queryRaw<OrderFulfillmentRow[]>`
+        SELECT "fulfillmentMode"::text AS "fulfillmentMode", "fulfillmentSnapshot"
+          FROM "Order"
+         WHERE "id" = ${input.orderId}
+         FOR UPDATE
+      `;
+      const fulfillment = fulfillmentRows[0];
+      if (!fulfillment) return { status: "REJECTED" as const, code: "ORDER_NOT_FOUND" as const };
       const order = await tx.order.findUnique({
         where: { id: input.orderId },
         include: { items: true, invoice: true, offerRedemption: true },
@@ -303,10 +316,13 @@ function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlem
           orderStatus: "PAID" as const,
           invoiceStatus: "FINAL" as const,
           settlementDisposition: disposition,
+          fulfillmentMode: fulfillment.fulfillmentMode,
+          fulfillmentSnapshot: fulfillment.fulfillmentSnapshot,
           items: Object.freeze(order.items.map((item) => Object.freeze({
             orderItemId: item.id,
             productId: item.productId,
             editionId: item.editionId,
+            purchasePlanId: item.purchasePlanId,
             quantity: item.quantity,
             entitlementSnapshot: item.entitlementSnapshot,
             policySnapshot: item.policySnapshot,
@@ -357,7 +373,7 @@ export async function reactToPaidSettlement(
   }
 
   const entitlements = createEntitlementsDurableRightGrantCapability(createEntitlementsRepository(tx));
-  const commerce = createCommerceSettlementReactionCapability({
+  const commerce = createCommerceSettlementFulfillmentCapability({
     payments: Object.freeze({
       async reconcile() {
         return {
@@ -381,6 +397,7 @@ export async function reactToPaidSettlement(
         return { status: "FAILED" as const };
       },
     }),
+    claimUnits: createTransactionalClaimUnitIssuer(tx),
   });
 
   const result = await commerce.react({ providerEventRecordId, expectedLivemode });
