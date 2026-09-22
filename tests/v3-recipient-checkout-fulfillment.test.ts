@@ -66,6 +66,33 @@ describe("V3 recipient checkout fulfillment", () => {
     expect(pkg).toContain("commerce-v0.14.0");
   });
 
+
+  it("gives the verified recipient a secretless pending-license inbox", async () => {
+    const [page, card, acceptRoute, claimsService, claimCodes, dashboard] = await Promise.all([
+      read("app/dashboard/claims/page.tsx"),
+      read("components/recipient-claim-card.tsx"),
+      read("app/api/claims/[id]/accept/route.ts"),
+      read("apps/web/entitlements/recipient-claims.ts"),
+      read("apps/web/entitlements/claim-codes.ts"),
+      read("app/dashboard/page.tsx"),
+    ]);
+
+    expect(page).toContain("listPendingRecipientClaims(user.email)");
+    expect(page).toContain("listClaimAuthorizedAccounts(user.id)");
+    expect(page).toContain("RecipientClaimCard");
+    expect(card).toContain('/api/claims/${claim.id}/accept');
+    expect(card).not.toContain("claimCode");
+    expect(acceptRoute).toContain("consumeRecipientClaimCode");
+    expect(acceptRoute).toContain("principal.email");
+    expect(acceptRoute).toContain('"CLAIM_ENTITLEMENT"');
+    expect(claimCodes).toContain("requireRecipientBinding");
+    expect(claimCodes).toContain("if (requireRecipientBinding && !claim.recipientEmail)");
+    expect(claimCodes).toContain('WHERE "id" = ${input.claimCodeId}');
+    expect(claimsService).toContain('WHERE c."recipientEmail" = ${email}');
+    expect(claimsService).toContain(`c."status" = 'AVAILABLE'`);
+    expect(dashboard).toContain('href="/dashboard/claims"');
+  });
+
   it("persists fulfillment context before zero-payment fulfillment can run", async () => {
     const migration = await read(
       "prisma/migrations/20260923012000_v3_claim_fulfillment_context/migration.sql",
