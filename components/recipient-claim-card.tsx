@@ -6,7 +6,7 @@ import { useState } from "react";
 type Account = {
   id: string;
   name: string;
-  type: "PERSONAL" | "ORGANIZATION";
+  type: "INDIVIDUAL" | "ORGANIZATION";
 };
 
 export function RecipientClaimCard({
@@ -73,7 +73,7 @@ export function RecipientClaimCard({
             <select className="input" value={accountId} onChange={(event) => setAccountId(event.target.value)}>
               {accounts.map((account) => (
                 <option value={account.id} key={account.id}>
-                  {account.name} · {account.type === "PERSONAL" ? "Personal" : "Organization"}
+                  {account.name} · {account.type === "INDIVIDUAL" ? "Personal" : "Organization"}
                 </option>
               ))}
             </select>
