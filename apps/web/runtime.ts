@@ -11,6 +11,7 @@ import { notificationsModule } from "../../modules/notifications/module";
 import { createPaymentsModule } from "../../modules/payments/module";
 import { composeCapabilities } from "../../platform/composition/composer";
 import { createWebPaymentsAdapter } from "./payments/provider";
+import { createClaimUnitIssuer } from "./entitlements/claim-unit-issuer";
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -24,13 +25,14 @@ async function composeWebApplication(): Promise<ComposedApplication> {
   const licensePepper = required("LICENSE_PEPPER");
   const mfaEncryptionKey = process.env.MFA_ENCRYPTION_KEY?.trim() || undefined;
   const payments = createWebPaymentsAdapter();
+  const claimUnits = createClaimUnitIssuer();
 
   return composeCapabilities([
     createIdentityModule({ connectionString, sessionSecret, mfaEncryptionKey }),
     createAccountsModule({ connectionString }),
     createLegalModule({ connectionString }),
     createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
-    createCommerceModule({ connectionString }),
+    createCommerceModule({ connectionString, claimUnits }),
     createPaymentsModule({
       connectionString,
       provider: payments,
