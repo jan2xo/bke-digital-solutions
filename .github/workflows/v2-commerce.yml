@@ -54,11 +54,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-commerce-0.11.0.tgz
+          artifact=/tmp/bke-commerce-0.14.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.11.0/bke-commerce-0.11.0.tgz
-          echo "ec0ccc587a9a31b94cf5fedb3be4757cca6d453a3569a7ad6ce7c6b932ff5604  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.14.0/bke-commerce-0.14.0.tgz
+          echo "d8577e22a454bea94c154388db1127b96c0ff827c6f6857c714879bffca159b5  $artifact" | sha256sum -c -
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Commerce consumer adoption and staging retirement
