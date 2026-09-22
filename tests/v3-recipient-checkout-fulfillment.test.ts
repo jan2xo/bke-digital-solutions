@@ -39,9 +39,12 @@ describe("V3 recipient checkout fulfillment", () => {
   });
 
   it("routes recipient checkout into first-ownership claim fulfillment", async () => {
-    const [checkout, settlement, module, button, pkg] = await Promise.all([
+    const [checkout, checkoutPage, settlement, processing, licensing, module, button, pkg] = await Promise.all([
       read("app/api/checkout/route.ts"),
+      read("app/checkout/page.tsx"),
       read("apps/web/payments/settlement-transaction.ts"),
+      read("apps/web/payments/webhook-processing.ts"),
+      read("apps/web/licensing/entitlement-management.ts"),
       read("modules/commerce/module.ts"),
       read("components/checkout-start-button.tsx"),
       read("package.json"),
@@ -50,11 +53,20 @@ describe("V3 recipient checkout fulfillment", () => {
     expect(checkout).toContain('input.purchaseFor === "OTHER" ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT"');
     expect(checkout).toContain("{ recipientEmail: input.recipientEmail }");
     expect(checkout).toContain("RECIPIENT_PURCHASE_REQUIRES_PERPETUAL_PLAN");
+    expect(checkout).toContain("V3_CLAIM_CODE_CHECKOUT_ENABLED");
+    expect(checkout).toContain("RECIPIENT_PURCHASE_UNAVAILABLE");
+    expect(checkoutPage).toContain("recipientCheckoutEnabled && plan.type === \"PERPETUAL\"");
 
     expect(settlement).toContain("createCommerceSettlementFulfillmentCapability");
     expect(settlement).toContain("createTransactionalClaimUnitIssuer(tx)");
     expect(settlement).toContain('SELECT "fulfillmentMode"::text AS "fulfillmentMode", "fulfillmentSnapshot"');
     expect(settlement).toContain("purchasePlanId: item.purchasePlanId");
+    expect(processing).toContain('settlement.fulfillmentMode === "ACCOUNT_ENTITLEMENT"');
+    expect(processing).toContain('"status" IN (\'AVAILABLE\', \'CLAIMED\')');
+    expect(processing).toContain('"status" = \'REVOKED\'');
+    expect(processing).toContain('UPDATE "Entitlement"');
+    expect(licensing).toContain("fulfillClaimedLicense");
+    expect(licensing).toContain('acquisition: "CLAIM_CODE"');
 
     expect(module).toContain("createCommerceSettlementFulfillmentCapability");
     expect(module).toContain("const claimUnits: CommerceClaimUnitIssuer = options.claimUnits ??");
@@ -83,6 +95,7 @@ describe("V3 recipient checkout fulfillment", () => {
     expect(card).toContain('/api/claims/${claim.id}/accept');
     expect(card).not.toContain("claimCode");
     expect(acceptRoute).toContain("consumeRecipientClaimCode");
+    expect(acceptRoute).toContain("fulfillClaimedLicense");
     expect(acceptRoute).toContain("principal.email");
     expect(acceptRoute).toContain('"CLAIM_ENTITLEMENT"');
     expect(claimCodes).toContain("requireRecipientBinding");
