@@ -6,6 +6,7 @@ import { apiError } from "@/apps/web/http/api-error";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { requireClaimAccountCapabilityInTransaction } from "@/apps/web/accounts/claim-code-authorization";
 import { db } from "@/platform/host/db";
+import { fulfillClaimedLicense } from "@/apps/web/licensing/entitlement-management";
 
 const schema = z.object({
   customerAccountId: z.string().min(1).max(256),
@@ -51,6 +52,10 @@ export async function POST(
       });
 
       if (claim.status === "CLAIMED") {
+        const license = await fulfillClaimedLicense(tx, {
+          claimCodeId: claim.claimCodeId,
+          accountId: input.customerAccountId,
+        });
         await tx.auditLog.create({
           data: {
             actorId: principal.id,
@@ -61,6 +66,7 @@ export async function POST(
             metadata: {
               acquisition: "RECIPIENT_EMAIL_CLAIM",
               claimCodeId: id,
+              licenseId: license.id,
             },
           },
         });
