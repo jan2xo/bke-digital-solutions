@@ -49,7 +49,12 @@ export type ClaimCodeRevealResult =
   | { readonly status: "FAILED"; readonly code: "DELIVERY_KEY_UNAVAILABLE" | "INVALID_CIPHERTEXT" };
 
 export type ClaimCodeConsumeResult =
-  | { readonly status: "CLAIMED"; readonly entitlementId: string; readonly accountId: string }
+  | {
+      readonly status: "CLAIMED";
+      readonly entitlementId: string;
+      readonly accountId: string;
+      readonly claimCodeId: string;
+    }
   | { readonly status: "REJECTED"; readonly code: "INVALID_CODE" | "ALREADY_CLAIMED" | "REVOKED" | "EXPIRED" | "RECIPIENT_MISMATCH" };
 
 type ClaimRow = Readonly<{
@@ -274,7 +279,7 @@ async function consumeLockedClaim(
   `;
   if (changed !== 1) throw new Error("CLAIM_CODE_STATE_CHANGED");
 
-  return { status: "CLAIMED", entitlementId, accountId: input.accountId };
+  return { status: "CLAIMED", entitlementId, accountId: input.accountId, claimCodeId: claim.id };
 }
 
 export async function consumeClaimCode(
