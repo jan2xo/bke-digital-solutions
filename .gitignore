@@ -13,3 +13,4 @@ test-results
 *.tsbuildinfo
 .certification-secrets/
 .supply-chain/
+.bke-disposable/
