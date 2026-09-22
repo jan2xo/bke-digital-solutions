@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-// Final owner-adoption parity runs against released Commerce 0.11.0 and Payments 0.6.0.
+// Final owner-adoption parity runs against released Commerce 0.14.0 and the certified Payments owner package.
 // Transaction adapters are explicitly typed against the released owner repository ports.
 const processorSource = readFileSync("apps/web/payments/webhook-processing.ts", "utf8");
 const ingestionSource = readFileSync("apps/web/payments/webhook-ingestion.ts", "utf8");
@@ -30,7 +30,8 @@ describe("payment webhook owner-adoption parity", () => {
 
   it("locks one transaction-bound Payments → Commerce → Entitlements settlement graph", () => {
     expect(settlementSource).toContain("createPaymentsSettlementFactCapability");
-    expect(settlementSource).toContain("createCommerceSettlementReactionCapability");
+    expect(settlementSource).toContain("createCommerceSettlementFulfillmentCapability");
+    expect(settlementSource).toContain("issueCommerceClaimUnits");
     expect(settlementSource).toContain("createEntitlementsDurableRightGrantCapability");
     expect(settlementSource).toContain('FROM "PaymentProviderEvent"');
     expect(settlementSource).toContain('FROM "PaymentCheckoutAttempt"');
