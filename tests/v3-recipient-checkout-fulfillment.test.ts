@@ -64,6 +64,7 @@ describe("V3 recipient checkout fulfillment", () => {
     expect(processing).toContain('settlement.fulfillmentMode === "ACCOUNT_ENTITLEMENT"');
     expect(processing).toContain('"status" IN (\'AVAILABLE\', \'CLAIMED\')');
     expect(processing).toContain('"status" = \'REVOKED\'');
+    expect(processing).toContain('"revokedAt" = COALESCE');
     expect(processing).toContain('UPDATE "Entitlement"');
     expect(licensing).toContain("fulfillClaimedLicense");
     expect(licensing).toContain('acquisition: "CLAIM_CODE"');
