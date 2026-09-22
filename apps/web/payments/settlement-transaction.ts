@@ -1,9 +1,10 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
-import type { CommerceSettlementReactionRepository } from "@bke/commerce/logic/settlement-reaction-repository";
+import { createCommerceSettlementFulfillmentCapability } from "@bke/commerce/logic/settlement-fulfillment";
+import type { CommerceSettlementFulfillmentRepository } from "@bke/commerce/logic/settlement-fulfillment-repository";
 import type { CommerceSettlementEntitlementInput } from "@bke/commerce/logic/settlement-reaction-ports";
+import { issueCommerceClaimUnits } from "@/apps/web/entitlements/commerce-claim-unit-issuer";
 import { createEntitlementsDurableRightGrantCapability } from "@bke/entitlements/logic/durable-right-grant";
 import type {
   EntitlementsDurableRightGrantRepository,
@@ -75,7 +76,12 @@ type SettlementFactRow = Readonly<{
 }>;
 
 type EntitlementsGrantRepositoryInput = Parameters<EntitlementsDurableRightGrantRepository["grant"]>[0];
-type CommerceSettlementRepositoryInput = Parameters<CommerceSettlementReactionRepository["settle"]>[0];
+type CommerceSettlementRepositoryInput = Parameters<CommerceSettlementFulfillmentRepository["settle"]>[0];
+
+type FulfillmentRoutingRow = Readonly<{
+  fulfillmentMode: "ACCOUNT_ENTITLEMENT" | "CLAIM_CODE";
+  fulfillmentSnapshot: unknown;
+}>;
 
 type EntitlementRow = Readonly<{
   id: string;
@@ -251,10 +257,17 @@ function createEntitlementsRepository(tx: Prisma.TransactionClient): Entitlement
   });
 }
 
-function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlementReactionRepository {
+function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlementFulfillmentRepository {
   return Object.freeze({
     async settle(input: CommerceSettlementRepositoryInput) {
-      await tx.$queryRaw`SELECT "id" FROM "Order" WHERE "id" = ${input.orderId} FOR UPDATE`;
+      const routingRows = await tx.$queryRaw<FulfillmentRoutingRow[]>`
+        SELECT "fulfillmentMode"::text AS "fulfillmentMode", "fulfillmentSnapshot"
+          FROM "Order"
+         WHERE "id" = ${input.orderId}
+         FOR UPDATE
+      `;
+      const routing = routingRows[0];
+      if (!routing) return { status: "REJECTED" as const, code: "ORDER_NOT_FOUND" as const };
       const order = await tx.order.findUnique({
         where: { id: input.orderId },
         include: { items: true, invoice: true, offerRedemption: true },
@@ -303,10 +316,13 @@ function createCommerceRepository(tx: Prisma.TransactionClient): CommerceSettlem
           orderStatus: "PAID" as const,
           invoiceStatus: "FINAL" as const,
           settlementDisposition: disposition,
+          fulfillmentMode: routing.fulfillmentMode,
+          fulfillmentSnapshot: routing.fulfillmentSnapshot,
           items: Object.freeze(order.items.map((item) => Object.freeze({
             orderItemId: item.id,
             productId: item.productId,
             editionId: item.editionId,
+            purchasePlanId: item.purchasePlanId,
             quantity: item.quantity,
             entitlementSnapshot: item.entitlementSnapshot,
             policySnapshot: item.policySnapshot,
@@ -357,7 +373,7 @@ export async function reactToPaidSettlement(
   }
 
   const entitlements = createEntitlementsDurableRightGrantCapability(createEntitlementsRepository(tx));
-  const commerce = createCommerceSettlementReactionCapability({
+  const commerce = createCommerceSettlementFulfillmentCapability({
     payments: Object.freeze({
       async reconcile() {
         return {
@@ -379,6 +395,11 @@ export async function reactToPaidSettlement(
         if (result.status === "GRANTED" || result.status === "EXISTING") return { status: result.status };
         if (result.status === "REJECTED") return { status: "REJECTED" as const };
         return { status: "FAILED" as const };
+      },
+    }),
+    claimUnits: Object.freeze({
+      async issue(input) {
+        return issueCommerceClaimUnits(tx, input);
       },
     }),
   });
