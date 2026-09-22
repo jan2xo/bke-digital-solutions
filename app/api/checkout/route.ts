@@ -39,6 +39,7 @@ import { rateLimit } from "@/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 import { checkoutSchema } from "@/apps/web/http/validation";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { getRuntimeEnvironment } from "@/platform/host/env";
 
 class CheckoutHttpError extends Error {
   constructor(
@@ -129,6 +130,9 @@ export async function POST(request: Request) {
     }
 
     const input = checkoutSchema.parse(await request.json());
+    if (input.purchaseFor === "OTHER" && !getRuntimeEnvironment().V3_CLAIM_CODE_CHECKOUT_ENABLED) {
+      fail("RECIPIENT_PURCHASE_UNAVAILABLE", 503);
+    }
     const purchaseAccess = application.get<AccountsPurchaseAccessCapability>(
       ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
     );
