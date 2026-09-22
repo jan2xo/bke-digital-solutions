@@ -522,6 +522,36 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
           where: { licenseId: { in: licenseIds }, active: true },
           data: { active: false, deactivatedAt: new Date() },
         });
+
+        const claimRows = await tx.$queryRaw<Array<{ id: string; entitlementId: string | null }>>`
+          SELECT "id", "entitlementId"
+            FROM "ClaimCode"
+           WHERE "orderId" = ${order.id}
+             AND "status" IN ('AVAILABLE', 'CLAIMED')
+           FOR UPDATE
+        `;
+        if (claimRows.length > 0) {
+          await tx.$executeRaw`
+            UPDATE "ClaimCode"
+               SET "status" = 'REVOKED',
+                   "codeCiphertext" = NULL,
+                   "updatedAt" = NOW()
+             WHERE "orderId" = ${order.id}
+               AND "status" IN ('AVAILABLE', 'CLAIMED')
+          `;
+          for (const claim of claimRows) {
+            if (!claim.entitlementId) continue;
+            await tx.$executeRaw`
+              UPDATE "Entitlement"
+                 SET "validUntil" = CASE
+                   WHEN "validFrom" < ${event.occurredAt} THEN ${event.occurredAt}
+                   ELSE "validFrom" + INTERVAL '1 millisecond'
+                 END
+               WHERE "id" = ${claim.entitlementId}
+            `;
+          }
+        }
+
         await tx.subscription.updateMany({
           where: {
             OR: [
