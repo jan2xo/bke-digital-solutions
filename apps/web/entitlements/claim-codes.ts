@@ -211,32 +211,17 @@ export async function revealClaimCode(
   }
 }
 
-export async function consumeClaimCode(
+async function consumeLockedClaim(
   tx: Prisma.TransactionClient,
-  input: Readonly<{ code: string; userId: string; accountId: string; verifiedEmail: string }>,
+  claim: ClaimRow,
+  input: Readonly<{ userId: string; accountId: string; verifiedEmail: string }>,
+  requireRecipientBinding: boolean,
 ): Promise<ClaimCodeConsumeResult> {
-  if (
-    !input.userId.trim()
-    || !input.accountId.trim()
-    || !validClaimRecipientEmail(input.verifiedEmail)
-    || !validClaimCode(input.code)
-  ) {
-    return { status: "REJECTED", code: "INVALID_CODE" };
-  }
-
-  const codeHash = hashClaimCode(input.code, env.LICENSE_PEPPER);
-  const rows = await tx.$queryRaw<ClaimRow[]>`
-    SELECT "id", "status", "resourceId", "productId", "editionId", "purchasePlanId",
-           "scopeSnapshot", "grantSnapshot", "validFrom", "validUntil", "expiresAt",
-           "recipientEmail", "claimedToAccountId", "entitlementId"
-      FROM "ClaimCode"
-     WHERE "codeHash" = ${codeHash}
-     FOR UPDATE
-  `;
-  const claim = rows[0];
-  if (!claim) return { status: "REJECTED", code: "INVALID_CODE" };
   if (claim.status === "CLAIMED") return { status: "REJECTED", code: "ALREADY_CLAIMED" };
   if (claim.status === "REVOKED") return { status: "REJECTED", code: "REVOKED" };
+  if (requireRecipientBinding && !claim.recipientEmail) {
+    return { status: "REJECTED", code: "INVALID_CODE" };
+  }
   if (!claimRecipientMatches(claim.recipientEmail, input.verifiedEmail)) {
     return { status: "REJECTED", code: "RECIPIENT_MISMATCH" };
   }
@@ -290,4 +275,57 @@ export async function consumeClaimCode(
   if (changed !== 1) throw new Error("CLAIM_CODE_STATE_CHANGED");
 
   return { status: "CLAIMED", entitlementId, accountId: input.accountId };
+}
+
+export async function consumeClaimCode(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ code: string; userId: string; accountId: string; verifiedEmail: string }>,
+): Promise<ClaimCodeConsumeResult> {
+  if (
+    !input.userId.trim()
+    || !input.accountId.trim()
+    || !validClaimRecipientEmail(input.verifiedEmail)
+    || !validClaimCode(input.code)
+  ) {
+    return { status: "REJECTED", code: "INVALID_CODE" };
+  }
+
+  const codeHash = hashClaimCode(input.code, env.LICENSE_PEPPER);
+  const rows = await tx.$queryRaw<ClaimRow[]>`
+    SELECT "id", "status", "resourceId", "productId", "editionId", "purchasePlanId",
+           "scopeSnapshot", "grantSnapshot", "validFrom", "validUntil", "expiresAt",
+           "recipientEmail", "claimedToAccountId", "entitlementId"
+      FROM "ClaimCode"
+     WHERE "codeHash" = ${codeHash}
+     FOR UPDATE
+  `;
+  const claim = rows[0];
+  if (!claim) return { status: "REJECTED", code: "INVALID_CODE" };
+  return consumeLockedClaim(tx, claim, input, false);
+}
+
+export async function consumeRecipientClaimCode(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ claimCodeId: string; userId: string; accountId: string; verifiedEmail: string }>,
+): Promise<ClaimCodeConsumeResult> {
+  if (
+    !input.claimCodeId.trim()
+    || !input.userId.trim()
+    || !input.accountId.trim()
+    || !validClaimRecipientEmail(input.verifiedEmail)
+  ) {
+    return { status: "REJECTED", code: "INVALID_CODE" };
+  }
+
+  const rows = await tx.$queryRaw<ClaimRow[]>`
+    SELECT "id", "status", "resourceId", "productId", "editionId", "purchasePlanId",
+           "scopeSnapshot", "grantSnapshot", "validFrom", "validUntil", "expiresAt",
+           "recipientEmail", "claimedToAccountId", "entitlementId"
+      FROM "ClaimCode"
+     WHERE "id" = ${input.claimCodeId}
+     FOR UPDATE
+  `;
+  const claim = rows[0];
+  if (!claim) return { status: "REJECTED", code: "INVALID_CODE" };
+  return consumeLockedClaim(tx, claim, input, true);
 }
