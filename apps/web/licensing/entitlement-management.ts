@@ -331,7 +331,7 @@ export async function fulfillOrderLicensing(
       editionId: item.editionId,
       purchasePlanId: item.purchasePlanId,
       subscriptionId,
-      maxSeats: item.quantity * policy.maxSeats,
+      maxSeats: policy.maxSeats,
       maxDevicesPerSeat: policy.maxDevicesPerSeat,
       expiresAt,
       eventMetadata: {
@@ -375,7 +375,7 @@ export async function fulfillClaimedLicense(
     where: { id: claim.orderItemId },
     include: { order: true },
   });
-  if (item.billingType !== "ONE_TIME" || item.planType !== "PERPETUAL") {
+  if (item.billingType !== "ONE_TIME" || item.quantity !== 1) {
     throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
   }
 
@@ -387,7 +387,7 @@ export async function fulfillClaimedLicense(
     if (existing.accountId !== input.accountId) {
       throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
     }
-    return Object.freeze(existing);
+    return Object.freeze({ id: existing.id });
   }
 
   const policy = item.policySnapshot as {
@@ -427,5 +427,7 @@ export async function fulfillClaimedLicense(
   if (issued.status !== "OK") {
     throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
   }
-  return issued.license;
+  const license = issued.licenses[0];
+  if (!license) throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
+  return Object.freeze({ id: license.id });
 }
