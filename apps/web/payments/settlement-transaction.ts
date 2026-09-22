@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { createCommerceSettlementFulfillmentCapability } from "@bke/commerce/logic/settlement-fulfillment";
 import type { CommerceSettlementFulfillmentRepository } from "@bke/commerce/logic/settlement-fulfillment-repository";
 import type { CommerceSettlementEntitlementInput } from "@bke/commerce/logic/settlement-reaction-ports";
+import type { CommerceClaimUnitIssueInput } from "@bke/commerce/logic/settlement-fulfillment-ports";
 import { issueCommerceClaimUnits } from "@/apps/web/entitlements/commerce-claim-unit-issuer";
 import { createEntitlementsDurableRightGrantCapability } from "@bke/entitlements/logic/durable-right-grant";
 import type {
@@ -398,7 +399,7 @@ export async function reactToPaidSettlement(
       },
     }),
     claimUnits: Object.freeze({
-      async issue(input) {
+      async issue(input: CommerceClaimUnitIssueInput) {
         return issueCommerceClaimUnits(tx, input);
       },
     }),
