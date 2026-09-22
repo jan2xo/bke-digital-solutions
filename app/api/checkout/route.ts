@@ -76,6 +76,8 @@ function commerceFailure(code: string): never {
       return fail("OFFER_NOT_AVAILABLE", 422);
     case "ENTITLEMENT_CONFLICT":
       return fail("ENTITLEMENT_CONFLICT", 409);
+    case "CLAIM_UNIT_CONFLICT":
+      return fail("CLAIM_UNIT_CONFLICT", 409);
     case "PAYMENT_PROVIDER_REJECTED":
       return fail("PAYMENT_PROVIDER_REJECTED", 502);
     case "INVALID_INPUT":
@@ -84,6 +86,7 @@ function commerceFailure(code: string): never {
     case "LEGAL_UNAVAILABLE":
     case "COMMERCE_PERSISTENCE_UNAVAILABLE":
     case "ENTITLEMENTS_UNAVAILABLE":
+    case "CLAIM_UNITS_UNAVAILABLE":
     case "PAYMENTS_UNAVAILABLE":
     case "PAYMENT_PROVIDER_UNAVAILABLE":
       return fail(code, 503);
@@ -125,6 +128,10 @@ export async function POST(request: Request) {
     }
 
     const input = checkoutSchema.parse(await request.json());
+    const recipientEmail =
+      input.recipientEmail && input.recipientEmail !== principal.email.trim().toLowerCase()
+        ? input.recipientEmail
+        : undefined;
     const purchaseAccess = application.get<AccountsPurchaseAccessCapability>(
       ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
     );
@@ -277,6 +284,8 @@ export async function POST(request: Request) {
       })),
       order: {
         accountId: access.account.id,
+        fulfillmentMode: recipientEmail ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
+        fulfillmentSnapshot: recipientEmail ? { recipientEmail } : {},
         orderNumber: `BKE-${new Date().getUTCFullYear()}-${suffix}`,
         invoiceNumber: `INV-${new Date().getUTCFullYear()}-${suffix}`,
         currency: plan.currency,
