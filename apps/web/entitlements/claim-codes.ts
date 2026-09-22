@@ -4,6 +4,11 @@ import { randomUUID } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { env } from "@/platform/host/env";
 import {
+  claimRecipientMatches,
+  normalizeClaimRecipientEmail,
+  validClaimRecipientEmail,
+} from "./claim-recipient-email";
+import {
   decryptClaimCode,
   encryptClaimCode,
   generateClaimCode,
@@ -26,6 +31,7 @@ export type ClaimCodeIssueInput = Readonly<{
   validFrom: Date;
   validUntil?: Date | null;
   expiresAt?: Date | null;
+  recipientEmail?: string | null;
 }>;
 
 export type ClaimCodeIssueResult =
@@ -44,7 +50,7 @@ export type ClaimCodeRevealResult =
 
 export type ClaimCodeConsumeResult =
   | { readonly status: "CLAIMED"; readonly entitlementId: string; readonly accountId: string }
-  | { readonly status: "REJECTED"; readonly code: "INVALID_CODE" | "ALREADY_CLAIMED" | "REVOKED" | "EXPIRED" };
+  | { readonly status: "REJECTED"; readonly code: "INVALID_CODE" | "ALREADY_CLAIMED" | "REVOKED" | "EXPIRED" | "RECIPIENT_MISMATCH" };
 
 type ClaimRow = Readonly<{
   id: string;
@@ -58,6 +64,7 @@ type ClaimRow = Readonly<{
   validFrom: Date;
   validUntil: Date | null;
   expiresAt: Date | null;
+  recipientEmail: string | null;
   claimedToAccountId: string | null;
   entitlementId: string | null;
 }>;
@@ -69,6 +76,7 @@ function validIssueInput(input: ClaimCodeIssueInput): boolean {
     && input.purchaserAccountId.trim()
     && input.productId.trim()
     && input.resourceId.trim()
+    && (input.recipientEmail == null || validClaimRecipientEmail(input.recipientEmail))
     && Number.isSafeInteger(input.units)
     && input.units > 0
     && input.units <= 1000
@@ -85,6 +93,9 @@ export async function issueClaimCodes(
   if (!validIssueInput(input)) return { status: "REJECTED", code: "INVALID_INPUT" };
   const deliveryKey = env.CLAIM_CODE_ENCRYPTION_KEY?.trim();
   if (!deliveryKey) return { status: "FAILED", code: "DELIVERY_KEY_UNAVAILABLE" };
+  const recipientEmail = input.recipientEmail == null
+    ? null
+    : normalizeClaimRecipientEmail(input.recipientEmail);
 
   const existing = await tx.$queryRaw<Array<{
     id: string;
@@ -95,9 +106,10 @@ export async function issueClaimCodes(
     editionId: string | null;
     purchasePlanId: string | null;
     resourceId: string;
+    recipientEmail: string | null;
   }>>`
     SELECT "id", "orderId", "unitIndex", "purchaserAccountId", "productId",
-           "editionId", "purchasePlanId", "resourceId"
+           "editionId", "purchasePlanId", "resourceId", "recipientEmail"
       FROM "ClaimCode"
      WHERE "orderItemId" = ${input.orderItemId}
      ORDER BY "unitIndex" ASC
@@ -112,7 +124,8 @@ export async function issueClaimCodes(
         row.productId === input.productId &&
         row.editionId === (input.editionId ?? null) &&
         row.purchasePlanId === (input.purchasePlanId ?? null) &&
-        row.resourceId === input.resourceId
+        row.resourceId === input.resourceId &&
+        row.recipientEmail === recipientEmail
       );
     if (!sameSource) return { status: "REJECTED", code: "SOURCE_CONFLICT" };
     return {
@@ -134,14 +147,15 @@ export async function issueClaimCodes(
         "id", "orderId", "orderItemId", "unitIndex", "purchaserAccountId",
         "codeHash", "codeCiphertext", "codeLastFour", "status", "resourceId", "productId",
         "editionId", "purchasePlanId", "scopeSnapshot", "grantSnapshot",
-        "validFrom", "validUntil", "expiresAt", "createdAt", "updatedAt"
+        "validFrom", "validUntil", "expiresAt", "recipientEmail", "createdAt", "updatedAt"
       ) VALUES (
         ${claimCodeId}, ${input.orderId}, ${input.orderItemId}, ${unitIndex}, ${input.purchaserAccountId},
         ${codeHash}, ${codeCiphertext}, ${normalized.slice(-4)}, 'AVAILABLE', ${input.resourceId}, ${input.productId},
         ${input.editionId ?? null}, ${input.purchasePlanId ?? null},
         ${JSON.stringify(input.scopeSnapshot ?? null)}::jsonb,
         ${JSON.stringify(input.grantSnapshot ?? null)}::jsonb,
-        ${input.validFrom}, ${input.validUntil ?? null}, ${input.expiresAt ?? null}, NOW(), NOW()
+        ${input.validFrom}, ${input.validUntil ?? null}, ${input.expiresAt ?? null},
+        ${recipientEmail}, NOW(), NOW()
       )
     `;
     claimCodeIds.push(claimCodeId);
@@ -199,9 +213,14 @@ export async function revealClaimCode(
 
 export async function consumeClaimCode(
   tx: Prisma.TransactionClient,
-  input: Readonly<{ code: string; userId: string; accountId: string }>,
+  input: Readonly<{ code: string; userId: string; accountId: string; verifiedEmail: string }>,
 ): Promise<ClaimCodeConsumeResult> {
-  if (!input.userId.trim() || !input.accountId.trim() || !validClaimCode(input.code)) {
+  if (
+    !input.userId.trim()
+    || !input.accountId.trim()
+    || !validClaimRecipientEmail(input.verifiedEmail)
+    || !validClaimCode(input.code)
+  ) {
     return { status: "REJECTED", code: "INVALID_CODE" };
   }
 
@@ -209,7 +228,7 @@ export async function consumeClaimCode(
   const rows = await tx.$queryRaw<ClaimRow[]>`
     SELECT "id", "status", "resourceId", "productId", "editionId", "purchasePlanId",
            "scopeSnapshot", "grantSnapshot", "validFrom", "validUntil", "expiresAt",
-           "claimedToAccountId", "entitlementId"
+           "recipientEmail", "claimedToAccountId", "entitlementId"
       FROM "ClaimCode"
      WHERE "codeHash" = ${codeHash}
      FOR UPDATE
@@ -218,6 +237,9 @@ export async function consumeClaimCode(
   if (!claim) return { status: "REJECTED", code: "INVALID_CODE" };
   if (claim.status === "CLAIMED") return { status: "REJECTED", code: "ALREADY_CLAIMED" };
   if (claim.status === "REVOKED") return { status: "REJECTED", code: "REVOKED" };
+  if (!claimRecipientMatches(claim.recipientEmail, input.verifiedEmail)) {
+    return { status: "REJECTED", code: "RECIPIENT_MISMATCH" };
+  }
 
   const now = new Date();
   if (claim.status === "EXPIRED" || (claim.expiresAt && claim.expiresAt <= now)) {
@@ -239,6 +261,7 @@ export async function consumeClaimCode(
     claimCodeId: claim.id,
     claimedByUserId: input.userId,
     claimedToAccountId: input.accountId,
+    recipientBound: Boolean(claim.recipientEmail),
   };
 
   await tx.$executeRaw`
