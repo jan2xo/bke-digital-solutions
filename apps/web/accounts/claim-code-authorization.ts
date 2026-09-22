@@ -2,6 +2,7 @@ import "server-only";
 
 import type { AccountsMemberRole } from "@bke/accounts/contracts/account.contract";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
+import { db } from "@/platform/host/db";
 
 export type ClaimAccountCapability = "CLAIM_ENTITLEMENT" | "MANAGE_CLAIM_CODES";
 
@@ -58,4 +59,54 @@ export async function requireClaimAccountCapabilityInTransaction(
   }
 
   return Object.assign(account, { effectiveRole });
+}
+
+
+export interface ClaimAuthorizedAccountOption {
+  readonly id: string;
+  readonly displayName: string;
+  readonly type: "PERSONAL" | "ORGANIZATION";
+  readonly effectiveRole: AccountsMemberRole;
+}
+
+export async function listClaimAuthorizedAccounts(
+  principalId: string,
+): Promise<readonly ClaimAuthorizedAccountOption[]> {
+  const normalizedPrincipalId = principalId.trim();
+  if (!normalizedPrincipalId) return Object.freeze([]);
+
+  const accounts = await db.customerAccount.findMany({
+    where: {
+      lifecycleState: "ACTIVE",
+      OR: [
+        { ownerId: normalizedPrincipalId },
+        { memberships: { some: { userId: normalizedPrincipalId } } },
+      ],
+    },
+    include: {
+      memberships: {
+        where: { userId: normalizedPrincipalId },
+        select: { role: true },
+        take: 1,
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return Object.freeze(accounts.flatMap((account) => {
+    const effectiveRole = (
+      account.ownerId === normalizedPrincipalId
+        ? "OWNER"
+        : account.memberships[0]?.role
+    ) as AccountsMemberRole | undefined;
+    if (!effectiveRole || !roleHasClaimAccountCapability(effectiveRole, "CLAIM_ENTITLEMENT")) {
+      return [];
+    }
+    return [{
+      id: account.id,
+      displayName: account.displayName,
+      type: account.type,
+      effectiveRole,
+    }];
+  }));
 }
