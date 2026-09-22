@@ -346,3 +346,86 @@ export async function fulfillOrderLicensing(
     }
   }
 }
+
+
+export async function fulfillClaimedLicense(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ claimCodeId: string; accountId: string }>,
+) {
+  const claims = await tx.$queryRaw<Array<{
+    orderItemId: string;
+    status: "AVAILABLE" | "CLAIMED" | "REVOKED" | "EXPIRED";
+    claimedToAccountId: string | null;
+  }>>`
+    SELECT "orderItemId", "status", "claimedToAccountId"
+      FROM "ClaimCode"
+     WHERE "id" = ${input.claimCodeId}
+     LIMIT 1
+  `;
+  const claim = claims[0];
+  if (
+    !claim
+    || claim.status !== "CLAIMED"
+    || claim.claimedToAccountId !== input.accountId
+  ) {
+    throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
+  }
+
+  const item = await tx.orderItem.findUniqueOrThrow({
+    where: { id: claim.orderItemId },
+    include: { order: true },
+  });
+  if (item.billingType !== "ONE_TIME" || item.planType !== "PERPETUAL") {
+    throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
+  }
+
+  const existing = await tx.license.findUnique({
+    where: { orderItemId: item.id },
+    select: { id: true, publicId: true, accountId: true, status: true, expiresAt: true },
+  });
+  if (existing) {
+    if (existing.accountId !== input.accountId) {
+      throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
+    }
+    return Object.freeze(existing);
+  }
+
+  const policy = item.policySnapshot as {
+    maxSeats: number;
+    maxDevicesPerSeat: number;
+    validityDays?: number;
+  };
+  const effectiveAt = new Date();
+  const plaintextKey = generateLicenseKey();
+  const capability = createLicensingEntitlementManagementCapability(createRepository(tx));
+  const issued = await capability.issue({
+    keyMaterial: {
+      publicId: randomUUID(),
+      keyHash: hashLicenseKey(plaintextKey),
+      keyLastFour: plaintextKey.slice(-4),
+      keyCiphertext: encryptLicenseKey(plaintextKey),
+    },
+    accountId: input.accountId,
+    orderId: item.orderId,
+    orderItemId: item.id,
+    productId: item.productId,
+    editionId: item.editionId,
+    purchasePlanId: item.purchasePlanId,
+    subscriptionId: null,
+    maxSeats: item.quantity * policy.maxSeats,
+    maxDevicesPerSeat: policy.maxDevicesPerSeat,
+    expiresAt: licensingInitialExpiration(effectiveAt, policy.validityDays),
+    eventMetadata: {
+      orderId: item.orderId,
+      claimCodeId: input.claimCodeId,
+      acquisition: "CLAIM_CODE",
+      editionId: item.editionId,
+      purchasePlanId: item.purchasePlanId,
+      planType: item.planType,
+    },
+  });
+  if (issued.status !== "OK") {
+    throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
+  }
+  return issued.license;
+}
