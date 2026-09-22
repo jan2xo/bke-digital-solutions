@@ -23,6 +23,7 @@ import { CheckoutStartButton } from "@/components/checkout-start-button";
 import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-account-list";
 import { currentIdentitySession } from "@/apps/web/auth/session";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { getRuntimeEnvironment } from "@/platform/host/env";
 
 export default async function CheckoutReview({
   searchParams,
@@ -97,6 +98,7 @@ export default async function CheckoutReview({
   const legalDocuments = requirementsResult.requirements;
 
   const authorizedAccounts = await listPurchaseAuthorizedAccounts(principal.id);
+  const recipientCheckoutEnabled = getRuntimeEnvironment().V3_CLAIM_CODE_CHECKOUT_ENABLED;
   const annual =
     plan.type === "ANNUAL"
       ? { savingsMinor: terms.savingsMinor, effectiveMonthlyMinor: terms.effectiveMonthlyMinor ?? 0 }
@@ -136,6 +138,7 @@ export default async function CheckoutReview({
       <CheckoutStartButton
         purchasePlanId={plan.id}
         currentEmail={principal.email}
+        recipientCheckoutEnabled={recipientCheckoutEnabled}
         accounts={authorizedAccounts.map((account) => ({ id: account.id, name: account.displayName }))}
         legalDocuments={legalDocuments.map((document) => ({
           versionId: document.documentVersionId,
