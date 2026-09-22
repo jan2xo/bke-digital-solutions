@@ -135,6 +135,7 @@ export default async function CheckoutReview({
       </p>
       <CheckoutStartButton
         purchasePlanId={plan.id}
+        allowRecipientPurchase={plan.type === "PERPETUAL"}
         accounts={authorizedAccounts.map((account) => ({ id: account.id, name: account.displayName }))}
         legalDocuments={legalDocuments.map((document) => ({
           versionId: document.documentVersionId,
