@@ -28,7 +28,10 @@ import { createCommercePurchasePlanLookupCapability } from "@bke/commerce/logic/
 import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
 import { createCommerceRenewalCheckoutPricingCapability } from "@bke/commerce/logic/renewal-checkout-pricing";
 import { createCommerceSettlementFulfillmentCapability } from "@bke/commerce/logic/settlement-fulfillment";
-import type { CommerceClaimUnitIssuer } from "@bke/commerce/logic/settlement-fulfillment-ports";
+import type {
+  CommerceClaimUnitIssueInput,
+  CommerceClaimUnitIssuer,
+} from "@bke/commerce/logic/settlement-fulfillment-ports";
 import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
 import { createCommerceSubscriptionStatusLookupCapability } from "@bke/commerce/logic/subscription-status-lookup";
 import type {
@@ -68,10 +71,15 @@ import type { CapabilityModule, CapabilityResolver } from "../../contracts/capab
 
 export interface CommerceModuleOptions {
   readonly connectionString: string;
-  readonly claimUnits: CommerceClaimUnitIssuer;
+  readonly claimUnits?: CommerceClaimUnitIssuer;
 }
 
 export function createCommerceModule(options: CommerceModuleOptions): CapabilityModule {
+  const claimUnits: CommerceClaimUnitIssuer = options.claimUnits ?? Object.freeze({
+    async issue(_input: CommerceClaimUnitIssueInput) {
+      return { status: "FAILED" as const };
+    },
+  });
   const offerRedemption = createCommerceOfferRedemptionCapability(
     createPostgresCommerceOfferRedemptionRepository(options.connectionString),
   );
@@ -203,7 +211,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       const zeroPaymentFulfillment = createCommerceZeroPaymentFulfillmentCapability({
         repository: zeroPaymentRepository,
         entitlements,
-        claimUnits: options.claimUnits,
+        claimUnits,
       });
 
       const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({
@@ -234,7 +242,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         payments,
         repository: settlementFulfillmentRepository,
         entitlements,
-        claimUnits: options.claimUnits,
+        claimUnits,
       });
 
       return [
