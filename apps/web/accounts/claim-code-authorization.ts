@@ -65,7 +65,7 @@ export async function requireClaimAccountCapabilityInTransaction(
 export interface ClaimAuthorizedAccountOption {
   readonly id: string;
   readonly displayName: string;
-  readonly type: "PERSONAL" | "ORGANIZATION";
+  readonly type: "INDIVIDUAL" | "ORGANIZATION";
   readonly effectiveRole: AccountsMemberRole;
 }
 
