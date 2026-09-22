@@ -76,6 +76,10 @@ function commerceFailure(code: string): never {
       return fail("OFFER_NOT_AVAILABLE", 422);
     case "ENTITLEMENT_CONFLICT":
       return fail("ENTITLEMENT_CONFLICT", 409);
+    case "CLAIM_UNIT_CONFLICT":
+      return fail("CLAIM_UNIT_CONFLICT", 409);
+    case "CLAIM_UNITS_UNAVAILABLE":
+      return fail("CLAIM_UNITS_UNAVAILABLE", 503);
     case "PAYMENT_PROVIDER_REJECTED":
       return fail("PAYMENT_PROVIDER_REJECTED", 502);
     case "INVALID_INPUT":
@@ -151,6 +155,9 @@ export async function POST(request: Request) {
     }
     const plan = planResult.plan;
     if (!plan.editionId) fail("INVALID_PURCHASE_PLAN", 422);
+    if (input.purchaseFor === "OTHER" && plan.type !== "PERPETUAL") {
+      fail("RECIPIENT_PURCHASE_REQUIRES_PERPETUAL_PLAN", 422);
+    }
 
     const pricingCapability = application.get<CommercePurchasePlanPricingCapability>(
       COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
@@ -277,6 +284,10 @@ export async function POST(request: Request) {
       })),
       order: {
         accountId: access.account.id,
+        fulfillmentMode: input.purchaseFor === "OTHER" ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
+        fulfillmentSnapshot: input.purchaseFor === "OTHER"
+          ? { recipientEmail: input.recipientEmail }
+          : {},
         orderNumber: `BKE-${new Date().getUTCFullYear()}-${suffix}`,
         invoiceNumber: `INV-${new Date().getUTCFullYear()}-${suffix}`,
         currency: plan.currency,
