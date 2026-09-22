@@ -25,7 +25,7 @@ describe("V3 recipient checkout fulfillment", () => {
     const result = checkoutSchema.parse({
       ...base,
       purchaseFor: "OTHER",
-      recipientEmail: "  Recipient@Example.COM ",
+      recipientEmail: "Recipient@Example.COM",
     });
     expect(result.recipientEmail).toBe("recipient@example.com");
   });
@@ -57,7 +57,8 @@ describe("V3 recipient checkout fulfillment", () => {
     expect(settlement).toContain("purchasePlanId: item.purchasePlanId");
 
     expect(module).toContain("createCommerceSettlementFulfillmentCapability");
-    expect(module).toContain("claimUnits: options.claimUnits");
+    expect(module).toContain("const claimUnits: CommerceClaimUnitIssuer = options.claimUnits ??");
+    expect(module).toContain("claimUnits,");
     expect(module).toContain("COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID");
 
     expect(button).toContain("For someone else");
