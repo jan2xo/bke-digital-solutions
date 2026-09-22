@@ -114,7 +114,7 @@ export function CheckoutStartButton({
             <span><b>For someone else</b><span className="block text-sm text-[#a8b5c4]">Payment stays with your purchasing account. The license is reserved for the recipient email after verification and is not granted to you first.</span></span>
           </label>
         ) : (
-          <p className="text-sm text-[#a8b5c4]">Recipient purchases are currently available for perpetual licenses only.</p>
+          <p className="text-sm text-[#a8b5c4]">Recipient purchases are not currently available for this checkout.</p>
         )}
         {purchaseFor === "OTHER" && allowRecipientPurchase && (
           <label className="label mt-2">
