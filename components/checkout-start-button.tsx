@@ -8,11 +8,13 @@ type LegalDocument = Readonly<{ versionId: string; type: string; title: string; 
 export function CheckoutStartButton({
   purchasePlanId,
   currentEmail,
+  recipientCheckoutEnabled,
   accounts,
   legalDocuments,
 }: {
   purchasePlanId: string;
   currentEmail: string;
+  recipientCheckoutEnabled: boolean;
   accounts: CheckoutAccount[];
   legalDocuments: LegalDocument[];
 }) {
@@ -27,6 +29,11 @@ export function CheckoutStartButton({
   const legalPanel = useRef<HTMLFieldSetElement>(null);
 
   async function start() {
+    if (!recipientCheckoutEnabled && purchaseFor === "OTHER") {
+      setPurchaseFor("SELF");
+      setError("Recipient purchases are not enabled in this environment.");
+      return;
+    }
     if (purchaseFor === "OTHER" && !recipientEmail.trim()) {
       setError("Enter the recipient email for this license.");
       return;
@@ -61,6 +68,7 @@ export function CheckoutStartButton({
         OFFER_ACCOUNT_LIMIT_REACHED: "This account has already used this offer.",
         CLAIM_UNIT_CONFLICT: "This recipient purchase conflicts with an existing claim. Please contact support.",
         CLAIM_UNITS_UNAVAILABLE: "Recipient fulfillment is temporarily unavailable. Your purchase was not reassigned to you.",
+        RECIPIENT_CHECKOUT_DISABLED: "Buying for someone else is not enabled in this environment.",
         RATE_LIMITED: "Too many checkout attempts. Please wait before trying again.",
       } as Record<string, string>)[payload.error] ?? "Checkout could not be started");
       setBusy(false);
@@ -83,11 +91,11 @@ export function CheckoutStartButton({
         <input type="radio" name="purchase-for" checked={purchaseFor === "SELF"} onChange={() => { setPurchaseFor("SELF"); setError(""); }} />
         <span>For me <span className="text-[#8790ae]">({currentEmail})</span></span>
       </label>
-      <label className="flex items-center gap-2 text-sm">
+      {recipientCheckoutEnabled && <label className="flex items-center gap-2 text-sm">
         <input type="radio" name="purchase-for" checked={purchaseFor === "OTHER"} onChange={() => { setPurchaseFor("OTHER"); setError(""); }} />
         <span>For someone else</span>
-      </label>
-      {purchaseFor === "OTHER" && <label className="label mt-1">
+      </label>}
+      {recipientCheckoutEnabled && purchaseFor === "OTHER" && <label className="label mt-1">
         Recipient email
         <input
           className="input"
