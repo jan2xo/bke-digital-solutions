@@ -49,10 +49,10 @@ describe("V3 recipient checkout fulfillment", () => {
   });
 
   it("wires claim units into both paid and zero-payment Commerce fulfillment", () => {
-    const module = readFileSync("modules/commerce/module.ts", "utf8");
-    expect(module).toContain("createCommerceSettlementFulfillmentCapability");
-    expect(module).toContain("COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID");
-    expect(module).toContain("claimUnits: options.claimUnits");
+    const commerceModuleSource = readFileSync("modules/commerce/module.ts", "utf8");
+    expect(commerceModuleSource).toContain("createCommerceSettlementFulfillmentCapability");
+    expect(commerceModuleSource).toContain("COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID");
+    expect(commerceModuleSource).toContain("claimUnits: options.claimUnits");
   });
 
   it("exposes an explicit For me / For someone else customer choice when enabled", () => {
