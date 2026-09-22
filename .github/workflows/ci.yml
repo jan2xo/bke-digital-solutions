@@ -74,4 +74,5 @@ jobs:
           cp .env.example .env.certification
           docker compose --env-file .env.certification -f docker-compose.production.yml -f docker-compose.disposable.yml config --quiet
           rm .env.certification
+      - run: docker build --target migrations -t bke-digital-solutions-migrations:ci .
       - run: docker build --target runner -t bke-digital-solutions:ci .
