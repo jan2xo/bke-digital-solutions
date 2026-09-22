@@ -50,7 +50,7 @@ export async function issueCommerceClaimUnits(
 
 export function createCommerceClaimUnitIssuer(): CommerceClaimUnitIssuer {
   return Object.freeze({
-    async issue(input) {
+    async issue(input: CommerceClaimUnitIssueInput) {
       return db.$transaction(
         (tx) => issueCommerceClaimUnits(tx, input),
         { isolationLevel: "Serializable" },
