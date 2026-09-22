@@ -52,7 +52,7 @@ export function createTransactionalClaimUnitIssuer(
   tx: Prisma.TransactionClient,
 ): CommerceClaimUnitIssuer {
   return Object.freeze({
-    async issue(input) {
+    async issue(input: CommerceClaimUnitIssueInput) {
       return issue(tx, input);
     },
   });
@@ -60,7 +60,7 @@ export function createTransactionalClaimUnitIssuer(
 
 export function createClaimUnitIssuer(): CommerceClaimUnitIssuer {
   return Object.freeze({
-    async issue(input) {
+    async issue(input: CommerceClaimUnitIssueInput) {
       return db.$transaction(
         (tx) => issue(tx, input),
         { isolationLevel: "Serializable" },
