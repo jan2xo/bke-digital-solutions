@@ -5,11 +5,11 @@ import { checkoutSchema } from "@/apps/web/http/validation";
 const read = (path: string) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 const base = {
-  purchasePlanId: "cm12345678901234567890123",
-  customerAccountId: "cm12345678901234567890124",
+  purchasePlanId: "c123456789012345678901234",
+  customerAccountId: "c223456789012345678901234",
   legalVersionIds: [
-    "cm12345678901234567890125",
-    "cm12345678901234567890126",
+    "c323456789012345678901234",
+    "c423456789012345678901234",
   ],
 };
 
