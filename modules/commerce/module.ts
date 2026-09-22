@@ -10,6 +10,7 @@ import { COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID } from "@bke/commerce/c
 import { COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID } from "@bke/commerce/contracts/public-promotion-preview.contract";
 import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-lookup.contract";
 import { COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
+import { COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID } from "@bke/commerce/contracts/settlement-fulfillment.contract";
 import { COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID } from "@bke/commerce/contracts/settlement-reaction.contract";
 import { COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/subscription-status-lookup.contract";
 import { COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID } from "@bke/commerce/contracts/zero-payment-fulfillment.contract";
@@ -26,6 +27,8 @@ import { createCommercePublicPromotionPreviewCapability } from "@bke/commerce/lo
 import { createCommercePurchasePlanLookupCapability } from "@bke/commerce/logic/purchase-plan-lookup";
 import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
 import { createCommerceRenewalCheckoutPricingCapability } from "@bke/commerce/logic/renewal-checkout-pricing";
+import { createCommerceSettlementFulfillmentCapability } from "@bke/commerce/logic/settlement-fulfillment";
+import type { CommerceClaimUnitIssuer } from "@bke/commerce/logic/settlement-fulfillment-ports";
 import { createCommerceSettlementReactionCapability } from "@bke/commerce/logic/settlement-reaction";
 import { createCommerceSubscriptionStatusLookupCapability } from "@bke/commerce/logic/subscription-status-lookup";
 import type {
@@ -41,6 +44,7 @@ import { createPostgresCommerceOrderItemPolicyLookupCapability } from "@bke/comm
 import { createPostgresCommercePublicPromotionPreviewRepository } from "@bke/commerce/prisma/repositories/postgres-public-promotion-preview-repository";
 import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
 import { createPostgresCommerceRenewalCheckoutPricingRepository } from "@bke/commerce/prisma/repositories/postgres-renewal-checkout-pricing-repository";
+import { createPostgresCommerceSettlementFulfillmentRepository } from "@bke/commerce/prisma/repositories/postgres-settlement-fulfillment-repository";
 import { createPostgresCommerceSettlementReactionRepository } from "@bke/commerce/prisma/repositories/postgres-settlement-reaction-repository";
 import { createPostgresCommerceSubscriptionStatusLookupRepository } from "@bke/commerce/prisma/repositories/postgres-subscription-status-lookup-repository";
 import { createPostgresCommerceZeroPaymentFulfillmentRepository } from "@bke/commerce/prisma/repositories/postgres-zero-payment-fulfillment-repository";
@@ -64,6 +68,7 @@ import type { CapabilityModule, CapabilityResolver } from "../../contracts/capab
 
 export interface CommerceModuleOptions {
   readonly connectionString: string;
+  readonly claimUnits: CommerceClaimUnitIssuer;
 }
 
 export function createCommerceModule(options: CommerceModuleOptions): CapabilityModule {
@@ -95,6 +100,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   const settlementRepository = createPostgresCommerceSettlementReactionRepository(
     options.connectionString,
   );
+  const settlementFulfillmentRepository = createPostgresCommerceSettlementFulfillmentRepository(
+    options.connectionString,
+  );
   const zeroPaymentRepository = createPostgresCommerceZeroPaymentFulfillmentRepository(
     options.connectionString,
   );
@@ -117,6 +125,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID,
       COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID,
       COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID,
+      COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID,
       COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID,
       COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID,
       COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID,
@@ -194,6 +203,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       const zeroPaymentFulfillment = createCommerceZeroPaymentFulfillmentCapability({
         repository: zeroPaymentRepository,
         entitlements,
+        claimUnits: options.claimUnits,
       });
 
       const checkoutOrchestration = createCommerceCheckoutOrchestrationCapability({
@@ -220,6 +230,12 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         repository: settlementRepository,
         entitlements,
       });
+      const settlementFulfillment = createCommerceSettlementFulfillmentCapability({
+        payments,
+        repository: settlementFulfillmentRepository,
+        entitlements,
+        claimUnits: options.claimUnits,
+      });
 
       return [
         { id: COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID, value: purchasePlanPricing },
@@ -230,6 +246,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         { id: COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID, value: publicPromotionPreview },
         { id: COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID, value: checkoutOrchestration },
         { id: COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID, value: settlementReaction },
+        { id: COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID, value: settlementFulfillment },
         { id: COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID, value: zeroPaymentFulfillment },
         { id: COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID, value: orderItemPolicyLookup },
         { id: COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID, value: subscriptionStatusLookup },
