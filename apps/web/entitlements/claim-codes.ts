@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { env } from "@/platform/host/env";
+import { db } from "@/platform/host/db";
 import { fulfillOrderLicensing } from "@/apps/web/licensing/entitlement-management";
 import {
   claimRecipientMatches,
@@ -301,4 +302,96 @@ export async function consumeClaimCode(
   if (changed !== 1) throw new Error("CLAIM_CODE_STATE_CHANGED");
 
   return { status: "CLAIMED", entitlementId, accountId: input.accountId };
+}
+
+
+export type PendingRecipientClaim = Readonly<{
+  claimCodeId: string;
+  orderNumber: string;
+  productName: string;
+  editionName: string | null;
+  planName: string | null;
+  createdAt: Date;
+  expiresAt: Date | null;
+}>;
+
+export async function listPendingRecipientClaims(
+  verifiedEmail: string,
+): Promise<readonly PendingRecipientClaim[]> {
+  if (!validClaimRecipientEmail(verifiedEmail)) return Object.freeze([]);
+  const recipientEmail = normalizeClaimRecipientEmail(verifiedEmail);
+  const rows = await db.$queryRaw<Array<{
+    claimCodeId: string;
+    orderNumber: string;
+    productName: string;
+    editionName: string | null;
+    planName: string | null;
+    createdAt: Date;
+    expiresAt: Date | null;
+  }>>`
+    SELECT cc."id" AS "claimCodeId",
+           o."number" AS "orderNumber",
+           oi."productName",
+           oi."editionName",
+           oi."planName",
+           cc."createdAt",
+           cc."expiresAt"
+      FROM "ClaimCode" cc
+      JOIN "Order" o ON o."id" = cc."orderId"
+      JOIN "OrderItem" oi ON oi."id" = cc."orderItemId"
+     WHERE cc."recipientEmail" = ${recipientEmail}
+       AND cc."status" = 'AVAILABLE'
+       AND (cc."expiresAt" IS NULL OR cc."expiresAt" > NOW())
+       AND o."status" = 'PAID'
+     ORDER BY cc."createdAt" ASC
+  `;
+  return Object.freeze(rows.map((row) => Object.freeze({ ...row })));
+}
+
+export async function consumeRecipientClaimById(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ claimCodeId: string; userId: string; accountId: string; verifiedEmail: string }>,
+): Promise<ClaimCodeConsumeResult> {
+  if (
+    !input.claimCodeId.trim()
+    || !input.userId.trim()
+    || !input.accountId.trim()
+    || !validClaimRecipientEmail(input.verifiedEmail)
+  ) {
+    return { status: "REJECTED", code: "INVALID_CODE" };
+  }
+
+  const recipientEmail = normalizeClaimRecipientEmail(input.verifiedEmail);
+  const rows = await tx.$queryRaw<Array<{
+    id: string;
+    status: "AVAILABLE" | "CLAIMED" | "REVOKED" | "EXPIRED";
+    recipientEmail: string | null;
+    codeCiphertext: string | null;
+    expiresAt: Date | null;
+  }>>`
+    SELECT "id", "status", "recipientEmail", "codeCiphertext", "expiresAt"
+      FROM "ClaimCode"
+     WHERE "id" = ${input.claimCodeId}
+     LIMIT 1
+  `;
+  const claim = rows[0];
+  if (!claim) return { status: "REJECTED", code: "INVALID_CODE" };
+  if (claim.status === "CLAIMED") return { status: "REJECTED", code: "ALREADY_CLAIMED" };
+  if (claim.status === "REVOKED") return { status: "REJECTED", code: "REVOKED" };
+  if (!claimRecipientMatches(claim.recipientEmail, recipientEmail)) {
+    return { status: "REJECTED", code: "RECIPIENT_MISMATCH" };
+  }
+  if (claim.status === "EXPIRED" || (claim.expiresAt && claim.expiresAt <= new Date())) {
+    return { status: "REJECTED", code: "EXPIRED" };
+  }
+
+  const deliveryKey = env.CLAIM_CODE_ENCRYPTION_KEY?.trim();
+  if (!deliveryKey || !claim.codeCiphertext) throw new Error("CLAIM_CODE_DELIVERY_UNAVAILABLE");
+  const code = decryptClaimCode(claim.codeCiphertext, deliveryKey);
+  return consumeClaimCode(tx, {
+    code,
+    userId: input.userId,
+    accountId: input.accountId,
+    verifiedEmail: recipientEmail,
+  });
 }
