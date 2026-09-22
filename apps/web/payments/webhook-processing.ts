@@ -535,6 +535,7 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
             UPDATE "ClaimCode"
                SET "status" = 'REVOKED',
                    "codeCiphertext" = NULL,
+                   "revokedAt" = COALESCE("revokedAt", ${event.occurredAt}),
                    "updatedAt" = NOW()
              WHERE "orderId" = ${order.id}
                AND "status" IN ('AVAILABLE', 'CLAIMED')
