@@ -16,7 +16,6 @@ FROM dependencies AS migrations
 RUN addgroup --system --gid 1002 prisma && adduser --system --uid 1002 prisma
 COPY --chown=prisma:prisma prisma ./prisma
 COPY --chown=prisma:prisma prisma.config.ts ./prisma.config.ts
-COPY --chown=prisma:prisma generated ./generated
 ENV NODE_ENV=production
 USER prisma
 CMD ["npx", "prisma", "migrate", "deploy"]
