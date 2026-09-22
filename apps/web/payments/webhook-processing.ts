@@ -261,12 +261,14 @@ async function processPaidEvent(
   }
 
   if (settlement.paymentSettlementDisposition === "CREATED") {
-    await fulfillOrderLicensing(
-      tx,
-      order.id,
-      { paymentId: payment.id, paymentEventId: event.eventId },
-      renewalRequests,
-    );
+    if (settlement.fulfillmentMode === "ACCOUNT_ENTITLEMENT") {
+      await fulfillOrderLicensing(
+        tx,
+        order.id,
+        { paymentId: payment.id, paymentEventId: event.eventId },
+        renewalRequests,
+      );
+    }
     await tx.auditLog.create({
       data: {
         accountId: order.accountId,
