@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   parseSimpleEnv,
@@ -23,6 +24,13 @@ const secrets = {
 };
 
 describe("V3 disposable certification environment", () => {
+  it("does not require host-installed tsx for doctor validation", () => {
+    const doctor = readFileSync("scripts/v3-disposable-doctor.mjs", "utf8");
+    expect(doctor).not.toContain('runCheck("environment schema", "npm"');
+    expect(doctor).toContain('"operations"');
+    expect(doctor).toContain('"config:validate"');
+  });
+
   it("parses values containing equals signs", () => {
     expect(parseSimpleEnv("A=one=two\nB=three\n")).toEqual({
       A: "one=two",
