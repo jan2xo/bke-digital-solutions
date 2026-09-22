@@ -509,6 +509,15 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
         });
         await tx.order.update({ where: { id: order.id }, data: { status: "REFUNDED" } });
         await tx.invoice.update({ where: { orderId: order.id }, data: { status: "VOID" } });
+        await tx.$executeRaw`
+          UPDATE "ClaimCode"
+             SET "status" = 'REVOKED',
+                 "revokedAt" = ${event.occurredAt},
+                 "codeCiphertext" = NULL,
+                 "updatedAt" = NOW()
+           WHERE "orderId" = ${order.id}
+             AND "status" = 'AVAILABLE'
+        `;
         const licenses = await tx.license.findMany({
           where: {
             OR: [
