@@ -65,6 +65,8 @@ describe("V3 disposable certification environment", () => {
       supplyPublicBase64: "supply-public",
     });
 
+    expect(output).toContain("NODE_ENV=production");
+    expect(output).toContain("DEPLOYMENT_ENV=test");
     expect(output).toContain("PAYMENT_PROVIDER=mock");
     expect(output).toContain("PAYMONGO_SECRET_KEY=\n");
     expect(output).toContain("PAYMONGO_LIVEMODE=false");

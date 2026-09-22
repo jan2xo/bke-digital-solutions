@@ -107,7 +107,7 @@ export function renderDisposableEnvironment({
 
   const values = [
     ["BKE_DISPOSABLE_CERTIFICATION", "true"],
-    ["NODE_ENV", "test"],
+    ["NODE_ENV", "production"],
     ["DEPLOYMENT_ENV", "test"],
     ["DEPLOYMENT_ID", "bke-v3-disposable"],
     ["APP_URL", "https://bke-v3.test:8443"],

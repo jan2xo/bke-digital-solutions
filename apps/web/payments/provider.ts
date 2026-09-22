@@ -4,6 +4,7 @@ import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-atte
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconciliation-provider";
 import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
+import { assertMockPaymentsAllowed } from "@/apps/web/payments/runtime-policy";
 
 type WebPaymentsAdapter = PaymentsCheckoutProvider &
   PaymentsProviderEventVerifier &
@@ -21,7 +22,7 @@ function appOrigin() {
 }
 
 function createMockAdapter(): WebPaymentsAdapter {
-  if (process.env.NODE_ENV === "production") throw new Error("V2_MOCK_PAYMENTS_FORBIDDEN_IN_PRODUCTION");
+  assertMockPaymentsAllowed();
   const adapter: WebPaymentsAdapter = {
     name: "mock",
     async createCheckout(input) {
