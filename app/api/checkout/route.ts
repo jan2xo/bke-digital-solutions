@@ -130,7 +130,7 @@ export async function POST(request: Request) {
 
     const input = checkoutSchema.parse(await request.json());
     const runtimeEnvironment = getRuntimeEnvironment();
-    if (input.recipientEmail && !runtimeEnvironment.V3_CLAIM_CODE_CHECKOUT_ENABLED) {
+    if (input.recipientEmail && !runtimeEnvironment.CLAIM_CODE_CHECKOUT_ENABLED) {
       fail("RECIPIENT_CHECKOUT_DISABLED", 409);
     }
     const recipientEmail =
