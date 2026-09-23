@@ -66,6 +66,7 @@ describe("Agent account-session update authority", () => {
     expect(route).toContain("authenticateAgentAccessToken");
     expect(route).toContain("readAgentSoftwareCatalog");
     expect(route).toContain("issueAgentAccountUpdatePolicy");
+    expect(route).toContain("update-policy-issuer");
     expect(route).toContain("githubReleaseRepository");
     expect(route).toContain('channel: z.literal("stable")');
     expect(route).not.toContain("verified_licenses");
