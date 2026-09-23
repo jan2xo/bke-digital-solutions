@@ -14,6 +14,7 @@ on:
       - "app/api/agent-sessions/provision/standalone/route.ts"
       - "app/api/agent-sessions/update/standalone/route.ts"
       - "apps/web/agent-sessions/update-policy.ts"
+      - "apps/web/agent-sessions/update-policy-issuer.ts"
       - "tests/agent-session-update-authority.test.ts"
       - "components/license-seat-manager.tsx"
       - "components/customer-license-card.tsx"
