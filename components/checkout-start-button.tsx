@@ -8,13 +8,13 @@ type LegalDocument = Readonly<{ versionId: string; type: string; title: string; 
 export function CheckoutStartButton({
   purchasePlanId,
   currentEmail,
-  recipientCheckoutEnabled,
+  giftCheckoutEnabled,
   accounts,
   legalDocuments,
 }: {
   purchasePlanId: string;
   currentEmail: string;
-  recipientCheckoutEnabled: boolean;
+  giftCheckoutEnabled: boolean;
   accounts: CheckoutAccount[];
   legalDocuments: LegalDocument[];
 }) {
@@ -22,20 +22,15 @@ export function CheckoutStartButton({
   const [error, setError] = useState("");
   const [accountId, setAccountId] = useState(accounts[0]?.id ?? "");
   const [offer, setOffer] = useState("");
-  const [purchaseFor, setPurchaseFor] = useState<"SELF" | "OTHER">("SELF");
-  const [recipientEmail, setRecipientEmail] = useState("");
+  const [purchaseFor, setPurchaseFor] = useState<"SELF" | "GIFT">("SELF");
   const [accepted, setAccepted] = useState<string[]>([]);
   const [legalAttempted, setLegalAttempted] = useState(false);
   const legalPanel = useRef<HTMLFieldSetElement>(null);
 
   async function start() {
-    if (!recipientCheckoutEnabled && purchaseFor === "OTHER") {
+    if (!giftCheckoutEnabled && purchaseFor === "GIFT") {
       setPurchaseFor("SELF");
-      setError("Recipient purchases are not enabled in this environment.");
-      return;
-    }
-    if (purchaseFor === "OTHER" && !recipientEmail.trim()) {
-      setError("Enter the recipient email for this license.");
+      setError("Gift purchases are not enabled in this environment.");
       return;
     }
     if (accepted.length !== legalDocuments.length) {
@@ -53,8 +48,8 @@ export function CheckoutStartButton({
       body: JSON.stringify({
         purchasePlanId,
         customerAccountId: accountId,
+        purchaseFor,
         legalVersionIds: accepted,
-        ...(purchaseFor === "OTHER" ? { recipientEmail: recipientEmail.trim() } : {}),
         ...(offer.trim() ? { offerIdentifier: offer.trim() } : {}),
       }),
     });
@@ -66,9 +61,9 @@ export function CheckoutStartButton({
         OFFER_NOT_FOUND: "This offer is unavailable for the selected account or plan.",
         OFFER_LIMIT_REACHED: "This offer has reached its redemption limit.",
         OFFER_ACCOUNT_LIMIT_REACHED: "This account has already used this offer.",
-        CLAIM_UNIT_CONFLICT: "This recipient purchase conflicts with an existing claim. Please contact support.",
-        CLAIM_UNITS_UNAVAILABLE: "Recipient fulfillment is temporarily unavailable. Your purchase was not reassigned to you.",
-        RECIPIENT_CHECKOUT_DISABLED: "Buying for someone else is not enabled in this environment.",
+        CLAIM_UNIT_CONFLICT: "This gift purchase conflicts with an existing claim. Please contact support.",
+        CLAIM_UNITS_UNAVAILABLE: "Gift fulfillment is temporarily unavailable. No software right was assigned to the paying account.",
+        GIFT_CHECKOUT_DISABLED: "Gift Claim Code purchases are not enabled in this environment.",
         RATE_LIMITED: "Too many checkout attempts. Please wait before trying again.",
       } as Record<string, string>)[payload.error] ?? "Checkout could not be started");
       setBusy(false);
@@ -86,30 +81,18 @@ export function CheckoutStartButton({
     </label>
 
     <fieldset className="grid gap-2">
-      <legend className="font-bold">Who is this license for?</legend>
+      <legend className="font-bold">How should this purchase be delivered?</legend>
       <label className="flex items-center gap-2 text-sm">
         <input type="radio" name="purchase-for" checked={purchaseFor === "SELF"} onChange={() => { setPurchaseFor("SELF"); setError(""); }} />
-        <span>For me <span className="text-[#8790ae]">({currentEmail})</span></span>
+        <span>For my account <span className="text-[#8790ae]">({currentEmail})</span></span>
       </label>
-      {recipientCheckoutEnabled && <label className="flex items-center gap-2 text-sm">
-        <input type="radio" name="purchase-for" checked={purchaseFor === "OTHER"} onChange={() => { setPurchaseFor("OTHER"); setError(""); }} />
-        <span>For someone else</span>
+      {giftCheckoutEnabled && <label className="flex items-center gap-2 text-sm">
+        <input type="radio" name="purchase-for" checked={purchaseFor === "GIFT"} onChange={() => { setPurchaseFor("GIFT"); setError(""); }} />
+        <span>Buy as gift / Claim Code</span>
       </label>}
-      {recipientCheckoutEnabled && purchaseFor === "OTHER" && <label className="label mt-1">
-        Recipient email
-        <input
-          className="input"
-          type="email"
-          autoComplete="email"
-          value={recipientEmail}
-          onChange={(event) => { setRecipientEmail(event.target.value); setError(""); }}
-          maxLength={254}
-          placeholder="recipient@example.com"
-        />
-        <span className="mt-1 block text-xs text-[#8790ae]">
-          The recipient must claim with this verified email. The paying account keeps the order and invoice; the recipient gets the software right.
-        </span>
-      </label>}
+      {giftCheckoutEnabled && purchaseFor === "GIFT" && <p className="rounded-lg border border-[#2d3850] bg-[#151d29] p-3 text-sm text-[#a8b5c4]">
+        After payment, your account receives a one-time Claim Code. Send that code to anyone you choose. The first eligible BKE account that successfully redeems it becomes the software owner.
+      </p>}
     </fieldset>
 
     <label className="label">
