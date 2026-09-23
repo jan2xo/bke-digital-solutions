@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.1.0/bke-entitlements-0.1.0.tgz";
-const EXPECTED_VERSION = "0.1.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.2.0/bke-entitlements-0.2.0.tgz";
+const EXPECTED_VERSION = "0.2.0";
 const EXPECTED_SHA256 =
-  "f9c0bb1d464c9271076333a6c5012478cd9bc3cec9e9571a3ba4c2b0d2b1257b";
+  "e35d8cf741d5ede132a06e684bcda13211bd58bd564c8dec0109b964c11fa779";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -50,6 +50,17 @@ const requiredPackageSurfaces = [
 for (const marker of requiredPackageSurfaces) {
   if (!moduleSource.includes(marker)) {
     throw new Error(`Entitlements host adapter is missing standalone package surface: ${marker}`);
+  }
+}
+
+for (const marker of [
+  "ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID",
+  "ENTITLEMENTS_DURABLE_RIGHT_REVOCATION_CAPABILITY_ID",
+  "createEntitlementsDurableRightRevocationCapability",
+  "createPostgresEntitlementsDurableRightRevocationRepository",
+]) {
+  if (!moduleSource.includes(marker)) {
+    throw new Error(`Entitlements host module is missing 0.2.0 capability wiring: ${marker}`);
   }
 }
 
