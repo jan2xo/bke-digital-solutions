@@ -20,9 +20,9 @@ export const environmentSchema = z.object({
   SESSION_SECRET: secret,
   MFA_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_PEPPER: secret,
-  V3_CLAIM_CODE_CHECKOUT_ENABLED: bool.default(false),
+  CLAIM_CODE_CHECKOUT_ENABLED: bool.default(false),
   CLAIM_CODE_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
-  V3_AGENT_ACCOUNT_SESSION_ENABLED: bool.default(false),
+  AGENT_ACCOUNT_SESSION_ENABLED: bool.default(false),
   AGENT_ACCOUNT_SESSION_PEPPER: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
@@ -122,12 +122,12 @@ export const environmentSchema = z.object({
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
   if (protectedEnvironment && (!value.LICENSE_SIGNING_PRIVATE_KEY || !value.LICENSE_SIGNING_PUBLIC_KEY)) context.addIssue({ code: "custom", path: ["LICENSE_SIGNING_PRIVATE_KEY"], message: "Ed25519 lease signing keys are required in protected environments" });
   if (protectedEnvironment && !value.SUPPLY_CHAIN_SIGNING_PRIVATE_KEY) context.addIssue({ code: "custom", path: ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY"], message: "Supply-chain signing key is required in protected environments" });
-  if (value.V3_CLAIM_CODE_CHECKOUT_ENABLED) {
+  if (value.CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Claim Code checkout is enabled" });
     }
   }
-  if (value.V3_AGENT_ACCOUNT_SESSION_ENABLED) {
+  if (value.AGENT_ACCOUNT_SESSION_ENABLED) {
     if (!value.AGENT_ACCOUNT_SESSION_PEPPER || value.AGENT_ACCOUNT_SESSION_PEPPER.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_PEPPER)) {
       context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_PEPPER"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Agent account sessions are enabled" });
     }
