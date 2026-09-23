@@ -14,6 +14,7 @@ import { db } from "@/platform/host/db";
 
 const schema = z.object({
   device_code: z.string().min(32).max(256),
+  device_id: z.string().regex(/^[A-Za-z0-9._:-]{16,256}$/).optional(),
 }).strict();
 
 export async function POST(request: Request) {
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
     const result = await db.$transaction(
       (tx) => pollAgentDeviceAuthorization(tx, {
         deviceCode: input.device_code,
+        deviceId: input.device_id,
         pepper: runtime.AGENT_ACCOUNT_SESSION_PEPPER!,
         encryptionKey: runtime.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY!,
       }),

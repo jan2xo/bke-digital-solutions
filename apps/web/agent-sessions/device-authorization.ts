@@ -25,6 +25,7 @@ const POLL_INTERVAL_SECONDS = 5;
 type DeviceAuthorizationRow = Readonly<{
   id: string;
   deviceId: string;
+  authorizationKind: "DEVICE_CODE" | "NATIVE_HANDOFF";
   status: "PENDING" | "APPROVED" | "DENIED" | "EXPIRED" | "CONSUMED";
   expiresAt: Date;
   pollIntervalSeconds: number;
@@ -123,7 +124,7 @@ export async function approveAgentDeviceAuthorization(
 ) {
   const userCodeHash = hashAgentUserCode(input.userCode, input.pepper);
   const rows = await tx.$queryRaw<DeviceAuthorizationRow[]>`
-    SELECT "id", "deviceId", "status", "expiresAt", "pollIntervalSeconds",
+    SELECT "id", "deviceId", "authorizationKind", "status", "expiresAt", "pollIntervalSeconds",
            "lastPollAt", "approvedByUserId", "approvedAccountId", "approvedAt",
            "handoffExpiresAt", "sessionId", "tokenBundleCiphertext"
       FROM "AgentDeviceAuthorization"
@@ -196,6 +197,7 @@ export async function pollAgentDeviceAuthorization(
   tx: Prisma.TransactionClient,
   input: Readonly<{
     deviceCode: string;
+    deviceId?: string | null;
     pepper: string;
     encryptionKey: string;
   }>,
@@ -205,7 +207,7 @@ export async function pollAgentDeviceAuthorization(
 > {
   const deviceCodeHash = hashAgentDeviceCode(input.deviceCode, input.pepper);
   const rows = await tx.$queryRaw<DeviceAuthorizationRow[]>`
-    SELECT "id", "deviceId", "status", "expiresAt", "pollIntervalSeconds",
+    SELECT "id", "deviceId", "authorizationKind", "status", "expiresAt", "pollIntervalSeconds",
            "lastPollAt", "approvedByUserId", "approvedAccountId", "approvedAt",
            "handoffExpiresAt", "sessionId", "tokenBundleCiphertext"
       FROM "AgentDeviceAuthorization"
@@ -216,6 +218,13 @@ export async function pollAgentDeviceAuthorization(
   if (!authorization) return { status: "expired_token" };
 
   const now = new Date();
+
+  if (
+    authorization.authorizationKind === "NATIVE_HANDOFF"
+    && (!input.deviceId || input.deviceId.trim() !== authorization.deviceId)
+  ) {
+    return { status: "access_denied" };
+  }
 
   if (authorization.status === "PENDING") {
     if (authorization.expiresAt <= now) {
@@ -253,6 +262,18 @@ export async function pollAgentDeviceAuthorization(
 
   if (authorization.status === "DENIED") return { status: "access_denied" };
   if (authorization.status === "EXPIRED") return { status: "expired_token" };
+
+  if (authorization.status === "APPROVED" && authorization.expiresAt <= now) {
+    await tx.$executeRaw`
+      UPDATE "AgentDeviceAuthorization"
+         SET "status" = 'EXPIRED',
+             "tokenBundleCiphertext" = NULL,
+             "updatedAt" = NOW()
+       WHERE "id" = ${authorization.id}
+         AND "status" = 'APPROVED'
+    `;
+    return { status: "expired_token" };
+  }
 
   if (authorization.status === "CONSUMED") {
     if (
