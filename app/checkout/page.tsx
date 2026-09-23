@@ -98,7 +98,7 @@ export default async function CheckoutReview({
   const legalDocuments = requirementsResult.requirements;
 
   const authorizedAccounts = await listPurchaseAuthorizedAccounts(principal.id);
-  const recipientCheckoutEnabled = getRuntimeEnvironment().CLAIM_CODE_CHECKOUT_ENABLED;
+  const giftCheckoutEnabled = getRuntimeEnvironment().CLAIM_CODE_CHECKOUT_ENABLED;
   const annual =
     plan.type === "ANNUAL"
       ? { savingsMinor: terms.savingsMinor, effectiveMonthlyMinor: terms.effectiveMonthlyMinor ?? 0 }
@@ -138,7 +138,7 @@ export default async function CheckoutReview({
       <CheckoutStartButton
         purchasePlanId={plan.id}
         currentEmail={principal.email}
-        recipientCheckoutEnabled={recipientCheckoutEnabled}
+        giftCheckoutEnabled={giftCheckoutEnabled}
         accounts={authorizedAccounts.map((account) => ({ id: account.id, name: account.displayName }))}
         legalDocuments={legalDocuments.map((document) => ({
           versionId: document.documentVersionId,
