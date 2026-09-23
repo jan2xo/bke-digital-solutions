@@ -35,6 +35,7 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
   const canViewOrders = roleHasAccountsCapability(account.effectiveRole, "VIEW_ORDERS");
   const canViewLicenses = roleHasAccountsCapability(account.effectiveRole, "VIEW_LICENSES");
   const canViewSubscriptions = roleHasAccountsCapability(account.effectiveRole, "VIEW_SUBSCRIPTIONS");
+  const canAssignLicenses = roleHasAccountsCapability(account.effectiveRole, "ASSIGN_LICENSE");
   const canManageClaimCodes = roleHasClaimAccountCapability(account.effectiveRole, "MANAGE_CLAIM_CODES");
   const [orders, licenses, subscriptions, trials, renewalLegal, giftClaims] = await Promise.all([
     canViewOrders ? db.order.findMany({ where: { accountId: id }, include: { invoice: true, payments: true, items: true, attempts: { select: { status: true, checkoutUrl: true }, orderBy: { createdAt: "desc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
@@ -73,7 +74,7 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
   return <section className="shell py-14"><p className="font-bold text-sky-300">{account.type} · {account.effectiveRole}</p><h1 className="mt-2 text-4xl font-black">{account.displayName}</h1>{account.lifecycleState !== "ACTIVE" && <p className="mt-3 rounded border border-amber-400 bg-amber-50 p-3 font-bold text-amber-900">This account is {account.lifecycleState.toLowerCase()}. New purchases, renewals, downloads, key reveal, trials, and activations are disabled.</p>}<div className="mt-10 grid gap-8">
     <section><h2 className="mb-4 text-2xl font-black">Products and licenses</h2><div className="grid gap-5 md:grid-cols-2">{licenses.length ? licenses.map((license) => {
       const productName = `${license.product.name}${license.edition ? ` — ${license.edition.name} (${license.purchasePlan ? purchasePlanLabel(license.purchasePlan.type) : "Legacy"})` : ""}`;
-      return <CustomerLicenseCard key={license.id} license={{ id: license.id, productName, status: license.status, lastFour: license.keyLastFour, expiresAt: license.expiresAt?.toISOString() ?? null, maxDevices: license.maxSeats * license.maxDevicesPerSeat, activations: license.activations.map((activation) => ({ id: activation.id, label: activation.label, active: activation.active })), downloadAvailable: Boolean(githubLatestReleaseUrl(license.product.productId)) }}/>;
+      return <CustomerLicenseCard key={license.id} license={{ id: license.id, productName, status: license.status, lastFour: license.keyLastFour, expiresAt: license.expiresAt?.toISOString() ?? null, maxDevices: license.maxSeats * license.maxDevicesPerSeat, activations: license.activations.map((activation) => ({ id: activation.id, label: activation.label, active: activation.active })), downloadAvailable: Boolean(githubLatestReleaseUrl(license.product.productId)), manageSeatsHref: canAssignLicenses && account.lifecycleState === "ACTIVE" ? `/dashboard/accounts/${id}/licenses/${license.id}/seats` : null }}/>;
     }) : <Empty/>}</div></section>
    {giftClaims.length > 0 && <GiftClaimCodes
       customerAccountId={id}
