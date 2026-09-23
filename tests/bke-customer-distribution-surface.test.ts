@@ -18,6 +18,10 @@ describe("BKE-only customer distribution surface", () => {
     expect(bkePage).toContain("BKE_PUBLIC_DOWNLOAD_URL");
     expect(bkePage).toContain("canonical customer download surface");
     expect(dashboard).toContain('href="/bke"');
+    expect(dashboard).toContain('href="/redeem"');
+    expect(accountPage).toContain("GiftClaimCodes");
+    expect(accountPage).toContain("manageSeatsHref");
+    expect(licenseCard).toContain("manageSeatsHref");
     expect(licenseCard).toContain('href="/bke"');
     expect(licenseCard).not.toContain("/download");
     expect(accountPage).not.toContain("githubLatestReleaseUrl");
