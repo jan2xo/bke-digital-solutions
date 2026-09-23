@@ -10,7 +10,7 @@ import { valid, gt } from "semver";
 export const AGENT_ACCOUNT_UPDATE_POLICY_SCHEMA = "bke.update-policy.v2" as const;
 export const AGENT_ACCOUNT_UPDATE_SOURCE_AUTHORITY = "GITHUB_RELEASES" as const;
 export const AGENT_ACCOUNT_UPDATE_CHANNEL = "stable" as const;
-export const AGENT_ACCOUNT_UPDATE_POLICY_TTL_SECONDS = 120;
+export const AGENT_ACCOUNT_UPDATE_POLICY_TTL_SECONDS = 300;
 
 export type AgentAccountUpdatePlatform = "windows" | "macos" | "linux";
 export type AgentAccountUpdateArchitecture = "x64" | "arm64" | "x86";
