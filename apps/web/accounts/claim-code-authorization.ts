@@ -2,7 +2,6 @@ import "server-only";
 
 import type { AccountsMemberRole } from "@bke/accounts/contracts/account.contract";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
-import { db } from "@/platform/host/db";
 
 export type ClaimAccountCapability = "CLAIM_ENTITLEMENT" | "MANAGE_CLAIM_CODES";
 
@@ -59,41 +58,4 @@ export async function requireClaimAccountCapabilityInTransaction(
   }
 
   return Object.assign(account, { effectiveRole });
-}
-
-
-export async function listClaimAuthorizedAccounts(principalId: string) {
-  const accounts = await db.customerAccount.findMany({
-    where: {
-      lifecycleState: "ACTIVE",
-      OR: [
-        { ownerId: principalId },
-        { memberships: { some: { userId: principalId } } },
-      ],
-    },
-    include: {
-      memberships: {
-        where: { userId: principalId },
-        take: 1,
-      },
-    },
-    orderBy: { createdAt: "asc" },
-  });
-
-  return Object.freeze(accounts.flatMap((account) => {
-    const effectiveRole = (
-      account.ownerId === principalId
-        ? "OWNER"
-        : account.memberships[0]?.role
-    ) as AccountsMemberRole | undefined;
-    if (!effectiveRole || !roleHasClaimAccountCapability(effectiveRole, "CLAIM_ENTITLEMENT")) {
-      return [];
-    }
-    return [{
-      id: account.id,
-      displayName: account.displayName,
-      type: account.type,
-      role: effectiveRole,
-    }] as const;
-  }));
 }
