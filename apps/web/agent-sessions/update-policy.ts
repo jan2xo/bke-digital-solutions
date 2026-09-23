@@ -1,5 +1,3 @@
-import "server-only";
-
 import {
   createPrivateKey,
   createPublicKey,
@@ -8,8 +6,6 @@ import {
   type KeyObject,
 } from "node:crypto";
 import { valid, gt } from "semver";
-import { resolveCommercialPrivateKey } from "@bke/licensing/logic/commercial-signing-registry";
-import { activeLicensingSigningKey } from "@/apps/web/licensing/signing-key-registry";
 
 export const AGENT_ACCOUNT_UPDATE_POLICY_SCHEMA = "bke.update-policy.v2" as const;
 export const AGENT_ACCOUNT_UPDATE_SOURCE_AUTHORITY = "GITHUB_RELEASES" as const;
@@ -153,21 +149,4 @@ export function signAgentAccountUpdatePolicy(
     ...unsigned,
     signature: signature.toString("base64"),
   });
-}
-
-export async function issueAgentAccountUpdatePolicy(
-  input: AgentAccountUpdatePolicyInput,
-  issuedAt = new Date(),
-): Promise<SignedAgentAccountUpdatePolicy> {
-  const active = await activeLicensingSigningKey();
-  return signAgentAccountUpdatePolicy(
-    input,
-    {
-      keyId: active.keyId,
-      algorithm: active.algorithm,
-      publicKey: active.publicKey,
-      privateKey: resolveCommercialPrivateKey(active.privateKeyReference),
-    },
-    issuedAt,
-  );
 }
