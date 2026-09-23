@@ -69,6 +69,22 @@ describe("Claim Code gift checkout", () => {
     expect(redeem).not.toContain("RECIPIENT_MISMATCH");
   });
 
+  it("provides a recipient-facing Claim Code redemption screen", () => {
+    const page = readFileSync("app/redeem/page.tsx", "utf8");
+    const component = readFileSync("components/claim-code-redeemer.tsx", "utf8");
+    const authorization = readFileSync("apps/web/accounts/claim-code-authorization.ts", "utf8");
+    const dashboard = readFileSync("app/dashboard/page.tsx", "utf8");
+
+    expect(page).toContain("Redeem software");
+    expect(page).toContain("ClaimCodeRedeemer");
+    expect(component).toContain("Redeem Claim Code");
+    expect(component).toContain('fetch("/api/claims/redeem"');
+    expect(component).toContain("BKE-CLM-");
+    expect(authorization).toContain("listClaimAuthorizedAccounts");
+    expect(authorization).toContain('"CLAIM_ENTITLEMENT"');
+    expect(dashboard).toContain('href="/redeem"');
+  });
+
   it("revokes still-unused gift codes after a confirmed refund", () => {
     const refund = readFileSync("apps/web/payments/webhook-processing.ts", "utf8");
     expect(refund).toContain('UPDATE "ClaimCode"');
