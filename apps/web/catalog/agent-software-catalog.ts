@@ -54,6 +54,7 @@ export async function readAgentSoftwareCatalog(
   tx: Prisma.TransactionClient,
   input: Readonly<{
     accountId: string;
+    userId: string;
     platform: "windows" | "macos" | "linux";
     architecture: "x64" | "arm64" | "x86";
   }>,
@@ -81,6 +82,31 @@ export async function readAgentSoftwareCatalog(
            AND e."status" = 'ACTIVE'
            AND e."validFrom" <= NOW()
            AND (e."validUntil" IS NULL OR e."validUntil" > NOW())
+           AND EXISTS (
+             SELECT 1
+               FROM "CustomerAccount" ca
+              WHERE ca."id" = ${input.accountId}
+                AND (
+                  (
+                    ca."type" = 'INDIVIDUAL'
+                    AND ca."ownerId" = ${input.userId}
+                  )
+                  OR
+                  (
+                    ca."type" = 'ORGANIZATION'
+                    AND EXISTS (
+                      SELECT 1
+                        FROM "License" l
+                        JOIN "LicenseAssignment" la ON la."licenseId" = l."id"
+                       WHERE l."accountId" = ca."id"
+                         AND l."productId" = p."id"
+                         AND l."status" = 'ACTIVE'
+                         AND (l."expiresAt" IS NULL OR l."expiresAt" > NOW())
+                         AND la."userId" = ${input.userId}
+                    )
+                  )
+                )
+           )
       ) AS "entitled"
     FROM "Product" p
     LEFT JOIN LATERAL (
