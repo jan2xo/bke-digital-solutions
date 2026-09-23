@@ -44,6 +44,7 @@ describe("Agent account-session update authority", () => {
     expect(policy).not.toHaveProperty("artifact_sha256");
     expect(policy).not.toHaveProperty("artifact_size");
     expect(policy).not.toHaveProperty("download_url");
+    expect(AGENT_ACCOUNT_UPDATE_POLICY_TTL_SECONDS).toBe(300);
     expect(
       new Date(policy.expires_at).getTime() - new Date(policy.issued_at).getTime(),
     ).toBe(AGENT_ACCOUNT_UPDATE_POLICY_TTL_SECONDS * 1000);
