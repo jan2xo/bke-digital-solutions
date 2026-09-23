@@ -17,7 +17,8 @@ describe("durable Entitlement refund revocation", () => {
     expect(adapterSource).toContain('"revocationReference"');
     expect(adapterSource).toContain('"revocationSnapshot"');
     expect(processorSource).toContain("revokeOrderEntitlements");
-    expect(processorSource).toContain('order.fulfillmentMode === "ACCOUNT_ENTITLEMENT"');
+    expect(processorSource).toContain('SELECT "fulfillmentMode"::text AS "fulfillmentMode"');
+    expect(processorSource).toContain('refundFulfillmentMode === "ACCOUNT_ENTITLEMENT"');
     expect(processorSource).toContain('reason: "REFUND_CONFIRMED"');
   });
 
