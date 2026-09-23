@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { env } from "@/platform/host/env";
+import { fulfillOrderLicensing } from "@/apps/web/licensing/entitlement-management";
 import {
   decryptClaimCode,
   encryptClaimCode,
@@ -48,6 +49,8 @@ export type ClaimCodeConsumeResult =
 
 type ClaimRow = Readonly<{
   id: string;
+  orderId: string;
+  orderItemId: string;
   status: "AVAILABLE" | "CLAIMED" | "REVOKED" | "EXPIRED";
   resourceId: string;
   productId: string;
@@ -207,7 +210,7 @@ export async function consumeClaimCode(
 
   const codeHash = hashClaimCode(input.code, env.LICENSE_PEPPER);
   const rows = await tx.$queryRaw<ClaimRow[]>`
-    SELECT "id", "status", "resourceId", "productId", "editionId", "purchasePlanId",
+    SELECT "id", "orderId", "orderItemId", "status", "resourceId", "productId", "editionId", "purchasePlanId",
            "scopeSnapshot", "grantSnapshot", "validFrom", "validUntil", "expiresAt",
            "claimedToAccountId", "entitlementId"
       FROM "ClaimCode"
@@ -252,6 +255,14 @@ export async function consumeClaimCode(
       ${claim.validFrom}, ${claim.validUntil}
     )
   `;
+
+  await fulfillOrderLicensing(
+    tx,
+    claim.orderId,
+    {},
+    [],
+    { accountId: input.accountId, orderItemId: claim.orderItemId },
+  );
 
   const changed = await tx.$executeRaw`
     UPDATE "ClaimCode"

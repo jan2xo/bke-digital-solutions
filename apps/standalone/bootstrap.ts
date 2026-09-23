@@ -1,3 +1,4 @@
+import type { CommerceClaimUnitIssuer } from "@bke/commerce/logic/settlement-fulfillment-ports";
 import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-attempt-provider";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconciliation-provider";
@@ -20,8 +21,8 @@ function requireEnvironment(name: string): string {
 }
 
 const connectionString = requireEnvironment("DATABASE_URL");
-const sessionSecret = requireEnvironment("V2_STANDALONE_SESSION_SECRET");
-const licensePepper = requireEnvironment("V2_STANDALONE_LICENSE_PEPPER");
+const sessionSecret = requireEnvironment("STANDALONE_SESSION_SECRET");
+const licensePepper = requireEnvironment("STANDALONE_LICENSE_PEPPER");
 
 const inertCheckoutProvider: PaymentsCheckoutProvider = {
   name: "standalone-certification",
@@ -44,6 +45,12 @@ const inertRefundProvider: PaymentsRefundProvider = {
   },
 };
 
+const inertClaimUnits: CommerceClaimUnitIssuer = {
+  async issue() {
+    throw new Error("Standalone composition boot must not issue Claim Codes.");
+  },
+};
+
 const inertReconciliationProvider: PaymentsReconciliationProvider = {
   name: "standalone-certification",
   async retrievePayment() {
@@ -56,7 +63,7 @@ const application = await composeCapabilities([
   createAccountsModule({ connectionString }),
   createLegalModule({ connectionString }),
   createCatalogModule({ connectionString }),
-  createCommerceModule({ connectionString }),
+  createCommerceModule({ connectionString, claimUnits: inertClaimUnits }),
   createPaymentsModule({
     connectionString,
     provider: inertCheckoutProvider,

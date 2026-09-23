@@ -39,7 +39,7 @@ function json(body: unknown, status = 200) {
 export async function POST(request: Request) {
   try {
     const runtime = getRuntimeEnvironment();
-    if (!runtime.V3_AGENT_ACCOUNT_SESSION_ENABLED) {
+    if (!runtime.AGENT_ACCOUNT_SESSION_ENABLED) {
       return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
     }
 

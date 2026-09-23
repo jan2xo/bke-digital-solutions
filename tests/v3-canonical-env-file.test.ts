@@ -35,7 +35,7 @@ describe("V3 canonical environment file contract", () => {
     expect(existsSync(retiredProductionTemplate)).toBe(false);
 
     const template = readFileSync(".env.example", "utf8");
-    expect(template).toContain("V3_AGENT_ACCOUNT_SESSION_ENABLED=false");
+    expect(template).toContain("AGENT_ACCOUNT_SESSION_ENABLED=false");
     expect(template).toContain("AGENT_ACCOUNT_SESSION_PEPPER=");
     expect(template).toContain("AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY=");
     expect(template).toContain("APP_DOMAIN=");

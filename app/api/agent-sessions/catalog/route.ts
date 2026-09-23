@@ -27,7 +27,7 @@ function bearerToken(request: Request): string | null {
 export async function GET(request: Request) {
   try {
     const runtime = getRuntimeEnvironment();
-    if (!runtime.V3_AGENT_ACCOUNT_SESSION_ENABLED) {
+    if (!runtime.AGENT_ACCOUNT_SESSION_ENABLED) {
       return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
     }
 

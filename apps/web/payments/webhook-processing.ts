@@ -14,6 +14,7 @@ import { paymentProvider } from "@/apps/web/payments/compatibility-provider";
 import { ingestPaymentWebhook } from "@/apps/web/payments/webhook-ingestion";
 import { reactToPaidSettlement } from "@/apps/web/payments/settlement-transaction";
 import { persistNotification } from "@/apps/web/notifications/center";
+import { revokeOrderEntitlements } from "@/apps/web/entitlements/refund-revocation";
 
 type StoredEvent = Readonly<{
   eventId: string;
@@ -261,12 +262,14 @@ async function processPaidEvent(
   }
 
   if (settlement.paymentSettlementDisposition === "CREATED") {
-    await fulfillOrderLicensing(
-      tx,
-      order.id,
-      { paymentId: payment.id, paymentEventId: event.eventId },
-      renewalRequests,
-    );
+    if (settlement.fulfillmentMode === "ACCOUNT_ENTITLEMENT") {
+      await fulfillOrderLicensing(
+        tx,
+        order.id,
+        { paymentId: payment.id, paymentEventId: event.eventId },
+        renewalRequests,
+      );
+    }
     await tx.auditLog.create({
       data: {
         accountId: order.accountId,
@@ -275,7 +278,11 @@ async function processPaidEvent(
           : "PAYMENT_SETTLED",
         targetType: "Order",
         targetId: order.id,
-        metadata: { provider: event.provider, webhookEventId: event.eventId },
+        metadata: {
+          provider: event.provider,
+          webhookEventId: event.eventId,
+          fulfillmentMode: settlement.fulfillmentMode,
+        },
       },
     });
   }
@@ -503,6 +510,40 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
         });
         await tx.order.update({ where: { id: order.id }, data: { status: "REFUNDED" } });
         await tx.invoice.update({ where: { orderId: order.id }, data: { status: "VOID" } });
+        await tx.$executeRaw`
+          UPDATE "ClaimCode"
+             SET "status" = 'REVOKED',
+                 "revokedAt" = ${event.occurredAt},
+                 "codeCiphertext" = NULL,
+                 "updatedAt" = NOW()
+           WHERE "orderId" = ${order.id}
+             AND "status" = 'AVAILABLE'
+        `;
+        const refundFulfillmentRows = await tx.$queryRaw<Array<{
+          fulfillmentMode: "ACCOUNT_ENTITLEMENT" | "CLAIM_CODE";
+        }>>`
+          SELECT "fulfillmentMode"::text AS "fulfillmentMode"
+            FROM "Order"
+           WHERE "id" = ${order.id}
+           LIMIT 1
+        `;
+        const refundFulfillmentMode = refundFulfillmentRows[0]?.fulfillmentMode;
+        if (!refundFulfillmentMode) {
+          throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
+        }
+        if (refundFulfillmentMode === "ACCOUNT_ENTITLEMENT") {
+          await revokeOrderEntitlements(tx, order.id, {
+            revocationReference: `refund:${event.provider}:${event.externalRefundId ?? event.eventId}`,
+            revocationSnapshot: {
+              reason: "REFUND_CONFIRMED",
+              orderId: order.id,
+              provider: event.provider,
+              eventId: event.eventId,
+              externalRefundId: event.externalRefundId ?? null,
+            },
+            revokedAt: event.occurredAt,
+          });
+        }
         const licenses = await tx.license.findMany({
           where: {
             OR: [

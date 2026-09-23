@@ -37,8 +37,8 @@ jobs:
           --health-retries 10
     env:
       DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_standalone
-      V2_STANDALONE_SESSION_SECRET: v2-standalone-certification-session-secret-2026
-      V2_STANDALONE_LICENSE_PEPPER: v2-standalone-certification-license-pepper-2026
+      STANDALONE_SESSION_SECRET: v2-standalone-certification-session-secret-2026
+      STANDALONE_LICENSE_PEPPER: v2-standalone-certification-license-pepper-2026
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

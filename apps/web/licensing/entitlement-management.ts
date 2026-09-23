@@ -26,6 +26,11 @@ type PaymentEvidence = Readonly<{
   paymentEventId?: string;
 }>;
 
+type LicensingFulfillmentTarget = Readonly<{
+  accountId?: string;
+  orderItemId?: string;
+}>;
+
 type LicensingIssueRepositoryInput = Parameters<LicensingEntitlementManagementRepository["issue"]>[0];
 type LicensingRenewRepositoryInput = Parameters<LicensingEntitlementManagementRepository["renewSubscription"]>[0];
 
@@ -203,15 +208,23 @@ export async function fulfillOrderLicensing(
   orderId: string,
   evidence: PaymentEvidence,
   renewalRequests: RenewalLeaseRequest[],
+  target: LicensingFulfillmentTarget = {},
 ) {
   const order = await tx.order.findUniqueOrThrow({
     where: { id: orderId },
     include: { items: true },
   });
+  const accountId = target.accountId ?? order.accountId;
+  const items = target.orderItemId
+    ? order.items.filter((item) => item.id === target.orderItemId)
+    : order.items;
+  if (target.orderItemId && items.length !== 1) {
+    throw new PaymentLifecycleError("PAYMENT_PROCESSING_FAILED");
+  }
   const capability = createLicensingEntitlementManagementCapability(createRepository(tx));
   const effectiveAt = new Date();
 
-  for (const item of order.items) {
+  for (const item of items) {
     const policy = item.policySnapshot as {
       maxSeats: number;
       maxDevicesPerSeat: number;
@@ -291,7 +304,7 @@ export async function fulfillOrderLicensing(
       };
       const subscription = await tx.subscription.create({
         data: {
-          accountId: order.accountId,
+          accountId,
           orderId,
           productId: item.productId,
           editionId: item.editionId,
@@ -324,7 +337,7 @@ export async function fulfillOrderLicensing(
         keyLastFour: plaintextKey.slice(-4),
         keyCiphertext: encryptLicenseKey(plaintextKey),
       },
-      accountId: order.accountId,
+      accountId,
       orderId,
       orderItemId: item.id,
       productId: item.productId,

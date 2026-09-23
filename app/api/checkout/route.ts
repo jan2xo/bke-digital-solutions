@@ -39,6 +39,7 @@ import { rateLimit } from "@/apps/web/http/rate-limit";
 import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 import { checkoutSchema } from "@/apps/web/http/validation";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { getRuntimeEnvironment } from "@/platform/host/env";
 
 class CheckoutHttpError extends Error {
   constructor(
@@ -76,6 +77,8 @@ function commerceFailure(code: string): never {
       return fail("OFFER_NOT_AVAILABLE", 422);
     case "ENTITLEMENT_CONFLICT":
       return fail("ENTITLEMENT_CONFLICT", 409);
+    case "CLAIM_UNIT_CONFLICT":
+      return fail("CLAIM_UNIT_CONFLICT", 409);
     case "PAYMENT_PROVIDER_REJECTED":
       return fail("PAYMENT_PROVIDER_REJECTED", 502);
     case "INVALID_INPUT":
@@ -84,6 +87,7 @@ function commerceFailure(code: string): never {
     case "LEGAL_UNAVAILABLE":
     case "COMMERCE_PERSISTENCE_UNAVAILABLE":
     case "ENTITLEMENTS_UNAVAILABLE":
+    case "CLAIM_UNITS_UNAVAILABLE":
     case "PAYMENTS_UNAVAILABLE":
     case "PAYMENT_PROVIDER_UNAVAILABLE":
       return fail(code, 503);
@@ -125,6 +129,11 @@ export async function POST(request: Request) {
     }
 
     const input = checkoutSchema.parse(await request.json());
+    const runtimeEnvironment = getRuntimeEnvironment();
+    const giftPurchase = input.purchaseFor === "GIFT";
+    if (giftPurchase && !runtimeEnvironment.CLAIM_CODE_CHECKOUT_ENABLED) {
+      fail("GIFT_CHECKOUT_DISABLED", 409);
+    }
     const purchaseAccess = application.get<AccountsPurchaseAccessCapability>(
       ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
     );
@@ -277,6 +286,8 @@ export async function POST(request: Request) {
       })),
       order: {
         accountId: access.account.id,
+        fulfillmentMode: giftPurchase ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
+        fulfillmentSnapshot: {},
         orderNumber: `BKE-${new Date().getUTCFullYear()}-${suffix}`,
         invoiceNumber: `INV-${new Date().getUTCFullYear()}-${suffix}`,
         currency: plan.currency,

@@ -11,6 +11,7 @@ import { notificationsModule } from "../../modules/notifications/module";
 import { createPaymentsModule } from "../../modules/payments/module";
 import { composeCapabilities } from "../../platform/composition/composer";
 import { createWebPaymentsAdapter } from "./payments/provider";
+import { createCommerceClaimUnitIssuer } from "./entitlements/commerce-claim-unit-issuer";
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -30,7 +31,7 @@ async function composeWebApplication(): Promise<ComposedApplication> {
     createAccountsModule({ connectionString }),
     createLegalModule({ connectionString }),
     createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
-    createCommerceModule({ connectionString }),
+    createCommerceModule({ connectionString, claimUnits: createCommerceClaimUnitIssuer() }),
     createPaymentsModule({
       connectionString,
       provider: payments,
