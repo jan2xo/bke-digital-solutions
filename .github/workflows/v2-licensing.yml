@@ -12,6 +12,9 @@ on:
       - "apps/web/catalog/agent-software-catalog.ts"
       - "app/api/agent-sessions/catalog/route.ts"
       - "app/api/agent-sessions/provision/standalone/route.ts"
+      - "app/api/agent-sessions/update/standalone/route.ts"
+      - "apps/web/agent-sessions/update-policy.ts"
+      - "tests/agent-session-update-authority.test.ts"
       - "components/license-seat-manager.tsx"
       - "components/customer-license-card.tsx"
       - "tests/license-seat-management.test.ts"
@@ -74,6 +77,8 @@ jobs:
         run: npx vitest run tests/unit/refresh-decision.test.ts
       - name: Certify license seat management boundaries
         run: npx vitest run tests/license-seat-management.test.ts tests/v3-agent-software-catalog-contract.test.ts
+      - name: Certify account-session product update authority
+        run: npx vitest run tests/agent-session-update-authority.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Licensing Prisma schema
