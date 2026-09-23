@@ -64,6 +64,30 @@ describe("V3 Agent software catalog contract", () => {
     expect(source).not.toContain('JOIN "ClaimCode"');
   });
 
+  it("requires an assigned seat for organization software visibility", () => {
+    const source = readFileSync(
+      "apps/web/catalog/agent-software-catalog.ts",
+      "utf8",
+    );
+    const catalogRoute = readFileSync(
+      "app/api/agent-sessions/catalog/route.ts",
+      "utf8",
+    );
+    const provisionRoute = readFileSync(
+      "app/api/agent-sessions/provision/standalone/route.ts",
+      "utf8",
+    );
+
+    expect(source).toContain('ca."type" = \'INDIVIDUAL\'');
+    expect(source).toContain('ca."ownerId" = ${input.userId}');
+    expect(source).toContain('ca."type" = \'ORGANIZATION\'');
+    expect(source).toContain('JOIN "LicenseAssignment" la ON la."licenseId" = l."id"');
+    expect(source).toContain('la."userId" = ${input.userId}');
+    expect(source).toContain('l."status" = \'ACTIVE\'');
+    expect(catalogRoute).toContain("userId: session.userId");
+    expect(provisionRoute).toContain("userId: session.userId");
+  });
+
   it("allows one ProductVersion to advertise universal platform/architecture compatibility", () => {
     const source = readFileSync(
       "apps/web/catalog/agent-software-catalog.ts",
