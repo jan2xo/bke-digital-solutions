@@ -29,7 +29,7 @@ describe("V3 recipient checkout fulfillment", () => {
     const page = readFileSync("app/checkout/page.tsx", "utf8");
     const checkout = readFileSync("components/checkout-start-button.tsx", "utf8");
 
-    expect(route).toContain("V3_CLAIM_CODE_CHECKOUT_ENABLED");
+    expect(route).toContain("CLAIM_CODE_CHECKOUT_ENABLED");
     expect(route).toContain('fail("RECIPIENT_CHECKOUT_DISABLED", 409)');
     expect(page).toContain("recipientCheckoutEnabled");
     expect(checkout).toContain("recipientCheckoutEnabled &&");
