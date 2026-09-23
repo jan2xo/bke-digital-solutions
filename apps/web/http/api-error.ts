@@ -89,6 +89,9 @@ const statuses: Record<string, number> = {
   INVALID_PURCHASE_PLAN: 422,
   INVALID_CATALOG_PRODUCT: 422,
   INVALID_CATALOG_EDITION: 422,
+  LICENSE_NOT_ACTIVE: 409,
+  TARGET_NOT_ACCOUNT_MEMBER: 422,
+  LICENSE_SEAT_LIMIT: 409,
 };
 
 function protocolError(error: unknown): { code: string; status: number } | null {
