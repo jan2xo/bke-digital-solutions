@@ -21,8 +21,8 @@ function requireEnvironment(name: string): string {
 }
 
 const connectionString = requireEnvironment("DATABASE_URL");
-const sessionSecret = requireEnvironment("V2_STANDALONE_SESSION_SECRET");
-const licensePepper = requireEnvironment("V2_STANDALONE_LICENSE_PEPPER");
+const sessionSecret = requireEnvironment("STANDALONE_SESSION_SECRET");
+const licensePepper = requireEnvironment("STANDALONE_LICENSE_PEPPER");
 
 const inertCheckoutProvider: PaymentsCheckoutProvider = {
   name: "standalone-certification",
