@@ -7,7 +7,7 @@ import {
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
 import { authenticateAgentAccessToken } from "@/apps/web/agent-sessions/device-authorization";
-import { issueAgentAccountUpdatePolicy } from "@/apps/web/agent-sessions/update-policy";
+import { issueAgentAccountUpdatePolicy } from "@/apps/web/agent-sessions/update-policy-issuer";
 import { readAgentSoftwareCatalog } from "@/apps/web/catalog/agent-software-catalog";
 import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
