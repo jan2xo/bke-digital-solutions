@@ -54,3 +54,48 @@ export async function requireAgentDeviceAccountAccessInTransaction(
     effectiveRole,
   });
 }
+
+
+export async function listAgentDeviceAccountsInTransaction(
+  tx: Prisma.TransactionClient,
+  principalId: string,
+): Promise<readonly AgentDeviceAuthorizedAccount[]> {
+  const normalizedPrincipalId = principalId.trim();
+  if (!normalizedPrincipalId) return Object.freeze([]);
+
+  const accounts = await tx.customerAccount.findMany({
+    where: {
+      lifecycleState: "ACTIVE",
+      OR: [
+        { ownerId: normalizedPrincipalId },
+        { memberships: { some: { userId: normalizedPrincipalId } } },
+      ],
+    },
+    include: {
+      memberships: {
+        where: { userId: normalizedPrincipalId },
+        take: 1,
+      },
+    },
+    orderBy: [
+      { type: "asc" },
+      { displayName: "asc" },
+      { id: "asc" },
+    ],
+  });
+
+  return Object.freeze(accounts.flatMap((account) => {
+    const effectiveRole = (
+      account.ownerId === normalizedPrincipalId
+        ? "OWNER"
+        : account.memberships[0]?.role
+    ) as AccountsMemberRole | undefined;
+    if (!effectiveRole) return [];
+    return [Object.freeze({
+      id: account.id,
+      type: account.type,
+      displayName: account.displayName,
+      effectiveRole,
+    })];
+  }));
+}
