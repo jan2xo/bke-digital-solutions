@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.2.0/bke-entitlements-0.2.0.tgz";
-const EXPECTED_VERSION = "0.2.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.2.1/bke-entitlements-0.2.1.tgz";
+const EXPECTED_VERSION = "0.2.1";
 const EXPECTED_SHA256 =
-  "e35d8cf741d5ede132a06e684bcda13211bd58bd564c8dec0109b964c11fa779";
+  "45c749558d07704a47f25ee08a3bff69d48541e0f1166b456605398c796e2a05";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
