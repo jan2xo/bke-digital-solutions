@@ -6,6 +6,16 @@ on:
     paths:
       - "modules/licensing/**"
       - "app/api/licenses/refresh/route.ts"
+      - "app/api/licenses/[id]/assignments/**"
+      - "app/dashboard/accounts/[accountId]/licenses/[licenseId]/seats/**"
+      - "apps/web/licensing/license-seat-management.ts"
+      - "apps/web/catalog/agent-software-catalog.ts"
+      - "app/api/agent-sessions/catalog/route.ts"
+      - "app/api/agent-sessions/provision/standalone/route.ts"
+      - "components/license-seat-manager.tsx"
+      - "components/customer-license-card.tsx"
+      - "tests/license-seat-management.test.ts"
+      - "tests/v3-agent-software-catalog-contract.test.ts"
       - "tests/unit/refresh-decision.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "contracts/**"
@@ -62,6 +72,8 @@ jobs:
         run: npx tsx modules/licensing/test/consumer-adoption.certify.ts
       - name: Certify released refresh decision parity
         run: npx vitest run tests/unit/refresh-decision.test.ts
+      - name: Certify license seat management boundaries
+        run: npx vitest run tests/license-seat-management.test.ts tests/v3-agent-software-catalog-contract.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Licensing Prisma schema
