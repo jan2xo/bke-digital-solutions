@@ -12,7 +12,7 @@ export default async function DeviceAuthorizationPage({
   searchParams: Promise<{ code?: string }>;
 }) {
   const runtime = getRuntimeEnvironment();
-  if (!runtime.V3_AGENT_ACCOUNT_SESSION_ENABLED) notFound();
+  if (!runtime.AGENT_ACCOUNT_SESSION_ENABLED) notFound();
 
   const { code: rawCode } = await searchParams;
   const userCode = rawCode?.trim().toUpperCase() ?? "";
