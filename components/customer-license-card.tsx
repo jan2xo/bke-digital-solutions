@@ -12,7 +12,6 @@ type Props = {
     expiresAt: string | null;
     maxDevices: number;
     activations: { id: string; label: string | null; active: boolean }[];
-    downloadAvailable: boolean;
     manageSeatsHref?: string | null;
   };
 };
@@ -57,9 +56,12 @@ export function CustomerLicenseCard({ license }: Props) {
       ? <div className="mt-4 rounded-lg bg-amber-50 p-4 text-amber-950"><p className="text-xs font-bold uppercase">License key</p><code className="mt-2 block break-all">{key}</code></div>
       : <button className="button secondary mt-4" onClick={reveal}>Reveal license key</button>}
     <div className="mt-5 grid gap-2">{license.activations.map((activation) => <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3 text-sm text-slate-100" key={activation.id}><span>{activation.label ?? "Authorized device"} · {activation.active ? "Active" : "Deactivated"}</span>{activation.active && <button className="font-bold text-red-700" onClick={() => deactivate(activation.id)}>Deactivate</button>}</div>)}</div>
-    <div className="mt-5 flex flex-wrap gap-3">
-      {license.manageSeatsHref && <a className="button secondary" href={license.manageSeatsHref}>Manage seats</a>}
-      {license.downloadAvailable && <a className="button" href={`/api/licenses/${license.id}/download`}>Download latest release</a>}
+    <div className="mt-5 rounded-xl border border-sky-800/60 bg-sky-950/30 p-4">
+      <p className="text-sm font-semibold">Install and manage BKE software from the BKE desktop app.</p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        {license.manageSeatsHref && <a className="button secondary" href={license.manageSeatsHref}>Manage seats</a>}
+        <a className="button" href="/bke">Get BKE</a>
+      </div>
     </div>
     {message && <p role="alert" className="mt-3 text-sm text-red-700">{message}</p>}
   </article>;
