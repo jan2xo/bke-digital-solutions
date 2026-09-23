@@ -72,6 +72,7 @@ export async function POST(request: Request) {
 
       const products = await readAgentSoftwareCatalog(tx, {
         accountId: session.accountId,
+        userId: session.userId,
         platform: input.platform,
         architecture: input.architecture,
       });
