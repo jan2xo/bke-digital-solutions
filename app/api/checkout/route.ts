@@ -130,13 +130,10 @@ export async function POST(request: Request) {
 
     const input = checkoutSchema.parse(await request.json());
     const runtimeEnvironment = getRuntimeEnvironment();
-    if (input.recipientEmail && !runtimeEnvironment.CLAIM_CODE_CHECKOUT_ENABLED) {
-      fail("RECIPIENT_CHECKOUT_DISABLED", 409);
+    const giftPurchase = input.purchaseFor === "GIFT";
+    if (giftPurchase && !runtimeEnvironment.CLAIM_CODE_CHECKOUT_ENABLED) {
+      fail("GIFT_CHECKOUT_DISABLED", 409);
     }
-    const recipientEmail =
-      input.recipientEmail && input.recipientEmail !== principal.email.trim().toLowerCase()
-        ? input.recipientEmail
-        : undefined;
     const purchaseAccess = application.get<AccountsPurchaseAccessCapability>(
       ACCOUNTS_PURCHASE_ACCESS_CAPABILITY_ID,
     );
@@ -289,8 +286,8 @@ export async function POST(request: Request) {
       })),
       order: {
         accountId: access.account.id,
-        fulfillmentMode: recipientEmail ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
-        fulfillmentSnapshot: recipientEmail ? { recipientEmail } : {},
+        fulfillmentMode: giftPurchase ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
+        fulfillmentSnapshot: {},
         orderNumber: `BKE-${new Date().getUTCFullYear()}-${suffix}`,
         invoiceNumber: `INV-${new Date().getUTCFullYear()}-${suffix}`,
         currency: plan.currency,
