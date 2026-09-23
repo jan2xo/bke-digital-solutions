@@ -519,7 +519,19 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
            WHERE "orderId" = ${order.id}
              AND "status" = 'AVAILABLE'
         `;
-        if (order.fulfillmentMode === "ACCOUNT_ENTITLEMENT") {
+        const refundFulfillmentRows = await tx.$queryRaw<Array<{
+          fulfillmentMode: "ACCOUNT_ENTITLEMENT" | "CLAIM_CODE";
+        }>>`
+          SELECT "fulfillmentMode"::text AS "fulfillmentMode"
+            FROM "Order"
+           WHERE "id" = ${order.id}
+           LIMIT 1
+        `;
+        const refundFulfillmentMode = refundFulfillmentRows[0]?.fulfillmentMode;
+        if (!refundFulfillmentMode) {
+          throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
+        }
+        if (refundFulfillmentMode === "ACCOUNT_ENTITLEMENT") {
           await revokeOrderEntitlements(tx, order.id, {
             revocationReference: `refund:${event.provider}:${event.externalRefundId ?? event.eventId}`,
             revocationSnapshot: {
