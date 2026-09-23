@@ -98,7 +98,7 @@ export default async function CheckoutReview({
   const legalDocuments = requirementsResult.requirements;
 
   const authorizedAccounts = await listPurchaseAuthorizedAccounts(principal.id);
-  const recipientCheckoutEnabled = getRuntimeEnvironment().V3_CLAIM_CODE_CHECKOUT_ENABLED;
+  const recipientCheckoutEnabled = getRuntimeEnvironment().CLAIM_CODE_CHECKOUT_ENABLED;
   const annual =
     plan.type === "ANNUAL"
       ? { savingsMinor: terms.savingsMinor, effectiveMonthlyMinor: terms.effectiveMonthlyMinor ?? 0 }
