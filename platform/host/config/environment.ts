@@ -124,15 +124,15 @@ export const environmentSchema = z.object({
   if (protectedEnvironment && !value.SUPPLY_CHAIN_SIGNING_PRIVATE_KEY) context.addIssue({ code: "custom", path: ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY"], message: "Supply-chain signing key is required in protected environments" });
   if (value.CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
-      context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Claim Code checkout is enabled" });
+      context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when Claim Code checkout is enabled" });
     }
   }
   if (value.AGENT_ACCOUNT_SESSION_ENABLED) {
     if (!value.AGENT_ACCOUNT_SESSION_PEPPER || value.AGENT_ACCOUNT_SESSION_PEPPER.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_PEPPER)) {
-      context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_PEPPER"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Agent account sessions are enabled" });
+      context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_PEPPER"], message: "must be configured, at least 48 characters, and not a placeholder when Agent account sessions are enabled" });
     }
     if (!value.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY || value.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY)) {
-      context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when V3 Agent account sessions are enabled" });
+      context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when Agent account sessions are enabled" });
     }
   }
   if (environmentCredentialsRequired && value.EMAIL_PROVIDER === "resend" && !value.RESEND_API_KEY) context.addIssue({ code: "custom", path: ["RESEND_API_KEY"], message: "is required for the selected provider source" });
