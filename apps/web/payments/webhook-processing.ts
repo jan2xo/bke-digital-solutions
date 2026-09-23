@@ -14,6 +14,7 @@ import { paymentProvider } from "@/apps/web/payments/compatibility-provider";
 import { ingestPaymentWebhook } from "@/apps/web/payments/webhook-ingestion";
 import { reactToPaidSettlement } from "@/apps/web/payments/settlement-transaction";
 import { persistNotification } from "@/apps/web/notifications/center";
+import { revokeOrderEntitlements } from "@/apps/web/entitlements/refund-revocation";
 
 type StoredEvent = Readonly<{
   eventId: string;
@@ -518,6 +519,19 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
            WHERE "orderId" = ${order.id}
              AND "status" = 'AVAILABLE'
         `;
+        if (order.fulfillmentMode === "ACCOUNT_ENTITLEMENT") {
+          await revokeOrderEntitlements(tx, order.id, {
+            revocationReference: `refund:${event.provider}:${event.externalRefundId ?? event.eventId}`,
+            revocationSnapshot: {
+              reason: "REFUND_CONFIRMED",
+              orderId: order.id,
+              provider: event.provider,
+              eventId: event.eventId,
+              externalRefundId: event.externalRefundId ?? null,
+            },
+            revokedAt: event.occurredAt,
+          });
+        }
         const licenses = await tx.license.findMany({
           where: {
             OR: [
