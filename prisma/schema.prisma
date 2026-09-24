@@ -1119,6 +1119,7 @@ model Order {
   id                    String                  @id @default(cuid())
   number                String                  @unique
   accountId             String
+  sourceReference       String?                 @unique
   status                OrderStatus             @default(PENDING)
   currency              String
   subtotalMinor         Int
