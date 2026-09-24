@@ -5,16 +5,27 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_call:
+    inputs:
+      source_sha:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact commit SHA to certify
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: digital-solutions-ci-${{ github.event.pull_request.number || github.ref }}
+  group: digital-solutions-ci-${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 env:
-  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
   NODE_ENV: test
   APP_URL: http://localhost:3000
   DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_test
