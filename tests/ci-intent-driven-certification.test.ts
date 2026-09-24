@@ -47,8 +47,9 @@ describe("intent-driven certification foundation", () => {
       expect(workflow).toContain("Verify exact source checkout");
       expect(workflow).toContain('test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"');
       expect(workflow).toContain(
-        "github.event.pull_request.number || inputs.source_sha || github.ref",
+        "group: ${{ github.workflow }}-${{ inputs.source_sha }}",
       );
+      expect(workflow).not.toContain("github.event.pull_request");
     },
   );
 
@@ -59,12 +60,13 @@ describe("intent-driven certification foundation", () => {
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("source_sha:");
     expect(workflow).toContain(
-      "SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}",
+      "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
     expect(workflow).toContain(
-      "github.event.pull_request.number || inputs.source_sha || github.ref",
+      "group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}",
     );
+    expect(workflow).not.toContain("github.event.pull_request");
   });
 
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
@@ -93,5 +95,12 @@ describe("intent-driven certification foundation", () => {
     expect(workflow).toContain('tokens.includes("full")');
     expect(workflow).toContain("targets = allowedTargets");
     expect(workflow).not.toContain("pull_request:");
+    expect(workflow).toContain("cancel-in-progress: true");
+    expect(workflow).toContain(
+      "startsWith(github.event.comment.body, '/certify ')",
+    );
+    expect(workflow).toContain("github.event.issue.number");
+    expect(workflow).toContain("inputs.source_sha");
+    expect(workflow).toContain("github.run_id");
   });
 });

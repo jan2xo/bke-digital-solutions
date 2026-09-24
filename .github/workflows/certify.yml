@@ -20,8 +20,8 @@ permissions:
   issues: read
 
 concurrency:
-  group: intent-certification-${{ github.event.issue.number || inputs.source_sha || github.run_id }}
-  cancel-in-progress: false
+  group: intent-certification-${{ (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/certify ') && github.event.issue.number) || inputs.source_sha || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   plan:
