@@ -45,6 +45,8 @@ describe("Agent account-session Claim Code redemption", () => {
     expect(source).toContain('"claim_code_already_used"');
     expect(source).toContain('"claim_code_revoked"');
     expect(source).toContain('"claim_code_expired"');
+    expect(source).toContain('"account_forbidden"');
+    expect(source).toContain('"account_not_found"');
     expect(source).toContain('"INVALID_TOKEN"');
     expect(source).toContain('"RATE_LIMITED"');
   });
