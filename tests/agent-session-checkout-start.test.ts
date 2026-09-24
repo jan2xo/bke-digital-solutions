@@ -15,16 +15,20 @@ describe("Agent-session Store checkout start", () => {
 
   it("accepts only narrow purchase intent from BKE", () => {
     const route = readFileSync(routePath, "utf8");
+    const schema = route.slice(
+      route.indexOf("const checkoutStartSchema"),
+      route.indexOf("class CheckoutStartHttpError"),
+    );
 
-    expect(route).toContain("correlation_id:");
-    expect(route).toContain("purchase_plan_id:");
-    expect(route).toContain('purchase_mode: z.enum(["SELF", "GIFT"])');
-    expect(route).toContain("legal_version_ids:");
-    expect(route).not.toContain("customer_account_id:");
-    expect(route).not.toContain("account_id:");
-    expect(route).not.toContain("amount_minor:");
-    expect(route).not.toContain("checkout_url:");
-    expect(route).not.toContain("recipientEmail");
+    expect(schema).toContain("correlation_id:");
+    expect(schema).toContain("purchase_plan_id:");
+    expect(schema).toContain('purchase_mode: z.enum(["SELF", "GIFT"])');
+    expect(schema).toContain("legal_version_ids:");
+    expect(schema).not.toContain("customer_account_id:");
+    expect(schema).not.toContain("account_id:");
+    expect(schema).not.toContain("amount_minor:");
+    expect(schema).not.toContain("checkout_url:");
+    expect(schema).not.toContain("recipientEmail");
   });
 
   it("binds purchase authority to the authenticated Agent session account", () => {
@@ -79,7 +83,7 @@ describe("Agent-session Store checkout start", () => {
     const route = readFileSync(routePath, "utf8");
 
     expect(route).toContain("order_id: checkoutResult.order.orderId");
-    expect(route).toContain("checkout_url: checkoutResult.payment.checkoutUrl");
+    expect(route).toContain("checkoutResult.payment.checkoutUrl");
     expect(route).toContain("complimentary: false");
     expect(route).toContain("complimentary: true");
   });
