@@ -1,0 +1,55 @@
+name: Agent Store - Integration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "app/api/agent-sessions/store/**"
+      - "app/api/checkout/route.ts"
+      - "apps/web/catalog/agent-store-catalog.ts"
+      - "apps/web/licensing/self-purchase-continuation.ts"
+      - "apps/web/licensing/self-purchase-continuation-policy.ts"
+      - "tests/agent-session-checkout-review.test.ts"
+      - "tests/agent-session-checkout-start.test.ts"
+      - "tests/agent-session-checkout-status.test.ts"
+      - "tests/v3-agent-store-catalog-contract.test.ts"
+      - "tests/licensing-self-purchase-continuation.test.ts"
+      - "tests/licensing-self-purchase-route-adoption.test.ts"
+      - "contracts/**"
+      - "tooling/check-module-boundaries.mjs"
+      - "tsconfig.architecture.json"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/v2-agent-store.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-store-integration-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  certify:
+    name: Store contracts + architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Store catalog boundary
+        run: npx vitest run tests/v3-agent-store-catalog-contract.test.ts
+      - name: Certify checkout review/start/status boundaries
+        run: npx vitest run tests/agent-session-checkout-review.test.ts tests/agent-session-checkout-start.test.ts tests/agent-session-checkout-status.test.ts
+      - name: Certify buy-or-extend licensing semantics
+        run: npx vitest run tests/licensing-self-purchase-continuation.test.ts tests/licensing-self-purchase-route-adoption.test.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
