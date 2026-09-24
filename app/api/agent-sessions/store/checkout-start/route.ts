@@ -353,6 +353,8 @@ export async function POST(request: Request) {
       annualDiscountBps: plan.annualDiscountBps,
     };
 
+    const sourceReference =
+      `agent-checkout:${session.sessionId}:${input.correlation_id}`;
     const checkout = application.get<CommerceCheckoutOrchestrationCapability>(
       COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID,
     );
@@ -368,6 +370,7 @@ export async function POST(request: Request) {
       })),
       order: {
         accountId: access.account.id,
+        sourceReference,
         fulfillmentMode: giftPurchase ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
         fulfillmentSnapshot: {},
         orderNumber: `BKE-${new Date().getUTCFullYear()}-${suffix}`,
@@ -412,8 +415,7 @@ export async function POST(request: Request) {
           },
         ],
       },
-      paymentSourceReference:
-        `agent-checkout:${session.sessionId}:${input.correlation_id}`,
+      paymentSourceReference: sourceReference,
       payer: {
         name: access.account.displayName,
         email: access.account.billingEmail,
