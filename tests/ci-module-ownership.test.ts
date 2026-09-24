@@ -78,6 +78,8 @@ describe("CI module ownership", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
     expect(workflow).toContain("name: CI");
+    expect(workflow).toContain("push:\n    branches: [main]");
+    expect(workflow).toContain("pull_request:\n    branches: [main]");
     expect(workflow).toContain("Required certification");
     expect(workflow).toContain("cancel-in-progress: true");
   });
