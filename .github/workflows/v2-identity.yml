@@ -9,6 +9,8 @@ on:
       - "tests/agent-session-checkout-review.test.ts"
       - "app/api/agent-sessions/store/checkout-start/route.ts"
       - "tests/agent-session-checkout-start.test.ts"
+      - "app/api/agent-sessions/store/checkout-status/route.ts"
+      - "tests/agent-session-checkout-status.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "contracts/**"
       - "tooling/check-module-boundaries.mjs"
@@ -65,6 +67,8 @@ jobs:
         run: npx vitest run tests/agent-session-checkout-review.test.ts
       - name: Certify Agent Store checkout start boundary
         run: npx vitest run tests/agent-session-checkout-start.test.ts
+      - name: Certify Agent Store checkout recovery boundary
+        run: npx vitest run tests/agent-session-checkout-status.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Identity Prisma schema
