@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "modules/identity/**"
+      - "app/api/agent-sessions/store/checkout-review/route.ts"
+      - "tests/agent-session-checkout-review.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "contracts/**"
       - "tooling/check-module-boundaries.mjs"
@@ -57,6 +59,8 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Identity standalone consumer adoption
         run: npx tsx modules/identity/test/consumer-adoption.certify.ts
+      - name: Certify Agent Store checkout review boundary
+        run: npx vitest run tests/agent-session-checkout-review.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Identity Prisma schema
