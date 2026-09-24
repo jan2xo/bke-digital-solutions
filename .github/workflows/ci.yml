@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: digital-solutions-ci-${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+  group: digital-solutions-ci-${{ github.event.pull_request.number || inputs.source_sha || github.ref }}
   cancel-in-progress: true
 
 env:
