@@ -66,12 +66,24 @@ export async function POST(request: Request) {
         return { status: "invalid_token" as const };
       }
 
-      const account = await requireClaimAccountCapabilityInTransaction(
-        tx,
-        session.userId,
-        session.accountId,
-        "CLAIM_ENTITLEMENT",
-      );
+      let account;
+      try {
+        account = await requireClaimAccountCapabilityInTransaction(
+          tx,
+          session.userId,
+          session.accountId,
+          "CLAIM_ENTITLEMENT",
+        );
+      } catch (error) {
+        const code = error instanceof Error ? error.message : "";
+        if (code === "ACCOUNT_ROLE_FORBIDDEN") {
+          return { status: "account_forbidden" as const };
+        }
+        if (code === "NOT_FOUND") {
+          return { status: "account_not_found" as const };
+        }
+        throw error;
+      }
       if (account.lifecycleState === "SUSPENDED") {
         return { status: "suspended_account" as const };
       }
@@ -121,6 +133,10 @@ export async function POST(request: Request) {
     switch (result.status) {
       case "invalid_token":
         return json({ error: "INVALID_TOKEN" }, 401);
+      case "account_forbidden":
+        return json({ status: "account_forbidden" }, 403);
+      case "account_not_found":
+        return json({ status: "account_not_found" }, 404);
       case "suspended_account":
         return json({ status: "suspended_account" }, 409);
       case "closed_account":
