@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.14.0/bke-commerce-0.14.0.tgz";
-const EXPECTED_VERSION = "0.14.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.15.0/bke-commerce-0.15.0.tgz";
+const EXPECTED_VERSION = "0.15.0";
 const EXPECTED_SHA256 =
-  "d8577e22a454bea94c154388db1127b96c0ff827c6f6857c714879bffca159b5";
+  "798e28a21e4c3ad0e87cf327662e77db3843cec89e6eda67170a66ba4e0a6003";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -32,6 +32,10 @@ for (const marker of [
   "purchaseAccess",
   "@bke/commerce/contracts/order-item-policy-lookup.contract",
   "COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID",
+  "COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID",
+  "createCommerceOrderSourceLookupCapability",
+  "createPostgresCommerceOrderSourceLookupRepository",
+  "orderSourceLookup",
   "createPostgresCommerceOrderItemPolicyLookupCapability",
   "orderItemPolicyLookup",
   "@bke/commerce/contracts/subscription-status-lookup.contract",
