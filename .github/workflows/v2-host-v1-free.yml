@@ -1,28 +1,6 @@
 name: Production Host - Legacy Free
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "app/**"
-      - "apps/**"
-      - "components/**"
-      - "contracts/**"
-      - "lib/**"
-      - "modules/**"
-      - "platform/**"
-      - "prisma/**"
-      - "tooling/**"
-      - "generated/prisma/**"
-      - "middleware.ts"
-      - "middleware.tsx"
-      - "proxy.ts"
-      - "instrumentation.ts"
-      - "instrumentation-client.ts"
-      - "package.json"
-      - "package-lock.json"
-      - "next.config.ts"
-      - ".github/workflows/v2-host-v1-free.yml"
   workflow_call:
     inputs:
       source_sha:

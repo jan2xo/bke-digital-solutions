@@ -1,24 +1,6 @@
 name: Module - Payments
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/payments/**"
-      - "platform/persistence/migration-compositor.mjs"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - "app/api/admin/payments/reconcile/route.ts"
-      - "app/admin/payments/page.tsx"
-      - "lib/reconciliation.ts"
-      - "tests/payments-reconciliation-v2-adoption.test.ts"
-      - ".github/workflows/v2-payments.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:

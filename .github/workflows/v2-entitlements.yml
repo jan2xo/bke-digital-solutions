@@ -1,25 +1,6 @@
 name: Module - Entitlements
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/entitlements/**"
-      - "app/api/agent-sessions/claims/redeem/route.ts"
-      - "apps/web/accounts/claim-code-authorization.ts"
-      - "apps/web/entitlements/claim-codes.ts"
-      - "tests/agent-session-claim-redemption.test.ts"
-      - "tests/v3-claim-redemption-authorization.test.ts"
-      - "platform/persistence/migration-compositor.mjs"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - ".github/workflows/v2-entitlements.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:

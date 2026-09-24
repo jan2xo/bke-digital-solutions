@@ -1,16 +1,6 @@
 name: Prisma Isolation
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/spike-alpha/**"
-      - "modules/spike-beta/**"
-      - "platform/persistence/migration-compositor.mjs"
-      - "tooling/certify-prisma-isolation.mjs"
-      - ".github/workflows/v2-prisma-isolation.yml"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:

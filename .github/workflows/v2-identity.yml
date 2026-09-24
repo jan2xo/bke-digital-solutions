@@ -1,18 +1,6 @@
 name: Module - Identity
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/identity/**"
-      - "platform/persistence/migration-compositor.mjs"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - ".github/workflows/v2-identity.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:

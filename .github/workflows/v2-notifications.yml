@@ -1,19 +1,6 @@
 name: Module - Notifications
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/notifications/**"
-      - "apps/standalone/**"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/v2-notifications.yml"
   workflow_call:
     inputs:
       source_sha:

@@ -1,18 +1,6 @@
 name: Standalone Capability Host
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "apps/standalone/**"
-      - "modules/**"
-      - "platform/composition/**"
-      - "platform/persistence/migration-compositor.mjs"
-      - "contracts/**"
-      - "tsconfig.architecture.json"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/v2-standalone.yml"
   workflow_call:
     inputs:
       source_sha:
