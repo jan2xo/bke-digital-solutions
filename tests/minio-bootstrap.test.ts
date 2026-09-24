@@ -4,8 +4,44 @@ import { randomBytes } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 const script = readFileSync("scripts/minio-init.sh", "utf8");
-const minioImage = "minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e";
-const mcImage = "minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3";
+const productionMinioImage = "minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e";
+const productionMcImage = "minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3";
+const integrationImage = "bke/minio-bootstrap-integration:2025-04-22";
+let integrationImageReady = false;
+
+function ensureIntegrationImage() {
+  if (integrationImageReady) return;
+  const existing = spawnSync("docker", ["image", "inspect", integrationImage], {
+    encoding: "utf8",
+    timeout: 15_000,
+  });
+  if (existing.status !== 0) {
+    const build = spawnSync(
+      "docker",
+      [
+        "build",
+        "--file",
+        "tests/fixtures/minio/Dockerfile.integration",
+        "--tag",
+        integrationImage,
+        ".",
+      ],
+      {
+        encoding: "utf8",
+        timeout: 240_000,
+        maxBuffer: 16 * 1024 * 1024,
+      },
+    );
+    if (build.status !== 0) {
+      throw new Error(
+        build.stderr ||
+          build.stdout ||
+          "Unable to build pinned MinIO integration image.",
+      );
+    }
+  }
+  integrationImageReady = true;
+}
 
 function docker(args: string[], options: { allowFailure?: boolean } = {}) {
   const result = spawnSync("docker", args, { encoding: "utf8", timeout: 15_000 });
@@ -14,6 +50,7 @@ function docker(args: string[], options: { allowFailure?: boolean } = {}) {
 }
 
 function isolatedRuntime() {
+  ensureIntegrationImage();
   const suffix = randomBytes(6).toString("hex");
   const network = `bke-minio-test-${suffix}`;
   const container = `bke-minio-test-${suffix}`;
@@ -23,10 +60,10 @@ function isolatedRuntime() {
   const rootUser = `root-${suffix}`;
   const rootPassword = `root-secret-${suffix}-long-enough`;
   docker(["network", "create", network]);
-  docker(["run", "-d", "--name", container, "--network", network, "--network-alias", "minio", "-e", `MINIO_ROOT_USER=${rootUser}`, "-e", `MINIO_ROOT_PASSWORD=${rootPassword}`, minioImage, "server", "/data"]);
+  docker(["run", "-d", "--name", container, "--network", network, "--network-alias", "minio", "-e", `MINIO_ROOT_USER=${rootUser}`, "-e", `MINIO_ROOT_PASSWORD=${rootPassword}`, integrationImage, "minio", "server", "/data"]);
 
-  const runMc = (args: string[], allowFailure = false) => docker(["run", "--rm", "--network", network, "--entrypoint", "/bin/sh", mcImage, "-c", args.join(" ")], { allowFailure });
-  const runInitializer = () => docker(["run", "--rm", "--network", network, "-v", `${process.cwd()}/scripts/minio-init.sh:/usr/local/bin/minio-init.sh:ro`, "-e", `MINIO_ROOT_USER=${rootUser}`, "-e", `MINIO_ROOT_PASSWORD=${rootPassword}`, "-e", "S3_ENDPOINT=http://minio:9000", "-e", "S3_REGION=auto", "-e", `S3_BUCKET=${bucket}`, "-e", `S3_ACCESS_KEY_ID=${user}`, "-e", `S3_SECRET_ACCESS_KEY=${password}`, "-e", "S3_FORCE_PATH_STYLE=true", "-e", "DEPLOYMENT_ENV=production", "--entrypoint", "/bin/sh", mcImage, "/usr/local/bin/minio-init.sh"], { allowFailure: true });
+  const runMc = (args: string[], allowFailure = false) => docker(["run", "--rm", "--network", network, "--entrypoint", "/bin/sh", integrationImage, "-c", args.join(" ")], { allowFailure });
+  const runInitializer = () => docker(["run", "--rm", "--network", network, "-v", `${process.cwd()}/scripts/minio-init.sh:/usr/local/bin/minio-init.sh:ro`, "-e", `MINIO_ROOT_USER=${rootUser}`, "-e", `MINIO_ROOT_PASSWORD=${rootPassword}`, "-e", "S3_ENDPOINT=http://minio:9000", "-e", "S3_REGION=auto", "-e", `S3_BUCKET=${bucket}`, "-e", `S3_ACCESS_KEY_ID=${user}`, "-e", `S3_SECRET_ACCESS_KEY=${password}`, "-e", "S3_FORCE_PATH_STYLE=true", "-e", "DEPLOYMENT_ENV=production", "--entrypoint", "/bin/sh", integrationImage, "/usr/local/bin/minio-init.sh"], { allowFailure: true });
   const cleanup = () => {
     docker(["rm", "-f", container], { allowFailure: true });
     docker(["network", "rm", network], { allowFailure: true });
@@ -67,8 +104,8 @@ describe("production MinIO bootstrap contract", () => {
     const resolved: { services: Record<string, { image?: string; depends_on?: Record<string, { condition: string }>; environment?: Record<string, string | null>; ports?: unknown[]; volumes?: Array<{ type?: string; source?: string; target?: string }> }> } = JSON.parse(execFileSync("docker", ["compose", "--env-file", ".env.example", "-f", "docker-compose.production.yml", "config", "--format", "json"], { encoding: "utf8" }));
     const services = resolved.services;
     expect(services.minio).toBeDefined();
-    expect(services.minio.image).toBe(minioImage);
-    expect(services["minio-init"]?.image).toBe(mcImage);
+    expect(services.minio.image).toBe(productionMinioImage);
+    expect(services["minio-init"]?.image).toBe(productionMcImage);
     expect(services["minio-init"]?.depends_on?.minio?.condition).toBe("service_healthy");
     expect(services.app.depends_on?.["minio-init"]?.condition).toBe("service_completed_successfully");
     expect(services["backup-worker"].depends_on?.["minio-init"]?.condition).toBe("service_completed_successfully");
