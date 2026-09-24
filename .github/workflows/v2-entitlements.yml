@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths:
       - "modules/entitlements/**"
+      - "app/api/agent-sessions/claims/redeem/route.ts"
+      - "apps/web/accounts/claim-code-authorization.ts"
+      - "apps/web/entitlements/claim-codes.ts"
+      - "tests/agent-session-claim-redemption.test.ts"
+      - "tests/v3-claim-redemption-authorization.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "platform/composition/**"
       - "contracts/**"
@@ -59,6 +64,8 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Entitlements consumer adoption and staging retirement
         run: npx tsx modules/entitlements/test/consumer-adoption.certify.ts
+      - name: Certify Agent account-session Claim Code redemption
+        run: npx vitest run tests/agent-session-claim-redemption.test.ts tests/v3-claim-redemption-authorization.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Entitlements Prisma schema
