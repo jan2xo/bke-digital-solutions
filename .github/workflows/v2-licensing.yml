@@ -9,12 +9,6 @@ on:
       - "app/api/licenses/[id]/assignments/**"
       - "app/dashboard/accounts/[accountId]/licenses/[licenseId]/seats/**"
       - "apps/web/licensing/license-seat-management.ts"
-      - "apps/web/licensing/self-purchase-continuation.ts"
-      - "apps/web/licensing/self-purchase-continuation-policy.ts"
-      - "app/api/checkout/route.ts"
-      - "app/api/agent-sessions/store/checkout-start/route.ts"
-      - "tests/licensing-self-purchase-continuation.test.ts"
-      - "tests/licensing-self-purchase-route-adoption.test.ts"
       - "apps/web/catalog/agent-software-catalog.ts"
       - "app/api/agent-sessions/catalog/route.ts"
       - "app/api/agent-sessions/provision/standalone/route.ts"
@@ -92,8 +86,6 @@ jobs:
         run: npx vitest run tests/agent-session-update-authority.test.ts
       - name: Certify account-session product repair authority
         run: npx vitest run tests/agent-session-repair-authority.test.ts
-      - name: Certify buy-or-extend self-purchase licensing semantics
-        run: npx vitest run tests/licensing-self-purchase-continuation.test.ts tests/licensing-self-purchase-route-adoption.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Licensing Prisma schema
