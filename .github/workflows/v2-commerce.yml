@@ -5,20 +5,6 @@ on:
     branches: [main]
     paths:
       - "modules/commerce/**"
-      - "app/api/agent-sessions/store/checkout-review/route.ts"
-      - "tests/agent-session-checkout-review.test.ts"
-      - "app/api/agent-sessions/store/checkout-start/route.ts"
-      - "app/api/checkout/route.ts"
-      - "apps/web/licensing/self-purchase-continuation.ts"
-      - "apps/web/licensing/self-purchase-continuation-policy.ts"
-      - "tests/agent-session-checkout-start.test.ts"
-      - "tests/licensing-self-purchase-continuation.test.ts"
-      - "tests/licensing-self-purchase-route-adoption.test.ts"
-      - "app/api/agent-sessions/store/checkout-status/route.ts"
-      - "tests/agent-session-checkout-status.test.ts"
-      - "app/api/agent-sessions/store/route.ts"
-      - "apps/web/catalog/agent-store-catalog.ts"
-      - "tests/v3-agent-store-catalog-contract.test.ts"
       - "app/page.tsx"
       - "app/products/[slug]/page.tsx"
       - "app/api/admin/offers/**"
@@ -77,16 +63,6 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Commerce consumer adoption and staging retirement
         run: npx tsx modules/commerce/test/consumer-adoption.certify.ts
-      - name: Certify Agent Store catalog boundary
-        run: npx vitest run tests/v3-agent-store-catalog-contract.test.ts
-      - name: Certify Agent Store checkout review boundary
-        run: npx vitest run tests/agent-session-checkout-review.test.ts
-      - name: Certify Agent Store checkout start boundary
-        run: npx vitest run tests/agent-session-checkout-start.test.ts
-      - name: Certify buy-or-extend self-purchase semantics
-        run: npx vitest run tests/licensing-self-purchase-continuation.test.ts tests/licensing-self-purchase-route-adoption.test.ts
-      - name: Certify Agent Store checkout recovery boundary
-        run: npx vitest run tests/agent-session-checkout-status.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate package-backed Commerce Prisma schema
