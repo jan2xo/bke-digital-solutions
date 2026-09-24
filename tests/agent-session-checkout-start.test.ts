@@ -80,6 +80,13 @@ describe("Agent-session Store checkout start", () => {
     );
   });
 
+  it("preserves the account-session protocol on owned checkout failures", () => {
+    const route = readFileSync(routePath, "utf8");
+
+    expect(route).toContain("error instanceof CheckoutStartHttpError");
+    expect(route).toContain("return json({ error: error.code }, error.status)");
+  });
+
   it("returns only server-created order and secure checkout navigation", () => {
     const route = readFileSync(routePath, "utf8");
 

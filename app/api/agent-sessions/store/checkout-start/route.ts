@@ -451,6 +451,9 @@ export async function POST(request: Request) {
       201,
     );
   } catch (error) {
+    if (error instanceof CheckoutStartHttpError) {
+      return json({ error: error.code }, error.status);
+    }
     return apiError(error);
   }
 }
