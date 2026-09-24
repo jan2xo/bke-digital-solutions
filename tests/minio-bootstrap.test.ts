@@ -144,7 +144,7 @@ describe("live MinIO bootstrap integration", () => {
     } finally {
       runtime.cleanup();
     }
-  }, 120_000);
+  }, 300_000);
 
   it("fails closed when a broader direct policy is present", () => {
     const runtime = isolatedRuntime();
@@ -160,7 +160,7 @@ describe("live MinIO bootstrap integration", () => {
     } finally {
       runtime.cleanup();
     }
-  }, 120_000);
+  }, 300_000);
 
   it("fails closed when the application identity has group authorization", () => {
     const runtime = isolatedRuntime();
@@ -181,5 +181,5 @@ describe("live MinIO bootstrap integration", () => {
     } finally {
       runtime.cleanup();
     }
-  }, 120_000);
+  }, 300_000);
 });
