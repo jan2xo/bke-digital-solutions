@@ -100,6 +100,9 @@ for (const name of exactHeadWorkflows) {
   if (/^\s*pull_request:\s*$/m.test(workflow)) {
     fail(`${name} must not auto-run on pull_request`);
   }
+  if (workflow.includes("github.event.pull_request")) {
+    fail(`${name} must not depend on pull_request event context`);
+  }
 }
 
 const globalCi = read("ci.yml");
