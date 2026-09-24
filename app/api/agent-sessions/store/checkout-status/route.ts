@@ -164,7 +164,9 @@ export async function GET(request: Request) {
       | "CANCELLED";
     let checkoutUrl: string | null = null;
 
-    if (order.status === "PAID") {
+    if (order.status === "CANCELLED") {
+      paymentStatus = "CANCELLED";
+    } else if (order.paidAt !== null) {
       paymentStatus = order.totalMinor === 0 ? "NOT_REQUIRED" : "SETTLED";
     } else if (order.totalMinor === 0) {
       paymentStatus = "NOT_REQUIRED";
