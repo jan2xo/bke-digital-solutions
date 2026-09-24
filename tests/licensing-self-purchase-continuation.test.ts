@@ -54,6 +54,21 @@ describe("self-purchase licensing continuation", () => {
     });
   });
 
+  it("does not guess renewal for a legacy subscription without a matching plan identity", () => {
+    expect(
+      decideSelfPurchaseContinuation("plan-1", [
+        license("plan-1", {
+          id: "subscription-legacy",
+          status: "ACTIVE",
+          purchasePlanId: null,
+        }),
+      ]),
+    ).toEqual({
+      mode: "CONFLICT",
+      reason: "ALREADY_OWNED",
+    });
+  });
+
   it("does not sell the same non-renewable license twice", () => {
     expect(
       decideSelfPurchaseContinuation("plan-1", [
