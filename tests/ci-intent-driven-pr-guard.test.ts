@@ -31,6 +31,22 @@ describe("intent-driven pull-request certification", () => {
     ).toBe(0);
   });
 
+  it("parses every workflow with the same Ruby YAML runtime used by PR Guard", () => {
+    const result = spawnSync(
+      "ruby",
+      [
+        "-e",
+        'require "yaml"; Dir[".github/workflows/*.yml"].sort.each { |file| YAML.safe_load(File.read(file), aliases: true) }',
+      ],
+      { encoding: "utf8" },
+    );
+
+    expect(
+      result.status,
+      [result.stdout, result.stderr].filter(Boolean).join("\n"),
+    ).toBe(0);
+  });
+
   it("keeps the automatic PR guard lightweight", () => {
     const guard = readFileSync(
       `${workflowsDir}/pr-guard.yml`,
