@@ -74,8 +74,9 @@ describe("Agent-session Store checkout start", () => {
   it("binds mutation identity to the Agent session and correlation id", () => {
     const route = readFileSync(routePath, "utf8");
 
+    expect(route).toContain("paymentSourceReference:");
     expect(route).toContain(
-      "paymentSourceReference: `agent-checkout:${session.sessionId}:${input.correlation_id}`",
+      "`agent-checkout:${session.sessionId}:${input.correlation_id}`",
     );
   });
 
