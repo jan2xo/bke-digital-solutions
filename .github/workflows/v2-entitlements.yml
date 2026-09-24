@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths:
       - "modules/entitlements/**"
+      - "app/api/agent-sessions/claims/redeem/route.ts"
+      - "apps/web/accounts/claim-code-authorization.ts"
+      - "apps/web/entitlements/claim-codes.ts"
+      - "tests/agent-session-claim-redemption.test.ts"
+      - "tests/v3-claim-redemption-authorization.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "platform/composition/**"
       - "contracts/**"
@@ -38,7 +43,14 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
+      NODE_ENV: test
+      APP_URL: http://localhost:3000
       DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_entitlements
+      SESSION_SECRET: entitlements-ci-session-secret-with-at-least-32-chars
+      LICENSE_PEPPER: entitlements-ci-license-pepper-with-at-least-32-chars
+      CRON_SECRET: entitlements-ci-cron-secret-with-at-least-32-chars
+      S3_BUCKET: test
+      EMAIL_FROM: test@example.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -59,6 +71,8 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Entitlements consumer adoption and staging retirement
         run: npx tsx modules/entitlements/test/consumer-adoption.certify.ts
+      - name: Certify Agent account-session Claim Code redemption
+        run: npx vitest run tests/agent-session-claim-redemption.test.ts tests/v3-claim-redemption-authorization.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Entitlements Prisma schema
