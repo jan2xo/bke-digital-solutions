@@ -26,8 +26,7 @@ function renewableOnPlan(
       license.subscription &&
       (license.subscription.status === "ACTIVE" ||
         license.subscription.status === "PAST_DUE") &&
-      (license.subscription.purchasePlanId === null ||
-        license.subscription.purchasePlanId === purchasePlanId),
+      license.subscription.purchasePlanId === purchasePlanId,
   );
 }
 
