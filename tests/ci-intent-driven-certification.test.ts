@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const workflowsDir = ".github/workflows";
@@ -22,7 +22,7 @@ const callableWorkflows = [
   "v2-standalone.yml",
 ] as const;
 
-describe("intent-driven certification foundation", () => {
+describe("intent-driven certification", () => {
   it("accepts explicit certification intent instead of guessing ownership", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 
@@ -35,42 +35,43 @@ describe("intent-driven certification foundation", () => {
     expect(workflow).toContain('"targets_json"');
     expect(workflow).toContain("required-certification:");
     expect(workflow).toContain("Required certification");
+    expect(workflow).not.toContain("pull_request:");
   });
 
   it.each(callableWorkflows)(
-    "%s is reusable and verifies the exact requested source SHA",
+    "%s is reusable/manual-only and verifies the exact requested source SHA",
     (name) => {
       const workflow = readFileSync(`${workflowsDir}/${name}`, "utf8");
 
       expect(workflow).toContain("workflow_call:");
+      expect(workflow).toContain("workflow_dispatch:");
       expect(workflow).toContain("source_sha:");
+      expect(workflow).not.toContain("pull_request:");
       expect(workflow).toContain("Verify exact source checkout");
       expect(workflow).toContain('test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"');
-      expect(workflow).toContain(
-        "github.event.pull_request.number || inputs.source_sha || github.ref",
-      );
+      expect(workflow).toContain("inputs.source_sha");
     },
   );
 
-  it("makes global CI callable against an explicit exact SHA", () => {
+  it("makes global CI callable against an explicit SHA and automatic only on main", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
     expect(workflow).toContain("workflow_call:");
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("source_sha:");
     expect(workflow).toContain(
-      "SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}",
+      "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(workflow).toContain(
-      "github.event.pull_request.number || inputs.source_sha || github.ref",
-    );
+    expect(workflow).toContain("push:\n    branches: [main]");
+    expect(workflow).not.toContain("pull_request:");
   });
 
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
     const workflow = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
 
     expect(workflow).toContain("workflow_call:");
+    expect(workflow).toContain("workflow_dispatch:");
     expect(workflow.match(/npm ci/g)).toHaveLength(1);
     expect(workflow.match(/Typecheck architecture/g)).toHaveLength(1);
 
@@ -85,6 +86,18 @@ describe("intent-driven certification foundation", () => {
     ]) {
       expect(workflow).toContain(testPath);
     }
+
+    for (const retired of [
+      "v2-platform-audit.yml",
+      "v2-platform-email.yml",
+      "v2-platform-health.yml",
+      "v2-platform-observability.yml",
+      "v2-platform-providers.yml",
+      "v2-platform-scheduler.yml",
+      "v2-platform-storage-cleanup.yml",
+    ]) {
+      expect(existsSync(`${workflowsDir}/${retired}`)).toBe(false);
+    }
   });
 
   it("keeps full certification explicit and rare", () => {
@@ -92,6 +105,5 @@ describe("intent-driven certification foundation", () => {
 
     expect(workflow).toContain('tokens.includes("full")');
     expect(workflow).toContain("targets = allowedTargets");
-    expect(workflow).not.toContain("pull_request:");
   });
 });
