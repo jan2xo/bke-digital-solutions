@@ -7,6 +7,8 @@ on:
       - "modules/accounts/**"
       - "app/api/agent-sessions/store/checkout-review/route.ts"
       - "tests/agent-session-checkout-review.test.ts"
+      - "app/api/agent-sessions/store/checkout-start/route.ts"
+      - "tests/agent-session-checkout-start.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "contracts/**"
       - "tooling/check-module-boundaries.mjs"
@@ -61,6 +63,8 @@ jobs:
         run: npx tsx modules/accounts/test/consumer-adoption.certify.ts
       - name: Certify Agent Store checkout review boundary
         run: npx vitest run tests/agent-session-checkout-review.test.ts
+      - name: Certify Agent Store checkout start boundary
+        run: npx vitest run tests/agent-session-checkout-start.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Accounts Prisma schema

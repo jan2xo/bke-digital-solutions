@@ -7,6 +7,8 @@ on:
       - "modules/legal/**"
       - "app/api/agent-sessions/store/checkout-review/route.ts"
       - "tests/agent-session-checkout-review.test.ts"
+      - "app/api/agent-sessions/store/checkout-start/route.ts"
+      - "tests/agent-session-checkout-start.test.ts"
       - "apps/web/legal/**"
       - "lib/legal/service.ts"
       - "lib/legal/constants.ts"
@@ -80,6 +82,8 @@ jobs:
         run: npx tsx modules/legal/test/consumer-adoption.certify.ts
       - name: Certify Agent Store checkout review boundary
         run: npx vitest run tests/agent-session-checkout-review.test.ts
+      - name: Certify Agent Store checkout start boundary
+        run: npx vitest run tests/agent-session-checkout-start.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Legal Prisma schema
