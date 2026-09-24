@@ -4,10 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.7.0/bke-payments-0.7.0.tgz";
-const EXPECTED_VERSION = "0.7.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.9.0/bke-payments-0.9.0.tgz";
+const EXPECTED_VERSION = "0.9.0";
 const EXPECTED_SHA256 =
-  "f078bb4e655e44bc929e03af20db20fb849480c7a13ef5c7dc5095381d5b02f6";
+  "9ab16f457bc308fc26935ed47b3b8f2cfae3eb28036a3751f6460e3e93217f27";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -47,6 +47,12 @@ const requiredPackageSurfaces = [
   "@bke/payments/prisma/repositories/",
   "@bke/payments/module.manifest",
   "PAYMENTS_RECONCILIATION_CAPABILITY_ID",
+  "PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID",
+  "createPaymentsCheckoutAttemptLookupCapability",
+  "checkoutAttemptLookup",
+  "PAYMENTS_COMMERCIAL_EVENT_MATCH_CAPABILITY_ID",
+  "createPaymentsCommercialEventMatchCapability",
+  "commercialEventMatch",
   "createPaymentsReconciliationCapability",
   "createPostgresPaymentsReconciliationRepository",
 ];

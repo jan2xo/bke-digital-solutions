@@ -1,10 +1,14 @@
 import type { CapabilityModule } from "../../contracts/capability";
 import { PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID } from "@bke/payments/contracts/checkout-attempt.contract";
+import { PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID } from "@bke/payments/contracts/checkout-attempt-lookup.contract";
+import { PAYMENTS_COMMERCIAL_EVENT_MATCH_CAPABILITY_ID } from "@bke/payments/contracts/commercial-event-match.contract";
 import { PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID } from "@bke/payments/contracts/provider-event-ingestion.contract";
 import { PAYMENTS_RECONCILIATION_CAPABILITY_ID } from "@bke/payments/contracts/reconciliation.contract";
 import { PAYMENTS_REFUND_INITIATION_CAPABILITY_ID } from "@bke/payments/contracts/refund-initiation.contract";
 import { PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID } from "@bke/payments/contracts/settlement-fact.contract";
 import { createPaymentsCheckoutAttemptCapability } from "@bke/payments/logic/checkout-attempt";
+import { createPaymentsCheckoutAttemptLookupCapability } from "@bke/payments/logic/checkout-attempt-lookup";
+import { createPaymentsCommercialEventMatchCapability } from "@bke/payments/logic/commercial-event-match";
 import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-attempt-provider";
 import { createPaymentsProviderEventIngestionCapability } from "@bke/payments/logic/provider-event-ingestion";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
@@ -42,10 +46,15 @@ export function createPaymentsModule(options: PaymentsModuleOptions): Capability
     throw new Error("PAYMENTS_PROVIDER_VERIFIER_MISMATCH");
   }
 
+  const checkoutRepository =
+    createPostgresPaymentsCheckoutAttemptRepository(options.connectionString);
   const checkoutAttempt = createPaymentsCheckoutAttemptCapability(
-    createPostgresPaymentsCheckoutAttemptRepository(options.connectionString),
+    checkoutRepository,
     options.provider,
   );
+  const checkoutAttemptLookup =
+    createPaymentsCheckoutAttemptLookupCapability(checkoutRepository);
+  const commercialEventMatch = createPaymentsCommercialEventMatchCapability();
   const providerEventIngestion = createPaymentsProviderEventIngestionCapability(
     createPostgresPaymentsProviderEventRepository(options.connectionString),
     options.eventVerifier,
@@ -67,6 +76,8 @@ export function createPaymentsModule(options: PaymentsModuleOptions): Capability
     start() {
       return [
         { id: PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID, value: checkoutAttempt },
+        { id: PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID, value: checkoutAttemptLookup },
+        { id: PAYMENTS_COMMERCIAL_EVENT_MATCH_CAPABILITY_ID, value: commercialEventMatch },
         { id: PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID, value: providerEventIngestion },
         { id: PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID, value: settlementFact },
         { id: PAYMENTS_REFUND_INITIATION_CAPABILITY_ID, value: refundInitiation },

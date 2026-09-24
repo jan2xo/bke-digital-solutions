@@ -13,6 +13,15 @@ describe("Claim Code gift checkout", () => {
     expect(route).not.toContain("recipientEmail");
   });
 
+  it("uses one durable source identity for the web order and payment attempt", () => {
+    const route = readFileSync("app/api/checkout/route.ts", "utf8");
+
+    expect(route).toContain("const sourceReference =");
+    expect(route).toContain("`checkout:${principal.id}:${randomUUID()}`");
+    expect(route).toContain("sourceReference,");
+    expect(route).toContain("paymentSourceReference: sourceReference");
+  });
+
   it("keeps gift creation behind the generation-free rollout flag", () => {
     const route = readFileSync("app/api/checkout/route.ts", "utf8");
     const page = readFileSync("app/checkout/page.tsx", "utf8");

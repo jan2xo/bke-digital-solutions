@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "modules/payments/**"
+      - "app/api/agent-sessions/store/checkout-status/route.ts"
+      - "tests/agent-session-checkout-status.test.ts"
       - "platform/persistence/migration-compositor.mjs"
       - "platform/composition/**"
       - "contracts/**"
@@ -54,17 +56,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-payments-0.7.0.tgz
+          artifact=/tmp/bke-payments-0.9.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.7.0/bke-payments-0.7.0.tgz
-          echo "f078bb4e655e44bc929e03af20db20fb849480c7a13ef5c7dc5095381d5b02f6  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.9.0/bke-payments-0.9.0.tgz
+          echo "9ab16f457bc308fc26935ed47b3b8f2cfae3eb28036a3751f6460e3e93217f27  $artifact" | sha256sum -c -
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Payments consumer adoption and staging retirement
         run: npx tsx modules/payments/test/consumer-adoption.certify.ts
       - name: Certify reconciliation host adoption
         run: npx vitest run tests/payments-reconciliation-v2-adoption.test.ts
+      - name: Certify Agent Store checkout recovery boundary
+        run: npx vitest run tests/agent-session-checkout-status.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Payments Prisma schema
