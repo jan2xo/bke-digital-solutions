@@ -1,39 +1,6 @@
 name: Module - Licensing
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/licensing/**"
-      - "app/api/licenses/refresh/route.ts"
-      - "app/api/licenses/[id]/assignments/**"
-      - "app/dashboard/accounts/[accountId]/licenses/[licenseId]/seats/**"
-      - "apps/web/licensing/license-seat-management.ts"
-      - "apps/web/catalog/agent-software-catalog.ts"
-      - "app/api/agent-sessions/catalog/route.ts"
-      - "app/api/agent-sessions/provision/standalone/route.ts"
-      - "app/api/agent-sessions/update/standalone/route.ts"
-      - "apps/web/agent-sessions/update-policy.ts"
-      - "apps/web/agent-sessions/update-policy-issuer.ts"
-      - "tests/agent-session-update-authority.test.ts"
-      - "app/api/agent-sessions/repair/standalone/route.ts"
-      - "apps/web/agent-sessions/repair-policy.ts"
-      - "apps/web/agent-sessions/repair-policy-issuer.ts"
-      - "tests/agent-session-repair-authority.test.ts"
-      - "components/license-seat-manager.tsx"
-      - "components/customer-license-card.tsx"
-      - "tests/license-seat-management.test.ts"
-      - "tests/v3-agent-software-catalog-contract.test.ts"
-      - "tests/unit/refresh-decision.test.ts"
-      - "platform/persistence/migration-compositor.mjs"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - ".github/workflows/v2-licensing.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:
@@ -50,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.source_sha || github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.source_sha || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -75,11 +42,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.source_sha }}
       - name: Verify exact source checkout
         shell: bash
         env:
-          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
       - uses: actions/setup-node@v4
         with:

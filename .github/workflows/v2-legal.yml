@@ -1,29 +1,6 @@
 name: Module - Legal
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/legal/**"
-      - "apps/web/legal/**"
-      - "lib/legal/service.ts"
-      - "lib/legal/constants.ts"
-      - "app/admin/releases/[id]/page.tsx"
-      - "app/api/admin/legal/route.ts"
-      - "app/api/admin/supply-chain/route.ts"
-      - "app/api/auth/register/route.ts"
-      - "app/dashboard/accounts/[id]/page.tsx"
-      - "tests/legal.test.ts"
-      - "platform/persistence/migration-compositor.mjs"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - ".github/workflows/v2-legal.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:
@@ -40,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.source_sha || github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.source_sha || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -65,11 +42,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.source_sha }}
       - name: Verify exact source checkout
         shell: bash
         env:
-          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
       - uses: actions/setup-node@v4
         with:
