@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - "modules/catalog/**"
+      - "app/api/agent-sessions/store/route.ts"
+      - "apps/web/catalog/agent-store-catalog.ts"
+      - "tests/v3-agent-store-catalog-contract.test.ts"
       - "apps/standalone/**"
       - "platform/persistence/migration-compositor.mjs"
       - "platform/composition/**"
@@ -59,6 +62,8 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Catalog consumer adoption and staging retirement
         run: npx tsx modules/catalog/test/consumer-adoption.certify.ts
+      - name: Certify Agent Store catalog boundary
+        run: npx vitest run tests/v3-agent-store-catalog-contract.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate package-backed Catalog Prisma schema
