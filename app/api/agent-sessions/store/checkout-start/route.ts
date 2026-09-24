@@ -48,6 +48,7 @@ import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { resolveSelfPurchaseContinuation } from "@/apps/web/licensing/self-purchase-continuation";
 import { db } from "@/platform/host/db";
 import { getRuntimeEnvironment } from "@/platform/host/env";
 
@@ -274,6 +275,21 @@ export async function POST(request: Request) {
     }
     const product = productResult.value;
 
+    const selfPurchase = giftPurchase
+      ? ({ mode: "NEW" } as const)
+      : await resolveSelfPurchaseContinuation({
+          accountId: access.account.id,
+          editionId: edition.id,
+          purchasePlanId: plan.id,
+        });
+    if (selfPurchase.mode === "CONFLICT") {
+      return json({ error: "ENTITLEMENT_CONFLICT" }, 409);
+    }
+    const renewalSubscriptionId =
+      selfPurchase.mode === "RENEW" ? selfPurchase.subscriptionId : null;
+    const acceptanceContext: "CHECKOUT" | "RENEWAL_CHECKOUT" =
+      renewalSubscriptionId ? "RENEWAL_CHECKOUT" : "CHECKOUT";
+
     const requirementsCapability = application.get<LegalCheckoutRequirementsCapability>(
       LEGAL_CHECKOUT_REQUIREMENTS_CAPABILITY_ID,
     );
@@ -306,7 +322,7 @@ export async function POST(request: Request) {
         customerAccountId: access.account.id,
         documentId: requirement.documentId,
         documentVersionId: requirement.documentVersionId,
-        acceptanceContext: "CHECKOUT",
+        acceptanceContext,
         slaVersion: requirement.slaVersion,
         renderedContentSha256: requirement.renderedContentSha256,
         variablesSnapshot: requirement.variablesSnapshot,
@@ -364,12 +380,13 @@ export async function POST(request: Request) {
       legal: requirements.map((requirement) => ({
         documentId: requirement.documentId,
         documentVersionId: requirement.documentVersionId,
-        acceptanceContext: "CHECKOUT",
+        acceptanceContext,
         slaVersion: requirement.slaVersion,
         renderedContentSha256: requirement.renderedContentSha256,
       })),
       order: {
         accountId: access.account.id,
+        ...(renewalSubscriptionId ? { renewalSubscriptionId } : {}),
         sourceReference,
         fulfillmentMode: giftPurchase ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT",
         fulfillmentSnapshot: {},
