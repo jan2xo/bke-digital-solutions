@@ -1,0 +1,327 @@
+name: Intent Certification
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact commit SHA to certify
+        required: true
+        type: string
+      targets:
+        description: Space/comma-separated certification targets, or full
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: intent-certification-${{ github.event.issue.number || inputs.source_sha || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Resolve certification intent
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.issue.pull_request && startsWith(github.event.comment.body, '/certify '))
+    runs-on: ubuntu-latest
+    outputs:
+      source_sha: ${{ steps.plan.outputs.source_sha }}
+      targets_json: ${{ steps.plan.outputs.targets_json }}
+    steps:
+      - id: plan
+        name: Resolve exact head and targets
+        uses: actions/github-script@v7
+        env:
+          DISPATCH_SHA: ${{ inputs.source_sha }}
+          DISPATCH_TARGETS: ${{ inputs.targets }}
+        with:
+          script: |
+            const allowedTargets = [
+              "core",
+              "accounts",
+              "agent-store",
+              "catalog",
+              "commerce",
+              "composition",
+              "echo",
+              "entitlements",
+              "host",
+              "identity",
+              "legal",
+              "licensing",
+              "notifications",
+              "payments",
+              "platform",
+              "prisma-isolation",
+              "standalone",
+              "native-account",
+            ];
+
+            let sourceSha;
+            let requested;
+
+            if (context.eventName === "issue_comment") {
+              const association = context.payload.comment?.author_association ?? "NONE";
+              const allowedAssociations = new Set(["OWNER", "MEMBER", "COLLABORATOR"]);
+              if (!allowedAssociations.has(association)) {
+                core.setFailed(`Certification command rejected for author association ${association}.`);
+                return;
+              }
+
+              const issue = context.payload.issue;
+              if (!issue?.pull_request) {
+                core.setFailed("/certify is valid only on pull requests.");
+                return;
+              }
+
+              const response = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: issue.number,
+              });
+              sourceSha = response.data.head.sha;
+              requested = (context.payload.comment?.body ?? "")
+                .replace(/^\/certify\s+/i, "")
+                .trim();
+            } else {
+              sourceSha = (process.env.DISPATCH_SHA ?? "").trim();
+              requested = (process.env.DISPATCH_TARGETS ?? "").trim();
+            }
+
+            if (!/^[0-9a-f]{40}$/i.test(sourceSha ?? "")) {
+              core.setFailed("Certification requires an exact 40-character source SHA.");
+              return;
+            }
+
+            const tokens = [...new Set(
+              requested
+                .toLowerCase()
+                .split(/[\s,]+/)
+                .map((value) => value.trim())
+                .filter(Boolean),
+            )];
+
+            if (tokens.length === 0) {
+              core.setFailed("No certification targets were declared.");
+              return;
+            }
+
+            let targets;
+            if (tokens.includes("full") || tokens.includes("all")) {
+              targets = allowedTargets;
+            } else {
+              const unknown = tokens.filter((target) => !allowedTargets.includes(target));
+              if (unknown.length > 0) {
+                core.setFailed(
+                  `Unknown certification target(s): ${unknown.join(", ")}. Allowed: ${allowedTargets.join(", ")}.`,
+                );
+                return;
+              }
+              targets = tokens;
+            }
+
+            core.setOutput("source_sha", sourceSha);
+            core.setOutput("targets_json", JSON.stringify(targets));
+            await core.summary
+              .addHeading("BKE certification plan")
+              .addRaw(`Exact source SHA: \`${sourceSha}\`\n\n`)
+              .addRaw(`Targets: \`${targets.join(", ")}\`\n`)
+              .write();
+
+  core:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'core')
+    uses: ./.github/workflows/ci.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  accounts:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'accounts')
+    uses: ./.github/workflows/v2-accounts.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  agent-store:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'agent-store')
+    uses: ./.github/workflows/v2-agent-store.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  catalog:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'catalog')
+    uses: ./.github/workflows/v2-catalog.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  commerce:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'commerce')
+    uses: ./.github/workflows/v2-commerce.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  composition:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'composition')
+    uses: ./.github/workflows/v2-composition.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  echo:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'echo')
+    uses: ./.github/workflows/v2-echo.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  entitlements:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'entitlements')
+    uses: ./.github/workflows/v2-entitlements.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  host:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'host')
+    uses: ./.github/workflows/v2-host-v1-free.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  identity:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'identity')
+    uses: ./.github/workflows/v2-identity.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  legal:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'legal')
+    uses: ./.github/workflows/v2-legal.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  licensing:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'licensing')
+    uses: ./.github/workflows/v2-licensing.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  notifications:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'notifications')
+    uses: ./.github/workflows/v2-notifications.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  payments:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'payments')
+    uses: ./.github/workflows/v2-payments.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  platform:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'platform')
+    uses: ./.github/workflows/v2-platform.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  prisma-isolation:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'prisma-isolation')
+    uses: ./.github/workflows/v2-prisma-isolation.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  standalone:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'standalone')
+    uses: ./.github/workflows/v2-standalone.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  native-account:
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'native-account')
+    uses: ./.github/workflows/native-bke-account-handoff.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  required-certification:
+    name: Required certification
+    if: always() && needs.plan.result == 'success'
+    needs:
+      - plan
+      - core
+      - accounts
+      - agent-store
+      - catalog
+      - commerce
+      - composition
+      - echo
+      - entitlements
+      - host
+      - identity
+      - legal
+      - licensing
+      - notifications
+      - payments
+      - platform
+      - prisma-isolation
+      - standalone
+      - native-account
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
+      TARGETS_JSON: ${{ needs.plan.outputs.targets_json }}
+      NEEDS_JSON: ${{ toJSON(needs) }}
+    steps:
+      - name: Verify declared certification plan
+        shell: bash
+        run: |
+          node <<'NODE'
+          const targets = JSON.parse(process.env.TARGETS_JSON);
+          const needs = JSON.parse(process.env.NEEDS_JSON);
+          const failed = [];
+
+          for (const target of targets) {
+            const result = needs[target]?.result;
+            if (result !== "success") {
+              failed.push(`${target}=${result ?? "missing"}`);
+            }
+          }
+
+          if (failed.length > 0) {
+            console.error(
+              `Required certification failed for ${process.env.SOURCE_SHA}: ${failed.join(", ")}`,
+            );
+            process.exit(1);
+          }
+
+          console.log(
+            `Required certification PASS for ${process.env.SOURCE_SHA}: ${targets.join(", ")}`,
+          );
+          NODE
+      - name: Write exact-head certification summary
+        shell: bash
+        run: |
+          {
+            echo "## Required certification PASS"
+            echo
+            echo "Exact source SHA: \`$SOURCE_SHA\`"
+            echo
+            echo "Declared targets: \`$TARGETS_JSON\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,134 @@
+name: Platform - Combined Certification
+
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact commit SHA to certify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.source_sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  platform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Verify exact source checkout
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
+
+      - name: Certify Audit seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/)' platform/audit --include='*.ts'; then
+            echo "Audit platform seam must not reach through legacy, domain packages, or Prisma."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/audit/test/audit.test.ts
+
+      - name: Certify Email seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/)' platform/email --include='*.ts'; then
+            echo "Email platform seam must not reach through legacy, domain packages, or Prisma."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/email/test/email.test.ts
+
+      - name: Certify Health seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env|observability|metrics)' platform/health --include='*.ts'; then
+            echo "Health must remain a generic liveness/readiness seam."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/health/test/health.test.ts
+
+      - name: Certify Observability seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' platform/observability --include='*.ts'; then
+            echo "Observability must receive publishers and alert persistence through ports."
+            exit 1
+          fi
+          if grep -R -nE '(application|database|valkey|object_storage|scheduler|backups|payments|licensing|email|security|infrastructure)' platform/observability --include='*.ts' --exclude='*.test.ts'; then
+            echo "Observability must aggregate publisher-owned health, not own domain cards."
+            exit 1
+          fi
+          if grep -nE '(@/lib/observability|generated/prisma|from ["'"'"']@prisma/)' apps/web/observability.ts; then
+            echo "The web Observability adapter must not reach through legacy Observability or generated Prisma."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/observability/test/observability.test.ts
+
+      - name: Certify Provider seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' platform/providers --include='*.ts'; then
+            echo "Provider platform seam must receive persistence/runtime configuration through ports."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/providers/test/providers.test.ts
+
+      - name: Certify Scheduler seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/)' platform/scheduler --include='*.ts'; then
+            echo "Scheduler platform seam must not reach through legacy, domain packages, or Prisma."
+            exit 1
+          fi
+          if grep -R -nE '(commissioning\.evidence|storage\.lifecycle|email\.outbox|subscriptions\.renewal-reminders|entitlements\.expiration|commerce\.lifecycle|customers\.retention-review|security\.expired-records|payments\.operations|renewals\.prepared-recovery|backups\.daily|backups\.retention)' platform/scheduler --include='*.ts' --exclude='*.test.ts'; then
+            echo "Scheduler platform seam must not own concrete domain job registry entries."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/scheduler/test/scheduler.test.ts
+
+      - name: Certify Storage Cleanup seam ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE '(@/lib|@bke/|modules|generated/prisma|from ["'"'"']@prisma/|process\.env)' platform/storage-cleanup --include='*.ts'; then
+            echo "Storage Cleanup must receive persistence, storage, and eligibility through ports."
+            exit 1
+          fi
+          if grep -nE '(@/lib|generated/prisma|from ["'"'"']@prisma/)' apps/web/storage/cleanup.ts; then
+            echo "Web Storage Cleanup adapter must use platform ports and PostgreSQL persistence only."
+            exit 1
+          fi
+          if grep -R -nE '(productArtifact|activeReference|Catalog|catalog|entitlement|license|order)' platform/storage-cleanup --include='*.ts' --exclude='*.test.ts'; then
+            echo "Storage Cleanup must not decide domain deletion eligibility."
+            exit 1
+          fi
+          npx vitest run --config vitest.architecture.config.ts platform/storage-cleanup/test/storage-cleanup.test.ts
