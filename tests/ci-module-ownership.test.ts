@@ -14,14 +14,6 @@ const formerStoreOwners = [
   "v2-payments.yml",
 ] as const;
 
-const storeIntegrationPaths = [
-  "app/api/agent-sessions/store/**",
-  "app/api/checkout/route.ts",
-  "apps/web/catalog/agent-store-catalog.ts",
-  "apps/web/licensing/self-purchase-continuation.ts",
-  "apps/web/licensing/self-purchase-continuation-policy.ts",
-] as const;
-
 const storeIntegrationTests = [
   "tests/v3-agent-store-catalog-contract.test.ts",
   "tests/agent-session-checkout-review.test.ts",
@@ -32,18 +24,19 @@ const storeIntegrationTests = [
 ] as const;
 
 describe("CI module ownership", () => {
-  it("gives Agent Store integration one owner for Store adapter certification", () => {
+  it("gives Agent Store integration one explicit certification owner", () => {
     const workflow = readFileSync(agentStorePath, "utf8");
 
-    for (const path of storeIntegrationPaths) {
-      expect(workflow).toContain(path);
-    }
     for (const test of storeIntegrationTests) {
       expect(workflow).toContain(test);
     }
 
     expect(workflow).toContain("Store contracts + architecture");
-    expect(workflow).toContain("cancel-in-progress: true");
+    expect(workflow).toContain("workflow_call:");
+    expect(workflow).toContain("workflow_dispatch:");
+    expect(workflow).toContain("source_sha:");
+    expect(workflow).toContain("Verify exact source checkout");
+    expect(workflow).not.toContain("pull_request:");
   });
 
   it.each(formerStoreOwners)(
@@ -51,35 +44,45 @@ describe("CI module ownership", () => {
     (name) => {
       const workflow = readFileSync(`${workflowsDir}/${name}`, "utf8");
 
-      for (const path of storeIntegrationPaths) {
-        expect(workflow).not.toContain(path);
-      }
       for (const test of storeIntegrationTests) {
         expect(workflow).not.toContain(test);
       }
     },
   );
 
-  it("cancels stale PR workflow generations repository-wide", () => {
-    const workflowNames = readdirSync(workflowsDir).filter((name) =>
-      name.endsWith(".yml"),
-    );
+  it("routes Agent Store intent through the explicit certifier", () => {
+    const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 
-    for (const name of workflowNames) {
-      const workflow = readFileSync(`${workflowsDir}/${name}`, "utf8");
-      if (!workflow.includes("pull_request:")) continue;
-
-      expect(workflow, name).toContain("concurrency:");
-      expect(workflow, name).toContain("cancel-in-progress: true");
-    }
+    expect(workflow).toContain('"agent-store"');
+    expect(workflow).toContain("agent-store:");
+    expect(workflow).toContain("uses: ./.github/workflows/v2-agent-store.yml");
+    expect(workflow).toContain("required-certification:");
   });
 
-  it("keeps the global CI aggregate certification gate", () => {
+  it("keeps only the lightweight PR guard automatic", () => {
+    const owners = readdirSync(workflowsDir)
+      .filter((name) => name.endsWith(".yml"))
+      .filter((name) =>
+        /^\s*pull_request:\s*$/m.test(
+          readFileSync(`${workflowsDir}/${name}`, "utf8"),
+        ),
+      );
+
+    expect(owners).toEqual(["pr-guard.yml"]);
+
+    const guard = readFileSync(`${workflowsDir}/pr-guard.yml`, "utf8");
+    expect(guard).toContain("cancel-in-progress: true");
+    expect(guard).not.toContain("npm ci");
+  });
+
+  it("keeps global CI as explicit certification plus post-merge main verification", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
     expect(workflow).toContain("name: CI");
     expect(workflow).toContain("push:\n    branches: [main]");
-    expect(workflow).toContain("pull_request:\n    branches: [main]");
+    expect(workflow).toContain("workflow_call:");
+    expect(workflow).toContain("workflow_dispatch:");
+    expect(workflow).not.toContain("pull_request:");
     expect(workflow).toContain("Required certification");
     expect(workflow).toContain("cancel-in-progress: true");
   });
