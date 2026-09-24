@@ -39,6 +39,7 @@ describe("intent-driven pull-request certification", () => {
 
     expect(guard).toContain("Verify certification plan declaration");
     expect(guard).toContain("Verify exact PR head checkout");
+    expect(guard).toContain("fetch-depth: 0");
     expect(guard).toContain("git diff --check");
     expect(guard).toContain("check-ci-intent-ownership.mjs");
     expect(guard).toContain("check-module-boundaries.mjs");
