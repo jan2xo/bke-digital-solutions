@@ -46,6 +46,9 @@ describe("intent-driven certification foundation", () => {
       expect(workflow).toContain("source_sha:");
       expect(workflow).toContain("Verify exact source checkout");
       expect(workflow).toContain('test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"');
+      expect(workflow).toContain(
+        "github.event.pull_request.number || inputs.source_sha || github.ref",
+      );
     },
   );
 
@@ -59,6 +62,9 @@ describe("intent-driven certification foundation", () => {
       "SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
+    expect(workflow).toContain(
+      "github.event.pull_request.number || inputs.source_sha || github.ref",
+    );
   });
 
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
