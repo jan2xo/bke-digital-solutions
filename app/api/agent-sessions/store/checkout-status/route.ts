@@ -176,6 +176,7 @@ export async function GET(request: Request) {
       }
       paymentStatus = paymentResult.value.status;
       if (
+        order.status === "PENDING" &&
         paymentResult.value.status === "PENDING" &&
         paymentResult.value.checkoutUrl
       ) {
