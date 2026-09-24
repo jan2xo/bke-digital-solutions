@@ -9,6 +9,8 @@ on:
       - "tests/agent-session-checkout-review.test.ts"
       - "app/api/agent-sessions/store/checkout-start/route.ts"
       - "tests/agent-session-checkout-start.test.ts"
+      - "app/api/agent-sessions/store/checkout-status/route.ts"
+      - "tests/agent-session-checkout-status.test.ts"
       - "app/api/agent-sessions/store/route.ts"
       - "apps/web/catalog/agent-store-catalog.ts"
       - "tests/v3-agent-store-catalog-contract.test.ts"
@@ -61,11 +63,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-commerce-0.14.0.tgz
+          artifact=/tmp/bke-commerce-0.15.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.14.0/bke-commerce-0.14.0.tgz
-          echo "d8577e22a454bea94c154388db1127b96c0ff827c6f6857c714879bffca159b5  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.15.0/bke-commerce-0.15.0.tgz
+          echo "798e28a21e4c3ad0e87cf327662e77db3843cec89e6eda67170a66ba4e0a6003  $artifact" | sha256sum -c -
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Commerce consumer adoption and staging retirement
@@ -76,6 +78,8 @@ jobs:
         run: npx vitest run tests/agent-session-checkout-review.test.ts
       - name: Certify Agent Store checkout start boundary
         run: npx vitest run tests/agent-session-checkout-start.test.ts
+      - name: Certify Agent Store checkout recovery boundary
+        run: npx vitest run tests/agent-session-checkout-status.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate package-backed Commerce Prisma schema
