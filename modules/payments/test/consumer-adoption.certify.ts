@@ -50,6 +50,9 @@ const requiredPackageSurfaces = [
   "PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID",
   "createPaymentsCheckoutAttemptLookupCapability",
   "checkoutAttemptLookup",
+  "PAYMENTS_COMMERCIAL_EVENT_MATCH_CAPABILITY_ID",
+  "createPaymentsCommercialEventMatchCapability",
+  "commercialEventMatch",
   "createPaymentsReconciliationCapability",
   "createPostgresPaymentsReconciliationRepository",
 ];
