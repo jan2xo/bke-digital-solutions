@@ -19,11 +19,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: digital-solutions-ci-${{ github.event.pull_request.number || inputs.source_sha || github.ref }}
+  group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}
   cancel-in-progress: true
 
 env:
-  SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+  SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
   NODE_ENV: test
   APP_URL: http://localhost:3000
   DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_test
