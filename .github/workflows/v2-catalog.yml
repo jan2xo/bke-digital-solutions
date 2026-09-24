@@ -1,20 +1,6 @@
 name: Module - Catalog
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/catalog/**"
-      - "apps/standalone/**"
-      - "platform/persistence/migration-compositor.mjs"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "package.json"
-      - "package-lock.json"
-      - "next.config.ts"
-      - ".github/workflows/v2-catalog.yml"
   workflow_call:
     inputs:
       source_sha:

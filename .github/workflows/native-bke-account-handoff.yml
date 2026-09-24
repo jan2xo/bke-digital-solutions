@@ -1,18 +1,6 @@
 name: Native BKE Account Handoff
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "app/api/agent-sessions/native/**"
-      - "app/api/agent-sessions/device/token/**"
-      - "apps/web/agent-sessions/**"
-      - "apps/web/accounts/agent-device-session-authorization.ts"
-      - "prisma/migrations/**"
-      - "tests/native-bke-account-handoff.test.ts"
-      - ".github/workflows/native-bke-account-handoff.yml"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:

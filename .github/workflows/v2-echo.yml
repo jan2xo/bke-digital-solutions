@@ -1,17 +1,6 @@
 name: Module - Echo
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/echo/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - ".github/workflows/v2-echo.yml"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:

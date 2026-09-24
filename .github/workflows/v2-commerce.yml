@@ -1,24 +1,6 @@
 name: Module - Commerce
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/commerce/**"
-      - "app/page.tsx"
-      - "app/products/[slug]/page.tsx"
-      - "app/api/admin/offers/**"
-      - "lib/pricing.ts"
-      - "lib/offers.ts"
-      - "platform/persistence/migration-compositor.mjs"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "package.json"
-      - "package-lock.json"
-      - "next.config.ts"
-      - ".github/workflows/v2-commerce.yml"
   workflow_call:
     inputs:
       source_sha:

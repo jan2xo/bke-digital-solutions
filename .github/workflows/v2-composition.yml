@@ -1,28 +1,6 @@
 name: Composition
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "apps/orchestrator/**"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "modules/*/module.ts"
-      - "modules/*/module.manifest.ts"
-      - "modules/*/contracts/**"
-      - "modules/identity/test/consumer-adoption.certify.ts"
-      - "modules/accounts/test/consumer-adoption.certify.ts"
-      - "modules/legal/test/consumer-adoption.certify.ts"
-      - "modules/licensing/test/consumer-adoption.certify.ts"
-      - "modules/entitlements/test/consumer-adoption.certify.ts"
-      - "modules/payments/test/consumer-adoption.certify.ts"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - ".github/workflows/v2-composition.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:
