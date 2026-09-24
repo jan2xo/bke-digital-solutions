@@ -6,6 +6,7 @@ import { COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID } from "@bke/commerce/con
 import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-orchestration.contract";
 import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "@bke/commerce/contracts/offer-redemption.contract";
 import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "@bke/commerce/contracts/order-invoice-creation.contract";
+import { COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/order-source-lookup.contract";
 import { COMMERCE_ORDER_ITEM_POLICY_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/order-item-policy-lookup.contract";
 import { COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID } from "@bke/commerce/contracts/public-promotion-preview.contract";
 import { COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/purchase-plan-lookup.contract";
@@ -23,6 +24,7 @@ import type {
 } from "@bke/commerce/logic/checkout-orchestration-ports";
 import { createCommerceOfferRedemptionCapability } from "@bke/commerce/logic/offer-redemption";
 import { createCommerceOrderInvoiceCreationCapability } from "@bke/commerce/logic/order-invoice-creation";
+import { createCommerceOrderSourceLookupCapability } from "@bke/commerce/logic/order-source-lookup";
 import { createCommercePublicPromotionPreviewCapability } from "@bke/commerce/logic/public-promotion-preview";
 import { createCommercePurchasePlanLookupCapability } from "@bke/commerce/logic/purchase-plan-lookup";
 import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
@@ -40,6 +42,7 @@ import { commerceModuleManifest } from "@bke/commerce/module.manifest";
 import { createPostgresCommerceCheckoutOfferPricingRepository } from "@bke/commerce/prisma/repositories/postgres-checkout-offer-pricing-repository";
 import { createPostgresCommerceOfferRedemptionRepository } from "@bke/commerce/prisma/repositories/postgres-offer-redemption-repository";
 import { createPostgresCommerceOrderInvoiceCreationRepository } from "@bke/commerce/prisma/repositories/postgres-order-invoice-creation-repository";
+import { createPostgresCommerceOrderSourceLookupRepository } from "@bke/commerce/prisma/repositories/postgres-order-source-lookup-repository";
 import { createPostgresCommerceOrderItemPolicyLookupCapability } from "@bke/commerce/prisma/repositories/postgres-order-item-policy-lookup-repository";
 import { createPostgresCommercePublicPromotionPreviewRepository } from "@bke/commerce/prisma/repositories/postgres-public-promotion-preview-repository";
 import { createPostgresCommercePurchasePlanLookupRepository } from "@bke/commerce/prisma/repositories/postgres-purchase-plan-lookup-repository";
@@ -77,6 +80,9 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
   );
   const orderInvoiceCreation = createCommerceOrderInvoiceCreationCapability(
     createPostgresCommerceOrderInvoiceCreationRepository(options.connectionString),
+  );
+  const orderSourceLookup = createCommerceOrderSourceLookupCapability(
+    createPostgresCommerceOrderSourceLookupRepository(options.connectionString),
   );
   const renewalCheckoutPricing = createCommerceRenewalCheckoutPricingCapability(
     createPostgresCommerceRenewalCheckoutPricingRepository(options.connectionString),
@@ -121,6 +127,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID,
       COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID,
       COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID,
+      COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID,
       COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID,
       COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID,
       COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID,
@@ -242,6 +249,7 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         { id: COMMERCE_PURCHASE_PLAN_LOOKUP_CAPABILITY_ID, value: purchasePlanLookup },
         { id: COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID, value: offerRedemption },
         { id: COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID, value: orderInvoiceCreation },
+        { id: COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID, value: orderSourceLookup },
         { id: COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID, value: checkoutOfferPricing },
         { id: COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID, value: publicPromotionPreview },
         { id: COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID, value: checkoutOrchestration },
