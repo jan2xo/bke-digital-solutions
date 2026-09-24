@@ -36,6 +36,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - name: Verify exact PR head checkout
         shell: bash
@@ -53,10 +54,12 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
 
       - name: Validate workflow YAML syntax
-        shell: ruby {0}
+        shell: bash
         run: |
+          ruby <<'RUBY'
           require "yaml"
           Dir[".github/workflows/*.yml"].sort.each do |file|
             YAML.safe_load(File.read(file), aliases: true)
             puts "YAML GREEN: #{file}"
           end
+          RUBY
