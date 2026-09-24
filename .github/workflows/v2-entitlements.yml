@@ -1,25 +1,6 @@
 name: Module - Entitlements
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "modules/entitlements/**"
-      - "app/api/agent-sessions/claims/redeem/route.ts"
-      - "apps/web/accounts/claim-code-authorization.ts"
-      - "apps/web/entitlements/claim-codes.ts"
-      - "tests/agent-session-claim-redemption.test.ts"
-      - "tests/v3-claim-redemption-authorization.test.ts"
-      - "platform/persistence/migration-compositor.mjs"
-      - "platform/composition/**"
-      - "contracts/**"
-      - "tooling/check-module-boundaries.mjs"
-      - "tsconfig.architecture.json"
-      - "vitest.architecture.config.ts"
-      - ".github/workflows/v2-entitlements.yml"
-      - "next.config.ts"
-      - "package.json"
-      - "package-lock.json"
   workflow_call:
     inputs:
       source_sha:
@@ -36,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.source_sha || github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.source_sha || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -68,11 +49,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.source_sha }}
       - name: Verify exact source checkout
         shell: bash
         env:
-          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha || github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
       - uses: actions/setup-node@v4
         with:
