@@ -242,6 +242,76 @@ function candidateWhere(
   return { OR: audience };
 }
 
+async function listNotificationsForPrincipal(
+  principal: NotificationsPrincipalContext,
+  input: Readonly<{
+    limit?: number;
+    includeDismissed?: boolean;
+  }>,
+): Promise<readonly WebNotificationItem[]> {
+  const limit = Math.min(Math.max(input.limit ?? 100, 1), 200);
+  const { inbox } = await capabilities();
+  const rows = await db.notificationMessage.findMany({
+    where: candidateWhere(principal),
+    include: {
+      receipts: {
+        where: { userId: principal.principalId },
+        take: 1,
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: Math.min(limit * 3, 600),
+  });
+
+  const accountIds = [...new Set(rows
+    .map((row) => row.audienceAccountId)
+    .filter((value): value is string => Boolean(value)))];
+  const accounts = accountIds.length
+    ? await db.customerAccount.findMany({
+        where: { id: { in: accountIds } },
+        select: { id: true, displayName: true },
+      })
+    : [];
+  const accountNames = new Map(accounts.map((account) => [account.id, account.displayName]));
+
+  const items: WebNotificationItem[] = [];
+  for (const row of rows) {
+    const state = (row.receipts[0]?.state ?? "UNREAD") as NotificationsReceiptState;
+    const visibility = inbox.visibility({
+      notification: rowSnapshot(row),
+      principal,
+      receiptState: state,
+    });
+    if (
+      visibility.status !== "VISIBLE" &&
+      !(input.includeDismissed && visibility.code === "DISMISSED")
+    ) {
+      continue;
+    }
+    items.push(Object.freeze({
+      id: row.id,
+      source: row.sourceModule,
+      event: row.sourceEvent,
+      title: row.title,
+      body: row.body,
+      category: row.category,
+      priority: row.priority,
+      createdAt: row.createdAt,
+      expiresAt: row.expiresAt,
+      state,
+      audienceKind: rowAudience(row).kind,
+      accountId: row.audienceAccountId,
+      accountName: row.audienceAccountId
+        ? accountNames.get(row.audienceAccountId) ?? null
+        : null,
+      productId: row.productId,
+      data: row.data,
+    }));
+    if (items.length >= limit) break;
+  }
+  return Object.freeze(items);
+}
+
 export async function listNotificationsForUser(input: Readonly<{
   userId: string;
   role: string;
