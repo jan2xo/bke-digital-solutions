@@ -79,14 +79,9 @@ export async function POST(request: Request) {
       return json({ error: "RATE_LIMITED" }, 429);
     }
 
-    const sourceReferences = await db.$transaction(
-      (tx) =>
-        agentCheckoutSourceReferenceCandidates(
-          tx,
-          session,
-          input.correlation_id,
-        ),
-      { isolationLevel: "Serializable" },
+    const sourceReferences = await agentCheckoutSourceReferenceCandidates(
+      session,
+      input.correlation_id,
     );
     const application = await getV2WebApplication();
     const orderLookup = application.get<CommerceOrderSourceLookupCapability>(
