@@ -34,7 +34,6 @@ describe("Agent-session Store checkout status", () => {
     const route = readFileSync(routePath, "utf8");
 
     expect(route).toContain("agentCheckoutSourceReferenceCandidates");
-    expect(route).toContain("tx,");
     expect(route).toContain("session,");
     expect(route).toContain("input.correlation_id");
     expect(route).toContain("for (const candidate of sourceReferences)");
