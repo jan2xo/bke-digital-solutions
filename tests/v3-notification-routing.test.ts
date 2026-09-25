@@ -29,6 +29,10 @@ const agentRoute = readFileSync(
   "app/api/agent-sessions/notifications/route.ts",
   "utf8",
 );
+const agentInboxRoute = readFileSync(
+  "app/api/agent-sessions/notification-inbox/route.ts",
+  "utf8",
+);
 
 describe("V3 notification routing", () => {
   it("keeps normal commerce out of automatic Resend delivery", () => {
@@ -120,5 +124,16 @@ describe("V3 notification routing", () => {
     expect(agentRoute).toContain("listAccountProductNotifications");
     expect(agentRoute).toContain('productId: input.product_id');
     expect(agentRoute).toContain('"cache-control": "no-store"');
+  });
+
+  it("exposes a selected-account Agent inbox without client-controlled account scope", () => {
+    expect(agentInboxRoute).toContain("requireAgentAccountSessionProtocol");
+    expect(agentInboxRoute).toContain("authenticateAgentAccessToken");
+    expect(agentInboxRoute).toContain("AGENT_ACCOUNT_SESSION_PEPPER");
+    expect(agentInboxRoute).toContain("listNotificationsForAgentSession");
+    expect(agentInboxRoute).toContain("accountId: authenticated.accountId");
+    expect(agentInboxRoute).not.toContain('searchParams.get("account_id")');
+    expect(agentInboxRoute).not.toContain("listNotificationsForUser");
+    expect(agentInboxRoute).toContain('"cache-control": "no-store"');
   });
 });
