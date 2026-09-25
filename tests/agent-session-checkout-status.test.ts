@@ -30,18 +30,48 @@ describe("Agent-session Store checkout status", () => {
     expect(route).toContain('key !== "correlation_id"');
   });
 
-  it("reconstructs the exact durable source from authenticated session plus correlation", () => {
+  it("recovers the durable device source plus same-device legacy session candidates", () => {
     const route = readFileSync(routePath, "utf8");
 
-    expect(route).toContain(
-      "`agent-checkout:${session.sessionId}:${input.correlation_id}`",
-    );
+    expect(route).toContain("agentCheckoutSourceReferenceCandidates");
+    expect(route).toContain("session,");
+    expect(route).toContain("input.correlation_id");
+    expect(route).toContain("for (const candidate of sourceReferences)");
+    expect(route).toContain("sourceReference: candidate");
     expect(route).toContain("COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID");
     expect(route).toContain("PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID");
     expect(route).toContain("order.accountId !== session.accountId");
     expect(route).toContain(
       "paymentResult.value.commercialReference !== order.orderId",
     );
+  });
+
+  it("keeps recovery bound to the same authenticated user account and device", () => {
+    const helper = readFileSync(
+      "apps/web/agent-sessions/store-checkout-recovery.ts",
+      "utf8",
+    );
+
+    expect(helper).toContain('createHash("sha256")');
+    expect(helper).toContain("agent-checkout-device:");
+    expect(helper).toContain("session.deviceId");
+    expect(helper).toContain("session.userId");
+    expect(helper).toContain("session.accountId");
+    expect(helper).toContain('"deviceId" = ${session.deviceId}');
+    expect(helper).toContain('"userId" = ${session.userId}');
+    expect(helper).toContain('"accountId" = ${session.accountId}');
+    expect(helper).toContain("LEGACY_SESSION_CANDIDATE_LIMIT = 64");
+    expect(helper).toContain(
+      "legacyAgentCheckoutSourceReference(session.sessionId, correlationId)",
+    );
+    expect(helper).toContain(
+      "legacyAgentCheckoutSourceReference(item.id, correlationId)",
+    );
+    expect(helper).toContain("new Set(candidates)");
+    expect(helper).not.toContain("accessToken");
+    expect(helper).not.toContain("refreshToken");
+    expect(helper).not.toContain("recipient");
+    expect(helper).not.toContain("provider");
   });
 
   it("is read-only and never retries or recreates checkout", () => {

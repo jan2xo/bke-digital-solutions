@@ -71,13 +71,14 @@ describe("Agent-session Store checkout start", () => {
     expect(route).not.toContain("createCheckoutSession");
   });
 
-  it("binds mutation identity to the Agent session and correlation id", () => {
+  it("binds mutation identity to the durable Agent device and correlation id", () => {
     const route = readFileSync(routePath, "utf8");
 
-    expect(route).toContain("const sourceReference =");
-    expect(route).toContain(
-      "`agent-checkout:${session.sessionId}:${input.correlation_id}`",
-    );
+    expect(route).toContain("durableAgentCheckoutSourceReference");
+    expect(route).toContain("durableAgentCheckoutSourceReference(");
+    expect(route).toContain("session,");
+    expect(route).toContain("input.correlation_id");
+    expect(route).not.toContain("`agent-checkout:${session.sessionId}:${input.correlation_id}`");
     expect(route).toContain("sourceReference,");
     expect(route).toContain("paymentSourceReference: sourceReference");
   });

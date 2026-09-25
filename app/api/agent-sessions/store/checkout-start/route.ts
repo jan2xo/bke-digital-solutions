@@ -44,6 +44,7 @@ import {
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
 import { authenticateAgentAccessToken } from "@/apps/web/agent-sessions/device-authorization";
+import { durableAgentCheckoutSourceReference } from "@/apps/web/agent-sessions/store-checkout-recovery";
 import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
@@ -369,8 +370,10 @@ export async function POST(request: Request) {
       annualDiscountBps: plan.annualDiscountBps,
     };
 
-    const sourceReference =
-      `agent-checkout:${session.sessionId}:${input.correlation_id}`;
+    const sourceReference = durableAgentCheckoutSourceReference(
+      session,
+      input.correlation_id,
+    );
     const checkout = application.get<CommerceCheckoutOrchestrationCapability>(
       COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID,
     );
