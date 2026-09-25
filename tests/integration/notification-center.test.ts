@@ -12,6 +12,7 @@ let ownerId = "";
 let outsiderId = "";
 let adminId = "";
 let accountId = "";
+let otherAccountId = "";
 
 describe.sequential("Digital Solutions durable notification center", () => {
   beforeAll(async () => {
@@ -31,6 +32,16 @@ describe.sequential("Digital Solutions durable notification center", () => {
     });
     ownerId = owner.id;
     accountId = owner.ownedAccounts[0]!.id;
+
+    const otherAccount = await db.customerAccount.create({
+      data: {
+        ownerId,
+        type: "ORGANIZATION",
+        displayName: "Notification Other Account",
+        billingEmail: `notification-other-${suffix}@bke.test`,
+      },
+    });
+    otherAccountId = otherAccount.id;
 
     const outsider = await db.user.create({
       data: {
@@ -59,7 +70,9 @@ describe.sequential("Digital Solutions durable notification center", () => {
         idempotencyKey: { contains: suffix },
       },
     });
-    await db.customerAccount.deleteMany({ where: { id: accountId } });
+    await db.customerAccount.deleteMany({
+      where: { id: { in: [accountId, otherAccountId] } },
+    });
     await db.user.deleteMany({
       where: { id: { in: [ownerId, outsiderId, adminId] } },
     });
@@ -152,6 +165,74 @@ describe.sequential("Digital Solutions durable notification center", () => {
     });
     expect(admin.some((item) => item.event === "TEST_ADMIN")).toBe(true);
     expect(admin.some((item) => item.event === "TEST_ACCOUNT")).toBe(false);
+  });
+
+  it("scopes Agent inbox to the authenticated selected account without losing principal or active-client notices", async () => {
+    const {
+      listNotificationsForAgentSession,
+      persistNotificationOutsideTransaction,
+    } = await import("@/apps/web/notifications/center");
+
+    const notices = [
+      {
+        event: "TEST_AGENT_SELECTED_ACCOUNT",
+        audience: { kind: "ACCOUNT" as const, accountId },
+        idempotencyKey: `notification-agent-selected:${suffix}`,
+      },
+      {
+        event: "TEST_AGENT_OTHER_ACCOUNT",
+        audience: { kind: "ACCOUNT" as const, accountId: otherAccountId },
+        idempotencyKey: `notification-agent-other:${suffix}`,
+      },
+      {
+        event: "TEST_AGENT_PRINCIPAL",
+        audience: { kind: "PRINCIPAL" as const, principalId: ownerId },
+        idempotencyKey: `notification-agent-principal:${suffix}`,
+      },
+      {
+        event: "TEST_AGENT_ACTIVE_CLIENT",
+        audience: { kind: "ALL_ACTIVE_CLIENTS" as const },
+        idempotencyKey: `notification-agent-active-client:${suffix}`,
+      },
+    ];
+
+    for (const notice of notices) {
+      expect((await persistNotificationOutsideTransaction({
+        source: {
+          moduleId: "notifications",
+          event: notice.event,
+          sourceReference: suffix,
+        },
+        audience: notice.audience,
+        content: {
+          title: notice.event,
+          body: "Agent inbox visibility certification.",
+          category: "CUSTOM" as const,
+        },
+        context: {
+          trigger: "CUSTOM" as const,
+          placementHint: "bke-launcher-inbox",
+        },
+        priority: "NORMAL" as const,
+        idempotencyKey: notice.idempotencyKey,
+        createdAt: new Date(),
+      })).status).toBe("CREATED");
+    }
+
+    const inbox = await listNotificationsForAgentSession({
+      userId: ownerId,
+      role: "CUSTOMER",
+      accountId,
+      limit: 100,
+    });
+    const events = inbox.map((item) => item.event);
+
+    expect(events).toEqual(expect.arrayContaining([
+      "TEST_AGENT_SELECTED_ACCOUNT",
+      "TEST_AGENT_PRINCIPAL",
+      "TEST_AGENT_ACTIVE_CLIENT",
+    ]));
+    expect(events).not.toContain("TEST_AGENT_OTHER_ACCOUNT");
   });
 
   it("owns per-user UNREAD → READ → DISMISSED receipts", async () => {
