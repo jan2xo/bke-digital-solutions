@@ -194,6 +194,11 @@ describe.sequential("Digital Solutions durable notification center", () => {
         audience: { kind: "ALL_ACTIVE_CLIENTS" as const },
         idempotencyKey: `notification-agent-active-client:${suffix}`,
       },
+      {
+        event: "TEST_AGENT_ADMIN",
+        audience: { kind: "ADMINISTRATORS" as const },
+        idempotencyKey: `notification-agent-admin:${suffix}`,
+      },
     ];
 
     for (const notice of notices) {
@@ -221,7 +226,6 @@ describe.sequential("Digital Solutions durable notification center", () => {
 
     const inbox = await listNotificationsForAgentSession({
       userId: ownerId,
-      role: "CUSTOMER",
       accountId,
       limit: 100,
     });
@@ -233,6 +237,7 @@ describe.sequential("Digital Solutions durable notification center", () => {
       "TEST_AGENT_ACTIVE_CLIENT",
     ]));
     expect(events).not.toContain("TEST_AGENT_OTHER_ACCOUNT");
+    expect(events).not.toContain("TEST_AGENT_ADMIN");
   });
 
   it("owns per-user UNREAD → READ → DISMISSED receipts", async () => {
