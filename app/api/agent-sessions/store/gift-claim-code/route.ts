@@ -2,6 +2,12 @@ import {
   COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID,
   type CommerceOrderSourceLookupCapability,
 } from "@bke/commerce/contracts/order-source-lookup.contract";
+
+type CommerceOrderLookupResult = Awaited<
+  ReturnType<CommerceOrderSourceLookupCapability["find"]>
+>;
+type CommerceOrderLookupValue =
+  Extract<CommerceOrderLookupResult, { status: "FOUND" }>["value"];
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
@@ -88,12 +94,7 @@ export async function POST(request: Request) {
     );
 
     let sourceReference: string | null = null;
-    let order:
-      | Awaited<ReturnType<CommerceOrderSourceLookupCapability["find"]>> extends
-          { status: "FOUND"; value: infer TValue }
-        ? TValue
-        : never
-      | null = null;
+    let order: CommerceOrderLookupValue | null = null;
 
     for (const candidate of sourceReferences) {
       const orderResult = await orderLookup.find({ sourceReference: candidate });
