@@ -274,6 +274,20 @@ describe.sequential("Digital Solutions durable notification center", () => {
     expect(await mutateNotificationReceiptForAgentSession({
       userId: ownerId,
       accountId,
+      notificationId: selected!.id,
+      action: "DISMISS",
+    })).toMatchObject({ status: "UPDATED", state: "DISMISSED" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId: otherAccountId,
+      notificationId: selected!.id,
+      action: "DISMISS",
+    })).toEqual({ status: "NOT_FOUND" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
       notificationId: other.id,
       action: "MARK_READ",
     })).toEqual({ status: "NOT_FOUND" });
@@ -297,8 +311,8 @@ describe.sequential("Digital Solutions durable notification center", () => {
       accountId,
       limit: 100,
     });
-    expect(afterMutation.find((item) => item.id === selected!.id)?.state)
-      .toBe("READ");
+    expect(afterMutation.some((item) => item.id === selected!.id))
+      .toBe(false);
     expect(afterMutation.some((item) => item.id === principal!.id))
       .toBe(false);
   });
