@@ -233,6 +233,9 @@ function candidateWhere(
   if (principal.role === "ADMIN") {
     audience.push({ audienceKind: "ADMINISTRATORS" });
   }
+  if (principal.activeClient) {
+    audience.push({ audienceKind: "ALL_ACTIVE_CLIENTS" });
+  }
   if (principal.segmentKeys?.length) {
     audience.push({
       audienceKind: "SEGMENT",
@@ -242,20 +245,20 @@ function candidateWhere(
   return { OR: audience };
 }
 
-export async function listNotificationsForUser(input: Readonly<{
-  userId: string;
-  role: string;
-  limit?: number;
-  includeDismissed?: boolean;
-}>): Promise<readonly WebNotificationItem[]> {
+async function listNotificationsForPrincipal(
+  principal: NotificationsPrincipalContext,
+  input: Readonly<{
+    limit?: number;
+    includeDismissed?: boolean;
+  }>,
+): Promise<readonly WebNotificationItem[]> {
   const limit = Math.min(Math.max(input.limit ?? 100, 1), 200);
-  const principal = await principalContext(input.userId, input.role);
   const { inbox } = await capabilities();
   const rows = await db.notificationMessage.findMany({
     where: candidateWhere(principal),
     include: {
       receipts: {
-        where: { userId: input.userId },
+        where: { userId: principal.principalId },
         take: 1,
       },
     },
@@ -310,6 +313,37 @@ export async function listNotificationsForUser(input: Readonly<{
     if (items.length >= limit) break;
   }
   return Object.freeze(items);
+}
+
+export async function listNotificationsForUser(input: Readonly<{
+  userId: string;
+  role: string;
+  limit?: number;
+  includeDismissed?: boolean;
+}>): Promise<readonly WebNotificationItem[]> {
+  const principal = await principalContext(input.userId, input.role);
+  return listNotificationsForPrincipal(principal, input);
+}
+
+export async function listNotificationsForAgentSession(input: Readonly<{
+  userId: string;
+  role: string;
+  accountId: string;
+  limit?: number;
+}>): Promise<readonly WebNotificationItem[]> {
+  const principal = Object.freeze({
+    principalId: input.userId,
+    role: input.role,
+    accountIds: Object.freeze([input.accountId]),
+    segmentKeys: Object.freeze([]),
+    activeClient: true,
+    visitorId: null,
+  } satisfies NotificationsPrincipalContext);
+
+  return listNotificationsForPrincipal(principal, {
+    limit: input.limit,
+    includeDismissed: false,
+  });
 }
 
 async function mutateReceipt(input: Readonly<{
