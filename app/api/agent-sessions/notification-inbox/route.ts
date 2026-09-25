@@ -68,19 +68,10 @@ export async function GET(request: Request) {
         return { status: "invalid_token" as const };
       }
 
-      const user = await tx.user.findUnique({
-        where: { id: authenticated.userId },
-        select: { role: true },
-      });
-      if (!user) {
-        return { status: "invalid_token" as const };
-      }
-
       return {
         status: "authenticated" as const,
         userId: authenticated.userId,
         accountId: authenticated.accountId,
-        role: user.role,
       };
     }, { isolationLevel: "Serializable" });
 
@@ -90,7 +81,6 @@ export async function GET(request: Request) {
 
     const notifications = await listNotificationsForAgentSession({
       userId: session.userId,
-      role: session.role,
       accountId: session.accountId,
       limit: input.limit,
     });
