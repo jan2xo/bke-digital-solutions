@@ -233,6 +233,9 @@ function candidateWhere(
   if (principal.role === "ADMIN") {
     audience.push({ audienceKind: "ADMINISTRATORS" });
   }
+  if (principal.activeClient) {
+    audience.push({ audienceKind: "ALL_ACTIVE_CLIENTS" });
+  }
   if (principal.segmentKeys?.length) {
     audience.push({
       audienceKind: "SEGMENT",
