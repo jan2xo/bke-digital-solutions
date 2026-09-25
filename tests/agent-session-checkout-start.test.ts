@@ -75,7 +75,8 @@ describe("Agent-session Store checkout start", () => {
     const route = readFileSync(routePath, "utf8");
 
     expect(route).toContain("durableAgentCheckoutSourceReference");
-    expect(route).toContain("session.deviceId");
+    expect(route).toContain("durableAgentCheckoutSourceReference(");
+    expect(route).toContain("session,");
     expect(route).toContain("input.correlation_id");
     expect(route).not.toContain("`agent-checkout:${session.sessionId}:${input.correlation_id}`");
     expect(route).toContain("sourceReference,");
