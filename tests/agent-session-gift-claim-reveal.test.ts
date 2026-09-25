@@ -17,10 +17,12 @@ describe("Agent Store GIFT Claim Code reveal", () => {
     expect(source).toContain('"cache-control": "no-store"');
   });
 
-  it("binds reveal to the exact checkout correlation and purchaser account", () => {
+  it("binds reveal to same-device recovery candidates and purchaser account", () => {
     const source = route();
 
-    expect(source).toContain("agent-checkout:${session.sessionId}:${input.correlation_id}");
+    expect(source).toContain("agentCheckoutSourceReferenceCandidates");
+    expect(source).toContain("for (const candidate of sourceReferences)");
+    expect(source).toContain("sourceReference: candidate");
     expect(source).toContain("order.sourceReference !== sourceReference");
     expect(source).toContain("order.accountId !== session.accountId");
     expect(source).toContain('order.fulfillmentMode !== "CLAIM_CODE"');
