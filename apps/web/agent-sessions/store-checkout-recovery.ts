@@ -14,15 +14,32 @@ type AgentAccountSessionIdRow = Readonly<{
   id: string;
 }>;
 
-function durableDeviceKey(deviceId: string): string {
-  return createHash("sha256").update(deviceId, "utf8").digest("hex");
+function durableRecoveryKey(
+  deviceId: string,
+  userId: string,
+  accountId: string,
+): string {
+  return createHash("sha256")
+    .update(deviceId, "utf8")
+    .update("\0", "utf8")
+    .update(userId, "utf8")
+    .update("\0", "utf8")
+    .update(accountId, "utf8")
+    .digest("hex");
 }
 
 export function durableAgentCheckoutSourceReference(
-  deviceId: string,
+  session: Pick<
+    AgentCheckoutSessionIdentity,
+    "deviceId" | "userId" | "accountId"
+  >,
   correlationId: string,
 ): string {
-  return `agent-checkout-device:${durableDeviceKey(deviceId)}:${correlationId}`;
+  return `agent-checkout-device:${durableRecoveryKey(
+    session.deviceId,
+    session.userId,
+    session.accountId,
+  )}:${correlationId}`;
 }
 
 function legacyAgentCheckoutSourceReference(
@@ -48,7 +65,7 @@ export async function agentCheckoutSourceReferenceCandidates(
   `;
 
   const candidates = [
-    durableAgentCheckoutSourceReference(session.deviceId, correlationId),
+    durableAgentCheckoutSourceReference(session, correlationId),
     legacyAgentCheckoutSourceReference(session.sessionId, correlationId),
     ...historicalSessions.map((item) =>
       legacyAgentCheckoutSourceReference(item.id, correlationId)),
