@@ -18,6 +18,7 @@ import {
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
 import { authenticateAgentAccessToken } from "@/apps/web/agent-sessions/device-authorization";
+import { agentCheckoutSourceReferenceCandidates } from "@/apps/web/agent-sessions/store-checkout-recovery";
 import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
@@ -122,23 +123,46 @@ export async function GET(request: Request) {
       return json({ error: "INVALID_TOKEN" }, 401);
     }
 
-    const sourceReference =
-      `agent-checkout:${session.sessionId}:${input.correlation_id}`;
+    const sourceReferences = await db.$transaction(
+      (tx) =>
+        agentCheckoutSourceReferenceCandidates(
+          tx,
+          session,
+          input.correlation_id,
+        ),
+      { isolationLevel: "Serializable" },
+    );
     const orderLookup = application.get<CommerceOrderSourceLookupCapability>(
       COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID,
     );
-    const orderResult = await orderLookup.find({ sourceReference });
-    if (orderResult.status === "FAILED") {
-      return json({ error: "COMMERCE_UNAVAILABLE" }, 503);
+
+    let sourceReference: string | null = null;
+    let order:
+      | Awaited<ReturnType<CommerceOrderSourceLookupCapability["find"]>> extends
+          { status: "FOUND"; value: infer TValue }
+        ? TValue
+        : never
+      | null = null;
+
+    for (const candidate of sourceReferences) {
+      const orderResult = await orderLookup.find({ sourceReference: candidate });
+      if (orderResult.status === "FAILED") {
+        return json({ error: "COMMERCE_UNAVAILABLE" }, 503);
+      }
+      if (orderResult.status === "FOUND") {
+        sourceReference = candidate;
+        order = orderResult.value;
+        break;
+      }
     }
-    if (orderResult.status === "NOT_FOUND") {
+
+    if (!sourceReference || !order) {
       return json({
         status: "not_found",
         correlation_id: input.correlation_id,
       });
     }
 
-    const order = orderResult.value;
     if (
       order.sourceReference !== sourceReference ||
       order.accountId !== session.accountId
