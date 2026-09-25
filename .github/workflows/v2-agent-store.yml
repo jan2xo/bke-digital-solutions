@@ -44,7 +44,7 @@ jobs:
       - name: Certify Store catalog boundary
         run: npx vitest run tests/v3-agent-store-catalog-contract.test.ts
       - name: Certify checkout review/start/status boundaries
-        run: npx vitest run tests/agent-session-checkout-review.test.ts tests/agent-session-checkout-start.test.ts tests/agent-session-checkout-status.test.ts tests/agent-session-gift-claim-reveal.test.ts
+        run: npx vitest run tests/agent-session-checkout-review.test.ts tests/agent-session-checkout-start.test.ts tests/agent-session-checkout-status.test.ts tests/agent-session-gift-claim-reveal.test.ts tests/agent-session-checkout-recovery-reference.test.ts
       - name: Certify buy-or-extend licensing semantics
         run: npx vitest run tests/licensing-self-purchase-continuation.test.ts tests/licensing-self-purchase-route-adoption.test.ts
       - name: Typecheck architecture
