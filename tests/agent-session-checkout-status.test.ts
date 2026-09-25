@@ -46,6 +46,34 @@ describe("Agent-session Store checkout status", () => {
     );
   });
 
+  it("keeps recovery bound to the same authenticated user account and device", () => {
+    const helper = readFileSync(
+      "apps/web/agent-sessions/store-checkout-recovery.ts",
+      "utf8",
+    );
+
+    expect(helper).toContain('createHash("sha256")');
+    expect(helper).toContain("agent-checkout-device:");
+    expect(helper).toContain("session.deviceId");
+    expect(helper).toContain("session.userId");
+    expect(helper).toContain("session.accountId");
+    expect(helper).toContain('"deviceId" = ${session.deviceId}');
+    expect(helper).toContain('"userId" = ${session.userId}');
+    expect(helper).toContain('"accountId" = ${session.accountId}');
+    expect(helper).toContain("LEGACY_SESSION_CANDIDATE_LIMIT = 64");
+    expect(helper).toContain(
+      "legacyAgentCheckoutSourceReference(session.sessionId, correlationId)",
+    );
+    expect(helper).toContain(
+      "legacyAgentCheckoutSourceReference(item.id, correlationId)",
+    );
+    expect(helper).toContain("new Set(candidates)");
+    expect(helper).not.toContain("accessToken");
+    expect(helper).not.toContain("refreshToken");
+    expect(helper).not.toContain("recipient");
+    expect(helper).not.toContain("provider");
+  });
+
   it("is read-only and never retries or recreates checkout", () => {
     const route = readFileSync(routePath, "utf8");
 
