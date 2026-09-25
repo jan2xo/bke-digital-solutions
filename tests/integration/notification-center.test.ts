@@ -170,6 +170,7 @@ describe.sequential("Digital Solutions durable notification center", () => {
   it("scopes Agent inbox to the authenticated selected account without losing principal or active-client notices", async () => {
     const {
       listNotificationsForAgentSession,
+      mutateNotificationReceiptForAgentSession,
       persistNotificationOutsideTransaction,
     } = await import("@/apps/web/notifications/center");
 
@@ -238,6 +239,82 @@ describe.sequential("Digital Solutions durable notification center", () => {
     ]));
     expect(events).not.toContain("TEST_AGENT_OTHER_ACCOUNT");
     expect(events).not.toContain("TEST_AGENT_ADMIN");
+
+    const selected = inbox.find(
+      (item) => item.event === "TEST_AGENT_SELECTED_ACCOUNT",
+    );
+    const principal = inbox.find(
+      (item) => item.event === "TEST_AGENT_PRINCIPAL",
+    );
+    const other = await db.notificationMessage.findUniqueOrThrow({
+      where: {
+        idempotencyKey: `notification-agent-other:${suffix}`,
+      },
+    });
+    const admin = await db.notificationMessage.findUniqueOrThrow({
+      where: {
+        idempotencyKey: `notification-agent-admin:${suffix}`,
+      },
+    });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
+      notificationId: selected!.id,
+      action: "MARK_READ",
+    })).toMatchObject({ status: "UPDATED", state: "READ" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
+      notificationId: selected!.id,
+      action: "MARK_READ",
+    })).toMatchObject({ status: "UNCHANGED", state: "READ" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
+      notificationId: selected!.id,
+      action: "DISMISS",
+    })).toMatchObject({ status: "UPDATED", state: "DISMISSED" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId: otherAccountId,
+      notificationId: selected!.id,
+      action: "DISMISS",
+    })).toEqual({ status: "NOT_FOUND" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
+      notificationId: other.id,
+      action: "MARK_READ",
+    })).toEqual({ status: "NOT_FOUND" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
+      notificationId: admin.id,
+      action: "DISMISS",
+    })).toEqual({ status: "NOT_FOUND" });
+
+    expect(await mutateNotificationReceiptForAgentSession({
+      userId: ownerId,
+      accountId,
+      notificationId: principal!.id,
+      action: "DISMISS",
+    })).toMatchObject({ status: "UPDATED", state: "DISMISSED" });
+
+    const afterMutation = await listNotificationsForAgentSession({
+      userId: ownerId,
+      accountId,
+      limit: 100,
+    });
+    expect(afterMutation.some((item) => item.id === selected!.id))
+      .toBe(false);
+    expect(afterMutation.some((item) => item.id === principal!.id))
+      .toBe(false);
   });
 
   it("owns per-user UNREAD → READ → DISMISSED receipts", async () => {

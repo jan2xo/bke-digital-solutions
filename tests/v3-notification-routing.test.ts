@@ -33,6 +33,10 @@ const agentInboxRoute = readFileSync(
   "app/api/agent-sessions/notification-inbox/route.ts",
   "utf8",
 );
+const agentReceiptRoute = readFileSync(
+  "app/api/agent-sessions/notification-receipt/route.ts",
+  "utf8",
+);
 
 describe("V3 notification routing", () => {
   it("keeps normal commerce out of automatic Resend delivery", () => {
@@ -135,5 +139,23 @@ describe("V3 notification routing", () => {
     expect(agentInboxRoute).not.toContain('searchParams.get("account_id")');
     expect(agentInboxRoute).not.toContain("listNotificationsForUser");
     expect(agentInboxRoute).toContain('"cache-control": "no-store"');
+  });
+
+  it("mutates Agent notification receipts only inside the authenticated selected-account scope", () => {
+    expect(agentReceiptRoute).toContain("requireAgentAccountSessionProtocol");
+    expect(agentReceiptRoute).toContain("authenticateAgentAccessToken");
+    expect(agentReceiptRoute).toContain("AGENT_ACCOUNT_SESSION_PEPPER");
+    expect(agentReceiptRoute).toContain(
+      "mutateNotificationReceiptForAgentSession",
+    );
+    expect(agentReceiptRoute).toContain(
+      "accountId: authenticated.accountId",
+    );
+    expect(agentReceiptRoute).toContain(
+      'action: z.enum(["MARK_READ", "DISMISS"])',
+    );
+    expect(agentReceiptRoute).not.toContain('account_id: z.');
+    expect(agentReceiptRoute).not.toContain("role:");
+    expect(agentReceiptRoute).toContain('"cache-control": "no-store"');
   });
 });
