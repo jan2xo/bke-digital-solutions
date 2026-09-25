@@ -30,12 +30,15 @@ describe("Agent-session Store checkout status", () => {
     expect(route).toContain('key !== "correlation_id"');
   });
 
-  it("reconstructs the exact durable source from authenticated session plus correlation", () => {
+  it("recovers the durable device source plus same-device legacy session candidates", () => {
     const route = readFileSync(routePath, "utf8");
 
-    expect(route).toContain(
-      "`agent-checkout:${session.sessionId}:${input.correlation_id}`",
-    );
+    expect(route).toContain("agentCheckoutSourceReferenceCandidates");
+    expect(route).toContain("tx,");
+    expect(route).toContain("session,");
+    expect(route).toContain("input.correlation_id");
+    expect(route).toContain("for (const candidate of sourceReferences)");
+    expect(route).toContain("sourceReference: candidate");
     expect(route).toContain("COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID");
     expect(route).toContain("PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID");
     expect(route).toContain("order.accountId !== session.accountId");
