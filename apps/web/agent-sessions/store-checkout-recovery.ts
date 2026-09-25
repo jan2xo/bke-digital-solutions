@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { Prisma } from "@prisma/client";
+import { db } from "@/platform/host/db";
 
 const LEGACY_SESSION_CANDIDATE_LIMIT = 64;
 
@@ -50,11 +50,10 @@ function legacyAgentCheckoutSourceReference(
 }
 
 export async function agentCheckoutSourceReferenceCandidates(
-  tx: Prisma.TransactionClient,
   session: AgentCheckoutSessionIdentity,
   correlationId: string,
 ): Promise<readonly string[]> {
-  const historicalSessions = await tx.$queryRaw<AgentAccountSessionIdRow[]>`
+  const historicalSessions = await db.$queryRaw<AgentAccountSessionIdRow[]>`
     SELECT "id"
       FROM "AgentAccountSession"
      WHERE "deviceId" = ${session.deviceId}
