@@ -379,7 +379,7 @@ async function mutateReceiptForPrincipal(
     principal,
     receiptState: current === "DISMISSED" ? null : current,
   });
-  if (visibility.status !== "VISIBLE" && current !== "DISMISSED") {
+  if (visibility.status !== "VISIBLE") {
     return { status: "NOT_FOUND" as const };
   }
 
