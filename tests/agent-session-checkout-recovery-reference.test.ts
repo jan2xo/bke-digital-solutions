@@ -9,8 +9,11 @@ describe("Agent Store checkout recovery identity", () => {
     const source = helper();
 
     expect(source).toContain('createHash("sha256")');
-    expect(source).toContain('"agent-checkout-device:"');
-    expect(source).toContain("durableDeviceKey(deviceId)");
+    expect(source).toContain("agent-checkout-device:");
+    expect(source).toContain("durableRecoveryKey(");
+    expect(source).toContain("session.deviceId");
+    expect(source).toContain("session.userId");
+    expect(source).toContain("session.accountId");
     expect(source).not.toContain("accessToken");
     expect(source).not.toContain("refreshToken");
   });
@@ -29,7 +32,7 @@ describe("Agent Store checkout recovery identity", () => {
   it("preserves current-session legacy recovery while preferring the durable device source", () => {
     const source = helper();
     const durableIndex = source.indexOf(
-      "durableAgentCheckoutSourceReference(session.deviceId, correlationId)",
+      "durableAgentCheckoutSourceReference(session, correlationId)",
     );
     const currentLegacyIndex = source.indexOf(
       "legacyAgentCheckoutSourceReference(session.sessionId, correlationId)",
