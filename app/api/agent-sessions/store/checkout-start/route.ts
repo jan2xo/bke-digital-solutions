@@ -371,7 +371,7 @@ export async function POST(request: Request) {
     };
 
     const sourceReference = durableAgentCheckoutSourceReference(
-      session.deviceId,
+      session,
       input.correlation_id,
     );
     const checkout = application.get<CommerceCheckoutOrchestrationCapability>(
