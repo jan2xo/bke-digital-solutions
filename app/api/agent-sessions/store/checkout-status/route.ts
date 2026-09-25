@@ -129,14 +129,9 @@ export async function GET(request: Request) {
       return json({ error: "INVALID_TOKEN" }, 401);
     }
 
-    const sourceReferences = await db.$transaction(
-      (tx) =>
-        agentCheckoutSourceReferenceCandidates(
-          tx,
-          session,
-          input.correlation_id,
-        ),
-      { isolationLevel: "Serializable" },
+    const sourceReferences = await agentCheckoutSourceReferenceCandidates(
+      session,
+      input.correlation_id,
     );
     const orderLookup = application.get<CommerceOrderSourceLookupCapability>(
       COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID,
