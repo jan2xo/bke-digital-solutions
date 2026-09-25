@@ -327,13 +327,12 @@ export async function listNotificationsForUser(input: Readonly<{
 
 export async function listNotificationsForAgentSession(input: Readonly<{
   userId: string;
-  role: string;
   accountId: string;
   limit?: number;
 }>): Promise<readonly WebNotificationItem[]> {
   const principal = Object.freeze({
     principalId: input.userId,
-    role: input.role,
+    role: "CUSTOMER",
     accountIds: Object.freeze([input.accountId]),
     segmentKeys: Object.freeze([]),
     activeClient: true,
