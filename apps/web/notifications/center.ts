@@ -325,33 +325,42 @@ export async function listNotificationsForUser(input: Readonly<{
   return listNotificationsForPrincipal(principal, input);
 }
 
+function agentNotificationPrincipal(
+  userId: string,
+  accountId: string,
+): NotificationsPrincipalContext {
+  return Object.freeze({
+    principalId: userId,
+    role: "CUSTOMER",
+    accountIds: Object.freeze([accountId]),
+    segmentKeys: Object.freeze([]),
+    activeClient: true,
+    visitorId: null,
+  } satisfies NotificationsPrincipalContext);
+}
+
 export async function listNotificationsForAgentSession(input: Readonly<{
   userId: string;
   accountId: string;
   limit?: number;
 }>): Promise<readonly WebNotificationItem[]> {
-  const principal = Object.freeze({
-    principalId: input.userId,
-    role: "CUSTOMER",
-    accountIds: Object.freeze([input.accountId]),
-    segmentKeys: Object.freeze([]),
-    activeClient: true,
-    visitorId: null,
-  } satisfies NotificationsPrincipalContext);
-
-  return listNotificationsForPrincipal(principal, {
-    limit: input.limit,
-    includeDismissed: false,
-  });
+  return listNotificationsForPrincipal(
+    agentNotificationPrincipal(input.userId, input.accountId),
+    {
+      limit: input.limit,
+      includeDismissed: false,
+    },
+  );
 }
 
-async function mutateReceipt(input: Readonly<{
-  userId: string;
-  role: string;
-  notificationId: string;
-  action: "MARK_READ" | "DISMISS";
-}>) {
-  const principal = await principalContext(input.userId, input.role);
+async function mutateReceiptForPrincipal(
+  principal: NotificationsPrincipalContext,
+  input: Readonly<{
+    userId: string;
+    notificationId: string;
+    action: "MARK_READ" | "DISMISS";
+  }>,
+) {
   const row = await db.notificationMessage.findUnique({
     where: { id: input.notificationId },
     include: {
@@ -407,6 +416,30 @@ async function mutateReceipt(input: Readonly<{
     },
   });
   return { status: "UPDATED" as const, state: transition.state };
+}
+
+async function mutateReceipt(input: Readonly<{
+  userId: string;
+  role: string;
+  notificationId: string;
+  action: "MARK_READ" | "DISMISS";
+}>) {
+  return mutateReceiptForPrincipal(
+    await principalContext(input.userId, input.role),
+    input,
+  );
+}
+
+export function mutateNotificationReceiptForAgentSession(input: Readonly<{
+  userId: string;
+  accountId: string;
+  notificationId: string;
+  action: "MARK_READ" | "DISMISS";
+}>) {
+  return mutateReceiptForPrincipal(
+    agentNotificationPrincipal(input.userId, input.accountId),
+    input,
+  );
 }
 
 export function markNotificationRead(input: Readonly<{
