@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const roots = [
   ".env.example",
+  "docker-compose.production.yml",
+  "docker-compose.disposable.yml",
   "platform/host/config/environment.ts",
   "apps/standalone/bootstrap.ts",
   "scripts",
