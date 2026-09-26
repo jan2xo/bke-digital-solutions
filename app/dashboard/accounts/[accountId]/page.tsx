@@ -17,16 +17,16 @@ import { getV2WebApplication } from "@/apps/web/runtime";
 import { roleHasClaimAccountCapability } from "@/apps/web/accounts/claim-code-authorization";
 import { GiftClaimCodes } from "@/components/gift-claim-codes";
 
-export default async function AccountPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AccountPage({ params }: { params: Promise<{ accountId: string }> }) {
   const user = await requireUser().catch(() => redirect("/login"));
-  const { id } = await params;
-  await requireLegalClearance(user.id, `/dashboard/accounts/${id}`);
+  const { accountId } = await params;
+  await requireLegalClearance(user.id, `/dashboard/accounts/${accountId}`);
   const access = await (async () => {
     const application = await getV2WebApplication();
     const accountAccess = application.get<AccountsAccountAccessCapability>(
       ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID,
     );
-    const result = await accountAccess.authorize({ principalId: user.id, accountId: id });
+    const result = await accountAccess.authorize({ principalId: user.id, accountId });
     if (result.status !== "AUTHORIZED") throw new Error(result.code);
     return result;
   })().catch(() => redirect("/dashboard"));
@@ -37,10 +37,10 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
   const canAssignLicenses = roleHasAccountsCapability(account.effectiveRole, "ASSIGN_LICENSE");
   const canManageClaimCodes = roleHasClaimAccountCapability(account.effectiveRole, "MANAGE_CLAIM_CODES");
   const [orders, licenses, subscriptions, trials, renewalLegal, giftClaims] = await Promise.all([
-    canViewOrders ? db.order.findMany({ where: { accountId: id }, include: { invoice: true, payments: true, items: true, attempts: { select: { status: true, checkoutUrl: true }, orderBy: { createdAt: "desc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
-    db.license.findMany({ where: { accountId: id, ...(canViewLicenses ? {} : { assignments: { some: { userId: user.id } } }) }, include: { edition: true, purchasePlan: true, product: true, activations: { orderBy: { activatedAt: "desc" } } }, orderBy: { createdAt: "desc" }, take: 50 }),
-    canViewSubscriptions ? db.subscription.findMany({ where: { accountId: id }, include: { product: true, edition: true, purchasePlan: true }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
-    canViewLicenses ? db.trialGrant.findMany({ where: { accountId: id }, include: { product: true, edition: true, license: true }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
+    canViewOrders ? db.order.findMany({ where: { accountId }, include: { invoice: true, payments: true, items: true, attempts: { select: { status: true, checkoutUrl: true }, orderBy: { createdAt: "desc" }, take: 1 } }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
+    db.license.findMany({ where: { accountId, ...(canViewLicenses ? {} : { assignments: { some: { userId: user.id } } }) }, include: { edition: true, purchasePlan: true, product: true, activations: { orderBy: { activatedAt: "desc" } } }, orderBy: { createdAt: "desc" }, take: 50 }),
+    canViewSubscriptions ? db.subscription.findMany({ where: { accountId }, include: { product: true, edition: true, purchasePlan: true }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
+    canViewLicenses ? db.trialGrant.findMany({ where: { accountId }, include: { product: true, edition: true, license: true }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
     publishedLegalDocuments([...CHECKOUT_LEGAL_TYPES, ...SUBSCRIPTION_LEGAL_TYPES]),
     canManageClaimCodes ? db.$queryRaw<Array<{
       id: string;
@@ -65,7 +65,7 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
         FROM "ClaimCode" cc
         JOIN "Order" o ON o."id" = cc."orderId"
         JOIN "OrderItem" oi ON oi."id" = cc."orderItemId"
-       WHERE cc."purchaserAccountId" = ${id}
+       WHERE cc."purchaserAccountId" = ${accountId}
        ORDER BY cc."createdAt" DESC
        LIMIT 100
     ` : Promise.resolve([]),
@@ -73,10 +73,10 @@ export default async function AccountPage({ params }: { params: Promise<{ id: st
   return <section className="shell py-14"><p className="font-bold text-sky-300">{account.type} · {account.effectiveRole}</p><h1 className="mt-2 text-4xl font-black">{account.displayName}</h1>{account.lifecycleState !== "ACTIVE" && <p className="mt-3 rounded border border-amber-400 bg-amber-50 p-3 font-bold text-amber-900">This account is {account.lifecycleState.toLowerCase()}. New purchases, renewals, key reveal, trials, activations, and BKE-managed installs are disabled.</p>}<div className="mt-10 grid gap-8">
     <section><h2 className="mb-4 text-2xl font-black">Products and licenses</h2><div className="grid gap-5 md:grid-cols-2">{licenses.length ? licenses.map((license) => {
       const productName = `${license.product.name}${license.edition ? ` — ${license.edition.name} (${license.purchasePlan ? purchasePlanLabel(license.purchasePlan.type) : "Legacy"})` : ""}`;
-      return <CustomerLicenseCard key={license.id} license={{ id: license.id, productName, status: license.status, lastFour: license.keyLastFour, expiresAt: license.expiresAt?.toISOString() ?? null, maxDevices: license.maxSeats * license.maxDevicesPerSeat, activations: license.activations.map((activation) => ({ id: activation.id, label: activation.label, active: activation.active })), manageSeatsHref: canAssignLicenses && account.lifecycleState === "ACTIVE" ? `/dashboard/accounts/${id}/licenses/${license.id}/seats` : null }}/>;
+      return <CustomerLicenseCard key={license.id} license={{ id: license.id, productName, status: license.status, lastFour: license.keyLastFour, expiresAt: license.expiresAt?.toISOString() ?? null, maxDevices: license.maxSeats * license.maxDevicesPerSeat, activations: license.activations.map((activation) => ({ id: activation.id, label: activation.label, active: activation.active })), manageSeatsHref: canAssignLicenses && account.lifecycleState === "ACTIVE" ? `/dashboard/accounts/${accountId}/licenses/${license.id}/seats` : null }}/>;
     }) : <Empty/>}</div></section>
    {giftClaims.length > 0 && <GiftClaimCodes
-      customerAccountId={id}
+      customerAccountId={accountId}
       claims={giftClaims.map((claim) => ({
         id: claim.id,
         orderNumber: claim.orderNumber,

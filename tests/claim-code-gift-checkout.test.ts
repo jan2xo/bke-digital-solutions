@@ -59,7 +59,7 @@ describe("Claim Code gift checkout", () => {
   });
 
   it("lets the purchaser reveal available gift codes", () => {
-    const account = readFileSync("app/dashboard/accounts/[id]/page.tsx", "utf8");
+    const account = readFileSync("app/dashboard/accounts/[accountId]/page.tsx", "utf8");
     const panel = readFileSync("components/gift-claim-codes.tsx", "utf8");
     const reveal = readFileSync("app/api/claims/[id]/reveal/route.ts", "utf8");
 

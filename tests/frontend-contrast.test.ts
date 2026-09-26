@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const accountPage = readFileSync("app/dashboard/accounts/[id]/page.tsx", "utf8");
+const accountPage = readFileSync("app/dashboard/accounts/[accountId]/page.tsx", "utf8");
 const licensingPage = readFileSync("app/licensing/page.tsx", "utf8");
 const read = (path: string) => readFileSync(path, "utf8");
 
