@@ -9,7 +9,7 @@ describe("BKE-only customer distribution surface", () => {
       read("components/header.tsx"),
       read("app/bke/page.tsx"),
       read("app/dashboard/page.tsx"),
-      read("app/dashboard/accounts/[id]/page.tsx"),
+      read("app/dashboard/accounts/[accountId]/page.tsx"),
       read("components/customer-license-card.tsx"),
     ]);
 
