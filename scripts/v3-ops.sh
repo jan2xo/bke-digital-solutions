@@ -209,6 +209,7 @@ Usage:
   ./bke.sh doctor              Validate configuration and show status
   ./bke.sh disposable-up       Build/start disposable LAN certification and run doctor
   ./bke.sh disposable-doctor   Verify TLS, readiness dependencies, and Agent session start
+  ./bke.sh disposable-utm-fixture  Seed verified UTM CUSTOMER + Render Dock 1.0.2 entitlement
   ./bke.sh disposable-status   Show disposable service status
   ./bke.sh disposable-logs     Show disposable logs
   ./bke.sh disposable-smoke    Run disposable DB smoke check
@@ -304,6 +305,7 @@ case "$command" in
   disposable-up) cmd_disposable up "$@" ;;
   disposable-refresh) cmd_disposable refresh "$@" ;;
   disposable-doctor) cmd_disposable doctor "$@" ;;
+  disposable-utm-fixture) cmd_disposable utm-fixture "$@" ;;
   disposable-status) cmd_disposable status "$@" ;;
   disposable-logs) cmd_disposable logs "$@" ;;
   disposable-smoke) cmd_disposable smoke "$@" ;;
