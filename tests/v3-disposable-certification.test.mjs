@@ -72,6 +72,9 @@ describe("V3 disposable certification environment", () => {
     expect(output).toContain("PAYMONGO_LIVEMODE=false");
     expect(output).toContain("EMAIL_PROVIDER=log");
     expect(output).toContain("RESEND_API_KEY=\n");
-    expect(output).toContain("V3_AGENT_ACCOUNT_SESSION_ENABLED=true");
+    expect(output).toContain("CLAIM_CODE_CHECKOUT_ENABLED=false");
+    expect(output).toContain("AGENT_ACCOUNT_SESSION_ENABLED=true");
+    expect(output).not.toContain("V3_CLAIM_CODE_CHECKOUT_ENABLED");
+    expect(output).not.toContain("V3_AGENT_ACCOUNT_SESSION_ENABLED");
   });
 });
