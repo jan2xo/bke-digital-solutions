@@ -61,6 +61,21 @@ switch (action) {
     compose(["up", "-d", "--build", "--force-recreate", "app", "scheduler", "backup-worker", "caddy"]);
     run(process.execPath, ["scripts/v3-disposable-doctor.mjs"]);
     break;
+  case "utm-fixture":
+    materialize();
+    compose(["config", "--quiet"]);
+    compose([
+      "--profile",
+      "operations",
+      "run",
+      "--rm",
+      "--build",
+      "seed",
+      "npm",
+      "run",
+      "disposable:utm-fixture",
+    ]);
+    break;
   case "doctor":
     materialize();
     run(process.execPath, ["scripts/v3-disposable-doctor.mjs"]);
