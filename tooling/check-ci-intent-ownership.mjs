@@ -3,6 +3,13 @@ import { join } from "node:path";
 
 const workflowsDir = ".github/workflows";
 const retiredPlatformWorkflows = [
+  "v2-platform-audit.yml",
+  "v2-platform-email.yml",
+  "v2-platform-health.yml",
+  "v2-platform-observability.yml",
+  "v2-platform-providers.yml",
+  "v2-platform-scheduler.yml",
+  "v2-platform-storage-cleanup.yml",
 ];
 
 const workflowNames = readdirSync(workflowsDir).filter((name) => name.endsWith(".yml"));
@@ -83,13 +90,6 @@ const exactHeadWorkflows = [
   "v2-licensing.yml",
   "v2-notifications.yml",
   "v2-payments.yml",
-  "v2-platform-audit.yml",
-  "v2-platform-email.yml",
-  "v2-platform-health.yml",
-  "v2-platform-observability.yml",
-  "v2-platform-providers.yml",
-  "v2-platform-scheduler.yml",
-  "v2-platform-storage-cleanup.yml",
   "v2-platform.yml",
   "v2-prisma-isolation.yml",
   "v2-standalone.yml",
