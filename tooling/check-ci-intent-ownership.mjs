@@ -2,6 +2,16 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const workflowsDir = ".github/workflows";
+const retiredPlatformWorkflows = [
+  "v2-platform-audit.yml",
+  "v2-platform-email.yml",
+  "v2-platform-health.yml",
+  "v2-platform-observability.yml",
+  "v2-platform-providers.yml",
+  "v2-platform-scheduler.yml",
+  "v2-platform-storage-cleanup.yml",
+];
+
 const workflowNames = readdirSync(workflowsDir).filter((name) => name.endsWith(".yml"));
 
 function read(name) {
@@ -24,6 +34,12 @@ if (
   fail(
     `automatic pull_request ownership must belong only to pr-guard.yml; found: ${pullRequestOwners.join(", ") || "none"}`,
   );
+}
+
+for (const name of retiredPlatformWorkflows) {
+  if (workflowNames.includes(name)) {
+    fail(`${name} is retired; platform certification belongs to v2-platform.yml`);
+  }
 }
 
 const guard = read("pr-guard.yml");
@@ -74,13 +90,6 @@ const exactHeadWorkflows = [
   "v2-licensing.yml",
   "v2-notifications.yml",
   "v2-payments.yml",
-  "v2-platform-audit.yml",
-  "v2-platform-email.yml",
-  "v2-platform-health.yml",
-  "v2-platform-observability.yml",
-  "v2-platform-providers.yml",
-  "v2-platform-scheduler.yml",
-  "v2-platform-storage-cleanup.yml",
   "v2-platform.yml",
   "v2-prisma-isolation.yml",
   "v2-standalone.yml",
@@ -102,6 +111,21 @@ for (const name of exactHeadWorkflows) {
   }
   if (workflow.includes("github.event.pull_request")) {
     fail(`${name} must not depend on pull_request event context`);
+  }
+}
+
+const platformWorkflow = read("v2-platform.yml");
+for (const required of [
+  "platform/audit/test/audit.test.ts",
+  "platform/email/test/email.test.ts",
+  "platform/health/test/health.test.ts",
+  "platform/observability/test/observability.test.ts",
+  "platform/providers/test/providers.test.ts",
+  "platform/scheduler/test/scheduler.test.ts",
+  "platform/storage-cleanup/test/storage-cleanup.test.ts",
+]) {
+  if (!platformWorkflow.includes(required)) {
+    fail(`v2-platform.yml is missing consolidated ownership for ${required}`);
   }
 }
 

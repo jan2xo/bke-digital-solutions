@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const workflowsDir = ".github/workflows";
@@ -86,6 +86,20 @@ describe("intent-driven certification foundation", () => {
       "platform/storage-cleanup/test/storage-cleanup.test.ts",
     ]) {
       expect(workflow).toContain(testPath);
+    }
+  });
+
+  it("retires duplicate platform workflow owners", () => {
+    for (const retired of [
+      "v2-platform-audit.yml",
+      "v2-platform-email.yml",
+      "v2-platform-health.yml",
+      "v2-platform-observability.yml",
+      "v2-platform-providers.yml",
+      "v2-platform-scheduler.yml",
+      "v2-platform-storage-cleanup.yml",
+    ]) {
+      expect(existsSync(`${workflowsDir}/${retired}`)).toBe(false);
     }
   });
 
