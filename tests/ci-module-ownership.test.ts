@@ -59,6 +59,22 @@ describe("CI module ownership", () => {
     expect(workflow).toContain("required-certification:");
   });
 
+  it("gives all platform seam tests one consolidated workflow owner", () => {
+    const workflow = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
+
+    for (const test of [
+      "platform/audit/test/audit.test.ts",
+      "platform/email/test/email.test.ts",
+      "platform/health/test/health.test.ts",
+      "platform/observability/test/observability.test.ts",
+      "platform/providers/test/providers.test.ts",
+      "platform/scheduler/test/scheduler.test.ts",
+      "platform/storage-cleanup/test/storage-cleanup.test.ts",
+    ]) {
+      expect(workflow).toContain(test);
+    }
+  });
+
   it("keeps only the lightweight PR guard automatic", () => {
     const owners = readdirSync(workflowsDir)
       .filter((name) => name.endsWith(".yml"))
