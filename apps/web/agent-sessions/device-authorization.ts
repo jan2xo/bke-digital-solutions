@@ -649,6 +649,48 @@ export async function acknowledgeAgentSessionHandoff(
   return "acknowledged";
 }
 
+export async function revokeAgentAccountSessionsForUser(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  now: Date = new Date(),
+): Promise<void> {
+  await tx.$executeRaw`
+    UPDATE "AgentAccountRefreshToken"
+       SET "status" = 'REVOKED',
+           "revokedAt" = COALESCE("revokedAt", ${now})
+     WHERE "sessionId" IN (
+       SELECT "id"
+         FROM "AgentAccountSession"
+        WHERE "userId" = ${userId}
+     )
+       AND "status" <> 'REVOKED'
+  `;
+
+  await tx.$executeRaw`
+    UPDATE "AgentAccountSession"
+       SET "revokedAt" = COALESCE("revokedAt", ${now}),
+           "updatedAt" = NOW()
+     WHERE "userId" = ${userId}
+  `;
+
+  await tx.$executeRaw`
+    UPDATE "AgentDeviceAuthorization"
+       SET "status" = CASE
+             WHEN "status" = 'APPROVED' THEN 'DENIED'
+             ELSE "status"
+           END,
+           "deniedAt" = CASE
+             WHEN "status" = 'APPROVED' THEN COALESCE("deniedAt", ${now})
+             ELSE "deniedAt"
+           END,
+           "tokenBundleCiphertext" = NULL,
+           "handoffExpiresAt" = ${now},
+           "updatedAt" = NOW()
+     WHERE "approvedByUserId" = ${userId}
+       AND "status" IN ('APPROVED','CONSUMED')
+  `;
+}
+
 export async function revokeAgentAccountSession(
   tx: Prisma.TransactionClient,
   input: Readonly<{ refreshToken: string; pepper: string }>,
