@@ -177,6 +177,9 @@ export async function POST(request: Request) {
         });
     }
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return json({ error: "INVALID_INPUT" }, 400);
+    }
     return apiError(error);
   }
 }
