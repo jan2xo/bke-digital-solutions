@@ -14,7 +14,6 @@ import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { passwordSchema } from "@/apps/web/http/validation";
-import { securityEvent } from "@/apps/web/security/events";
 import { db } from "@/platform/host/db";
 import { getRuntimeEnvironment } from "@/platform/host/env";
 
@@ -125,6 +124,22 @@ export async function POST(request: Request) {
         changedAt,
       );
 
+      await tx.securityEvent.create({
+        data: {
+          userId: authenticated.userId,
+          type: "PASSWORD_CHANGED",
+          outcome: "SUCCESS",
+          severity: "HIGH",
+          authenticationMethod: "PASSWORD",
+          metadata: {
+            channel: "BKE_AGENT_SESSION",
+            agentSessionId: authenticated.sessionId,
+            deviceId: authenticated.deviceId,
+            reauthenticationRequired: true,
+          },
+        },
+      });
+
       await tx.auditLog.create({
         data: {
           actorId: authenticated.userId,
@@ -156,16 +171,6 @@ export async function POST(request: Request) {
       case "password_provider_unavailable":
         return json({ error: "PASSWORD_PROVIDER_UNAVAILABLE" }, 503);
       case "changed":
-        await securityEvent(
-          "PASSWORD_CHANGED",
-          request,
-          result.userId,
-          { method: "BKE_AGENT_SESSION" },
-          {
-            sessionId: result.sessionId,
-            authenticationMethod: "PASSWORD",
-          },
-        );
         return json({
           status: "changed",
           reauthentication_required: true,
