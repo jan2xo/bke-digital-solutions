@@ -59,9 +59,13 @@ describe("native BKE account password change", () => {
   it("records security and audit evidence without password material", () => {
     const route = read(routePath);
 
-    expect(route).toContain('securityEvent("PASSWORD_CHANGED"');
+    expect(route).toContain("tx.securityEvent.create");
+    expect(route).toContain('type: "PASSWORD_CHANGED"');
+    expect(route).toContain('outcome: "SUCCESS"');
+    expect(route).toContain('severity: "HIGH"');
     expect(route).toContain('action: "PASSWORD_CHANGED"');
     expect(route).toContain('channel: "BKE_AGENT_SESSION"');
+    expect(route).not.toContain("securityEvent(");
     expect(route).not.toContain("current_password,");
     expect(route).not.toContain("new_password,");
   });
