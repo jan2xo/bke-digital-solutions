@@ -22,6 +22,17 @@ const callableWorkflows = [
   "v2-standalone.yml",
 ] as const;
 
+const explicitConcurrencyGroups = new Map<string, string>([
+  [
+    "native-bke-account-handoff.yml",
+    "group: native-bke-account-${{ inputs.source_sha }}",
+  ],
+  [
+    "v2-identity.yml",
+    "group: identity-${{ inputs.source_sha }}",
+  ],
+]);
+
 describe("intent-driven certification foundation", () => {
   it("accepts explicit certification intent instead of guessing ownership", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
@@ -47,7 +58,8 @@ describe("intent-driven certification foundation", () => {
       expect(workflow).toContain("Verify exact source checkout");
       expect(workflow).toContain('test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"');
       expect(workflow).toContain(
-        "group: ${{ github.workflow }}-${{ inputs.source_sha }}",
+        explicitConcurrencyGroups.get(name) ??
+          "group: ${{ github.workflow }}-${{ inputs.source_sha }}",
       );
       expect(workflow).not.toContain("github.event.pull_request");
     },
