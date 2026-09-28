@@ -56,6 +56,13 @@ describe("native BKE account password change", () => {
     expect(route).not.toContain("handoff_code:");
   });
 
+  it("keeps validation failures inside the Agent-session protocol envelope", () => {
+    const route = read(routePath);
+
+    expect(route).toContain("error instanceof z.ZodError");
+    expect(route).toContain('return json({ error: "INVALID_INPUT" }, 400)');
+  });
+
   it("records security and audit evidence without password material", () => {
     const route = read(routePath);
 
