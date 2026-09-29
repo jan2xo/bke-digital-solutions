@@ -7,6 +7,7 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   authenticateNativeAgentRequest: vi.fn(),
   createOrganizationAccount: vi.fn(),
   updateOrganizationProfile: vi.fn(),
+  inviteOrganizationMember: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
@@ -27,6 +28,8 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
     agentOrganizationMocks.createOrganizationAccount,
   updateOrganizationProfile:
     agentOrganizationMocks.updateOrganizationProfile,
+  inviteOrganizationMember:
+    agentOrganizationMocks.inviteOrganizationMember,
 }));
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: agentOrganizationMocks.rateLimit,
@@ -402,5 +405,150 @@ describe("native Agent organization profile update", () => {
     expect(
       response.headers.get("x-bke-account-session-version"),
     ).toBe("bke.account-session.v1");
+  });
+});
+
+
+describe("native Agent organization invitation issuance", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "user-cert",
+      accountId: "selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.inviteOrganizationMember.mockResolvedValue({
+      invitation: {
+        id: "invitation-id-must-not-leak",
+        accountId: "selected-account-cert",
+        email: "member@example.test",
+        role: "MEMBER",
+        status: "PENDING",
+        tokenHash: "invitation-hash-must-not-leak",
+        expiresAt: new Date("2026-10-07T00:00:00.000Z"),
+        createdAt: new Date("2026-09-30T00:00:00.000Z"),
+      },
+      token: "one-time-invitation-code-cert",
+    });
+  });
+
+  function inviteRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/invitations/create",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("rejects browser-origin invitation mutation before Agent authentication", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/create/route"
+    );
+    const response = await POST(inviteRequest({}, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("binds invitation issuance to the authenticated selected Organization and projects only the one-time invite secret", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/create/route"
+    );
+    const response = await POST(inviteRequest({
+      email: "member@example.test",
+      role: "MEMBER",
+    }));
+
+    expect(response.status).toBe(201);
+    expect(
+      agentOrganizationMocks.inviteOrganizationMember,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      accountId: "selected-account-cert",
+      email: "member@example.test",
+      role: "MEMBER",
+    });
+
+    const payload = await response.json();
+    expect(payload).toEqual({
+      status: "created",
+      invitation: {
+        email: "member@example.test",
+        role: "MEMBER",
+        status: "PENDING",
+        expires_at: "2026-10-07T00:00:00.000Z",
+        created_at: "2026-09-30T00:00:00.000Z",
+      },
+      invitation_code: "one-time-invitation-code-cert",
+    });
+    const wire = JSON.stringify(payload);
+    expect(wire).not.toContain("invitation-id-must-not-leak");
+    expect(wire).not.toContain("invitation-hash-must-not-leak");
+    expect(wire).not.toContain("selected-account-cert");
+    expect(wire).not.toContain("user-cert");
+  });
+
+  it("preserves Accounts role denial without projecting an invitation code", async () => {
+    agentOrganizationMocks.inviteOrganizationMember.mockRejectedValueOnce(
+      new Error("ACCOUNT_ROLE_FORBIDDEN"),
+    );
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/create/route"
+    );
+    const response = await POST(inviteRequest({
+      email: "member@example.test",
+      role: "MEMBER",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({
+      error: "ACCOUNT_ROLE_FORBIDDEN",
+    });
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+  });
+
+  it("rejects invalid invitation input before Accounts authority", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/create/route"
+    );
+    const response = await POST(inviteRequest({
+      email: "not-an-email",
+      role: "SUPERUSER",
+      account_id: "caller-must-not-select-account",
+    }));
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: "INVALID_INPUT",
+    });
+    expect(
+      agentOrganizationMocks.inviteOrganizationMember,
+    ).not.toHaveBeenCalled();
   });
 });
