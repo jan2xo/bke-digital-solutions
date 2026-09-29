@@ -194,11 +194,11 @@ export async function sendPasswordReset(email: string, token: string) {
   });
 }
 
-export async function sendAdministratorLoginCode(email: string, code: string, reference: string) {
+export async function sendIdentityLoginCode(email: string, code: string, reference: string) {
   await runtimeEmailProvider.send({
     to: email,
-    subject: `Your BKE administrator verification code [${reference}]`,
-    text: `Your BKE administrator verification code is ${code}. Verification reference: ${reference}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid. If you did not request this code, do not share it and review your account security.`,
+    subject: `Your BKE verification code [${reference}]`,
+    text: `Your BKE verification code is ${code}. Verification reference: ${reference}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid. If you did not request this code, do not share it and review your account security.`,
   });
 }
 
