@@ -89,41 +89,12 @@ export async function getAgentOrganizationOverview(input: {
       type: true,
       displayName: true,
       lifecycleState: true,
-      billingEmail: true,
-      taxId: true,
       organization: {
         select: {
           legalName: true,
           registrationNumber: true,
         },
       },
-      memberships: manageMembers
-        ? {
-            orderBy: { createdAt: "asc" },
-            select: {
-              role: true,
-              user: {
-                select: {
-                  email: true,
-                  name: true,
-                },
-              },
-            },
-          }
-        : false,
-      invitations: manageMembers
-        ? {
-            where: { status: "PENDING" },
-            orderBy: { createdAt: "desc" },
-            select: {
-              email: true,
-              role: true,
-              status: true,
-              expiresAt: true,
-              createdAt: true,
-            },
-          }
-        : false,
       _count: {
         select: {
           licenses: true,
@@ -133,6 +104,39 @@ export async function getAgentOrganizationOverview(input: {
       },
     },
   });
+
+  const [memberships, invitations] = manageMembers
+    ? await Promise.all([
+        db.membership.findMany({
+          where: { accountId: input.accountId },
+          orderBy: { createdAt: "asc" },
+          select: {
+            role: true,
+            user: {
+              select: {
+                email: true,
+                name: true,
+              },
+            },
+          },
+        }),
+        db.invitation.findMany({
+          where: {
+            accountId: input.accountId,
+            status: "PENDING",
+          },
+          orderBy: { createdAt: "desc" },
+          select: {
+            email: true,
+            role: true,
+            status: true,
+            expiresAt: true,
+            createdAt: true,
+          },
+        }),
+      ])
+    : [[], []] as const;
+
 
   if (
     !account ||
@@ -156,8 +160,8 @@ export async function getAgentOrganizationOverview(input: {
       legalName: account.organization.legalName,
       registrationNumber: account.organization.registrationNumber,
     },
-    billingEmail: viewBilling ? account.billingEmail : null,
-    taxId: viewBilling ? account.taxId : null,
+    billingEmail: viewBilling ? access.account.billingEmail : null,
+    taxId: viewBilling ? access.account.taxId : null,
     counts: {
       licenses: viewLicenses ? account._count.licenses : null,
       subscriptions:
@@ -167,14 +171,14 @@ export async function getAgentOrganizationOverview(input: {
       orders: viewBilling ? account._count.orders : null,
     },
     members: manageMembers
-      ? account.memberships.map((membership) => ({
+      ? memberships.map((membership) => ({
           email: membership.user.email,
           name: membership.user.name,
           role: membership.role,
         }))
       : [],
     invitations: manageMembers
-      ? account.invitations
+      ? invitations
       : [],
   };
 }
