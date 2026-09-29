@@ -6,6 +6,7 @@ const read = (path: string) => readFileSync(path, "utf8");
 const agentOrganizationMocks = vi.hoisted(() => ({
   authenticateNativeAgentRequest: vi.fn(),
   createOrganizationAccount: vi.fn(),
+  updateOrganizationProfile: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
@@ -24,6 +25,8 @@ vi.mock("@/apps/web/agent-sessions/native-mfa", () => ({
 vi.mock("@/apps/web/accounts/organization-operations", () => ({
   createOrganizationAccount:
     agentOrganizationMocks.createOrganizationAccount,
+  updateOrganizationProfile:
+    agentOrganizationMocks.updateOrganizationProfile,
 }));
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: agentOrganizationMocks.rateLimit,
@@ -273,5 +276,131 @@ describe("native Agent organization creation", () => {
     expect(
       agentOrganizationMocks.createOrganizationAccount,
     ).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("native Agent organization profile update", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "user-cert",
+      accountId: "selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.updateOrganizationProfile.mockResolvedValue({
+      id: "selected-account-cert",
+    });
+  });
+
+  function profileRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/profile",
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("rejects browser-origin profile mutation before Agent authentication", async () => {
+    const { PATCH } = await import(
+      "../app/api/agent-sessions/account/organization/profile/route"
+    );
+    const response = await PATCH(profileRequest({}, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("binds organization profile mutation to the authenticated selected account", async () => {
+    const { PATCH } = await import(
+      "../app/api/agent-sessions/account/organization/profile/route"
+    );
+    const response = await PATCH(profileRequest({
+      display_name: "Renamed Certification Org",
+      legal_name: "Renamed Certification Organization Legal",
+      billing_email: "billing-renamed@example.test",
+      registration_number: "REG-RENAMED",
+      tax_id: null,
+    }));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.updateOrganizationProfile,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      accountId: "selected-account-cert",
+      displayName: "Renamed Certification Org",
+      legalName: "Renamed Certification Organization Legal",
+      billingEmail: "billing-renamed@example.test",
+      registrationNumber: "REG-RENAMED",
+      taxId: null,
+    });
+    const payload = await response.json();
+    expect(payload).toEqual({ status: "updated" });
+    expect(JSON.stringify(payload)).not.toContain(
+      "selected-account-cert",
+    );
+    expect(JSON.stringify(payload)).not.toContain(
+      "user-cert",
+    );
+  });
+
+  it("rejects empty profile mutations before Accounts authority", async () => {
+    const { PATCH } = await import(
+      "../app/api/agent-sessions/account/organization/profile/route"
+    );
+    const response = await PATCH(profileRequest({}));
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: "INVALID_INPUT",
+    });
+    expect(
+      agentOrganizationMocks.updateOrganizationProfile,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("preserves Accounts role denial and Agent protocol headers", async () => {
+    agentOrganizationMocks.updateOrganizationProfile.mockRejectedValueOnce(
+      new Error("ACCOUNT_ROLE_FORBIDDEN"),
+    );
+    const { PATCH } = await import(
+      "../app/api/agent-sessions/account/organization/profile/route"
+    );
+    const response = await PATCH(profileRequest({
+      display_name: "Forbidden Rename",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({
+      error: "ACCOUNT_ROLE_FORBIDDEN",
+    });
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
   });
 });
