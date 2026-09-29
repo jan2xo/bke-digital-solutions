@@ -76,9 +76,9 @@ describe("native BKE customer MFA authority", () => {
     expect(complete).toContain("recovery_codes: result.recoveryCodes");
     expect(recovery).toContain("recovery_codes: result.recoveryCodes");
     const completeResponses =
-      complete.match(/return response\(\{[\s\S]*?\}\s*\);/g)?.join("\n") ?? "";
+      complete.match(/return response\(\{[^}]*\}/g)?.join("\n") ?? "";
     const recoveryResponses =
-      recovery.match(/return response\(\{[\s\S]*?\}\s*\);/g)?.join("\n") ?? "";
+      recovery.match(/return response\(\{[^}]*\}/g)?.join("\n") ?? "";
     expect(completeResponses).not.toContain("current_password");
     expect(recoveryResponses).not.toContain("current_password");
   });
