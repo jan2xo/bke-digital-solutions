@@ -9,16 +9,13 @@ import {
   rejectBrowserOriginForAgent,
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
-import {
-  issueNativeBkeAgentHandoff,
-  resolveNativeBkeAccounts,
-} from "@/apps/web/agent-sessions/native-handoff";
+import { completeNativeBkeHandoff } from "@/apps/web/agent-sessions/native-mfa";
+import { issueIdentityLoginMfaChallenge } from "@/apps/web/auth/mfa-challenge";
 import { emailSchema } from "@/apps/web/http/validation";
 import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { getV2WebApplication } from "@/apps/web/runtime";
-import { db } from "@/platform/host/db";
 import { getRuntimeEnvironment } from "@/platform/host/env";
 
 const schema = z.object({
@@ -41,6 +38,30 @@ function response(body: unknown, status = 200) {
   });
 }
 
+function handoffResponse(result: Awaited<ReturnType<typeof completeNativeBkeHandoff>>) {
+  if (result.status === "account_selection_required") {
+    return response({
+      status: result.status,
+      accounts: result.accounts.map((account) => ({
+        account_id: account.id,
+        account_type: account.type,
+        account_display_name: account.displayName,
+      })),
+    });
+  }
+
+  return response({
+    status: "handoff_issued",
+    handoff_code: result.handoff.handoffCode,
+    expires_in: result.handoff.expiresIn,
+    account: {
+      account_id: result.handoff.account.id,
+      account_type: result.handoff.account.type,
+      account_display_name: result.handoff.account.displayName,
+    },
+  }, 201);
+}
+
 export async function POST(request: Request) {
   try {
     const runtime = getRuntimeEnvironment();
@@ -53,7 +74,6 @@ export async function POST(request: Request) {
 
     const input = schema.parse(await request.json());
     const ip = clientIp(request);
-
     if (
       !(await rateLimit(`native-bke-login:${ip}:${input.email}`, 8, 900)).allowed
       || !(await rateLimit(
@@ -81,10 +101,7 @@ export async function POST(request: Request) {
     if (authenticated.status === "FAILED") {
       return response({ error: "AUTHENTICATION_UNAVAILABLE" }, 503);
     }
-    if (
-      authenticated.route !== "CUSTOMER_SESSION"
-      || authenticated.principal.role !== "CUSTOMER"
-    ) {
+    if (authenticated.principal.role !== "CUSTOMER") {
       return response({ error: "FORBIDDEN" }, 403);
     }
     if (!authenticated.principal.emailVerified) {
@@ -94,63 +111,33 @@ export async function POST(request: Request) {
       return response({ error: "ACCOUNT_NOT_ACTIVE" }, 403);
     }
 
-    const result = await db.$transaction(async (tx) => {
-      const accounts = await resolveNativeBkeAccounts(
-        tx,
+    if (authenticated.route === "MFA_CHALLENGE") {
+      const challenge = await issueIdentityLoginMfaChallenge(
         authenticated.principal.id,
       );
+      return response({
+        status: "mfa_challenge_required",
+        challenge_token: challenge.token,
+        expires_at: challenge.expiresAt.toISOString(),
+        email_sent: challenge.delivered,
+        mfa_reference: challenge.reference,
+      }, 202);
+    }
 
-      if (!input.customer_account_id && accounts.length !== 1) {
-        return {
-          status: "account_selection_required" as const,
-          accounts,
-        };
-      }
+    if (authenticated.route !== "SESSION") {
+      return response({ error: "FORBIDDEN" }, 403);
+    }
 
-      const accountId = input.customer_account_id ?? accounts[0]?.id;
-      if (!accountId) {
-        return {
-          status: "account_selection_required" as const,
-          accounts,
-        };
-      }
-
-      const handoff = await issueNativeBkeAgentHandoff(tx, {
-        principal: authenticated.principal,
-        accountId,
+    return handoffResponse(await completeNativeBkeHandoff(
+      authenticated.principal,
+      {
+        customerAccountId: input.customer_account_id,
         deviceId: input.device_id,
         deviceName: input.device_name,
         platform: input.platform,
         architecture: input.architecture,
-        pepper: runtime.AGENT_ACCOUNT_SESSION_PEPPER!,
-      });
-      return {
-        status: "handoff_issued" as const,
-        handoff,
-      };
-    }, { isolationLevel: "Serializable" });
-
-    if (result.status === "account_selection_required") {
-      return response({
-        status: result.status,
-        accounts: result.accounts.map((account) => ({
-          account_id: account.id,
-          account_type: account.type,
-          account_display_name: account.displayName,
-        })),
-      });
-    }
-
-    return response({
-      status: "handoff_issued",
-      handoff_code: result.handoff.handoffCode,
-      expires_in: result.handoff.expiresIn,
-      account: {
-        account_id: result.handoff.account.id,
-        account_type: result.handoff.account.type,
-        account_display_name: result.handoff.account.displayName,
       },
-    }, 201);
+    ));
   } catch (error) {
     return apiError(error);
   }
