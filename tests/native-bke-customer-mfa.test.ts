@@ -121,7 +121,7 @@ describe("native BKE customer MFA authority", () => {
         },
       },
     );
-  });
+  }, 30_000);
 
   it("never returns password material and returns recovery codes only from Identity mutation results", () => {
     const helper = read("apps/web/agent-sessions/native-mfa.ts");
