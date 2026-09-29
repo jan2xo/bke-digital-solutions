@@ -9,7 +9,7 @@ export default async function AdminSecurityPage({ searchParams }: { searchParams
   const context = await currentIdentitySession();
   if (!context) redirect("/login");
   if (context.principal.role !== "ADMIN") redirect("/dashboard");
-  if (!context.administratorMfaEnabled || !context.session.mfaVerifiedAt) redirect("/security/mfa");
+  if (!context.mfaEnabled || !context.session.mfaVerifiedAt) redirect("/security/mfa");
   const session = context.session;
   const filters = await searchParams;
   const eventTypes = ["ADMIN_LOGIN_SUCCEEDED","ADMIN_LOGIN_FAILED","ADMIN_PASSWORD_ACCEPTED","ADMIN_PASSWORD_REJECTED","ADMIN_SESSION_CREATED","MFA_CHALLENGE_SUCCEEDED","MFA_CHALLENGE_FAILED","MFA_ENROLLED","MFA_DISABLED","MFA_RECOVERY_USED","MFA_RECOVERY_REGENERATED","RECENT_AUTH_SUCCEEDED","RECENT_AUTH_FAILED","ADMIN_SESSION_REVOKED","ADMIN_MAGIC_LOGIN_BLOCKED","MFA_ENROLLMENT_STARTED","PASSWORD_CHANGED","PASSWORD_RESET_COMPLETED","ADMIN_ALL_OTHER_SESSIONS_REVOKED","ADMIN_ALL_SESSIONS_REVOKED","SECURITY_RATE_LIMIT_TRIGGERED","PROVIDER_CREDENTIAL_REPLACED","PROVIDER_CREDENTIAL_REVOKED","PROVIDER_VALIDATION_SUCCEEDED","PROVIDER_VALIDATION_FAILED","LIVE_PAYMENT_ENABLE_BLOCKED"];
