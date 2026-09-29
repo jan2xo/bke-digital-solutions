@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     if (
       session.principal.role !== "ADMIN" ||
       !session.session.mfaVerifiedAt ||
-      !session.administratorMfaEnabled
+      !session.mfaEnabled
     ) {
       throw new Error("FORBIDDEN");
     }
