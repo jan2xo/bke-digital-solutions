@@ -71,6 +71,11 @@ const [
   ),
 ]);
 
+const magicLoginConsumeRouteSource = await readFile(
+  new URL("../../../app/api/auth/magic/consume/route.ts", import.meta.url),
+  "utf8",
+);
+
 if (
   !moduleSource.includes("CapabilityModule") ||
   !moduleSource.includes('"../../contracts/capability"')
@@ -197,6 +202,30 @@ for (const marker of [
   if (!mfaChallengeRouteSource.includes(marker)) {
     throw new Error(
       `Browser MFA completion is missing principal-aware routing marker: ${marker}`,
+    );
+  }
+}
+
+for (const marker of [
+  "IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID",
+  "magicLogin.consume",
+  "writeIdentitySessionCookie",
+  "MFA_PASSWORD_REQUIRED",
+]) {
+  if (!magicLoginConsumeRouteSource.includes(marker)) {
+    throw new Error(
+      `Magic-login consume must use released Identity MFA authority: ${marker}`,
+    );
+  }
+}
+for (const forbidden of [
+  "db.verificationToken",
+  "hashToken(",
+  "createSession(",
+]) {
+  if (magicLoginConsumeRouteSource.includes(forbidden)) {
+    throw new Error(
+      `Magic-login consume still bypasses released Identity authority: ${forbidden}`,
     );
   }
 }
