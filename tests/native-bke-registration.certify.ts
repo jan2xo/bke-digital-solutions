@@ -1,12 +1,18 @@
 import assert from "node:assert/strict";
-import { db } from "@/platform/host/db";
-import { hashToken } from "@/platform/host/security/crypto";
-import {
+
+process.env.AGENT_ACCOUNT_SESSION_PEPPER ??=
+  "native-registration-cert-agent-session-pepper-5c824be43f3248d08a9fd69e";
+process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY ??=
+  "native-registration-cert-agent-session-key-8f37de217ce54a8e9b60c421";
+
+const { db } = await import("@/platform/host/db");
+const { hashToken } = await import("@/platform/host/security/crypto");
+const {
   NativeCustomerRegistrationError,
   registerNativeCustomer,
   resendNativeCustomerVerification,
   verifyNativeCustomerEmail,
-} from "@/apps/web/auth/native-customer-registration";
+} = await import("@/apps/web/auth/native-customer-registration");
 
 const email = `native-registration-cert-${process.pid}@example.com`;
 const name = "Native Registration Cert";
