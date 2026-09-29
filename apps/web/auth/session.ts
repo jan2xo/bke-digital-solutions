@@ -126,7 +126,7 @@ export async function requireIdentityAdmin(): Promise<IdentitySessionContext> {
   const session = await currentIdentitySession();
   if (!session) throw new Error("UNAUTHENTICATED");
   if (session.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  if (!session.administratorMfaEnabled) throw new Error("MFA_ENROLLMENT_REQUIRED");
+  if (!session.mfaEnabled) throw new Error("MFA_ENROLLMENT_REQUIRED");
   if (!session.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
   return session;
 }
@@ -186,13 +186,13 @@ export async function requireRecentUser(maxAgeMinutes = 15) {
 export async function requireRecentAdmin(maxAgeMinutes = 15) {
   const context = await requireRecentIdentitySession(maxAgeMinutes);
   if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  if (!context.administratorMfaEnabled || !context.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
+  if (!context.mfaEnabled || !context.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
   return context.principal;
 }
 
 export async function requireRecentAdminSession(maxAgeMinutes = 15) {
   const context = await requireRecentIdentitySession(maxAgeMinutes);
   if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  if (!context.administratorMfaEnabled || !context.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
+  if (!context.mfaEnabled || !context.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
   return legacySessionView(context);
 }
