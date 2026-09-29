@@ -12,12 +12,15 @@ describe("V2 Privacy + Catalog released-package adoption", () => {
   it("routes privacy through the V2 released-package adapter", () => {
     const publicRoute = read("app/api/privacy/requests/route.ts");
     const adminRoute = read("app/api/admin/privacy/requests/route.ts");
+    const agentRoute = read("app/api/agent-sessions/privacy/requests/route.ts");
     const adapter = read("apps/web/privacy/requests.ts");
 
     expect(publicRoute).toContain("@/apps/web/privacy/requests");
     expect(adminRoute).toContain("@/apps/web/privacy/requests");
     expect(publicRoute).not.toContain("@/lib/privacy/requests");
     expect(adminRoute).not.toContain("@/lib/privacy/requests");
+    expect(agentRoute).toContain("@/apps/web/privacy/requests");
+    expect(agentRoute).not.toContain("@/lib/privacy/requests");
     expect(adapter).toContain("@bke/privacy/contracts/privacy-request-policy.contract");
     expect(adapter).toContain("@bke/privacy/logic/privacy-request-policy");
     expect(adapter).toContain("planPrivacyRequestCreation");
