@@ -173,6 +173,34 @@ if (!mfaChallengeRouteSource.includes("verifyIdentityLoginMfaChallenge")) {
   throw new Error("LOGIN MFA completion route does not consume released Identity verification through the V2 adapter.");
 }
 
+const customerMfaGate = loginRouteSource.indexOf(
+  "if (user.administratorMfa?.enabledAt)",
+);
+const administratorEnrollmentGate = loginRouteSource.lastIndexOf(
+  'if (user.role === "ADMIN")',
+);
+if (
+  customerMfaGate < 0 ||
+  administratorEnrollmentGate < 0 ||
+  customerMfaGate > administratorEnrollmentGate
+) {
+  throw new Error(
+    "Browser login must enforce enabled MFA for CUSTOMER and ADMIN before the administrator-only enrollment fallback.",
+  );
+}
+for (const marker of [
+  'principal.role === "ADMIN"',
+  'redirectTo',
+  '"/dashboard"',
+  '"/admin"',
+]) {
+  if (!mfaChallengeRouteSource.includes(marker)) {
+    throw new Error(
+      `Browser MFA completion is missing principal-aware routing marker: ${marker}`,
+    );
+  }
+}
+
 const forbiddenStagingSpecifiers = [
   '"./contracts/',
   '"./logic/',
