@@ -123,6 +123,45 @@ describe("native BKE customer MFA authority", () => {
     );
   }, 30_000);
 
+  it("keeps organization overview bound to the authenticated Agent principal and selected account", () => {
+    const route = read("app/api/agent-sessions/account/organization/route.ts");
+    const authority = read("apps/web/accounts/agent-organization-overview.ts");
+
+    expect(route).toContain("rejectBrowserOriginForAgent(request)");
+    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+    expect(route).toContain("authenticateNativeAgentRequest(request)");
+    expect(route).toContain("accountId: authenticated.accountId");
+    expect(route).toContain("principalId: authenticated.userId");
+    expect(route).not.toContain("user_id");
+    expect(route).not.toContain("account_id");
+    expect(route).not.toContain("access_token");
+    expect(route).not.toContain("refresh_token");
+    expect(route).not.toContain("handoff_code");
+    expect(route).not.toContain("console.log");
+
+    expect(authority).toContain("ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID");
+    expect(authority).toContain("roleHasAccountsCapability");
+    expect(authority).toContain('"MANAGE_MEMBERS"');
+    expect(authority).toContain('"VIEW_PAYMENTS"');
+    expect(authority).toContain('"VIEW_LICENSES"');
+    expect(authority).not.toContain("tokenHash");
+    expect(authority).not.toContain("ownerId:");
+  });
+
+  it("proves role-filtered selected-account organization overview against the exact-head database", () => {
+    execFileSync(
+      "npx",
+      ["tsx", "tests/agent-session-organization-overview.certify.ts"],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: "--conditions=react-server",
+        },
+      },
+    );
+  }, 30_000);
+
   it("keeps customer privacy requests behind authenticated Agent-session account scope", () => {
     const route = read("app/api/agent-sessions/privacy/requests/route.ts");
 
