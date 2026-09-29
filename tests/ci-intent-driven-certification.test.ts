@@ -31,6 +31,14 @@ const explicitConcurrencyGroups = new Map<string, string>([
     "v2-identity.yml",
     "group: identity-${{ inputs.source_sha }}",
   ],
+  [
+    "v2-accounts.yml",
+    "group: accounts-${{ inputs.source_sha }}",
+  ],
+  [
+    "v2-legal.yml",
+    "group: legal-${{ inputs.source_sha }}",
+  ],
 ]);
 
 describe("intent-driven certification foundation", () => {

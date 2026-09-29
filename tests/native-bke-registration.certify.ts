@@ -1,14 +1,20 @@
 import assert from "node:assert/strict";
-import { db } from "@/platform/host/db";
-import { hashToken } from "@/platform/host/security/crypto";
-import {
+
+process.env.AGENT_ACCOUNT_SESSION_PEPPER ??=
+  "native-registration-cert-agent-session-pepper-5c824be43f3248d08a9fd69e";
+process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY ??=
+  "native-registration-cert-agent-session-key-8f37de217ce54a8e9b60c421";
+
+const { db } = await import("@/platform/host/db");
+const { hashToken } = await import("@/platform/host/security/crypto");
+const {
   NativeCustomerRegistrationError,
   registerNativeCustomer,
   resendNativeCustomerVerification,
   verifyNativeCustomerEmail,
-} from "@/apps/web/auth/native-customer-registration";
+} = await import("@/apps/web/auth/native-customer-registration");
 
-const email = "native-registration-cert@example.com";
+const email = `native-registration-cert-${process.pid}@example.com`;
 const name = "Native Registration Cert";
 const request = new Request("https://native-cert.bke.test/native-registration", {
   method: "POST",
@@ -18,11 +24,22 @@ const request = new Request("https://native-cert.bke.test/native-registration", 
   },
 });
 
-async function createLegalDocument(
+async function resolveLegalVersion(
   documentType: "TERMS_OF_SERVICE" | "PRIVACY_POLICY",
   slug: string,
   title: string,
 ) {
+  const existing = await db.legalDocument.findUnique({
+    where: { documentType },
+    include: { currentPublishedVersion: true },
+  });
+  if (existing) {
+    assert.equal(existing.status, "ACTIVE");
+    assert.ok(existing.currentPublishedVersion);
+    assert.equal(existing.currentPublishedVersion.status, "PUBLISHED");
+    return existing.currentPublishedVersion.id;
+  }
+
   const document = await db.legalDocument.create({
     data: {
       title,
@@ -52,12 +69,12 @@ async function createLegalDocument(
   return version.id;
 }
 
-const termsVersionId = await createLegalDocument(
+const termsVersionId = await resolveLegalVersion(
   "TERMS_OF_SERVICE",
   "native-cert-terms",
   "Native Cert Terms",
 );
-const privacyVersionId = await createLegalDocument(
+const privacyVersionId = await resolveLegalVersion(
   "PRIVACY_POLICY",
   "native-cert-privacy",
   "Native Cert Privacy",
@@ -104,7 +121,7 @@ await db.verificationToken.create({
   data: {
     identifier: email,
     purpose: "VERIFY_EMAIL",
-    tokenHash: hashToken("browser-verification-cert-token"),
+    tokenHash: hashToken(`browser-verification-cert-token-${process.pid}`),
     expiresAt: new Date(Date.now() + 30 * 60_000),
   },
 });
