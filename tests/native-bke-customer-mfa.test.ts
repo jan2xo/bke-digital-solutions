@@ -123,6 +123,36 @@ describe("native BKE customer MFA authority", () => {
     );
   }, 30_000);
 
+  it("keeps customer privacy requests behind authenticated Agent-session account scope", () => {
+    const route = read("app/api/agent-sessions/privacy/requests/route.ts");
+
+    expect(route).toContain("rejectBrowserOriginForAgent(request)");
+    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+    expect(route).toContain("authenticateNativeAgentRequest(request)");
+    expect(route).toContain("PRIVACY_REQUEST_TYPES");
+    expect(route).toContain("accountId: session.accountId");
+    expect(route).not.toContain("user_id:");
+    expect(route).not.toContain("account_id: z.");
+    expect(route).not.toContain("access_token:");
+    expect(route).not.toContain("refresh_token:");
+    expect(route).not.toContain("handoff_code:");
+    expect(route).not.toContain("console.log");
+  });
+
+  it("proves selected-account privacy request persistence and visibility boundaries", () => {
+    execFileSync(
+      "npx",
+      ["tsx", "tests/agent-session-privacy-requests.certify.ts"],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: "--conditions=react-server",
+        },
+      },
+    );
+  }, 30_000);
+
   it("never returns password material and returns recovery codes only from Identity mutation results", () => {
     const helper = read("apps/web/agent-sessions/native-mfa.ts");
     const complete = read("app/api/agent-sessions/account/mfa/enroll/complete/route.ts");

@@ -130,3 +130,34 @@ export async function transitionPrivacyRequest(input: {
     return updated;
   });
 }
+
+
+export async function listPrivacyRequestsForAgentSession(input: {
+  userId: string;
+  accountId: string;
+  limit?: number;
+}) {
+  const limit = Math.max(1, Math.min(input.limit ?? 50, 100));
+  return db.privacyRequest.findMany({
+    where: {
+      userId: input.userId,
+      OR: [
+        { customerAccountId: null },
+        { customerAccountId: input.accountId },
+      ],
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    select: {
+      id: true,
+      customerAccountId: true,
+      requestType: true,
+      status: true,
+      summary: true,
+      responseSummary: true,
+      reviewedAt: true,
+      closedAt: true,
+      createdAt: true,
+    },
+  });
+}
