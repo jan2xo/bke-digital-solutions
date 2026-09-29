@@ -1,8 +1,8 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz";
-const EXPECTED_VERSION = "0.3.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.4.0/bke-identity-0.4.0.tgz";
+const EXPECTED_VERSION = "0.4.0";
 
 const [
   moduleSource,
@@ -70,6 +70,11 @@ const [
     "utf8",
   ),
 ]);
+
+const magicLoginConsumeRouteSource = await readFile(
+  new URL("../../../app/api/auth/magic/consume/route.ts", import.meta.url),
+  "utf8",
+);
 
 if (
   !moduleSource.includes("CapabilityModule") ||
@@ -171,6 +176,58 @@ if (!mfaChallengeRequestRouteSource.includes("reissueIdentityLoginMfaChallenge")
 }
 if (!mfaChallengeRouteSource.includes("verifyIdentityLoginMfaChallenge")) {
   throw new Error("LOGIN MFA completion route does not consume released Identity verification through the V2 adapter.");
+}
+
+const customerMfaGate = loginRouteSource.indexOf(
+  "if (user.administratorMfa?.enabledAt)",
+);
+const administratorEnrollmentGate = loginRouteSource.lastIndexOf(
+  'if (user.role === "ADMIN")',
+);
+if (
+  customerMfaGate < 0 ||
+  administratorEnrollmentGate < 0 ||
+  customerMfaGate > administratorEnrollmentGate
+) {
+  throw new Error(
+    "Browser login must enforce enabled MFA for CUSTOMER and ADMIN before the administrator-only enrollment fallback.",
+  );
+}
+for (const marker of [
+  'principal.role === "ADMIN"',
+  'redirectTo',
+  '"/dashboard"',
+  '"/admin"',
+]) {
+  if (!mfaChallengeRouteSource.includes(marker)) {
+    throw new Error(
+      `Browser MFA completion is missing principal-aware routing marker: ${marker}`,
+    );
+  }
+}
+
+for (const marker of [
+  "IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID",
+  "magicLogin.consume",
+  "writeIdentitySessionCookie",
+  "MFA_PASSWORD_REQUIRED",
+]) {
+  if (!magicLoginConsumeRouteSource.includes(marker)) {
+    throw new Error(
+      `Magic-login consume must use released Identity MFA authority: ${marker}`,
+    );
+  }
+}
+for (const forbidden of [
+  "db.verificationToken",
+  "hashToken(",
+  "createSession(",
+]) {
+  if (magicLoginConsumeRouteSource.includes(forbidden)) {
+    throw new Error(
+      `Magic-login consume still bypasses released Identity authority: ${forbidden}`,
+    );
+  }
 }
 
 const forbiddenStagingSpecifiers = [

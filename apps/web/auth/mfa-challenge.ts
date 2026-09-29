@@ -16,7 +16,7 @@ import {
   type IdentityLoginMfaVerificationCapability,
 } from "@bke/identity/contracts/login-mfa-verification.contract";
 import { audit } from "@/apps/web/audit";
-import { sendAdministratorLoginCode } from "@/apps/web/email";
+import { sendIdentityLoginCode } from "@/apps/web/email";
 import { getV2WebApplication } from "../runtime";
 
 export const IDENTITY_MFA_CHALLENGE_COOKIE =
@@ -55,7 +55,7 @@ export async function deliverIdentityMfaChallenge(input: {
   };
 }): Promise<boolean> {
   try {
-    await sendAdministratorLoginCode(
+    await sendIdentityLoginCode(
       input.delivery.recipientEmail,
       input.delivery.code,
       input.delivery.reference,
@@ -76,9 +76,10 @@ export async function deliverIdentityMfaChallenge(input: {
 async function deliveredLoginChallenge(
   userId: string,
   challenge: IdentityIssuedLoginMfaChallenge,
-): Promise<{ token: string; delivered: boolean; reference: string }> {
+): Promise<{ token: string; delivered: boolean; reference: string; expiresAt: Date }> {
   return {
     token: challenge.challengeToken,
+    expiresAt: challenge.expiresAt,
     delivered: await deliverIdentityMfaChallenge({
       userId,
       purpose: "LOGIN",
@@ -90,7 +91,7 @@ async function deliveredLoginChallenge(
 
 export async function issueIdentityLoginMfaChallenge(
   userId: string,
-): Promise<{ token: string; delivered: boolean; reference: string }> {
+): Promise<{ token: string; delivered: boolean; reference: string; expiresAt: Date }> {
   const application = await getV2WebApplication();
   const issuance = application.get<IdentityLoginMfaChallengeIssuanceCapability>(
     IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
@@ -105,6 +106,7 @@ export async function reissueIdentityLoginMfaChallenge(): Promise<{
   token: string;
   delivered: boolean;
   reference: string;
+  expiresAt: Date;
 }> {
   const challengeToken = await currentIdentityMfaChallengeToken();
   if (!challengeToken) throw new Error("INVALID_MFA_CHALLENGE");

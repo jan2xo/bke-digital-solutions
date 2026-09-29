@@ -6,7 +6,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const context = await currentIdentitySession();
   if (!context) redirect("/login");
   if (context.principal.role !== "ADMIN") redirect("/dashboard");
-  if (!context.administratorMfaEnabled) redirect("/security/mfa");
+  if (!context.mfaEnabled) redirect("/security/mfa");
   if (!context.session.mfaVerifiedAt) redirect("/login");
   return <div className="admin-layout"><AdminNav/><div className="admin-content">{children}</div></div>;
 }

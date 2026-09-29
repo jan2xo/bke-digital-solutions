@@ -17,8 +17,11 @@ describe("native BKE account handoff", () => {
 
   it("keeps password material out of the persisted handoff and supports account selection", () => {
     const route = read("app/api/agent-sessions/native/login/route.ts");
+    const composition = read("apps/web/agent-sessions/native-mfa.ts");
     const helper = read("apps/web/agent-sessions/native-handoff.ts");
-    expect(route).toContain('status: "account_selection_required"');
+    expect(composition).toContain('status: "account_selection_required"');
+    expect(composition).toContain("resolveNativeBkeAccounts");
+    expect(composition).toContain("issueNativeBkeAgentHandoff");
     expect(route).toContain("customer_account_id");
     expect(route).toContain("handoff_code");
     expect(helper).not.toContain("password");
