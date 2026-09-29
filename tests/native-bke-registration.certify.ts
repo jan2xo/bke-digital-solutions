@@ -8,7 +8,7 @@ import {
   verifyNativeCustomerEmail,
 } from "@/apps/web/auth/native-customer-registration";
 
-const email = "native-registration-cert@example.com";
+const email = `native-registration-cert-${process.pid}@example.com`;
 const name = "Native Registration Cert";
 const request = new Request("https://native-cert.bke.test/native-registration", {
   method: "POST",
@@ -18,11 +18,22 @@ const request = new Request("https://native-cert.bke.test/native-registration", 
   },
 });
 
-async function createLegalDocument(
+async function resolveLegalVersion(
   documentType: "TERMS_OF_SERVICE" | "PRIVACY_POLICY",
   slug: string,
   title: string,
 ) {
+  const existing = await db.legalDocument.findUnique({
+    where: { documentType },
+    include: { currentPublishedVersion: true },
+  });
+  if (existing) {
+    assert.equal(existing.status, "ACTIVE");
+    assert.ok(existing.currentPublishedVersion);
+    assert.equal(existing.currentPublishedVersion.status, "PUBLISHED");
+    return existing.currentPublishedVersion.id;
+  }
+
   const document = await db.legalDocument.create({
     data: {
       title,
@@ -52,12 +63,12 @@ async function createLegalDocument(
   return version.id;
 }
 
-const termsVersionId = await createLegalDocument(
+const termsVersionId = await resolveLegalVersion(
   "TERMS_OF_SERVICE",
   "native-cert-terms",
   "Native Cert Terms",
 );
-const privacyVersionId = await createLegalDocument(
+const privacyVersionId = await resolveLegalVersion(
   "PRIVACY_POLICY",
   "native-cert-privacy",
   "Native Cert Privacy",
@@ -104,7 +115,7 @@ await db.verificationToken.create({
   data: {
     identifier: email,
     purpose: "VERIFY_EMAIL",
-    tokenHash: hashToken("browser-verification-cert-token"),
+    tokenHash: hashToken(`browser-verification-cert-token-${process.pid}`),
     expiresAt: new Date(Date.now() + 30 * 60_000),
   },
 });
