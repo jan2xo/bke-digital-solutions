@@ -16,7 +16,7 @@ import {
   type IdentityLoginMfaVerificationCapability,
 } from "@bke/identity/contracts/login-mfa-verification.contract";
 import { audit } from "@/apps/web/audit";
-import { sendAdministratorLoginCode } from "@/apps/web/email";
+import { sendIdentityLoginCode } from "@/apps/web/email";
 import { getV2WebApplication } from "../runtime";
 
 export const IDENTITY_MFA_CHALLENGE_COOKIE =
@@ -55,7 +55,7 @@ export async function deliverIdentityMfaChallenge(input: {
   };
 }): Promise<boolean> {
   try {
-    await sendAdministratorLoginCode(
+    await sendIdentityLoginCode(
       input.delivery.recipientEmail,
       input.delivery.code,
       input.delivery.reference,
