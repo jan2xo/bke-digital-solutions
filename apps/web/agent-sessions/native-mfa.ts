@@ -5,10 +5,15 @@ import {
   type IdentityLoginMfaAuthenticationMethod,
   type IdentityLoginMfaVerificationCapability,
 } from "@bke/identity/contracts/login-mfa-verification.contract";
+import type { IdentityPrincipal } from "@bke/identity/contracts/identity.contract";
 import {
   IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID,
   type IdentitySessionIssuanceCapability,
 } from "@bke/identity/contracts/session.contract";
+import {
+  issueNativeBkeAgentHandoff,
+  resolveNativeBkeAccounts,
+} from "@/apps/web/agent-sessions/native-handoff";
 import {
   authenticateAgentAccessToken,
   revokeAgentAccountSessionsForUser,
@@ -121,4 +126,40 @@ export async function revokeNativeAgentSessionsForUser(
   await db.$transaction((tx) =>
     revokeAgentAccountSessionsForUser(tx, userId, new Date()),
   );
+}
+
+
+export async function completeNativeBkeHandoff(
+  principal: IdentityPrincipal,
+  input: Readonly<{
+    customerAccountId?: string;
+    deviceId: string;
+    deviceName?: string;
+    platform: "windows" | "macos" | "linux";
+    architecture: "x64" | "arm64" | "x86";
+  }>,
+) {
+  const runtime = getRuntimeEnvironment();
+  return db.$transaction(async (tx) => {
+    const accounts = await resolveNativeBkeAccounts(tx, principal.id);
+    if (!input.customerAccountId && accounts.length !== 1) {
+      return { status: "account_selection_required" as const, accounts };
+    }
+
+    const accountId = input.customerAccountId ?? accounts[0]?.id;
+    if (!accountId) {
+      return { status: "account_selection_required" as const, accounts };
+    }
+
+    const handoff = await issueNativeBkeAgentHandoff(tx, {
+      principal,
+      accountId,
+      deviceId: input.deviceId,
+      deviceName: input.deviceName,
+      platform: input.platform,
+      architecture: input.architecture,
+      pepper: runtime.AGENT_ACCOUNT_SESSION_PEPPER!,
+    });
+    return { status: "handoff_issued" as const, handoff };
+  }, { isolationLevel: "Serializable" });
 }
