@@ -194,6 +194,14 @@ export async function sendPasswordReset(email: string, token: string) {
   });
 }
 
+export async function sendNativeVerificationCode(email: string, code: string) {
+  await runtimeEmailProvider.send({
+    to: email,
+    subject: "Verify your BKE account",
+    text: `Your BKE account verification code is ${code}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid.`,
+  });
+}
+
 export async function sendIdentityLoginCode(email: string, code: string, reference: string) {
   await runtimeEmailProvider.send({
     to: email,

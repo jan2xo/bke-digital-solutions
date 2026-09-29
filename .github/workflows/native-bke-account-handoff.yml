@@ -68,6 +68,6 @@ jobs:
           WHERE conname = 'AgentDeviceAuthorization_authorizationKind_check';
           SQL
       - name: Certify native BKE handoff boundaries
-        run: npx vitest run tests/native-bke-account-handoff.test.ts tests/agent-session-password-change.test.ts tests/native-bke-password-reset.test.ts tests/native-bke-customer-mfa.test.ts
+        run: npx vitest run tests/native-bke-account-handoff.test.ts tests/agent-session-password-change.test.ts tests/native-bke-password-reset.test.ts tests/native-bke-customer-mfa.test.ts tests/native-bke-registration.test.ts
       - name: Typecheck host
         run: npm run typecheck
