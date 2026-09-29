@@ -410,6 +410,7 @@ type AgentAccountSessionRow = Readonly<{
   accessExpiresAt: Date;
   refreshExpiresAt: Date;
   refreshGeneration: number;
+  createdAt: Date;
   revokedAt: Date | null;
 }>;
 
@@ -420,6 +421,20 @@ type AgentRefreshTokenRow = Readonly<{
   status: "ACTIVE" | "ROTATED" | "REVOKED";
   expiresAt: Date;
 }>;
+
+async function agentSessionPredatesPasswordCredential(
+  tx: Prisma.TransactionClient,
+  session: AgentAccountSessionRow,
+): Promise<boolean> {
+  const credential = await tx.passwordCredential.findUnique({
+    where: { userId: session.userId },
+    select: { changedAt: true },
+  });
+  return Boolean(
+    credential?.changedAt &&
+    credential.changedAt > session.createdAt
+  );
+}
 
 async function revokeAgentSessionFamily(
   tx: Prisma.TransactionClient,
@@ -470,7 +485,7 @@ export async function refreshAgentAccountSession(
 
   const sessions = await tx.$queryRaw<AgentAccountSessionRow[]>`
     SELECT "id", "deviceAuthorizationId", "userId", "accountId", "deviceId",
-           "accessExpiresAt", "refreshExpiresAt", "refreshGeneration", "revokedAt"
+           "accessExpiresAt", "refreshExpiresAt", "refreshGeneration", "createdAt", "revokedAt"
       FROM "AgentAccountSession"
      WHERE "id" = ${token.sessionId}
      FOR UPDATE
@@ -490,6 +505,11 @@ export async function refreshAgentAccountSession(
     session.refreshExpiresAt <= now ||
     session.revokedAt
   ) {
+    await revokeAgentSessionFamily(tx, session.id, now);
+    return { status: "invalid_grant" };
+  }
+
+  if (await agentSessionPredatesPasswordCredential(tx, session)) {
     await revokeAgentSessionFamily(tx, session.id, now);
     return { status: "invalid_grant" };
   }
@@ -586,7 +606,7 @@ export async function authenticateAgentAccessToken(
   const hash = hashAgentAccessToken(input.accessToken, input.pepper);
   const sessions = await tx.$queryRaw<AgentAccountSessionRow[]>`
     SELECT "id", "deviceAuthorizationId", "userId", "accountId", "deviceId",
-           "accessExpiresAt", "refreshExpiresAt", "refreshGeneration", "revokedAt"
+           "accessExpiresAt", "refreshExpiresAt", "refreshGeneration", "createdAt", "revokedAt"
       FROM "AgentAccountSession"
      WHERE "accessTokenHash" = ${hash}
      FOR UPDATE
@@ -594,6 +614,11 @@ export async function authenticateAgentAccessToken(
   const session = sessions[0];
   const now = new Date();
   if (!session || session.revokedAt || session.accessExpiresAt <= now) {
+    return { status: "invalid_token" };
+  }
+
+  if (await agentSessionPredatesPasswordCredential(tx, session)) {
+    await revokeAgentSessionFamily(tx, session.id, now);
     return { status: "invalid_token" };
   }
 
