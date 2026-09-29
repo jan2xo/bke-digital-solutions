@@ -58,82 +58,64 @@ const outsider = await db.user.create({
 });
 const outsiderAccountId = outsider.ownedAccounts[0]!.id;
 
-try {
-  const selected = await createPrivacyRequest({
-    userId: owner.id,
-    accountId: selectedAccountId,
-    requestType: "ACCESS",
-    summary: "Please provide the personal data held for this selected account.",
-    request,
-  });
-  const userLevel = await createPrivacyRequest({
-    userId: owner.id,
-    accountId: null,
-    requestType: "CORRECTION",
-    summary: "Please review the personal identity data associated with my BKE user.",
-    request,
-  });
-  const other = await createPrivacyRequest({
-    userId: owner.id,
-    accountId: otherAccount.id,
-    requestType: "EXPORT",
-    summary: "Please export the data associated with my other organization account.",
-    request,
-  });
-  const outsiderRequest = await createPrivacyRequest({
-    userId: outsider.id,
-    accountId: outsiderAccountId,
-    requestType: "DELETION",
-    summary: "Please review deletion options for this unrelated certification account.",
-    request,
-  });
+const selected = await createPrivacyRequest({
+  userId: owner.id,
+  accountId: selectedAccountId,
+  requestType: "ACCESS",
+  summary: "Please provide the personal data held for this selected account.",
+  request,
+});
+const userLevel = await createPrivacyRequest({
+  userId: owner.id,
+  accountId: null,
+  requestType: "CORRECTION",
+  summary: "Please review the personal identity data associated with my BKE user.",
+  request,
+});
+const other = await createPrivacyRequest({
+  userId: owner.id,
+  accountId: otherAccount.id,
+  requestType: "EXPORT",
+  summary: "Please export the data associated with my other organization account.",
+  request,
+});
+const outsiderRequest = await createPrivacyRequest({
+  userId: outsider.id,
+  accountId: outsiderAccountId,
+  requestType: "DELETION",
+  summary: "Please review deletion options for this unrelated certification account.",
+  request,
+});
 
-  const visible = await listPrivacyRequestsForAgentSession({
-    userId: owner.id,
-    accountId: selectedAccountId,
-    limit: 50,
-  });
-  const visibleIds = new Set(visible.map((item) => item.id));
+const visible = await listPrivacyRequestsForAgentSession({
+  userId: owner.id,
+  accountId: selectedAccountId,
+  limit: 50,
+});
+const visibleIds = new Set(visible.map((item) => item.id));
 
-  assert.equal(visibleIds.has(selected.id), true);
-  assert.equal(visibleIds.has(userLevel.id), true);
-  assert.equal(visibleIds.has(other.id), false);
-  assert.equal(visibleIds.has(outsiderRequest.id), false);
-  assert.equal(visible.every((item) => item.status === "OPEN"), true);
+assert.equal(visibleIds.has(selected.id), true);
+assert.equal(visibleIds.has(userLevel.id), true);
+assert.equal(visibleIds.has(other.id), false);
+assert.equal(visibleIds.has(outsiderRequest.id), false);
+assert.equal(visible.every((item) => item.status === "OPEN"), true);
 
-  const persisted = await db.privacyRequest.findUniqueOrThrow({
-    where: { id: selected.id },
-  });
-  assert.equal(persisted.userId, owner.id);
-  assert.equal(persisted.customerAccountId, selectedAccountId);
-  assert.equal(persisted.requestType, "ACCESS");
-  assert.equal(persisted.status, "OPEN");
+const persisted = await db.privacyRequest.findUniqueOrThrow({
+  where: { id: selected.id },
+});
+assert.equal(persisted.userId, owner.id);
+assert.equal(persisted.customerAccountId, selectedAccountId);
+assert.equal(persisted.requestType, "ACCESS");
+assert.equal(persisted.status, "OPEN");
 
-  const event = await db.privacyRequestEvent.findFirstOrThrow({
-    where: { privacyRequestId: selected.id },
-  });
-  assert.equal(event.eventType, "CREATED");
-  assert.equal(event.toStatus, "OPEN");
+const event = await db.privacyRequestEvent.findFirstOrThrow({
+  where: { privacyRequestId: selected.id },
+});
+assert.equal(event.eventType, "CREATED");
+assert.equal(event.toStatus, "OPEN");
 
-  console.log("Agent-session privacy request certification: PASS");
-} finally {
-  const userIds = [owner.id, outsider.id];
-  const accountIds = [selectedAccountId, otherAccount.id, outsiderAccountId];
-  const privacyRows = await db.privacyRequest.findMany({
-    where: { userId: { in: userIds } },
-    select: { id: true },
-  });
-  const privacyIds = privacyRows.map((item) => item.id);
-  await db.privacyRequestEvent.deleteMany({
-    where: { privacyRequestId: { in: privacyIds } },
-  });
-  await db.privacyRequest.deleteMany({
-    where: { id: { in: privacyIds } },
-  });
-  await db.customerAccount.deleteMany({
-    where: { id: { in: accountIds } },
-  });
-  await db.user.deleteMany({
-    where: { id: { in: userIds } },
-  });
-}
+console.log("Agent-session privacy request certification: PASS");
+
+// PrivacyRequestEvent is intentionally immutable. This certification runs only
+// against disposable CI databases, so its uniquely named audit rows remain
+// until the database container is destroyed instead of bypassing immutability.
