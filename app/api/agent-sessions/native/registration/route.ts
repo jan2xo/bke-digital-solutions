@@ -5,6 +5,10 @@ import {
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
 import { registrationLegalDocuments } from "@/apps/web/legal/service";
+import {
+  applyLegalVariables,
+  legalVariables,
+} from "@/apps/web/legal/render";
 import { apiError } from "@/apps/web/http/api-error";
 import { getRuntimeEnvironment } from "@/platform/host/env";
 
@@ -42,6 +46,7 @@ export async function GET(request: Request) {
       return response({ error: "REGISTRATION_UNAVAILABLE" }, 503);
     }
 
+    const variables = legalVariables();
     return response({
       status: "ready",
       legal_documents: documents.map((document) => ({
@@ -49,6 +54,13 @@ export async function GET(request: Request) {
         title: document.title,
         slug: document.slug,
         version_id: document.currentPublishedVersionId,
+        version_number: document.currentPublishedVersion!.versionNumber,
+        effective_at:
+          document.currentPublishedVersion!.effectiveAt?.toISOString() ?? null,
+        content_markdown: applyLegalVariables(
+          document.currentPublishedVersion!.markdownContent,
+          variables,
+        ),
       })),
     });
   } catch (error) {

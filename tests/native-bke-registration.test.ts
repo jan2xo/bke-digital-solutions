@@ -26,6 +26,8 @@ describe("native BKE customer registration", () => {
 
     expect(preflight).toContain("registrationLegalDocuments");
     expect(preflight).toContain("currentPublishedVersionId");
+    expect(preflight).toContain("content_markdown");
+    expect(preflight).toContain("applyLegalVariables");
     expect(register).toContain("legal_version_ids");
     expect(authority).toContain("recordLegalAcceptances");
     expect(authority).toContain('"REGISTRATION"');
@@ -52,6 +54,14 @@ describe("native BKE customer registration", () => {
     expect(authority).toContain('"VERIFY_EMAIL_NATIVE"');
     expect(authority).toContain("emailVerified: now");
     expect(authority).toContain("usedAt: null");
+  });
+
+  it("keeps browser and native email-verification purposes isolated", () => {
+    const browserVerify = read("app/api/auth/verify/route.ts");
+    const nativeAuthority = read("apps/web/auth/native-customer-registration.ts");
+
+    expect(browserVerify).toContain('row.purpose !== "VERIFY_EMAIL"');
+    expect(nativeAuthority).toContain('"VERIFY_EMAIL_NATIVE"');
   });
 
   it("keeps resend enumeration-resistant", () => {

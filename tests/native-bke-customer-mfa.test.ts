@@ -85,11 +85,16 @@ describe("native BKE customer MFA authority", () => {
 
     expect(preflight).toContain("registrationLegalDocuments");
     expect(preflight).toContain("currentPublishedVersionId");
+    expect(preflight).toContain("content_markdown");
+    expect(preflight).toContain("applyLegalVariables");
     expect(register).toContain("legal_version_ids");
     expect(authority).toContain("recordLegalAcceptances");
     expect(authority).toContain('"REGISTRATION"');
     expect(authority).toContain('"VERIFY_EMAIL_NATIVE"');
     expect(authority).toContain("hashToken(code)");
+    expect(verify).toContain("verifyNativeCustomerEmail");
+    const browserVerify = read("app/api/auth/verify/route.ts");
+    expect(browserVerify).toContain('row.purpose !== "VERIFY_EMAIL"');
     expect(register).not.toContain("verification_code");
     expect(resend).not.toContain("verification_code");
     expect(resend).toContain('status: "accepted"');
