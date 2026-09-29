@@ -34,8 +34,9 @@ describe("native BKE password reset request", () => {
     expect(authority).toContain("createdAt: Date");
     expect(authority).toContain("passwordCredential.findUnique");
     expect(authority).toContain("credential.changedAt > session.createdAt");
+    expect(authority).toContain("credential.changedAt > session.createdAt");
     expect(
-      authority.match(/credential\.changedAt > session\.createdAt/g)?.length ?? 0,
+      authority.match(/agentSessionPredatesPasswordCredential\(tx, session\)/g)?.length ?? 0,
     ).toBeGreaterThanOrEqual(2);
     expect(authority).toContain("await revokeAgentSessionFamily(tx, session.id, now)");
   });
