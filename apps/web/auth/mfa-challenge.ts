@@ -76,9 +76,10 @@ export async function deliverIdentityMfaChallenge(input: {
 async function deliveredLoginChallenge(
   userId: string,
   challenge: IdentityIssuedLoginMfaChallenge,
-): Promise<{ token: string; delivered: boolean; reference: string }> {
+): Promise<{ token: string; delivered: boolean; reference: string; expiresAt: Date }> {
   return {
     token: challenge.challengeToken,
+    expiresAt: challenge.expiresAt,
     delivered: await deliverIdentityMfaChallenge({
       userId,
       purpose: "LOGIN",
@@ -90,7 +91,7 @@ async function deliveredLoginChallenge(
 
 export async function issueIdentityLoginMfaChallenge(
   userId: string,
-): Promise<{ token: string; delivered: boolean; reference: string }> {
+): Promise<{ token: string; delivered: boolean; reference: string; expiresAt: Date }> {
   const application = await getV2WebApplication();
   const issuance = application.get<IdentityLoginMfaChallengeIssuanceCapability>(
     IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
@@ -105,6 +106,7 @@ export async function reissueIdentityLoginMfaChallenge(): Promise<{
   token: string;
   delivered: boolean;
   reference: string;
+  expiresAt: Date;
 }> {
   const challengeToken = await currentIdentityMfaChallengeToken();
   if (!challengeToken) throw new Error("INVALID_MFA_CHALLENGE");
