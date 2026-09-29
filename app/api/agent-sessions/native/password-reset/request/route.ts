@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { z } from "zod";
 import {
   IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
@@ -61,12 +61,15 @@ export async function POST(request: Request) {
 
     // Enumeration resistance is part of the native contract. Capability or
     // delivery failure must not tell the caller whether the address exists.
-    if (result.status === "ACCEPTED" && result.delivery) {
+    const delivery =
+      result.status === "ACCEPTED" ? result.delivery : null;
+    after(async () => {
+      if (!delivery) return;
       await sendPasswordReset(
-        result.delivery.recipientEmail,
-        result.delivery.token
+        delivery.recipientEmail,
+        delivery.token
       ).catch(() => undefined);
-    }
+    });
 
     return accepted();
   } catch (error) {
