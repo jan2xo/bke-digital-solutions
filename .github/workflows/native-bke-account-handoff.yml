@@ -41,6 +41,13 @@ jobs:
       DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_native_auth
       DIRECT_DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_native_auth
       NODE_ENV: test
+      APP_URL: https://native-cert.bke.test
+      SESSION_SECRET: native-registration-cert-session-secret-0000000001
+      LICENSE_PEPPER: native-registration-cert-license-pepper-0000000001
+      CRON_SECRET: native-registration-cert-cron-secret-000000000001
+      S3_BUCKET: bke-native-registration-cert
+      EMAIL_FROM: cert@bke.test
+      AGENT_ACCOUNT_SESSION_ENABLED: "true"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -68,6 +75,10 @@ jobs:
           WHERE conname = 'AgentDeviceAuthorization_authorizationKind_check';
           SQL
       - name: Certify native BKE handoff boundaries
-        run: npx vitest run tests/native-bke-account-handoff.test.ts tests/agent-session-password-change.test.ts tests/native-bke-password-reset.test.ts tests/native-bke-customer-mfa.test.ts
+        run: npx vitest run tests/native-bke-account-handoff.test.ts tests/agent-session-password-change.test.ts tests/native-bke-password-reset.test.ts tests/native-bke-customer-mfa.test.ts tests/native-bke-registration.test.ts
+      - name: Certify native customer registration state transitions
+        env:
+          NODE_OPTIONS: --conditions=react-server
+        run: npx tsx tests/native-bke-registration.certify.ts
       - name: Typecheck host
         run: npm run typecheck

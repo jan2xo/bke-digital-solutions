@@ -147,7 +147,7 @@ const productionLegalConstantConsumers = await Promise.all([
   "../../../app/api/admin/legal/route.ts",
   "../../../app/api/admin/supply-chain/route.ts",
   "../../../app/api/auth/register/route.ts",
-  "../../../app/dashboard/accounts/[id]/page.tsx",
+  "../../../app/dashboard/accounts/[accountId]/page.tsx",
 ].map((path) => readFile(new URL(path, import.meta.url), "utf8")));
 const productionLegalConstantSource = productionLegalConstantConsumers.join("\n");
 if (productionLegalConstantSource.includes('"@/lib/legal/constants"')) throw new Error("Production host still reaches through the legacy Legal constants module.");

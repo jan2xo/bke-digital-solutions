@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
@@ -67,6 +68,60 @@ describe("native BKE customer MFA authority", () => {
     expect(sessionAuthority).toContain("enabledAt");
     expect(sessionAuthority).toContain("disabledAt");
   });
+
+  it("keeps native registration protocol-bound, legal-version-bound, and secret-safe", () => {
+    const preflight = read("app/api/agent-sessions/native/registration/route.ts");
+    const register = read("app/api/agent-sessions/native/register/route.ts");
+    const verify = read("app/api/agent-sessions/native/verify-email/route.ts");
+    const resend = read("app/api/agent-sessions/native/verification/resend/route.ts");
+    const authority = read("apps/web/auth/native-customer-registration.ts");
+
+    for (const route of [preflight, register, verify, resend]) {
+      expect(route).toContain("rejectBrowserOriginForAgent(request)");
+      expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+      expect(route).not.toContain("createSession");
+      expect(route).not.toContain("console.log");
+    }
+
+    expect(preflight).toContain("registrationLegalDocuments");
+    expect(preflight).toContain("currentPublishedVersionId");
+    expect(preflight).toContain("content_markdown");
+    expect(preflight).toContain("applyLegalVariables");
+    expect(register).toContain("legal_version_ids");
+    expect(authority).toContain("recordLegalAcceptances");
+    expect(authority).toContain('"REGISTRATION"');
+    expect(authority).toContain('"VERIFY_EMAIL_NATIVE"');
+    expect(authority).toContain("hashToken(code)");
+    expect(verify).toContain("verifyNativeCustomerEmail");
+    const browserVerify = read("app/api/auth/verify/route.ts");
+    expect(browserVerify).toContain('row.purpose !== "VERIFY_EMAIL"');
+    expect(register).not.toContain("verification_code");
+    expect(resend).not.toContain("verification_code");
+    expect(resend).toContain('status: "accepted"');
+  });
+
+  it("proves native registration, token rotation, legal acceptance, and verification against the exact-head database", () => {
+    execFileSync(
+      "npx",
+      ["tsx", "tests/native-bke-registration.certify.ts"],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: "--conditions=react-server",
+          APP_URL: "https://native-cert.bke.test",
+          SESSION_SECRET:
+            "native-registration-cert-session-secret-0000000001",
+          LICENSE_PEPPER:
+            "native-registration-cert-license-pepper-0000000001",
+          CRON_SECRET:
+            "native-registration-cert-cron-secret-000000000001",
+          S3_BUCKET: "bke-native-registration-cert",
+          EMAIL_FROM: "cert@bke.test",
+        },
+      },
+    );
+  }, 30_000);
 
   it("never returns password material and returns recovery codes only from Identity mutation results", () => {
     const helper = read("apps/web/agent-sessions/native-mfa.ts");
