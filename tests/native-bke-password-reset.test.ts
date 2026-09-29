@@ -12,6 +12,7 @@ describe("native BKE password reset request", () => {
     expect(route).toContain("IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID");
     expect(route).toContain("passwordReset.request");
     expect(route).toContain("sendPasswordReset");
+    expect(route).toContain("after(async () =>");
     expect(route).toContain('status: "accepted"');
     expect(route).not.toContain("assertSameOrigin");
     expect(route).not.toContain("createSession");
@@ -21,6 +22,7 @@ describe("native BKE password reset request", () => {
     const route = read("app/api/agent-sessions/native/password-reset/request/route.ts");
 
     expect(route).toContain("result.delivery");
+    expect(route).toContain("const delivery =");
     expect(route).toContain(".catch(() => undefined)");
     expect(route).not.toContain("email_sent");
     expect(route).not.toContain("recipient_email");
@@ -33,7 +35,6 @@ describe("native BKE password reset request", () => {
 
     expect(authority).toContain("createdAt: Date");
     expect(authority).toContain("passwordCredential.findUnique");
-    expect(authority).toContain("credential.changedAt > session.createdAt");
     expect(authority).toContain("credential.changedAt > session.createdAt");
     expect(
       authority.match(/agentSessionPredatesPasswordCredential\(tx, session\)/g)?.length ?? 0,
