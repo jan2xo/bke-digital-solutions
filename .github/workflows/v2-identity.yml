@@ -57,11 +57,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-identity-0.3.0.tgz
+          artifact=/tmp/bke-identity-0.4.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.3.0/bke-identity-0.3.0.tgz
-          echo "5d8820122de15e0b500f6e3cccfdeeec6b63afbb361daa1dee3fc217e1c3f139  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.4.0/bke-identity-0.4.0.tgz
+          echo "4b5ead5c9aee8fe1e1b67876711a423c033a8ad81d6a9b0a54b42548d59222ad  $artifact" | sha256sum -c -
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Identity standalone consumer adoption
