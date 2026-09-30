@@ -13,6 +13,7 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   expirePendingOrganizationInvitations: vi.fn(),
   updateOrganizationMemberRole: vi.fn(),
   removeOrganizationMember: vi.fn(),
+  leaveOrganization: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
@@ -51,6 +52,8 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
     agentOrganizationMocks.updateOrganizationMemberRole,
   removeOrganizationMember:
     agentOrganizationMocks.removeOrganizationMember,
+  leaveOrganization:
+    agentOrganizationMocks.leaveOrganization,
 }));
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: agentOrganizationMocks.rateLimit,
@@ -1117,5 +1120,167 @@ describe("native Agent organization member management", () => {
     expect(await response.json()).toEqual({
       error: "LAST_OWNER_REQUIRED",
     });
+  });
+});
+
+
+describe("native Agent organization self-leave", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "user-cert",
+      accountId: "selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.leaveOrganization.mockResolvedValue({
+      accountId: "selected-account-cert",
+      userId: "user-cert",
+      role: "MEMBER",
+      createdAt: new Date("2026-09-30T00:00:00.000Z"),
+    });
+  });
+
+  function leaveRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/leave",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("projects self-leave as Digital Solutions authority rather than Launcher role inference", () => {
+    const overview = read(
+      "apps/web/accounts/agent-organization-overview.ts",
+    );
+    const route = read(
+      "app/api/agent-sessions/account/organization/route.ts",
+    );
+    expect(overview).toContain(
+      'const leaveOrganization = access.effectiveRole !== "OWNER";',
+    );
+    expect(route).toContain(
+      "leave_organization: overview.permissions.leaveOrganization",
+    );
+  });
+
+  it("rejects browser-origin leave before Agent authentication", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/leave/route"
+    );
+    const response = await POST(leaveRequest({}, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("binds self-leave to the authenticated principal and selected account", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/leave/route"
+    );
+    const response = await POST(leaveRequest({}));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.leaveOrganization,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      accountId: "selected-account-cert",
+    });
+    expect(await response.json()).toEqual({
+      status: "left",
+      reauthentication_required: true,
+    });
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+  });
+
+  it("rejects caller-selected account or member identifiers", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/leave/route"
+    );
+
+    for (const body of [
+      { account_id: "caller-selected-account" },
+      { user_id: "caller-selected-user" },
+      { membership_id: "caller-selected-membership" },
+      { owner_id: "caller-selected-owner" },
+    ]) {
+      const response = await POST(leaveRequest(body));
+      expect(response.status).toBe(400);
+      expect(await response.json()).toEqual({
+        error: "INVALID_INPUT",
+      });
+    }
+
+    expect(
+      agentOrganizationMocks.leaveOrganization,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("preserves Accounts owner and missing-membership protections", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/leave/route"
+    );
+
+    agentOrganizationMocks.leaveOrganization.mockRejectedValueOnce(
+      new Error("OWNER_CANNOT_LEAVE"),
+    );
+    const owner = await POST(leaveRequest({}));
+    expect(owner.status).toBe(409);
+    expect(await owner.json()).toEqual({
+      error: "OWNER_CANNOT_LEAVE",
+    });
+
+    agentOrganizationMocks.leaveOrganization.mockRejectedValueOnce(
+      new Error("MEMBER_NOT_FOUND"),
+    );
+    const missing = await POST(leaveRequest({}));
+    expect(missing.status).toBe(404);
+    expect(await missing.json()).toEqual({
+      error: "MEMBER_NOT_FOUND",
+    });
+  });
+
+  it("rate limits self-leave without invoking Accounts authority", async () => {
+    agentOrganizationMocks.rateLimit.mockResolvedValueOnce({
+      allowed: false,
+    });
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/leave/route"
+    );
+    const response = await POST(leaveRequest({}));
+
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({
+      error: "RATE_LIMITED",
+    });
+    expect(
+      agentOrganizationMocks.leaveOrganization,
+    ).not.toHaveBeenCalled();
   });
 });
