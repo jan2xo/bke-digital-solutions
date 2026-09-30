@@ -8,6 +8,7 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   createOrganizationAccount: vi.fn(),
   updateOrganizationProfile: vi.fn(),
   inviteOrganizationMember: vi.fn(),
+  acceptOrganizationInvitation: vi.fn(),
   resendOrganizationInvitation: vi.fn(),
   revokeOrganizationInvitation: vi.fn(),
   expirePendingOrganizationInvitations: vi.fn(),
@@ -43,6 +44,8 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
     agentOrganizationMocks.updateOrganizationProfile,
   inviteOrganizationMember:
     agentOrganizationMocks.inviteOrganizationMember,
+  acceptOrganizationInvitation:
+    agentOrganizationMocks.acceptOrganizationInvitation,
   resendOrganizationInvitation:
     agentOrganizationMocks.resendOrganizationInvitation,
   revokeOrganizationInvitation:
@@ -580,6 +583,247 @@ describe("native Agent organization invitation issuance", () => {
     });
     expect(
       agentOrganizationMocks.inviteOrganizationMember,
+    ).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("native Agent organization invitation acceptance", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "recipient-user-cert",
+      accountId: "current-selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.db.user.findUnique.mockResolvedValue({
+      email: "recipient@example.test",
+    });
+    agentOrganizationMocks.expirePendingOrganizationInvitations.mockResolvedValue(
+      undefined,
+    );
+    agentOrganizationMocks.acceptOrganizationInvitation.mockResolvedValue({
+      accountId: "invited-organization-id-must-not-leak",
+      userId: "recipient-user-cert",
+      role: "LICENSE_MANAGER",
+      createdAt: new Date("2026-09-30T00:00:00.000Z"),
+    });
+  });
+
+  function acceptRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/invitations/accept",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("rejects browser-origin acceptance before Agent authentication", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/accept/route"
+    );
+    const response = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("binds acceptance to the authenticated identity and keeps the selected account out of destination authority", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/accept/route"
+    );
+    const response = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }));
+
+    expect(response.status).toBe(201);
+    expect(
+      agentOrganizationMocks.db.user.findUnique,
+    ).toHaveBeenCalledWith({
+      where: { id: "recipient-user-cert" },
+      select: { email: true },
+    });
+    expect(
+      agentOrganizationMocks.expirePendingOrganizationInvitations,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      agentOrganizationMocks.acceptOrganizationInvitation,
+    ).toHaveBeenCalledWith({
+      userId: "recipient-user-cert",
+      email: "recipient@example.test",
+      token: "organization-invitation-code-cert-0123456789",
+    });
+
+    const payload = await response.json();
+    expect(payload).toEqual({
+      status: "accepted",
+      role: "LICENSE_MANAGER",
+      switch_required: true,
+    });
+    const wire = JSON.stringify(payload);
+    expect(wire).not.toContain("current-selected-account-cert");
+    expect(wire).not.toContain(
+      "invited-organization-id-must-not-leak",
+    );
+    expect(wire).not.toContain("recipient-user-cert");
+    expect(wire).not.toContain("recipient@example.test");
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+  });
+
+  it("accepts only the one-time invitation code from the caller", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/accept/route"
+    );
+
+    for (const body of [
+      {
+        invitation_code:
+          "organization-invitation-code-cert-0123456789",
+        account_id: "caller-selected-account",
+      },
+      {
+        invitation_code:
+          "organization-invitation-code-cert-0123456789",
+        user_id: "caller-selected-user",
+      },
+      {
+        invitation_code:
+          "organization-invitation-code-cert-0123456789",
+        email: "attacker@example.test",
+      },
+      {
+        invitation_code:
+          "organization-invitation-code-cert-0123456789",
+        role: "OWNER",
+      },
+      { invitation_code: "too-short" },
+    ]) {
+      const response = await POST(acceptRequest(body));
+      expect(response.status).toBe(400);
+      expect(await response.json()).toEqual({
+        error: "INVALID_INPUT",
+      });
+    }
+
+    expect(
+      agentOrganizationMocks.acceptOrganizationInvitation,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("fails closed when the authenticated principal no longer exists", async () => {
+    agentOrganizationMocks.db.user.findUnique.mockResolvedValueOnce(
+      null,
+    );
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/accept/route"
+    );
+    const response = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }));
+
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({
+      error: "INVALID_TOKEN",
+    });
+    expect(
+      agentOrganizationMocks.acceptOrganizationInvitation,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("preserves Accounts invitation rejection semantics", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/accept/route"
+    );
+
+    agentOrganizationMocks.acceptOrganizationInvitation.mockRejectedValueOnce(
+      new Error("INVITATION_EMAIL_MISMATCH"),
+    );
+    const mismatch = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }));
+    expect(mismatch.status).toBe(403);
+    expect(await mismatch.json()).toEqual({
+      error: "INVITATION_EMAIL_MISMATCH",
+    });
+
+    agentOrganizationMocks.acceptOrganizationInvitation.mockRejectedValueOnce(
+      new Error("INVITATION_EXPIRED"),
+    );
+    const expired = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }));
+    expect(expired.status).toBe(410);
+    expect(await expired.json()).toEqual({
+      error: "INVITATION_EXPIRED",
+    });
+
+    agentOrganizationMocks.acceptOrganizationInvitation.mockRejectedValueOnce(
+      new Error("SUSPENDED_ACCOUNT"),
+    );
+    const suspended = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }));
+    expect(suspended.status).toBe(409);
+    expect(await suspended.json()).toEqual({
+      error: "SUSPENDED_ACCOUNT",
+    });
+  });
+
+  it("rate limits invitation acceptance without consuming the code", async () => {
+    agentOrganizationMocks.rateLimit.mockResolvedValueOnce({
+      allowed: false,
+    });
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/accept/route"
+    );
+    const response = await POST(acceptRequest({
+      invitation_code:
+        "organization-invitation-code-cert-0123456789",
+    }));
+
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({
+      error: "RATE_LIMITED",
+    });
+    expect(
+      agentOrganizationMocks.expirePendingOrganizationInvitations,
+    ).not.toHaveBeenCalled();
+    expect(
+      agentOrganizationMocks.acceptOrganizationInvitation,
     ).not.toHaveBeenCalled();
   });
 });
