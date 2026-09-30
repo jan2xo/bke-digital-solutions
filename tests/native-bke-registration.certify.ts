@@ -172,3 +172,4 @@ await assert.rejects(
 );
 
 console.log("Native customer registration certification: PASS");
+await import("./agent-session-account-purchases.certify");

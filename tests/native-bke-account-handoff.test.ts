@@ -16,6 +16,7 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   removeOrganizationMember: vi.fn(),
   transferOrganizationOwnership: vi.fn(),
   leaveOrganization: vi.fn(),
+  getAgentAccountPurchasesOverview: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
@@ -66,6 +67,10 @@ vi.mock("@/apps/web/http/rate-limit", () => ({
 }));
 vi.mock("@/apps/web/runtime", () => ({
   getV2WebApplication: agentOrganizationMocks.getV2WebApplication,
+}));
+vi.mock("@/apps/web/accounts/agent-account-purchases-overview", () => ({
+  getAgentAccountPurchasesOverview:
+    agentOrganizationMocks.getAgentAccountPurchasesOverview,
 }));
 vi.mock("@/platform/host/db", () => ({
   db: agentOrganizationMocks.db,
@@ -1803,5 +1808,175 @@ describe("native Agent organization ownership transfer", () => {
     expect(
       agentOrganizationMocks.transferOrganizationOwnership,
     ).not.toHaveBeenCalled();
+  });
+});
+
+describe("native Agent account purchases overview", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "principal-purchases-cert",
+      accountId: "selected-purchases-account-cert",
+      sessionId: "agent-purchases-session-cert",
+      deviceId: "agent-purchases-device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.getAgentAccountPurchasesOverview.mockResolvedValue({
+      status: "ready",
+      account: {
+        type: "ORGANIZATION",
+        displayName: "Certification Organization",
+        lifecycleState: "ACTIVE",
+        role: "OWNER",
+      },
+      permissions: {
+        viewOrders: true,
+        viewSubscriptions: true,
+        viewAllLicenses: true,
+      },
+      licenses: [{
+        productName: "Render Dock",
+        editionName: "Pro",
+        planType: "ANNUAL",
+        status: "ACTIVE",
+        keyLastFour: "ABCD",
+        expiresAt: new Date("2027-09-30T00:00:00.000Z"),
+        maxDevices: 4,
+        activeDevices: 1,
+      }],
+      subscriptions: [{
+        productName: "Render Dock",
+        editionName: "Pro",
+        planType: "ANNUAL",
+        status: "ACTIVE",
+        seats: 2,
+        currentPeriodEnd: new Date("2027-09-30T00:00:00.000Z"),
+      }],
+      orders: [{
+        number: "ORD-CERT-001",
+        status: "PAID",
+        totalMinor: 30000000,
+        currency: "PHP",
+        createdAt: new Date("2026-09-30T00:00:00.000Z"),
+        invoiceAvailable: true,
+        items: [{
+          productName: "Render Dock",
+          editionName: "Pro",
+          planName: "Annual",
+        }],
+      }],
+    });
+  });
+
+  function purchasesRequest(
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/purchases",
+      {
+        method: "GET",
+        headers: {
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+      },
+    );
+  }
+
+  it("rejects browser-origin purchases reads before Agent authentication", async () => {
+    const { GET } = await import(
+      "../app/api/agent-sessions/account/purchases/route"
+    );
+    const response = await GET(purchasesRequest({
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+  });
+
+  it("binds purchases history to the authenticated principal and selected account without leaking authority identifiers", async () => {
+    const { GET } = await import(
+      "../app/api/agent-sessions/account/purchases/route"
+    );
+    const response = await GET(purchasesRequest());
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.getAgentAccountPurchasesOverview,
+    ).toHaveBeenCalledWith({
+      principalId: "principal-purchases-cert",
+      accountId: "selected-purchases-account-cert",
+    });
+
+    const payload = await response.json();
+    expect(payload.status).toBe("ready");
+    expect(payload.licenses).toHaveLength(1);
+    expect(payload.subscriptions).toHaveLength(1);
+    expect(payload.orders).toHaveLength(1);
+
+    const wire = JSON.stringify(payload).toLowerCase();
+    for (const forbidden of [
+      "selected-purchases-account-cert",
+      "principal-purchases-cert",
+      "agent-purchases-session-cert",
+      "agent-purchases-device-cert",
+      "access_token",
+      "refresh_token",
+      "checkout_url",
+      "payment",
+      "provider",
+      "license_id",
+      "order_id",
+      "subscription_id",
+      "invoice_id",
+      "device_id",
+      "license_key",
+    ]) {
+      expect(wire).not.toContain(forbidden);
+    }
+  });
+
+  it("preserves purchases authorization denial, rate limiting, and fail-closed unavailable state", async () => {
+    const { GET } = await import(
+      "../app/api/agent-sessions/account/purchases/route"
+    );
+
+    agentOrganizationMocks.getAgentAccountPurchasesOverview.mockResolvedValueOnce({
+      status: "forbidden",
+    });
+    const forbidden = await GET(purchasesRequest());
+    expect(forbidden.status).toBe(403);
+    expect(await forbidden.json()).toEqual({
+      error: "ACCOUNT_FORBIDDEN",
+    });
+
+    agentOrganizationMocks.rateLimit.mockResolvedValueOnce({
+      allowed: false,
+    });
+    const limited = await GET(purchasesRequest());
+    expect(limited.status).toBe(429);
+    expect(await limited.json()).toEqual({
+      error: "RATE_LIMITED",
+    });
+
+    agentOrganizationMocks.getAgentAccountPurchasesOverview.mockResolvedValueOnce({
+      status: "failed",
+    });
+    const unavailable = await GET(purchasesRequest());
+    expect(unavailable.status).toBe(503);
+    expect(await unavailable.json()).toEqual({
+      error: "ACCOUNT_PURCHASES_UNAVAILABLE",
+    });
   });
 });
