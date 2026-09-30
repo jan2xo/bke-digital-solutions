@@ -19,6 +19,7 @@ export type AgentOrganizationOverview =
       readonly permissions: {
         readonly manageMembers: boolean;
         readonly transferOwnership: boolean;
+        readonly closeOrganization: boolean;
         readonly leaveOrganization: boolean;
         readonly viewBilling: boolean;
         readonly viewLicenses: boolean;
@@ -79,6 +80,10 @@ export async function getAgentOrganizationOverview(input: {
   const manageMembers = roleHasAccountsCapability(
     access.effectiveRole,
     "MANAGE_MEMBERS",
+  );
+  const closeOrganization = roleHasAccountsCapability(
+    access.effectiveRole,
+    "CLOSE_ACCOUNT",
   );
   const leaveOrganization = access.effectiveRole !== "OWNER";
   const viewBilling = roleHasAccountsCapability(
@@ -166,6 +171,7 @@ export async function getAgentOrganizationOverview(input: {
       transferOwnership:
         manageMembers &&
         account.lifecycleState === "ACTIVE",
+      closeOrganization,
       leaveOrganization,
       viewBilling,
       viewLicenses,
