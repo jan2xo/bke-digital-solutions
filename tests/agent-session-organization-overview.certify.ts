@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { db } from "@/platform/host/db";
 import { getAgentOrganizationOverview } from "@/apps/web/accounts/agent-organization-overview";
+import {
+  issueAgentOrganizationInvitationManagementHandle,
+  resolveAgentOrganizationInvitationManagementHandle,
+  validAgentOrganizationInvitationManagementHandle,
+} from "@/apps/web/accounts/agent-organization-invitation-management";
 
 const suffix = `${Date.now().toString(36)}-${process.pid}`;
 
@@ -53,6 +58,16 @@ const organization = await db.customerAccount.create({
   },
 });
 
+const pendingInvitation = await db.invitation.findFirstOrThrow({
+  where: {
+    accountId: organization.id,
+    status: "PENDING",
+  },
+  select: {
+    id: true,
+  },
+});
+
 const personal = await db.customerAccount.create({
   data: {
     type: "INDIVIDUAL",
@@ -86,6 +101,40 @@ try {
   });
   assert.equal(ownerOverview.members.length, 4);
   assert.equal(ownerOverview.invitations.length, 1);
+  const ownerInvitation = ownerOverview.invitations[0]!;
+  assert.equal(
+    validAgentOrganizationInvitationManagementHandle(
+      ownerInvitation.managementHandle,
+    ),
+    true,
+  );
+  assert.equal(
+    ownerInvitation.managementHandle.includes(
+      pendingInvitation.id,
+    ),
+    false,
+  );
+  assert.equal(
+    ownerInvitation.managementHandle,
+    issueAgentOrganizationInvitationManagementHandle(
+      organization.id,
+      pendingInvitation.id,
+    ),
+  );
+  assert.equal(
+    await resolveAgentOrganizationInvitationManagementHandle({
+      accountId: organization.id,
+      handle: ownerInvitation.managementHandle,
+    }),
+    pendingInvitation.id,
+  );
+  assert.equal(
+    await resolveAgentOrganizationInvitationManagementHandle({
+      accountId: personal.id,
+      handle: ownerInvitation.managementHandle,
+    }),
+    null,
+  );
   assert.equal(
     Object.hasOwn(ownerOverview.members[0] ?? {}, "userId"),
     false,
