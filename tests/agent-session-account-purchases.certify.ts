@@ -225,8 +225,23 @@ try {
     viewOrders: true,
     viewSubscriptions: true,
     viewAllLicenses: true,
+    manageLicenseSeats: true,
   });
   assert.equal(ownerOverview.licenses.length, 2);
+  assert.ok(
+    ownerOverview.licenses.every(
+      (license) =>
+        license.seatManagementHandle?.startsWith(
+          "bke-license-seat-v1_",
+        ) === true,
+    ),
+  );
+  assert.equal(
+    ownerOverview.licenses.find(
+      (license) => license.keyLastFour === "A001",
+    )?.assignedSeats,
+    1,
+  );
   assert.equal(ownerOverview.subscriptions.length, 1);
   assert.equal(ownerOverview.orders.length, 1);
   assert.equal(ownerOverview.orders[0]!.invoiceAvailable, true);
@@ -257,6 +272,7 @@ try {
     viewOrders: true,
     viewSubscriptions: true,
     viewAllLicenses: false,
+    manageLicenseSeats: false,
   });
   assert.equal(billingOverview.licenses.length, 0);
   assert.equal(billingOverview.subscriptions.length, 1);
@@ -275,8 +291,17 @@ try {
     viewOrders: false,
     viewSubscriptions: true,
     viewAllLicenses: true,
+    manageLicenseSeats: true,
   });
   assert.equal(licenseOverview.licenses.length, 2);
+  assert.ok(
+    licenseOverview.licenses.every(
+      (license) =>
+        license.seatManagementHandle?.startsWith(
+          "bke-license-seat-v1_",
+        ) === true,
+    ),
+  );
   assert.equal(licenseOverview.subscriptions.length, 1);
   assert.equal(licenseOverview.orders.length, 0);
 
@@ -293,11 +318,16 @@ try {
     viewOrders: false,
     viewSubscriptions: false,
     viewAllLicenses: false,
+    manageLicenseSeats: false,
   });
   assert.equal(memberOverview.licenses.length, 1);
   assert.equal(
     memberOverview.licenses[0]!.keyLastFour,
     assignedLicense.keyLastFour,
+  );
+  assert.equal(
+    memberOverview.licenses[0]!.seatManagementHandle,
+    null,
   );
   assert.equal(memberOverview.subscriptions.length, 0);
   assert.equal(memberOverview.orders.length, 0);
