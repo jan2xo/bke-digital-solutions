@@ -1980,4 +1980,3 @@ describe("native Agent account purchases overview", () => {
     });
   });
 });
-
