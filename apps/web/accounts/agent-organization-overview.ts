@@ -18,6 +18,7 @@ export type AgentOrganizationOverview =
       readonly role: string;
       readonly permissions: {
         readonly manageMembers: boolean;
+        readonly leaveOrganization: boolean;
         readonly viewBilling: boolean;
         readonly viewLicenses: boolean;
       };
@@ -78,6 +79,7 @@ export async function getAgentOrganizationOverview(input: {
     access.effectiveRole,
     "MANAGE_MEMBERS",
   );
+  const leaveOrganization = access.effectiveRole !== "OWNER";
   const viewBilling = roleHasAccountsCapability(
     access.effectiveRole,
     "VIEW_PAYMENTS",
@@ -160,6 +162,7 @@ export async function getAgentOrganizationOverview(input: {
     role: access.effectiveRole,
     permissions: {
       manageMembers,
+      leaveOrganization,
       viewBilling,
       viewLicenses,
     },
