@@ -8,6 +8,11 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   createOrganizationAccount: vi.fn(),
   updateOrganizationProfile: vi.fn(),
   inviteOrganizationMember: vi.fn(),
+  resendOrganizationInvitation: vi.fn(),
+  revokeOrganizationInvitation: vi.fn(),
+  expirePendingOrganizationInvitations: vi.fn(),
+  resolveInvitationHandle: vi.fn(),
+  validInvitationHandle: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
@@ -30,6 +35,18 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
     agentOrganizationMocks.updateOrganizationProfile,
   inviteOrganizationMember:
     agentOrganizationMocks.inviteOrganizationMember,
+  resendOrganizationInvitation:
+    agentOrganizationMocks.resendOrganizationInvitation,
+  revokeOrganizationInvitation:
+    agentOrganizationMocks.revokeOrganizationInvitation,
+  expirePendingOrganizationInvitations:
+    agentOrganizationMocks.expirePendingOrganizationInvitations,
+}));
+vi.mock("@/apps/web/accounts/agent-organization-invitation-management", () => ({
+  resolveAgentOrganizationInvitationManagementHandle:
+    agentOrganizationMocks.resolveInvitationHandle,
+  validAgentOrganizationInvitationManagementHandle:
+    agentOrganizationMocks.validInvitationHandle,
 }));
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: agentOrganizationMocks.rateLimit,
@@ -550,5 +567,217 @@ describe("native Agent organization invitation issuance", () => {
     expect(
       agentOrganizationMocks.inviteOrganizationMember,
     ).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("native Agent organization invitation management", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "user-cert",
+      accountId: "selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.validInvitationHandle.mockImplementation(
+      (handle: string) =>
+        /^bke-org-invite-v1_[0-9a-f]{64}$/.test(handle),
+    );
+    agentOrganizationMocks.resolveInvitationHandle.mockResolvedValue(
+      "invitation-db-id-cert",
+    );
+    agentOrganizationMocks.expirePendingOrganizationInvitations.mockResolvedValue({
+      count: 0,
+    });
+    agentOrganizationMocks.resendOrganizationInvitation.mockResolvedValue({
+      invitation: {
+        id: "invitation-db-id-cert",
+        accountId: "selected-account-cert",
+        email: "member@example.test",
+        role: "MEMBER",
+        status: "PENDING",
+        tokenHash: "rotated-token-hash-must-not-leak",
+        expiresAt: new Date("2026-10-08T00:00:00.000Z"),
+        createdAt: new Date("2026-09-30T00:00:00.000Z"),
+      },
+      token: "rotated-one-time-invitation-code-cert",
+    });
+    agentOrganizationMocks.revokeOrganizationInvitation.mockResolvedValue({
+      id: "invitation-db-id-cert",
+      accountId: "selected-account-cert",
+      email: "member@example.test",
+      role: "MEMBER",
+      status: "REVOKED",
+      tokenHash: "revoked-token-hash-must-not-leak",
+      expiresAt: new Date("2026-10-07T00:00:00.000Z"),
+      createdAt: new Date("2026-09-30T00:00:00.000Z"),
+    });
+  });
+
+  const managementHandle =
+    "bke-org-invite-v1_" + "a".repeat(64);
+
+  function manageRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/invitations/manage",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("rejects browser-origin invitation management before Agent authentication", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/manage/route"
+    );
+    const response = await POST(manageRequest({
+      action: "resend",
+      management_handle: managementHandle,
+    }, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("resolves the opaque handle only inside the selected Organization and returns a fresh one-time code", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/manage/route"
+    );
+    const response = await POST(manageRequest({
+      action: "resend",
+      management_handle: managementHandle,
+    }));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.resolveInvitationHandle,
+    ).toHaveBeenCalledWith({
+      accountId: "selected-account-cert",
+      handle: managementHandle,
+    });
+    expect(
+      agentOrganizationMocks.resendOrganizationInvitation,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      invitationId: "invitation-db-id-cert",
+    });
+
+    const payload = await response.json();
+    expect(payload).toEqual({
+      status: "resent",
+      invitation: {
+        email: "member@example.test",
+        role: "MEMBER",
+        status: "PENDING",
+        expires_at: "2026-10-08T00:00:00.000Z",
+        created_at: "2026-09-30T00:00:00.000Z",
+      },
+      invitation_code: "rotated-one-time-invitation-code-cert",
+    });
+    const wire = JSON.stringify(payload);
+    expect(wire).not.toContain("invitation-db-id-cert");
+    expect(wire).not.toContain("selected-account-cert");
+    expect(wire).not.toContain("rotated-token-hash-must-not-leak");
+  });
+
+  it("revokes through the resolved handle without returning a secret", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/manage/route"
+    );
+    const response = await POST(manageRequest({
+      action: "revoke",
+      management_handle: managementHandle,
+    }));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.revokeOrganizationInvitation,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      invitationId: "invitation-db-id-cert",
+    });
+
+    const payload = await response.json();
+    expect(payload).toEqual({
+      status: "revoked",
+      invitation: {
+        email: "member@example.test",
+        role: "MEMBER",
+        status: "REVOKED",
+        expires_at: "2026-10-07T00:00:00.000Z",
+        created_at: "2026-09-30T00:00:00.000Z",
+      },
+    });
+    expect(JSON.stringify(payload)).not.toContain(
+      "invitation_code",
+    );
+  });
+
+  it("fails closed for malformed, stale, or cross-account handles before mutation", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/manage/route"
+    );
+
+    const malformed = await POST(manageRequest({
+      action: "resend",
+      management_handle: "raw-invitation-id",
+    }));
+    expect(malformed.status).toBe(400);
+    expect(
+      agentOrganizationMocks.resendOrganizationInvitation,
+    ).not.toHaveBeenCalled();
+
+    agentOrganizationMocks.resolveInvitationHandle.mockResolvedValueOnce(
+      null,
+    );
+    const stale = await POST(manageRequest({
+      action: "revoke",
+      management_handle: managementHandle,
+    }));
+    expect(stale.status).toBe(404);
+    expect(await stale.json()).toEqual({
+      error: "INVITATION_NOT_FOUND",
+    });
+    expect(
+      agentOrganizationMocks.revokeOrganizationInvitation,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("preserves Accounts role denial and never projects a resend code", async () => {
+    agentOrganizationMocks.resendOrganizationInvitation.mockRejectedValueOnce(
+      new Error("ACCOUNT_ROLE_FORBIDDEN"),
+    );
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/invitations/manage/route"
+    );
+    const response = await POST(manageRequest({
+      action: "resend",
+      management_handle: managementHandle,
+    }));
+
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({
+      error: "ACCOUNT_ROLE_FORBIDDEN",
+    });
   });
 });
