@@ -70,6 +70,7 @@ export async function GET(request: Request) {
       },
       permissions: {
         manage_members: overview.permissions.manageMembers,
+        leave_organization: overview.permissions.leaveOrganization,
         view_billing: overview.permissions.viewBilling,
         view_licenses: overview.permissions.viewLicenses,
       },
