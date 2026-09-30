@@ -72,6 +72,8 @@ export async function GET(request: Request) {
         manage_members: overview.permissions.manageMembers,
         transfer_ownership:
           overview.permissions.transferOwnership,
+        close_organization:
+          overview.permissions.closeOrganization,
         leave_organization: overview.permissions.leaveOrganization,
         view_billing: overview.permissions.viewBilling,
         view_licenses: overview.permissions.viewLicenses,
