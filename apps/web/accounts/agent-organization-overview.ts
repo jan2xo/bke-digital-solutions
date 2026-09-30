@@ -18,6 +18,7 @@ export type AgentOrganizationOverview =
       readonly role: string;
       readonly permissions: {
         readonly manageMembers: boolean;
+        readonly transferOwnership: boolean;
         readonly leaveOrganization: boolean;
         readonly viewBilling: boolean;
         readonly viewLicenses: boolean;
@@ -162,6 +163,9 @@ export async function getAgentOrganizationOverview(input: {
     role: access.effectiveRole,
     permissions: {
       manageMembers,
+      transferOwnership:
+        manageMembers &&
+        account.lifecycleState === "ACTIVE",
       leaveOrganization,
       viewBilling,
       viewLicenses,
