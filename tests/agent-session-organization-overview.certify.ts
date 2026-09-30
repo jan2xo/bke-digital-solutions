@@ -103,6 +103,7 @@ try {
   assert.equal(ownerOverview.role, "OWNER");
   assert.deepEqual(ownerOverview.permissions, {
     manageMembers: true,
+    transferOwnership: true,
     leaveOrganization: false,
     viewBilling: true,
     viewLicenses: true,
@@ -212,6 +213,7 @@ try {
   assert.equal(billingOverview.role, "BILLING");
   assert.deepEqual(billingOverview.permissions, {
     manageMembers: false,
+    transferOwnership: false,
     leaveOrganization: true,
     viewBilling: true,
     viewLicenses: false,
@@ -235,6 +237,7 @@ try {
   assert.equal(licenseOverview.role, "LICENSE_MANAGER");
   assert.deepEqual(licenseOverview.permissions, {
     manageMembers: false,
+    transferOwnership: false,
     leaveOrganization: true,
     viewBilling: false,
     viewLicenses: true,
@@ -258,6 +261,7 @@ try {
   assert.equal(memberOverview.role, "MEMBER");
   assert.deepEqual(memberOverview.permissions, {
     manageMembers: false,
+    transferOwnership: false,
     leaveOrganization: true,
     viewBilling: false,
     viewLicenses: false,
