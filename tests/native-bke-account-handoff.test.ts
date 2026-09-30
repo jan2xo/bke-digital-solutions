@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import "./agent-session-account-purchases.test";
 
 const read = (path: string) => readFileSync(path, "utf8");
 
