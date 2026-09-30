@@ -1837,6 +1837,7 @@ describe("native Agent account purchases overview", () => {
         viewOrders: true,
         viewSubscriptions: true,
         viewAllLicenses: true,
+        manageLicenseSeats: true,
       },
       licenses: [{
         productName: "Render Dock",
@@ -1847,6 +1848,10 @@ describe("native Agent account purchases overview", () => {
         expiresAt: new Date("2027-09-30T00:00:00.000Z"),
         maxDevices: 4,
         activeDevices: 1,
+        maxSeats: 2,
+        assignedSeats: 1,
+        seatManagementHandle:
+          "bke-license-seat-v1_" + "a".repeat(64),
       }],
       subscriptions: [{
         productName: "Render Dock",
@@ -1922,6 +1927,12 @@ describe("native Agent account purchases overview", () => {
     const payload = await response.json();
     expect(payload.status).toBe("ready");
     expect(payload.licenses).toHaveLength(1);
+    expect(payload.permissions.manage_license_seats).toBe(true);
+    expect(payload.licenses[0].max_seats).toBe(2);
+    expect(payload.licenses[0].assigned_seats).toBe(1);
+    expect(payload.licenses[0].seat_management_handle).toMatch(
+      /^bke-license-seat-v1_[0-9a-f]{64}$/,
+    );
     expect(payload.subscriptions).toHaveLength(1);
     expect(payload.orders).toHaveLength(1);
 
@@ -1980,3 +1991,50 @@ describe("native Agent account purchases overview", () => {
     });
   });
 });
+
+describe("native Agent license seat management route boundaries", () => {
+  it("keeps seat reads and mutations behind Agent auth, protocol, opaque handles, and selected-account scoping", () => {
+    const readRoute = read(
+      "app/api/agent-sessions/account/license-seats/route.ts",
+    );
+    const manageRoute = read(
+      "app/api/agent-sessions/account/license-seats/manage/route.ts",
+    );
+    const handles = read(
+      "apps/web/licensing/agent-license-seat-management.ts",
+    );
+
+    for (const source of [readRoute, manageRoute]) {
+      expect(source).toContain("rejectBrowserOriginForAgent");
+      expect(source).toContain("requireAgentAccountSessionProtocol");
+      expect(source).toContain("authenticateNativeAgentRequest");
+      expect(source).toContain("authenticated.accountId");
+      expect(source).toContain(
+        '"x-bke-account-session-version"',
+      );
+      expect(source).not.toContain("V3_");
+    }
+
+    expect(readRoute).toContain(
+      "resolveAgentLicenseSeatManagementHandle",
+    );
+    expect(readRoute).toContain(
+      "getAgentLicenseSeatOverview",
+    );
+    expect(manageRoute).toContain(
+      "resolveAgentLicenseSeatTargetHandle",
+    );
+    expect(manageRoute).toContain("assignLicenseSeat");
+    expect(manageRoute).toContain("removeLicenseSeat");
+    expect(handles).toContain(
+      "bke.agent.license-seat.management.v1",
+    );
+    expect(handles).toContain(
+      "bke.agent.license-seat.target.v1",
+    );
+    expect(handles).not.toContain("account_id");
+    expect(handles).not.toContain("user_id");
+    expect(handles).not.toContain("license_id");
+  });
+});
+
