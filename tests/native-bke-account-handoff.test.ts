@@ -649,6 +649,40 @@ describe("native Agent organization invitation management", () => {
     );
   }
 
+  it("keeps raw invitation IDs private while projecting scoped management handles", () => {
+    const overview = read(
+      "apps/web/accounts/agent-organization-overview.ts",
+    );
+    const route = read(
+      "app/api/agent-sessions/account/organization/route.ts",
+    );
+    const handles = read(
+      "apps/web/accounts/agent-organization-invitation-management.ts",
+    );
+
+    expect(overview).toContain(
+      "issueAgentOrganizationInvitationManagementHandle",
+    );
+    expect(route).toContain(
+      "management_handle: invitation.managementHandle",
+    );
+    expect(route).not.toContain(
+      "id: invitation.id",
+    );
+    expect(handles).toContain(
+      'createHmac("sha256", env.SESSION_SECRET)',
+    );
+    expect(handles).toContain(
+      'HANDLE_DOMAIN = "bke.agent.organization.invitation.management.v1"',
+    );
+    expect(handles).toContain(
+      'status: "PENDING"',
+    );
+    expect(handles).toContain(
+      "safeEqual(expected, input.handle)",
+    );
+  });
+
   it("rejects browser-origin invitation management before Agent authentication", async () => {
     const { POST } = await import(
       "../app/api/agent-sessions/account/organization/invitations/manage/route"
