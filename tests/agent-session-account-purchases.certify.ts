@@ -136,7 +136,7 @@ const order = await db.order.create({
     invoice: {
       create: {
         number: `INV-PURCHASES-${suffix}`,
-        status: "ISSUED",
+        status: "FINAL",
         customerSnapshot: { certification: true },
         currency: "PHP",
         subtotalMinor: 30000000,
@@ -316,6 +316,24 @@ try {
     "Agent-session account purchases overview certification: PASS",
   );
 } finally {
+  await db.deviceActivation.deleteMany({
+    where: { license: { accountId: organization.id } },
+  });
+  await db.licenseAssignment.deleteMany({
+    where: { license: { accountId: organization.id } },
+  });
+  await db.license.deleteMany({
+    where: { accountId: organization.id },
+  });
+  await db.subscription.deleteMany({
+    where: { accountId: organization.id },
+  });
+  await db.invoice.deleteMany({
+    where: { order: { accountId: organization.id } },
+  });
+  await db.order.deleteMany({
+    where: { accountId: organization.id },
+  });
   await db.customerAccount.deleteMany({
     where: { id: organization.id },
   });
