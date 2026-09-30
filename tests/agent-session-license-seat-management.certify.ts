@@ -161,14 +161,13 @@ const license = await db.license.create({
 });
 
 try {
-  const formerMembership = await db.membership.findFirstOrThrow({
-    where: {
-      accountId: organization.id,
-      userId: formerMember.id,
-    },
-  });
   await db.membership.delete({
-    where: { id: formerMembership.id },
+    where: {
+      accountId_userId: {
+        accountId: organization.id,
+        userId: formerMember.id,
+      },
+    },
   });
 
   const licenseHandle =
