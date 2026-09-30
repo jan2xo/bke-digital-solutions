@@ -115,7 +115,8 @@ export async function getAgentOrganizationOverview(input: {
           where: { accountId: input.accountId },
           orderBy: { createdAt: "asc" },
           select: {
-            id: true,
+            userId: true,
+            createdAt: true,
             role: true,
             user: {
               select: {
@@ -184,7 +185,8 @@ export async function getAgentOrganizationOverview(input: {
           managementHandle:
             issueAgentOrganizationMemberManagementHandle(
               input.accountId,
-              membership.id,
+              membership.userId,
+              membership.createdAt,
             ),
         }))
       : [],
