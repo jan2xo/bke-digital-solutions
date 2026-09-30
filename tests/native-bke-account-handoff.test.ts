@@ -11,14 +11,15 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   resendOrganizationInvitation: vi.fn(),
   revokeOrganizationInvitation: vi.fn(),
   expirePendingOrganizationInvitations: vi.fn(),
-  resolveInvitationHandle: vi.fn(),
-  validInvitationHandle: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
   db: {
     user: {
       findUnique: vi.fn(),
+    },
+    invitation: {
+      findMany: vi.fn(),
     },
   },
   getRuntimeEnvironment: vi.fn(),
@@ -42,12 +43,6 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
   expirePendingOrganizationInvitations:
     agentOrganizationMocks.expirePendingOrganizationInvitations,
 }));
-vi.mock("@/apps/web/accounts/agent-organization-invitation-management", () => ({
-  resolveAgentOrganizationInvitationManagementHandle:
-    agentOrganizationMocks.resolveInvitationHandle,
-  validAgentOrganizationInvitationManagementHandle:
-    agentOrganizationMocks.validInvitationHandle,
-}));
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: agentOrganizationMocks.rateLimit,
 }));
@@ -58,6 +53,10 @@ vi.mock("@/platform/host/db", () => ({
   db: agentOrganizationMocks.db,
 }));
 vi.mock("@/platform/host/env", () => ({
+  env: {
+    SESSION_SECRET:
+      "native-organization-handle-cert-session-secret-0000000001",
+  },
   getRuntimeEnvironment:
     agentOrganizationMocks.getRuntimeEnvironment,
 }));
@@ -585,13 +584,9 @@ describe("native Agent organization invitation management", () => {
       deviceId: "device-cert",
     });
     agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
-    agentOrganizationMocks.validInvitationHandle.mockImplementation(
-      (handle: string) =>
-        /^bke-org-invite-v1_[0-9a-f]{64}$/.test(handle),
-    );
-    agentOrganizationMocks.resolveInvitationHandle.mockResolvedValue(
-      "invitation-db-id-cert",
-    );
+    agentOrganizationMocks.db.invitation.findMany.mockResolvedValue([
+      { id: "invitation-db-id-cert" },
+    ]);
     agentOrganizationMocks.expirePendingOrganizationInvitations.mockResolvedValue({
       count: 0,
     });
@@ -620,8 +615,20 @@ describe("native Agent organization invitation management", () => {
     });
   });
 
-  const managementHandle =
-    "bke-org-invite-v1_" + "a".repeat(64);
+  let managementHandle = "";
+
+  beforeEach(async () => {
+    const {
+      issueAgentOrganizationInvitationManagementHandle,
+    } = await import(
+      "../apps/web/accounts/agent-organization-invitation-management"
+    );
+    managementHandle =
+      issueAgentOrganizationInvitationManagementHandle(
+        "selected-account-cert",
+        "invitation-db-id-cert",
+      );
+  });
 
   function manageRequest(
     body: unknown,
@@ -670,10 +677,15 @@ describe("native Agent organization invitation management", () => {
 
     expect(response.status).toBe(200);
     expect(
-      agentOrganizationMocks.resolveInvitationHandle,
+      agentOrganizationMocks.db.invitation.findMany,
     ).toHaveBeenCalledWith({
-      accountId: "selected-account-cert",
-      handle: managementHandle,
+      where: {
+        accountId: "selected-account-cert",
+        status: "PENDING",
+      },
+      select: {
+        id: true,
+      },
     });
     expect(
       agentOrganizationMocks.resendOrganizationInvitation,
@@ -747,8 +759,8 @@ describe("native Agent organization invitation management", () => {
       agentOrganizationMocks.resendOrganizationInvitation,
     ).not.toHaveBeenCalled();
 
-    agentOrganizationMocks.resolveInvitationHandle.mockResolvedValueOnce(
-      null,
+    agentOrganizationMocks.db.invitation.findMany.mockResolvedValueOnce(
+      [],
     );
     const stale = await POST(manageRequest({
       action: "revoke",
@@ -760,6 +772,25 @@ describe("native Agent organization invitation management", () => {
     });
     expect(
       agentOrganizationMocks.revokeOrganizationInvitation,
+    ).not.toHaveBeenCalled();
+
+    const {
+      issueAgentOrganizationInvitationManagementHandle,
+    } = await import(
+      "../apps/web/accounts/agent-organization-invitation-management"
+    );
+    const copiedFromAnotherAccount =
+      issueAgentOrganizationInvitationManagementHandle(
+        "other-account-cert",
+        "invitation-db-id-cert",
+      );
+    const crossAccount = await POST(manageRequest({
+      action: "resend",
+      management_handle: copiedFromAnotherAccount,
+    }));
+    expect(crossAccount.status).toBe(404);
+    expect(
+      agentOrganizationMocks.resendOrganizationInvitation,
     ).not.toHaveBeenCalled();
   });
 
