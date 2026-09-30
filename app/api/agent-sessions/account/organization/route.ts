@@ -85,6 +85,7 @@ export async function GET(request: Request) {
         email: member.email,
         name: member.name,
         role: member.role,
+        management_handle: member.managementHandle,
       })),
       invitations: overview.invitations.map((invitation) => ({
         email: invitation.email,

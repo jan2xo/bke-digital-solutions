@@ -6,6 +6,11 @@ import {
   resolveAgentOrganizationInvitationManagementHandle,
   validAgentOrganizationInvitationManagementHandle,
 } from "@/apps/web/accounts/agent-organization-invitation-management";
+import {
+  issueAgentOrganizationMemberManagementHandle,
+  resolveAgentOrganizationMemberManagementHandle,
+  validAgentOrganizationMemberManagementHandle,
+} from "@/apps/web/accounts/agent-organization-member-management";
 
 const suffix = `${Date.now().toString(36)}-${process.pid}`;
 
@@ -58,6 +63,17 @@ const organization = await db.customerAccount.create({
   },
 });
 
+const memberMembership = await db.membership.findFirstOrThrow({
+  where: {
+    accountId: organization.id,
+    userId: member.id,
+  },
+  select: {
+    userId: true,
+    createdAt: true,
+  },
+});
+
 const pendingInvitation = await db.invitation.findFirstOrThrow({
   where: {
     accountId: organization.id,
@@ -100,6 +116,44 @@ try {
     orders: 0,
   });
   assert.equal(ownerOverview.members.length, 4);
+  const ownerMember = ownerOverview.members.find(
+    (candidate) => candidate.email === member.email,
+  );
+  assert.ok(ownerMember);
+  assert.equal(
+    validAgentOrganizationMemberManagementHandle(
+      ownerMember.managementHandle,
+    ),
+    true,
+  );
+  assert.equal(
+    ownerMember.managementHandle.includes(
+      memberMembership.userId,
+    ),
+    false,
+  );
+  assert.equal(
+    ownerMember.managementHandle,
+    issueAgentOrganizationMemberManagementHandle(
+      organization.id,
+      memberMembership.userId,
+      memberMembership.createdAt,
+    ),
+  );
+  assert.equal(
+    await resolveAgentOrganizationMemberManagementHandle({
+      accountId: organization.id,
+      handle: ownerMember.managementHandle,
+    }),
+    member.id,
+  );
+  assert.equal(
+    await resolveAgentOrganizationMemberManagementHandle({
+      accountId: personal.id,
+      handle: ownerMember.managementHandle,
+    }),
+    null,
+  );
   assert.equal(ownerOverview.invitations.length, 1);
   const ownerInvitation = ownerOverview.invitations[0]!;
   assert.equal(
@@ -137,6 +191,10 @@ try {
   );
   assert.equal(
     Object.hasOwn(ownerOverview.members[0] ?? {}, "userId"),
+    false,
+  );
+  assert.equal(
+    Object.hasOwn(ownerOverview.members[0] ?? {}, "id"),
     false,
   );
   assert.equal(
