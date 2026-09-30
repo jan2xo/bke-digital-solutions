@@ -2037,4 +2037,3 @@ describe("native Agent license seat management route boundaries", () => {
     expect(handles).not.toContain("license_id");
   });
 });
-
