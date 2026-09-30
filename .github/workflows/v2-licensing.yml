@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: licensing-${{ inputs.source_sha }}
+  group: ${{ github.workflow }}-${{ inputs.source_sha }}
   cancel-in-progress: true
 
 jobs:
