@@ -147,6 +147,21 @@ export async function resolveAgentLicenseSeatTargetHandle(
           },
         },
       },
+      licenses: {
+        select: {
+          assignments: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  lifecycleState: true,
+                  emailVerified: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -159,10 +174,13 @@ export async function resolveAgentLicenseSeatTargetHandle(
     ...account.memberships.map(
       (membership) => membership.user,
     ),
+    ...account.licenses.flatMap((license) =>
+      license.assignments.map(
+        (assignment) => assignment.user,
+      ),
+    ),
   ].filter(
     (user, index, all) =>
-      user.lifecycleState === "ACTIVE" &&
-      Boolean(user.emailVerified) &&
       all.findIndex(
         (candidate) => candidate.id === user.id,
       ) === index,
