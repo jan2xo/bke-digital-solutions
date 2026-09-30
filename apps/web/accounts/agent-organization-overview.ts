@@ -6,6 +6,7 @@ import {
 } from "@bke/accounts/contracts/account-access.contract";
 import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authorization-policy";
 import { issueAgentOrganizationInvitationManagementHandle } from "@/apps/web/accounts/agent-organization-invitation-management";
+import { issueAgentOrganizationMemberManagementHandle } from "@/apps/web/accounts/agent-organization-member-management";
 import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
 
@@ -35,6 +36,7 @@ export type AgentOrganizationOverview =
         readonly email: string;
         readonly name: string | null;
         readonly role: string;
+        readonly managementHandle: string;
       }[];
       readonly invitations: readonly {
         readonly email: string;
@@ -113,6 +115,7 @@ export async function getAgentOrganizationOverview(input: {
           where: { accountId: input.accountId },
           orderBy: { createdAt: "asc" },
           select: {
+            id: true,
             role: true,
             user: {
               select: {
@@ -178,6 +181,11 @@ export async function getAgentOrganizationOverview(input: {
           email: membership.user.email,
           name: membership.user.name,
           role: membership.role,
+          managementHandle:
+            issueAgentOrganizationMemberManagementHandle(
+              input.accountId,
+              membership.id,
+            ),
         }))
       : [],
     invitations: manageMembers
