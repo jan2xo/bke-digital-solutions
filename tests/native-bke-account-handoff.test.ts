@@ -873,18 +873,18 @@ describe("native Agent organization member management", () => {
     agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
     agentOrganizationMocks.db.membership.findMany.mockResolvedValue([
       {
-        id: "membership-db-id-cert",
         userId: "member-user-id-cert",
+        createdAt: new Date("2026-09-30T00:00:00.000Z"),
       },
     ]);
     agentOrganizationMocks.updateOrganizationMemberRole.mockResolvedValue({
-      id: "membership-db-id-cert",
+      id: "membership-record-must-not-leak",
       accountId: "selected-account-cert",
       userId: "member-user-id-cert",
       role: "BILLING",
     });
     agentOrganizationMocks.removeOrganizationMember.mockResolvedValue({
-      id: "membership-db-id-cert",
+      id: "membership-record-must-not-leak",
       accountId: "selected-account-cert",
       userId: "member-user-id-cert",
       role: "MEMBER",
@@ -902,7 +902,8 @@ describe("native Agent organization member management", () => {
     managementHandle =
       issueAgentOrganizationMemberManagementHandle(
         "selected-account-cert",
-        "membership-db-id-cert",
+        "member-user-id-cert",
+        new Date("2026-09-30T00:00:00.000Z"),
       );
   });
 
@@ -997,8 +998,8 @@ describe("native Agent organization member management", () => {
         accountId: "selected-account-cert",
       },
       select: {
-        id: true,
         userId: true,
+        createdAt: true,
       },
     });
     expect(
@@ -1037,7 +1038,7 @@ describe("native Agent organization member management", () => {
       status: "removed",
     });
     const wire = JSON.stringify(payload);
-    expect(wire).not.toContain("membership-db-id-cert");
+    expect(wire).not.toContain("membership-record-must-not-leak");
     expect(wire).not.toContain("member-user-id-cert");
     expect(wire).not.toContain("selected-account-cert");
   });
@@ -1080,7 +1081,8 @@ describe("native Agent organization member management", () => {
     const copiedFromAnotherAccount =
       issueAgentOrganizationMemberManagementHandle(
         "other-account-cert",
-        "membership-db-id-cert",
+        "member-user-id-cert",
+        new Date("2026-09-30T00:00:00.000Z"),
       );
     const crossAccount = await POST(manageMemberRequest({
       action: "update_role",
