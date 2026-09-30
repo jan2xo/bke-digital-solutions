@@ -58,4 +58,45 @@ describe("license seat management", () => {
     expect(apiError).toContain("TARGET_NOT_ACCOUNT_MEMBER: 422");
     expect(apiError).toContain("LICENSE_SEAT_LIMIT: 409");
   });
+
+  it("exposes Agent seat management only through opaque selected-account handles", () => {
+    const handles = readFileSync(
+      "apps/web/licensing/agent-license-seat-management.ts",
+      "utf8",
+    );
+    const overview = readFileSync(
+      "apps/web/accounts/agent-account-purchases-overview.ts",
+      "utf8",
+    );
+    const readRoute = readFileSync(
+      "app/api/agent-sessions/account/license-seats/route.ts",
+      "utf8",
+    );
+    const manageRoute = readFileSync(
+      "app/api/agent-sessions/account/license-seats/manage/route.ts",
+      "utf8",
+    );
+
+    expect(handles).toContain("createHmac");
+    expect(handles).toContain("safeEqual");
+    expect(handles).toContain("SESSION_SECRET");
+    expect(handles).toContain("bke-license-seat-v1_");
+    expect(handles).toContain("bke-license-seat-user-v1_");
+    expect(overview).toContain('"ASSIGN_LICENSE"');
+    expect(overview).toContain("seatManagementHandle");
+    expect(readRoute).toContain(
+      "authenticated.accountId",
+    );
+    expect(manageRoute).toContain(
+      "authenticated.accountId",
+    );
+    expect(manageRoute).toContain(
+      'action: z.enum(["assign", "remove"])',
+    );
+    expect(readRoute).not.toContain("license_id");
+    expect(readRoute).not.toContain("user_id");
+    expect(manageRoute).not.toContain("license_id");
+    expect(manageRoute).not.toContain("user_id");
+  });
+
 });
