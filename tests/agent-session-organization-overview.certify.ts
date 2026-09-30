@@ -69,7 +69,8 @@ const memberMembership = await db.membership.findFirstOrThrow({
     userId: member.id,
   },
   select: {
-    id: true,
+    userId: true,
+    createdAt: true,
   },
 });
 
@@ -127,13 +128,7 @@ try {
   );
   assert.equal(
     ownerMember.managementHandle.includes(
-      memberMembership.id,
-    ),
-    false,
-  );
-  assert.equal(
-    ownerMember.managementHandle.includes(
-      member.id,
+      memberMembership.userId,
     ),
     false,
   );
@@ -141,7 +136,8 @@ try {
     ownerMember.managementHandle,
     issueAgentOrganizationMemberManagementHandle(
       organization.id,
-      memberMembership.id,
+      memberMembership.userId,
+      memberMembership.createdAt,
     ),
   );
   assert.equal(
