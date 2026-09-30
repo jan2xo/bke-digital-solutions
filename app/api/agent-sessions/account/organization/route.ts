@@ -92,6 +92,7 @@ export async function GET(request: Request) {
         status: invitation.status,
         expires_at: invitation.expiresAt.toISOString(),
         created_at: invitation.createdAt.toISOString(),
+        management_handle: invitation.managementHandle,
       })),
     });
   } catch (error) {
