@@ -137,19 +137,29 @@ export async function POST(request: Request) {
     }
 
     try {
+      if (input.action === "assign") {
+        const result = await db.$transaction(
+          (tx) =>
+            assignLicenseSeat(tx, {
+              actorId: authenticated.userId,
+              licenseId,
+              targetUserId,
+            }),
+          { isolationLevel: "Serializable" },
+        );
+
+        return response({
+          status: result.status.toLowerCase(),
+        });
+      }
+
       const result = await db.$transaction(
         (tx) =>
-          input.action === "assign"
-            ? assignLicenseSeat(tx, {
-                actorId: authenticated.userId,
-                licenseId,
-                targetUserId,
-              })
-            : removeLicenseSeat(tx, {
-                actorId: authenticated.userId,
-                licenseId,
-                targetUserId,
-              }),
+          removeLicenseSeat(tx, {
+            actorId: authenticated.userId,
+            licenseId,
+            targetUserId,
+          }),
         { isolationLevel: "Serializable" },
       );
 
