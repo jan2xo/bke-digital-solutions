@@ -11,6 +11,8 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   resendOrganizationInvitation: vi.fn(),
   revokeOrganizationInvitation: vi.fn(),
   expirePendingOrganizationInvitations: vi.fn(),
+  updateOrganizationMemberRole: vi.fn(),
+  removeOrganizationMember: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
   checkLegalReacceptance: vi.fn(),
@@ -19,6 +21,9 @@ const agentOrganizationMocks = vi.hoisted(() => ({
       findUnique: vi.fn(),
     },
     invitation: {
+      findMany: vi.fn(),
+    },
+    membership: {
       findMany: vi.fn(),
     },
   },
@@ -42,6 +47,10 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
     agentOrganizationMocks.revokeOrganizationInvitation,
   expirePendingOrganizationInvitations:
     agentOrganizationMocks.expirePendingOrganizationInvitations,
+  updateOrganizationMemberRole:
+    agentOrganizationMocks.updateOrganizationMemberRole,
+  removeOrganizationMember:
+    agentOrganizationMocks.removeOrganizationMember,
 }));
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: agentOrganizationMocks.rateLimit,
@@ -843,6 +852,268 @@ describe("native Agent organization invitation management", () => {
     expect(response.status).toBe(403);
     expect(await response.json()).toEqual({
       error: "ACCOUNT_ROLE_FORBIDDEN",
+    });
+  });
+});
+
+
+describe("native Agent organization member management", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "user-cert",
+      accountId: "selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.db.membership.findMany.mockResolvedValue([
+      {
+        id: "membership-db-id-cert",
+        userId: "member-user-id-cert",
+      },
+    ]);
+    agentOrganizationMocks.updateOrganizationMemberRole.mockResolvedValue({
+      id: "membership-db-id-cert",
+      accountId: "selected-account-cert",
+      userId: "member-user-id-cert",
+      role: "BILLING",
+    });
+    agentOrganizationMocks.removeOrganizationMember.mockResolvedValue({
+      id: "membership-db-id-cert",
+      accountId: "selected-account-cert",
+      userId: "member-user-id-cert",
+      role: "MEMBER",
+    });
+  });
+
+  let managementHandle = "";
+
+  beforeEach(async () => {
+    const {
+      issueAgentOrganizationMemberManagementHandle,
+    } = await import(
+      "../apps/web/accounts/agent-organization-member-management"
+    );
+    managementHandle =
+      issueAgentOrganizationMemberManagementHandle(
+        "selected-account-cert",
+        "membership-db-id-cert",
+      );
+  });
+
+  function manageMemberRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/members/manage",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("keeps raw member IDs private while projecting scoped management handles", () => {
+    const overview = read(
+      "apps/web/accounts/agent-organization-overview.ts",
+    );
+    const route = read(
+      "app/api/agent-sessions/account/organization/route.ts",
+    );
+    const handles = read(
+      "apps/web/accounts/agent-organization-member-management.ts",
+    );
+
+    expect(overview).toContain(
+      "issueAgentOrganizationMemberManagementHandle",
+    );
+    expect(route).toContain(
+      "management_handle: member.managementHandle",
+    );
+    expect(route).not.toContain(
+      "user_id: member",
+    );
+    expect(route).not.toContain(
+      "membership_id",
+    );
+    expect(handles).toContain(
+      'createHmac("sha256", env.SESSION_SECRET)',
+    );
+    expect(handles).toContain(
+      'HANDLE_DOMAIN = "bke.agent.organization.member.management.v1"',
+    );
+    expect(handles).toContain(
+      "where: { accountId: input.accountId }",
+    );
+    expect(handles).toContain(
+      "safeEqual(expected, input.handle)",
+    );
+  });
+
+  it("rejects browser-origin member management before Agent authentication", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/members/manage/route"
+    );
+    const response = await POST(manageMemberRequest({
+      action: "remove",
+      management_handle: managementHandle,
+    }, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("updates a member role through the selected-account scoped handle", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/members/manage/route"
+    );
+    const response = await POST(manageMemberRequest({
+      action: "update_role",
+      management_handle: managementHandle,
+      role: "BILLING",
+    }));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.db.membership.findMany,
+    ).toHaveBeenCalledWith({
+      where: {
+        accountId: "selected-account-cert",
+      },
+      select: {
+        id: true,
+        userId: true,
+      },
+    });
+    expect(
+      agentOrganizationMocks.updateOrganizationMemberRole,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      accountId: "selected-account-cert",
+      userId: "member-user-id-cert",
+      role: "BILLING",
+    });
+    expect(await response.json()).toEqual({
+      status: "updated",
+    });
+  });
+
+  it("removes a member through the selected-account scoped handle without reflecting identifiers", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/members/manage/route"
+    );
+    const response = await POST(manageMemberRequest({
+      action: "remove",
+      management_handle: managementHandle,
+    }));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.removeOrganizationMember,
+    ).toHaveBeenCalledWith({
+      actorId: "user-cert",
+      accountId: "selected-account-cert",
+      userId: "member-user-id-cert",
+    });
+
+    const payload = await response.json();
+    expect(payload).toEqual({
+      status: "removed",
+    });
+    const wire = JSON.stringify(payload);
+    expect(wire).not.toContain("membership-db-id-cert");
+    expect(wire).not.toContain("member-user-id-cert");
+    expect(wire).not.toContain("selected-account-cert");
+  });
+
+  it("fails closed for malformed, stale, cross-account, and widened member requests", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/members/manage/route"
+    );
+
+    const malformed = await POST(manageMemberRequest({
+      action: "remove",
+      management_handle: "raw-user-or-membership-id",
+    }));
+    expect(malformed.status).toBe(400);
+
+    const widened = await POST(manageMemberRequest({
+      action: "remove",
+      management_handle: managementHandle,
+      user_id: "caller-must-not-select-user",
+    }));
+    expect(widened.status).toBe(400);
+
+    agentOrganizationMocks.db.membership.findMany.mockResolvedValueOnce(
+      [],
+    );
+    const stale = await POST(manageMemberRequest({
+      action: "remove",
+      management_handle: managementHandle,
+    }));
+    expect(stale.status).toBe(404);
+    expect(await stale.json()).toEqual({
+      error: "MEMBER_NOT_FOUND",
+    });
+
+    const {
+      issueAgentOrganizationMemberManagementHandle,
+    } = await import(
+      "../apps/web/accounts/agent-organization-member-management"
+    );
+    const copiedFromAnotherAccount =
+      issueAgentOrganizationMemberManagementHandle(
+        "other-account-cert",
+        "membership-db-id-cert",
+      );
+    const crossAccount = await POST(manageMemberRequest({
+      action: "update_role",
+      management_handle: copiedFromAnotherAccount,
+      role: "MEMBER",
+    }));
+    expect(crossAccount.status).toBe(404);
+
+    expect(
+      agentOrganizationMocks.updateOrganizationMemberRole,
+    ).not.toHaveBeenCalled();
+    expect(
+      agentOrganizationMocks.removeOrganizationMember,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("preserves Accounts last-owner protection", async () => {
+    agentOrganizationMocks.updateOrganizationMemberRole.mockRejectedValueOnce(
+      new Error("LAST_OWNER_REQUIRED"),
+    );
+
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/members/manage/route"
+    );
+    const response = await POST(manageMemberRequest({
+      action: "update_role",
+      management_handle: managementHandle,
+      role: "MEMBER",
+    }));
+
+    expect(response.status).toBe(409);
+    expect(await response.json()).toEqual({
+      error: "LAST_OWNER_REQUIRED",
     });
   });
 });
