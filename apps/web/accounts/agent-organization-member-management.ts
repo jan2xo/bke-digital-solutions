@@ -8,21 +8,36 @@ import { safeEqual } from "@/platform/host/security/crypto";
 const HANDLE_PREFIX = "bke-org-member-v1_";
 const HANDLE_DOMAIN = "bke.agent.organization.member.management.v1";
 
-function digest(accountId: string, membershipId: string) {
+function digest(
+  accountId: string,
+  userId: string,
+  createdAt: Date | string,
+) {
+  const createdAtValue =
+    createdAt instanceof Date
+      ? createdAt.toISOString()
+      : createdAt;
   return createHmac("sha256", env.SESSION_SECRET)
     .update(HANDLE_DOMAIN)
     .update("\0")
     .update(accountId)
     .update("\0")
-    .update(membershipId)
+    .update(userId)
+    .update("\0")
+    .update(createdAtValue)
     .digest("hex");
 }
 
 export function issueAgentOrganizationMemberManagementHandle(
   accountId: string,
-  membershipId: string,
+  userId: string,
+  createdAt: Date | string,
 ) {
-  return `${HANDLE_PREFIX}${digest(accountId, membershipId)}`;
+  return `${HANDLE_PREFIX}${digest(
+    accountId,
+    userId,
+    createdAt,
+  )}`;
 }
 
 export function validAgentOrganizationMemberManagementHandle(
@@ -44,8 +59,8 @@ export async function resolveAgentOrganizationMemberManagementHandle(
   const memberships = await db.membership.findMany({
     where: { accountId: input.accountId },
     select: {
-      id: true,
       userId: true,
+      createdAt: true,
     },
   });
 
@@ -53,7 +68,8 @@ export async function resolveAgentOrganizationMemberManagementHandle(
     const expected =
       issueAgentOrganizationMemberManagementHandle(
         input.accountId,
-        membership.id,
+        membership.userId,
+        membership.createdAt,
       );
     if (safeEqual(expected, input.handle)) {
       return membership.userId;
