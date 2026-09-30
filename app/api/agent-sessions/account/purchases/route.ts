@@ -22,6 +22,16 @@ function response(body: unknown, status = 200) {
   });
 }
 
+function errorResponse(error: unknown) {
+  const result = apiError(error);
+  result.headers.set("cache-control", "no-store");
+  result.headers.set(
+    "x-bke-account-session-version",
+    AGENT_ACCOUNT_SESSION_PROTOCOL_VERSION,
+  );
+  return result;
+}
+
 export async function GET(request: Request) {
   try {
     const runtime = getRuntimeEnvironment();
@@ -115,6 +125,6 @@ export async function GET(request: Request) {
       })),
     });
   } catch (error) {
-    return apiError(error);
+    return errorResponse(error);
   }
 }
