@@ -13,6 +13,7 @@ const agentOrganizationMocks = vi.hoisted(() => ({
   expirePendingOrganizationInvitations: vi.fn(),
   updateOrganizationMemberRole: vi.fn(),
   removeOrganizationMember: vi.fn(),
+  transferOrganizationOwnership: vi.fn(),
   leaveOrganization: vi.fn(),
   rateLimit: vi.fn(),
   getV2WebApplication: vi.fn(),
@@ -52,6 +53,8 @@ vi.mock("@/apps/web/accounts/organization-operations", () => ({
     agentOrganizationMocks.updateOrganizationMemberRole,
   removeOrganizationMember:
     agentOrganizationMocks.removeOrganizationMember,
+  transferOrganizationOwnership:
+    agentOrganizationMocks.transferOrganizationOwnership,
   leaveOrganization:
     agentOrganizationMocks.leaveOrganization,
 }));
@@ -1281,6 +1284,280 @@ describe("native Agent organization self-leave", () => {
     });
     expect(
       agentOrganizationMocks.leaveOrganization,
+    ).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("native Agent organization ownership transfer", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    agentOrganizationMocks.getRuntimeEnvironment.mockReturnValue({
+      AGENT_ACCOUNT_SESSION_ENABLED: true,
+    });
+    agentOrganizationMocks.authenticateNativeAgentRequest.mockResolvedValue({
+      status: "authenticated",
+      userId: "owner-user-cert",
+      accountId: "selected-account-cert",
+      sessionId: "agent-session-cert",
+      deviceId: "device-cert",
+    });
+    agentOrganizationMocks.rateLimit.mockResolvedValue({ allowed: true });
+    agentOrganizationMocks.db.membership.findMany.mockResolvedValue([
+      {
+        userId: "new-owner-user-id-cert",
+        createdAt: new Date("2026-09-30T00:00:00.000Z"),
+      },
+    ]);
+    agentOrganizationMocks.transferOrganizationOwnership.mockResolvedValue({
+      id: "selected-account-cert",
+      type: "ORGANIZATION",
+      displayName: "Certification Org",
+      ownerId: "new-owner-user-id-cert",
+    });
+  });
+
+  let managementHandle = "";
+
+  beforeEach(async () => {
+    const {
+      issueAgentOrganizationMemberManagementHandle,
+    } = await import(
+      "../apps/web/accounts/agent-organization-member-management"
+    );
+    managementHandle =
+      issueAgentOrganizationMemberManagementHandle(
+        "selected-account-cert",
+        "new-owner-user-id-cert",
+        new Date("2026-09-30T00:00:00.000Z"),
+      );
+  });
+
+  function transferRequest(
+    body: unknown,
+    headers: Record<string, string> = {},
+  ) {
+    return new Request(
+      "https://digital-solutions.example.test/api/agent-sessions/account/organization/ownership/transfer",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-bke-account-session-version":
+            "bke.account-session.v1",
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  }
+
+  it("projects ownership transfer as explicit Digital Solutions authority", () => {
+    const overview = read(
+      "apps/web/accounts/agent-organization-overview.ts",
+    );
+    const route = read(
+      "app/api/agent-sessions/account/organization/route.ts",
+    );
+    expect(overview).toContain(
+      "readonly transferOwnership: boolean;",
+    );
+    expect(overview).toContain(
+      'account.lifecycleState === "ACTIVE"',
+    );
+    expect(route).toContain(
+      "transfer_ownership:",
+    );
+    expect(route).toContain(
+      "overview.permissions.transferOwnership",
+    );
+  });
+
+  it("rejects browser-origin ownership transfer before Agent authentication", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/ownership/transfer/route"
+    );
+    const response = await POST(transferRequest({
+      management_handle: managementHandle,
+    }, {
+      origin: "https://browser.example.test",
+    }));
+
+    expect(response.status).toBe(403);
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+    expect(
+      agentOrganizationMocks.authenticateNativeAgentRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("transfers to the selected-account scoped member handle without leaking identifiers", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/ownership/transfer/route"
+    );
+    const response = await POST(transferRequest({
+      management_handle: managementHandle,
+    }));
+
+    expect(response.status).toBe(200);
+    expect(
+      agentOrganizationMocks.db.membership.findMany,
+    ).toHaveBeenCalledWith({
+      where: {
+        accountId: "selected-account-cert",
+      },
+      select: {
+        userId: true,
+        createdAt: true,
+      },
+    });
+    expect(
+      agentOrganizationMocks.transferOrganizationOwnership,
+    ).toHaveBeenCalledWith({
+      actorId: "owner-user-cert",
+      accountId: "selected-account-cert",
+      newOwnerUserId: "new-owner-user-id-cert",
+    });
+
+    const payload = await response.json();
+    expect(payload).toEqual({
+      status: "transferred",
+      reauthentication_required: true,
+    });
+    const wire = JSON.stringify(payload);
+    expect(wire).not.toContain("selected-account-cert");
+    expect(wire).not.toContain("owner-user-cert");
+    expect(wire).not.toContain("new-owner-user-id-cert");
+    expect(
+      response.headers.get("x-bke-account-session-version"),
+    ).toBe("bke.account-session.v1");
+  });
+
+  it("rejects raw identifiers, malformed handles, stale handles, and cross-account handles", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/ownership/transfer/route"
+    );
+
+    for (const body of [
+      {
+        management_handle: managementHandle,
+        account_id: "caller-selected-account",
+      },
+      {
+        management_handle: managementHandle,
+        user_id: "caller-selected-user",
+      },
+      {
+        management_handle: managementHandle,
+        membership_id: "caller-selected-membership",
+      },
+      {
+        management_handle: managementHandle,
+        owner_id: "caller-selected-owner",
+      },
+      {
+        management_handle: "raw-user-or-membership-id",
+      },
+    ]) {
+      const response = await POST(transferRequest(body));
+      expect(response.status).toBe(400);
+      expect(await response.json()).toEqual({
+        error: "INVALID_INPUT",
+      });
+    }
+
+    agentOrganizationMocks.db.membership.findMany.mockResolvedValueOnce(
+      [],
+    );
+    const stale = await POST(transferRequest({
+      management_handle: managementHandle,
+    }));
+    expect(stale.status).toBe(404);
+    expect(await stale.json()).toEqual({
+      error: "MEMBER_NOT_FOUND",
+    });
+
+    const {
+      issueAgentOrganizationMemberManagementHandle,
+    } = await import(
+      "../apps/web/accounts/agent-organization-member-management"
+    );
+    const copiedFromAnotherAccount =
+      issueAgentOrganizationMemberManagementHandle(
+        "other-account-cert",
+        "new-owner-user-id-cert",
+        new Date("2026-09-30T00:00:00.000Z"),
+      );
+    const crossAccount = await POST(transferRequest({
+      management_handle: copiedFromAnotherAccount,
+    }));
+    expect(crossAccount.status).toBe(404);
+    expect(await crossAccount.json()).toEqual({
+      error: "MEMBER_NOT_FOUND",
+    });
+
+    expect(
+      agentOrganizationMocks.transferOrganizationOwnership,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("preserves Accounts authorization, lifecycle, and same-owner rejection semantics", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/ownership/transfer/route"
+    );
+
+    agentOrganizationMocks.transferOrganizationOwnership.mockRejectedValueOnce(
+      new Error("ACCOUNT_ROLE_FORBIDDEN"),
+    );
+    const forbidden = await POST(transferRequest({
+      management_handle: managementHandle,
+    }));
+    expect(forbidden.status).toBe(403);
+    expect(await forbidden.json()).toEqual({
+      error: "ACCOUNT_ROLE_FORBIDDEN",
+    });
+
+    agentOrganizationMocks.transferOrganizationOwnership.mockRejectedValueOnce(
+      new Error("SUSPENDED_ACCOUNT"),
+    );
+    const suspended = await POST(transferRequest({
+      management_handle: managementHandle,
+    }));
+    expect(suspended.status).toBe(409);
+    expect(await suspended.json()).toEqual({
+      error: "SUSPENDED_ACCOUNT",
+    });
+
+    agentOrganizationMocks.transferOrganizationOwnership.mockRejectedValueOnce(
+      new Error("MEMBER_NOT_FOUND"),
+    );
+    const sameOwner = await POST(transferRequest({
+      management_handle: managementHandle,
+    }));
+    expect(sameOwner.status).toBe(404);
+    expect(await sameOwner.json()).toEqual({
+      error: "MEMBER_NOT_FOUND",
+    });
+  });
+
+  it("rate limits ownership transfer without invoking Accounts authority", async () => {
+    agentOrganizationMocks.rateLimit.mockResolvedValueOnce({
+      allowed: false,
+    });
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/organization/ownership/transfer/route"
+    );
+    const response = await POST(transferRequest({
+      management_handle: managementHandle,
+    }));
+
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({
+      error: "RATE_LIMITED",
+    });
+    expect(
+      agentOrganizationMocks.transferOrganizationOwnership,
     ).not.toHaveBeenCalled();
   });
 });
