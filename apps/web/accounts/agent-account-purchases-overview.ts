@@ -7,6 +7,7 @@ import {
 import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authorization-policy";
 import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { issueAgentLicenseSeatManagementHandle } from "@/apps/web/licensing/agent-license-seat-management";
 
 const LIST_LIMIT = 50;
 
@@ -23,6 +24,7 @@ export type AgentAccountPurchasesOverview =
         readonly viewOrders: boolean;
         readonly viewSubscriptions: boolean;
         readonly viewAllLicenses: boolean;
+        readonly manageLicenseSeats: boolean;
       };
       readonly licenses: readonly {
         readonly productName: string;
@@ -33,6 +35,9 @@ export type AgentAccountPurchasesOverview =
         readonly expiresAt: Date | null;
         readonly maxDevices: number;
         readonly activeDevices: number;
+        readonly maxSeats: number;
+        readonly assignedSeats: number;
+        readonly seatManagementHandle: string | null;
       }[];
       readonly subscriptions: readonly {
         readonly productName: string;
@@ -91,6 +96,10 @@ export async function getAgentAccountPurchasesOverview(input: {
     access.effectiveRole,
     "VIEW_LICENSES",
   );
+  const manageLicenseSeats = roleHasAccountsCapability(
+    access.effectiveRole,
+    "ASSIGN_LICENSE",
+  );
 
   const [licenses, subscriptions, orders] = await Promise.all([
     db.license.findMany({
@@ -107,6 +116,8 @@ export async function getAgentAccountPurchasesOverview(input: {
       orderBy: { createdAt: "desc" },
       take: LIST_LIMIT,
       select: {
+        id: true,
+        createdAt: true,
         status: true,
         keyLastFour: true,
         expiresAt: true,
@@ -118,6 +129,9 @@ export async function getAgentAccountPurchasesOverview(input: {
         activations: {
           where: { active: true },
           select: { id: true },
+        },
+        _count: {
+          select: { assignments: true },
         },
       },
     }),
@@ -172,6 +186,7 @@ export async function getAgentAccountPurchasesOverview(input: {
       viewOrders,
       viewSubscriptions,
       viewAllLicenses,
+      manageLicenseSeats,
     },
     licenses: licenses.map((license) => ({
       productName: license.product.name,
@@ -183,6 +198,18 @@ export async function getAgentAccountPurchasesOverview(input: {
       maxDevices:
         license.maxSeats * license.maxDevicesPerSeat,
       activeDevices: license.activations.length,
+      maxSeats: license.maxSeats,
+      assignedSeats: license._count.assignments,
+      seatManagementHandle:
+        manageLicenseSeats &&
+        access.account.lifecycleState === "ACTIVE" &&
+        license.status === "ACTIVE"
+          ? issueAgentLicenseSeatManagementHandle(
+              input.accountId,
+              license.id,
+              license.createdAt,
+            )
+          : null,
     })),
     subscriptions: subscriptions.map((subscription) => ({
       productName: subscription.product.name,

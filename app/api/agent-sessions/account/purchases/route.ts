@@ -88,6 +88,8 @@ export async function GET(request: Request) {
           overview.permissions.viewSubscriptions,
         view_all_licenses:
           overview.permissions.viewAllLicenses,
+        manage_license_seats:
+          overview.permissions.manageLicenseSeats,
       },
       licenses: overview.licenses.map((license) => ({
         product_name: license.productName,
@@ -98,6 +100,10 @@ export async function GET(request: Request) {
         expires_at: license.expiresAt?.toISOString() ?? null,
         max_devices: license.maxDevices,
         active_devices: license.activeDevices,
+        max_seats: license.maxSeats,
+        assigned_seats: license.assignedSeats,
+        seat_management_handle:
+          license.seatManagementHandle,
       })),
       subscriptions: overview.subscriptions.map(
         (subscription) => ({
