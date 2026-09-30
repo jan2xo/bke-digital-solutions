@@ -5,6 +5,7 @@ import {
   type AccountsAccountAccessCapability,
 } from "@bke/accounts/contracts/account-access.contract";
 import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authorization-policy";
+import { issueAgentOrganizationInvitationManagementHandle } from "@/apps/web/accounts/agent-organization-invitation-management";
 import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
 
@@ -41,6 +42,7 @@ export type AgentOrganizationOverview =
         readonly status: string;
         readonly expiresAt: Date;
         readonly createdAt: Date;
+        readonly managementHandle: string;
       }[];
     }
   | { readonly status: "not_organization" }
@@ -127,6 +129,7 @@ export async function getAgentOrganizationOverview(input: {
           },
           orderBy: { createdAt: "desc" },
           select: {
+            id: true,
             email: true,
             role: true,
             status: true,
@@ -178,7 +181,18 @@ export async function getAgentOrganizationOverview(input: {
         }))
       : [],
     invitations: manageMembers
-      ? invitations
+      ? invitations.map((invitation) => ({
+          email: invitation.email,
+          role: invitation.role,
+          status: invitation.status,
+          expiresAt: invitation.expiresAt,
+          createdAt: invitation.createdAt,
+          managementHandle:
+            issueAgentOrganizationInvitationManagementHandle(
+              input.accountId,
+              invitation.id,
+            ),
+        }))
       : [],
   };
 }
