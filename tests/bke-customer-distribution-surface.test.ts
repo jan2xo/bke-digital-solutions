@@ -5,9 +5,17 @@ const read = (path: string) => readFile(new URL(`../${path}`, import.meta.url), 
 
 describe("BKE-only customer distribution surface", () => {
   it("routes public and customer download UX through BKE", async () => {
-    const [header, bkePage, dashboard, accountPage, licenseCard] = await Promise.all([
+    const [
+      header,
+      bkePage,
+      distribution,
+      dashboard,
+      accountPage,
+      licenseCard,
+    ] = await Promise.all([
       read("components/header.tsx"),
       read("app/bke/page.tsx"),
+      read("platform/distribution/bke-launcher-download.ts"),
       read("app/dashboard/page.tsx"),
       read("app/dashboard/accounts/[accountId]/page.tsx"),
       read("components/customer-license-card.tsx"),
@@ -15,7 +23,8 @@ describe("BKE-only customer distribution surface", () => {
 
     expect(header).toContain('href="/bke"');
     expect(header).toContain("Download BKE");
-    expect(bkePage).toContain("BKE_PUBLIC_DOWNLOAD_URL");
+    expect(bkePage).toContain("resolveBkePublicDownloadUrl");
+    expect(distribution).toContain("BKE_PUBLIC_DOWNLOAD_URL");
     expect(bkePage).toContain("canonical customer download surface");
     expect(dashboard).toContain('href="/bke"');
     expect(dashboard).toContain('href="/redeem"');
@@ -29,8 +38,13 @@ describe("BKE-only customer distribution surface", () => {
   });
 
   it("does not pretend an uncertified BKE installer exists", async () => {
-    const page = await read("app/bke/page.tsx");
+    const [page, distribution] = await Promise.all([
+      read("app/bke/page.tsx"),
+      read("platform/distribution/bke-launcher-download.ts"),
+    ]);
     expect(page).toContain("BKE installer publishing is being prepared.");
-    expect(page).toContain('url.protocol === "https:"');
+    expect(distribution).toContain('url.protocol !== "https:"');
+    expect(distribution).toContain('url.hostname !== "github.com"');
+    expect(distribution).toContain("BKE_RELEASE_DOWNLOAD_PATTERN");
   });
 });
