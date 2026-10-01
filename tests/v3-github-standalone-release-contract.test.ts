@@ -1,9 +1,6 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import {
-  StandaloneReleaseContractError,
-  verifyGitHubStandaloneReleaseContract,
-} from "@/platform/distribution/github-standalone-release";
+import { verifyGitHubStandaloneReleaseContract } from "@/platform/distribution/github-standalone-release";
 
 function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
