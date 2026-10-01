@@ -41,7 +41,11 @@ export default async function ReleaseDetail({ params }: { params: Promise<{ id: 
           Build, tests, malware scanning, optional signing/checksum checks, and release publication are owned by GitHub Actions and GitHub Releases.
         </p>
         <p className="mt-3 text-sm text-slate-600">
-          Digital Solutions does not certify release evidence. This page controls catalog metadata and commercial availability only.
+          GitHub remains the build and software-release authority. Before a standalone
+          version can be shown in the BKE catalog, Digital Solutions verifies the exact
+          stable GitHub release contract (updater metadata, GitHub digest/size, and ZIP-root
+          entry point) and records durable verification evidence. The Licensing Agent
+          independently verifies the package again before privileged installation.
         </p>
       </section>
 

@@ -117,6 +117,22 @@ export async function readAgentSoftwareCatalog(
          AND pv."publishedAt" IS NOT NULL
          AND pv."lifecycle" IN ('STABLE', 'LTS')
          AND (
+           p."launcherExecutionType"::text IS DISTINCT FROM 'STANDALONE'
+           OR EXISTS (
+             SELECT 1
+               FROM "SupplyChainEvidence" release_evidence
+               JOIN "SupplyChainVerificationEvidence" release_contract
+                 ON release_contract."evidenceId" = release_evidence."id"
+              WHERE release_evidence."versionId" = pv."id"
+                AND release_contract."kind" = 'GITHUB_RELEASE_CONTRACT'
+                AND release_contract."result" = 'VERIFIED'
+                AND release_contract."metadata"->>'productId' = p."productId"
+                AND release_contract."metadata"->>'version' = pv."version"
+                AND release_contract."metadata"->>'platform' = ${input.platform}
+                AND release_contract."metadata"->>'architecture' = ${input.architecture}
+           )
+         )
+         AND (
            LOWER(pv."operatingSystem") = ${input.platform}
            OR LOWER(pv."operatingSystem") IN ('any', 'universal')
          )

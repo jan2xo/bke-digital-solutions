@@ -10,6 +10,7 @@ import {
   generateLicenseKey,
   hashLicenseKey,
 } from "../platform/host/security/crypto";
+import { verifyGitHubStandaloneReleaseContract } from "../platform/distribution/github-standalone-release";
 
 const FIXTURE_EMAIL = "utm-launcher-customer@local.test";
 const FIXTURE_ACCOUNT_ID = "utm-launcher-customer-account";
@@ -78,6 +79,18 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
   const validFrom = new Date(now.getTime() - 60_000);
 
   try {
+    const releaseProofs =
+      await verifyGitHubStandaloneReleaseContract({
+        productId: PRODUCT_ID,
+        version: PRODUCT_VERSION,
+        platform: "windows",
+        architecture: "x64",
+      });
+    if (releaseProofs.length !== 1) {
+      throw new Error("UTM_FIXTURE_RELEASE_CONTRACT_INVALID");
+    }
+    const releaseProof = releaseProofs[0];
+
     const user = await db.user.upsert({
       where: { email: FIXTURE_EMAIL },
       update: {
@@ -179,7 +192,7 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
       update: {
         releaseNotes: "Disposable UTM certification target.",
         operatingSystem: "Windows",
-        architecture: "universal",
+        architecture: "x64",
         channel: "STABLE",
         lifecycle: "STABLE",
         active: true,
@@ -191,7 +204,7 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
         version: PRODUCT_VERSION,
         releaseNotes: "Disposable UTM certification target.",
         operatingSystem: "Windows",
-        architecture: "universal",
+        architecture: "x64",
         channel: "STABLE",
         lifecycle: "STABLE",
         active: true,
@@ -206,6 +219,57 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
         id: { not: version.id },
       },
       data: { isLatest: false },
+    });
+
+    const releaseEvidence = await db.supplyChainEvidence.upsert({
+      where: { versionId: version.id },
+      update: {
+        releaseIdentifier: `${PRODUCT_SLUG}@${PRODUCT_VERSION}`,
+        commitHash: releaseProof.releaseTargetSha,
+        branch: `refs/tags/${releaseProof.tag}`,
+        buildEnvironment: "disposable-utm",
+        builderIdentity: "github-release-contract",
+        builtAt: now,
+        manifestJson: {
+          authority: "GITHUB_RELEASES",
+          repository: releaseProof.repository,
+          tag: releaseProof.tag,
+          packageSha256: releaseProof.packageSha256,
+        },
+      },
+      create: {
+        versionId: version.id,
+        releaseIdentifier: `${PRODUCT_SLUG}@${PRODUCT_VERSION}`,
+        commitHash: releaseProof.releaseTargetSha,
+        branch: `refs/tags/${releaseProof.tag}`,
+        buildEnvironment: "disposable-utm",
+        builderIdentity: "github-release-contract",
+        builtAt: now,
+        manifestJson: {
+          authority: "GITHUB_RELEASES",
+          repository: releaseProof.repository,
+          tag: releaseProof.tag,
+          packageSha256: releaseProof.packageSha256,
+        },
+      },
+    });
+
+    await db.supplyChainVerificationEvidence.deleteMany({
+      where: {
+        evidenceId: releaseEvidence.id,
+        kind: "GITHUB_RELEASE_CONTRACT",
+      },
+    });
+    await db.supplyChainVerificationEvidence.create({
+      data: {
+        evidenceId: releaseEvidence.id,
+        kind: "GITHUB_RELEASE_CONTRACT",
+        artifactHash: releaseProof.packageSha256,
+        result: "VERIFIED",
+        reference:
+          `https://github.com/${releaseProof.repository}/releases/tag/${releaseProof.tag}`,
+        metadata: { ...releaseProof },
+      },
     });
 
     let policy = await db.licensePolicy.findFirst({
@@ -477,8 +541,10 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
       version: PRODUCT_VERSION,
       entitled: true,
       launcherExecutionType: "STANDALONE",
-      releaseRepository: "jan2xo/BKE_RENDER_DOCK",
-      releaseTag: "v1.0.3",
+      releaseRepository: releaseProof.repository,
+      releaseTag: releaseProof.tag,
+      releasePackageSha256: releaseProof.packageSha256,
+      releaseContractVerified: true,
     }));
   } finally {
     await db.$disconnect();
