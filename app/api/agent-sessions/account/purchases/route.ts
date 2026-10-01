@@ -90,6 +90,8 @@ export async function GET(request: Request) {
           overview.permissions.viewAllLicenses,
         manage_license_seats:
           overview.permissions.manageLicenseSeats,
+        manage_devices:
+          overview.permissions.manageDevices,
       },
       licenses: overview.licenses.map((license) => ({
         product_name: license.productName,
@@ -104,6 +106,8 @@ export async function GET(request: Request) {
         assigned_seats: license.assignedSeats,
         seat_management_handle:
           license.seatManagementHandle,
+        device_management_handle:
+          license.deviceManagementHandle,
       })),
       subscriptions: overview.subscriptions.map(
         (subscription) => ({
