@@ -99,4 +99,54 @@ describe("license seat management", () => {
     expect(manageRoute).not.toContain("user_id");
   });
 
+
+  it("exposes authorized-device management only through purpose-specific opaque Agent handles", () => {
+    const handles = readFileSync(
+      "apps/web/licensing/agent-license-device-management.ts",
+      "utf8",
+    );
+    const authority = readFileSync(
+      "apps/web/licensing/agent-license-device-authority.ts",
+      "utf8",
+    );
+    const purchases = readFileSync(
+      "apps/web/accounts/agent-account-purchases-overview.ts",
+      "utf8",
+    );
+    const readRoute = readFileSync(
+      "app/api/agent-sessions/account/license-devices/route.ts",
+      "utf8",
+    );
+    const manageRoute = readFileSync(
+      "app/api/agent-sessions/account/license-devices/manage/route.ts",
+      "utf8",
+    );
+
+    expect(handles).toContain("createHmac");
+    expect(handles).toContain("safeEqual");
+    expect(handles).toContain("SESSION_SECRET");
+    expect(handles).toContain("bke-license-device-v1_");
+    expect(handles).toContain(
+      "bke-license-device-target-v1_",
+    );
+    expect(authority).toContain('"DEACTIVATE_DEVICE"');
+    expect(authority).toContain(
+      'isolationLevel: "Serializable"',
+    );
+    expect(authority).toContain('"DEVICE_DEACTIVATED"');
+    expect(authority).toContain('type: "DEACTIVATED"');
+    expect(purchases).toContain('"DEACTIVATE_DEVICE"');
+    expect(purchases).toContain("deviceManagementHandle");
+    expect(readRoute).toContain("authenticated.accountId");
+    expect(manageRoute).toContain("authenticated.accountId");
+    expect(readRoute).not.toContain("license_id");
+    expect(readRoute).not.toContain("device_id");
+    expect(manageRoute).not.toContain("license_id");
+    expect(manageRoute).not.toContain("device_id");
+    expect(readRoute).not.toContain("deviceHash");
+    expect(readRoute).not.toContain("machineIdHint");
+    expect(manageRoute).not.toContain("deviceHash");
+    expect(manageRoute).not.toContain("machineIdHint");
+  });
+
 });
