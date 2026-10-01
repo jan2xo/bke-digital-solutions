@@ -140,6 +140,31 @@ describe("V3 Agent software catalog contract", () => {
     expect(source).toContain('pv."publishedAt" IS NOT NULL');
   });
 
+  it("requires durable GitHub release-contract proof for standalone installability", () => {
+    const source = readFileSync(
+      "apps/web/catalog/agent-software-catalog.ts",
+      "utf8",
+    );
+    const releaseRoute = readFileSync(
+      "app/api/admin/versions/[id]/route.ts",
+      "utf8",
+    );
+    const apiError = readFileSync(
+      "apps/web/http/api-error.ts",
+      "utf8",
+    );
+
+    expect(source).toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(source).toContain('release_contract."result" = \'VERIFIED\'');
+    expect(source).toContain('release_contract."metadata"->>\'platform\' = ${input.platform}');
+    expect(source).toContain('release_contract."metadata"->>\'architecture\' = ${input.architecture}');
+    expect(releaseRoute).toContain("verifyGitHubStandaloneReleaseContract");
+    expect(releaseRoute).toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(releaseRoute).toContain("RELEASE_DISTRIBUTION_CONTRACT_INVALID");
+    expect(apiError).toContain("RELEASE_DISTRIBUTION_CONTRACT_INVALID: 409");
+    expect(apiError).toContain("RELEASE_DISTRIBUTION_UNAVAILABLE: 503");
+  });
+
   it("fails closed on unknown execution values", () => {
     expect(projectAgentSoftwareCatalogRow({
       productId: "future-product",
