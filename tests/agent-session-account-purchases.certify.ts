@@ -355,8 +355,8 @@ try {
     viewAllLicenses: true,
     manageLicenseSeats: true,
     manageDevices: true,
-    continuePendingOrders: true,
-    cancelPendingOrders: true,
+    continuePendingOrders: false,
+    cancelPendingOrders: false,
   });
   assert.equal(licenseOverview.licenses.length, 2);
   assert.ok(
