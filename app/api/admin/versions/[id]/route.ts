@@ -6,6 +6,11 @@ import { assertSameOrigin } from "@/apps/web/http/request";
 import { audit } from "@/apps/web/audit";
 import { apiError } from "@/apps/web/http/api-error";
 import { rateLimit } from "@/apps/web/http/rate-limit";
+import {
+  StandaloneReleaseContractError,
+  type StandaloneReleaseContractProof,
+  verifyGitHubStandaloneReleaseContract,
+} from "@/platform/distribution/github-standalone-release";
 
 const stages = ["DRAFT", "INTERNAL", "ALPHA", "BETA", "RELEASE_CANDIDATE", "STABLE", "LTS", "DEPRECATED", "ARCHIVED"] as const;
 const schema = z.object({
@@ -34,7 +39,20 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const input = schema.parse(await request.json());
     if (!(await rateLimit(`admin-release-lifecycle:${admin.id}:${id}`, 20, 3600)).allowed) throw new Error("RATE_LIMITED");
 
-    const current = await db.productVersion.findUniqueOrThrow({ where: { id } });
+    const current = await db.productVersion.findUniqueOrThrow({
+      where: { id },
+      include: {
+        product: {
+          select: {
+            productId: true,
+            launcherExecutionType: true,
+          },
+        },
+        supplyChainEvidence: {
+          select: { id: true },
+        },
+      },
+    });
     const targetLifecycle = input.lifecycle ?? current.lifecycle;
     const compatibilityChange =
       input.operatingSystem !== undefined ||
@@ -46,6 +64,42 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     if (input.published === true && !["STABLE", "LTS"].includes(targetLifecycle)) {
       throw new Error("RELEASE_PUBLICATION_REQUIRES_STABLE");
+    }
+
+    let standaloneReleaseProofs: readonly StandaloneReleaseContractProof[] = [];
+    if (
+      input.published === true &&
+      current.product.launcherExecutionType === "STANDALONE"
+    ) {
+      const productId = current.product.productId?.trim();
+      const operatingSystem =
+        input.operatingSystem ?? current.operatingSystem;
+      const architecture =
+        input.architecture ?? current.architecture;
+
+      if (
+        !productId ||
+        !current.supplyChainEvidence ||
+        operatingSystem !== "Windows" ||
+        !["x64", "arm64", "universal"].includes(architecture)
+      ) {
+        throw new Error("RELEASE_DISTRIBUTION_CONTRACT_INVALID");
+      }
+
+      try {
+        standaloneReleaseProofs =
+          await verifyGitHubStandaloneReleaseContract({
+            productId,
+            version: current.version,
+            platform: "windows",
+            architecture: architecture as "x64" | "arm64" | "universal",
+          });
+      } catch (error) {
+        if (error instanceof StandaloneReleaseContractError) {
+          throw new Error(error.code);
+        }
+        throw error;
+      }
     }
 
     if (input.lifecycle) {
@@ -71,6 +125,34 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           },
           data: { isLatest: false },
         });
+
+        if (
+          current.product.launcherExecutionType === "STANDALONE" &&
+          current.supplyChainEvidence
+        ) {
+          await tx.supplyChainVerificationEvidence.deleteMany({
+            where: {
+              evidenceId: current.supplyChainEvidence.id,
+              kind: "GITHUB_RELEASE_CONTRACT",
+            },
+          });
+
+          if (standaloneReleaseProofs.length === 0) {
+            throw new Error("RELEASE_DISTRIBUTION_CONTRACT_INVALID");
+          }
+
+          await tx.supplyChainVerificationEvidence.createMany({
+            data: standaloneReleaseProofs.map((proof) => ({
+              evidenceId: current.supplyChainEvidence!.id,
+              kind: "GITHUB_RELEASE_CONTRACT",
+              artifactHash: proof.packageSha256,
+              result: "VERIFIED",
+              reference:
+                `https://github.com/${proof.repository}/releases/tag/${proof.tag}`,
+              metadata: { ...proof },
+            })),
+          });
+        }
       }
 
       const now = new Date();
@@ -119,6 +201,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         operatingSystem: input.operatingSystem,
         architecture: input.architecture,
         releaseAuthority: "GITHUB",
+        releaseContractVerified:
+          standaloneReleaseProofs.length > 0,
+        releaseContractArchitectures:
+          standaloneReleaseProofs.map((proof) => proof.architecture),
         notes: input.notes ?? "",
       },
     });
