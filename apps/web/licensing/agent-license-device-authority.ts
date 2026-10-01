@@ -129,6 +129,13 @@ export async function getAgentLicenseDeviceOverview(input: {
             active: true,
           },
         },
+        _count: {
+          select: {
+            activations: {
+              where: { active: true },
+            },
+          },
+        },
       },
     });
 
@@ -145,9 +152,7 @@ export async function getAgentLicenseDeviceOverview(input: {
         maxDevices:
           license.maxSeats *
           license.maxDevicesPerSeat,
-        activeDevices: license.activations.filter(
-          (activation) => activation.active,
-        ).length,
+        activeDevices: license._count.activations,
       },
       devices: license.activations.map((activation) => ({
         label: activation.label,
