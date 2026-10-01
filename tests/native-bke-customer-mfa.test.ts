@@ -69,6 +69,50 @@ describe("native BKE customer MFA authority", () => {
     expect(sessionAuthority).toContain("disabledAt");
   });
 
+  it("adds a session-scoped 15-minute recent-auth primitive without persisting proof material", () => {
+    const migration = read(
+      "prisma/migrations/20261001060000_agent_session_recent_auth/migration.sql",
+    );
+    const helper = read("apps/web/agent-sessions/recent-auth.ts");
+    const start = read(
+      "app/api/agent-sessions/account/recent-auth/start/route.ts",
+    );
+    const complete = read(
+      "app/api/agent-sessions/account/recent-auth/complete/route.ts",
+    );
+
+    expect(migration).toContain('"recentAuthenticatedAt" TIMESTAMP(3)');
+    expect(helper).toContain("AGENT_RECENT_AUTH_WINDOW_MINUTES = 15");
+    expect(helper).toContain('"recentAuthenticatedAt" = ${now}');
+    expect(helper).toContain('"id" = ${input.sessionId}');
+    expect(helper).toContain('"userId" = ${input.userId}');
+    expect(helper).toContain('"accountId" = ${input.accountId}');
+    expect(helper).toContain('"deviceId" = ${input.deviceId}');
+    expect(helper).toContain('"revokedAt" IS NULL');
+    expect(helper).toContain('"AGENT_RECENT_AUTH_VERIFIED"');
+    expect(helper).not.toContain("current_password");
+    expect(helper).not.toContain("challenge_token");
+    expect(helper).not.toContain("codeHash");
+
+    for (const route of [start, complete]) {
+      expect(route).toContain("rejectBrowserOriginForAgent(request)");
+      expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+      expect(route).toContain("authenticateNativeAgentRequest(request)");
+      expect(route).toContain('"cache-control": "no-store"');
+      expect(route).not.toContain("console.log");
+    }
+
+    expect(start).toContain("current_password");
+    expect(start).toContain("verifyNativeCurrentPassword");
+    expect(start).toContain("administratorMfaMethod.findUnique");
+    expect(start).toContain("issueIdentityLoginMfaChallenge");
+    expect(start).toContain('status: "verified"');
+    expect(start).toContain('status: "mfa_challenge_issued"');
+    expect(complete).toContain("challenge_token");
+    expect(complete).toContain("verifyNativeMfaProof");
+    expect(complete).toContain('method: "PASSWORD_MFA"');
+  });
+
   it("keeps native registration protocol-bound, legal-version-bound, and secret-safe", () => {
     const preflight = read("app/api/agent-sessions/native/registration/route.ts");
     const register = read("app/api/agent-sessions/native/register/route.ts");
