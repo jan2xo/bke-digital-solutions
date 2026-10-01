@@ -154,7 +154,7 @@ describe("V3 Agent software catalog contract", () => {
       "utf8",
     );
 
-    expect(source).toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(source).toContain('release_contract."kind" = \'GITHUB_RELEASE_CONTRACT\'');
     expect(source).toContain('release_contract."result" = \'VERIFIED\'');
     expect(source).toContain('release_contract."metadata"->>\'platform\' = ${input.platform}');
     expect(source).toContain('release_contract."metadata"->>\'architecture\' = ${input.architecture}');
