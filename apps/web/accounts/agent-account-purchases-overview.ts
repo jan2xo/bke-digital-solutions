@@ -8,6 +8,7 @@ import { roleHasAccountsCapability } from "@bke/accounts/logic/account-authoriza
 import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
 import { issueAgentLicenseSeatManagementHandle } from "@/apps/web/licensing/agent-license-seat-management";
+import { issueAgentLicenseDeviceManagementHandle } from "@/apps/web/licensing/agent-license-device-management";
 
 const LIST_LIMIT = 50;
 
@@ -25,6 +26,7 @@ export type AgentAccountPurchasesOverview =
         readonly viewSubscriptions: boolean;
         readonly viewAllLicenses: boolean;
         readonly manageLicenseSeats: boolean;
+        readonly manageDevices: boolean;
       };
       readonly licenses: readonly {
         readonly productName: string;
@@ -38,6 +40,7 @@ export type AgentAccountPurchasesOverview =
         readonly maxSeats: number;
         readonly assignedSeats: number;
         readonly seatManagementHandle: string | null;
+        readonly deviceManagementHandle: string | null;
       }[];
       readonly subscriptions: readonly {
         readonly productName: string;
@@ -99,6 +102,10 @@ export async function getAgentAccountPurchasesOverview(input: {
   const manageLicenseSeats = roleHasAccountsCapability(
     access.effectiveRole,
     "ASSIGN_LICENSE",
+  );
+  const manageDevices = roleHasAccountsCapability(
+    access.effectiveRole,
+    "DEACTIVATE_DEVICE",
   );
 
   const [licenses, subscriptions, orders] = await Promise.all([
@@ -187,6 +194,7 @@ export async function getAgentAccountPurchasesOverview(input: {
       viewSubscriptions,
       viewAllLicenses,
       manageLicenseSeats,
+      manageDevices,
     },
     licenses: licenses.map((license) => ({
       productName: license.product.name,
@@ -205,6 +213,15 @@ export async function getAgentAccountPurchasesOverview(input: {
         access.account.lifecycleState === "ACTIVE" &&
         license.status === "ACTIVE"
           ? issueAgentLicenseSeatManagementHandle(
+              input.accountId,
+              license.id,
+              license.createdAt,
+            )
+          : null,
+      deviceManagementHandle:
+        manageDevices &&
+        access.account.lifecycleState === "ACTIVE"
+          ? issueAgentLicenseDeviceManagementHandle(
               input.accountId,
               license.id,
               license.createdAt,
