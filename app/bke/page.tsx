@@ -1,21 +1,12 @@
+import { resolveBkePublicDownloadUrl } from "@/platform/distribution/bke-launcher-download";
+
 export const metadata = {
   title: "Download BKE",
   description: "BKE is the desktop home for installing and managing BKE software.",
 };
 
-function configuredDownloadUrl() {
-  const value = process.env.BKE_PUBLIC_DOWNLOAD_URL?.trim();
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" ? url.toString() : null;
-  } catch {
-    return null;
-  }
-}
-
 export default function BkeDownloadPage() {
-  const downloadUrl = configuredDownloadUrl();
+  const downloadUrl = resolveBkePublicDownloadUrl();
 
   return <section className="shell py-16 motion-fade-up">
     <p className="font-bold text-[#ffe08a]">BKE DESKTOP</p>
