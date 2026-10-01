@@ -9,6 +9,10 @@ import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
 import { issueAgentLicenseSeatManagementHandle } from "@/apps/web/licensing/agent-license-seat-management";
 import { issueAgentLicenseDeviceManagementHandle } from "@/apps/web/licensing/agent-license-device-management";
+import {
+  issueAgentOrderCancelHandle,
+  issueAgentOrderContinueHandle,
+} from "@/apps/web/accounts/agent-order-management";
 
 const LIST_LIMIT = 50;
 
@@ -27,6 +31,8 @@ export type AgentAccountPurchasesOverview =
         readonly viewAllLicenses: boolean;
         readonly manageLicenseSeats: boolean;
         readonly manageDevices: boolean;
+        readonly continuePendingOrders: boolean;
+        readonly cancelPendingOrders: boolean;
       };
       readonly licenses: readonly {
         readonly productName: string;
@@ -57,6 +63,8 @@ export type AgentAccountPurchasesOverview =
         readonly currency: string;
         readonly createdAt: Date;
         readonly invoiceAvailable: boolean;
+        readonly continueHandle: string | null;
+        readonly cancelHandle: string | null;
         readonly items: readonly {
           readonly productName: string;
           readonly editionName: string | null;
@@ -106,6 +114,14 @@ export async function getAgentAccountPurchasesOverview(input: {
   const manageDevices = roleHasAccountsCapability(
     access.effectiveRole,
     "DEACTIVATE_DEVICE",
+  );
+  const continuePendingOrders = roleHasAccountsCapability(
+    access.effectiveRole,
+    "PURCHASE",
+  );
+  const cancelPendingOrders = roleHasAccountsCapability(
+    access.effectiveRole,
+    "CANCEL_PENDING_ORDER",
   );
 
   const [licenses, subscriptions, orders] = await Promise.all([
@@ -163,6 +179,7 @@ export async function getAgentAccountPurchasesOverview(input: {
           orderBy: { createdAt: "desc" },
           take: LIST_LIMIT,
           select: {
+            id: true,
             number: true,
             status: true,
             totalMinor: true,
@@ -195,6 +212,8 @@ export async function getAgentAccountPurchasesOverview(input: {
       viewAllLicenses,
       manageLicenseSeats,
       manageDevices,
+      continuePendingOrders,
+      cancelPendingOrders,
     },
     licenses: licenses.map((license) => ({
       productName: license.product.name,
@@ -243,6 +262,26 @@ export async function getAgentAccountPurchasesOverview(input: {
       currency: order.currency,
       createdAt: order.createdAt,
       invoiceAvailable: order.invoice !== null,
+      continueHandle:
+        continuePendingOrders &&
+        access.account.lifecycleState === "ACTIVE" &&
+        order.status === "PENDING"
+          ? issueAgentOrderContinueHandle(
+              input.accountId,
+              order.id,
+              order.createdAt,
+            )
+          : null,
+      cancelHandle:
+        cancelPendingOrders &&
+        access.account.lifecycleState === "ACTIVE" &&
+        order.status === "PENDING"
+          ? issueAgentOrderCancelHandle(
+              input.accountId,
+              order.id,
+              order.createdAt,
+            )
+          : null,
       items: order.items.map((item) => ({
         productName: item.productName,
         editionName: item.editionName,
