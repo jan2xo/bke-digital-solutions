@@ -82,5 +82,13 @@ jobs:
         env:
           NODE_OPTIONS: --conditions=react-server
         run: npx tsx tests/native-bke-registration.certify.ts
+      - name: Certify native purchase projection
+        env:
+          NODE_OPTIONS: --conditions=react-server
+        run: npx tsx tests/agent-session-account-purchases.certify.ts
+      - name: Certify native pending order management
+        env:
+          NODE_OPTIONS: --conditions=react-server
+        run: npx tsx tests/agent-session-order-management.certify.ts
       - name: Typecheck host
         run: npm run typecheck
