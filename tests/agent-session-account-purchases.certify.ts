@@ -149,6 +149,19 @@ const order = await db.order.create({
   include: { items: true },
 });
 
+const pendingOrder = await db.order.create({
+  data: {
+    number: `ORD-PENDING-${suffix}`,
+    accountId: organization.id,
+    status: "PENDING",
+    currency: "PHP",
+    subtotalMinor: 15000000,
+    taxMinor: 0,
+    totalMinor: 15000000,
+    billingSnapshot: { certification: true },
+  },
+});
+
 const subscription = await db.subscription.create({
   data: {
     accountId: organization.id,
@@ -227,6 +240,8 @@ try {
     viewAllLicenses: true,
     manageLicenseSeats: true,
     manageDevices: true,
+    continuePendingOrders: true,
+    cancelPendingOrders: true,
   });
   assert.equal(ownerOverview.licenses.length, 2);
   assert.ok(
@@ -247,9 +262,43 @@ try {
     1,
   );
   assert.equal(ownerOverview.subscriptions.length, 1);
-  assert.equal(ownerOverview.orders.length, 1);
-  assert.equal(ownerOverview.orders[0]!.invoiceAvailable, true);
-  assert.equal(ownerOverview.orders[0]!.items.length, 2);
+  assert.equal(ownerOverview.orders.length, 2);
+  const ownerPendingOrder = ownerOverview.orders.find(
+    (candidate) => candidate.status === "PENDING",
+  );
+  const ownerPaidOrder = ownerOverview.orders.find(
+    (candidate) => candidate.status === "PAID",
+  );
+  assert.ok(ownerPendingOrder);
+  assert.ok(ownerPaidOrder);
+  assert.equal(ownerPaidOrder.invoiceAvailable, true);
+  assert.equal(ownerPaidOrder.items.length, 2);
+  assert.equal(
+    ownerPendingOrder.continueHandle?.startsWith(
+      "bke-order-continue-v1_",
+    ),
+    true,
+  );
+  assert.equal(
+    ownerPendingOrder.cancelHandle?.startsWith(
+      "bke-order-cancel-v1_",
+    ),
+    true,
+  );
+  assert.equal(ownerPaidOrder.continueHandle, null);
+  assert.equal(ownerPaidOrder.cancelHandle, null);
+  assert.equal(
+    ownerPendingOrder.continueHandle?.includes(
+      pendingOrder.id,
+    ),
+    false,
+  );
+  assert.equal(
+    ownerPendingOrder.cancelHandle?.includes(
+      pendingOrder.id,
+    ),
+    false,
+  );
   assert.equal(
     Object.hasOwn(ownerOverview.licenses[0] ?? {}, "id"),
     false,
@@ -278,10 +327,18 @@ try {
     viewAllLicenses: false,
     manageLicenseSeats: false,
     manageDevices: false,
+    continuePendingOrders: true,
+    cancelPendingOrders: true,
   });
   assert.equal(billingOverview.licenses.length, 0);
   assert.equal(billingOverview.subscriptions.length, 1);
-  assert.equal(billingOverview.orders.length, 1);
+  assert.equal(billingOverview.orders.length, 2);
+  const billingPendingOrder = billingOverview.orders.find(
+    (candidate) => candidate.status === "PENDING",
+  );
+  assert.ok(billingPendingOrder);
+  assert.ok(billingPendingOrder.continueHandle);
+  assert.ok(billingPendingOrder.cancelHandle);
 
   const licenseOverview =
     await getAgentAccountPurchasesOverview({
@@ -298,6 +355,8 @@ try {
     viewAllLicenses: true,
     manageLicenseSeats: true,
     manageDevices: true,
+    continuePendingOrders: true,
+    cancelPendingOrders: true,
   });
   assert.equal(licenseOverview.licenses.length, 2);
   assert.ok(
@@ -329,6 +388,8 @@ try {
     viewAllLicenses: false,
     manageLicenseSeats: false,
     manageDevices: false,
+    continuePendingOrders: false,
+    cancelPendingOrders: false,
   });
   assert.equal(memberOverview.licenses.length, 1);
   assert.equal(
