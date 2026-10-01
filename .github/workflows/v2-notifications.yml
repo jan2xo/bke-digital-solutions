@@ -50,5 +50,7 @@ jobs:
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Notifications consumer adoption and staging retirement
         run: npx tsx modules/notifications/test/consumer-adoption.certify.ts
+      - name: Certify notification routing and product broadcasts
+        run: npx vitest run tests/v3-notification-routing.test.ts tests/v3-product-broadcast-contract.test.ts
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
