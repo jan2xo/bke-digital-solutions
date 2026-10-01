@@ -29,10 +29,10 @@ describe("disposable UTM Launcher fixture", () => {
 
   it("pins the real Render Dock standalone certification target", () => {
     expect(fixture).toContain('const PRODUCT_ID = "bke-render-dock"');
-    expect(fixture).toContain('const PRODUCT_VERSION = "1.0.2"');
+    expect(fixture).toContain('const PRODUCT_VERSION = "1.0.3"');
     expect(fixture).toContain('launcherExecutionType: "STANDALONE"');
     expect(fixture).toContain('releaseRepository: "jan2xo/BKE_RENDER_DOCK"');
-    expect(fixture).toContain('releaseTag: "v1.0.2"');
+    expect(fixture).toContain('releaseTag: "v1.0.3"');
     expect(fixture).toContain('"Entitlement"');
   });
 
