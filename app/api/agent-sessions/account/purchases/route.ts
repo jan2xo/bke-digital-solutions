@@ -92,6 +92,10 @@ export async function GET(request: Request) {
           overview.permissions.manageLicenseSeats,
         manage_devices:
           overview.permissions.manageDevices,
+        continue_pending_orders:
+          overview.permissions.continuePendingOrders,
+        cancel_pending_orders:
+          overview.permissions.cancelPendingOrders,
       },
       licenses: overview.licenses.map((license) => ({
         product_name: license.productName,
@@ -127,6 +131,8 @@ export async function GET(request: Request) {
         currency: order.currency,
         created_at: order.createdAt.toISOString(),
         invoice_available: order.invoiceAvailable,
+        continue_handle: order.continueHandle,
+        cancel_handle: order.cancelHandle,
         items: order.items.map((item) => ({
           product_name: item.productName,
           edition_name: item.editionName,
