@@ -53,7 +53,11 @@ function partialResponse(bytes: Buffer, range: string): Response {
   }
 
   const body = bytes.subarray(start, end + 1);
-  return new Response(body, {
+  const responseBody = body.buffer.slice(
+    body.byteOffset,
+    body.byteOffset + body.byteLength,
+  ) as ArrayBuffer;
+  return new Response(responseBody, {
     status: 206,
     headers: {
       "content-length": String(body.length),
@@ -115,7 +119,11 @@ function releaseFetch(entries: readonly string[]): typeof fetch {
       return Response.json(release);
     }
     if (url.endsWith(metadataName)) {
-      return new Response(metadataBytes, {
+      const responseBody = metadataBytes.buffer.slice(
+        metadataBytes.byteOffset,
+        metadataBytes.byteOffset + metadataBytes.byteLength,
+      ) as ArrayBuffer;
+      return new Response(responseBody, {
         status: 200,
         headers: { "content-length": String(metadataBytes.length) },
       });
@@ -166,7 +174,7 @@ describe("standalone GitHub release contract", () => {
       }, releaseFetch([
         "NDER_DOCK/artifacts/publish/win-x64/RENDER DOCK.exe",
       ])),
-    ).rejects.toMatchObject<Partial<StandaloneReleaseContractError>>({
+    ).rejects.toMatchObject({
       code: "RELEASE_DISTRIBUTION_CONTRACT_INVALID",
       retryable: false,
     });
@@ -205,7 +213,7 @@ describe("standalone GitHub release contract", () => {
         platform: "windows",
         architecture: "x64",
       }, fetcher),
-    ).rejects.toMatchObject<Partial<StandaloneReleaseContractError>>({
+    ).rejects.toMatchObject({
       code: "RELEASE_DISTRIBUTION_CONTRACT_INVALID",
       retryable: false,
     });
