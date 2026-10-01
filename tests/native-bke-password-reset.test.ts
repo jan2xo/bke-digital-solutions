@@ -42,11 +42,46 @@ describe("native BKE password reset request", () => {
     expect(authority).toContain("await revokeAgentSessionFamily(tx, session.id, now)");
   });
 
-  it("keeps existing browser reset completion as the credential authority", () => {
-    const route = read("app/api/auth/password-reset/consume/route.ts");
+  it("exposes password-reset completion through the native protocol without creating a session", () => {
+    const route = read("app/api/agent-sessions/native/password-reset/complete/route.ts");
 
+    expect(route).toContain("rejectBrowserOriginForAgent(request)");
+    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
     expect(route).toContain("IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID");
-    expect(route).toContain("passwordReset.complete");
-    expect(route).toContain("assertSameOrigin(request)");
+    expect(route).toContain("passwordReset.complete(input)");
+    expect(route).toContain("passwordSchema");
+    expect(route).toContain('status: "completed"');
+    expect(route).not.toContain("assertSameOrigin(request)");
+    expect(route).not.toContain("createSession");
+    expect(route).not.toContain("handoff");
+  });
+
+  it("keeps native reset secrets transient and narrows the success response", () => {
+    const route = read("app/api/agent-sessions/native/password-reset/complete/route.ts");
+
+    expect(route).toContain("token: z.string().min(20)");
+    expect(route).toContain("password: passwordSchema");
+    expect(route).toContain("input.token !== input.token.trim()");
+    expect(route).toContain("passwordReset.complete(input)");
+    expect(route).toContain('return response({ status: "completed" })');
+    expect(route).not.toContain("result.token");
+    expect(route).not.toContain("result.password");
+    expect(route).not.toContain("recipient_email");
+    expect(route).not.toContain("account_id");
+    expect(route).not.toContain("session_id");
+  });
+
+  it("keeps browser and native reset completion on the same Identity authority", () => {
+    const browser = read("app/api/auth/password-reset/consume/route.ts");
+    const native = read("app/api/agent-sessions/native/password-reset/complete/route.ts");
+
+    for (const route of [browser, native]) {
+      expect(route).toContain("IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID");
+      expect(route).toContain("passwordReset.complete(input)");
+    }
+
+    expect(browser).toContain("assertSameOrigin(request)");
+    expect(native).toContain("rejectBrowserOriginForAgent(request)");
+    expect(native).not.toContain("assertSameOrigin(request)");
   });
 });
