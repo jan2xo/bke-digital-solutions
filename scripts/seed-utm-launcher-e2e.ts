@@ -15,7 +15,7 @@ const FIXTURE_EMAIL = "utm-launcher-customer@local.test";
 const FIXTURE_ACCOUNT_ID = "utm-launcher-customer-account";
 const PRODUCT_ID = "bke-render-dock";
 const PRODUCT_SLUG = "bke-render-dock";
-const PRODUCT_VERSION = "1.0.2";
+const PRODUCT_VERSION = "1.0.3";
 const ORDER_NUMBER = "BKE-UTM-RENDER-DOCK";
 const ORDER_ITEM_ID = "utm-render-dock-order-item";
 const LICENSE_PUBLIC_ID = "utm-render-dock-license";
@@ -478,7 +478,7 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
       entitled: true,
       launcherExecutionType: "STANDALONE",
       releaseRepository: "jan2xo/BKE_RENDER_DOCK",
-      releaseTag: "v1.0.2",
+      releaseTag: "v1.0.3",
     }));
   } finally {
     await db.$disconnect();
