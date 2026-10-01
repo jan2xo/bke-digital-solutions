@@ -54,3 +54,20 @@ curl -I https://jl-bke.com/licensing-agent/linux/download
 Only trusted VPS operators may place or replace installers. HTTPS, fixed mappings, read-only Caddy storage, no upload endpoint, no Admin UI, no public write API, and no remote installer execution are intentional boundaries. Desktop products open only the fixed recovery page in the default browser; they never download or execute an installer directly.
 
 Future protected products should imitate Air Stack and Render Dock: use the localhost Licensing Agent contract, use `https://jl-bke.com/licensing-agent` for AgentUnavailable recovery, keep product-specific `displayName` and immutable `bke-<normalized-name>` identity, and do not implement licensing, lease, signature, installer, updater, or commercial entitlement logic themselves.
+
+
+## Standalone product release-contract gate
+
+For Launcher-managed `STANDALONE` products, GitHub remains the software release authority and Digital Solutions does not ingest product binaries.
+
+Before an administrator publishes a stable/LTS ProductVersion into the customer catalog, Digital Solutions now verifies the mapped exact GitHub tag and requires the modern updater contract for every advertised architecture:
+
+- stable, non-draft, non-prerelease exact `v<version>` release;
+- bounded `*-Windows-<architecture>.update.json` metadata;
+- exact product/version/platform/architecture metadata;
+- GitHub-reported package size and SHA-256 digest matching the metadata;
+- exact signed entry point present at the ZIP root, proven from the ZIP central directory with bounded HTTP Range reads.
+
+Successful verification is recorded as durable `GITHUB_RELEASE_CONTRACT / VERIFIED` supply-chain evidence. The Agent software catalog only exposes a standalone ProductVersion for a requesting platform/architecture when matching evidence exists.
+
+This is defense in depth, not a transfer of release authority: GitHub owns release bytes, Digital Solutions gates catalog policy on a verified release reference, and the Licensing Agent independently downloads, hashes, validates package structure/target policy, and performs privileged lifecycle operations.
