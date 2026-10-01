@@ -1838,6 +1838,7 @@ describe("native Agent account purchases overview", () => {
         viewSubscriptions: true,
         viewAllLicenses: true,
         manageLicenseSeats: true,
+        manageDevices: true,
       },
       licenses: [{
         productName: "Render Dock",
@@ -1852,6 +1853,8 @@ describe("native Agent account purchases overview", () => {
         assignedSeats: 1,
         seatManagementHandle:
           "bke-license-seat-v1_" + "a".repeat(64),
+        deviceManagementHandle:
+          "bke-license-device-v1_" + "b".repeat(64),
       }],
       subscriptions: [{
         productName: "Render Dock",
@@ -1928,10 +1931,14 @@ describe("native Agent account purchases overview", () => {
     expect(payload.status).toBe("ready");
     expect(payload.licenses).toHaveLength(1);
     expect(payload.permissions.manage_license_seats).toBe(true);
+    expect(payload.permissions.manage_devices).toBe(true);
     expect(payload.licenses[0].max_seats).toBe(2);
     expect(payload.licenses[0].assigned_seats).toBe(1);
     expect(payload.licenses[0].seat_management_handle).toMatch(
       /^bke-license-seat-v1_[0-9a-f]{64}$/,
+    );
+    expect(payload.licenses[0].device_management_handle).toMatch(
+      /^bke-license-device-v1_[0-9a-f]{64}$/,
     );
     expect(payload.subscriptions).toHaveLength(1);
     expect(payload.orders).toHaveLength(1);
@@ -2037,3 +2044,60 @@ describe("native Agent license seat management route boundaries", () => {
     expect(handles).not.toContain("license_id");
   });
 });
+
+describe("native Agent authorized-device management boundaries", () => {
+  it("binds device reads and deactivation to Agent auth, protocol, opaque purpose-specific handles, and selected-account scope", () => {
+    const handles = read(
+      "apps/web/licensing/agent-license-device-management.ts",
+    );
+    const authority = read(
+      "apps/web/licensing/agent-license-device-authority.ts",
+    );
+    const readRoute = read(
+      "app/api/agent-sessions/account/license-devices/route.ts",
+    );
+    const manageRoute = read(
+      "app/api/agent-sessions/account/license-devices/manage/route.ts",
+    );
+
+    for (const source of [readRoute, manageRoute]) {
+      expect(source).toContain("rejectBrowserOriginForAgent");
+      expect(source).toContain("requireAgentAccountSessionProtocol");
+      expect(source).toContain("authenticateNativeAgentRequest");
+      expect(source).toContain("authenticated.accountId");
+      expect(source).toContain(
+        '"x-bke-account-session-version"',
+      );
+      expect(source).not.toContain("V3_");
+    }
+
+    expect(handles).toContain(
+      "bke.agent.license-device.management.v1",
+    );
+    expect(handles).toContain(
+      "bke.agent.license-device.target.v1",
+    );
+    expect(handles).toContain("createHmac");
+    expect(handles).toContain("safeEqual");
+    expect(authority).toContain('"DEACTIVATE_DEVICE"');
+    expect(authority).toContain('"DEVICE_DEACTIVATED"');
+    expect(authority).toContain('type: "DEACTIVATED"');
+    expect(readRoute).toContain(
+      "resolveAgentLicenseDeviceManagementHandle",
+    );
+    expect(manageRoute).toContain(
+      "resolveAgentLicenseDeviceTargetHandle",
+    );
+    expect(manageRoute).toContain(
+      "deactivateAgentLicenseDevice",
+    );
+
+    for (const source of [readRoute, manageRoute]) {
+      expect(source).not.toContain("license_id");
+      expect(source).not.toContain("device_id");
+      expect(source).not.toContain("device_hash");
+      expect(source).not.toContain("machine_id");
+    }
+  });
+});
+\n
