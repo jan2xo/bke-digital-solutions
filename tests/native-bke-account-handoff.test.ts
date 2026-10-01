@@ -2171,3 +2171,43 @@ describe("native Agent authorized-device management boundaries", () => {
     }
   });
 });
+
+
+describe("native Agent billing history boundary", () => {
+  it("keeps selected-account billing history read-only and strips cloud payment authority", () => {
+    const route = read(
+      "app/api/agent-sessions/account/billing/route.ts",
+    );
+    const overview = read(
+      "apps/web/accounts/agent-account-billing-history.ts",
+    );
+
+    expect(route).toContain("rejectBrowserOriginForAgent(request)");
+    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+    expect(route).toContain("authenticateNativeAgentRequest(request)");
+    expect(route).toContain("accountId: authenticated.accountId");
+    expect(route).toContain("cache-control");
+    expect(route).toContain("view_invoices");
+    expect(route).toContain("view_payments");
+    expect(route).not.toContain("invoice_id");
+    expect(route).not.toContain("payment_id");
+    expect(route).not.toContain("order_id");
+    expect(route).not.toContain("provider");
+    expect(route).not.toContain("external_id");
+    expect(route).not.toContain("checkout_url");
+
+    expect(overview).toContain('"VIEW_INVOICES"');
+    expect(overview).toContain('"VIEW_PAYMENTS"');
+    expect(overview).toContain("db.invoice.findMany");
+    expect(overview).toContain("db.payment.findMany");
+    expect(overview).toContain("accountId: input.accountId");
+    expect(overview).toContain("INVOICE_LINE_LIMIT");
+    expect(overview).not.toContain("customerSnapshot:");
+    expect(overview).not.toContain("billingSnapshot:");
+    expect(overview).not.toContain("provider:");
+    expect(overview).not.toContain("externalId:");
+    expect(overview).not.toContain("checkoutUrl:");
+    expect(overview).not.toContain("V2_");
+    expect(overview).not.toContain("V3_");
+  });
+});
