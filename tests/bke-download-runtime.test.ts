@@ -2,14 +2,19 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { resolveBkePublicDownloadUrl } from "@/platform/distribution/bke-launcher-download";
 
+function environment(downloadUrl?: string): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    ...(downloadUrl ? { BKE_PUBLIC_DOWNLOAD_URL: downloadUrl } : {}),
+  };
+}
+
 describe("BKE customer download runtime", () => {
   it("accepts only canonical BKE Launcher GitHub release assets", () => {
     const canonical =
       "https://github.com/jan2xo/bke-launcher/releases/download/v0.1.0/BKE-0.1.0-Windows-x64.exe";
 
-    expect(resolveBkePublicDownloadUrl({
-      BKE_PUBLIC_DOWNLOAD_URL: canonical,
-    })).toBe(canonical);
+    expect(resolveBkePublicDownloadUrl(environment(canonical))).toBe(canonical);
 
     for (const rejected of [
       "http://github.com/jan2xo/bke-launcher/releases/download/v0.1.0/BKE-0.1.0-Windows-x64.exe",
@@ -20,14 +25,14 @@ describe("BKE customer download runtime", () => {
       "https://github.com/jan2xo/bke-launcher/releases/download/v0.1.0/BKE-0.1.0-Windows-x64.zip",
       "https://github.com/jan2xo/bke-launcher/releases/download/v0.1.0/BKE-0.1.0-Windows-x64.exe?token=unexpected",
     ]) {
-      expect(resolveBkePublicDownloadUrl({
-        BKE_PUBLIC_DOWNLOAD_URL: rejected,
-      })).toBeNull();
+      expect(resolveBkePublicDownloadUrl(environment(rejected))).toBeNull();
     }
   });
 
   it("keeps the public page closed when no release has been configured", () => {
-    expect(resolveBkePublicDownloadUrl({})).toBeNull();
+    const env = environment();
+    delete env.BKE_PUBLIC_DOWNLOAD_URL;
+    expect(resolveBkePublicDownloadUrl(env)).toBeNull();
   });
 
   it("passes the stable download variable into the canonical Compose runtime", () => {
