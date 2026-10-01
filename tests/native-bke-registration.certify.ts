@@ -173,4 +173,5 @@ await assert.rejects(
 
 console.log("Native customer registration certification: PASS");
 await import("./agent-session-account-purchases.certify");
-await import("./agent-session-license-seat-management.certify");\nawait import("./agent-session-license-device-management.certify");\n
+await import("./agent-session-license-seat-management.certify");
+await import("./agent-session-license-device-management.certify");
