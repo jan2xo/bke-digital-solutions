@@ -48,6 +48,9 @@ describe("V3 disposable certification environment", () => {
     });
 
     expect(output).toContain("APP_URL=https://bke-v3.test:8443");
+    expect(output).toContain(
+      "BKE_PUBLIC_DOWNLOAD_URL=https://github.com/jan2xo/bke-launcher/releases/download/bke-v0.1.0-preproduction.20261002.1/BKE-0.1.0-PREPRODUCTION-Windows.exe",
+    );
     expect(output).toContain("@postgres:5432/bke_v3");
     expect(output).toContain("REDIS_URL=redis://valkey:6379");
     expect(output).toContain("S3_ENDPOINT=http://minio:9000");

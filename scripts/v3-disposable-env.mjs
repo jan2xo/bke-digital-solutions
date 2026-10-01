@@ -14,6 +14,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = resolve(SCRIPT_DIR, "..");
+const BKE_PREPRODUCTION_DOWNLOAD_URL =
+  "https://github.com/jan2xo/bke-launcher/releases/download/bke-v0.1.0-preproduction.20261002.1/BKE-0.1.0-PREPRODUCTION-Windows.exe";
 
 const REQUIRED_SECRETS = [
   "SESSION_SECRET",
@@ -113,6 +115,7 @@ export function renderDisposableEnvironment({
     ["APP_URL", "https://bke-v3.test:8443"],
     ["INTERNAL_APP_URL", "http://app:3000"],
     ["PUBLIC_WEBHOOK_ORIGIN", ""],
+    ["BKE_PUBLIC_DOWNLOAD_URL", BKE_PREPRODUCTION_DOWNLOAD_URL],
     ["LOCAL_PRODUCTION_SIMULATION", "false"],
     ["APP_DOMAIN", "bke-v3.test"],
     ["S3_UPLOAD_DOMAIN", "uploads.bke-v3.test"],
