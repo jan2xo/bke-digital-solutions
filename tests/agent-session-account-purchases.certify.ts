@@ -226,6 +226,7 @@ try {
     viewSubscriptions: true,
     viewAllLicenses: true,
     manageLicenseSeats: true,
+    manageDevices: true,
   });
   assert.equal(ownerOverview.licenses.length, 2);
   assert.ok(
@@ -233,6 +234,9 @@ try {
       (license) =>
         license.seatManagementHandle?.startsWith(
           "bke-license-seat-v1_",
+        ) === true &&
+        license.deviceManagementHandle?.startsWith(
+          "bke-license-device-v1_",
         ) === true,
     ),
   );
@@ -273,6 +277,7 @@ try {
     viewSubscriptions: true,
     viewAllLicenses: false,
     manageLicenseSeats: false,
+    manageDevices: false,
   });
   assert.equal(billingOverview.licenses.length, 0);
   assert.equal(billingOverview.subscriptions.length, 1);
@@ -292,6 +297,7 @@ try {
     viewSubscriptions: true,
     viewAllLicenses: true,
     manageLicenseSeats: true,
+    manageDevices: true,
   });
   assert.equal(licenseOverview.licenses.length, 2);
   assert.ok(
@@ -299,6 +305,9 @@ try {
       (license) =>
         license.seatManagementHandle?.startsWith(
           "bke-license-seat-v1_",
+        ) === true &&
+        license.deviceManagementHandle?.startsWith(
+          "bke-license-device-v1_",
         ) === true,
     ),
   );
@@ -319,6 +328,7 @@ try {
     viewSubscriptions: false,
     viewAllLicenses: false,
     manageLicenseSeats: false,
+    manageDevices: false,
   });
   assert.equal(memberOverview.licenses.length, 1);
   assert.equal(
@@ -327,6 +337,10 @@ try {
   );
   assert.equal(
     memberOverview.licenses[0]!.seatManagementHandle,
+    null,
+  );
+  assert.equal(
+    memberOverview.licenses[0]!.deviceManagementHandle,
     null,
   );
   assert.equal(memberOverview.subscriptions.length, 0);
