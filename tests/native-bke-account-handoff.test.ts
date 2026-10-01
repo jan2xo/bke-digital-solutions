@@ -1839,6 +1839,8 @@ describe("native Agent account purchases overview", () => {
         viewAllLicenses: true,
         manageLicenseSeats: true,
         manageDevices: true,
+        continuePendingOrders: true,
+        cancelPendingOrders: true,
       },
       licenses: [{
         productName: "Render Dock",
@@ -1871,6 +1873,10 @@ describe("native Agent account purchases overview", () => {
         currency: "PHP",
         createdAt: new Date("2026-09-30T00:00:00.000Z"),
         invoiceAvailable: true,
+        continueHandle:
+          "bke-order-continue-v1_" + "c".repeat(64),
+        cancelHandle:
+          "bke-order-cancel-v1_" + "d".repeat(64),
         items: [{
           productName: "Render Dock",
           editionName: "Pro",
@@ -1932,6 +1938,12 @@ describe("native Agent account purchases overview", () => {
     expect(payload.licenses).toHaveLength(1);
     expect(payload.permissions.manage_license_seats).toBe(true);
     expect(payload.permissions.manage_devices).toBe(true);
+    expect(
+      payload.permissions.continue_pending_orders,
+    ).toBe(true);
+    expect(
+      payload.permissions.cancel_pending_orders,
+    ).toBe(true);
     expect(payload.licenses[0].max_seats).toBe(2);
     expect(payload.licenses[0].assigned_seats).toBe(1);
     expect(payload.licenses[0].seat_management_handle).toMatch(
@@ -1942,6 +1954,12 @@ describe("native Agent account purchases overview", () => {
     );
     expect(payload.subscriptions).toHaveLength(1);
     expect(payload.orders).toHaveLength(1);
+    expect(payload.orders[0].continue_handle).toMatch(
+      /^bke-order-continue-v1_[0-9a-f]{64}$/,
+    );
+    expect(payload.orders[0].cancel_handle).toMatch(
+      /^bke-order-cancel-v1_[0-9a-f]{64}$/,
+    );
 
     const wire = JSON.stringify(payload).toLowerCase();
     for (const forbidden of [
@@ -1996,6 +2014,59 @@ describe("native Agent account purchases overview", () => {
     expect(await unavailable.json()).toEqual({
       error: "ACCOUNT_PURCHASES_UNAVAILABLE",
     });
+  });
+});
+
+describe("native Agent pending order management boundaries", () => {
+  it("binds continue and cancel to Agent auth, Legal state, selected-account opaque handles, and distinct Accounts permissions", () => {
+    const handles = read(
+      "apps/web/accounts/agent-order-management.ts",
+    );
+    const authority = read(
+      "apps/web/accounts/agent-order-authority.ts",
+    );
+    const continueRoute = read(
+      "app/api/agent-sessions/account/orders/continue/route.ts",
+    );
+    const cancelRoute = read(
+      "app/api/agent-sessions/account/orders/cancel/route.ts",
+    );
+
+    for (const source of [continueRoute, cancelRoute]) {
+      expect(source).toContain("rejectBrowserOriginForAgent");
+      expect(source).toContain("requireAgentAccountSessionProtocol");
+      expect(source).toContain("authenticateNativeAgentRequest");
+      expect(source).toContain("authenticated.accountId");
+      expect(source).toContain("assertLegalAcceptanceCurrent");
+      expect(source).toContain(
+        '"x-bke-account-session-version"',
+      );
+      expect(source).not.toContain("order_id");
+      expect(source).not.toContain("V3_");
+    }
+
+    expect(handles).toContain(
+      "bke.agent.order.continue.v1",
+    );
+    expect(handles).toContain(
+      "bke.agent.order.cancel.v1",
+    );
+    expect(handles).toContain("createHmac");
+    expect(handles).toContain("safeEqual");
+    expect(continueRoute).toContain(
+      "resolveAgentOrderContinueHandle",
+    );
+    expect(cancelRoute).toContain(
+      "resolveAgentOrderCancelHandle",
+    );
+    expect(authority).toContain('capability: "PURCHASE"');
+    expect(authority).toContain(
+      'capability: "CANCEL_PENDING_ORDER"',
+    );
+    expect(authority).toContain('"ORDER_CANCELLED"');
+    expect(authority).toContain(
+      '"PaymentCheckoutAttempt"',
+    );
   });
 });
 
