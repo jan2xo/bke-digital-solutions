@@ -9,6 +9,7 @@ import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
 
 const LIST_LIMIT = 50;
+const INVOICE_LINE_LIMIT = 100;
 
 export type AgentAccountBillingHistory =
   | {
@@ -99,6 +100,7 @@ export async function getAgentAccountBillingHistory(input: {
             order: { select: { number: true } },
             lines: {
               orderBy: { id: "asc" },
+              take: INVOICE_LINE_LIMIT + 1,
               select: {
                 description: true,
                 quantity: true,
@@ -125,6 +127,12 @@ export async function getAgentAccountBillingHistory(input: {
         })
       : Promise.resolve([]),
   ]);
+
+  if (invoices.some(
+    (invoice) => invoice.lines.length > INVOICE_LINE_LIMIT,
+  )) {
+    return { status: "failed" };
+  }
 
   return {
     status: "ready",
