@@ -1,7 +1,8 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const workflowsDir = ".github/workflows";
+const legacyDir = ".github/legacy-workflows/2026-10-02";
 const retiredPlatformWorkflows = [
   "v2-platform-audit.yml",
   "v2-platform-email.yml",
@@ -26,36 +27,31 @@ function fail(message) {
 const pullRequestOwners = workflowNames.filter((name) =>
   /^\s*pull_request:\s*$/m.test(read(name)),
 );
+const pushOwners = workflowNames.filter((name) =>
+  /^\s{2}push:\s*$/m.test(read(name)),
+);
 
-if (
-  pullRequestOwners.length !== 1 ||
-  pullRequestOwners[0] !== "pr-guard.yml"
-) {
+if (pullRequestOwners.length !== 0) {
   fail(
-    `automatic pull_request ownership must belong only to pr-guard.yml; found: ${pullRequestOwners.join(", ") || "none"}`,
+    `automatic pull_request certification is forbidden; found: ${pullRequestOwners.join(", ")}`,
   );
+}
+if (pushOwners.length !== 0) {
+  fail(
+    `ordinary push certification is forbidden; found: ${pushOwners.join(", ")}`,
+  );
+}
+if (workflowNames.includes("pr-guard.yml")) {
+  fail("pr-guard.yml must remain legacy-only");
+}
+if (!existsSync(join(legacyDir, "pr-guard.yml"))) {
+  fail("legacy PR guard archive is missing");
 }
 
 for (const name of retiredPlatformWorkflows) {
   if (workflowNames.includes(name)) {
     fail(`${name} is retired; platform certification belongs to v2-platform.yml`);
   }
-}
-
-const guard = read("pr-guard.yml");
-for (const required of [
-  "pull_request:",
-  "Verify certification plan declaration",
-  "Verify exact PR head checkout",
-  "node tooling/check-ci-intent-ownership.mjs",
-  "node tooling/check-module-boundaries.mjs",
-]) {
-  if (!guard.includes(required)) {
-    fail(`pr-guard.yml is missing ${required}`);
-  }
-}
-if (guard.includes("npm ci")) {
-  fail("pr-guard.yml must remain lightweight and must not run npm ci");
 }
 
 const certify = read("certify.yml");
@@ -109,6 +105,9 @@ for (const name of exactHeadWorkflows) {
   if (/^\s*pull_request:\s*$/m.test(workflow)) {
     fail(`${name} must not auto-run on pull_request`);
   }
+  if (/^\s{2}push:\s*$/m.test(workflow)) {
+    fail(`${name} must not auto-run on push`);
+  }
   if (workflow.includes("github.event.pull_request")) {
     fail(`${name} must not depend on pull_request event context`);
   }
@@ -130,15 +129,18 @@ for (const required of [
 }
 
 const globalCi = read("ci.yml");
-if (!globalCi.includes("push:\n    branches: [main]")) {
-  fail("ci.yml must retain post-merge main verification");
+if (globalCi.includes("push:\n    branches: [main]")) {
+  fail("ci.yml must not auto-run as post-merge main verification");
 }
 if (!globalCi.includes("workflow_call:")) {
   fail("ci.yml must remain reusable by certify.yml");
+}
+if (!globalCi.includes("workflow_dispatch:")) {
+  fail("ci.yml must remain explicitly dispatchable");
 }
 
 if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log("Intent-driven CI ownership GREEN");
+console.log("Intentional CI ownership GREEN");
