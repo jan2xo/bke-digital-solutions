@@ -1,7 +1,7 @@
 import "server-only";
 
 import { resolveCommercialPrivateKey } from "@bke/licensing/logic/commercial-signing-registry";
-import { activeLicensingSigningKey } from "@/apps/web/licensing/signing-key-registry";
+import { activeLicensingSigningKey, ensureLicensingSigningKey } from "@/apps/web/licensing/signing-key-registry";
 import {
   signAgentAccountUpdatePolicy,
   type AgentAccountUpdatePolicyInput,
@@ -12,6 +12,7 @@ export async function issueAgentAccountUpdatePolicy(
   input: AgentAccountUpdatePolicyInput,
   issuedAt = new Date(),
 ): Promise<SignedAgentAccountUpdatePolicy> {
+  await ensureLicensingSigningKey();
   const active = await activeLicensingSigningKey();
   return signAgentAccountUpdatePolicy(
     input,
