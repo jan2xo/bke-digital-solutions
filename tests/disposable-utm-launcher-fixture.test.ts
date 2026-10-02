@@ -95,7 +95,9 @@ describe("disposable UTM Launcher fixture", () => {
   it("is exposed only through the disposable operator path", () => {
     expect(pkg.scripts["disposable:utm-fixture"]).toContain("seed-utm-launcher-e2e.ts");
     expect(compose).toContain('case "utm-fixture"');
-    expect(compose).toContain('"disposable:utm-fixture"');
+    expect(disposableCompose).toContain(
+      'command: ["npm", "run", "disposable:utm-fixture"]',
+    );
     expect(ops).toContain("disposable-utm-fixture");
   });
 });
