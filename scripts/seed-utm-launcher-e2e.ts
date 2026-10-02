@@ -17,6 +17,10 @@ const FIXTURE_ACCOUNT_ID = "utm-launcher-customer-account";
 const PRODUCT_ID = "bke-render-dock";
 const PRODUCT_SLUG = "bke-render-dock";
 const PRODUCT_VERSION = "1.0.3";
+const PLUGIN_PRODUCT_ID = "bke-trial-product";
+const PLUGIN_PRODUCT_SLUG = "bke-trial-product";
+const PLUGIN_PRODUCT_VERSION = "2.0.0";
+const PLUGIN_ENTITLEMENT_SOURCE = "utm:bke-trial-product:launcher-plugin";
 const ORDER_NUMBER = "BKE-UTM-RENDER-DOCK";
 const ORDER_ITEM_ID = "utm-render-dock-order-item";
 const LICENSE_PUBLIC_ID = "utm-render-dock-license";
@@ -531,20 +535,143 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
         "validUntil" = NULL
     `;
 
+    const existingPluginProduct = await db.product.findFirst({
+      where: {
+        OR: [
+          { productId: PLUGIN_PRODUCT_ID },
+          { slug: PLUGIN_PRODUCT_SLUG },
+        ],
+      },
+    });
+
+    const pluginProduct = existingPluginProduct
+      ? await db.product.update({
+          where: { id: existingPluginProduct.id },
+          data: {
+            productId: PLUGIN_PRODUCT_ID,
+            slug: PLUGIN_PRODUCT_SLUG,
+            name: "BKE Demo App",
+            summary: "BKE Launcher-hosted demonstration plugin.",
+            description:
+              "Disposable UTM Launcher-plugin authorization and open-path certification fixture.",
+            type: "SOFTWARE",
+            launcherExecutionType: "LAUNCHER_PLUGIN",
+            active: true,
+            publishedAt: existingPluginProduct.publishedAt ?? now,
+            archivedAt: null,
+          },
+        })
+      : await db.product.create({
+          data: {
+            productId: PLUGIN_PRODUCT_ID,
+            slug: PLUGIN_PRODUCT_SLUG,
+            name: "BKE Demo App",
+            summary: "BKE Launcher-hosted demonstration plugin.",
+            description:
+              "Disposable UTM Launcher-plugin authorization and open-path certification fixture.",
+            type: "SOFTWARE",
+            launcherExecutionType: "LAUNCHER_PLUGIN",
+            active: true,
+            publishedAt: now,
+          },
+        });
+
+    const pluginVersion = await db.productVersion.upsert({
+      where: {
+        productId_version: {
+          productId: pluginProduct.id,
+          version: PLUGIN_PRODUCT_VERSION,
+        },
+      },
+      update: {
+        releaseNotes: "Disposable Launcher-plugin certification target.",
+        operatingSystem: "Any",
+        architecture: "universal",
+        channel: "STABLE",
+        lifecycle: "STABLE",
+        active: true,
+        isLatest: true,
+        publishedAt: now,
+      },
+      create: {
+        productId: pluginProduct.id,
+        version: PLUGIN_PRODUCT_VERSION,
+        releaseNotes: "Disposable Launcher-plugin certification target.",
+        operatingSystem: "Any",
+        architecture: "universal",
+        channel: "STABLE",
+        lifecycle: "STABLE",
+        active: true,
+        isLatest: true,
+        publishedAt: now,
+      },
+    });
+
+    await db.productVersion.updateMany({
+      where: {
+        productId: pluginProduct.id,
+        id: { not: pluginVersion.id },
+      },
+      data: { isLatest: false },
+    });
+
+    const pluginEntitlementId = randomUUID();
+    await db.$executeRaw`
+      INSERT INTO "Entitlement" (
+        "id", "subjectId", "resourceId", "sourceReference", "status", "quantity",
+        "scopeSnapshot", "grantSnapshot", "validFrom", "validUntil"
+      ) VALUES (
+        ${pluginEntitlementId}, ${account.id}, ${pluginProduct.id}, ${PLUGIN_ENTITLEMENT_SOURCE}, 'ACTIVE', 1,
+        ${JSON.stringify({
+          productId: PLUGIN_PRODUCT_ID,
+          version: PLUGIN_PRODUCT_VERSION,
+          executionType: "LAUNCHER_PLUGIN",
+          testOnly: true,
+        })}::jsonb,
+        ${JSON.stringify({
+          source: "utm-launcher-e2e",
+          executionType: "LAUNCHER_PLUGIN",
+          bundled: true,
+        })}::jsonb,
+        ${validFrom}, NULL
+      )
+      ON CONFLICT ("sourceReference") DO UPDATE SET
+        "subjectId" = EXCLUDED."subjectId",
+        "resourceId" = EXCLUDED."resourceId",
+        "status" = 'ACTIVE',
+        "quantity" = 1,
+        "scopeSnapshot" = EXCLUDED."scopeSnapshot",
+        "grantSnapshot" = EXCLUDED."grantSnapshot",
+        "validFrom" = EXCLUDED."validFrom",
+        "validUntil" = NULL
+    `;
+
     console.info(JSON.stringify({
       testOnly: true,
       fixture: "utm-launcher-e2e",
       email: FIXTURE_EMAIL,
       password,
       accountId: account.id,
-      productId: PRODUCT_ID,
-      version: PRODUCT_VERSION,
-      entitled: true,
-      launcherExecutionType: "STANDALONE",
-      releaseRepository: releaseProof.repository,
-      releaseTag: releaseProof.tag,
-      releasePackageSha256: releaseProof.packageSha256,
-      releaseContractVerified: true,
+      products: [
+        {
+          productId: PRODUCT_ID,
+          version: PRODUCT_VERSION,
+          entitled: true,
+          launcherExecutionType: "STANDALONE",
+          releaseRepository: releaseProof.repository,
+          releaseTag: releaseProof.tag,
+          releasePackageSha256: releaseProof.packageSha256,
+          releaseContractVerified: true,
+        },
+        {
+          productId: PLUGIN_PRODUCT_ID,
+          version: PLUGIN_PRODUCT_VERSION,
+          entitled: true,
+          launcherExecutionType: "LAUNCHER_PLUGIN",
+          bundled: true,
+          standaloneReleaseEvidenceRequired: false,
+        },
+      ],
     }));
   } finally {
     await db.$disconnect();
