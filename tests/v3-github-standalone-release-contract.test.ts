@@ -34,20 +34,12 @@ function fakeZipCentralDirectory(entries: readonly string[]): Buffer {
 }
 
 function partialResponse(bytes: Buffer, range: string): Response {
-  let start: number;
-  let end: number;
-
-  const suffix = /^bytes=-(\d+)$/.exec(range);
-  if (suffix) {
-    const length = Number(suffix[1]);
-    start = Math.max(0, bytes.length - length);
-    end = bytes.length - 1;
-  } else {
-    const exact = /^bytes=(\d+)-(\d+)$/.exec(range);
-    if (!exact) throw new Error("unexpected range");
-    start = Number(exact[1]);
-    end = Number(exact[2]);
+  const exact = /^bytes=(\d+)-(\d+)$/.exec(range);
+  if (!exact) {
+    throw new Error(`GitHub release assets require explicit byte ranges: ${range}`);
   }
+  const start = Number(exact[1]);
+  const end = Number(exact[2]);
 
   const body = bytes.subarray(start, end + 1);
   const responseBody = body.buffer.slice(
@@ -159,6 +151,38 @@ describe("standalone GitHub release contract", () => {
       entryPoint: "RENDER DOCK.exe",
     });
     expect(proofs[0].packageSha256).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  it("uses explicit byte ranges for GitHub release ZIP reads", async () => {
+    const ranges: string[] = [];
+    const baseFetch = releaseFetch([
+      "RENDER DOCK.exe",
+      "BKE_RENDER_DOCK.dll",
+    ]);
+    const fetcher = (async (input, init) => {
+      const url =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.toString()
+            : input.url;
+      if (url.endsWith("Render-Dock-1.0.3-Windows-x64.update.zip")) {
+        const range = new Headers(init?.headers).get("range");
+        if (range) ranges.push(range);
+      }
+      return baseFetch(input, init);
+    }) as typeof fetch;
+
+    await verifyGitHubStandaloneReleaseContract({
+      productId: "bke-render-dock",
+      version: "1.0.3",
+      platform: "windows",
+      architecture: "x64",
+    }, fetcher);
+
+    expect(ranges.length).toBeGreaterThanOrEqual(2);
+    expect(ranges.every((range) => /^bytes=\d+-\d+$/.test(range))).toBe(true);
+    expect(ranges.some((range) => range.startsWith("bytes=-"))).toBe(false);
   });
 
   it("rejects a package whose signed entry point is nested instead of at ZIP root", async () => {

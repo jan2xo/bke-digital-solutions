@@ -70,10 +70,7 @@ switch (action) {
       "run",
       "--rm",
       "--build",
-      "seed",
-      "npm",
-      "run",
-      "disposable:utm-fixture",
+      "utm-fixture",
     ]);
     break;
   case "doctor":

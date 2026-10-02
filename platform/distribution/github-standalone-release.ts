@@ -375,10 +375,12 @@ async function verifyPackageRootEntryPoint(
 ): Promise<void> {
   validateGitHubReleaseAssetUrl(asset.browserDownloadUrl, repository, tag);
 
+  const tailLength = Math.min(asset.size, ZIP_EOCD_SEARCH_BYTES);
+  const tailStart = asset.size - tailLength;
   const tail = await fetchRange(
     fetcher,
     asset.browserDownloadUrl,
-    `bytes=-${Math.min(asset.size, ZIP_EOCD_SEARCH_BYTES)}`,
+    `bytes=${tailStart}-${asset.size - 1}`,
   );
   if (tail.total !== asset.size) invalid();
 
