@@ -1,0 +1,56 @@
+name: Module - Notifications
+
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact commit SHA to certify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.source_sha }}
+  cancel-in-progress: true
+
+jobs:
+  notifications:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Verify exact source checkout
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Notifications package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-notifications-0.2.0.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.2.0/bke-notifications-0.2.0.tgz
+          echo "11bd533b523a72d1fdeac67f97f9c518715ca2a97d60ce3c9e7887284279c7bc  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Notifications consumer adoption and staging retirement
+        run: npx tsx modules/notifications/test/consumer-adoption.certify.ts
+      - name: Certify notification routing and product broadcasts
+        run: npx vitest run tests/v3-notification-routing.test.ts tests/v3-product-broadcast-contract.test.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit

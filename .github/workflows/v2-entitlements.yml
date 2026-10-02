@@ -1,0 +1,85 @@
+name: Module - Entitlements
+
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact commit SHA to certify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.source_sha }}
+  cancel-in-progress: true
+
+jobs:
+  entitlements:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_v2_entitlements
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_v2_entitlements"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      APP_URL: http://localhost:3000
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_v2_entitlements
+      SESSION_SECRET: entitlements-ci-session-secret-with-at-least-32-chars
+      LICENSE_PEPPER: entitlements-ci-license-pepper-with-at-least-32-chars
+      CRON_SECRET: entitlements-ci-cron-secret-with-at-least-32-chars
+      S3_BUCKET: test
+      EMAIL_FROM: test@example.com
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Verify exact source checkout
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify certified Entitlements package artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact=/tmp/bke-entitlements-0.2.1.tgz
+          curl -fL --retry 3 --retry-all-errors \
+            -o "$artifact" \
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.2.1/bke-entitlements-0.2.1.tgz
+          echo "45c749558d07704a47f25ee08a3bff69d48541e0f1166b456605398c796e2a05  $artifact" | sha256sum -c -
+      - name: Enforce module boundaries
+        run: node tooling/check-module-boundaries.mjs
+      - name: Certify Entitlements consumer adoption and staging retirement
+        run: npx tsx modules/entitlements/test/consumer-adoption.certify.ts
+      - name: Certify Agent account-session Claim Code redemption
+        run: npx vitest run tests/agent-session-claim-redemption.test.ts tests/v3-claim-redemption-authorization.test.ts
+      - name: Typecheck architecture
+        run: npx tsc -p tsconfig.architecture.json --noEmit
+      - name: Validate installed Entitlements Prisma schema
+        run: npx prisma validate --schema node_modules/@bke/entitlements/prisma/schema.prisma
+      - name: Apply installed Entitlements baseline
+        run: node platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations
+      - name: Prove installed Entitlements migration idempotence
+        run: node platform/persistence/migration-compositor.mjs entitlements node_modules/@bke/entitlements/migrations

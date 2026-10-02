@@ -1,0 +1,86 @@
+name: Native BKE Account Handoff
+
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact commit SHA to certify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-bke-account-${{ inputs.source_sha }}
+  cancel-in-progress: true
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_native_auth
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_native_auth"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_native_auth
+      DIRECT_DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_native_auth
+      NODE_ENV: test
+      APP_URL: https://native-cert.bke.test
+      SESSION_SECRET: native-registration-cert-session-secret-0000000001
+      LICENSE_PEPPER: native-registration-cert-license-pepper-0000000001
+      CRON_SECRET: native-registration-cert-cron-secret-000000000001
+      S3_BUCKET: bke-native-registration-cert
+      EMAIL_FROM: cert@bke.test
+      AGENT_ACCOUNT_SESSION_ENABLED: "true"
+      AGENT_ACCOUNT_SESSION_PEPPER: native-cert-agent-session-pepper-7f93c0d6c4a24b67a8c19e2d
+      AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY: native-cert-agent-session-encryption-41b09f77d3e54e76a8c29d1f
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Verify exact source checkout
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run db:deploy
+      - name: Certify native handoff schema
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          SELECT "authorizationKind", count(*)
+          FROM "AgentDeviceAuthorization"
+          GROUP BY "authorizationKind";
+          SELECT conname
+          FROM pg_constraint
+          WHERE conname = 'AgentDeviceAuthorization_authorizationKind_check';
+          SQL
+      - name: Certify native BKE handoff boundaries
+        run: npx vitest run tests/native-bke-account-handoff.test.ts tests/agent-session-password-change.test.ts tests/native-bke-password-reset.test.ts tests/native-bke-customer-mfa.test.ts tests/native-bke-registration.test.ts
+      - name: Certify native customer registration state transitions
+        env:
+          NODE_OPTIONS: --conditions=react-server
+        run: npx tsx tests/native-bke-registration.certify.ts
+      - name: Typecheck host
+        run: npm run typecheck
