@@ -39,6 +39,25 @@ describe("disposable UTM Launcher fixture", () => {
     expect(fixture).toContain('"Entitlement"');
   });
 
+  it("adds the first real Launcher plugin without standalone release baggage", () => {
+    expect(fixture).toContain('const PLUGIN_PRODUCT_ID = "bke-trial-product"');
+    expect(fixture).toContain('const PLUGIN_PRODUCT_VERSION = "2.0.0"');
+    expect(fixture).toContain('launcherExecutionType: "LAUNCHER_PLUGIN"');
+    expect(fixture).toContain('operatingSystem: "Any"');
+    expect(fixture).toContain('architecture: "universal"');
+    expect(fixture).toContain('resourceId: pluginProduct.id');
+    expect(fixture).toContain('executionType: "LAUNCHER_PLUGIN"');
+    expect(fixture).toContain('standaloneReleaseEvidenceRequired: false');
+
+    const pluginSection = fixture.slice(
+      fixture.indexOf("const existingPluginProduct"),
+      fixture.indexOf("console.info(JSON.stringify"),
+    );
+    expect(pluginSection).not.toContain("verifyGitHubStandaloneReleaseContract");
+    expect(pluginSection).not.toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(pluginSection).not.toContain("supplyChainEvidence");
+  });
+
   it("creates a verified CUSTOMER with a generated password", () => {
     expect(fixture).toContain('role: "CUSTOMER"');
     expect(fixture).toContain("emailVerified: now");
