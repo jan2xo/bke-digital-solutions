@@ -58,6 +58,18 @@ describe("Agent account-session repair authority", () => {
     ).toBe(true);
   });
 
+  it("bootstraps the configured signing authority before issuing Repair policy", () => {
+    const issuer = readFileSync(
+      "apps/web/agent-sessions/repair-policy-issuer.ts",
+      "utf8",
+    );
+    const ensureIndex = issuer.indexOf("await ensureLicensingSigningKey()");
+    const activeIndex = issuer.indexOf("await activeLicensingSigningKey()");
+
+    expect(ensureIndex).toBeGreaterThanOrEqual(0);
+    expect(activeIndex).toBeGreaterThan(ensureIndex);
+  });
+
   it("keeps Repair distinct from Update and legacy lease authority", () => {
     const route = readFileSync(
       "app/api/agent-sessions/repair/standalone/route.ts",
