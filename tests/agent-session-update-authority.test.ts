@@ -58,6 +58,18 @@ describe("Agent account-session update authority", () => {
     ).toBe(true);
   });
 
+  it("bootstraps the configured signing authority before issuing Update policy", () => {
+    const issuer = readFileSync(
+      "apps/web/agent-sessions/update-policy-issuer.ts",
+      "utf8",
+    );
+    const ensureIndex = issuer.indexOf("await ensureLicensingSigningKey()");
+    const activeIndex = issuer.indexOf("await activeLicensingSigningKey()");
+
+    expect(ensureIndex).toBeGreaterThanOrEqual(0);
+    expect(activeIndex).toBeGreaterThan(ensureIndex);
+  });
+
   it("keeps authorization on Agent account sessions instead of legacy license leases", () => {
     const route = readFileSync(
       "app/api/agent-sessions/update/standalone/route.ts",
