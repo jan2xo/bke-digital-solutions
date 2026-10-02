@@ -24,13 +24,17 @@ The repository expects an ignored directory:
     license-signing-public.pem
     supply-chain-signing-private.pem
     supply-chain-signing-public.pem
+    agent-update-signing-private.pem
+    agent-update-signing-public.json
   tls/
     bke-v3-disposable-ca.crt.pem
     bke-v3.test.crt.pem
     bke-v3.test.key.pem
 ```
 
-Never commit this directory. The environment materializer verifies both Ed25519 keypairs, the TLS hostname/keypair, and the CA relationship before writing the ignored `.env.certification`.
+Never commit this directory. The environment materializer verifies the license and supply-chain Ed25519 pairs, verifies that `agent-update-signing-private.pem` exactly matches the raw Ed25519 public key in the strict `bke.update-authority-key.v1` JSON document, verifies the TLS hostname/keypair and CA relationship, and only then writes the ignored `.env.certification`.
+
+The Agent update private key is encoded only into the server-side `BKE_AGENT_UPDATE_SIGNING_KEYS` runtime value. The public JSON is the trust document that must be embedded into the matching PREPRODUCTION Agent installer. The private key must never be copied into Agent packaging, GitHub artifacts, or the repository.
 
 If `.env.certification` already exists without the disposable marker, the materializer refuses to overwrite it.
 

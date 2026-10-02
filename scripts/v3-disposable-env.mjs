@@ -71,6 +71,59 @@ function assertEd25519Pair(privatePath, publicPath, label) {
   }
 }
 
+export function readAgentUpdateSigningBundle(privatePath, publicDocumentPath) {
+  const privatePem = readFileSync(privatePath, "utf8");
+  const privateKey = createPrivateKey(privatePem);
+  if (privateKey.asymmetricKeyType !== "ed25519") {
+    throw new Error("AGENT_UPDATE_SIGNING_KEY_TYPE_INVALID");
+  }
+
+  let document;
+  try {
+    document = JSON.parse(readFileSync(publicDocumentPath, "utf8"));
+  } catch {
+    throw new Error("AGENT_UPDATE_PUBLIC_DOCUMENT_INVALID");
+  }
+  const fields = Object.keys(document).sort();
+  const expectedFields = ["algorithm", "key_id", "public_key", "schema"].sort();
+  if (
+    JSON.stringify(fields) !== JSON.stringify(expectedFields) ||
+    document.schema !== "bke.update-authority-key.v1" ||
+    document.algorithm !== "Ed25519" ||
+    typeof document.key_id !== "string" ||
+    !/^[A-Za-z0-9._-]{1,64}$/.test(document.key_id) ||
+    typeof document.public_key !== "string"
+  ) {
+    throw new Error("AGENT_UPDATE_PUBLIC_DOCUMENT_INVALID");
+  }
+
+  const configuredRaw = Buffer.from(document.public_key, "base64");
+  const normalizedInput = document.public_key.replace(/=+$/u, "");
+  const normalizedRoundTrip = configuredRaw.toString("base64").replace(/=+$/u, "");
+  if (
+    configuredRaw.length !== 32 ||
+    normalizedInput !== normalizedRoundTrip
+  ) {
+    throw new Error("AGENT_UPDATE_PUBLIC_KEY_INVALID");
+  }
+
+  const publicJwk = createPublicKey(privateKey).export({ format: "jwk" });
+  if (typeof publicJwk.x !== "string") {
+    throw new Error("AGENT_UPDATE_PUBLIC_KEY_INVALID");
+  }
+  const derivedRaw = Buffer.from(publicJwk.x, "base64url");
+  if (!derivedRaw.equals(configuredRaw)) {
+    throw new Error("AGENT_UPDATE_SIGNING_KEYPAIR_MISMATCH");
+  }
+
+  return {
+    keyId: document.key_id,
+    signingKeysJson: JSON.stringify({
+      [document.key_id]: Buffer.from(privatePem, "utf8").toString("base64"),
+    }),
+  };
+}
+
 function assertTlsBundle(bundleDir) {
   const certPath = join(bundleDir, "tls", "bke-v3.test.crt.pem");
   const keyPath = join(bundleDir, "tls", "bke-v3.test.key.pem");
@@ -101,6 +154,7 @@ export function renderDisposableEnvironment({
   licensePublicBase64,
   supplyPrivateBase64,
   supplyPublicBase64,
+  agentUpdateSigningKeysJson,
 }) {
   for (const key of REQUIRED_SECRETS) requireSecret(secrets, key);
 
@@ -138,6 +192,7 @@ export function renderDisposableEnvironment({
     ["LICENSE_SIGNING_KEY_ID", "bke-v3-disposable-ed25519-v1"],
     ["LICENSE_SIGNING_PRIVATE_KEY", licensePrivateBase64],
     ["LICENSE_SIGNING_PUBLIC_KEY", licensePublicBase64],
+    ["BKE_AGENT_UPDATE_SIGNING_KEYS", agentUpdateSigningKeysJson],
     ["SUPPLY_CHAIN_SIGNING_KEY_ID", supplyKeyId],
     ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY", supplyPrivateBase64],
     ["SUPPLY_CHAIN_SIGNING_PUBLIC_KEY", supplyPublicBase64],
@@ -232,18 +287,26 @@ export function materializeDisposableEnvironment({
   const licensePublicPath = join(signingDir, "license-signing-public.pem");
   const supplyPrivatePath = join(signingDir, "supply-chain-signing-private.pem");
   const supplyPublicPath = join(signingDir, "supply-chain-signing-public.pem");
+  const agentUpdatePrivatePath = join(signingDir, "agent-update-signing-private.pem");
+  const agentUpdatePublicDocumentPath = join(signingDir, "agent-update-signing-public.json");
 
   for (const path of [
     licensePrivatePath,
     licensePublicPath,
     supplyPrivatePath,
     supplyPublicPath,
+    agentUpdatePrivatePath,
+    agentUpdatePublicDocumentPath,
   ]) {
     if (!existsSync(path)) throw new Error(`DISPOSABLE_SIGNING_FILE_MISSING:${path}`);
   }
 
   assertEd25519Pair(licensePrivatePath, licensePublicPath, "LICENSE_SIGNING");
   assertEd25519Pair(supplyPrivatePath, supplyPublicPath, "SUPPLY_CHAIN_SIGNING");
+  const agentUpdateSigning = readAgentUpdateSigningBundle(
+    agentUpdatePrivatePath,
+    agentUpdatePublicDocumentPath,
+  );
   assertTlsBundle(bundleDir);
 
   const environment = renderDisposableEnvironment({
@@ -252,6 +315,7 @@ export function materializeDisposableEnvironment({
     licensePublicBase64: encodedPem(licensePublicPath),
     supplyPrivateBase64: encodedPem(supplyPrivatePath),
     supplyPublicBase64: encodedPem(supplyPublicPath),
+    agentUpdateSigningKeysJson: agentUpdateSigning.signingKeysJson,
   });
 
   writeFileSync(target, environment, { encoding: "utf8", mode: 0o600 });
