@@ -3,19 +3,28 @@ import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const workflowsDir = ".github/workflows";
+const legacyDir = ".github/legacy-workflows/2026-10-02";
 
-describe("intent-driven pull-request certification", () => {
-  it("keeps exactly one automatic pull_request owner", () => {
-    const workflowNames = readdirSync(workflowsDir).filter((name) =>
-      name.endsWith(".yml"),
-    );
-    const owners = workflowNames.filter((name) =>
+function activeWorkflowNames() {
+  return readdirSync(workflowsDir).filter((name) => name.endsWith(".yml"));
+}
+
+describe("intent-driven certification orchestration", () => {
+  it("keeps zero automatic pull_request or ordinary push owners", () => {
+    const workflowNames = activeWorkflowNames();
+    const pullRequestOwners = workflowNames.filter((name) =>
       /^\s*pull_request:\s*$/m.test(
         readFileSync(`${workflowsDir}/${name}`, "utf8"),
       ),
     );
+    const pushOwners = workflowNames.filter((name) =>
+      /^\s{2}push:\s*$/m.test(
+        readFileSync(`${workflowsDir}/${name}`, "utf8"),
+      ),
+    );
 
-    expect(owners).toEqual(["pr-guard.yml"]);
+    expect(pullRequestOwners).toEqual([]);
+    expect(pushOwners).toEqual([]);
   });
 
   it("passes the durable CI ownership checker", () => {
@@ -31,7 +40,7 @@ describe("intent-driven pull-request certification", () => {
     ).toBe(0);
   });
 
-  it("parses every workflow with the same Ruby YAML runtime used by PR Guard", () => {
+  it("parses every active workflow with Ruby YAML", () => {
     const result = spawnSync(
       "ruby",
       [
@@ -47,20 +56,13 @@ describe("intent-driven pull-request certification", () => {
     ).toBe(0);
   });
 
-  it("keeps the automatic PR guard lightweight", () => {
-    const guard = readFileSync(
-      `${workflowsDir}/pr-guard.yml`,
-      "utf8",
-    );
-
-    expect(guard).toContain("Verify certification plan declaration");
-    expect(guard).toContain("Verify exact PR head checkout");
-    expect(guard).toContain("fetch-depth: 0");
-    expect(guard).toContain("git diff --check");
-    expect(guard).toContain("check-ci-intent-ownership.mjs");
-    expect(guard).toContain("check-module-boundaries.mjs");
-    expect(guard).not.toContain("npm ci");
-    expect(guard).not.toContain("services:");
+  it("keeps the retired PR guard only in the inert legacy archive", () => {
+    expect(activeWorkflowNames()).not.toContain("pr-guard.yml");
+    const guard = readFileSync(`${legacyDir}/pr-guard.yml`, "utf8");
+    expect(guard).toContain("pull_request:");
+    expect(
+      readFileSync(`${legacyDir}/README.md`, "utf8"),
+    ).toContain("inert");
   });
 
   it("keeps substantial certification manual/reusable", () => {
@@ -80,13 +82,14 @@ describe("intent-driven pull-request certification", () => {
       expect(workflow).toContain("workflow_dispatch:");
       expect(workflow).toContain("source_sha:");
       expect(workflow).not.toMatch(/^\s*pull_request:\s*$/m);
+      expect(workflow).not.toMatch(/^\s{2}push:\s*$/m);
     }
   });
 
-  it("keeps core CI as main verification plus explicit certification", () => {
+  it("keeps core CI callable without automatic main verification", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
-    expect(workflow).toContain("push:\n    branches: [main]");
+    expect(workflow).not.toContain("push:\n    branches: [main]");
     expect(workflow).toContain("workflow_call:");
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).not.toMatch(/^\s*pull_request:\s*$/m);
