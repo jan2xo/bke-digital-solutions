@@ -20,6 +20,21 @@ services:
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
 
+  utm-fixture:
+    build:
+      context: .
+      target: operations
+    command: ["npm", "run", "disposable:utm-fixture"]
+    env_file: .env.certification
+    profiles: ["operations"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+    networks: [private, egress]
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+
   smoke:
     build:
       context: .
