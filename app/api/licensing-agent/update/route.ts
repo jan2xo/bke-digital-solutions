@@ -2,23 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   LicensingAgentUpdateConfigurationError,
   LicensingAgentUpdateRequestError,
-  resolveLicensingAgentUpdate,
-} from "@/platform/distribution/software-catalog";
+} from "@/platform/distribution/licensing-agent-update-contract";
+import { resolveSignedLicensingAgentUpdate } from "@/apps/web/distribution/licensing-agent-update-authority";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const version = request.nextUrl.searchParams.get("version") ?? "";
-  const platform = request.nextUrl.searchParams.get("platform") ?? "";
-  const architecture = request.nextUrl.searchParams.get("architecture") ?? "";
+  const currentVersion =
+    request.nextUrl.searchParams.get("version") ?? "";
+  const platform =
+    request.nextUrl.searchParams.get("platform") ?? "";
+  const architecture =
+    request.nextUrl.searchParams.get("architecture") ?? "";
 
   try {
-    const result = resolveLicensingAgentUpdate({
-      currentVersion: version,
+    const policy = await resolveSignedLicensingAgentUpdate({
+      currentVersion,
       platform,
       architecture,
     });
-    return NextResponse.json(result, {
+    return NextResponse.json(policy, {
       headers: { "cache-control": "no-store" },
     });
   } catch (error) {

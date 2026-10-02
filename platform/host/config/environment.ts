@@ -28,6 +28,7 @@ export const environmentSchema = z.object({
   LICENSE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
   LICENSE_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   LICENSE_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-ed25519-v1"),
+  BKE_AGENT_UPDATE_SIGNING_KEYS: z.preprocess(optional, z.string().min(2).optional()),
   SUPPLY_CHAIN_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
   SUPPLY_CHAIN_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-supply-chain-ed25519-v1"),

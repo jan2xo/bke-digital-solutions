@@ -71,3 +71,18 @@ Before an administrator publishes a stable/LTS ProductVersion into the customer 
 Successful verification is recorded as durable `GITHUB_RELEASE_CONTRACT / VERIFIED` supply-chain evidence. The Agent software catalog only exposes a standalone ProductVersion for a requesting platform/architecture when matching evidence exists.
 
 This is defense in depth, not a transfer of release authority: GitHub owns release bytes, Digital Solutions gates catalog policy on a verified release reference, and the Licensing Agent independently downloads, hashes, validates package structure/target policy, and performs privileged lifecycle operations.
+
+
+## Durable self-update authority
+
+The Agent self-update decision is a separate trust boundary from customer software catalog presentation.
+
+`GET /api/licensing-agent/update` serves the exact signed `bke.update-policy.v1` contract consumed by the current .NET Agent. Digital Solutions stores durable authority metadata only: release version, minimum supported version, monotonic revision, environment audience, GitHub release tag, exact artifact SHA-256/size, update-authority public keys, and a key reference. Private Ed25519 keys remain outside the database in the stable `BKE_AGENT_UPDATE_SIGNING_KEYS` secret map.
+
+The admin backend endpoint `/api/admin/licensing-agent/update-authority` supports staged key registration, key activation/retirement, GitHub-verified release registration, and release activation/deactivation. There is intentionally no Admin UI in this wave.
+
+Release registration accepts no arbitrary download URL, digest, or artifact name. Digital Solutions derives `bke-licensing-agent-v<version>` and the canonical Windows artifact names, verifies the exact public GitHub release in `jan2xo/bke-software-catalog`, and stores GitHub-reported SHA-256/size evidence. PREPRODUCTION runtime accepts prereleases only; PRODUCTION runtime accepts non-prerelease releases only.
+
+Key rotation can keep more than one public key active. Each key declares the earliest installed Agent version that already trusts it. Policy issuance chooses the newest compatible active key for the requesting Agent version, and retirement fails closed if an active release would lose a compatible key.
+
+The Agent independently verifies the policy signature, trusted key ID, current-version echo, architecture, monotonic revision, artifact SHA-256/size, and the derived GitHub asset URL before installer execution.
