@@ -45,6 +45,7 @@ describe("V3 disposable certification environment", () => {
       licensePublicBase64: "license-public",
       supplyPrivateBase64: "supply-private",
       supplyPublicBase64: "supply-public",
+      agentUpdateSigningKeysJson: '{"bke-agent-update-preproduction-v1":"private-key-base64"}',
     });
 
     expect(output).toContain("APP_URL=https://bke-v3.test:8443");
@@ -54,6 +55,9 @@ describe("V3 disposable certification environment", () => {
     expect(output).toContain("@postgres:5432/bke_v3");
     expect(output).toContain("REDIS_URL=redis://valkey:6379");
     expect(output).toContain("S3_ENDPOINT=http://minio:9000");
+    expect(output).toContain(
+      'BKE_AGENT_UPDATE_SIGNING_KEYS={"bke-agent-update-preproduction-v1":"private-key-base64"}',
+    );
     expect(output).not.toContain("localhost:5432");
     expect(output).not.toContain("localhost:6379");
     expect(output).not.toContain("localhost:9000");
@@ -66,6 +70,7 @@ describe("V3 disposable certification environment", () => {
       licensePublicBase64: "license-public",
       supplyPrivateBase64: "supply-private",
       supplyPublicBase64: "supply-public",
+      agentUpdateSigningKeysJson: '{"bke-agent-update-preproduction-v1":"private-key-base64"}',
     });
 
     expect(output).toContain("NODE_ENV=production");
@@ -79,5 +84,6 @@ describe("V3 disposable certification environment", () => {
     expect(output).toContain("AGENT_ACCOUNT_SESSION_ENABLED=true");
     expect(output).not.toContain("V3_CLAIM_CODE_CHECKOUT_ENABLED");
     expect(output).not.toContain("V3_AGENT_ACCOUNT_SESSION_ENABLED");
+    expect(output).not.toContain("V3_AGENT_UPDATE_SIGNING_KEYS");
   });
 });
