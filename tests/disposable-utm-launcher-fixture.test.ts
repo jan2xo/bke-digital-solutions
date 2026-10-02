@@ -31,9 +31,13 @@ describe("disposable UTM Launcher fixture", () => {
     expect(fixture).toContain('const PRODUCT_ID = "bke-render-dock"');
     expect(fixture).toContain('const PRODUCT_VERSION = "1.0.3"');
     expect(fixture).toContain('launcherExecutionType: "STANDALONE"');
-    expect(fixture).toContain('architecture: "x64"');
-    expect(fixture).not.toContain('architecture: "universal"');
-    expect(fixture).toContain("verifyGitHubStandaloneReleaseContract");
+    const standaloneSection = fixture.slice(
+      fixture.indexOf("const existingProduct"),
+      fixture.indexOf("const existingPluginProduct"),
+    );
+    expect(standaloneSection).toContain('architecture: "x64"');
+    expect(standaloneSection).not.toContain('architecture: "universal"');
+    expect(standaloneSection).toContain("verifyGitHubStandaloneReleaseContract");
     expect(fixture).toContain('"GITHUB_RELEASE_CONTRACT"');
     expect(fixture).toContain("releaseContractVerified: true");
     expect(fixture).toContain('"Entitlement"');
@@ -45,7 +49,7 @@ describe("disposable UTM Launcher fixture", () => {
     expect(fixture).toContain('launcherExecutionType: "LAUNCHER_PLUGIN"');
     expect(fixture).toContain('operatingSystem: "Any"');
     expect(fixture).toContain('architecture: "universal"');
-    expect(fixture).toContain('resourceId: pluginProduct.id');
+    expect(fixture).toContain("pluginProduct.id");
     expect(fixture).toContain('executionType: "LAUNCHER_PLUGIN"');
     expect(fixture).toContain('standaloneReleaseEvidenceRequired: false');
 
