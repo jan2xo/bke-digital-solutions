@@ -74,6 +74,12 @@ jobs:
         run: npx vitest run tests/agent-session-update-authority.test.ts
       - name: Certify account-session product repair authority
         run: npx vitest run tests/agent-session-repair-authority.test.ts
+      - name: Export current signed Agent self-update cross-repo fixture
+        run: |
+          npx tsx scripts/certify-licensing-agent-signed-update.ts /tmp/bke-agent-update-fixture.json
+          test -s /tmp/bke-agent-update-fixture.json
+          node -e 'const f=require("/tmp/bke-agent-update-fixture.json"); if(f.schema!=="bke.agent-self-update-cross-repo-fixture.v1"||f.source!=="bke-digital-solutions"||f.fixtures.length!==2) process.exit(1)'
+
       - name: Typecheck architecture
         run: npx tsc -p tsconfig.architecture.json --noEmit
       - name: Validate installed Licensing Prisma schema
