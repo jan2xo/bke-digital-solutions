@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const workflowsDir = ".github/workflows";
+const legacyDir = ".github/legacy-workflows/2026-10-02";
 const agentStorePath = `${workflowsDir}/v2-agent-store.yml`;
 
 const formerStoreOwners = [
@@ -37,6 +38,7 @@ describe("CI module ownership", () => {
     expect(workflow).toContain("source_sha:");
     expect(workflow).toContain("Verify exact source checkout");
     expect(workflow).not.toContain("pull_request:");
+    expect(workflow).not.toMatch(/^\s{2}push:\s*$/m);
   });
 
   it.each(formerStoreOwners)(
@@ -75,7 +77,7 @@ describe("CI module ownership", () => {
     }
   });
 
-  it("keeps only the lightweight PR guard automatic", () => {
+  it("keeps automatic pull-request certification completely inactive", () => {
     const owners = readdirSync(workflowsDir)
       .filter((name) => name.endsWith(".yml"))
       .filter((name) =>
@@ -84,18 +86,20 @@ describe("CI module ownership", () => {
         ),
       );
 
-    expect(owners).toEqual(["pr-guard.yml"]);
-
-    const guard = readFileSync(`${workflowsDir}/pr-guard.yml`, "utf8");
-    expect(guard).toContain("cancel-in-progress: true");
-    expect(guard).not.toContain("npm ci");
+    expect(owners).toEqual([]);
+    expect(() =>
+      readFileSync(`${workflowsDir}/pr-guard.yml`, "utf8"),
+    ).toThrow();
+    expect(
+      readFileSync(`${legacyDir}/pr-guard.yml`, "utf8"),
+    ).toContain("pull_request:");
   });
 
-  it("keeps global CI as explicit certification plus post-merge main verification", () => {
+  it("keeps global CI explicit-only and reusable", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
     expect(workflow).toContain("name: CI");
-    expect(workflow).toContain("push:\n    branches: [main]");
+    expect(workflow).not.toContain("push:\n    branches: [main]");
     expect(workflow).toContain("workflow_call:");
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).not.toContain("pull_request:");
