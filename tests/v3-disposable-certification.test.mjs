@@ -1,7 +1,16 @@
-import { readFileSync } from "node:fs";
+import { generateKeyPairSync } from "node:crypto";
+import {
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   parseSimpleEnv,
+  readAgentUpdateSigningBundle,
   renderDisposableEnvironment,
 } from "../scripts/v3-disposable-env.mjs";
 
@@ -29,6 +38,63 @@ describe("V3 disposable certification environment", () => {
     expect(doctor).not.toContain('runCheck("environment schema", "npm"');
     expect(doctor).toContain('"operations"');
     expect(doctor).toContain('"config:validate"');
+  });
+
+  it("verifies the disposable Agent update signing pair and rejects drift", () => {
+    const root = mkdtempSync(join(tmpdir(), "bke-agent-update-signing-"));
+    try {
+      const { privateKey, publicKey } = generateKeyPairSync("ed25519");
+      const privatePem = privateKey.export({
+        format: "pem",
+        type: "pkcs8",
+      }).toString();
+      const publicJwk = publicKey.export({ format: "jwk" });
+      if (typeof publicJwk.x !== "string") {
+        throw new Error("test Ed25519 public key missing x");
+      }
+
+      const privatePath = join(root, "agent-update-signing-private.pem");
+      const publicPath = join(root, "agent-update-signing-public.json");
+      const keyId = "bke-agent-update-preproduction-test-v1";
+      writeFileSync(privatePath, privatePem, "utf8");
+      writeFileSync(
+        publicPath,
+        JSON.stringify({
+          schema: "bke.update-authority-key.v1",
+          key_id: keyId,
+          algorithm: "Ed25519",
+          public_key: Buffer.from(publicJwk.x, "base64url").toString("base64"),
+        }),
+        "utf8",
+      );
+
+      const verified = readAgentUpdateSigningBundle(
+        privatePath,
+        publicPath,
+      );
+      expect(verified.keyId).toBe(keyId);
+      const map = JSON.parse(verified.signingKeysJson);
+      expect(Object.keys(map)).toEqual([keyId]);
+      expect(
+        Buffer.from(map[keyId], "base64").toString("utf8"),
+      ).toBe(privatePem);
+
+      writeFileSync(
+        publicPath,
+        JSON.stringify({
+          schema: "bke.update-authority-key.v1",
+          key_id: keyId,
+          algorithm: "Ed25519",
+          public_key: Buffer.alloc(32, 9).toString("base64"),
+        }),
+        "utf8",
+      );
+      expect(() =>
+        readAgentUpdateSigningBundle(privatePath, publicPath),
+      ).toThrow("AGENT_UPDATE_SIGNING_KEYPAIR_MISMATCH");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   it("parses values containing equals signs", () => {
