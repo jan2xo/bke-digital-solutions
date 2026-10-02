@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const fixture = readFileSync("scripts/seed-utm-launcher-e2e.ts", "utf8");
 const compose = readFileSync("scripts/v3-disposable-compose.mjs", "utf8");
+const disposableCompose = readFileSync("docker-compose.disposable.yml", "utf8");
 const ops = readFileSync("scripts/v3-ops.sh", "utf8");
 const pkg = JSON.parse(readFileSync("package.json", "utf8")) as {
   scripts: Record<string, string>;
@@ -68,6 +69,27 @@ describe("disposable UTM Launcher fixture", () => {
     expect(fixture).toContain("createArgon2PasswordHasher");
     expect(fixture).toContain("randomBytes(18)");
     expect(fixture).toContain("UTM_FIXTURE_CUSTOMER_ACCOUNT_SELECTION_NOT_DETERMINISTIC");
+  });
+
+  it("grants GitHub egress only to the dedicated UTM fixture runner", () => {
+    const seedSection = disposableCompose.slice(
+      disposableCompose.indexOf("  seed:"),
+      disposableCompose.indexOf("  utm-fixture:"),
+    );
+    const fixtureSection = disposableCompose.slice(
+      disposableCompose.indexOf("  utm-fixture:"),
+      disposableCompose.indexOf("  smoke:"),
+    );
+
+    expect(seedSection).toContain("networks: [private]");
+    expect(seedSection).not.toContain("egress");
+    expect(fixtureSection).toContain("networks: [private, egress]");
+    expect(fixtureSection).toContain(
+      'command: ["npm", "run", "disposable:utm-fixture"]',
+    );
+    expect(compose).toMatch(
+      /"run",\s*"--rm",\s*"--build",\s*"utm-fixture"/,
+    );
   });
 
   it("is exposed only through the disposable operator path", () => {
