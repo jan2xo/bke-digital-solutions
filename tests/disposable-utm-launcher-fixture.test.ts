@@ -31,12 +31,35 @@ describe("disposable UTM Launcher fixture", () => {
     expect(fixture).toContain('const PRODUCT_ID = "bke-render-dock"');
     expect(fixture).toContain('const PRODUCT_VERSION = "1.0.3"');
     expect(fixture).toContain('launcherExecutionType: "STANDALONE"');
-    expect(fixture).toContain('architecture: "x64"');
-    expect(fixture).not.toContain('architecture: "universal"');
+    const standaloneSection = fixture.slice(
+      fixture.indexOf("const existingProduct"),
+      fixture.indexOf("const existingPluginProduct"),
+    );
+    expect(standaloneSection).toContain('architecture: "x64"');
+    expect(standaloneSection).not.toContain('architecture: "universal"');
     expect(fixture).toContain("verifyGitHubStandaloneReleaseContract");
     expect(fixture).toContain('"GITHUB_RELEASE_CONTRACT"');
     expect(fixture).toContain("releaseContractVerified: true");
     expect(fixture).toContain('"Entitlement"');
+  });
+
+  it("adds the first real Launcher plugin without standalone release baggage", () => {
+    expect(fixture).toContain('const PLUGIN_PRODUCT_ID = "bke-trial-product"');
+    expect(fixture).toContain('const PLUGIN_PRODUCT_VERSION = "2.0.0"');
+    expect(fixture).toContain('launcherExecutionType: "LAUNCHER_PLUGIN"');
+    expect(fixture).toContain('operatingSystem: "Any"');
+    expect(fixture).toContain('architecture: "universal"');
+    expect(fixture).toContain("pluginProduct.id");
+    expect(fixture).toContain('executionType: "LAUNCHER_PLUGIN"');
+    expect(fixture).toContain('standaloneReleaseEvidenceRequired: false');
+
+    const pluginSection = fixture.slice(
+      fixture.indexOf("const existingPluginProduct"),
+      fixture.indexOf("console.info(JSON.stringify"),
+    );
+    expect(pluginSection).not.toContain("verifyGitHubStandaloneReleaseContract");
+    expect(pluginSection).not.toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(pluginSection).not.toContain("supplyChainEvidence");
   });
 
   it("creates a verified CUSTOMER with a generated password", () => {

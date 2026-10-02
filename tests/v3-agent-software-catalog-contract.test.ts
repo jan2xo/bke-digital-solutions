@@ -165,6 +165,34 @@ describe("V3 Agent software catalog contract", () => {
     expect(apiError).toContain("RELEASE_DISTRIBUTION_UNAVAILABLE: 503");
   });
 
+  it("requires GitHub release evidence only for standalone execution", () => {
+    const source = readFileSync(
+      "apps/web/catalog/agent-software-catalog.ts",
+      "utf8",
+    );
+
+    expect(source).toContain(
+      'p."launcherExecutionType"::text IS DISTINCT FROM \'STANDALONE\'',
+    );
+    expect(source).toContain(
+      'release_contract."kind" = \'GITHUB_RELEASE_CONTRACT\'',
+    );
+
+    expect(projectAgentSoftwareCatalogRow({
+      productId: "bke-trial-product",
+      displayName: "BKE Demo App",
+      summary: "Bundled Launcher plugin",
+      executionType: "LAUNCHER_PLUGIN",
+      latestVersion: "2.0.0",
+      entitled: true,
+    })).toMatchObject({
+      executionType: "LAUNCHER_PLUGIN",
+      entitled: true,
+      installable: true,
+      latestVersion: "2.0.0",
+    });
+  });
+
   it("fails closed on unknown execution values", () => {
     expect(projectAgentSoftwareCatalogRow({
       productId: "future-product",
