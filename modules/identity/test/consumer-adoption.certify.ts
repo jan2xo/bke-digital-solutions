@@ -1,8 +1,8 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.4.0/bke-identity-0.4.0.tgz";
-const EXPECTED_VERSION = "0.4.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.5.0/bke-identity-0.5.0.tgz";
+const EXPECTED_VERSION = "0.5.0";
 
 const [
   moduleSource,

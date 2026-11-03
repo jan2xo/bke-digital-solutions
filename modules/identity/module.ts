@@ -1,4 +1,9 @@
 import type { CapabilityModule } from "../../contracts/capability";
+import { IDENTITY_GOOGLE_AUTHENTICATION_CAPABILITY_ID } from "@bke/identity/contracts/google-authentication.contract";
+import { IDENTITY_GOOGLE_PRINCIPAL_BINDING_CAPABILITY_ID } from "@bke/identity/contracts/google-identity.contract";
+import { createIdentityGoogleAuthenticationCapability } from "@bke/identity/logic/google-authentication";
+import { createIdentityGooglePrincipalBindingCapability } from "@bke/identity/logic/google-identity";
+import { createPostgresIdentityGoogleIdentityRepository } from "@bke/identity/prisma/repositories/postgres-google-identity-repository";
 import { IDENTITY_EMAIL_VERIFICATION_COMPLETION_CAPABILITY_ID } from "@bke/identity/contracts/email-verification-completion.contract";
 import { IDENTITY_EMAIL_VERIFICATION_ISSUANCE_CAPABILITY_ID } from "@bke/identity/contracts/email-verification-issuance.contract";
 import {
@@ -88,6 +93,9 @@ export function createIdentityModule(
   options: IdentityModuleOptions,
 ): CapabilityModule {
   const repository = createPostgresIdentityRepository(options.connectionString);
+  const googleIdentityRepository = createPostgresIdentityGoogleIdentityRepository(options.connectionString);
+  const googlePrincipalBinding = createIdentityGooglePrincipalBindingCapability(googleIdentityRepository);
+  const googleAuthentication = createIdentityGoogleAuthenticationCapability(googleIdentityRepository);
   const passwordVerifier = createArgon2PasswordVerifier();
   const passwordHasher = createArgon2PasswordHasher();
   const passwordChangeRepository = createPostgresIdentityPasswordChangeRepository(
@@ -180,6 +188,8 @@ export function createIdentityModule(
     ...identityModuleManifest,
     provides: [
       ...identityModuleManifest.provides,
+      IDENTITY_GOOGLE_AUTHENTICATION_CAPABILITY_ID,
+      IDENTITY_GOOGLE_PRINCIPAL_BINDING_CAPABILITY_ID,
       IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
       IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
     ],
@@ -189,6 +199,8 @@ export function createIdentityModule(
     manifest: hostManifest,
     start() {
       return [
+        { id: IDENTITY_GOOGLE_AUTHENTICATION_CAPABILITY_ID, value: googleAuthentication },
+        { id: IDENTITY_GOOGLE_PRINCIPAL_BINDING_CAPABILITY_ID, value: googlePrincipalBinding },
         {
           id: IDENTITY_LOOKUP_CAPABILITY_ID,
           value: createIdentityLookupCapability(repository),
