@@ -111,9 +111,9 @@ export async function GET(request: Request) {
       registeredNewUser
         ? "/verify-email"
         : method === "MFA_ENROLLMENT"
-        ? "/security/mfa"
+        ? "/security/recent?returnTo=%2Fsecurity%2Fmfa"
         : (await pendingReacceptance(userId)).length > 0
-          ? "/legal/accept?returnTo=%2Fdashboard"
+          ? `/legal/accept?returnTo=${encodeURIComponent(safeLocalRedirect(verified.context.returnTo))}`
           : safeLocalRedirect(verified.context.returnTo);
     const response = NextResponse.redirect(new URL(destination, getWebHostEnvironment().appUrl));
     response.cookies.delete(GOOGLE_LOGIN_CONTEXT_COOKIE);

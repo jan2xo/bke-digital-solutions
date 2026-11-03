@@ -1,11 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-export function RecentAuthenticationForm({ admin }: { admin: boolean }) {
+export function RecentAuthenticationForm({ admin, returnTo }: { admin: boolean; returnTo: string }) {
   const router = useRouter();
-  const search = useSearchParams();
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -61,7 +60,7 @@ export function RecentAuthenticationForm({ admin }: { admin: boolean }) {
           : "The verification code was not accepted.");
         return;
       }
-      const requested = search.get("returnTo");
+      const requested = returnTo;
       const destination =
         requested?.startsWith("/") && !requested.startsWith("//")
           ? requested

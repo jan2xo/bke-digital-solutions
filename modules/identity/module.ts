@@ -157,7 +157,7 @@ export function createIdentityModule(
     emailMfaProofProvider,
     loginMfaChallengeIssuance,
   );
-  const retiredAuthenticationCapabilities = new Set([
+  const retiredAuthenticationCapabilities = new Set<string>([
     IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID,
     IDENTITY_PASSWORD_CHANGE_CAPABILITY_ID,
     IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID,
