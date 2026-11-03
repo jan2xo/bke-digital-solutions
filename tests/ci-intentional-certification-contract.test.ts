@@ -9,6 +9,7 @@ const expectedActive = [
   "certify.yml",
   "ci.yml",
   "native-bke-account-handoff.yml",
+  "security-generate.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-catalog.yml",
@@ -64,7 +65,9 @@ describe("intentional GitHub Actions architecture", () => {
     expect(certifyTriggers).toMatch(/^\s{2}issue_comment:/mu);
     expect(certifyTriggers).toMatch(/^\s{2}workflow_dispatch:/mu);
 
-    for (const name of expectedActive.filter((value) => value !== "certify.yml")) {
+    for (const name of expectedActive.filter(
+      (value) => value !== "certify.yml" && value !== "security-generate.yml",
+    )) {
       const triggers = triggerSection(
         readFileSync(join(activeDir, name), "utf8"),
       );
@@ -73,6 +76,23 @@ describe("intentional GitHub Actions architecture", () => {
         name,
       ).toBe(true);
     }
+  });
+
+  it("keeps the security generator command on the trusted comment/run observer surface", () => {
+    const securityGenerate = readFileSync(
+      join(activeDir, "security-generate.yml"),
+      "utf8",
+    );
+    const triggers = triggerSection(securityGenerate);
+    expect(triggers).toMatch(/^\\s{2}issue_comment:/mu);
+    expect(triggers).toMatch(/^\\s{2}workflow_run:/mu);
+    expect(securityGenerate).toContain("github.event.comment.body == '/security-generate'");
+    expect(securityGenerate).toContain('workflow_id: workflowId');
+    expect(securityGenerate).toContain('security_generator: "true"');
+    expect(securityGenerate).toContain("actions: write");
+    expect(securityGenerate).not.toContain("pull_request_target:");
+    expect(securityGenerate).not.toContain("actions/checkout");
+    expect(securityGenerate).not.toContain("contents: write");
   });
 
   it("preserves the complete pre-overhaul workflow archive", () => {
