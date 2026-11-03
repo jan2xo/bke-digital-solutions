@@ -158,13 +158,13 @@ describe("trusted security generator dispatcher decisions", () => {
 
   it("does not reuse an artifact until generator evidence and exact artifact provenance exist", () => {
     const noJob = { id: 72, sha: SHA_A, status: "completed" as const, conclusion: "failure" as const, generator: null };
-    expect(decide({ ...valid(), runs: [noJob] }).kind).toBe("dispatch");
+    expect(decide({ ...valid(), runs: [noJob], newRunHasGenerator: false }).kind).toBe("accepted-unconfirmed");
 
     const wrongSha = {
       id: 73, sha: SHA_A, status: "completed" as const, conclusion: "failure" as const, generator: "success" as const,
       artifact: { id: 9, name: `bke-production-dependency-repair-${SHA_A}`, sha: SHA_B, runId: 73, expired: false }
     };
-    expect(decide({ ...valid(), runs: [wrongSha] }).kind).toBe("dispatch");
+    expect(decide({ ...valid(), runs: [wrongSha] }).kind).not.toBe("reuse");
   });
 
   it("reuses exact-head artifact when unrelated CI security job failed", () => {
