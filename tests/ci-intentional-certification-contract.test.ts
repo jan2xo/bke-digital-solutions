@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const activeDir = ".github/workflows";
@@ -90,24 +90,36 @@ describe("intentional GitHub Actions architecture", () => {
     expect(securityGenerate).toContain('workflow_id: workflowId');
     expect(securityGenerate).toContain('security_generator: "true"');
     expect(securityGenerate).toContain("actions: write");
+    expect(securityGenerate).toContain("require(\"./scripts/security-generate-policy.cjs\")");
+    expect(securityGenerate).toContain("ref: ${{ github.sha }}");
+    expect(securityGenerate).toContain("sparse-checkout: scripts/security-generate-policy.cjs");
+    expect(securityGenerate).toContain("persist-credentials: false");
     expect(securityGenerate).not.toContain("pull_request_target:");
-    expect(securityGenerate).not.toContain("actions/checkout");
     expect(securityGenerate).not.toContain("contents: write");
+    expect(securityGenerate).not.toContain("Date.parse(run.created_at)");
+    expect(securityGenerate).not.toContain("ref: sourceSha");
   });
 
-  it("requires exact-head generator correlation and suppresses duplicate runs", () => {
+  it("uses the shared tested policy for duplicate handling and run correlation", () => {
     const securityGenerate = readFileSync(
       join(activeDir, "security-generate.yml"),
       "utf8",
     );
+    expect(securityGenerate).toContain("policy.classifyPriorRun(");
+    expect(securityGenerate).toContain("policy.correlateGeneratorRun(");
+    expect(securityGenerate).toContain("policy.artifactBelongsToRun(");
     expect(securityGenerate).toContain("security-generate-dispatch-pr-269");
-    expect(securityGenerate).toContain("GitHub has not exposed its generator job yet");
-    expect(securityGenerate).toContain("priorGenerator?.conclusion === \"success\"");
-    expect(securityGenerate).toContain("item.workflow_run?.id === priorRun.id");
-    expect(securityGenerate).toContain("item.workflow_run?.id === run.id");
-    expect(securityGenerate).toContain("candidateGenerator && candidateGenerator.conclusion !== \"skipped\"");
-    expect(securityGenerate).not.toContain("Date.parse(run.created_at)");
-    expect(securityGenerate).not.toContain("priorRun.conclusion === \"success\"");
+  });
+
+  it("executes actionlint from the exact candidate checkout", () => {
+    const actionlintTest = readFileSync(
+      join("tests", "security-generate-actionlint.test.ts"),
+      "utf8",
+    );
+    expect(actionlintTest).toContain("actionlint@v1.7.7");
+    expect(actionlintTest).toContain(".github/workflows/ci.yml");
+    expect(actionlintTest).toContain(".github/workflows/security-generate.yml");
+    expect(actionlintTest).toContain('cwd: process.cwd()');
   });
 
   it("preserves the complete pre-overhaul workflow archive", () => {
