@@ -202,7 +202,7 @@ if (
 for (const marker of [
   'principal.role === "ADMIN"',
   'redirectTo',
-  '"safeLocalRedirect(returnTo)"',
+  "safeLocalRedirect(returnTo)",
   '"/admin"',
 ]) {
   if (!mfaChallengeRouteSource.includes(marker)) {
