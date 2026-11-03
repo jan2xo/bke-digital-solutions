@@ -130,6 +130,7 @@ describe("trusted security generator dispatcher decisions", () => {
   it("rejects untrusted associations and read-only collaborators", () => {
     expect(decide({ ...valid(), association: "NONE" }).kind).toBe("reject");
     expect(decide({ ...valid(), association: "COLLABORATOR", permissionLevel: "read" }).kind).toBe("reject");
+    expect(decide({ ...valid(), association: "MEMBER", permissionLevel: "write" }).kind).toBe("observed");
     expect(decide({ ...valid(), association: "MEMBER", permissionLevel: "none" }).kind).toBe("reject");
   });
 
