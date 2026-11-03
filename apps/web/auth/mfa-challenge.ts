@@ -150,7 +150,9 @@ export async function verifyIdentityLoginMfaChallenge(code: string): Promise<{
   if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
   return {
     userId: result.userId,
-    recoveryUsed: result.authenticationMethod === "PASSWORD_RECOVERY",
+    recoveryUsed:
+      result.authenticationMethod === "PASSWORD_RECOVERY" ||
+      result.authenticationMethod === "GOOGLE_OIDC_RECOVERY",
     authenticationMethod: result.authenticationMethod,
   };
 }

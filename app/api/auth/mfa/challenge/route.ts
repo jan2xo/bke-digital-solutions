@@ -11,6 +11,7 @@ import { rateLimit } from "@/apps/web/http/rate-limit";
 import { securityEvent } from "@/apps/web/security/events";
 import { pendingReacceptance } from "@/apps/web/legal/service";
 import { db } from "@/platform/host/db";
+import { safeLocalRedirect } from "@/apps/web/security/redirect";
 
 export async function POST(request: Request) {
   try {
@@ -25,8 +26,9 @@ export async function POST(request: Request) {
       throw new Error("RATE_LIMITED");
     }
 
-    const { code } = z
-      .object({ code: z.string().min(6).max(32) })
+    const { code, returnTo } = z
+      .object({ code: z.string().min(6).max(32), returnTo: z.string().max(2048).optional() })
+      .strict()
       .parse(await request.json());
     const verified = await verifyIdentityLoginMfaChallenge(code);
     const principal = await db.user.findUnique({
@@ -76,12 +78,13 @@ export async function POST(request: Request) {
       );
     }
 
+    const safeReturnTo = safeLocalRedirect(returnTo);
     const redirectTo =
       principal.role === "ADMIN"
         ? "/admin"
         : (await pendingReacceptance(result.userId)).length > 0
-          ? "/legal/accept?returnTo=%2Fdashboard"
-          : "/dashboard";
+          ? `/legal/accept?returnTo=${encodeURIComponent(safeReturnTo)}`
+          : safeReturnTo;
 
     const response = NextResponse.json({ ok: true, redirectTo });
     response.cookies.delete(IDENTITY_MFA_CHALLENGE_COOKIE);

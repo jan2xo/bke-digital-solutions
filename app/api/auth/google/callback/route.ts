@@ -79,7 +79,9 @@ export async function GET(request: Request) {
       : "SESSION";
     if (method === "MFA_CHALLENGE") {
       const challenge = await issueIdentityLoginMfaChallenge(userId, "GOOGLE_OIDC");
-      const response = NextResponse.redirect(new URL("/login/mfa", getWebHostEnvironment().appUrl));
+      const mfaUrl = new URL("/login/mfa", getWebHostEnvironment().appUrl);
+      mfaUrl.searchParams.set("returnTo", verified.context.returnTo);
+      const response = NextResponse.redirect(mfaUrl);
       response.cookies.set(GOOGLE_LOGIN_CONTEXT_COOKIE, "", { maxAge: 0, path: "/" });
       const { IDENTITY_MFA_CHALLENGE_COOKIE, IDENTITY_MFA_CHALLENGE_COOKIE_OPTIONS } =
         await import("@/apps/web/auth/mfa-challenge");
