@@ -34,6 +34,6 @@ Run relevant existing types/lint/tests, database migration replay, composition/s
 
 Implementation is pending when this contract is created. Primary agent owns orchestration/review; owner-selected GPT-6 Luna low effort owns coding. Preserve unrelated work and earlier scratch without wholesale adoption.
 
-The shared-package merge/publication currently awaits explicit owner approval after automatic review rejected a vague continuation as insufficient authorization. Do not bypass that review or consume unpublished bytes.
+The owner explicitly authorized PR85 merge and Identity 0.5.0 publication. Library main/tag identity-v0.5.0 resolves to a8590377f913a5ce8802fca5cdaf562ad8d4ff7e, with tree 8346014c9e3cb7b31b760f41ede5bd7ffe7ea090 identical to the reviewed source. Publication run 41641996989 passed. The published bke-identity-0.5.0.tgz asset digest and certified build log agree on SHA-256 d78e365d2db23044fe1175114affb540823599380c5dda85042dfe8073e1a2b9. Adopt the actual immutable release and verify downloaded bytes in consumer certification. This does not authorize application merge/deployment, paid resources or provider changes.
 
 No production deployment, provisioning, paid activation, live secrets, Google project changes, native repository edits or automatic application merge. Real Google client behavior, native interoperability, Workers resource/Free fit and production acceptance remain separate gates. Report source/CI/fixture acceptance honestly.
