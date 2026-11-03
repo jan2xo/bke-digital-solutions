@@ -134,6 +134,11 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Validate trusted GitHub Actions workflow definitions
+        run: >-
+          go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+          .github/workflows/ci.yml
+          .github/workflows/security-generate.yml
       - name: Validate Bash operator syntax
         run: bash -n bke.sh scripts/v3-ops.sh scripts/deploy-production.sh
       - name: Validate disposable operator syntax
