@@ -24,7 +24,6 @@ jobs:
     timeout-minutes: 2
     permissions:
       actions: write
-      administration: read
       issues: write
       pull-requests: read
     steps:
