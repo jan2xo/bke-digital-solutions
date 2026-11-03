@@ -123,6 +123,9 @@ jobs:
                 event: "workflow_dispatch",
                 per_page: 50,
               });
+              // Serialize at the job level as well as the workflow level, and
+              // refuse unresolved exact-head runs before any new dispatch.
+
               // Refuse ambiguous queue state before dispatch. GitHub's job API can
               // lag the workflow-run API, and an empty job list is not proof that
               // no generator is queued.
