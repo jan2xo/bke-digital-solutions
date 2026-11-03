@@ -134,8 +134,20 @@ jobs:
                   job.name === "Guarded production dependency generator"
                 );
 
-                if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status) &&
-                    priorGenerator && priorGenerator.conclusion == null) {
+                if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status)) {
+                  if (!priorGenerator || priorGenerator.conclusion == null) {
+                    await ledger(
+                      "## /security-generate — duplicate safely rejected\\n\\n" +
+                      "An exact-head workflow is already queued or running: [" + priorRun.id + "](" +
+                      priorRun.html_url + ") for source SHA `" + sourceSha + "`. " +
+                      "The generator job is not yet positively visible or has not completed; no second dispatch was issued."
+                    );
+                    core.notice("Rejected duplicate request while exact-head run " + priorRun.id + " is queued/running.");
+                    return;
+                  }
+                }
+
+                if (priorGenerator?.conclusion === "success") {
                   await ledger(
                     "## /security-generate — duplicate safely rejected\n\n" +
                     "An exact-head generator is already active: [" + priorRun.id + "](" +
@@ -146,9 +158,7 @@ jobs:
                   return;
                 }
 
-                if (priorRun.status === "completed" &&
-                    priorRun.conclusion === "success" &&
-                    priorGenerator?.conclusion === "success") {
+                if (priorGenerator?.conclusion === "success") {
                   const priorArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
                     owner: "jan2xo",
                     repo: "bke-digital-solutions",
@@ -156,11 +166,13 @@ jobs:
                     per_page: 100,
                   });
                   const expectedArtifact = priorArtifacts.data.artifacts.find((item) =>
-                    item.name === "bke-production-dependency-repair-" + sourceSha && !item.expired
+                    item.name === "bke-production-dependency-repair-" + sourceSha &&
+                    !item.expired &&
+                    item.workflow_run?.id === priorRun.id
                   );
                   if (expectedArtifact) {
                     await ledger(
-                      "## /security-generate — existing exact-head artifact reused\\n\\n" +
+                      "## /security-generate — existing exact-head artifact reused\n\n" +
                       "- Source SHA: `" + sourceSha + "`\n" +
                       "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\n" +
                       "- Artifact ID: `" + expectedArtifact.id + "`\n" +
@@ -197,12 +209,26 @@ jobs:
                   event: "workflow_dispatch",
                   per_page: 50,
                 });
-                observedRun = runs.data.workflow_runs.find((run) =>
+                const candidates = runs.data.workflow_runs.filter((run) =>
                   !priorRunIds.has(run.id) &&
                   run.head_sha === sourceSha &&
-                  run.head_branch === expectedBranch &&
-                  Date.parse(run.created_at) >= dispatchStartedAt - 5000
-                ) ?? null;
+                  run.head_branch === expectedBranch
+                );
+                for (const candidate of candidates) {
+                  const candidateJobs = await github.rest.actions.listJobsForWorkflowRun({
+                    owner: "jan2xo",
+                    repo: "bke-digital-solutions",
+                    run_id: candidate.id,
+                    per_page: 100,
+                  });
+                  const candidateGenerator = candidateJobs.data.jobs.find((job) =>
+                    job.name === "Guarded production dependency generator"
+                  );
+                  if (candidateGenerator) {
+                    observedRun = candidate;
+                    break;
+                  }
+                }
                 if (observedRun) break;
                 await new Promise((resolve) => setTimeout(resolve, 2000));
               }
@@ -269,6 +295,8 @@ jobs:
               return;
             }
 
+            // The exact generator job name is positive evidence that this was
+            // generator-mode CI, not an ordinary certification dispatch.
             const jobsResponse = await github.rest.actions.listJobsForWorkflowRun({
               owner: "jan2xo",
               repo: "bke-digital-solutions",
