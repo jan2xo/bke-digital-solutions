@@ -93,8 +93,12 @@ jobs:
             cat .certification-secrets/license-signing-public.pem
             echo 'BKE_PUBLIC_KEY'
           } >> "$GITHUB_ENV"
+      - name: Create isolated PostgreSQL protocol-test database
+        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c 'CREATE DATABASE bke_readiness_ci OWNER bke'
       - name: Run runtime test suite
         run: npm test
+        env:
+          BKE_POSTGRES_READINESS_DATABASE_URL: postgresql://bke:bke@localhost:5432/bke_readiness_ci
 
   code-quality-build:
     name: Code quality + application build
