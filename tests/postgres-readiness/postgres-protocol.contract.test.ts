@@ -83,7 +83,7 @@ describe.skipIf(!enabled)("PostgreSQL readiness protocol contract", () => {
       );
       expect(result.rows).toEqual([{ id: "account-a", balance: 100 }]);
     } finally {
-      if (!c.released) c.release();
+      c.release();
     }
   });
 
