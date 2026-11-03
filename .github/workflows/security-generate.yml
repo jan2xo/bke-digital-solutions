@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 2
     permissions:
       actions: write
+      administration: read
       issues: write
       pull-requests: read
     steps:
@@ -200,7 +201,7 @@ jobs:
               per_page: 100,
             });
             const generator = jobsResponse.data.jobs.find((job) =>
-              job.name === "Security dependency generator"
+              job.name === "Guarded production dependency generator"
             );
 
             // Ordinary core CI dispatches have no generator job and must not be
