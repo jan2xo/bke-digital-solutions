@@ -15,10 +15,11 @@ The canonical shared Identity prerequisite is tracked in [bke-libraries-typescri
 Owner-confirmed public origin: `https://jl-bke.com`.
 
 - Google client type: Web application.
+- Owner-supplied public Client ID: `762330940636-uuqstj4ig6ads84nid0bik35jkum4kt1.apps.googleusercontent.com`. Configure this as the consumer's expected `GOOGLE_CLIENT_ID` audience; the client secret is not part of this document.
 - Authorized redirect URI: `https://jl-bke.com/api/auth/google/callback` (exact match; no trailing slash or wildcard).
 - Authorized JavaScript origin, if configured: `https://jl-bke.com`.
 - The consumer must implement `/api/auth/google/callback` and derive its exact redirect URL from the validated canonical `APP_URL`, rather than untrusted request headers. This is an implementation contract, not a live route claim.
-- Use only identity scopes needed for sign-in. Keep the client secret in protected deployment configuration; never in GitHub, browser code, Notion or review comments. The owner is creating the OAuth client; actual provider acceptance remains pending.
+- Use only identity scopes needed for sign-in. Keep the client secret in protected deployment configuration; never in GitHub, browser code, Notion or review comments. The owner reports creating the OAuth client; redirect settings, audience access and actual provider acceptance remain unverified.
 
 The owner approved fresh BKE application-factor verification for sensitive actions under Google-only authentication. Bind each expiring single-use challenge to the exact active BKE user/session, preserve administrator enrollment and recovery controls, and distinguish recent application-factor verification from fresh Google Account authentication. Ordinary Google login must not grant recent-auth assurance. [Decision and provider constraint](https://github.com/jan2xo/bke-libraries-typescript/pull/85#issuecomment-6598191698).
 
