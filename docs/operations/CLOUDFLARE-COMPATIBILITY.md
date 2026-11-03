@@ -6,14 +6,16 @@ This document tracks the first hosting-migration intent. It is not deployment ap
 
 Starting source: `a36d9decffa6936114a9578857558a9687ca4e7f` on canonical `main`.
 
-The owner authorized implementation from the 2026-11-03 V3 free-tier handoff, accepted a fresh database, and retained Docker as an optional cold target. The initial application-infrastructure objective is USD 0 for 1–3 customers. Paid upgrades, metered subscription activation, production cutover, live credentials and native Agent changes are outside this intent.
+The owner authorized implementation from the 2026-11-03 V3 free-tier handoff, accepted a fresh database, and retained Docker as an optional cold target. The owner subsequently required Google OAuth/OIDC only, with no Digital Solutions account passwords; that correction supersedes the handoff's Argon2/password requirements. The initial application-infrastructure objective is USD 0 for 1–3 customers. Paid upgrades, metered subscription activation, production cutover, live credentials and native Agent changes are outside this intent.
+
+The canonical shared Identity prerequisite is tracked in [bke-libraries-typescript PR85](https://github.com/jan2xo/bke-libraries-typescript/pull/85). Adopt an independently certified immutable package before claiming Google-authenticated application compatibility.
 
 Required PR1 evidence:
 
 | Requirement | Required receiving-path proof | Boundary |
 |---|---|---|
 | Framework | Existing V3 SSR/dynamic browse and authenticated dashboard, cookies, CSP/nonce, server-only/runtime configuration and static-asset routing | Actual application build and workerd; deployed staging remains separate |
-| Identity | Existing Argon2id parameters and PHC compatibility; valid/invalid/malformed inputs through both identity composition sites; second/concurrent invocations | Node and Workers runtime interoperability |
+| Identity | Google OIDC receiving-path proof, stable provider-subject binding, valid/invalid/replayed assertions, app-owned session/MFA/recent-auth protection and second/concurrent invocations; password endpoints retired in the consumer | Node and Workers runtime interoperability; real Google sign-in remains separate |
 | Persistence | Real PostgreSQL transaction/rollback through the chosen Workers/Hyperdrive adapter, with fresh authorization reads and safe client lifetime | Isolated database/runtime proof; no schema/history rewrite |
 | Licensing | Existing Ed25519 lease/policy producer and Agent-compatible test vectors; invalid/expired/wrong-scope inputs rejected by actual consumers | Source/runtime vectors; physical/native Agent testing remains separate |
 | Resources | CPU profiles, startup, bundle and memory evidence for representative operations and concurrency; explicit comparison against Free constraints | Wall-clock timers or local configuration alone cannot prove deployed CPU enforcement |
@@ -21,7 +23,7 @@ Required PR1 evidence:
 
 Map the existing Agent lease/auth/account/application-session lifetimes, trusted clock, local reuse, renewal, grace and revocation semantics before proposing any changes. A 24-hour process session must not extend a signed lease or bypass an existing refresh rule.
 
-Use the existing PostgreSQL/capability/security contracts. Preserve rate limiting, recent authentication, same-origin checks, audit boundaries and Docker source. Do not replace the product with a toy endpoint, weaken password parameters, introduce D1, modify Prisma schema/history or add automatic paid upgrades to obtain a pass.
+Use the existing PostgreSQL/capability/security contracts. Preserve rate limiting, recent authentication, same-origin checks, audit boundaries and Docker source. Do not replace the product with a toy endpoint, weaken Google token verification or MFA/authorization, introduce D1, rewrite Prisma history or add automatic paid upgrades to obtain a pass. Any necessary additive identity mapping/session-enum migration belongs to the explicitly authorized Google-only authentication prerequisite, not unrelated database hardening.
 
 ## Execution and evidence
 
@@ -29,4 +31,4 @@ Use the existing intentional GitHub certification mechanism and bind results to 
 
 A source milestone may be implemented while the parent migration remains PARTIAL. The complete PR1 acceptance cannot be called PASS if required application/runtime, CPU or database proof is missing. On a demonstrated incompatibility, retain the smallest reproducible evidence and identify the exact failing operation. Do not advance to unrelated later waves around a failed feasibility gate.
 
-Status at creation: requirements recorded; implementation and all proof PENDING. Production remains LOCKED. The handoff's later runtime-adapter, Agent efficiency, storage/jobs, provisioning/observability and release stages remain unimplemented by this document.
+Current status: requirements revised for Google-only sign-in; shared Identity prerequisite in progress; Workers application implementation and full proof PENDING. Production remains LOCKED. The handoff's later runtime-adapter, Agent efficiency, storage/jobs, provisioning/observability and release stages remain unimplemented by this document.
