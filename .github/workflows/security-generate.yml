@@ -120,6 +120,35 @@ jobs:
                 event: "workflow_dispatch",
                 per_page: 50,
               });
+              // Refuse ambiguous queue state before dispatch. GitHub's job API can
+              // lag the workflow-run API, and an empty job list is not proof that
+              // no generator is queued.
+              const unresolvedQueue = recentRuns.data.workflow_runs.find((run) =>
+                run.head_sha === sourceSha &&
+                ["queued", "in_progress", "waiting", "requested"].includes(run.status)
+              );
+              if (unresolvedQueue) {
+                const visibleJobs = await github.rest.actions.listJobsForWorkflowRun({
+                  owner: "jan2xo",
+                  repo: "bke-digital-solutions",
+                  run_id: unresolvedQueue.id,
+                  per_page: 100,
+                });
+                const visibleGenerator = visibleJobs.data.jobs.find((job) =>
+                  job.name === "Guarded production dependency generator"
+                );
+                if (!visibleGenerator || visibleGenerator.conclusion == null) {
+                  await ledger(
+                    "## /security-generate — duplicate safely rejected\\n\\n" +
+                    "An exact-head workflow is queued or running: [" + unresolvedQueue.id + "](" +
+                    unresolvedQueue.html_url + "). GitHub has not exposed terminal generator evidence; " +
+                    "no second dispatch was issued."
+                  );
+                  core.notice("Suppressed duplicate dispatch for unresolved run " + unresolvedQueue.id + ".");
+                  return;
+                }
+              }
+
               const priorRunIds = new Set(recentRuns.data.workflow_runs.map((run) => run.id));
               for (const priorRun of recentRuns.data.workflow_runs) {
                 if (priorRun.head_sha !== sourceSha) continue;
@@ -250,7 +279,7 @@ jobs:
                   const candidateGenerator = candidateJobs.data.jobs.find((job) =>
                     job.name === "Guarded production dependency generator"
                   );
-                  if (candidateGenerator) {
+                  if (candidateGenerator && candidateGenerator.conclusion !== "skipped") {
                     observedRun = candidate;
                     break;
                   }
@@ -333,10 +362,13 @@ jobs:
               job.name === "Guarded production dependency generator"
             );
 
-            // Ordinary core CI dispatches have no generator job and must not be
-            // mistaken for a security-generation request.
+            // No ledger claim is made without positive evidence of the named job.
             if (!generator || generator.conclusion === "skipped") {
-              core.notice("No active security generator job in this CI run; no PR ledger entry required.");
+              core.notice("No generator job evidence in this workflow run; ignored.");
+              return;
+            }
+            if (!["success", "failure", "cancelled", "timed_out", "action_required"].includes(generator.conclusion)) {
+              core.setFailed("Generator job has not reached a terminal, reportable conclusion.");
               return;
             }
 
@@ -361,7 +393,9 @@ jobs:
               });
               const expectedName = "bke-production-dependency-repair-" + run.head_sha;
               artifact = artifacts.data.artifacts.find((item) =>
-                item.name === expectedName && !item.expired
+                item.name === expectedName &&
+                !item.expired &&
+                item.workflow_run?.id === run.id
               ) ?? null;
             }
 
