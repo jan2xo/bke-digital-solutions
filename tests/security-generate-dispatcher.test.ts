@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 type Permission = "OWNER" | "MEMBER" | "COLLABORATOR" | "NONE";
 type RunStatus = "queued" | "in_progress" | "completed";
