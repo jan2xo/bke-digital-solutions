@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { EncryptJWT, exportJWK, generateKeyPair, jwtDecrypt, SignJWT, type KeyLike } from "jose";
+import { EncryptJWT, exportJWK, generateKeyPair, jwtDecrypt, SignJWT } from "jose";
 
 const { mockEnvironment } = vi.hoisted(() => ({
   mockEnvironment: {
@@ -37,7 +37,7 @@ const metadata = {
 let signing: Awaited<ReturnType<typeof generateKeyPair>>;
 let wrongSigning: Awaited<ReturnType<typeof generateKeyPair>>;
 let publicJwk: Awaited<ReturnType<typeof exportJWK>>;
-let tokenFactory: (nonce: string, privateKey?: KeyLike, claims?: { issuer?: string; audience?: string }) => Promise<string>;
+let tokenFactory: (nonce: string, privateKey?: Awaited<ReturnType<typeof generateKeyPair>>["privateKey"], claims?: { issuer?: string; audience?: string }) => Promise<string>;
 let tokenEndpointCalls = 0;
 let idToken: string;
 
