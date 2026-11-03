@@ -4,6 +4,7 @@ import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../platform/persistence/generated/prisma/client";
+import { revokeAgentAccountSessionsForUser } from "../apps/web/agent-sessions/device-authorization";
 import {
   createEmergencyEnrollmentToken,
   verifyOwnerRecoverySecret,
@@ -113,6 +114,7 @@ async function main() {
           },
         }),
       ]);
+      await revokeAgentAccountSessionsForUser(tx, user.id, now);
       await tx.auditLog.create({
         data: {
           action: "ADMIN_EMERGENCY_MFA_RECOVERY",
@@ -129,6 +131,7 @@ async function main() {
               recoveryCodes: recovery.count,
               challenges: challenges.count,
               sessions: sessions.count,
+              agentSessionFamiliesRevoked: true,
             },
           },
         },

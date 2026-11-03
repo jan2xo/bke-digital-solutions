@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { exportJWK, generateKeyPair, jwtDecrypt, SignJWT, type KeyLike } from "jose";
+import { EncryptJWT, exportJWK, generateKeyPair, jwtDecrypt, SignJWT, type KeyLike } from "jose";
 
 const { mockEnvironment } = vi.hoisted(() => ({
   mockEnvironment: {
@@ -37,7 +37,7 @@ const metadata = {
 let signing: Awaited<ReturnType<typeof generateKeyPair>>;
 let wrongSigning: Awaited<ReturnType<typeof generateKeyPair>>;
 let publicJwk: Awaited<ReturnType<typeof exportJWK>>;
-let tokenFactory: (nonce: string, privateKey?: KeyLike) => Promise<string>;
+let tokenFactory: (nonce: string, privateKey?: KeyLike, claims?: { issuer?: string; audience?: string }) => Promise<string>;
 let tokenEndpointCalls = 0;
 let idToken: string;
 
@@ -62,7 +62,7 @@ beforeAll(async () => {
     use: "sig",
     alg: "RS256",
   };
-  tokenFactory = async (nonce, privateKey = signing.privateKey) =>
+  tokenFactory = async (nonce, privateKey = signing.privateKey, claims = {}) =>
     new SignJWT({
       nonce,
       email: "customer@example.test",
@@ -70,8 +70,8 @@ beforeAll(async () => {
       name: "Test Customer",
     })
       .setProtectedHeader({ alg: "RS256", kid: "google-test-key" })
-      .setIssuer(GOOGLE_ISSUER)
-      .setAudience(CLIENT_ID)
+      .setIssuer(claims.issuer ?? GOOGLE_ISSUER)
+      .setAudience(claims.audience ?? CLIENT_ID)
       .setSubject("google-subject-123")
       .setIssuedAt()
       .setExpirationTime("5m")
@@ -152,4 +152,50 @@ describe("Google OIDC callback validation", () => {
       completeGoogleAuthorization(login.callbackUrl, login.encryptedContext),
     ).rejects.toThrow();
   });
+
+  it("rejects a nonce mismatch", async () => {
+    const login = await startLogin();
+    idToken = await tokenFactory("wrong-nonce");
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    await expect(completeGoogleAuthorization(login.callbackUrl, login.encryptedContext)).rejects.toThrow();
+  });
+
+  it.each([
+    ["issuer", { issuer: "https://attacker.example" }],
+    ["audience", { audience: "another-client.apps.googleusercontent.com" }],
+  ])("rejects a wrong ID-token %s", async (_name, claims) => {
+    const login = await startLogin();
+    idToken = await tokenFactory(login.nonce, undefined, claims);
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    await expect(completeGoogleAuthorization(login.callbackUrl, login.encryptedContext)).rejects.toThrow();
+  });
+
+  it("rejects a state mismatch before exchanging the authorization code", async () => {
+    const login = await startLogin();
+    idToken = await tokenFactory(login.nonce);
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    const wrongState = login.callbackUrl.replace(/state=[^&]+/, "state=attacker-state");
+    await expect(completeGoogleAuthorization(wrongState, login.encryptedContext)).rejects.toThrow();
+    expect(tokenEndpointCalls).toBe(0);
+  });
+
+  it("rejects an expired encrypted login context", async () => {
+    const login = await startLogin();
+    const key = new Uint8Array(
+      await crypto.subtle.digest("SHA-256", new TextEncoder().encode(process.env.SESSION_SECRET)),
+    );
+    const { payload } = await jwtDecrypt(login.encryptedContext, key);
+    const now = Math.floor(Date.now() / 1000);
+    const expiredContext = await new EncryptJWT(payload)
+      .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+      .setIssuer("bke-digital-solutions")
+      .setAudience("google-oidc-login")
+      .setIssuedAt(now - 700)
+      .setExpirationTime(now - 1)
+      .encrypt(key);
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    await expect(completeGoogleAuthorization(login.callbackUrl, expiredContext)).rejects.toThrow();
+    expect(tokenEndpointCalls).toBe(0);
+  });
+
 });

@@ -18,6 +18,7 @@ import type { IdentityPrincipal } from "@bke/identity/contracts/identity.contrac
 import { safeNetworkHint, summarizeUserAgent } from "@/platform/host/security/session-display";
 import { clientIp } from "../http/request";
 import { getV2WebApplication } from "../runtime";
+import { db } from "@/platform/host/db";
 
 const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -78,7 +79,15 @@ export async function currentIdentitySession(): Promise<IdentitySessionContext |
     IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
   );
   const result = await sessionValidation.validate(token);
-  if (result.status === "VALID") return result.context;
+  if (result.status === "VALID") {
+    if (!result.context.session.authenticationMethod.startsWith("GOOGLE_OIDC")) return null;
+    const principal = await db.user.findUnique({
+      where: { id: result.context.principal.id },
+      select: { lifecycleState: true, suspendedAt: true },
+    });
+    if (!principal || principal.lifecycleState !== "ACTIVE" || principal.suspendedAt) return null;
+    return result.context;
+  }
   if (result.status === "INVALID") return null;
   throw new Error(result.code);
 }

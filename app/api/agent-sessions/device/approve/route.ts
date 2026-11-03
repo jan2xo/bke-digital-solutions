@@ -24,6 +24,13 @@ export async function POST(request: Request) {
     const identitySession = await currentIdentitySession();
     if (!identitySession) throw new Error("UNAUTHENTICATED");
     const principal = identitySession.principal;
+    const currentPrincipal = await db.user.findUnique({
+      where: { id: principal.id },
+      select: { lifecycleState: true, suspendedAt: true },
+    });
+    if (!currentPrincipal || currentPrincipal.lifecycleState !== "ACTIVE" || currentPrincipal.suspendedAt) {
+      throw new Error("UNAUTHENTICATED");
+    }
     if (principal.role !== "CUSTOMER") return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
     if (identitySession.mfaEnabled && !identitySession.session.mfaVerifiedAt) return NextResponse.json({ error: "MFA_REQUIRED" }, { status: 403 });
     if (!principal.emailVerified) {

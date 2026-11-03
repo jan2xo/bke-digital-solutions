@@ -11,7 +11,6 @@ import {
 } from "@bke/identity/contracts/google-identity.contract";
 import { createIdentityGooglePrincipalBindingCapability } from "@bke/identity/logic/google-identity";
 import { createPrismaTransactionGoogleIdentityRepository } from "@/modules/identity/google-transaction-repository";
-import { getV2WebApplication } from "@/apps/web/runtime";
 
 export class GoogleRegistrationError extends Error {
   constructor(

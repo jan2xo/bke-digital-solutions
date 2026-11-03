@@ -1,4 +1,5 @@
 import type { PrismaClient } from "../platform/persistence/generated/prisma/client";
+import { revokeAgentAccountSessionsForUser } from "../apps/web/agent-sessions/device-authorization";
 
 export interface GoogleAdministratorBootstrapInput {
   readonly userId: string;
@@ -56,6 +57,7 @@ export async function bootstrapGoogleAdministrator(
       where: { id: user.id },
       data: { role: "ADMIN" },
     });
+    await revokeAgentAccountSessionsForUser(tx, user.id, now);
     const revoked = await tx.session.updateMany({
       where: { userId: user.id, revokedAt: null },
       data: {
@@ -75,6 +77,7 @@ export async function bootstrapGoogleAdministrator(
           operatorId: input.operatorId.slice(0, 160),
           deploymentEnvironment: input.deploymentEnvironment,
           revokedSessions: revoked.count,
+          agentSessionFamiliesRevoked: true,
           mfaEnrollmentRequired: true,
         },
       },
