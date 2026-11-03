@@ -4,8 +4,10 @@ import * as oauth from "oauth4webapi";
 import { EncryptJWT, jwtDecrypt } from "jose";
 import { getWebHostEnvironment } from "@/apps/web/config/environment";
 import { safeLocalRedirect } from "@/apps/web/security/redirect";
+import { consumeOneTimeKey } from "@/apps/web/http/rate-limit";
 
-const GOOGLE_ISSUER = new URL("https://accounts.google.com");
+const GOOGLE_ISSUER_VALUE = "https://accounts.google.com";
+const GOOGLE_ISSUER = new URL(GOOGLE_ISSUER_VALUE);
 const GOOGLE_LOGIN_CONTEXT_ISSUER = "bke-digital-solutions";
 const GOOGLE_LOGIN_CONTEXT_AUDIENCE = "google-oidc-login";
 const GOOGLE_LOGIN_CONTEXT_TTL_SECONDS = 600;
@@ -65,7 +67,7 @@ async function googleAuthorizationServer(): Promise<oauth.AuthorizationServer> {
     .discoveryRequest(GOOGLE_ISSUER)
     .then((response) => oauth.processDiscoveryResponse(GOOGLE_ISSUER, response))
     .then((metadata) => {
-      if (metadata.issuer !== GOOGLE_ISSUER.href) {
+      if (metadata.issuer !== GOOGLE_ISSUER_VALUE) {
         throw new Error("Google OIDC issuer metadata did not match the configured issuer.");
       }
       return metadata;
@@ -156,6 +158,12 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
     callbackUrl,
     context.state,
   );
+  const stateDigest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(context.state));
+  const contextKey = Array.from(new Uint8Array(stateDigest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  if (!(await consumeOneTimeKey(`google-login-context:${contextKey}`, GOOGLE_LOGIN_CONTEXT_TTL_SECONDS))) {
+    throw new Error("INVALID_GOOGLE_LOGIN_CONTEXT");
+  }
+
   const tokenEndpointResponse = await oauth.authorizationCodeGrantRequest(
     metadata,
     client,
@@ -173,11 +181,11 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
 
   // The library validates the protocol response, but this consumer also requires
   // an explicit ID-token JWS signature check before trusting the subject.
-  await oauth.validateApplicationLevelSignature(metadata, processedResponse);
+  await oauth.validateApplicationLevelSignature(metadata, tokenEndpointResponse);
   const claims = oauth.getValidatedIdTokenClaims(processedResponse);
   if (
     !claims ||
-    claims.iss !== GOOGLE_ISSUER.href ||
+    claims.iss !== GOOGLE_ISSUER_VALUE ||
     !(claims.aud === clientId || (Array.isArray(claims.aud) && claims.aud.includes(clientId))) ||
     typeof claims.sub !== "string" ||
     !/^[\x21-\x7e]{1,255}$/.test(claims.sub)
@@ -191,7 +199,7 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
   return {
     context,
     identity: {
-      issuer: GOOGLE_ISSUER.href,
+      issuer: GOOGLE_ISSUER_VALUE,
       subject: claims.sub,
       email,
       emailVerified,

@@ -51,3 +51,32 @@ export async function rateLimit(key: string, limit: number, windowSeconds: numbe
   local.set(bucket, next);
   return { allowed: next.count <= limit, remaining: Math.max(0, limit - next.count) };
 }
+
+const oneTimeKeys = new Map<string, number>();
+
+export async function consumeOneTimeKey(key: string, ttlSeconds: number): Promise<boolean> {
+  const storageKey = `${environment.redisKeyPrefix}:once:${key}`;
+  if (upstash) {
+    try {
+      return (await upstash.set(storageKey, "1", { ex: ttlSeconds, nx: true })) === "OK";
+    } catch {
+      return false;
+    }
+  }
+  if (localRedis) {
+    try {
+      if (!localRedis.isOpen) await localRedis.connect();
+      return (await localRedis.set(storageKey, "1", { EX: ttlSeconds, NX: true })) === "OK";
+    } catch {
+      return false;
+    }
+  }
+  if (environment.nodeEnv === "production") {
+    throw new Error("Distributed one-time storage is not configured");
+  }
+  const now = Date.now();
+  const expiresAt = oneTimeKeys.get(storageKey);
+  if (expiresAt && expiresAt > now) return false;
+  oneTimeKeys.set(storageKey, now + ttlSeconds * 1000);
+  return true;
+}
