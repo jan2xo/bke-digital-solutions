@@ -95,6 +95,21 @@ describe("intentional GitHub Actions architecture", () => {
     expect(securityGenerate).not.toContain("contents: write");
   });
 
+  it("requires exact-head generator correlation and suppresses duplicate runs", () => {
+    const securityGenerate = readFileSync(
+      join(activeDir, "security-generate.yml"),
+      "utf8",
+    );
+    expect(securityGenerate).toContain("security-generate-dispatch-pr-269");
+    expect(securityGenerate).toContain("GitHub has not exposed its generator job yet");
+    expect(securityGenerate).toContain("priorGenerator?.conclusion === \"success\"");
+    expect(securityGenerate).toContain("item.workflow_run?.id === priorRun.id");
+    expect(securityGenerate).toContain("item.workflow_run?.id === run.id");
+    expect(securityGenerate).toContain("candidateGenerator && candidateGenerator.conclusion !== \"skipped\"");
+    expect(securityGenerate).not.toContain("Date.parse(run.created_at)");
+    expect(securityGenerate).not.toContain("priorRun.conclusion === \"success\"");
+  });
+
   it("preserves the complete pre-overhaul workflow archive", () => {
     const legacy = readdirSync(legacyDir)
       .filter((name) => name.endsWith(".yml"))
