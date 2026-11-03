@@ -240,6 +240,8 @@ jobs:
                 }
               }
 
+              // Dispatch requests are serialized by the controller's concurrency
+              // key and the pre-dispatch run scan above.
               const dispatchStartedAt = Date.now();
               await github.rest.actions.createWorkflowDispatch({
                 owner: "jan2xo",
