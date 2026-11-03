@@ -21,7 +21,7 @@ jobs:
       github.event.issue.pull_request &&
       github.event.comment.body == '/security-generate'
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 3
     concurrency:
       group: security-generate-dispatch-pr-269
       cancel-in-progress: false
@@ -31,28 +31,26 @@ jobs:
       issues: write
       pull-requests: read
     steps:
+      - name: Checkout trusted default-branch policy only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: scripts/security-generate-policy.cjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
       - name: Validate requester, PR identity, and live head; dispatch fixed workflow
         uses: actions/github-script@v7
         with:
           script: |
-            const expectedRepo = "jan2xo/bke-digital-solutions";
-            const expectedPr = 269;
-            const expectedBase = "main";
-            const expectedBranch = "fix/v3-production-dependency-security";
+            const policy = require("./scripts/security-generate-policy.cjs");
+            const expectedRepo = policy.REPOSITORY;
+            const expectedPr = policy.PULL_REQUEST;
+            const expectedBranch = policy.HEAD_BRANCH;
             const workflowId = "ci.yml";
             const issue = context.payload.issue;
             const comment = context.payload.comment;
             const association = comment?.author_association ?? "NONE";
-            const allowedAssociations = new Set(["OWNER", "MEMBER", "COLLABORATOR"]);
-
-            // Ignore unauthorized authors without exposing repository metadata.
-            if (!allowedAssociations.has(association) || !comment?.user?.login) {
-              core.notice("Ignored /security-generate from an unauthorized author association.");
-              return;
-            }
-
-            const isVerifiedRepositoryOwner =
-              comment.user.login === "jan2xo" && association === "OWNER";
 
             async function ledger(message) {
               await github.rest.issues.createComment({
@@ -64,24 +62,31 @@ jobs:
             }
 
             try {
-              // The fixed repository owner is independently anchored by both the
-              // OWNER association and the known owner login. Other accepted GitHub
-              // associations must pass the repository's permission-level API check.
-              if (!isVerifiedRepositoryOwner) {
+              if (context.repo.owner + "/" + context.repo.repo !== expectedRepo ||
+                  issue?.number !== expectedPr || !issue.pull_request) {
+                throw new Error("Command is restricted to the designated dependency-remediation pull request.");
+              }
+
+              let permissionLevel = null;
+              const repositoryOwnerComment =
+                association === "OWNER" && comment?.user?.login === policy.OWNER;
+              if (!repositoryOwnerComment) {
                 const permission = await github.rest.repos.getCollaboratorPermissionLevel({
                   owner: "jan2xo",
                   repo: "bke-digital-solutions",
-                  username: comment.user.login,
+                  username: comment?.user?.login ?? "",
                 });
-                if (!["admin", "maintain", "write"].includes(permission.data.permission)) {
-                  core.notice("Ignored /security-generate: commenter lacks repository write permission.");
-                  return;
-                }
+                permissionLevel = permission.data.permission;
               }
 
-              if (context.repo.owner + "/" + context.repo.repo !== expectedRepo ||
-                  issue.number !== expectedPr || !issue.pull_request) {
-                throw new Error("Command is restricted to the designated dependency-remediation pull request.");
+              const authorization = policy.authorizeCommenter({
+                association,
+                login: comment?.user?.login,
+                permission: permissionLevel,
+              });
+              if (!authorization.ok) {
+                core.notice("Ignored /security-generate: " + authorization.reason + ".");
+                return;
               }
 
               const prResponse = await github.rest.pulls.get({
@@ -90,72 +95,37 @@ jobs:
                 pull_number: expectedPr,
               });
               const pr = prResponse.data;
-
-              if (pr.state !== "open" ||
-                  pr.base?.ref !== expectedBase ||
-                  pr.base?.repo?.full_name !== expectedRepo ||
-                  pr.head?.ref !== expectedBranch ||
-                  pr.head?.repo?.full_name !== expectedRepo) {
-                throw new Error("PR state, base, head branch, or head repository does not match the fixed allowlist.");
-              }
-
-              const sourceSha = pr.head?.sha ?? "";
-              if (!/^[0-9a-f]{40}$/.test(sourceSha)) {
-                throw new Error("GitHub did not return a valid exact 40-character PR head SHA.");
-              }
-
-              // Independently resolve the branch ref to detect head drift before dispatch.
-              const branch = await github.rest.repos.getBranch({
+              const branchRef = await github.rest.repos.getBranch({
                 owner: "jan2xo",
                 repo: "bke-digital-solutions",
                 branch: expectedBranch,
               });
-              if (branch.data.commit.sha !== sourceSha) {
-                throw new Error("PR head and branch ref differ; refusing stale or ambiguous dispatch.");
-              }
+              const sourceSha = pr.head?.sha ?? "";
 
-              // Reject a duplicate command while an exact-head generator is queued or running.
+              const target = policy.validateTarget({
+                contextRepository: context.repo.owner + "/" + context.repo.repo,
+                issueNumber: issue.number,
+                isPullRequest: Boolean(issue.pull_request),
+                prState: pr.state,
+                baseRef: pr.base?.ref ?? "",
+                baseRepository: pr.base?.repo?.full_name ?? "",
+                headRef: pr.head?.ref ?? "",
+                headRepository: pr.head?.repo?.full_name ?? "",
+                sourceSha,
+                branchSha: branchRef.data.commit.sha,
+              });
+              if (!target.ok) throw new Error(target.reason);
+
               const recentRuns = await github.rest.actions.listWorkflowRuns({
                 owner: "jan2xo",
                 repo: "bke-digital-solutions",
                 workflow_id: workflowId,
                 branch: expectedBranch,
                 event: "workflow_dispatch",
-                per_page: 50,
+                per_page: 100,
               });
-              // Serialize at the job level as well as the workflow level, and
-              // refuse unresolved exact-head runs before any new dispatch.
-
-              // Refuse ambiguous queue state before dispatch. GitHub's job API can
-              // lag the workflow-run API, and an empty job list is not proof that
-              // no generator is queued.
-              const unresolvedQueue = recentRuns.data.workflow_runs.find((run) =>
-                run.head_sha === sourceSha &&
-                ["queued", "in_progress", "waiting", "requested"].includes(run.status)
-              );
-              if (unresolvedQueue) {
-                const visibleJobs = await github.rest.actions.listJobsForWorkflowRun({
-                  owner: "jan2xo",
-                  repo: "bke-digital-solutions",
-                  run_id: unresolvedQueue.id,
-                  per_page: 100,
-                });
-                const visibleGenerator = visibleJobs.data.jobs.find((job) =>
-                  job.name === "Guarded production dependency generator"
-                );
-                if (!visibleGenerator || visibleGenerator.conclusion == null) {
-                  await ledger(
-                    "## /security-generate — duplicate safely rejected\\n\\n" +
-                    "An exact-head workflow is queued or running: [" + unresolvedQueue.id + "](" +
-                    unresolvedQueue.html_url + "). GitHub has not exposed terminal generator evidence; " +
-                    "no second dispatch was issued."
-                  );
-                  core.notice("Suppressed duplicate dispatch for unresolved run " + unresolvedQueue.id + ".");
-                  return;
-                }
-              }
-
               const priorRunIds = new Set(recentRuns.data.workflow_runs.map((run) => run.id));
+
               for (const priorRun of recentRuns.data.workflow_runs) {
                 if (priorRun.head_sha !== sourceSha) continue;
 
@@ -165,102 +135,56 @@ jobs:
                   run_id: priorRun.id,
                   per_page: 100,
                 });
-                const priorGenerator = priorJobs.data.jobs.find((job) =>
-                  job.name === "Guarded production dependency generator"
+                const generator = priorJobs.data.jobs.find((job) =>
+                  job.name === policy.GENERATOR_JOB
                 );
 
-                if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status)) {
-                  // An active ordinary workflow can still run the generator even
-                  // before the dedicated job is visible. Never issue a competing run.
-                  if (!priorGenerator) {
-                    await ledger(
-                      "## /security-generate — duplicate safely rejected\\n\\n" +
-                      "An exact-head workflow is queued or running: [" + priorRun.id + "](" +
-                      priorRun.html_url + "). GitHub has not exposed its generator job yet; " +
-                      "no second dispatch was issued."
-                    );
-                    core.notice("Suppressed duplicate request while exact-head workflow job listing is pending.");
-                    return;
-                  }
-                  // Treat absence of a terminal job conclusion as queued work, not as
-                  // permission to dispatch a second copy.
-                  if (!priorGenerator || priorGenerator.conclusion == null) {
-                    await ledger(
-                      "## /security-generate — duplicate safely rejected\\n\\n" +
-                      "An exact-head CI run is queued or running: [" + priorRun.id + "](" +
-                      priorRun.html_url + "). Its generator state is not yet terminal. No second dispatch was issued."
-                    );
-                    core.notice("Rejected duplicate command while exact-head run " + priorRun.id + " remains active.");
-                    return;
-                  }
-                  if (priorGenerator.conclusion === "success") {
-                    const activeArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-                      owner: "jan2xo",
-                      repo: "bke-digital-solutions",
-                      run_id: priorRun.id,
-                      per_page: 100,
-                    });
-                    const activeArtifact = activeArtifacts.data.artifacts.find((item) =>
-                      item.name === "bke-production-dependency-repair-" + sourceSha &&
-                      !item.expired &&
-                      item.workflow_run?.id === priorRun.id
-                    );
-                    if (activeArtifact) {
-                      await ledger(
-                        "## /security-generate — active run already produced exact-head artifact\\n\\n" +
-                        "- Source SHA: `" + sourceSha + "`\\n" +
-                        "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\\n" +
-                        "- Artifact ID: `" + activeArtifact.id + "`\\n\\n" +
-                        "The generator job has succeeded and the exact-head artifact is present. No duplicate dispatch was issued."
-                      );
-                      core.notice("Reused artifact from active run " + priorRun.id + ".");
-                      return;
-                    }
-                    await ledger(
-                      "## /security-generate — duplicate safely rejected\\n\\n" +
-                      "The exact-head generator job succeeded in [" + priorRun.id + "](" +
-                      priorRun.html_url + "), but the expected unexpired artifact is not yet visible. " +
-                      "No duplicate dispatch was issued; reconcile the run artifact ledger."
-                    );
-                    core.notice("Generator succeeded but expected artifact is not visible; duplicate dispatch suppressed.");
-                    return;
-                  }
-                }
-
-                // A successful generator job is reusable independently of the
-                // overall CI run conclusion (e.g. the separate audit job may fail).
-                if (priorGenerator?.conclusion === "success") {
-                  const priorArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                let artifact = null;
+                if (generator?.conclusion === "success") {
+                  const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
                     owner: "jan2xo",
                     repo: "bke-digital-solutions",
                     run_id: priorRun.id,
                     per_page: 100,
                   });
-                  const expectedArtifact = priorArtifacts.data.artifacts.find((item) =>
-                    item.name === "bke-production-dependency-repair-" + sourceSha &&
-                    !item.expired &&
-                    item.workflow_run?.id === priorRun.id
+                  artifact = artifacts.data.artifacts.find((item) =>
+                    policy.artifactBelongsToRun(item, { sourceSha, runId: priorRun.id })
+                  ) ?? null;
+                }
+
+                const decision = policy.classifyPriorRun({
+                  run: priorRun,
+                  sourceSha,
+                  generatorJob: generator,
+                  artifact,
+                });
+
+                if (decision.action === "reject") {
+                  await ledger(
+                    "## /security-generate — duplicate safely rejected\n\n" +
+                    "An exact-head workflow already exists: [" + priorRun.id + "](" +
+                    priorRun.html_url + "). " + decision.reason + ". No second dispatch was issued."
                   );
-                  if (expectedArtifact) {
-                    await ledger(
-                      "## /security-generate — existing exact-head artifact reused\\n\\n" +
-                      "- Source SHA: `" + sourceSha + "`\\n" +
-                      "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\\n" +
-                      "- CI conclusion: `" + priorRun.conclusion + "` (not used as generator success evidence)\\n" +
-                      "- Generator conclusion: `success`\\n" +
-                      "- Artifact ID: `" + expectedArtifact.id + "`\\n" +
-                      "- Artifact archive digest: `" + (expectedArtifact.digest ?? "not returned by GitHub") + "`\\n\\n" +
-                      "The generator job succeeded and GitHub exposes its unexpired artifact bound to this exact run and source SHA. No duplicate npm generation was dispatched."
-                    );
-                    core.notice("Reused exact-head generator artifact from run " + priorRun.id + ".");
-                    return;
-                  }
+                  core.notice("Suppressed duplicate exact-head dispatch: " + decision.reason + ".");
+                  return;
+                }
+
+                if (decision.action === "reuse") {
+                  await ledger(
+                    "## /security-generate — existing exact-head artifact reused\n\n" +
+                    "- Source SHA: `" + sourceSha + "`\n" +
+                    "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\n" +
+                    "- CI conclusion: `" + (priorRun.conclusion ?? "not completed") + "` (not used as generator success evidence)\n" +
+                    "- Generator conclusion: `success`\n" +
+                    "- Artifact ID: `" + decision.artifactId + "`\n" +
+                    "- Artifact archive digest: `" + (artifact.digest ?? "not returned by GitHub") + "`\n\n" +
+                    "The generator job succeeded and the unexpired artifact is bound to this exact run and SHA. No duplicate npm generation was dispatched."
+                  );
+                  core.notice("Reused exact-head generator artifact from run " + priorRun.id + ".");
+                  return;
                 }
               }
 
-              // Dispatch requests are serialized by the controller's concurrency
-              // key and the pre-dispatch run scan above.
-              const dispatchStartedAt = Date.now();
               await github.rest.actions.createWorkflowDispatch({
                 owner: "jan2xo",
                 repo: "bke-digital-solutions",
@@ -272,8 +196,9 @@ jobs:
                 },
               });
 
-              // The dispatch API returns 204, not a run ID. Observe the resulting run
-              // and report it only after GitHub exposes the exact branch/SHA tuple.
+              // The workflow_dispatch API returns 204 rather than a run ID.
+              // Report a run only after a new exact-head CI run exposes the
+              // dedicated, non-skipped generator job. No timestamp attribution.
               let observedRun = null;
               for (let attempt = 0; attempt < 10; attempt += 1) {
                 const runs = await github.rest.actions.listWorkflowRuns({
@@ -282,13 +207,14 @@ jobs:
                   workflow_id: workflowId,
                   branch: expectedBranch,
                   event: "workflow_dispatch",
-                  per_page: 50,
+                  per_page: 100,
                 });
                 const candidates = runs.data.workflow_runs.filter((run) =>
                   !priorRunIds.has(run.id) &&
                   run.head_sha === sourceSha &&
                   run.head_branch === expectedBranch
                 );
+
                 for (const candidate of candidates) {
                   const candidateJobs = await github.rest.actions.listJobsForWorkflowRun({
                     owner: "jan2xo",
@@ -297,9 +223,14 @@ jobs:
                     per_page: 100,
                   });
                   const candidateGenerator = candidateJobs.data.jobs.find((job) =>
-                    job.name === "Guarded production dependency generator"
+                    job.name === policy.GENERATOR_JOB
                   );
-                  if (candidateGenerator && candidateGenerator.conclusion !== "skipped") {
+                  if (policy.correlateGeneratorRun({
+                    candidateRun: candidate,
+                    priorRunIds,
+                    sourceSha,
+                    generatorJob: candidateGenerator,
+                  })) {
                     observedRun = candidate;
                     break;
                   }
@@ -310,30 +241,30 @@ jobs:
 
               if (!observedRun) {
                 await ledger(
-                  "## /security-generate — dispatch accepted; run not yet observable\n\n" +
+                  "## /security-generate — dispatch accepted; run not yet positively correlated\n\n" +
                   "GitHub accepted the fixed workflow dispatch for exact source SHA `" + sourceSha +
-                  "`, but no matching Actions run was visible during the bounded observation window. " +
-                  "No run ID, artifact, or successful result is claimed. FORGE must reconcile the run ledger."
+                  "`, but no new run with the dedicated generator job was visible during the bounded observation window. " +
+                  "No run ID, artifact, or success is claimed. Reconcile the Actions run ledger before retrying."
                 );
-                core.setFailed("Dispatch accepted but exact-head workflow run was not observable.");
+                core.setFailed("Dispatch accepted but positive exact-head generator-run correlation was not established.");
                 return;
               }
 
               await ledger(
-                "## /security-generate — exact-head run observed\n\n" +
+                "## /security-generate — exact-head generator run observed\n\n" +
                 "- PR: #269 (`" + expectedBranch + "`)\n" +
                 "- Source SHA: `" + sourceSha + "`\n" +
                 "- Workflow run: [" + observedRun.id + "](" + observedRun.html_url + ")\n" +
-                "- Status at dispatch observation: `" + observedRun.status + "`\n\n" +
-                "This confirms dispatch/run identity only. Generator success and artifact integrity are reported separately after the run completes."
+                "- Status at observation: `" + observedRun.status + "`\n\n" +
+                "The named generator job is present on a new exact-head run. Completion and artifact integrity are reported separately."
               );
-              core.notice("Observed workflow run " + observedRun.id + " for exact source SHA " + sourceSha + ".");
+              core.notice("Observed exact-head generator run " + observedRun.id + " for " + sourceSha + ".");
             } catch (error) {
               const message = String(error?.message ?? error).slice(0, 1200);
               await ledger(
                 "## /security-generate — rejected or failed\n\n" +
                 "The trusted controller did not establish a valid dispatch.\n\n" +
-                "- Requester: `" + comment.user.login + "`\n" +
+                "- Requester: `" + (comment?.user?.login ?? "unknown") + "`\n" +
                 "- Reason: " + message.replace(/\n/g, " ") + "\n\n" +
                 "No generator result or artifact is claimed."
               );
@@ -351,27 +282,34 @@ jobs:
     timeout-minutes: 3
     permissions:
       actions: read
+      contents: read
       issues: write
       pull-requests: read
     steps:
+      - name: Checkout trusted default-branch policy only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: scripts/security-generate-policy.cjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
       - name: Verify generator job and report exact-head artifact result
         uses: actions/github-script@v7
         with:
           script: |
+            const policy = require("./scripts/security-generate-policy.cjs");
             const run = context.payload.workflow_run;
-            const expectedShaPattern = /^[0-9a-f]{40}$/;
-            if (run.repository?.full_name !== "jan2xo/bke-digital-solutions" ||
-                run.head_repository?.full_name !== "jan2xo/bke-digital-solutions") {
-              core.notice("Ignored workflow run whose repository provenance is not the canonical repository.");
+            if (run.repository?.full_name !== policy.REPOSITORY ||
+                run.head_repository?.full_name !== policy.REPOSITORY) {
+              core.notice("Ignored workflow run whose repository provenance is not canonical.");
               return;
             }
-            if (!expectedShaPattern.test(run.head_sha ?? "")) {
+            if (!/^[0-9a-f]{40}$/.test(run.head_sha ?? "")) {
               core.setFailed("Workflow run did not carry a valid exact head SHA.");
               return;
             }
 
-            // The exact generator job name is positive evidence that this was
-            // generator-mode CI, not an ordinary certification dispatch.
             const jobsResponse = await github.rest.actions.listJobsForWorkflowRun({
               owner: "jan2xo",
               repo: "bke-digital-solutions",
@@ -379,12 +317,10 @@ jobs:
               per_page: 100,
             });
             const generator = jobsResponse.data.jobs.find((job) =>
-              job.name === "Guarded production dependency generator"
+              job.name === policy.GENERATOR_JOB
             );
-
-            // No ledger claim is made without positive evidence of the named job.
             if (!generator || generator.conclusion === "skipped") {
-              core.notice("No generator job evidence in this workflow run; ignored.");
+              core.notice("No positive generator-job evidence in this workflow run; ignored.");
               return;
             }
             if (!["success", "failure", "cancelled", "timed_out", "action_required"].includes(generator.conclusion)) {
@@ -395,12 +331,12 @@ jobs:
             const prResponse = await github.rest.pulls.get({
               owner: "jan2xo",
               repo: "bke-digital-solutions",
-              pull_number: 269,
+              pull_number: policy.PULL_REQUEST,
             });
             const pr = prResponse.data;
             const currentHeadMatches =
               pr.state === "open" &&
-              pr.head?.ref === "fix/v3-production-dependency-security" &&
+              pr.head?.ref === policy.HEAD_BRANCH &&
               pr.head?.sha === run.head_sha;
 
             let artifact = null;
@@ -411,11 +347,8 @@ jobs:
                 run_id: run.id,
                 per_page: 100,
               });
-              const expectedName = "bke-production-dependency-repair-" + run.head_sha;
               artifact = artifacts.data.artifacts.find((item) =>
-                item.name === expectedName &&
-                !item.expired &&
-                item.workflow_run?.id === run.id
+                policy.artifactBelongsToRun(item, { sourceSha: run.head_sha, runId: run.id })
               ) ?? null;
             }
 
@@ -433,7 +366,7 @@ jobs:
                 "- Artifact ID: `" + artifact.id + "`\n" +
                 "- Artifact archive digest: `" + (artifact.digest ?? "not returned by GitHub") + "`\n" +
                 "- Artifact expired: `" + artifact.expired + "`\n\n" +
-                "The run completed and GitHub exposes the exact-head artifact. Its internal dependency SHA-256 manifest remains to be independently checked before applying bytes.";
+                "The generator job succeeded and GitHub exposes its exact-run artifact. Its internal SHA-256 manifest must still be independently verified before applying dependency bytes.";
             } else if (generator.conclusion === "success") {
               body +=
                 "- Artifact: **MISSING** (expected exact-head artifact not found or expired)\n\n" +
@@ -453,7 +386,7 @@ jobs:
             await github.rest.issues.createComment({
               owner: "jan2xo",
               repo: "bke-digital-solutions",
-              issue_number: 269,
+              issue_number: policy.PULL_REQUEST,
               body,
             });
             core.notice("Reported generator run " + run.id + " and exact SHA " + run.head_sha + " to PR #269.");
