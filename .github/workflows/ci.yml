@@ -134,6 +134,8 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Run trusted dispatcher behavioral tests
+        run: npm run test:security-generate
       - name: Validate trusted GitHub Actions workflow definitions
         run: >-
           go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
