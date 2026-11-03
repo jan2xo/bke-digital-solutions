@@ -104,6 +104,42 @@ jobs:
                 throw new Error("PR head and branch ref differ; refusing stale or ambiguous dispatch.");
               }
 
+              // Reject a duplicate command while an exact-head generator is queued or running.
+              const recentRuns = await github.rest.actions.listWorkflowRuns({
+                owner: "jan2xo",
+                repo: "bke-digital-solutions",
+                workflow_id: workflowId,
+                branch: expectedBranch,
+                event: "workflow_dispatch",
+                per_page: 50,
+              });
+              for (const priorRun of recentRuns.data.workflow_runs) {
+                if (priorRun.head_sha !== sourceSha ||
+                    !["queued", "in_progress", "waiting", "requested"].includes(priorRun.status)) {
+                  continue;
+                }
+                const priorJobs = await github.rest.actions.listJobsForWorkflowRun({
+                  owner: "jan2xo",
+                  repo: "bke-digital-solutions",
+                  run_id: priorRun.id,
+                  per_page: 100,
+                });
+                const activeGenerator = priorJobs.data.jobs.find((job) =>
+                  job.name === "Guarded production dependency generator" &&
+                  job.conclusion == null
+                );
+                if (activeGenerator) {
+                  await ledger(
+                    "## /security-generate — duplicate safely rejected\\n\\n" +
+                    "An exact-head generator is already active: [" + priorRun.id + "](" +
+                    priorRun.html_url + ") for source SHA `" + sourceSha + "`. " +
+                    "No second workflow dispatch was issued."
+                  );
+                  core.notice("Rejected duplicate generator request while run " + priorRun.id + " is active.");
+                  return;
+                }
+              }
+
               const dispatchStartedAt = Date.now();
               await github.rest.actions.createWorkflowDispatch({
                 owner: "jan2xo",
