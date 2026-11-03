@@ -119,22 +119,22 @@ jobs:
                 event: "workflow_dispatch",
                 per_page: 50,
               });
+              const priorRunIds = new Set(recentRuns.data.workflow_runs.map((run) => run.id));
               for (const priorRun of recentRuns.data.workflow_runs) {
-                if (priorRun.head_sha !== sourceSha ||
-                    !["queued", "in_progress", "waiting", "requested"].includes(priorRun.status)) {
-                  continue;
-                }
+                if (priorRun.head_sha !== sourceSha) continue;
+
                 const priorJobs = await github.rest.actions.listJobsForWorkflowRun({
                   owner: "jan2xo",
                   repo: "bke-digital-solutions",
                   run_id: priorRun.id,
                   per_page: 100,
                 });
-                const activeGenerator = priorJobs.data.jobs.find((job) =>
-                  job.name === "Guarded production dependency generator" &&
-                  job.conclusion == null
+                const priorGenerator = priorJobs.data.jobs.find((job) =>
+                  job.name === "Guarded production dependency generator"
                 );
-                if (activeGenerator) {
+
+                if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status) &&
+                    priorGenerator && priorGenerator.conclusion == null) {
                   await ledger(
                     "## /security-generate — duplicate safely rejected\\n\\n" +
                     "An exact-head generator is already active: [" + priorRun.id + "](" +
@@ -143,6 +143,32 @@ jobs:
                   );
                   core.notice("Rejected duplicate generator request while run " + priorRun.id + " is active.");
                   return;
+                }
+
+                if (priorRun.status === "completed" &&
+                    priorRun.conclusion === "success" &&
+                    priorGenerator?.conclusion === "success") {
+                  const priorArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                    owner: "jan2xo",
+                    repo: "bke-digital-solutions",
+                    run_id: priorRun.id,
+                    per_page: 100,
+                  });
+                  const expectedArtifact = priorArtifacts.data.artifacts.find((item) =>
+                    item.name === "bke-production-dependency-repair-" + sourceSha && !item.expired
+                  );
+                  if (expectedArtifact) {
+                    await ledger(
+                      "## /security-generate — existing exact-head artifact reused\\n\\n" +
+                      "- Source SHA: `" + sourceSha + "`\n" +
+                      "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\n" +
+                      "- Artifact ID: `" + expectedArtifact.id + "`\n" +
+                      "- Artifact archive digest: `" + (expectedArtifact.digest ?? "not returned by GitHub") + "`\n\n" +
+                      "A successful, unexpired artifact already exists for this exact head. No duplicate npm generation was dispatched."
+                    );
+                    core.notice("Reused existing exact-head generator artifact from run " + priorRun.id + ".");
+                    return;
+                  }
                 }
               }
 
@@ -171,6 +197,7 @@ jobs:
                   per_page: 50,
                 });
                 observedRun = runs.data.workflow_runs.find((run) =>
+                  !priorRunIds.has(run.id) &&
                   run.head_sha === sourceSha &&
                   run.head_branch === expectedBranch &&
                   Date.parse(run.created_at) >= dispatchStartedAt - 5000
@@ -231,6 +258,11 @@ jobs:
           script: |
             const run = context.payload.workflow_run;
             const expectedShaPattern = /^[0-9a-f]{40}$/;
+            if (run.repository?.full_name !== "jan2xo/bke-digital-solutions" ||
+                run.head_repository?.full_name !== "jan2xo/bke-digital-solutions") {
+              core.notice("Ignored workflow run whose repository provenance is not the canonical repository.");
+              return;
+            }
             if (!expectedShaPattern.test(run.head_sha ?? "")) {
               core.setFailed("Workflow run did not carry a valid exact head SHA.");
               return;
