@@ -167,7 +167,19 @@ jobs:
                 );
 
                 if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status)) {
-                  // Treat absence of the job row as queued generator work, not as
+                  // An active ordinary workflow can still run the generator even
+                  // before the dedicated job is visible. Never issue a competing run.
+                  if (!priorGenerator) {
+                    await ledger(
+                      "## /security-generate — duplicate safely rejected\\n\\n" +
+                      "An exact-head workflow is queued or running: [" + priorRun.id + "](" +
+                      priorRun.html_url + "). GitHub has not exposed its generator job yet; " +
+                      "no second dispatch was issued."
+                    );
+                    core.notice("Suppressed duplicate request while exact-head workflow job listing is pending.");
+                    return;
+                  }
+                  // Treat absence of a terminal job conclusion as queued work, not as
                   // permission to dispatch a second copy.
                   if (!priorGenerator || priorGenerator.conclusion == null) {
                     await ledger(
