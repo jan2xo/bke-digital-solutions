@@ -135,7 +135,7 @@ describe("trusted security generator dispatcher decisions", () => {
 
   it("requires the repository owner identity as well as OWNER association", () => {
     expect(decide({ ...valid(), login: "impostor" }).kind).toBe("reject");
-    expect(decide({ ...valid(), association: "OWNER", login: "jan2xo" }).kind).toBe("dispatch");
+    expect(decide({ ...valid(), association: "OWNER", login: "jan2xo" }).kind).toBe("observed");
   });
 
   it("rejects wrong PR identity, base, head branch, fork, and stale branch SHA", () => {
