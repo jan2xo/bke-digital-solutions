@@ -47,16 +47,8 @@ jobs:
               return;
             }
 
-            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
-              owner: "jan2xo",
-              repo: "bke-digital-solutions",
-              username: comment.user.login,
-            });
-            const level = permission.data.permission;
-            if (!["admin", "maintain", "write"].includes(level)) {
-              core.notice("Ignored /security-generate: commenter lacks repository write permission.");
-              return;
-            }
+            const isVerifiedRepositoryOwner =
+              comment.user.login === "jan2xo" && association === "OWNER";
 
             async function ledger(message) {
               await github.rest.issues.createComment({
@@ -68,6 +60,21 @@ jobs:
             }
 
             try {
+              // The fixed repository owner is independently anchored by both the
+              // OWNER association and the known owner login. Other accepted GitHub
+              // associations must pass the repository's permission-level API check.
+              if (!isVerifiedRepositoryOwner) {
+                const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: "jan2xo",
+                  repo: "bke-digital-solutions",
+                  username: comment.user.login,
+                });
+                if (!["admin", "maintain", "write"].includes(permission.data.permission)) {
+                  core.notice("Ignored /security-generate: commenter lacks repository write permission.");
+                  return;
+                }
+              }
+
               if (context.repo.owner + "/" + context.repo.repo !== expectedRepo ||
                   issue.number !== expectedPr || !issue.pull_request) {
                 throw new Error("Command is restricted to the designated dependency-remediation pull request.");
