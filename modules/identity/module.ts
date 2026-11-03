@@ -188,8 +188,6 @@ export function createIdentityModule(
     ...identityModuleManifest,
     provides: [
       ...identityModuleManifest.provides,
-      IDENTITY_GOOGLE_AUTHENTICATION_CAPABILITY_ID,
-      IDENTITY_GOOGLE_PRINCIPAL_BINDING_CAPABILITY_ID,
       IDENTITY_SESSION_ADMINISTRATION_CAPABILITY_ID,
       IDENTITY_LOGIN_MFA_CHALLENGE_REISSUE_CAPABILITY_ID,
     ],

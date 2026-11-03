@@ -35,6 +35,7 @@ export async function GET(request: Request) {
   };
   if (!encryptedContext) return cleared();
 
+  let registeredNewUser = false;
   try {
     const verified = await completeGoogleAuthorization(request.url, encryptedContext);
     const application = await getV2WebApplication();
@@ -59,10 +60,11 @@ export async function GET(request: Request) {
         request,
       });
       userId = created.user.id;
+      registeredNewUser = true;
       try {
         await sendVerificationEmail(created.user.email, created.verificationToken);
       } catch {
-        await securityEvent("EMAIL_DELIVERY_FAILED", request, userId).catch(() => undefined);
+        // Contact verification can be resent through the canonical BKE email flow.
       }
       authenticated = await authentication.authenticate({
         subject: verified.identity.subject,
@@ -76,7 +78,7 @@ export async function GET(request: Request) {
       ? authenticated.route
       : "SESSION";
     if (method === "MFA_CHALLENGE") {
-      const challenge = await issueIdentityLoginMfaChallenge(userId);
+      const challenge = await issueIdentityLoginMfaChallenge(userId, "GOOGLE_OIDC");
       const response = NextResponse.redirect(new URL("/login/mfa", getWebHostEnvironment().appUrl));
       response.cookies.set(GOOGLE_LOGIN_CONTEXT_COOKIE, "", { maxAge: 0, path: "/" });
       const { IDENTITY_MFA_CHALLENGE_COOKIE, IDENTITY_MFA_CHALLENGE_COOKIE_OPTIONS } =
@@ -86,9 +88,6 @@ export async function GET(request: Request) {
         challenge.token,
         IDENTITY_MFA_CHALLENGE_COOKIE_OPTIONS,
       );
-      await securityEvent("MFA_CHALLENGE_ISSUED", request, userId, undefined, {
-        authenticationMethod: "GOOGLE_OIDC",
-      }).catch(() => undefined);
       return response;
     }
 
@@ -107,7 +106,9 @@ export async function GET(request: Request) {
     }
 
     const destination =
-      method === "MFA_ENROLLMENT"
+      registeredNewUser
+        ? "/verify-email"
+        : method === "MFA_ENROLLMENT"
         ? "/security/mfa"
         : (await pendingReacceptance(userId)).length > 0
           ? "/legal/accept?returnTo=%2Fdashboard"

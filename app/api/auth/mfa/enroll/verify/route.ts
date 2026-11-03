@@ -52,10 +52,11 @@ export async function POST(request: Request) {
     }
     if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
 
+    const googleSession = session.session.authenticationMethod.startsWith("GOOGLE_OIDC");
     await createSession(session.principal.id, request, {
       mfaVerified: true,
       recent: true,
-      authenticationMethod: "PASSWORD_EMAIL_OTP",
+      authenticationMethod: googleSession ? "GOOGLE_OIDC_EMAIL_OTP" : "PASSWORD_EMAIL_OTP",
     });
     await securityEvent("MFA_ENROLLED", request, session.principal.id, { method: "email" });
 

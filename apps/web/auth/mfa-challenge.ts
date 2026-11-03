@@ -91,12 +91,13 @@ async function deliveredLoginChallenge(
 
 export async function issueIdentityLoginMfaChallenge(
   userId: string,
+  primaryAuthenticationMethod: "PASSWORD" | "GOOGLE_OIDC" = "PASSWORD",
 ): Promise<{ token: string; delivered: boolean; reference: string; expiresAt: Date }> {
   const application = await getV2WebApplication();
   const issuance = application.get<IdentityLoginMfaChallengeIssuanceCapability>(
     IDENTITY_LOGIN_MFA_CHALLENGE_ISSUANCE_CAPABILITY_ID,
   );
-  const result = await issuance.issue({ userId });
+  const result = await issuance.issue({ userId, primaryAuthenticationMethod });
   if (result.status === "REJECTED") throw new Error(result.code);
   if (result.status === "FAILED") throw new IdentityCapabilityError(result.code);
   return deliveredLoginChallenge(userId, result.challenge);
