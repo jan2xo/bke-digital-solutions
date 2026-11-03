@@ -1,0 +1,275 @@
+name: Security Dependency Generator Command
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: security-generate-${{ github.event.issue.number || github.event.workflow_run.id || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    name: Authorize and dispatch exact dependency generator
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      github.event.comment.body == '/security-generate'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+      issues: write
+      pull-requests: read
+    steps:
+      - name: Validate requester, PR identity, and live head; dispatch fixed workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const expectedRepo = "jan2xo/bke-digital-solutions";
+            const expectedPr = 269;
+            const expectedBase = "main";
+            const expectedBranch = "fix/v3-production-dependency-security";
+            const workflowId = "ci.yml";
+            const issue = context.payload.issue;
+            const comment = context.payload.comment;
+            const association = comment?.author_association ?? "NONE";
+            const allowedAssociations = new Set(["OWNER", "MEMBER", "COLLABORATOR"]);
+
+            // Ignore unauthorized authors without exposing repository metadata.
+            if (!allowedAssociations.has(association) || !comment?.user?.login) {
+              core.notice("Ignored /security-generate from an unauthorized author association.");
+              return;
+            }
+
+            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: "jan2xo",
+              repo: "bke-digital-solutions",
+              username: comment.user.login,
+            });
+            const level = permission.data.permission;
+            if (!["admin", "maintain", "write"].includes(level)) {
+              core.notice("Ignored /security-generate: commenter lacks repository write permission.");
+              return;
+            }
+
+            async function ledger(message) {
+              await github.rest.issues.createComment({
+                owner: "jan2xo",
+                repo: "bke-digital-solutions",
+                issue_number: expectedPr,
+                body: message,
+              });
+            }
+
+            try {
+              if (context.repo.owner + "/" + context.repo.repo !== expectedRepo ||
+                  issue.number !== expectedPr || !issue.pull_request) {
+                throw new Error("Command is restricted to the designated dependency-remediation pull request.");
+              }
+
+              const prResponse = await github.rest.pulls.get({
+                owner: "jan2xo",
+                repo: "bke-digital-solutions",
+                pull_number: expectedPr,
+              });
+              const pr = prResponse.data;
+
+              if (pr.state !== "open" ||
+                  pr.base?.ref !== expectedBase ||
+                  pr.base?.repo?.full_name !== expectedRepo ||
+                  pr.head?.ref !== expectedBranch ||
+                  pr.head?.repo?.full_name !== expectedRepo) {
+                throw new Error("PR state, base, head branch, or head repository does not match the fixed allowlist.");
+              }
+
+              const sourceSha = pr.head?.sha ?? "";
+              if (!/^[0-9a-f]{40}$/.test(sourceSha)) {
+                throw new Error("GitHub did not return a valid exact 40-character PR head SHA.");
+              }
+
+              // Independently resolve the branch ref to detect head drift before dispatch.
+              const branch = await github.rest.repos.getBranch({
+                owner: "jan2xo",
+                repo: "bke-digital-solutions",
+                branch: expectedBranch,
+              });
+              if (branch.data.commit.sha !== sourceSha) {
+                throw new Error("PR head and branch ref differ; refusing stale or ambiguous dispatch.");
+              }
+
+              const dispatchStartedAt = Date.now();
+              await github.rest.actions.createWorkflowDispatch({
+                owner: "jan2xo",
+                repo: "bke-digital-solutions",
+                workflow_id: workflowId,
+                ref: expectedBranch,
+                inputs: {
+                  source_sha: sourceSha,
+                  security_generator: "true",
+                },
+              });
+
+              // The dispatch API returns 204, not a run ID. Observe the resulting run
+              // and report it only after GitHub exposes the exact branch/SHA tuple.
+              let observedRun = null;
+              for (let attempt = 0; attempt < 10; attempt += 1) {
+                const runs = await github.rest.actions.listWorkflowRuns({
+                  owner: "jan2xo",
+                  repo: "bke-digital-solutions",
+                  workflow_id: workflowId,
+                  branch: expectedBranch,
+                  event: "workflow_dispatch",
+                  per_page: 50,
+                });
+                observedRun = runs.data.workflow_runs.find((run) =>
+                  run.head_sha === sourceSha &&
+                  run.head_branch === expectedBranch &&
+                  Date.parse(run.created_at) >= dispatchStartedAt - 5000
+                ) ?? null;
+                if (observedRun) break;
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+              }
+
+              if (!observedRun) {
+                await ledger(
+                  "## /security-generate — dispatch accepted; run not yet observable\n\n" +
+                  "GitHub accepted the fixed workflow dispatch for exact source SHA `" + sourceSha +
+                  "`, but no matching Actions run was visible during the bounded observation window. " +
+                  "No run ID, artifact, or successful result is claimed. FORGE must reconcile the run ledger."
+                );
+                core.setFailed("Dispatch accepted but exact-head workflow run was not observable.");
+                return;
+              }
+
+              await ledger(
+                "## /security-generate — exact-head run observed\n\n" +
+                "- PR: #269 (`" + expectedBranch + "`)\n" +
+                "- Source SHA: `" + sourceSha + "`\n" +
+                "- Workflow run: [" + observedRun.id + "](" + observedRun.html_url + ")\n" +
+                "- Status at dispatch observation: `" + observedRun.status + "`\n\n" +
+                "This confirms dispatch/run identity only. Generator success and artifact integrity are reported separately after the run completes."
+              );
+              core.notice("Observed workflow run " + observedRun.id + " for exact source SHA " + sourceSha + ".");
+            } catch (error) {
+              const message = String(error?.message ?? error).slice(0, 1200);
+              await ledger(
+                "## /security-generate — rejected or failed\n\n" +
+                "The trusted controller did not establish a valid dispatch.\n\n" +
+                "- Requester: `" + comment.user.login + "`\n" +
+                "- Reason: " + message.replace(/\n/g, " ") + "\n\n" +
+                "No generator result or artifact is claimed."
+              );
+              core.setFailed(message);
+            }
+
+  report:
+    name: Return generator result to PR ledger
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.path == '.github/workflows/ci.yml' &&
+      github.event.workflow_run.event == 'workflow_dispatch' &&
+      github.event.workflow_run.head_branch == 'fix/v3-production-dependency-security'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      actions: read
+      issues: write
+      pull-requests: read
+    steps:
+      - name: Verify generator job and report exact-head artifact result
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const expectedShaPattern = /^[0-9a-f]{40}$/;
+            if (!expectedShaPattern.test(run.head_sha ?? "")) {
+              core.setFailed("Workflow run did not carry a valid exact head SHA.");
+              return;
+            }
+
+            const jobsResponse = await github.rest.actions.listJobsForWorkflowRun({
+              owner: "jan2xo",
+              repo: "bke-digital-solutions",
+              run_id: run.id,
+              per_page: 100,
+            });
+            const generator = jobsResponse.data.jobs.find((job) =>
+              job.name === "Security dependency generator"
+            );
+
+            // Ordinary core CI dispatches have no generator job and must not be
+            // mistaken for a security-generation request.
+            if (!generator || generator.conclusion === "skipped") {
+              core.notice("No active security generator job in this CI run; no PR ledger entry required.");
+              return;
+            }
+
+            const prResponse = await github.rest.pulls.get({
+              owner: "jan2xo",
+              repo: "bke-digital-solutions",
+              pull_number: 269,
+            });
+            const pr = prResponse.data;
+            const currentHeadMatches =
+              pr.state === "open" &&
+              pr.head?.ref === "fix/v3-production-dependency-security" &&
+              pr.head?.sha === run.head_sha;
+
+            let artifact = null;
+            if (generator.conclusion === "success") {
+              const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                owner: "jan2xo",
+                repo: "bke-digital-solutions",
+                run_id: run.id,
+                per_page: 100,
+              });
+              const expectedName = "bke-production-dependency-repair-" + run.head_sha;
+              artifact = artifacts.data.artifacts.find((item) =>
+                item.name === expectedName && !item.expired
+              ) ?? null;
+            }
+
+            let body =
+              "## /security-generate — completed exact-head result\n\n" +
+              "- Workflow run: [" + run.id + "](" + run.html_url + ")\n" +
+              "- Workflow head branch: `" + run.head_branch + "`\n" +
+              "- Exact source SHA: `" + run.head_sha + "`\n" +
+              "- Generator job conclusion: `" + generator.conclusion + "`\n" +
+              "- Current PR head matches run SHA: `" + currentHeadMatches + "`\n";
+
+            if (generator.conclusion === "success" && artifact) {
+              body +=
+                "- Artifact: `" + artifact.name + "`\n" +
+                "- Artifact ID: `" + artifact.id + "`\n" +
+                "- Artifact archive digest: `" + (artifact.digest ?? "not returned by GitHub") + "`\n" +
+                "- Artifact expired: `" + artifact.expired + "`\n\n" +
+                "The run completed and GitHub exposes the exact-head artifact. Its internal dependency SHA-256 manifest remains to be independently checked before applying bytes.";
+            } else if (generator.conclusion === "success") {
+              body +=
+                "- Artifact: **MISSING** (expected exact-head artifact not found or expired)\n\n" +
+                "The generator job passed but no usable exact-head artifact was exposed. Treat generation as incomplete.";
+              core.setFailed("Generator succeeded without its expected exact-head artifact.");
+            } else {
+              body +=
+                "\nGenerator failure/cancellation is recorded. Review the linked Actions run logs; no dependency bytes are accepted.";
+              core.setFailed("Dependency generator concluded " + generator.conclusion + ".");
+            }
+
+            if (!currentHeadMatches) {
+              body +=
+                "\n\n**STALE RESULT:** PR #269 no longer points at this source SHA. The run is evidence for its recorded commit only and must not be applied to the current PR head.";
+            }
+
+            await github.rest.issues.createComment({
+              owner: "jan2xo",
+              repo: "bke-digital-solutions",
+              issue_number: 269,
+              body,
+            });
+            core.notice("Reported generator run " + run.id + " and exact SHA " + run.head_sha + " to PR #269.");
