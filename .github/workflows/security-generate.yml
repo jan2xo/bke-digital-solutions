@@ -135,29 +135,53 @@ jobs:
                 );
 
                 if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status)) {
+                  // Treat absence of the job row as queued generator work, not as
+                  // permission to dispatch a second copy.
                   if (!priorGenerator || priorGenerator.conclusion == null) {
                     await ledger(
                       "## /security-generate — duplicate safely rejected\\n\\n" +
-                      "An exact-head workflow is already queued or running: [" + priorRun.id + "](" +
-                      priorRun.html_url + ") for source SHA `" + sourceSha + "`. " +
-                      "The generator job is not yet positively visible or has not completed; no second dispatch was issued."
+                      "An exact-head CI run is queued or running: [" + priorRun.id + "](" +
+                      priorRun.html_url + "). Its generator state is not yet terminal. No second dispatch was issued."
                     );
-                    core.notice("Rejected duplicate request while exact-head run " + priorRun.id + " is queued/running.");
+                    core.notice("Rejected duplicate command while exact-head run " + priorRun.id + " remains active.");
+                    return;
+                  }
+                  if (priorGenerator.conclusion === "success") {
+                    const activeArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                      owner: "jan2xo",
+                      repo: "bke-digital-solutions",
+                      run_id: priorRun.id,
+                      per_page: 100,
+                    });
+                    const activeArtifact = activeArtifacts.data.artifacts.find((item) =>
+                      item.name === "bke-production-dependency-repair-" + sourceSha &&
+                      !item.expired &&
+                      item.workflow_run?.id === priorRun.id
+                    );
+                    if (activeArtifact) {
+                      await ledger(
+                        "## /security-generate — active run already produced exact-head artifact\\n\\n" +
+                        "- Source SHA: `" + sourceSha + "`\\n" +
+                        "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\\n" +
+                        "- Artifact ID: `" + activeArtifact.id + "`\\n\\n" +
+                        "The generator job has succeeded and the exact-head artifact is present. No duplicate dispatch was issued."
+                      );
+                      core.notice("Reused artifact from active run " + priorRun.id + ".");
+                      return;
+                    }
+                    await ledger(
+                      "## /security-generate — duplicate safely rejected\\n\\n" +
+                      "The exact-head generator job succeeded in [" + priorRun.id + "](" +
+                      priorRun.html_url + "), but the expected unexpired artifact is not yet visible. " +
+                      "No duplicate dispatch was issued; reconcile the run artifact ledger."
+                    );
+                    core.notice("Generator succeeded but expected artifact is not visible; duplicate dispatch suppressed.");
                     return;
                   }
                 }
 
-                if (priorGenerator?.conclusion === "success") {
-                  await ledger(
-                    "## /security-generate — duplicate safely rejected\n\n" +
-                    "An exact-head generator is already active: [" + priorRun.id + "](" +
-                    priorRun.html_url + ") for source SHA `" + sourceSha + "`. " +
-                    "No second workflow dispatch was issued."
-                  );
-                  core.notice("Rejected duplicate generator request while run " + priorRun.id + " is active.");
-                  return;
-                }
-
+                // A successful generator job is reusable independently of the
+                // overall CI run conclusion (e.g. the separate audit job may fail).
                 if (priorGenerator?.conclusion === "success") {
                   const priorArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
                     owner: "jan2xo",
@@ -172,14 +196,16 @@ jobs:
                   );
                   if (expectedArtifact) {
                     await ledger(
-                      "## /security-generate — existing exact-head artifact reused\n\n" +
-                      "- Source SHA: `" + sourceSha + "`\n" +
-                      "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\n" +
-                      "- Artifact ID: `" + expectedArtifact.id + "`\n" +
-                      "- Artifact archive digest: `" + (expectedArtifact.digest ?? "not returned by GitHub") + "`\n\n" +
-                      "A successful, unexpired artifact already exists for this exact head. No duplicate npm generation was dispatched."
+                      "## /security-generate — existing exact-head artifact reused\\n\\n" +
+                      "- Source SHA: `" + sourceSha + "`\\n" +
+                      "- Workflow run: [" + priorRun.id + "](" + priorRun.html_url + ")\\n" +
+                      "- CI conclusion: `" + priorRun.conclusion + "` (not used as generator success evidence)\\n" +
+                      "- Generator conclusion: `success`\\n" +
+                      "- Artifact ID: `" + expectedArtifact.id + "`\\n" +
+                      "- Artifact archive digest: `" + (expectedArtifact.digest ?? "not returned by GitHub") + "`\\n\\n" +
+                      "The generator job succeeded and GitHub exposes its unexpired artifact bound to this exact run and source SHA. No duplicate npm generation was dispatched."
                     );
-                    core.notice("Reused existing exact-head generator artifact from run " + priorRun.id + ".");
+                    core.notice("Reused exact-head generator artifact from run " + priorRun.id + ".");
                     return;
                   }
                 }
