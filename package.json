@@ -65,8 +65,7 @@
     "disposable:env": "node scripts/v3-disposable-env.mjs",
     "disposable:compose": "node scripts/v3-disposable-compose.mjs",
     "disposable:doctor": "node scripts/v3-disposable-doctor.mjs",
-    "disposable:utm-fixture": "NODE_OPTIONS=--conditions=react-server tsx scripts/seed-utm-launcher-e2e.ts",
-    "test:security-generate": "vitest run tests/security-generate-dispatcher.test.ts"
+    "disposable:utm-fixture": "NODE_OPTIONS=--conditions=react-server tsx scripts/seed-utm-launcher-e2e.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",
