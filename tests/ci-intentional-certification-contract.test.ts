@@ -84,8 +84,8 @@ describe("intentional GitHub Actions architecture", () => {
       "utf8",
     );
     const triggers = triggerSection(securityGenerate);
-    expect(triggers).toMatch(/^\\s{2}issue_comment:/mu);
-    expect(triggers).toMatch(/^\\s{2}workflow_run:/mu);
+    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
+    expect(triggers).toMatch(/^\s{2}workflow_run:/mu);
     expect(securityGenerate).toContain("github.event.comment.body == '/security-generate'");
     expect(securityGenerate).toContain('workflow_id: workflowId');
     expect(securityGenerate).toContain('security_generator: "true"');
