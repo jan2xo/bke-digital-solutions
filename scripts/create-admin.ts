@@ -1,29 +1,114 @@
 import "dotenv/config";
+
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../platform/persistence/generated/prisma/client";
-import argon2 from "argon2";
 
-const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
+const databaseUrl = process.env.DATABASE_URL?.trim();
+if (!databaseUrl) throw new Error("DATABASE_URL is required.");
+const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: databaseUrl }) });
+const protectedEnvironment = ["staging", "production"].includes(
+  process.env.DEPLOYMENT_ENV ?? "development",
+);
+
 async function main() {
-  const protectedEnvironment = ["staging", "production"].includes(process.env.DEPLOYMENT_ENV ?? "development");
-  if (protectedEnvironment && process.env.ADMIN_BOOTSTRAP_ACK !== "I_UNDERSTAND_THIS_CREATES_A_PRIVILEGED_ACCOUNT") throw new Error("Set ADMIN_BOOTSTRAP_ACK to the documented acknowledgement for protected environments.");
-  const rl = createInterface({ input: stdin, output: stdout });
-  const email = (process.env.ADMIN_EMAIL ?? await rl.question("Admin email: ")).trim().toLowerCase();
-  const name = (process.env.ADMIN_NAME ?? await rl.question("Admin name: ")).trim();
-  const password = process.env.ADMIN_PASSWORD ?? await rl.question("Admin password (input may be visible): "); rl.close();
-  if (password.length < 12) throw new Error("Admin password must be at least 12 characters");
-  if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) throw new Error("Admin password must contain uppercase, lowercase, and numeric characters");
-  const existing = await db.user.findUnique({ where: { email }, select: { id: true, role: true } });
-  if (existing && process.env.ADMIN_UPDATE_EXISTING !== "true") throw new Error("This account already exists. Set ADMIN_UPDATE_EXISTING=true only for an authorized password rotation.");
-  const existingAdmins = await db.user.count({ where: { role: "ADMIN", email: { not: email } } });
-  if (existingAdmins > 0 && process.env.ADMIN_ALLOW_ADDITIONAL !== "true") throw new Error("Another administrator already exists. Set ADMIN_ALLOW_ADDITIONAL=true only after an authorized review.");
-  const passwordHash = await argon2.hash(password, { type: argon2.argon2id, memoryCost: 19456, timeCost: 2, parallelism: 1 });
-  const user = await db.user.upsert({ where: { email }, update: { name, role: "ADMIN", emailVerified: new Date(), credential: { upsert: { create: { passwordHash }, update: { passwordHash, changedAt: new Date() } } }, sessions: { deleteMany: {} } }, create: { email, name, role: "ADMIN", emailVerified: new Date(), credential: { create: { passwordHash } }, ownedAccounts: { create: { type: "INDIVIDUAL", displayName: name, billingEmail: email } } } });
-  if (!existing || process.env.ADMIN_RESET_MFA === "true") {
-    await db.$transaction([db.administratorMfaMethod.deleteMany({ where: { userId: user.id } }), db.administratorRecoveryCode.deleteMany({ where: { userId: user.id } }), db.mfaChallenge.deleteMany({ where: { userId: user.id } })]);
+  if (
+    protectedEnvironment &&
+    process.env.ADMIN_BOOTSTRAP_ACK !==
+      "I_UNDERSTAND_THIS_CREATES_A_PRIVILEGED_ACCOUNT"
+  ) {
+    throw new Error("Set ADMIN_BOOTSTRAP_ACK to the documented acknowledgement.");
   }
-  console.info(existing ? "Administrator credentials updated and sessions revoked." : "Administrator created. Mandatory email-code verification is required before admin access.");
+
+  const rl = createInterface({ input: stdin, output: stdout });
+  try {
+    const userId = (process.env.ADMIN_USER_ID ?? await rl.question("Google-bound BKE user ID: ")).trim();
+    const confirmation = (process.env.ADMIN_BOOTSTRAP_CONFIRM ?? await rl.question(`Type ${userId} to confirm administrator bootstrap: `)).trim();
+    const reason = (process.env.ADMIN_BOOTSTRAP_REASON ?? await rl.question("Mandatory authorization reason: ")).trim();
+    const operator = (process.env.ADMIN_BOOTSTRAP_OPERATOR_ID ?? await rl.question("Deployment operator identity: ")).trim();
+
+    if (!userId || confirmation !== userId || !reason || !operator) {
+      throw new Error("Target ID, exact confirmation, reason, and operator identity are required.");
+    }
+
+    const now = new Date();
+    const result = await db.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          emailVerified: true,
+          role: true,
+          suspendedAt: true,
+          lifecycleState: true,
+          googleIdentity: { select: { userId: true } },
+        },
+      });
+      if (
+        !user ||
+        !user.googleIdentity ||
+        !user.emailVerified ||
+        user.suspendedAt ||
+        user.lifecycleState !== "ACTIVE"
+      ) {
+        throw new Error("Target must be an active Google-bound user with BKE-verified contact email.");
+      }
+      if (user.role === "ADMIN") {
+        throw new Error("Target is already an administrator; use the separate recovery procedure if required.");
+      }
+
+      const otherAdministrators = await tx.user.count({
+        where: { role: "ADMIN", id: { not: user.id } },
+      });
+      if (otherAdministrators > 0 && process.env.ADMIN_ALLOW_ADDITIONAL !== "true") {
+        throw new Error(
+          "Another administrator exists. Set ADMIN_ALLOW_ADDITIONAL=true only after explicit authorization.",
+        );
+      }
+
+      await tx.user.update({
+        where: { id: user.id },
+        data: { role: "ADMIN" },
+      });
+      const revoked = await tx.session.updateMany({
+        where: { userId: user.id, revokedAt: null },
+        data: {
+          revokedAt: now,
+          revocationReason: "ADMIN_GOOGLE_BOOTSTRAP",
+        },
+      });
+      await tx.auditLog.create({
+        data: {
+          action: "ADMIN_GOOGLE_BOOTSTRAP",
+          targetType: "User",
+          targetId: user.id,
+          metadata: {
+            targetEmail: user.email,
+            identityMethod: "GOOGLE_OIDC",
+            reason: reason.slice(0, 500),
+            operatorId: operator.slice(0, 160),
+            deploymentEnvironment: process.env.DEPLOYMENT_ENV ?? "development",
+            revokedSessions: revoked.count,
+            mfaEnrollmentRequired: true,
+          },
+        },
+      });
+      return { userId: user.id, revokedSessions: revoked.count };
+    }, { isolationLevel: "Serializable" });
+
+    console.info(
+      `Google-bound administrator ${result.userId} was authorized; ${result.revokedSessions} existing session(s) revoked. Sign in with Google and complete fresh BKE MFA enrollment.`,
+    );
+  } finally {
+    rl.close();
+  }
 }
-main().finally(() => db.$disconnect());
+
+main()
+  .catch((error) => {
+    console.error(error instanceof Error ? error.message : "Administrator bootstrap failed.");
+    process.exitCode = 1;
+  })
+  .finally(() => db.$disconnect());

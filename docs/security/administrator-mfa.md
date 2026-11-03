@@ -1,16 +1,11 @@
-# Administrator email-code verification
+# Administrator application MFA
 
-Administrator authentication requires the account password followed by a six-digit code sent to the administrator's verified email address through Resend. Customers retain the existing password and magic-link flows; this policy applies only to global `ADMIN` users.
+Digital Solutions administrators sign in with Google OIDC. A Google session is BASIC until the separate BKE application factor is verified. An enabled administrator MFA account must complete the BKE email code or a single-use recovery code before protected administrator access. Google email profile claims do not set BKE contact verification.
 
-Password success creates no privileged session. It creates a purpose-bound, ten-minute `MfaChallenge` referenced by a random HttpOnly, Secure-in-production, same-site cookie. The email code is derived from that random token with keyed HMAC and is never stored or logged in plaintext. PostgreSQL stores the token hash, keyed code hash, expiry, purpose, consumption time, and bounded attempt count. Five failed attempts exhaust a challenge. Resending replaces the outstanding challenge and invalidates its earlier code.
+The Google subject is bound to one BKE principal. Administrator bootstrap promotes only an existing active Google-bound principal whose BKE contact email has already been verified. The operator command records the reason and operator, revokes existing sessions, and does not set up credentials or enable MFA. See the [administrator runbook](../admin-mfa-runbook.md).
 
-Successful verification atomically consumes the challenge and creates a server-owned MFA-verified session with authentication method `PASSWORD_EMAIL_OTP`. Login, enrollment, and recent-authentication challenges cannot be substituted for one another. The six-digit code is stored only as a keyed hash on its database challenge; plaintext codes and raw email payloads are never persisted or logged. Login emails and the verification screen show the same short reference so administrators can identify the newest valid email after a resend. Recovery codes are cryptographically random, shown once, stored only as keyed hashes, and atomically consumed.
+Login, enrollment, and recent-authentication challenges remain purpose-bound. Codes are derived and stored as keyed hashes, are single-use, and have expiry and bounded attempts. Resending replaces the pending challenge. Recovery codes are generated cryptographically, shown once, stored as keyed hashes, and atomically consumed.
 
-The email provider is an availability dependency for ordinary administrator login. Keep recovery codes offline and test genuine Resend delivery before production. A mailbox compromise plus password compromise defeats this factor, so the administrator mailbox must itself use strong MFA, security alerts, and recovery controls.
-# Provider outage behavior
+A fresh BKE factor grants recent authentication. It does not enroll or enable MFA by itself. Unenrolled administrators may use the verified BKE contact email factor to begin or resume enrollment. Every protected administrator operation still requires MFA enabled and verified.
 
-If MFA email delivery fails, authentication remains blocked and the UI directs
-the administrator to use a saved recovery code or try again later. Recovery
-codes are generated cryptographically, stored only as HMAC hashes, consumed
-once, invalidated on regeneration, and regeneration requires recent MFA-authenticated
-administrator access. `ALLOW_BREAK_GLASS` is unrelated to authentication.
+If email delivery fails, authentication remains blocked. Use a saved recovery code when the account is enrolled, or follow the [emergency recovery runbook](emergency-admin-recovery.md). Do not treat Google sign-in, Google email verification, an old ID-token timestamp, or an email-only bypass as application MFA.
