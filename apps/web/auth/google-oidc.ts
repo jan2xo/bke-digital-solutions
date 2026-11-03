@@ -116,7 +116,7 @@ export async function createGoogleAuthorizationRequest(input: {
     returnTo: safeLocalRedirect(input.returnTo),
     legalVersionIds: input.flow === "register" ? [...(input.legalVersionIds ?? [])] : [],
   };
-  const encryptedContext = await new EncryptJWT(context)
+  const encryptedContext = await new EncryptJWT({ ...context })
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuer(GOOGLE_LOGIN_CONTEXT_ISSUER)
     .setAudience(GOOGLE_LOGIN_CONTEXT_AUDIENCE)

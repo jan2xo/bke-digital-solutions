@@ -13,7 +13,7 @@ type PrismaTransaction = Prisma.TransactionClient;
  */
 export function createPrismaTransactionGoogleIdentityRepository(tx: PrismaTransaction) {
   const pgClient = {
-    async query<Row extends QueryResultRow = any>(
+    async query<Row extends QueryResultRow = QueryResultRow>(
       query: string,
       values: readonly unknown[] = [],
     ): Promise<QueryResult<Row>> {
