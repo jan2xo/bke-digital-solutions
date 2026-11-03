@@ -22,6 +22,9 @@ jobs:
       github.event.comment.body == '/security-generate'
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    concurrency:
+      group: security-generate-dispatch-pr-269
+      cancel-in-progress: false
     permissions:
       actions: write
       contents: read
