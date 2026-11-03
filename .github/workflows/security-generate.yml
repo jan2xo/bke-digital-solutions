@@ -136,7 +136,7 @@ jobs:
                 if (["queued", "in_progress", "waiting", "requested"].includes(priorRun.status) &&
                     priorGenerator && priorGenerator.conclusion == null) {
                   await ledger(
-                    "## /security-generate — duplicate safely rejected\\n\\n" +
+                    "## /security-generate — duplicate safely rejected\n\n" +
                     "An exact-head generator is already active: [" + priorRun.id + "](" +
                     priorRun.html_url + ") for source SHA `" + sourceSha + "`. " +
                     "No second workflow dispatch was issued."
