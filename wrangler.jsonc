@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bke-digital-solutions",
+  "main": "workers/entry.ts",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "bke-digital-solutions"
+    }
+  ],
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE_FRESH",
+      "id": "00000000000000000000000000000000",
+      "localConnectionString": "postgresql://bke:bke@127.0.0.1:5432/bke_test"
+    }
+  ],
+  "vars": {
+    "BKE_RUNTIME": "workers"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

@@ -1,37 +1,69 @@
+import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { db } from "../platform/host/db";
 import { describe, expect, it } from "vitest";
 
-const read = (path: string) => readFileSync(path, "utf8");
+describe("retired native password reset", () => {
+  it("retires native reset requests with a generic Google handoff response", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/native/password-reset/request/route"
+    );
+    const response = await POST();
 
-describe("native BKE password reset request", () => {
-  it("exposes password-reset request through the native protocol without browser-origin spoofing", () => {
-    const route = read("app/api/agent-sessions/native/password-reset/request/route.ts");
-
-    expect(route).toContain("rejectBrowserOriginForAgent(request)");
-    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
-    expect(route).toContain("IDENTITY_PASSWORD_RESET_REQUEST_CAPABILITY_ID");
-    expect(route).toContain("passwordReset.request");
-    expect(route).toContain("sendPasswordReset");
-    expect(route).toContain("after(async () =>");
-    expect(route).toContain('status: "accepted"');
-    expect(route).not.toContain("assertSameOrigin");
-    expect(route).not.toContain("createSession");
+    expect(response.status).toBe(410);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(await response.json()).toEqual({
+      error: "GOOGLE_BROWSER_HANDOFF_REQUIRED",
+    });
   });
 
-  it("preserves account-enumeration resistance and never reflects reset material", () => {
-    const route = read("app/api/agent-sessions/native/password-reset/request/route.ts");
+  it("returns the same retired response for known and unknown account emails", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/native/password-reset/request/route"
+    );
+    const invoke: (request: Request) => Promise<Response> = POST;
+    const knownEmail = `known-reset-target-${randomUUID()}@example.test`;
+    const unknownEmail = `unknown-reset-target-${randomUUID()}@example.test`;
+    const knownUser = await db.user.create({
+      data: { email: knownEmail },
+      select: { id: true },
+    });
 
-    expect(route).toContain("result.delivery");
-    expect(route).toContain("const delivery =");
-    expect(route).toContain(".catch(() => undefined)");
-    expect(route).not.toContain("email_sent");
-    expect(route).not.toContain("recipient_email");
-    expect(route).not.toContain("token:");
-    expect(route).not.toContain("result.delivery.token,");
+    try {
+      const [unknownResponse, knownResponse] = await Promise.all([
+        invoke(new Request("https://jl-bke.com/api/agent-sessions/native/password-reset/request", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: unknownEmail }),
+        })),
+        invoke(new Request("https://jl-bke.com/api/agent-sessions/native/password-reset/request", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: knownEmail, password: "must-not-be-reflected" }),
+        })),
+      ]);
+      expect(unknownResponse.status).toBe(knownResponse.status);
+      expect(unknownResponse.headers.get("cache-control")).toBe("no-store");
+      expect(knownResponse.headers.get("cache-control")).toBe("no-store");
+      expect(unknownResponse.headers.get("set-cookie")).toBeNull();
+      expect(knownResponse.headers.get("set-cookie")).toBeNull();
+      const [unknownBody, knownBody] = await Promise.all([
+        unknownResponse.json(),
+        knownResponse.json(),
+      ]);
+      expect(unknownBody).toEqual(knownBody);
+      expect(JSON.stringify(unknownBody)).not.toMatch(/email|token|password/i);
+    } finally {
+      await db.user.delete({ where: { id: knownUser.id } });
+    }
   });
 
-  it("invalidates Agent sessions against the latest password credential epoch", () => {
-    const authority = read("apps/web/agent-sessions/device-authorization.ts");
+  it("continues to invalidate old Agent sessions after a credential epoch change", () => {
+    const authority = readFileSync(
+      "apps/web/agent-sessions/device-authorization.ts",
+      "utf8",
+    );
 
     expect(authority).toContain("createdAt: Date");
     expect(authority).toContain("passwordCredential.findUnique");
@@ -42,46 +74,27 @@ describe("native BKE password reset request", () => {
     expect(authority).toContain("await revokeAgentSessionFamily(tx, session.id, now)");
   });
 
-  it("exposes password-reset completion through the native protocol without creating a session", () => {
-    const route = read("app/api/agent-sessions/native/password-reset/complete/route.ts");
+  it("retires native reset completion without issuing a session or reflecting reset material", async () => {
+    const { POST } = await import(
+      "../app/api/agent-sessions/native/password-reset/complete/route"
+    );
+    const response = await POST();
 
-    expect(route).toContain("rejectBrowserOriginForAgent(request)");
-    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
-    expect(route).toContain("IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID");
-    expect(route).toContain("passwordReset.complete(input)");
-    expect(route).toContain("passwordSchema");
-    expect(route).toContain('status: "completed"');
-    expect(route).not.toContain("assertSameOrigin(request)");
-    expect(route).not.toContain("createSession");
-    expect(route).not.toContain("handoff");
+    expect(response.status).toBe(410);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(await response.text()).not.toMatch(/token|password|session/i);
   });
 
-  it("keeps native reset secrets transient and narrows the success response", () => {
-    const route = read("app/api/agent-sessions/native/password-reset/complete/route.ts");
+  it("retires browser password-reset routes with the same no-store policy", async () => {
+    const request = await import("../app/api/auth/password-reset/request/route");
+    const consume = await import("../app/api/auth/password-reset/consume/route");
 
-    expect(route).toContain("token: z.string().min(20)");
-    expect(route).toContain("password: passwordSchema");
-    expect(route).toContain("input.token !== input.token.trim()");
-    expect(route).toContain("passwordReset.complete(input)");
-    expect(route).toContain('return response({ status: "completed" })');
-    expect(route).not.toContain("result.token");
-    expect(route).not.toContain("result.password");
-    expect(route).not.toContain("recipient_email");
-    expect(route).not.toContain("account_id");
-    expect(route).not.toContain("session_id");
-  });
-
-  it("keeps browser and native reset completion on the same Identity authority", () => {
-    const browser = read("app/api/auth/password-reset/consume/route.ts");
-    const native = read("app/api/agent-sessions/native/password-reset/complete/route.ts");
-
-    for (const route of [browser, native]) {
-      expect(route).toContain("IDENTITY_PASSWORD_RESET_COMPLETION_CAPABILITY_ID");
-      expect(route).toContain("passwordReset.complete(input)");
+    for (const handler of [request.POST, consume.POST]) {
+      const response = await handler();
+      expect(response.status).toBe(410);
+      expect(response.headers.get("cache-control")).toBe("no-store");
+      expect(response.headers.get("set-cookie")).toBeNull();
     }
-
-    expect(browser).toContain("assertSameOrigin(request)");
-    expect(native).toContain("rejectBrowserOriginForAgent(request)");
-    expect(native).not.toContain("assertSameOrigin(request)");
   });
 });

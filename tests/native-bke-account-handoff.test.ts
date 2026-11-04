@@ -85,30 +85,36 @@ vi.mock("@/platform/host/env", () => ({
 }));
 
 describe("native BKE account handoff", () => {
-  it("validates credentials through the released Identity capability without creating a browser session", () => {
-    const route = read("app/api/agent-sessions/native/login/route.ts");
-    expect(route).toContain("IDENTITY_PASSWORD_AUTHENTICATION_CAPABILITY_ID");
-    expect(route).toContain("passwordAuthentication.authenticate");
-    expect(route).toContain("rejectBrowserOriginForAgent");
-    expect(route).toContain("requireAgentAccountSessionProtocol");
-    expect(route).not.toContain("createSession");
-    expect(route).not.toContain("writeIdentitySessionCookie");
-    expect(route).not.toContain("cookies()");
+  it("retires the native password login grant with a generic Google browser handoff response", async () => {
+    const source = read("app/api/agent-sessions/native/login/route.ts");
+    expect(source).toContain("nativePasswordAuthRetired");
+
+    const { POST } = await import("../app/api/agent-sessions/native/login/route");
+    const response = await POST();
+
+    expect(response.status).toBe(410);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(await response.json()).toEqual({
+      error: "GOOGLE_BROWSER_HANDOFF_REQUIRED",
+    });
   });
 
-  it("keeps password material out of the persisted handoff and supports account selection", () => {
-    const route = read("app/api/agent-sessions/native/login/route.ts");
-    const composition = read("apps/web/agent-sessions/native-mfa.ts");
-    const helper = read("apps/web/agent-sessions/native-handoff.ts");
-    expect(composition).toContain('status: "account_selection_required"');
-    expect(composition).toContain("resolveNativeBkeAccounts");
-    expect(composition).toContain("issueNativeBkeAgentHandoff");
-    expect(route).toContain("customer_account_id");
-    expect(route).toContain("handoff_code");
-    expect(helper).not.toContain("password");
-    expect(helper).toContain("'NATIVE_HANDOFF', 'APPROVED'");
-    expect(helper).toContain("hashAgentDeviceCode(handoffCode");
-    expect(helper).not.toContain('"handoffCode"');
+  it("retires password MFA continuation while preserving the device-bound exchange", async () => {
+    const source = read("app/api/agent-sessions/native/mfa/verify/route.ts");
+    const helper = read("apps/web/auth/retired-auth.ts");
+    expect(source).toContain("nativePasswordAuthRetired");
+    expect(helper).toContain("GOOGLE_BROWSER_HANDOFF_REQUIRED");
+
+    const { POST } = await import("../app/api/agent-sessions/native/mfa/verify/route");
+    const response = await POST();
+    expect(response.status).toBe(410);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(await response.text()).not.toMatch(/handoff_code|access_token|refresh_token/i);
+
+    const service = read("apps/web/agent-sessions/device-authorization.ts");
+    expect(service).toContain("input.deviceId.trim() !== authorization.deviceId");
+    expect(service).toContain('authorization.authorizationKind === "NATIVE_HANDOFF"');
   });
 
   it("binds native handoff exchange to the intended device and expires approved grants", () => {

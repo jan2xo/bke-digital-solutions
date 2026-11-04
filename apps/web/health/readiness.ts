@@ -1,4 +1,5 @@
 import "server-only";
+import { currentOperationDatabaseUrl } from "@/platform/host/operation-scope";
 
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
 import { Redis as UpstashRedis } from "@upstash/redis";
@@ -24,7 +25,7 @@ function optional(name: string): string | undefined {
 }
 
 function required(name: string): string {
-  const value = optional(name);
+  const value = (name === "DATABASE_URL" ? currentOperationDatabaseUrl() : undefined) ?? optional(name);
   if (!value) throw new Error(`Missing web host health environment: ${name}`);
   return value;
 }

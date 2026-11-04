@@ -275,6 +275,11 @@ enum MfaChallengePurpose {
   RECENT_AUTH
 }
 
+enum MfaChallengeAuthenticationMethod {
+  PASSWORD
+  GOOGLE_OIDC
+}
+
 enum SecurityEventType {
   ADMIN_LOGIN_SUCCEEDED
   ADMIN_LOGIN_FAILED
@@ -327,6 +332,9 @@ enum SessionAuthenticationMethod {
   PASSWORD_TOTP
   PASSWORD_EMAIL_OTP
   PASSWORD_RECOVERY
+  GOOGLE_OIDC
+  GOOGLE_OIDC_EMAIL_OTP
+  GOOGLE_OIDC_RECOVERY
   MAGIC_LINK
   MFA_ENROLLMENT
 }
@@ -410,6 +418,7 @@ model User {
   legalHoldAt                     DateTime?
   legalHoldReason                 String?
   emailHash                       String?
+  googleIdentity                  GoogleIdentity?
   credential                      PasswordCredential?
   sessions                        Session[]
   ownedAccounts                   CustomerAccount[]               @relation("AccountOwner")
@@ -457,6 +466,14 @@ model User {
   @@index([legalHoldAt])
 }
 
+model GoogleIdentity {
+  userId    String   @id
+  subject   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model PasswordCredential {
   userId       String   @id
   passwordHash String
@@ -485,6 +502,7 @@ model Session {
   createdAt             DateTime                    @default(now())
   user                  User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
   securityEvents        SecurityEvent[]
+  mfaChallenges         MfaChallenge[]
 
   @@index([userId, expiresAt])
   @@index([userId, revokedAt])
@@ -518,9 +536,11 @@ model AdministratorRecoveryCode {
 }
 
 model MfaChallenge {
-  id           String              @id @default(cuid())
-  userId       String
-  purpose      MfaChallengePurpose @default(LOGIN)
+  id                        String                              @id @default(cuid())
+  userId                    String
+  purpose                   MfaChallengePurpose                 @default(LOGIN)
+  primaryAuthenticationMethod MfaChallengeAuthenticationMethod @default(PASSWORD)
+  sessionId                 String?
   tokenHash    String              @unique
   codeHash     String?
   expiresAt    DateTime
@@ -528,8 +548,10 @@ model MfaChallenge {
   attemptCount Int                 @default(0)
   createdAt    DateTime            @default(now())
   user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session      Session?            @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@index([userId, expiresAt])
+  @@index([sessionId])
 }
 
 model EmergencyMfaEnrollmentAuthorization {

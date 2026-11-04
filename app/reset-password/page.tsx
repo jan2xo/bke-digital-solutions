@@ -1,2 +1,11 @@
-import { ResetPasswordForm } from "@/components/password-reset-forms";
-export default async function ResetPasswordPage({searchParams}:{searchParams:Promise<{token?:string}>}){const{token=""}=await searchParams;return <section className="motion-fade-up mx-auto max-w-md px-4 py-16"><h1 className="mb-8 text-4xl font-black">Choose a new password</h1>{token?<ResetPasswordForm token={token}/>:<p>This reset link is invalid.</p>}</section>}
+import Link from "next/link";
+
+export default function ResetPasswordPage() {
+  return (
+    <section className="mx-auto max-w-md px-4 py-16">
+      <h1 className="text-3xl font-black">Password sign-in is retired</h1>
+      <p className="mt-4 text-slate-600">Digital Solutions accounts now use Google sign-in.</p>
+      <Link className="button primary mt-6 inline-block" href="/login">Continue with Google</Link>
+    </section>
+  );
+}

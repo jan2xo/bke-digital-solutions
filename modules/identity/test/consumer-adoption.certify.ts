@@ -1,8 +1,8 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.4.0/bke-identity-0.4.0.tgz";
-const EXPECTED_VERSION = "0.4.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.5.0/bke-identity-0.5.0.tgz";
+const EXPECTED_VERSION = "0.5.0";
 
 const [
   moduleSource,
@@ -17,7 +17,8 @@ const [
   sessionsRouteSource,
   installedLoginMfaChallengeReissueContractSource,
   mfaChallengeHostSource,
-  loginRouteSource,
+  googleCallbackRouteSource,
+  retiredPasswordLoginRouteSource,
   mfaChallengeRequestRouteSource,
   mfaChallengeRouteSource,
 ] = await Promise.all([
@@ -55,6 +56,10 @@ const [
   ),
   readFile(
     new URL("../../../apps/web/auth/mfa-challenge.ts", import.meta.url),
+    "utf8",
+  ),
+  readFile(
+    new URL("../../../app/api/auth/google/callback/route.ts", import.meta.url),
     "utf8",
   ),
   readFile(
@@ -160,7 +165,7 @@ for (const marker of [
   }
 }
 for (const [name, source] of [
-  ["login", loginRouteSource],
+  ["Google callback", googleCallbackRouteSource],
   ["challenge request", mfaChallengeRequestRouteSource],
   ["challenge completion", mfaChallengeRouteSource],
 ] as const) {
@@ -168,8 +173,14 @@ for (const [name, source] of [
     throw new Error(`${name} route still reaches through to V1 admin MFA.`);
   }
 }
-if (!loginRouteSource.includes("issueIdentityLoginMfaChallenge")) {
-  throw new Error("Login route does not consume released Identity LOGIN MFA issuance through the V2 adapter.");
+if (
+  !googleCallbackRouteSource.includes("issueIdentityLoginMfaChallenge") ||
+  !googleCallbackRouteSource.includes('issueIdentityLoginMfaChallenge(userId, "GOOGLE_OIDC")')
+) {
+  throw new Error("Google callback does not issue the released Identity LOGIN MFA challenge for Google sign-in.");
+}
+if (!retiredPasswordLoginRouteSource.includes("passwordAuthRetired")) {
+  throw new Error("Legacy password login must remain retired after Google-only cutover.");
 }
 if (!mfaChallengeRequestRouteSource.includes("reissueIdentityLoginMfaChallenge")) {
   throw new Error("LOGIN MFA resend route does not consume released Identity reissue through the V2 adapter.");
@@ -178,25 +189,20 @@ if (!mfaChallengeRouteSource.includes("verifyIdentityLoginMfaChallenge")) {
   throw new Error("LOGIN MFA completion route does not consume released Identity verification through the V2 adapter.");
 }
 
-const customerMfaGate = loginRouteSource.indexOf(
-  "if (user.administratorMfa?.enabledAt)",
-);
-const administratorEnrollmentGate = loginRouteSource.lastIndexOf(
-  'if (user.role === "ADMIN")',
-);
+if (!googleCallbackRouteSource.includes('method === "MFA_CHALLENGE"')) {
+  throw new Error("Google callback must route Identity-required app MFA through the LOGIN challenge.");
+}
 if (
-  customerMfaGate < 0 ||
-  administratorEnrollmentGate < 0 ||
-  customerMfaGate > administratorEnrollmentGate
+  !mfaChallengeRouteSource.includes("GOOGLE_MFA_METHODS") ||
+  !mfaChallengeRouteSource.includes("GOOGLE_OIDC_EMAIL_OTP") ||
+  !mfaChallengeRouteSource.includes("GOOGLE_OIDC_RECOVERY")
 ) {
-  throw new Error(
-    "Browser login must enforce enabled MFA for CUSTOMER and ADMIN before the administrator-only enrollment fallback.",
-  );
+  throw new Error("LOGIN MFA completion must accept only Google-family challenge methods.");
 }
 for (const marker of [
   'principal.role === "ADMIN"',
   'redirectTo',
-  '"/dashboard"',
+  "safeLocalRedirect(returnTo)",
   '"/admin"',
 ]) {
   if (!mfaChallengeRouteSource.includes(marker)) {
@@ -206,28 +212,11 @@ for (const marker of [
   }
 }
 
-for (const marker of [
-  "IDENTITY_MAGIC_LOGIN_CONSUME_CAPABILITY_ID",
-  "magicLogin.consume",
-  "writeIdentitySessionCookie",
-  "MFA_PASSWORD_REQUIRED",
-]) {
-  if (!magicLoginConsumeRouteSource.includes(marker)) {
-    throw new Error(
-      `Magic-login consume must use released Identity MFA authority: ${marker}`,
-    );
-  }
+if (!magicLoginConsumeRouteSource.includes("GOOGLE_SIGN_IN_REQUIRED")) {
+  throw new Error("Legacy magic-link consume must direct users to Google sign-in after cutover.");
 }
-for (const forbidden of [
-  "db.verificationToken",
-  "hashToken(",
-  "createSession(",
-]) {
-  if (magicLoginConsumeRouteSource.includes(forbidden)) {
-    throw new Error(
-      `Magic-login consume still bypasses released Identity authority: ${forbidden}`,
-    );
-  }
+if (magicLoginConsumeRouteSource.includes("magicLogin.consume")) {
+  throw new Error("Legacy magic-link consume must not issue sessions after Google-only cutover.");
 }
 
 const forbiddenStagingSpecifiers = [

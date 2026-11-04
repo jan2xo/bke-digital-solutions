@@ -15,15 +15,12 @@ import {
   type IdentitySessionValidationCapability,
 } from "@bke/identity/contracts/session-validation.contract";
 import type { IdentityPrincipal } from "@bke/identity/contracts/identity.contract";
-import { createArgon2PasswordHasher } from "@bke/identity/providers/argon2-password-hasher";
-import { createArgon2PasswordVerifier } from "@bke/identity/providers/argon2-password-verifier";
 import { safeNetworkHint, summarizeUserAgent } from "@/platform/host/security/session-display";
 import { clientIp } from "../http/request";
 import { getV2WebApplication } from "../runtime";
+import { db } from "@/platform/host/db";
 
 const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000;
-const passwordHasher = createArgon2PasswordHasher();
-const passwordVerifier = createArgon2PasswordVerifier();
 
 class IdentitySessionOperationError extends Error {
   readonly code: string;
@@ -82,7 +79,15 @@ export async function currentIdentitySession(): Promise<IdentitySessionContext |
     IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
   );
   const result = await sessionValidation.validate(token);
-  if (result.status === "VALID") return result.context;
+  if (result.status === "VALID") {
+    if (!result.context.session.authenticationMethod.startsWith("GOOGLE_OIDC")) return null;
+    const principal = await db.user.findUnique({
+      where: { id: result.context.principal.id },
+      select: { lifecycleState: true, suspendedAt: true },
+    });
+    if (!principal || principal.lifecycleState !== "ACTIVE" || principal.suspendedAt) return null;
+    return result.context;
+  }
   if (result.status === "INVALID") return null;
   throw new Error(result.code);
 }
@@ -108,12 +113,12 @@ export async function issueIdentitySession(
   return result.session;
 }
 
-export async function hashIdentityPassword(password: string) {
-  return passwordHasher.hash(password);
+export async function hashIdentityPassword(_password: string): Promise<never> {
+  throw new Error("PASSWORD_AUTH_RETIRED");
 }
 
-export async function verifyIdentityPassword(hash: string, password: string) {
-  return passwordVerifier.verify(hash, password);
+export async function verifyIdentityPassword(_hash: string, _password: string): Promise<boolean> {
+  return false;
 }
 
 export async function requireIdentityUser(): Promise<IdentityPrincipal> {

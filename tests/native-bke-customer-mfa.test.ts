@@ -4,44 +4,39 @@ import { describe, expect, it } from "vitest";
 
 const read = (path: string) => readFileSync(path, "utf8");
 
-describe("native BKE customer MFA authority", () => {
-  it("pins the immutable Identity 0.4.0 authority and provenance", () => {
+describe("Google-only authentication and Agent assurance boundary", () => {
+  it("pins the immutable Identity 0.5.0 artifact and digest", () => {
     const pkg = read("package.json");
     const workflow = read(".github/workflows/v2-identity.yml");
-    expect(pkg).toContain("identity-v0.4.0/bke-identity-0.4.0.tgz");
-    expect(workflow).toContain("identity-v0.4.0/bke-identity-0.4.0.tgz");
-    expect(workflow).toContain("4b5ead5c9aee8fe1e1b67876711a423c033a8ad81d6a9b0a54b42548d59222ad");
+
+    expect(pkg).toContain("identity-v0.5.0/bke-identity-0.5.0.tgz");
+    expect(workflow).toContain("identity-v0.5.0/bke-identity-0.5.0.tgz");
+    expect(workflow).toContain(
+      "d78e365d2db23044fe1175114affb540823599380c5dda85042dfe8073e1a2b9",
+    );
   });
 
-  it("requires MFA-enabled customers to complete a challenge before handoff", () => {
-    const login = read("app/api/agent-sessions/native/login/route.ts");
-    const verify = read("app/api/agent-sessions/native/mfa/verify/route.ts");
-    expect(login).toContain('authenticated.route === "MFA_CHALLENGE"');
-    expect(login).toContain('status: "mfa_challenge_required"');
-    expect(login).toContain('authenticated.route !== "SESSION"');
-    expect(login).not.toContain("CUSTOMER_SESSION");
-    expect(verify).toContain("IDENTITY_LOGIN_MFA_VERIFICATION_CAPABILITY_ID");
-    expect(verify).toContain("completeNativeBkeHandoff");
-  });
+  it("retires native password login and MFA grants with a no-store Google handoff response", async () => {
+    const login = await import("../app/api/agent-sessions/native/login/route");
+    const verify = await import("../app/api/agent-sessions/native/mfa/verify/route");
 
-  it("keeps every account MFA route behind Agent protocol and authenticated session identity", () => {
-    for (const path of [
-      "app/api/agent-sessions/account/mfa/route.ts",
-      "app/api/agent-sessions/account/mfa/enroll/start/route.ts",
-      "app/api/agent-sessions/account/mfa/enroll/complete/route.ts",
-      "app/api/agent-sessions/account/mfa/challenge/route.ts",
-      "app/api/agent-sessions/account/mfa/disable/route.ts",
-      "app/api/agent-sessions/account/mfa/recovery/regenerate/route.ts",
-    ]) {
-      const route = read(path);
-      expect(route).toContain("rejectBrowserOriginForAgent(request)");
-      expect(route).toContain("requireAgentAccountSessionProtocol(request)");
-      expect(route).toContain("authenticateNativeAgentRequest(request)");
-      expect(route).not.toContain("console.log");
+    for (const response of [await login.POST(), await verify.POST()]) {
+      expect(response.status).toBe(410);
+      expect(response.headers.get("cache-control")).toBe("no-store");
+      expect(response.headers.get("set-cookie")).toBeNull();
+      expect(await response.json()).toEqual({
+        error: "GOOGLE_BROWSER_HANDOFF_REQUIRED",
+      });
     }
   });
 
-  it("requires fresh password proof for MFA enrollment and destructive account-security mutations", () => {
+  it("keeps read-only Agent MFA status authenticated and retires native MFA mutations", () => {
+    const statusRoute = read("app/api/agent-sessions/account/mfa/route.ts");
+    expect(statusRoute).toContain("export async function GET(request: Request)");
+    expect(statusRoute).toContain("rejectBrowserOriginForAgent(request)");
+    expect(statusRoute).toContain("requireAgentAccountSessionProtocol(request)");
+    expect(statusRoute).toContain("authenticateNativeAgentRequest(request)");
+
     for (const path of [
       "app/api/agent-sessions/account/mfa/enroll/start/route.ts",
       "app/api/agent-sessions/account/mfa/enroll/complete/route.ts",
@@ -49,27 +44,37 @@ describe("native BKE customer MFA authority", () => {
       "app/api/agent-sessions/account/mfa/disable/route.ts",
       "app/api/agent-sessions/account/mfa/recovery/regenerate/route.ts",
     ]) {
-      const route = read(path);
-      expect(route).toContain("current_password");
-      expect(route).toContain("verifyNativeCurrentPassword");
+      expect(read(path)).toContain("nativeSecurityMutationRetired");
     }
   });
 
-  it("forces reauthentication after MFA assurance changes and blocks stale Agent sessions", () => {
-    const complete = read("app/api/agent-sessions/account/mfa/enroll/complete/route.ts");
-    const disable = read("app/api/agent-sessions/account/mfa/disable/route.ts");
-    const recovery = read("app/api/agent-sessions/account/mfa/recovery/regenerate/route.ts");
-    const sessionAuthority = read("apps/web/agent-sessions/device-authorization.ts");
-    expect(complete).toContain("revokeNativeAgentSessionsForUser");
-    expect(disable).toContain("revokeNativeAgentSessionsForUser");
-    expect(recovery).toContain("revokeNativeAgentSessionsForUser");
-    expect(recovery).toContain("issueTransientNativeMfaSession");
-    expect(sessionAuthority).toContain("agentSessionPredatesMfaAuthorityChange");
-    expect(sessionAuthority).toContain("enabledAt");
-    expect(sessionAuthority).toContain("disabledAt");
+  it("does not accept native password proofs for MFA enrollment or security mutations", () => {
+    const retired = read("apps/web/auth/retired-auth.ts");
+    expect(retired).toContain("BROWSER_SECURITY_REQUIRED");
+
+    for (const path of [
+      "app/api/agent-sessions/account/mfa/enroll/start/route.ts",
+      "app/api/agent-sessions/account/mfa/enroll/complete/route.ts",
+      "app/api/agent-sessions/account/mfa/challenge/route.ts",
+      "app/api/agent-sessions/account/mfa/disable/route.ts",
+      "app/api/agent-sessions/account/mfa/recovery/regenerate/route.ts",
+    ]) {
+      const route = read(path);
+      expect(route).toContain("nativeSecurityMutationRetired");
+      expect(route).not.toContain("current_password");
+      expect(route).not.toContain("verifyNativeCurrentPassword");
+    }
   });
 
-  it("adds a session-scoped 15-minute recent-auth primitive without persisting proof material", () => {
+  it("retains stale Agent-session MFA epoch checks independently of retired password routes", () => {
+    const authority = read("apps/web/agent-sessions/device-authorization.ts");
+
+    expect(authority).toContain("agentSessionPredatesMfaAuthorityChange");
+    expect(authority).toContain("enabledAt");
+    expect(authority).toContain("disabledAt");
+  });
+
+  it("keeps the recent-auth timestamp scoped to the Agent session and retires its password API", async () => {
     const migration = read(
       "prisma/migrations/20261001060000_agent_session_recent_auth/migration.sql",
     );
@@ -90,61 +95,35 @@ describe("native BKE customer MFA authority", () => {
     expect(helper).toContain('"deviceId" = ${input.deviceId}');
     expect(helper).toContain('"revokedAt" IS NULL');
     expect(helper).toContain('"AGENT_RECENT_AUTH_VERIFIED"');
-    expect(helper).not.toContain("current_password");
     expect(helper).not.toContain("challenge_token");
     expect(helper).not.toContain("codeHash");
+    expect(start).toContain("nativeSecurityMutationRetired");
+    expect(complete).toContain("nativeSecurityMutationRetired");
 
-    for (const route of [start, complete]) {
-      expect(route).toContain("rejectBrowserOriginForAgent(request)");
-      expect(route).toContain("requireAgentAccountSessionProtocol(request)");
-      expect(route).toContain("authenticateNativeAgentRequest(request)");
-      expect(route).toContain('"cache-control": "no-store"');
-      expect(route).not.toContain("console.log");
-    }
-
-    expect(start).toContain("current_password");
-    expect(start).toContain("verifyNativeCurrentPassword");
-    expect(start).toContain("administratorMfaMethod.findUnique");
-    expect(start).toContain("issueIdentityLoginMfaChallenge");
-    expect(start).toContain('status: "verified"');
-    expect(start).toContain('status: "mfa_challenge_issued"');
-    expect(complete).toContain("challenge_token");
-    expect(complete).toContain("verifyNativeMfaProof");
-    expect(complete).toContain('method: "PASSWORD_MFA"');
+    const { POST } = await import(
+      "../app/api/agent-sessions/account/recent-auth/start/route"
+    );
+    const response = await POST();
+    expect(response.status).toBe(409);
+    expect(response.headers.get("cache-control")).toBe("no-store");
   });
 
-  it("keeps native registration protocol-bound, legal-version-bound, and secret-safe", () => {
-    const preflight = read("app/api/agent-sessions/native/registration/route.ts");
-    const register = read("app/api/agent-sessions/native/register/route.ts");
-    const verify = read("app/api/agent-sessions/native/verify-email/route.ts");
-    const resend = read("app/api/agent-sessions/native/verification/resend/route.ts");
-    const authority = read("apps/web/auth/native-customer-registration.ts");
+  it("binds registration to the stable Google subject and accepted legal versions", () => {
+    const callback = read("app/api/auth/google/callback/route.ts");
+    const registration = read("apps/web/auth/google-registration.ts");
 
-    for (const route of [preflight, register, verify, resend]) {
-      expect(route).toContain("rejectBrowserOriginForAgent(request)");
-      expect(route).toContain("requireAgentAccountSessionProtocol(request)");
-      expect(route).not.toContain("createSession");
-      expect(route).not.toContain("console.log");
-    }
+    expect(callback).toContain("registerGoogleCustomer");
+    expect(callback).toContain("subject");
+    expect(registration).toContain("createPrismaTransactionGoogleIdentityRepository(tx)");
+    expect(registration).toContain("recordLegalAcceptances");
+    expect(registration).toContain("selectedVersionIds: [...input.legalVersionIds]");
+    expect(registration).toContain('purpose: "VERIFY_EMAIL"');
 
-    expect(preflight).toContain("registrationLegalDocuments");
-    expect(preflight).toContain("currentPublishedVersionId");
-    expect(preflight).toContain("content_markdown");
-    expect(preflight).toContain("applyLegalVariables");
-    expect(register).toContain("legal_version_ids");
-    expect(authority).toContain("recordLegalAcceptances");
-    expect(authority).toContain('"REGISTRATION"');
-    expect(authority).toContain('"VERIFY_EMAIL_NATIVE"');
-    expect(authority).toContain("hashToken(code)");
-    expect(verify).toContain("verifyNativeCustomerEmail");
-    const browserVerify = read("app/api/auth/verify/route.ts");
-    expect(browserVerify).toContain('row.purpose !== "VERIFY_EMAIL"');
-    expect(register).not.toContain("verification_code");
-    expect(resend).not.toContain("verification_code");
-    expect(resend).toContain('status: "accepted"');
+    const nativeRegister = read("app/api/agent-sessions/native/register/route.ts");
+    expect(nativeRegister).toContain("nativePasswordAuthRetired");
   });
 
-  it("proves native registration, token rotation, legal acceptance, and verification against the exact-head database", () => {
+  it("certifies Google registration, contact-code rotation, legal acceptance, and verification in PostgreSQL", () => {
     execFileSync(
       "npx",
       ["tsx", "tests/native-bke-registration.certify.ts"],
@@ -153,7 +132,7 @@ describe("native BKE customer MFA authority", () => {
         env: {
           ...process.env,
           NODE_OPTIONS: "--conditions=react-server",
-          APP_URL: "https://native-cert.bke.test",
+          APP_URL: "https://jl-bke.com",
           SESSION_SECRET:
             "native-registration-cert-session-secret-0000000001",
           LICENSE_PEPPER:
@@ -166,6 +145,22 @@ describe("native BKE customer MFA authority", () => {
       },
     );
   }, 30_000);
+
+  it("never returns password material or recovery codes through retired native security mutations", async () => {
+    const helper = read("apps/web/agent-sessions/native-mfa.ts");
+    expect(helper).not.toContain("console.log");
+    const change = await import(
+      "../app/api/agent-sessions/account/mfa/recovery/regenerate/route"
+    );
+    const response = await change.POST();
+    const body = await response.text();
+
+    expect(response.status).toBe(409);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(body).toBe(JSON.stringify({ error: "BROWSER_SECURITY_REQUIRED" }));
+    expect(body).not.toMatch(/password|recovery_codes|secret/i);
+  });
 
   it("keeps organization overview bound to the authenticated Agent principal and selected account", () => {
     const route = read("app/api/agent-sessions/account/organization/route.ts");
@@ -236,18 +231,5 @@ describe("native BKE customer MFA authority", () => {
     );
   }, 30_000);
 
-  it("never returns password material and returns recovery codes only from Identity mutation results", () => {
-    const helper = read("apps/web/agent-sessions/native-mfa.ts");
-    const complete = read("app/api/agent-sessions/account/mfa/enroll/complete/route.ts");
-    const recovery = read("app/api/agent-sessions/account/mfa/recovery/regenerate/route.ts");
-    expect(helper).not.toContain("console.log");
-    expect(complete).toContain("recovery_codes: result.recoveryCodes");
-    expect(recovery).toContain("recovery_codes: result.recoveryCodes");
-    const completeResponses =
-      complete.match(/return response\(\{[^}]*\}/g)?.join("\n") ?? "";
-    const recoveryResponses =
-      recovery.match(/return response\(\{[^}]*\}/g)?.join("\n") ?? "";
-    expect(completeResponses).not.toContain("current_password");
-    expect(recoveryResponses).not.toContain("current_password");
-  });
+
 });

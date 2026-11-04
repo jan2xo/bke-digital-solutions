@@ -23,8 +23,8 @@
     "db:smoke": "tsx scripts/post-migration-smoke.ts",
     "db:seed": "tsx prisma/seed.ts",
     "agent:demo:seed": "NODE_OPTIONS=--conditions=react-server tsx scripts/seed-agent-demo.ts",
-    "admin:create": "tsx scripts/create-admin.ts",
-    "admin:recover-mfa": "tsx scripts/recover-admin.ts",
+    "admin:create": "NODE_OPTIONS=--conditions=react-server tsx scripts/create-admin.ts",
+    "admin:recover-mfa": "NODE_OPTIONS=--conditions=react-server tsx scripts/recover-admin.ts",
     "grace:status": "tsx scripts/grace-period.ts status",
     "grace:set": "tsx scripts/grace-period.ts set",
     "payments:reconcile": "tsx scripts/reconcile-payments.ts",
@@ -65,7 +65,12 @@
     "disposable:env": "node scripts/v3-disposable-env.mjs",
     "disposable:compose": "node scripts/v3-disposable-compose.mjs",
     "disposable:doctor": "node scripts/v3-disposable-doctor.mjs",
-    "disposable:utm-fixture": "NODE_OPTIONS=--conditions=react-server tsx scripts/seed-utm-launcher-e2e.ts"
+    "disposable:utm-fixture": "NODE_OPTIONS=--conditions=react-server tsx scripts/seed-utm-launcher-e2e.ts",
+    "workers:build": "opennextjs-cloudflare build",
+    "workers:types": "wrangler types --env-interface CloudflareEnv workers/env.d.ts",
+    "workers:typecheck": "tsc --project workers/tsconfig.json --noEmit",
+    "workers:preview": "wrangler dev --local",
+    "workers:smoke": "node scripts/workers-smoke.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",
@@ -74,7 +79,7 @@
     "@bke/catalog": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.6.0/bke-catalog-0.6.0.tgz",
     "@bke/commerce": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.15.0/bke-commerce-0.15.0.tgz",
     "@bke/entitlements": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.2.1/bke-entitlements-0.2.1.tgz",
-    "@bke/identity": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.4.0/bke-identity-0.4.0.tgz",
+    "@bke/identity": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.5.0/bke-identity-0.5.0.tgz",
     "@bke/legal": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz",
     "@bke/licensing": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz",
     "@bke/notifications": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/notifications-v0.2.0/bke-notifications-0.2.0.tgz",
@@ -87,7 +92,7 @@
     "@upstash/redis": "^1.35.3",
     "argon2": "^0.44.0",
     "jose": "^6.1.0",
-    "next": "16.3.6",
+    "next": "16.4.1",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",
     "react": "^19.2.0",
@@ -96,7 +101,9 @@
     "resend": "^6.0.2",
     "semver": "^7.8.5",
     "server-only": "^0.0.1",
-    "zod": "^4.1.5"
+    "zod": "^4.1.5",
+    "oauth4webapi": "https://github.com/panva/oauth4webapi/releases/download/v3.8.8/oauth4webapi-3.8.8.tgz",
+    "@opennextjs/cloudflare": "1.20.15"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
@@ -107,12 +114,13 @@
     "@types/react-dom": "^19.1.9",
     "@types/semver": "^7.8.0",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.2.12",
+    "eslint-config-next": "16.4.1",
     "prisma": "7.9.1",
     "tailwindcss": "4.3.3",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "4.157.0"
   },
   "overrides": {
     "fast-uri": "3.1.5",

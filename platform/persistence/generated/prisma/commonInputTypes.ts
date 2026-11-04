@@ -237,6 +237,13 @@ export type EnumMfaChallengePurposeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumMfaChallengePurposeFilter<$PrismaModel> | $Enums.MfaChallengePurpose
 }
 
+export type EnumMfaChallengeAuthenticationMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.MfaChallengeAuthenticationMethod | Prisma.EnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel> | $Enums.MfaChallengeAuthenticationMethod
+}
+
 export type EnumMfaChallengePurposeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.MfaChallengePurpose | Prisma.EnumMfaChallengePurposeFieldRefInput<$PrismaModel>
   in?: $Enums.MfaChallengePurpose[] | Prisma.ListEnumMfaChallengePurposeFieldRefInput<$PrismaModel>
@@ -245,6 +252,16 @@ export type EnumMfaChallengePurposeWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMfaChallengePurposeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMfaChallengePurposeFilter<$PrismaModel>
+}
+
+export type EnumMfaChallengeAuthenticationMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MfaChallengeAuthenticationMethod | Prisma.EnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMfaChallengeAuthenticationMethodWithAggregatesFilter<$PrismaModel> | $Enums.MfaChallengeAuthenticationMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel>
 }
 
 export type EnumSecurityEventTypeFilter<$PrismaModel = never> = {
@@ -1485,6 +1502,13 @@ export type NestedEnumMfaChallengePurposeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumMfaChallengePurposeFilter<$PrismaModel> | $Enums.MfaChallengePurpose
 }
 
+export type NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.MfaChallengeAuthenticationMethod | Prisma.EnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel> | $Enums.MfaChallengeAuthenticationMethod
+}
+
 export type NestedEnumMfaChallengePurposeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.MfaChallengePurpose | Prisma.EnumMfaChallengePurposeFieldRefInput<$PrismaModel>
   in?: $Enums.MfaChallengePurpose[] | Prisma.ListEnumMfaChallengePurposeFieldRefInput<$PrismaModel>
@@ -1493,6 +1517,16 @@ export type NestedEnumMfaChallengePurposeWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMfaChallengePurposeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMfaChallengePurposeFilter<$PrismaModel>
+}
+
+export type NestedEnumMfaChallengeAuthenticationMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MfaChallengeAuthenticationMethod | Prisma.EnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MfaChallengeAuthenticationMethod[] | Prisma.ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMfaChallengeAuthenticationMethodWithAggregatesFilter<$PrismaModel> | $Enums.MfaChallengeAuthenticationMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMfaChallengeAuthenticationMethodFilter<$PrismaModel>
 }
 
 export type NestedEnumSecurityEventTypeFilter<$PrismaModel = never> = {

@@ -1,4 +1,5 @@
 import "server-only";
+import { currentOperationDatabaseUrl, operationResource } from "@/platform/host/operation-scope";
 import type { ComposedApplication } from "../../contracts/capability";
 import { createAccountsModule } from "../../modules/accounts/module";
 import { createCatalogModule } from "../../modules/catalog/module";
@@ -20,7 +21,7 @@ function required(name: string): string {
 }
 
 async function composeWebApplication(): Promise<ComposedApplication> {
-  const connectionString = required("DATABASE_URL");
+  const connectionString = currentOperationDatabaseUrl() ?? required("DATABASE_URL");
   const sessionSecret = required("SESSION_SECRET");
   const licensePepper = required("LICENSE_PEPPER");
   const mfaEncryptionKey = process.env.MFA_ENCRYPTION_KEY?.trim() || undefined;
@@ -48,6 +49,10 @@ async function composeWebApplication(): Promise<ComposedApplication> {
 const globalRuntime = globalThis as unknown as { bkeV2WebApplication?: Promise<ComposedApplication> };
 
 export function getV2WebApplication(): Promise<ComposedApplication> {
+  if (currentOperationDatabaseUrl()) {
+    return operationResource("composed-application", composeWebApplication);
+  }
+  if (process.env.BKE_RUNTIME === "workers") throw new Error("WORKER_OPERATION_SCOPE_REQUIRED");
   if (!globalRuntime.bkeV2WebApplication) {
     globalRuntime.bkeV2WebApplication = composeWebApplication().catch((error) => {
       delete globalRuntime.bkeV2WebApplication;

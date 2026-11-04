@@ -388,6 +388,14 @@ export const MfaChallengePurpose = {
 export type MfaChallengePurpose = (typeof MfaChallengePurpose)[keyof typeof MfaChallengePurpose]
 
 
+export const MfaChallengeAuthenticationMethod = {
+  PASSWORD: 'PASSWORD',
+  GOOGLE_OIDC: 'GOOGLE_OIDC'
+} as const
+
+export type MfaChallengeAuthenticationMethod = (typeof MfaChallengeAuthenticationMethod)[keyof typeof MfaChallengeAuthenticationMethod]
+
+
 export const SecurityEventType = {
   ADMIN_LOGIN_SUCCEEDED: 'ADMIN_LOGIN_SUCCEEDED',
   ADMIN_LOGIN_FAILED: 'ADMIN_LOGIN_FAILED',
@@ -449,6 +457,9 @@ export const SessionAuthenticationMethod = {
   PASSWORD_TOTP: 'PASSWORD_TOTP',
   PASSWORD_EMAIL_OTP: 'PASSWORD_EMAIL_OTP',
   PASSWORD_RECOVERY: 'PASSWORD_RECOVERY',
+  GOOGLE_OIDC: 'GOOGLE_OIDC',
+  GOOGLE_OIDC_EMAIL_OTP: 'GOOGLE_OIDC_EMAIL_OTP',
+  GOOGLE_OIDC_RECOVERY: 'GOOGLE_OIDC_RECOVERY',
   MAGIC_LINK: 'MAGIC_LINK',
   MFA_ENROLLMENT: 'MFA_ENROLLMENT'
 } as const

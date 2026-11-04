@@ -11,29 +11,49 @@ import { rateLimit } from "@/apps/web/http/rate-limit";
 import { securityEvent } from "@/apps/web/security/events";
 import { pendingReacceptance } from "@/apps/web/legal/service";
 import { db } from "@/platform/host/db";
+import { safeLocalRedirect } from "@/apps/web/security/redirect";
+
+const GOOGLE_MFA_METHODS = new Set([
+  "GOOGLE_OIDC_EMAIL_OTP",
+  "GOOGLE_OIDC_RECOVERY",
+]);
 
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     if (!(await rateLimit(`login-mfa:${clientIp(request)}`, 8, 900)).allowed) {
-      await securityEvent(
-        "SECURITY_RATE_LIMIT_TRIGGERED",
-        request,
-        undefined,
-        { reason: "mfa" },
-      );
+      await securityEvent("SECURITY_RATE_LIMIT_TRIGGERED", request, undefined, { reason: "mfa" });
       throw new Error("RATE_LIMITED");
     }
 
-    const { code } = z
-      .object({ code: z.string().min(6).max(32) })
+    const { code, returnTo } = z
+      .object({ code: z.string().min(6).max(32), returnTo: z.string().max(2048).optional() })
+      .strict()
       .parse(await request.json());
     const verified = await verifyIdentityLoginMfaChallenge(code);
+    if (!GOOGLE_MFA_METHODS.has(verified.authenticationMethod)) {
+      await securityEvent(
+        "MFA_CHALLENGE_FAILED",
+        request,
+        verified.userId,
+        { reason: "GOOGLE_AUTH_REQUIRED" },
+        { authenticationMethod: verified.authenticationMethod },
+      ).catch(() => undefined);
+      const response = NextResponse.json(
+        { error: "GOOGLE_SIGN_IN_REQUIRED" },
+        { status: 401, headers: { "cache-control": "no-store" } },
+      );
+      response.cookies.delete(IDENTITY_MFA_CHALLENGE_COOKIE);
+      return response;
+    }
+
     const principal = await db.user.findUnique({
       where: { id: verified.userId },
-      select: { role: true },
+      select: { role: true, lifecycleState: true, suspendedAt: true },
     });
-    if (!principal) throw new Error("UNAUTHENTICATED");
+    if (!principal || principal.lifecycleState !== "ACTIVE" || principal.suspendedAt) {
+      throw new Error("UNAUTHENTICATED");
+    }
 
     const session = await createSession(verified.userId, request, {
       mfaVerified: true,
@@ -47,41 +67,27 @@ export async function POST(request: Request) {
       request,
       result.userId,
       undefined,
-      {
-        sessionId: result.sessionId,
-        authenticationMethod: result.authenticationMethod,
-      },
+      { sessionId: result.sessionId, authenticationMethod: result.authenticationMethod },
     );
 
     if (principal.role === "ADMIN") {
-      await securityEvent(
-        "ADMIN_LOGIN_SUCCEEDED",
-        request,
-        result.userId,
-        undefined,
-        {
-          sessionId: result.sessionId,
-          authenticationMethod: result.authenticationMethod,
-        },
-      );
-      await securityEvent(
-        "ADMIN_SESSION_CREATED",
-        request,
-        result.userId,
-        undefined,
-        {
-          sessionId: result.sessionId,
-          authenticationMethod: result.authenticationMethod,
-        },
-      );
+      await securityEvent("ADMIN_LOGIN_SUCCEEDED", request, result.userId, undefined, {
+        sessionId: result.sessionId,
+        authenticationMethod: result.authenticationMethod,
+      });
+      await securityEvent("ADMIN_SESSION_CREATED", request, result.userId, undefined, {
+        sessionId: result.sessionId,
+        authenticationMethod: result.authenticationMethod,
+      });
     }
 
+    const safeReturnTo = safeLocalRedirect(returnTo);
     const redirectTo =
       principal.role === "ADMIN"
         ? "/admin"
         : (await pendingReacceptance(result.userId)).length > 0
-          ? "/legal/accept?returnTo=%2Fdashboard"
-          : "/dashboard";
+          ? `/legal/accept?returnTo=${encodeURIComponent(safeReturnTo)}`
+          : safeReturnTo;
 
     const response = NextResponse.json({ ok: true, redirectTo });
     response.cookies.delete(IDENTITY_MFA_CHALLENGE_COOKIE);
