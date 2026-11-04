@@ -130,9 +130,9 @@ export function verifyHyperdriveMetadata(drive, id, directUrl, expectedHost) {
   if (drive.name !== expected.hyperdriveName) fail("Hyperdrive name does not match the isolated Staging resource");
   const origin = drive.origin ?? {};
   if (origin.database !== expected.databaseName || origin.user !== expected.databaseRole || origin.host !== expectedHost || origin.host !== directUrl.hostname) fail("Hyperdrive origin does not match verified Neon host/database/role");
-  if (String(origin.scheme).toLowerCase() !== "postgres" || Number(origin.port) !== 5432) fail("Hyperdrive must use PostgreSQL on port 5432");
+  if (!["postgres", "postgresql"].includes(String(origin.scheme).toLowerCase()) || Number(origin.port) !== 5432) fail("Hyperdrive must use PostgreSQL on port 5432");
   if (drive.caching?.disabled !== true) fail("Hyperdrive query caching must be verified disabled");
-  if (origin.mtls?.sslmode !== undefined && !["require", "verify-ca", "verify-full"].includes(origin.mtls.sslmode)) fail("Hyperdrive origin TLS must not be disabled");
+  if (drive.mtls?.sslmode !== undefined && !["require", "verify-ca", "verify-full"].includes(drive.mtls.sslmode)) fail("Hyperdrive TLS must not be disabled");
   return true;
 }
 async function verifyHyperdrive(directUrl) {

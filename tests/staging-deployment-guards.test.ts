@@ -9,7 +9,7 @@ function setup(){
  Object.assign(process.env,{APP_URL:"https://bke-digital-solutions.jlprojectfreedom.workers.dev",DEPLOYMENT_ENV:"staging",DEPLOYMENT_ID:"bke-digital-solutions-try",REDIS_KEY_PREFIX:"bke-digital-solutions-try",PAYMENT_PROVIDER:"mock",PAYMONGO_LIVEMODE:"false",EMAIL_PROVIDER:"log",GOOGLE_CLIENT_ID:"id",GOOGLE_CLIENT_SECRET:"secret",STAGING_NEON_HOST:host,DATABASE_URL:db,DIRECT_DATABASE_URL:db,SESSION_SECRET:"s".repeat(64),MFA_ENCRYPTION_KEY:"m".repeat(64),LICENSE_PEPPER:"p".repeat(64),LICENSE_SIGNING_PRIVATE_KEY:"private-signing-key",LICENSE_SIGNING_PUBLIC_KEY:"public-signing-key",SUPPLY_CHAIN_SIGNING_PRIVATE_KEY:"private-supply-key",ADMIN_OWNER_RECOVERY_KEY:"a".repeat(64),CRON_SECRET:"c".repeat(64),S3_ACCESS_KEY_ID:"key",S3_SECRET_ACCESS_KEY:"secret",REDIS_URL:"rediss://redis.example.invalid:6379",EMAIL_FROM:"staging@example.invalid"});
 }
 beforeEach(setup); afterEach(()=>{for(const k of keys){const v=saved.get(k);if(v===undefined)delete process.env[k];else process.env[k]=v;}});
-function drive(){return {id:"a".repeat(32),name:"bke-digital-solutions-staging-fresh",origin:{database:"bke_staging",user:"bke_staging_owner",host,scheme:"postgres",port:5432,mtls:{sslmode:"require"}},caching:{disabled:true}};}
+function drive(){return {id:"a".repeat(32),name:"bke-digital-solutions-staging-fresh",origin:{database:"bke_staging",user:"bke_staging_owner",host,scheme:"postgres",port:5432},mtls:{sslmode:"require"},caching:{disabled:true}};}
 describe("protected Staging guards",()=>{
  it("rejects wrong public destination and namespace",async()=>{
   const {assertStagingSettings}=await import("../scripts/deploy-staging.mjs");
@@ -31,7 +31,16 @@ describe("protected Staging guards",()=>{
  it("requires a matching PostgreSQL 5432 Hyperdrive origin and disabled caching",()=>{
   const original=drive(), url=new URL(db);
   expect(verifyHyperdriveMetadata(original,original.id,url,host)).toBe(true);
-  const changes=[(d:any)=>d.origin.host="other.neon.tech",(d:any)=>d.origin.database="other",(d:any)=>d.origin.user="other",(d:any)=>d.origin.scheme="mysql",(d:any)=>d.origin.port=3306,(d:any)=>d.caching.disabled=false,(d:any)=>d.origin.mtls.sslmode="disable"];
+  type TestDrive = ReturnType<typeof drive>;
+  const changes: Array<(d: TestDrive) => void> = [
+   d => { d.origin.host="other.neon.tech"; }, d => { d.origin.database="other"; },
+   d => { d.origin.user="other"; }, d => { d.origin.scheme="mysql"; }, d => { d.origin.port=3306; },
+   d => { d.caching.disabled=false; }, d => { d.mtls!.sslmode="disable"; },
+  ];
+  const defaultTls=structuredClone(original); delete defaultTls.mtls;
+  expect(verifyHyperdriveMetadata(defaultTls,defaultTls.id,url,host)).toBe(true);
+  const postgresql=structuredClone(original); postgresql.origin.scheme="postgresql";
+  expect(verifyHyperdriveMetadata(postgresql,postgresql.id,url,host)).toBe(true);
   for(const change of changes){const d=structuredClone(original);change(d);expect(()=>verifyHyperdriveMetadata(d,d.id,url,host)).toThrow();}
  });
  it("requires Redis and strips inherited routes, vars, DB and deployment credentials",async()=>{
