@@ -142,27 +142,27 @@ Sources: [current limits](https://developers.cloudflare.com/workers/platform/lim
 [size-limit change](https://developers.cloudflare.com/changelog/post/2026-09-04-increased-worker-size-limit/),
 [startup profiling](https://developers.cloudflare.com/workers/wrangler/commands/workers/#startup).
 
-Read-only account inspection found no Worker scripts, Hyperdrive configurations,
-or workers.dev subdomain in the owner-selected jlprojectfreedom account.
-The active `jl-bke.com` DNS zone is in the owner's other connected Cloudflare
-account. This is an inventory finding, not authorization to transfer the zone,
-change DNS or deploy. Select a test origin, establish the fresh PostgreSQL and
-distributed one-time/rate-limit store, and configure the exact Google callback
-before real sign-in testing.
+Owner confirmed the Cloudflare account's assigned workers.dev subdomain is
+`jlprojectfreedom.workers.dev`. The existing Worker name is
+`bke-digital-solutions`, so the assigned staging origin is
+`https://bke-digital-solutions.jlprojectfreedom.workers.dev` and its Google
+callback is `/api/auth/google/callback` on that exact origin. The application
+has not been deployed and this origin is not yet live. The active `jl-bke.com`
+DNS zone is in the owner's other Cloudflare account; production/apex cutover
+remains a later, separate operation. Do not transfer the zone, change its DNS,
+or deploy as part of this compatibility work.
 
 Keep the OAuth client secret, Redis token, database credentials, session secret,
 application-factor encryption key, licensing pepper and signing private key
 in protected configuration only. The public client ID and origin may be recorded;
 secret values must not appear in source, profiles, artifacts, comments or Notion.
 
-The owner subsequently selected `https://try.jl-bke.com` for testing and confirmed
-that the apex site is currently live on the VPS. Preserve the apex and its routing.
-The exact test Google callback is
-`https://try.jl-bke.com/api/auth/google/callback`; test runtime configuration must
-use that origin. Infisical is the owner's existing secret manager. Its project,
-test environment and delivery integration still require confirmation; no secret
-values belong in this repository. See the Google consumer contract for delivery
-and production-cutover boundaries.
+The owner selected the assigned workers.dev origin above for staging and confirmed
+the apex site remains live on the VPS. The exact callback is
+`https://bke-digital-solutions.jlprojectfreedom.workers.dev/api/auth/google/callback`.
+Infisical is the existing protected configuration store; no secret values belong
+in this repository. See the Google consumer contract for delivery and the later
+production cutover boundary.
 
 ## Measured upload-size blocker
 

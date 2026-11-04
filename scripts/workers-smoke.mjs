@@ -25,7 +25,20 @@ const retired = await fetch(origin + "/api/auth/login", {
   body: JSON.stringify({ email: "fixture@example.invalid", password: "retired" }),
 });
 assert.equal(retired.status, 410, "Retired password login must remain retired");
-console.log("PASS: workerd public receiving checks");
+
+const signingKeysResponse = await fetch(origin + "/api/licensing/keys", { signal: AbortSignal.timeout(15000) });
+assert.equal(signingKeysResponse.status, 200, "Worker signing-key registry lookup failed");
+assert.equal(signingKeysResponse.headers.get("x-bke-licensing-version") !== null, true);
+const signingKeys = await signingKeysResponse.json();
+assert.equal(signingKeys.keys.length, 1, "Expected exactly one active public signing key");
+assert.equal(signingKeys.keys[0].algorithm, "Ed25519");
+assert.match(signingKeys.keys[0].key_id, /^[a-zA-Z0-9._-]+$/);
+assert.match(signingKeys.keys[0].public_key, /^-----BEGIN PUBLIC KEY-----/);
+const repeatedKeysResponse = await fetch(origin + "/api/licensing/keys", { signal: AbortSignal.timeout(15000) });
+assert.equal(repeatedKeysResponse.status, 200);
+assert.deepEqual((await repeatedKeysResponse.json()).keys, signingKeys.keys, "Worker key registry identity changed between reads");
+console.log("PASS: workerd public receiving checks and stable Ed25519 key-registry identity");
+console.log("LIMIT: public key registry reads do not prove commercial lease signing or issuance");
 console.log("NOT VERIFIED: real Google sign-in, native handoff, deployed Free CPU limits");
 
 const { readFile } = await import("node:fs/promises");
@@ -44,6 +57,26 @@ for (let invocation = 0; invocation < 2; invocation++) {
     assert.ok(!html.includes(sessions[1 - index].name), "Cross-account data exposure");
   }));
 }
+const logout = await fetch(origin + "/api/auth/logout", {
+  method: "POST",
+  headers: {
+    origin: "https://workers-ci.example.invalid",
+    cookie: "__Host-bke_session=" + sessions[1].token,
+  },
+  redirect: "manual",
+  signal: AbortSignal.timeout(15000),
+});
+assert.equal(logout.status, 200, "Actual Worker session termination route failed");
+assert.deepEqual(await logout.json(), { ok: true });
+assert.match(logout.headers.get("set-cookie") ?? "", /__Host-bke_session=;/, "Logout did not clear the session cookie");
+const loggedOut = await fetch(origin + "/dashboard", {
+  headers: { cookie: "__Host-bke_session=" + sessions[1].token }, redirect: "manual",
+});
+assert.ok([303, 307].includes(loggedOut.status), "Worker logout left the session usable");
+assert.match(loggedOut.headers.get("location") ?? "", /\/login/);
+await loggedOut.text();
+console.log("PASS: authenticated Worker logout terminates its database-backed session");
+
 await promisify(execFile)(process.execPath, [
   "node_modules/tsx/dist/cli.mjs", "scripts/workers-fixture.ts", "revoke",
 ], { env: { ...process.env, NODE_OPTIONS: "--conditions=react-server" } });

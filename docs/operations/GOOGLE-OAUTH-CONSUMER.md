@@ -16,16 +16,17 @@ Use validated stable Google subject as the external key. Never auto-link by matc
 
 ## Test origin and protected configuration
 
-The owner selected `https://try.jl-bke.com` for the receiving deployment.
-The existing `https://jl-bke.com` site is live and must remain untouched.
-Set the test runtime's `APP_URL=https://try.jl-bke.com`; the derived callback is
-`https://try.jl-bke.com/api/auth/google/callback`. The selected Google web client
-must allow that exact URI before the real test. Do not remove a working production
-callback, repoint the live hostname, share production state, or claim the Google
-console is configured from this document.
+The assigned staging origin is
+`https://bke-digital-solutions.jlprojectfreedom.workers.dev`, with exact callback
+`https://bke-digital-solutions.jlprojectfreedom.workers.dev/api/auth/google/callback`.
+The Cloudflare Worker has not been deployed yet. Configure staging `APP_URL` and
+the selected Google web client's exact redirect URI to this origin before real
+provider sign-in. The existing `https://jl-bke.com` site is live and must remain
+untouched; do not repoint its hostname or share its state.
 
-After independent acceptance and an authorized production cutover, the same
-application can use `APP_URL=https://jl-bke.com` and its matching Google callback.
+After independent acceptance and a separately authorized production cutover,
+the same application can use `APP_URL=https://jl-bke.com` and its matching Google
+callback. That future apex routing/TLS change is separate from Workers staging.
 Origin changes require receiving verification and a rollback plan; they do not
 require a separate authentication implementation.
 

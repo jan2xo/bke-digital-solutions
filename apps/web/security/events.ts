@@ -2,7 +2,7 @@ import "server-only";
 
 import { createHmac, randomBytes } from "node:crypto";
 import { hostname } from "node:os";
-import { Pool } from "pg";
+import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { clientIp } from "../http/request";
 
 export type SecurityEventType =
@@ -105,10 +105,6 @@ const definitions: Partial<Record<SecurityEventType, Definition>> = {
   STORAGE_CLEANUP_FAILED: { label: "Storage cleanup failed", outcome: "FAILURE", severity: "HIGH", explanation: "A durable private-storage cleanup job exhausted its automatic retries." },
 };
 
-const globalForSecurityEvents = globalThis as typeof globalThis & {
-  bkeV2SecurityEventPool?: Pool;
-};
-
 let cuidCounter = 0;
 const cuidBase = 36;
 const cuidBlockSize = 4;
@@ -148,17 +144,10 @@ function createCuid() {
   return `c${Date.now().toString(cuidBase)}${pad(counter.toString(cuidBase), cuidBlockSize)}${cuidFingerprint()}${cuidRandomBlock()}${cuidRandomBlock()}`;
 }
 
-function requiredRuntimeValue(name: "DATABASE_URL" | "SESSION_SECRET") {
+function requiredRuntimeValue(name: "SESSION_SECRET") {
   const value = process.env[name];
   if (!value) throw new Error(`Missing web host environment: ${name}`);
   return value;
-}
-
-function securityEventPool() {
-  if (!globalForSecurityEvents.bkeV2SecurityEventPool) {
-    globalForSecurityEvents.bkeV2SecurityEventPool = new Pool({ connectionString: requiredRuntimeValue("DATABASE_URL") });
-  }
-  return globalForSecurityEvents.bkeV2SecurityEventPool;
 }
 
 function hint(value: string) {
@@ -185,7 +174,7 @@ export async function securityEvent(
   options?: SecurityEventOptions,
 ) {
   const definition = securityEventDefinition(type);
-  await securityEventPool().query(
+  await getPostgresPool().query(
     `INSERT INTO "SecurityEvent" (
       "id",
       "userId",
