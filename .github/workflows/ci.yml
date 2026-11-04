@@ -289,6 +289,8 @@ jobs:
       - name: Build actual Workers application
         run: npm run workers:build
       - run: npm run workers:typecheck
+      - name: Measure Worker bundle and local startup without deployment
+        run: npx --no-install wrangler check startup --outfile .workers-build/startup.cpuprofile
       - name: Produce disposable application sessions
         run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
       - name: Exercise application in workerd

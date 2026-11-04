@@ -44,7 +44,7 @@ Use the existing intentional GitHub certification mechanism and bind results to 
 
 A source milestone may be implemented while the parent migration remains PARTIAL. The complete PR1 acceptance cannot be called PASS if required application/runtime, CPU or database proof is missing. On a demonstrated incompatibility, retain the smallest reproducible evidence and identify the exact failing operation. Do not advance to unrelated later waves around a failed feasibility gate.
 
-Current status: requirements revised for Google-only sign-in; shared Identity prerequisite in progress; Workers application implementation and full proof PENDING. Production remains LOCKED. The handoff's later runtime-adapter, Agent efficiency, storage/jobs, provisioning/observability and release stages remain unimplemented by this document.
+Current status: the immutable Identity 0.5.0 prerequisite is published and adopted. The application receiving milestone passed CI #2263 at `799ba8e103de36a4bab4c197559da2978d009860`; this is not real Google/provider or deployed Free acceptance. The parent migration remains PARTIAL and production remains LOCKED. Later provisioning, native/Agent, storage/jobs and release requirements remain separate.
 
 ## Implementation candidate (2026-11-04)
 
@@ -77,7 +77,7 @@ bytes; their artifact SHA-256 and lockfile provenance are recorded in PR266.
 The ingested lockfile must be unchanged by verification. Sessions are fixtures
 in disposable Actions PostgreSQL, not evidence of Google provider sign-in.
 
-Still required: exact-head successful execution, raw-pg call-site audit,
+Beyond the verified receiving milestone, still required: raw-pg call-site audit,
 provider cache-disable verification, real Google/Redis configuration and
 sign-in, representative licensing/transaction receiving proof, bounded
 scheduled entrypoint, deployed Free CPU/startup/bundle/memory evidence and
@@ -101,5 +101,56 @@ existing runtime while the built Worker contains static WASM imports.
 A failing restoration fails the build. Node and Workers builds use separate
 outputs/jobs; rebuild the intended target before starting it.
 
-This addresses the exact compiler error, and still requires an executed
-workerd receiving pass. [Supported Prisma generator runtimes](https://www.prisma.io/docs/orm/v7/prisma-schema/overview/generators).
+CI #2263 passed the actual workerd receiving checks after this correction,
+including repeated public browse, concurrent authenticated fixture dashboards,
+cross-account exclusion, and fresh session revocation. These sessions are
+fixtures issued through the released Identity capability, not Google provider
+sign-in. [Supported Prisma generator runtimes](https://www.prisma.io/docs/orm/v7/prisma-schema/overview/generators).
+
+
+## Verified receiving milestone and remaining setup (2026-11-04)
+
+[CI #2263](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41790668399)
+passed all required jobs at `799ba8e103de36a4bab4c197559da2978d009860`.
+Source and executed workflow SHA matched. The source/database suite passed
+739 tests with 5 skipped; Node and Docker builds passed. The Worker served
+the actual application, Google login page, retired credential endpoint (410),
+repeated concurrent authenticated dashboards with cross-account exclusion,
+and rejected a freshly revoked session.
+
+That run also exposed and then verified the host Legal storage correction:
+the host maps its existing `versionNumber/userId` fields to the released
+reacceptance repository contract. The released Legal capability still owns
+validation and the decision. No schema or migration rewrite was performed.
+The PostgreSQL regression checks legal holds, principal age, other-user
+acceptance, correct acceptance and rollback.
+
+The existing CI includes Wrangler's `check startup`, which internally performs
+a deployment dry run and reports bundle size plus a local startup CPU profile.
+It does not upload a Worker or require Cloudflare credentials. Its local
+measurements do not certify deployed startup, request CPU or memory.
+No profile or bundle containing configuration is published as an artifact.
+
+As verified against current Cloudflare documentation on 2026-11-04, the
+bundle limit is **64 MiB uncompressed** for Free and Paid. The former 3 MB/10 MB
+compressed limits were removed on 2026-09-04. Free HTTP/cron CPU remains 10 ms;
+memory is 128 MB per isolate, and startup is limited to 1 second. Capture
+representative deployed evidence before accepting Free fit; do not infer
+request CPU from elapsed HTTP time or this local startup profile.
+
+Sources: [current limits](https://developers.cloudflare.com/workers/platform/limits/),
+[size-limit change](https://developers.cloudflare.com/changelog/post/2026-09-04-increased-worker-size-limit/),
+[startup profiling](https://developers.cloudflare.com/workers/wrangler/commands/workers/#startup).
+
+Read-only account inspection found no Worker scripts, Hyperdrive configurations,
+or workers.dev subdomain in the owner-selected jlprojectfreedom account.
+The active `jl-bke.com` DNS zone is in the owner's other connected Cloudflare
+account. This is an inventory finding, not authorization to transfer the zone,
+change DNS or deploy. Select a test origin, establish the fresh PostgreSQL and
+distributed one-time/rate-limit store, and configure the exact Google callback
+before real sign-in testing.
+
+Keep the OAuth client secret, Redis token, database credentials, session secret,
+application-factor encryption key, licensing pepper and signing private key
+in protected configuration only. The public client ID and origin may be recorded;
+secret values must not appear in source, profiles, artifacts, comments or Notion.
