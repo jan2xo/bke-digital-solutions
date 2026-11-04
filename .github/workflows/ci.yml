@@ -12,13 +12,18 @@ on:
         description: Exact commit SHA to certify
         required: true
         type: string
+      security_generator:
+        description: Enable the guarded production dependency generator mode
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
 concurrency:
-  group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}
-  cancel-in-progress: true
+  group: ${{ inputs.security_generator == true && format('digital-solutions-generator-{0}', inputs.source_sha || github.ref) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}
+  cancel-in-progress: ${{ inputs.security_generator != true }}
 
 env:
   SOURCE_SHA: ${{ inputs.source_sha || github.sha }}

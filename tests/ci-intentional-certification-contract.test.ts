@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const activeDir = ".github/workflows";
@@ -9,6 +9,7 @@ const expectedActive = [
   "certify.yml",
   "ci.yml",
   "native-bke-account-handoff.yml",
+  "security-generate.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-catalog.yml",
@@ -64,7 +65,9 @@ describe("intentional GitHub Actions architecture", () => {
     expect(certifyTriggers).toMatch(/^\s{2}issue_comment:/mu);
     expect(certifyTriggers).toMatch(/^\s{2}workflow_dispatch:/mu);
 
-    for (const name of expectedActive.filter((value) => value !== "certify.yml")) {
+    for (const name of expectedActive.filter(
+      (value) => value !== "certify.yml" && value !== "security-generate.yml",
+    )) {
       const triggers = triggerSection(
         readFileSync(join(activeDir, name), "utf8"),
       );
@@ -73,6 +76,55 @@ describe("intentional GitHub Actions architecture", () => {
         name,
       ).toBe(true);
     }
+  });
+
+  it("keeps the security generator command on the trusted comment/run observer surface", () => {
+    const securityGenerate = readFileSync(
+      join(activeDir, "security-generate.yml"),
+      "utf8",
+    );
+    const triggers = triggerSection(securityGenerate);
+    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
+    expect(triggers).toMatch(/^\s{2}workflow_run:/mu);
+    expect(securityGenerate).toContain("github.event.comment.body == '/security-generate'");
+    expect(securityGenerate).toContain('workflow_id: workflowId');
+    expect(securityGenerate).toContain('security_generator: "true"');
+    expect(securityGenerate).toContain("actions: write");
+    expect(securityGenerate).toContain("require(\"./scripts/security-generate-policy.cjs\")");
+    expect(securityGenerate).toContain("ref: ${{ github.sha }}");
+    expect(securityGenerate).toContain("sparse-checkout: scripts/security-generate-policy.cjs");
+    expect(securityGenerate).toContain("persist-credentials: false");
+    expect(securityGenerate).not.toContain("pull_request_target:");
+    expect(securityGenerate).not.toContain("contents: write");
+    expect(securityGenerate).not.toContain("Date.parse(run.created_at)");
+    expect(securityGenerate).not.toContain("ref: sourceSha");
+  });
+
+  it("uses the shared tested policy for duplicate handling and run correlation", () => {
+    const securityGenerate = readFileSync(
+      join(activeDir, "security-generate.yml"),
+      "utf8",
+    );
+    const ci = readFileSync(join(activeDir, "ci.yml"), "utf8");
+    expect(securityGenerate).toContain("policy.classifyPriorRun(");
+    expect(securityGenerate).toContain("policy.correlateGeneratorRun(");
+    expect(securityGenerate).toContain("policy.artifactBelongsToRun(");
+    expect(securityGenerate).toContain("security-generate-dispatch-pr-269");
+    expect(ci).toContain("inputs.security_generator == true");
+    expect(ci).toContain("format('digital-solutions-generator-{0}', inputs.source_sha || github.ref)");
+    expect(ci).toContain("format('digital-solutions-ci-{0}', inputs.source_sha || github.ref)");
+    expect(ci).toContain("cancel-in-progress: ${{ inputs.security_generator != true }}");
+  });
+
+  it("executes actionlint from the exact candidate checkout", () => {
+    const actionlintTest = readFileSync(
+      join("tests", "security-generate-actionlint.test.ts"),
+      "utf8",
+    );
+    expect(actionlintTest).toContain("actionlint@v1.7.7");
+    expect(actionlintTest).toContain(".github/workflows/ci.yml");
+    expect(actionlintTest).toContain(".github/workflows/security-generate.yml");
+    expect(actionlintTest).toContain('cwd: process.cwd()');
   });
 
   it("preserves the complete pre-overhaul workflow archive", () => {
