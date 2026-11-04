@@ -198,3 +198,13 @@ The supported workerd Prisma generation and finally-based Node restoration
 remain intact. This avoids hand-patching generated WASM loaders, removing
 features or introducing more Workers. The exact size gate and receiving
 checks must pass before treating the correction as verified.
+
+CI #2266 stopped at the nested Webpack parser: the generated `.wasm?module`
+was being treated as JavaScript. The Workers build now provides a narrowly
+scoped Webpack external for that one compiler import, leaving its real WASM
+module to OpenNext's existing Wrangler-external handling. A copy of the
+genuinely generated PostgreSQL compiler is retained in the ignored build
+output so canonical Node regeneration cannot remove the needed build artifact.
+No generated source is edited and no dynamic WASM compilation is enabled.
+The custom external applies only to server compilation under the explicit
+Workers build flag; regular Node/Docker configuration is unchanged.

@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const schemaPath = "prisma/schema.prisma";
 const generatedPath = "platform/persistence/generated/prisma";
 const temporarySchema = ".workers-build/schema.prisma";
 
-function run(command, args) {
-  const result = spawnSync(command, args, { stdio: "inherit", env: process.env });
+function run(command, args, buildEnvironment = {}) {
+  const result = spawnSync(command, args, { stdio: "inherit", env: { ...process.env, ...buildEnvironment } });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error("Workers build command failed: " + command + " (exit " + result.status + ")");
 }
@@ -44,11 +44,17 @@ try {
   const compiler = await readFile(join(generatedPath, "internal/class.ts"), "utf8");
   assert.ok(!compiler.includes("new WebAssembly.Module("), "Dynamic WASM compilation remains in the generated runtime");
   assert.match(compiler, /\.wasm(?!-base64)/, "Expected a statically imported Workers WASM module");
+  // Preserve the genuinely generated module beyond canonical Node restoration.
+  // Next leaves this artifact to OpenNext/Wrangler; no compiler code is patched.
+  await copyFile(
+    join(generatedPath, "internal/query_compiler_fast_bg.wasm"),
+    ".workers-build/prisma-query-compiler.wasm",
+  );
   // The Turbopack WASM resolver expanded to ~60k project files and bundled
   // unrelated database engines. Use Next's supported Webpack build for this
   // target; OpenNext then adapts that output without rebuilding it.
-  run(process.execPath, ["node_modules/next/dist/bin/next", "build", "--webpack"]);
-  run(process.execPath, ["node_modules/@opennextjs/cloudflare/dist/cli/index.js", "build", "--skipNextBuild"]);
+  run(process.execPath, ["node_modules/next/dist/bin/next", "build", "--webpack"], { BKE_WORKERS_BUILD: "1" });
+  run(process.execPath, ["node_modules/@opennextjs/cloudflare/dist/cli/index.js", "build", "--skipNextBuild"], { BKE_WORKERS_BUILD: "1" });
 } finally {
   // Restore through the real canonical generator, never by patching output.
   try {
