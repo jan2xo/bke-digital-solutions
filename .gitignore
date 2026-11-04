@@ -20,3 +20,5 @@ test-results
 .dev.vars
 .dev.vars.*
 workers/env.d.ts
+
+.workers-build/

@@ -83,3 +83,23 @@ sign-in, representative licensing/transaction receiving proof, bounded
 scheduled entrypoint, deployed Free CPU/startup/bundle/memory evidence and
 installed native interaction. Keep the parent PARTIAL until those gates
 are resolved. No merge or deployment is authorized by this candidate.
+
+### Prisma runtime receiving correction
+
+CI2261 proved that the default Node-generated query compiler dynamically
+constructs a WebAssembly module, which workerd forbids. `workers:build` now
+derives a temporary schema from the canonical source, changing only the
+client generator's supported `runtime = "workerd"` field. The data-model
+text is asserted identical. Prisma generates the Workers client through its
+real CLI; no generated source is hand-edited and no migration command runs.
+
+After OpenNext captures the Workers artifact, a finally block runs the
+canonical Node generator again and verifies every generated file against
+its pre-build SHA-256. Canonical schema text is also checked unchanged.
+This keeps Node fixture/operator imports and Docker source on their
+existing runtime while the built Worker contains static WASM imports.
+A failing restoration fails the build. Node and Workers builds use separate
+outputs/jobs; rebuild the intended target before starting it.
+
+This addresses the exact compiler error, and still requires an executed
+workerd receiving pass. [Supported Prisma generator runtimes](https://www.prisma.io/docs/orm/v7/prisma-schema/overview/generators).
