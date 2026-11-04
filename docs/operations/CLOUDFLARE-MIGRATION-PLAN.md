@@ -14,6 +14,21 @@ Owner addition, 2026-11-04: include a unified BKE-branded PayMongo checkout in t
 
 This document records the migration plan and its subsequent implementation decisions. Early planning involved source inspection only; later scratch builds and shared-library CI are separate evidence and do not establish application or production acceptance. No Cloudflare application resources or production database changes have been made by this migration work.
 
+## Current progress — 2026-11-04
+
+- [x] Shared Identity 0.5.0 released after the owner's explicit package-release authorization.
+- [x] Google-only application consumer implemented and independently accepted at source level in [PR267](https://github.com/jan2xo/bke-digital-solutions/pull/267); it remains draft and unmerged.
+- [x] Node/application and Docker build checks, PostgreSQL migration/runtime fixtures, and native receiving-path certification passed. [Functional evidence](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41750739996).
+- [x] Composition, host reachability and all six Prisma-isolation scenarios passed after the scoped reusable-workflow cancellation fix. [Architecture evidence](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41751480399).
+- [x] Unified branded checkout requirements, responsibility owners and a done/pending checklist added in [PR271](https://github.com/jan2xo/bke-digital-solutions/pull/271).
+- [ ] Complete the separately owned dependency-security remediation in [PR269](https://github.com/jan2xo/bke-digital-solutions/pull/269), reconcile the integrated candidate and pass full relevant certification at its exact head. The production audit still reports 9 high and 1 critical; a scoped green run does not clear it.
+- [ ] Configure protected Google/Redis provider settings and verify actual Google sign-in.
+- [ ] Verify installed Agent/Launcher browser handoff and sensitive-feature availability; HTTP/service fixtures do not establish installed behavior.
+- [ ] Implement and accept the Workers runtime/DB/signing proof in PR266, including measured resource fit.
+- [ ] Accept the retained Docker runtime and hosting-switch drill; a successful container build alone does not prove fallback readiness.
+- [ ] Implement and sandbox-certify the separate branded checkout workstream, with actual merchant capability gates.
+- [ ] Complete authorized staging/bootstrap, recovery proof and separately authorized production launch.
+
 ## Recommended destination
 
 Keep the current V3 modular application and reusable @bke capabilities. Move primary application compute to Workers, adapt hosting-specific interfaces, retain PostgreSQL semantics, and preserve a tested Node/Docker deployment of the same source.
@@ -208,7 +223,7 @@ Budget against measured Worker CPU (including SSR, Google token verification and
 
 Unproven: this exact app has not been built or run on Workers; no native package was downloaded and matched byte-for-byte to the source tags during the compatibility review; full upstream advisory/session-lock inventory is not complete. Verify those parts in Stage 1/2 rather than treating planning as certification.
 
-**Current next action: resolve the application consumer's exact-head certification failures, complete its Google/native acceptance gates, then resume the Workers proof.** The shared Identity release is complete. The decisive hosting result remains a real Google-authenticated V3 application + PostgreSQL transaction + compatible signing path on workerd, with the Node production target preserved. Workers is the primary target; Docker must pass its own fallback acceptance using the same application and state contracts.
+**Current next action: finish the separately owned dependency-security gate, certify the integrated Google-only consumer at its exact revision, then resume the Workers proof and remaining provider/native acceptance.** The shared Identity release is complete and the consumer's source, Node/Docker builds and disposable PostgreSQL/receiving-path checks have passed. The decisive hosting result remains a real Google-authenticated V3 application + PostgreSQL transaction + compatible signing path on workerd, with the Node production target preserved. Workers is the primary target; Docker must pass its own fallback acceptance using the same application and state contracts.
 
 The unified branded checkout workstream is now included in the roadmap. Begin with the existing Payments/Commerce contract extension and a sandbox QR Ph vertical slice, then gated cards/wallets and licensing regression tests. Automatic subscriptions are conditional on merchant enablement and approved recurring-consent/business policy. Neither the new plan nor an example invoice authorizes a live charge or a pricing change.
 
