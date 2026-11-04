@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createLegalReacceptanceStatusCapability } from "@bke/legal/logic/reacceptance-status";
+import { createHostLegalReacceptanceStatusRepository } from "../../apps/web/legal/reacceptance-repository";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
@@ -63,17 +65,40 @@ describe.sequential("legal document persistence and immutable acceptance history
       db.legalDocument.update({ where: { id: document.id }, data: { currentPublishedVersionId: second.id } }),
     ]);
     const { pendingReacceptance } = await import("@/apps/web/legal/service");
+    const reacceptance = createLegalReacceptanceStatusCapability(
+      createHostLegalReacceptanceStatusRepository(),
+    );
+    const established = await db.user.findUniqueOrThrow({ where: { id: userId } });
+    const statusInput = { principalId: userId, principalEstablishedAt: established.createdAt };
+    const required = await reacceptance.check(statusInput);
+    expect(required.status).toBe("REACCEPTANCE_REQUIRED");
+    if (required.status !== "REACCEPTANCE_REQUIRED") throw new Error("Expected legal hold");
+    expect(required.pending).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        documentId: document.id,
+        documentVersionId: second.id,
+        version: "2",
+        publishedAt: expect.any(Date),
+      }),
+    ]));
     expect((await pendingReacceptance(userId)).some((item) => item.id === document.id)).toBe(true);
     const newerUser = await db.user.create({ data: { email: `legal-newer-${suffix}@bke.test`, name: "Newer Legal Customer", emailVerified: new Date() } });
     expect((await pendingReacceptance(newerUser.id)).some((item) => item.id === document.id)).toBe(false);
+    expect(await reacceptance.check({
+      principalId: newerUser.id, principalEstablishedAt: newerUser.createdAt,
+    })).toEqual({ status: "CURRENT", pending: [] });
+    await db.legalAcceptance.create({ data: { userId: newerUser.id, documentVersionId: second.id, acceptanceContext: "REACCEPTANCE", renderedContentHash: "2".repeat(64), variablesSnapshot: {} } });
+    expect((await reacceptance.check(statusInput)).status).toBe("REACCEPTANCE_REQUIRED");
     await db.legalAcceptance.create({ data: { userId, documentVersionId: second.id, acceptanceContext: "REACCEPTANCE", renderedContentHash: "2".repeat(64), variablesSnapshot: {} } });
     expect((await pendingReacceptance(userId)).some((item) => item.id === document.id)).toBe(false);
+    expect(await reacceptance.check(statusInput)).toEqual({ status: "CURRENT", pending: [] });
     await db.$transaction([
       db.legalDocumentVersion.update({ where: { id: second.id }, data: { status: "ARCHIVED", archivedAt: new Date() } }),
       db.legalDocumentVersion.update({ where: { id: first.id }, data: { status: "PUBLISHED", archivedAt: null } }),
       db.legalDocument.update({ where: { id: document.id }, data: { currentPublishedVersionId: first.id } }),
     ]);
     expect((await db.legalDocument.findUniqueOrThrow({ where: { id: document.id } })).currentPublishedVersionId).toBe(first.id);
+    expect(await reacceptance.check(statusInput)).toEqual({ status: "CURRENT", pending: [] });
   });
 
   it("prevents published content changes and physical deletion", async () => {

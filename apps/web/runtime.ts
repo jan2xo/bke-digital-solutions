@@ -12,6 +12,7 @@ import { notificationsModule } from "../../modules/notifications/module";
 import { createPaymentsModule } from "../../modules/payments/module";
 import { composeCapabilities } from "../../platform/composition/composer";
 import { createWebPaymentsAdapter } from "./payments/provider";
+import { createHostLegalReacceptanceStatusRepository } from "./legal/reacceptance-repository";
 import { createCommerceClaimUnitIssuer } from "./entitlements/commerce-claim-unit-issuer";
 
 function required(name: string): string {
@@ -30,7 +31,10 @@ async function composeWebApplication(): Promise<ComposedApplication> {
   return composeCapabilities([
     createIdentityModule({ connectionString, sessionSecret, mfaEncryptionKey }),
     createAccountsModule({ connectionString }),
-    createLegalModule({ connectionString }),
+    createLegalModule({
+      connectionString,
+      reacceptanceStatusRepository: createHostLegalReacceptanceStatusRepository(),
+    }),
     createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
     createCommerceModule({ connectionString, claimUnits: createCommerceClaimUnitIssuer() }),
     createPaymentsModule({

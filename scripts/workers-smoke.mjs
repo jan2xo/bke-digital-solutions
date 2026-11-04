@@ -38,8 +38,8 @@ for (let invocation = 0; invocation < 2; invocation++) {
       headers: { cookie: "__Host-bke_session=" + session.token },
       redirect: "manual", signal: AbortSignal.timeout(15000),
     });
-    assert.equal(response.status, 200, "Authenticated dashboard failed");
     const html = await response.text();
+    assert.equal(response.status, 200, "Authenticated dashboard failed");
     assert.ok(html.includes(session.name), "Own principal missing");
     assert.ok(!html.includes(sessions[1 - index].name), "Cross-account data exposure");
   }));
