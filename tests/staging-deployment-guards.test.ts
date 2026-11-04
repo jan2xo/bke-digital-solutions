@@ -52,6 +52,9 @@ describe("protected Staging guards",()=>{
   const {buildStagingArtifacts}=await import("../scripts/deploy-staging.mjs");
   const config={name:"bke-digital-solutions",hyperdrive:[{binding:"HYPERDRIVE_FRESH",id:"0".repeat(32),localConnectionString:"postgresql://fixture"}],vars:{BKE_RUNTIME:"workers"},triggers:{}};
   delete process.env.REDIS_URL; expect(()=>buildStagingArtifacts(config,process.env,"a".repeat(32))).toThrow(/Redis/);
+  process.env.UPSTASH_REDIS_REST_URL="http://redis.example.invalid"; process.env.UPSTASH_REDIS_REST_TOKEN="token";
+  expect(()=>buildStagingArtifacts(config,process.env,"a".repeat(32))).toThrow(/HTTPS/);
+  setup();
   process.env.REDIS_URL="rediss://redis.example.invalid:6379"; process.env.CLOUDFLARE_API_TOKEN="deploy-only";
   const artifacts=buildStagingArtifacts(config,process.env,"a".repeat(32));
   expect(artifacts.config.workers_dev).toBe(true); expect(artifacts.config.vars).not.toHaveProperty("DATABASE_URL");

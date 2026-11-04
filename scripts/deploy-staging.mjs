@@ -180,6 +180,10 @@ export function buildStagingArtifacts(sourceConfig, env, driveId) {
     if (!env.REDIS_URL.startsWith("rediss://")) fail("Staging REDIS_URL must use TLS");
   } else if (!env.UPSTASH_REDIS_REST_URL || !env.UPSTASH_REDIS_REST_TOKEN) {
     fail("Staging requires a complete distributed Redis configuration");
+  } else {
+    let upstashUrl;
+    try { upstashUrl = new URL(env.UPSTASH_REDIS_REST_URL); } catch { fail("UPSTASH_REDIS_REST_URL must be a valid HTTPS URL"); }
+    if (upstashUrl.protocol !== "https:") fail("UPSTASH_REDIS_REST_URL must use HTTPS");
   }
   if (Object.hasOwn(secrets, "CLOUDFLARE_API_TOKEN") || Object.hasOwn(secrets, "INFISICAL_STAGING_IDENTITY_ID")) {
     fail("Deployment credentials must never enter the Worker runtime allowlist");
