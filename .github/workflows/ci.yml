@@ -393,7 +393,7 @@ jobs:
           method: oidc
           identity-id: ${{ vars.INFISICAL_STAGING_IDENTITY_ID }}
           domain: https://app.infisical.com
-          project-id: 64133fed-7cb1-471b-80e4-4a9e7b44653b
+          project-id: f029af60-06f3-428c-b305-c70f8bcf7850
           env-slug: staging
           secret-path: /
           include-imports: 'false'
