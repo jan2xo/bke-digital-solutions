@@ -83,9 +83,9 @@ describe("intent-driven certification foundation", () => {
       "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(workflow).toContain(
-      "group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}",
-    );
+    expect(workflow).toContain("group: ${{ inputs.security_generator == true && format('digital-solutions-generator-{0}', inputs.source_sha || github.ref) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}");
+    expect(workflow).toContain("cancel-in-progress: ${{ inputs.security_generator != true }}");
+    expect(workflow).toContain("digital-solutions-generator-{0}");
     expect(workflow).not.toContain("github.event.pull_request");
   });
 
