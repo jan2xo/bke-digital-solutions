@@ -37,7 +37,7 @@ The saved isolated Staging origin is `https://bke-digital-solutions.jlprojectfre
 - Authorized Staging redirect URI: `https://bke-digital-solutions.jlprojectfreedom.workers.dev/api/auth/google/callback` (exact match; no trailing slash or wildcard).
 - Authorized Staging JavaScript origin, if configured: `https://bke-digital-solutions.jlprojectfreedom.workers.dev`.
 - The consumer must implement `/api/auth/google/callback` and derive its exact redirect URL from the validated canonical `APP_URL`, rather than untrusted request headers. This is an implementation contract, not a live route claim.
-- Use only identity scopes needed for sign-in. Keep the client secret in protected deployment configuration; never in GitHub, browser code, Notion or review comments. The owner reports creating the OAuth client; redirect settings, audience access and actual provider acceptance remain unverified.
+- Use only identity scopes needed for sign-in. Keep the client secret in protected deployment configuration; never in GitHub, browser code, Notion or review comments. The owner saved the exact Staging redirect URI above; that callback setting is verified. Audience access and actual provider acceptance remain unverified.
 
 The owner approved fresh BKE application-factor verification for sensitive actions under Google-only authentication. Bind each expiring single-use challenge to the exact active BKE user/session, preserve administrator enrollment and recovery controls, and distinguish recent application-factor verification from fresh Google Account authentication. Ordinary Google login must not grant recent-auth assurance. [Decision and provider constraint](https://github.com/jan2xo/bke-libraries-typescript/pull/85#issuecomment-6598191698).
 

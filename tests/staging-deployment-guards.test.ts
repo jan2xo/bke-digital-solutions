@@ -26,6 +26,11 @@ describe("protected Staging guards",()=>{
    `postgresql://bke_staging_owner:secret@${host}:5432/other?sslmode=require`,
    `postgresql://bke_staging_owner:secret@${host}:5432/bke_staging-pooler?sslmode=require`,
   ]){process.env.DIRECT_DATABASE_URL=value;expect(()=>assertStagingSettings()).toThrow();setup();}
+  const poolerHost="ep-example-pooler.ap-southeast-1.aws.neon.tech";
+  process.env.STAGING_NEON_HOST=poolerHost;
+  process.env.DIRECT_DATABASE_URL=`postgresql://bke_staging_owner:secret@${poolerHost}:5432/bke_staging?sslmode=require`;
+  expect(()=>assertStagingSettings()).toThrow(/unpooled/);
+  setup();
   process.env.STAGING_NEON_HOST="wrong.neon.tech"; expect(()=>assertStagingSettings()).toThrow();
  });
  it("requires a matching PostgreSQL 5432 Hyperdrive origin and disabled caching",()=>{
