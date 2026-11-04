@@ -29,7 +29,7 @@ describe("protected Staging guards",()=>{
   const poolerHost="ep-example-pooler.ap-southeast-1.aws.neon.tech";
   process.env.STAGING_NEON_HOST=poolerHost;
   process.env.DIRECT_DATABASE_URL=`postgresql://bke_staging_owner:secret@${poolerHost}:5432/bke_staging?sslmode=require`;
-  expect(()=>assertStagingSettings()).toThrow(/unpooled/);
+  expect(()=>assertStagingSettings()).toThrow(/STAGING_NEON_HOST must be the exact direct Neon hostname/);
   setup();
   process.env.STAGING_NEON_HOST="wrong.neon.tech"; expect(()=>assertStagingSettings()).toThrow();
  });
@@ -42,7 +42,7 @@ describe("protected Staging guards",()=>{
    d => { d.origin.user="other"; }, d => { d.origin.scheme="mysql"; }, d => { d.origin.port=3306; },
    d => { d.caching.disabled=false; }, d => { d.mtls!.sslmode="disable"; },
   ];
-  const defaultTls=structuredClone(original); delete defaultTls.mtls;
+  const defaultTls={id:original.id,name:original.name,origin:structuredClone(original.origin),caching:structuredClone(original.caching)};
   expect(verifyHyperdriveMetadata(defaultTls,defaultTls.id,url,host)).toBe(true);
   const postgresql=structuredClone(original); postgresql.origin.scheme="postgresql";
   expect(verifyHyperdriveMetadata(postgresql,postgresql.id,url,host)).toBe(true);
