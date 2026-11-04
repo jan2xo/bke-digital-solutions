@@ -289,8 +289,14 @@ jobs:
       - name: Build actual Workers application
         run: npm run workers:build
       - run: npm run workers:typecheck
-      - name: Measure Worker bundle and local startup without deployment
-        run: npx --no-install wrangler check startup --outfile .workers-build/startup.cpuprofile
+      - name: Verify bundle measurement boundary
+        run: node --test scripts/check-worker-bundle.test.mjs
+      - name: Produce actual Worker upload without deployment
+        run: npx --no-install wrangler deploy --dry-run --outfile .workers-build/worker.bundle --metafile .workers-build/wrangler-meta.json
+      - name: Require Worker upload to fit the platform size limit
+        run: node scripts/check-worker-bundle.mjs .workers-build/worker.bundle
+      - name: Measure local startup without deployment
+        run: npx --no-install wrangler check startup --worker .workers-build/worker.bundle --outfile .workers-build/startup.cpuprofile
       - name: Produce disposable application sessions
         run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
       - name: Exercise application in workerd

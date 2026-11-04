@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "bke-digital-solutions",
   "main": "workers/entry.ts",
+  "minify": true,
   "compatibility_date": "2026-11-04",
   "compatibility_flags": [
     "nodejs_compat",

@@ -163,3 +163,23 @@ use that origin. Infisical is the owner's existing secret manager. Its project,
 test environment and delivery integration still require confirmation; no secret
 values belong in this repository. See the Google consumer contract for delivery
 and production-cutover boundaries.
+
+## Measured upload-size blocker
+
+[CI #2264](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41794630233)
+at `4655dab51cb70036f23a76c707c8ff24af41f667` passed application receiving
+checks but measured **100079.55 KiB uncompressed**, approximately 97.7 MiB.
+This exceeds the documented 64 MiB upload limit. That initial measurement
+step only printed diagnostics, so its green result did not establish
+upload acceptance. Do not deploy that artifact or treat a paid plan as a
+size-limit fix.
+
+The subsequent candidate enables supported final Wrangler minification and
+adds a required size gate against the actual serialized dry-run upload.
+The gate counts code/WASM/data module bytes and excludes string metadata
+and source maps, matching pinned Wrangler's measurement. It prints sizes
+and module/input filenames, never binding values or module contents.
+Tests cover the exact 64 MiB boundary, oversized/invalid values, multipart
+accounting, and missing entry modules. Minification is not presumed sufficient;
+inspect the next exact-head result and the largest contributors if it fails.
+No application capability is removed or externalized to make the upload fit.
