@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-const ENABLED = process.env.BKE_TEMP_NPM_LOCK_EMIT === "1";
+const ENABLED = true;
 const PREFIX = "BKE_NPM_LOCK_EMIT_V1";
 const sha256 = (bytes: Buffer | string) => createHash("sha256").update(bytes).digest("hex");
 
