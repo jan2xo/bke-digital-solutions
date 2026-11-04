@@ -14,14 +14,28 @@ The canonical shared Identity prerequisite is tracked in [bke-libraries-typescri
 
 The earlier boundary above describes the initial migration intent. The owner later directed the team to use the Cloudflare-owned workers.dev origin and continue the discussed steps. This explicitly authorizes progressing isolated staging setup and a test deployment on eligible Free resources after review and required protected configuration are ready. The app has not yet been deployed. Keep the apex/production cutover, paid activation, production data, and unapproved security-access grants outside this authorization. Do not put staging secrets in ordinary PR or fixture CI; any actual staging deployment must use a separate protected operation.
 
+### Protected isolated Staging runbook
+
+The existing `CI` workflow has a manual `deploy_staging` input defaulting to `false`. A deploy requires the exact selected `source_sha`, an equal `github.workflow_sha`, and success from every core certification job. Staging deployments and migrations serialize with cancellation disabled. The target is the Cloudflare-owned workers.dev origin above; the apex and production are outside this path.
+
+Before any deploy-enabled run, an owner must verify the actual GitHub `Staging` environment has required reviewers and branch restrictions. The environment name alone does not establish protection. Only after that review may the owner create the Infisical OIDC identity/access policy and the environment-scoped Cloudflare deployment token. The identity should bind subject `repo:jan2xo/bke-digital-solutions:environment:Staging`, repository ID, and trusted workflow/ref. Infisical scope is project `64133fed-7cb1-471b-80e4-4a9e7b44653b`, environment `staging`, root path, without imports or recursion. The Cloudflare token is step-scoped to metadata verification and deploy; it is never a Worker runtime secret.
+
+Required protected config includes independently set `STAGING_NEON_HOST` equal to the exact direct Neon hostname, plus Infisical `DATABASE_URL` and `DIRECT_DATABASE_URL` using that host, database `bke_staging`, role `bke_staging_owner`, port 5432 and TLS. Hyperdrive `bke-digital-solutions-staging-fresh` must match host/database/role, use PostgreSQL port 5432 and have caching disabled. The approved namespace values are exactly `DEPLOYMENT_ID=bke-digital-solutions-try` and `REDIS_KEY_PREFIX=bke-digital-solutions-try`. Initial staging uses mock payments, log-only email and `PAYMONGO_LIVEMODE=false`.
+
+The job prepares and validates a private explicit runtime allowlist before applying existing reviewed migrations. Direct database URLs, Cloudflare deployment credentials, account metadata and Infisical OIDC metadata are excluded from Worker configuration/secrets. Do not seed demo/catalog/admin data, promote accounts by email, or enable scheduled Cron. Temporary Wrangler config and secret files are removed after every outcome. This path is limited to eligible Free resources and does not establish production acceptance.
+
+**Operator prerequisites:** Neon credential transfer into protected Infisical, actual GitHub environment protection, OIDC identity/access policy, Cloudflare token, independent `STAGING_NEON_HOST`, Redis, stable signing/secret keys, and usable S3 settings. Product image upload, cleanup and readiness still rely on S3 despite retired artifact endpoints returning 410 and releases using GitHub. Current account API returned Cloudflare R2 403/code 10042 because R2 is not enabled. Do not invent S3 endpoints or credentials, enable paid storage, or weaken these controls; a real storage topology decision is needed before protected config validation can pass.
+
+**Prior certification:** [CI #2270](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41835344651) passed exact source/workflow `982aece38f966b8ca70ad5bf40cbfaec57dcfe6e`: 740 passed, 5 skipped, all five core jobs passed, bundle size 15,854,468 bytes. The new protected staging changes are not covered by that result and still require exact-head Actions validation.
+
 ## Google OAuth client contract
 
-Owner-confirmed public origin: `https://jl-bke.com`.
+The saved isolated Staging origin is `https://bke-digital-solutions.jlprojectfreedom.workers.dev`. The existing apex `https://jl-bke.com` remains in the live production OAuth configuration and is not used for this staging deployment.
 
 - Google client type: Web application.
 - Owner-supplied public Client ID: `762330940636-uuqstj4ig6ads84nid0bik35jkum4kt1.apps.googleusercontent.com`. Configure this as the consumer's expected `GOOGLE_CLIENT_ID` audience; the client secret is not part of this document.
-- Authorized redirect URI: `https://jl-bke.com/api/auth/google/callback` (exact match; no trailing slash or wildcard).
-- Authorized JavaScript origin, if configured: `https://jl-bke.com`.
+- Authorized Staging redirect URI: `https://bke-digital-solutions.jlprojectfreedom.workers.dev/api/auth/google/callback` (exact match; no trailing slash or wildcard).
+- Authorized Staging JavaScript origin, if configured: `https://bke-digital-solutions.jlprojectfreedom.workers.dev`.
 - The consumer must implement `/api/auth/google/callback` and derive its exact redirect URL from the validated canonical `APP_URL`, rather than untrusted request headers. This is an implementation contract, not a live route claim.
 - Use only identity scopes needed for sign-in. Keep the client secret in protected deployment configuration; never in GitHub, browser code, Notion or review comments. The owner reports creating the OAuth client; redirect settings, audience access and actual provider acceptance remain unverified.
 

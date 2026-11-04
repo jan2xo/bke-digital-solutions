@@ -1,9 +1,13 @@
 import { readFile, writeFile, rm } from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 
-const expected = {
+export const expected = {
   appUrl: "https://bke-digital-solutions.jlprojectfreedom.workers.dev",
   deploymentEnv: "staging",
   databaseName: "bke_staging",
+  databaseRole: "bke_staging_owner",
+  deploymentId: "bke-digital-solutions-try",
+  redisPrefix: "bke-digital-solutions-try",
   hyperdriveName: "bke-digital-solutions-staging-fresh",
   cloudflareAccountId: "384c6c13373eb94a2925e0d865139970",
 };
@@ -83,38 +87,53 @@ const publicVariables = [
 function fail(message) {
   throw new Error(message);
 }
-function required(name) {
-  const value = process.env[name];
+function required(name, environment = process.env) {
+  const value = environment[name];
   if (typeof value !== "string" || value.length === 0) fail(`Missing required Staging setting: ${name}`);
   return value;
 }
-function databaseUrl(name) {
+export function databaseUrl(name, value, expectedHost) {
   let url;
-  try {
-    url = new URL(required(name));
-  } catch {
-    fail(`${name} must be a valid PostgreSQL URL`);
-  }
+  try { url = new URL(value); } catch { fail(`${name} must be a valid PostgreSQL URL`); }
   if (!["postgres:", "postgresql:"].includes(url.protocol)) fail(`${name} must use PostgreSQL`);
-  if (decodeURIComponent(url.pathname.slice(1)) !== expected.databaseName) fail(`${name} must target the isolated Staging database`);
-  if (!url.hostname.endsWith(".neon.tech")) fail(`${name} must target the verified Neon Staging host`);
+  if (decodeURIComponent(url.pathname.slice(1)) !== expected.databaseName) fail(`${name} must target bke_staging`);
+  if (decodeURIComponent(url.username) !== expected.databaseRole) fail(`${name} must use bke_staging_owner`);
+  if (!expectedHost || url.hostname.toLowerCase() !== expectedHost.toLowerCase()) fail(`${name} must match STAGING_NEON_HOST exactly`);
+  if (!url.hostname.endsWith(".neon.tech") || url.hostname.includes("pooler")) fail(`${name} must use a direct unpooled Neon host`);
+  if (url.port && url.port !== "5432") fail(`${name} must use port 5432`);
+  if (!["require", "verify-ca", "verify-full"].includes(url.searchParams.get("sslmode") ?? "")) fail(`${name} must require TLS`);
   return url;
 }
-function assertStagingSettings() {
-  if (required("APP_URL") !== expected.appUrl) fail("Staging APP_URL does not match the approved Cloudflare-owned origin");
-  if (required("DEPLOYMENT_ENV") !== expected.deploymentEnv) fail("DEPLOYMENT_ENV must be staging");
-  if (!required("DEPLOYMENT_ID").includes("staging")) fail("DEPLOYMENT_ID must identify the isolated Staging deployment");
-  if (required("PAYMENT_PROVIDER") !== "mock") fail("Initial Staging requires mock payments");
-  if (required("EMAIL_PROVIDER") !== "log") fail("Initial Staging requires log-only email");
-  if (required("PAYMONGO_LIVEMODE") !== "false") fail("PAYMONGO_LIVEMODE must explicitly be false");
+export function assertStagingSettings(env = process.env) {
+  if (required("APP_URL", env) !== expected.appUrl) fail("Staging APP_URL does not match the approved Cloudflare-owned origin");
+  if (required("DEPLOYMENT_ENV", env) !== expected.deploymentEnv) fail("DEPLOYMENT_ENV must be staging");
+  if (required("DEPLOYMENT_ID", env) !== expected.deploymentId) fail("DEPLOYMENT_ID must use the approved isolated Staging namespace");
+  if (required("REDIS_KEY_PREFIX", env) !== expected.redisPrefix) fail("REDIS_KEY_PREFIX must use the approved isolated Staging namespace");
+  if (required("PAYMENT_PROVIDER", env) !== "mock") fail("Initial Staging requires mock payments");
+  if (required("EMAIL_PROVIDER", env) !== "log") fail("Initial Staging requires log-only email");
+  if (required("PAYMONGO_LIVEMODE", env) !== "false") fail("PAYMONGO_LIVEMODE must explicitly be false");
   for (const name of ["LOCAL_PRODUCTION_SIMULATION", "ALLOW_BREAK_GLASS", "ALLOW_DESTRUCTIVE_ADMIN", "BACKUP_ENABLED", "CLAIM_CODE_CHECKOUT_ENABLED", "AGENT_ACCOUNT_SESSION_ENABLED"]) {
-    if (process.env[name] === "true") fail(`${name} must remain disabled for isolated authentication Staging`);
+    if (env[name] === "true") fail(`${name} must remain disabled for isolated authentication Staging`);
   }
-  required("GOOGLE_CLIENT_ID");
-  required("GOOGLE_CLIENT_SECRET");
-  const direct = databaseUrl(process.env.DIRECT_DATABASE_URL ? "DIRECT_DATABASE_URL" : "DATABASE_URL");
-  if (process.env.DATABASE_URL) databaseUrl("DATABASE_URL");
+  required("GOOGLE_CLIENT_ID", env);
+  required("GOOGLE_CLIENT_SECRET", env);
+  const host = required("STAGING_NEON_HOST", env);
+  if (host !== host.trim() || host.includes("://") || host.includes("/") || host.includes(":") || !host.endsWith(".neon.tech") || host.includes("pooler")) fail("STAGING_NEON_HOST must be the exact direct Neon hostname");
+  const direct = databaseUrl("DIRECT_DATABASE_URL", required("DIRECT_DATABASE_URL", env), host);
+  const runtime = databaseUrl("DATABASE_URL", required("DATABASE_URL", env), host);
+  if (direct.hostname !== runtime.hostname || direct.pathname !== runtime.pathname || direct.username !== runtime.username) fail("DATABASE_URL and DIRECT_DATABASE_URL must target the same database and role");
   return direct;
+}
+export function verifyHyperdriveMetadata(drive, id, directUrl, expectedHost) {
+  if (!/^[a-f0-9]{32}$/i.test(id) || /^0{32}$/.test(id)) fail("HYPERDRIVE_FRESH_ID is not provisioned");
+  if (drive.id !== id) fail("Cloudflare did not confirm the requested Hyperdrive configuration");
+  if (drive.name !== expected.hyperdriveName) fail("Hyperdrive name does not match the isolated Staging resource");
+  const origin = drive.origin ?? {};
+  if (origin.database !== expected.databaseName || origin.user !== expected.databaseRole || origin.host !== expectedHost || origin.host !== directUrl.hostname) fail("Hyperdrive origin does not match verified Neon host/database/role");
+  if (String(origin.scheme).toLowerCase() !== "postgres" || Number(origin.port) !== 5432) fail("Hyperdrive must use PostgreSQL on port 5432");
+  if (drive.caching?.disabled !== true) fail("Hyperdrive query caching must be verified disabled");
+  if (origin.mtls?.sslmode !== undefined && !["require", "verify-ca", "verify-full"].includes(origin.mtls.sslmode)) fail("Hyperdrive origin TLS must not be disabled");
+  return true;
 }
 async function verifyHyperdrive(directUrl) {
   if (required("CLOUDFLARE_ACCOUNT_ID") !== expected.cloudflareAccountId) fail("Cloudflare account does not match the approved Staging account");
@@ -129,47 +148,51 @@ async function verifyHyperdrive(directUrl) {
   const body = await response.json();
   if (body.success !== true || body.result?.id !== id) fail("Cloudflare did not confirm the requested Hyperdrive configuration");
   const drive = body.result;
-  if (drive.name !== expected.hyperdriveName) fail("Hyperdrive name does not match the isolated Staging resource");
-  if (drive.origin?.database !== expected.databaseName || drive.origin?.host !== directUrl.hostname) fail("Hyperdrive origin does not match the isolated Neon Staging database");
-  if (drive.caching?.disabled !== true) fail("Hyperdrive query caching must be verified disabled");
+  verifyHyperdriveMetadata(drive, id, directUrl, required("STAGING_NEON_HOST"));
   console.info("Verified isolated Neon database and cache-disabled Hyperdrive metadata.");
   return id;
 }
-async function prepare(driveId) {
-  const config = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
+export function buildStagingArtifacts(sourceConfig, env, driveId) {
+  const direct = assertStagingSettings(env);
+  const config = structuredClone(sourceConfig);
   if (config.name !== "bke-digital-solutions") fail("Unexpected Worker name");
+  if (config.route || config.routes) fail("Custom routes are forbidden for workers.dev-only Staging");
+  if (config.env) fail("Wrangler named environments cannot override the Staging target");
+  config.workers_dev = true;
   const bindings = config.hyperdrive;
   if (!Array.isArray(bindings) || bindings.length !== 1 || bindings[0].binding !== "HYPERDRIVE_FRESH") fail("Unexpected Hyperdrive binding contract");
   bindings[0].id = driveId;
   delete bindings[0].localConnectionString;
   if (config.triggers?.crons?.length) fail("Scheduled Cron is disabled for this Staging deployment");
   const vars = Object.fromEntries(publicVariables
-    .filter((name) => process.env[name] !== undefined && process.env[name] !== "")
-    .map((name) => [name, process.env[name]]));
-  Object.assign(vars, {
-    NODE_ENV: "production",
-    BKE_RUNTIME: "workers",
-    // The Worker obtains its only database connection from HYPERDRIVE_FRESH per operation.
-    // This inert URL satisfies import-time configuration shape without exposing Neon credentials.
-  });
-  config.vars = { ...config.vars, ...vars };
+    .filter((name) => env[name] !== undefined && env[name] !== "")
+    .map((name) => [name, env[name]]));
+  Object.assign(vars, { NODE_ENV: "production", BKE_RUNTIME: "workers" });
+  const forbidden = ["DATABASE_URL", "DIRECT_DATABASE_URL", "STAGING_NEON_HOST", "HYPERDRIVE_FRESH_ID", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "INFISICAL_STAGING_IDENTITY_ID"];
+  if (Object.keys(config.vars ?? {}).some((name) => forbidden.includes(name))) fail("Wrangler config contains forbidden Staging credential variables");
+  config.vars = vars;
   const secrets = Object.fromEntries([...requiredSecrets, ...optionalSecrets]
-    .filter((name) => process.env[name] !== undefined && process.env[name] !== "")
-    .map((name) => [name, process.env[name]]));
+    .filter((name) => env[name] !== undefined && env[name] !== "")
+    .map((name) => [name, env[name]]));
   const missing = requiredSecrets.filter((name) => !secrets[name]);
   if (missing.length) fail(`Missing required Staging runtime secrets: ${missing.join(", ")}`);
-  if (process.env.REDIS_URL) {
-    if (!process.env.REDIS_URL.startsWith("rediss://")) fail("Staging REDIS_URL must use TLS");
-  } else if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+  if (env.REDIS_URL) {
+    if (!env.REDIS_URL.startsWith("rediss://")) fail("Staging REDIS_URL must use TLS");
+  } else if (!env.UPSTASH_REDIS_REST_URL || !env.UPSTASH_REDIS_REST_TOKEN) {
     fail("Staging requires a complete distributed Redis configuration");
   }
   if (Object.hasOwn(secrets, "CLOUDFLARE_API_TOKEN") || Object.hasOwn(secrets, "INFISICAL_STAGING_IDENTITY_ID")) {
     fail("Deployment credentials must never enter the Worker runtime allowlist");
   }
   if (Object.keys(secrets).length > 100) fail("Runtime secret allowlist exceeds Cloudflare's bulk limit");
-  await writeFile(configPath, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
-  await writeFile(secretsPath, JSON.stringify(secrets, null, 2) + "\n", { mode: 0o600 });
-  console.info(`Prepared Staging Worker configuration with ${Object.keys(secrets).length} allowlisted runtime secrets.`);
+  return { config, secrets, direct };
+}
+export async function prepare(driveId) {
+  const source = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
+  const artifacts = buildStagingArtifacts(source, process.env, driveId);
+  await writeFile(configPath, JSON.stringify(artifacts.config, null, 2) + "\n", { mode: 0o600 });
+  await writeFile(secretsPath, JSON.stringify(artifacts.secrets, null, 2) + "\n", { mode: 0o600 });
+  console.info(`Prepared Staging Worker configuration with ${Object.keys(artifacts.secrets).length} allowlisted runtime secrets.`);
 }
 async function main() {
   const command = process.argv[2];
@@ -187,7 +210,9 @@ async function main() {
     fail("Usage: node scripts/deploy-staging.mjs <verify|prepare|cleanup>");
   }
 }
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : "Staging operation failed");
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : "Staging operation failed");
+    process.exitCode = 1;
+  });
+}

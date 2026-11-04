@@ -404,15 +404,20 @@ jobs:
         run: npm run config:validate
       - name: Verify Neon and cache-disabled Hyperdrive metadata
         env:
+          NODE_ENV: production
+          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
           CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: node scripts/deploy-staging.mjs verify
+      - name: Prepare isolated Worker configuration and runtime secret allowlist
+        env:
+          NODE_ENV: production
+          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
+        run: node scripts/deploy-staging.mjs prepare
       - name: Apply reviewed migrations to fresh Staging only
         env:
           NODE_ENV: production
         run: npm run db:deploy
-      - name: Prepare isolated Worker configuration and runtime secret allowlist
-        run: node scripts/deploy-staging.mjs prepare
       - name: Deploy certified Worker with allowlisted runtime secrets
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

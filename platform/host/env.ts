@@ -3,53 +3,29 @@ import { currentOperationDatabaseUrl, operationResource } from "@/platform/host/
 import { parseEnvironment, type ServerEnvironment } from "@/platform/host/config/environment";
 
 const workersRuntime = process.env.BKE_RUNTIME === "workers";
-const nodeEnvironment = workersRuntime ? undefined : parseEnvironment(process.env);
-
-function runtimeEnvironment(): ServerEnvironment {
-  if (!workersRuntime) return nodeEnvironment!;
+function workersEnvironment(): ServerEnvironment {
   const databaseUrl = currentOperationDatabaseUrl();
   if (!databaseUrl) throw new Error("WORKER_OPERATION_SCOPE_REQUIRED");
-  return operationResource("server-environment", () => parseEnvironment({
-    ...process.env,
-    DATABASE_URL: databaseUrl,
-  }));
+  return operationResource("server-environment", () => parseEnvironment({ ...process.env, DATABASE_URL: databaseUrl }));
 }
-
-const proxyTarget = {};
-export const env = new Proxy(proxyTarget as ServerEnvironment, {
-  get(_target, property) {
-    return Reflect.get(runtimeEnvironment(), property);
+const nodeEnvironment = workersRuntime ? undefined : parseEnvironment(process.env);
+const nodeEnv = nodeEnvironment ? new Proxy(nodeEnvironment, {
+  get(target, property, receiver) {
+    if (property === "DATABASE_URL") return currentOperationDatabaseUrl() ?? target.DATABASE_URL;
+    return Reflect.get(target, property, receiver);
   },
-  has(_target, property) {
-    return Reflect.has(runtimeEnvironment(), property);
-  },
-  ownKeys() {
-    return Reflect.ownKeys(runtimeEnvironment());
-  },
+}) : undefined;
+const workersEnv = new Proxy({} as ServerEnvironment, {
+  get(_target, property) { return Reflect.get(workersEnvironment(), property); },
+  has(_target, property) { return Reflect.has(workersEnvironment(), property); },
+  ownKeys() { return Reflect.ownKeys(workersEnvironment()); },
   getOwnPropertyDescriptor(_target, property) {
-    const descriptor = Object.getOwnPropertyDescriptor(runtimeEnvironment(), property);
+    const descriptor = Object.getOwnPropertyDescriptor(workersEnvironment(), property);
     return descriptor ? { ...descriptor, configurable: true } : undefined;
   },
-  getPrototypeOf() {
-    return Object.prototype;
-  },
-  set(_target, property, value) {
-    return Reflect.set(runtimeEnvironment(), property, value);
-  },
-  defineProperty(_target, property, descriptor) {
-    return Reflect.defineProperty(runtimeEnvironment(), property, descriptor);
-  },
-  deleteProperty(_target, property) {
-    return Reflect.deleteProperty(runtimeEnvironment(), property);
-  },
 });
-
-/** Resolve deployment configuration at request/operation time. This avoids
- * build-time snapshots for values supplied only by a Workers operation binding. */
+export const env = workersRuntime ? workersEnv : nodeEnv!;
 export function getRuntimeEnvironment(): ServerEnvironment {
-  if (workersRuntime) return runtimeEnvironment();
-  return parseEnvironment({
-    ...process.env,
-    DATABASE_URL: currentOperationDatabaseUrl() ?? process.env.DATABASE_URL,
-  });
+  if (workersRuntime) return workersEnvironment();
+  return parseEnvironment({ ...process.env, DATABASE_URL: currentOperationDatabaseUrl() ?? process.env.DATABASE_URL });
 }
