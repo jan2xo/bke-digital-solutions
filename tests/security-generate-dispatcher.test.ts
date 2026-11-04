@@ -5,6 +5,7 @@ import {
   classifyPriorRun,
   correlateGeneratorRun,
   artifactBelongsToRun,
+  type GeneratorJobFixture,
   GENERATOR_JOB,
   HEAD_BRANCH,
   REPOSITORY,
@@ -50,7 +51,7 @@ function artifactFixture(overrides = {}) {
   };
 }
 
-function generatorFixture(overrides = {}) {
+function generatorFixture(overrides: Partial<GeneratorJobFixture> = {}): GeneratorJobFixture {
   return {
     name: GENERATOR_JOB,
     conclusion: "success",
