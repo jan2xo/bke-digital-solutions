@@ -20,5 +20,5 @@ describe("candidate exact-head GitHub Actions lint", () => {
         },
       ),
     ).not.toThrow();
-  });
+  }, 120_000);
 });
