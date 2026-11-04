@@ -44,7 +44,11 @@ try {
   const compiler = await readFile(join(generatedPath, "internal/class.ts"), "utf8");
   assert.ok(!compiler.includes("new WebAssembly.Module("), "Dynamic WASM compilation remains in the generated runtime");
   assert.match(compiler, /\.wasm(?!-base64)/, "Expected a statically imported Workers WASM module");
-  run(process.execPath, ["node_modules/@opennextjs/cloudflare/dist/cli/index.js", "build"]);
+  // The Turbopack WASM resolver expanded to ~60k project files and bundled
+  // unrelated database engines. Use Next's supported Webpack build for this
+  // target; OpenNext then adapts that output without rebuilding it.
+  run(process.execPath, ["node_modules/next/dist/bin/next", "build", "--webpack"]);
+  run(process.execPath, ["node_modules/@opennextjs/cloudflare/dist/cli/index.js", "build", "--skipNextBuild"]);
 } finally {
   // Restore through the real canonical generator, never by patching output.
   try {

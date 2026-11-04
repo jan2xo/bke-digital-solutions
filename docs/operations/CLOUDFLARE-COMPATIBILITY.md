@@ -183,3 +183,18 @@ Tests cover the exact 64 MiB boundary, oversized/invalid values, multipart
 accounting, and missing entry modules. Minification is not presumed sufficient;
 inspect the next exact-head result and the largest contributors if it fails.
 No application capability is removed or externalized to make the upload fit.
+
+CI #2265 measured the minified upload at 90,638,039 bytes and correctly failed
+the size gate. Its build warning and import trace identify Turbopack's WASM
+resolver expanding a dynamic pattern to 59,870 project files. The upload
+contains unrelated PGlite, schema and non-PostgreSQL compiler engines, plus
+repeated generated chunks. These are bundling artifacts, not required new
+application responsibilities.
+
+The next correction uses Next's supported `next build --webpack` only within
+the Workers build wrapper, then OpenNext's supported `--skipNextBuild` to adapt
+that exact output. Normal Node/Docker build commands remain unchanged.
+The supported workerd Prisma generation and finally-based Node restoration
+remain intact. This avoids hand-patching generated WASM loaders, removing
+features or introducing more Workers. The exact size gate and receiving
+checks must pass before treating the correction as verified.
