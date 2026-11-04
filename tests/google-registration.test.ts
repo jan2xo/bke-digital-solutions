@@ -140,11 +140,8 @@ suite("Google registration PostgreSQL transaction", () => {
       registerGoogleCustomer(first),
       registerGoogleCustomer(second),
     ]);
-    for (const result of results) {
-      // The winning registration owns immutable legal acceptance rows; leave it
-      // in the disposable CI database until teardown.
-    }
-
+    // The winning registration owns immutable legal acceptance rows; leave it
+    // in the disposable CI database until teardown.
     expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
     expect(await db.googleIdentity.count({ where: { subject } })).toBe(1);
     expect(await db.user.count({
