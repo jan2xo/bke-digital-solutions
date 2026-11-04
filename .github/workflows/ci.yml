@@ -290,7 +290,7 @@ jobs:
         run: npm run workers:build
       - run: npm run workers:typecheck
       - name: Produce disposable application sessions
-        run: node --conditions=react-server node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
+        run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
       - name: Exercise application in workerd
         run: |
           npm run workers:preview -- --port 8787 > /tmp/bke-workerd.log 2>&1 &

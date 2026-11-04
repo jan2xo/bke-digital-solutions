@@ -25,7 +25,7 @@ const retired = await fetch(origin + "/api/auth/login", {
   body: JSON.stringify({ email: "fixture@example.invalid", password: "retired" }),
 });
 assert.equal(retired.status, 410, "Retired password login must remain retired");
-console.log("PASS: workerd startup, repeated application browse, Google login UI, retired password route");
+console.log("PASS: workerd public receiving checks");
 console.log("NOT VERIFIED: real Google sign-in, native handoff, deployed Free CPU limits");
 
 const { readFile } = await import("node:fs/promises");
@@ -45,8 +45,8 @@ for (let invocation = 0; invocation < 2; invocation++) {
   }));
 }
 await promisify(execFile)(process.execPath, [
-  "--conditions=react-server", "node_modules/tsx/dist/cli.mjs", "scripts/workers-fixture.ts", "revoke",
-]);
+  "node_modules/tsx/dist/cli.mjs", "scripts/workers-fixture.ts", "revoke",
+], { env: { ...process.env, NODE_OPTIONS: "--conditions=react-server" } });
 const revoked = await fetch(origin + "/dashboard", {
   headers: { cookie: "__Host-bke_session=" + sessions[0].token }, redirect: "manual",
 });
