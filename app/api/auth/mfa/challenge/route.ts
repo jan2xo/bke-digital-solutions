@@ -32,10 +32,13 @@ export async function POST(request: Request) {
       .parse(await request.json());
     const verified = await verifyIdentityLoginMfaChallenge(code);
     if (!GOOGLE_MFA_METHODS.has(verified.authenticationMethod)) {
-      await securityEvent("MFA_CHALLENGE_FAILED", request, verified.userId, undefined, {
-        reason: "GOOGLE_AUTH_REQUIRED",
-        authenticationMethod: verified.authenticationMethod,
-      }).catch(() => undefined);
+      await securityEvent(
+        "MFA_CHALLENGE_FAILED",
+        request,
+        verified.userId,
+        { reason: "GOOGLE_AUTH_REQUIRED" },
+        { authenticationMethod: verified.authenticationMethod },
+      ).catch(() => undefined);
       const response = NextResponse.json(
         { error: "GOOGLE_SIGN_IN_REQUIRED" },
         { status: 401, headers: { "cache-control": "no-store" } },

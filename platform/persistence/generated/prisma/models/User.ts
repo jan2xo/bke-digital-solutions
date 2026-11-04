@@ -262,6 +262,7 @@ export type UserWhereInput = {
   legalHoldAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   legalHoldReason?: Prisma.StringNullableFilter<"User"> | string | null
   emailHash?: Prisma.StringNullableFilter<"User"> | string | null
+  googleIdentity?: Prisma.XOR<Prisma.GoogleIdentityNullableScalarRelationFilter, Prisma.GoogleIdentityWhereInput> | null
   credential?: Prisma.XOR<Prisma.PasswordCredentialNullableScalarRelationFilter, Prisma.PasswordCredentialWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   ownedAccounts?: Prisma.CustomerAccountListRelationFilter
@@ -321,6 +322,7 @@ export type UserOrderByWithRelationInput = {
   legalHoldAt?: Prisma.SortOrderInput | Prisma.SortOrder
   legalHoldReason?: Prisma.SortOrderInput | Prisma.SortOrder
   emailHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleIdentity?: Prisma.GoogleIdentityOrderByWithRelationInput
   credential?: Prisma.PasswordCredentialOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   ownedAccounts?: Prisma.CustomerAccountOrderByRelationAggregateInput
@@ -383,6 +385,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   legalHoldAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   legalHoldReason?: Prisma.StringNullableFilter<"User"> | string | null
   emailHash?: Prisma.StringNullableFilter<"User"> | string | null
+  googleIdentity?: Prisma.XOR<Prisma.GoogleIdentityNullableScalarRelationFilter, Prisma.GoogleIdentityWhereInput> | null
   credential?: Prisma.XOR<Prisma.PasswordCredentialNullableScalarRelationFilter, Prisma.PasswordCredentialWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   ownedAccounts?: Prisma.CustomerAccountListRelationFilter
@@ -484,6 +487,7 @@ export type UserCreateInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -543,6 +547,7 @@ export type UserUncheckedCreateInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -602,6 +607,7 @@ export type UserUpdateInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -661,6 +667,7 @@ export type UserUncheckedUpdateInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -844,6 +851,20 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type EnumCustomerLifecycleStateFieldUpdateOperationsInput = {
   set?: $Enums.CustomerLifecycleState
+}
+
+export type UserCreateNestedOneWithoutGoogleIdentityInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoogleIdentityInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGoogleIdentityNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoogleIdentityInput
+  upsert?: Prisma.UserUpsertWithoutGoogleIdentityInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGoogleIdentityInput, Prisma.UserUpdateWithoutGoogleIdentityInput>, Prisma.UserUncheckedUpdateWithoutGoogleIdentityInput>
 }
 
 export type UserCreateNestedOneWithoutCredentialInput = {
@@ -1458,6 +1479,258 @@ export type UserUpdateOneRequiredWithoutProviderCredentialsCreatedNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProviderCredentialsCreatedInput, Prisma.UserUpdateWithoutProviderCredentialsCreatedInput>, Prisma.UserUncheckedUpdateWithoutProviderCredentialsCreatedInput>
 }
 
+export type UserCreateWithoutGoogleIdentityInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
+  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
+  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
+  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
+  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
+}
+
+export type UserUncheckedCreateWithoutGoogleIdentityInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
+  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
+  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
+  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
+  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
+}
+
+export type UserCreateOrConnectWithoutGoogleIdentityInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+}
+
+export type UserUpsertWithoutGoogleIdentityInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGoogleIdentityInput, Prisma.UserUncheckedUpdateWithoutGoogleIdentityInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGoogleIdentityInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGoogleIdentityInput, Prisma.UserUncheckedUpdateWithoutGoogleIdentityInput>
+}
+
+export type UserUpdateWithoutGoogleIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
+  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
+  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
+  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
+  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGoogleIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
+  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
+  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
+  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
+  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
+  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
+}
+
 export type UserCreateWithoutCredentialInput = {
   id?: string
   email: string
@@ -1474,6 +1747,7 @@ export type UserCreateWithoutCredentialInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -1532,6 +1806,7 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1606,6 +1881,7 @@ export type UserUpdateWithoutCredentialInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
@@ -1664,6 +1940,7 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1722,6 +1999,7 @@ export type UserCreateWithoutSessionsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -1780,6 +2058,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1854,6 +2133,7 @@ export type UserUpdateWithoutSessionsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
@@ -1912,6 +2192,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1970,6 +2251,7 @@ export type UserCreateWithoutAdministratorMfaInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2028,6 +2310,7 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2102,6 +2385,7 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2160,6 +2444,7 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2218,6 +2503,7 @@ export type UserCreateWithoutRecoveryCodesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2276,6 +2562,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2350,6 +2637,7 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2408,6 +2696,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2466,6 +2755,7 @@ export type UserCreateWithoutMfaChallengesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2524,6 +2814,7 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2598,6 +2889,7 @@ export type UserUpdateWithoutMfaChallengesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2656,6 +2948,7 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2714,6 +3007,7 @@ export type UserCreateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2772,6 +3066,7 @@ export type UserUncheckedCreateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2846,6 +3141,7 @@ export type UserUpdateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2904,6 +3200,7 @@ export type UserUncheckedUpdateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2962,6 +3259,7 @@ export type UserCreateWithoutSecurityEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -3020,6 +3318,7 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -3094,6 +3393,7 @@ export type UserUpdateWithoutSecurityEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -3152,6 +3452,7 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3210,6 +3511,7 @@ export type UserCreateWithoutOwnedAccountsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -3268,6 +3570,7 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3342,6 +3645,7 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
@@ -3400,6 +3704,7 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3458,6 +3763,7 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -3516,6 +3822,7 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -3590,6 +3897,7 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -3648,6 +3956,7 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3706,6 +4015,7 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -3764,6 +4074,7 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -3838,6 +4149,7 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -3896,6 +4208,7 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3954,6 +4267,7 @@ export type UserCreateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4012,6 +4326,7 @@ export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4075,6 +4390,7 @@ export type UserCreateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4133,6 +4449,7 @@ export type UserUncheckedCreateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4207,6 +4524,7 @@ export type UserUpdateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4265,6 +4583,7 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4334,6 +4653,7 @@ export type UserUpdateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4392,6 +4712,7 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4450,6 +4771,7 @@ export type UserCreateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4508,6 +4830,7 @@ export type UserUncheckedCreateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4582,6 +4905,7 @@ export type UserUpdateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4640,6 +4964,7 @@ export type UserUncheckedUpdateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4698,6 +5023,7 @@ export type UserCreateWithoutMembershipsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4756,6 +5082,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4830,6 +5157,7 @@ export type UserUpdateWithoutMembershipsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4888,6 +5216,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4946,6 +5275,7 @@ export type UserCreateWithoutArtifactUploadSessionsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -5004,6 +5334,7 @@ export type UserUncheckedCreateWithoutArtifactUploadSessionsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -5078,6 +5409,7 @@ export type UserUpdateWithoutArtifactUploadSessionsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -5136,6 +5468,7 @@ export type UserUncheckedUpdateWithoutArtifactUploadSessionsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5194,6 +5527,7 @@ export type UserCreateWithoutReleaseApprovalsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -5252,6 +5586,7 @@ export type UserUncheckedCreateWithoutReleaseApprovalsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -5315,6 +5650,7 @@ export type UserCreateWithoutReleaseApprovalsReviewedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -5373,6 +5709,7 @@ export type UserUncheckedCreateWithoutReleaseApprovalsReviewedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -5436,6 +5773,7 @@ export type UserCreateWithoutReleaseApprovalsApprovedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -5494,6 +5832,7 @@ export type UserUncheckedCreateWithoutReleaseApprovalsApprovedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -5568,6 +5907,7 @@ export type UserUpdateWithoutReleaseApprovalsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -5626,6 +5966,7 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5695,6 +6036,7 @@ export type UserUpdateWithoutReleaseApprovalsReviewedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -5753,6 +6095,7 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5822,6 +6165,7 @@ export type UserUpdateWithoutReleaseApprovalsApprovedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -5880,6 +6224,7 @@ export type UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5938,6 +6283,7 @@ export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -5996,6 +6342,7 @@ export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6070,6 +6417,7 @@ export type UserUpdateWithoutStorageCleanupJobsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6128,6 +6476,7 @@ export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6186,6 +6535,7 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6244,6 +6594,7 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6318,6 +6669,7 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6376,6 +6728,7 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6434,6 +6787,7 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6492,6 +6846,7 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6566,6 +6921,7 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6624,6 +6980,7 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6682,6 +7039,7 @@ export type UserCreateWithoutReconciliationsRunInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6740,6 +7098,7 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6803,6 +7162,7 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6861,6 +7221,7 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6935,6 +7296,7 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6993,6 +7355,7 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7062,6 +7425,7 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7120,6 +7484,7 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7178,6 +7543,7 @@ export type UserCreateWithoutCreatedOffersInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7236,6 +7602,7 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7310,6 +7677,7 @@ export type UserUpdateWithoutCreatedOffersInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7368,6 +7736,7 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7426,6 +7795,7 @@ export type UserCreateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7484,6 +7854,7 @@ export type UserUncheckedCreateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7547,6 +7918,7 @@ export type UserCreateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7605,6 +7977,7 @@ export type UserUncheckedCreateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7679,6 +8052,7 @@ export type UserUpdateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7737,6 +8111,7 @@ export type UserUncheckedUpdateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7806,6 +8181,7 @@ export type UserUpdateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7864,6 +8240,7 @@ export type UserUncheckedUpdateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7922,6 +8299,7 @@ export type UserCreateWithoutSupportMessagesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7980,6 +8358,7 @@ export type UserUncheckedCreateWithoutSupportMessagesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8054,6 +8433,7 @@ export type UserUpdateWithoutSupportMessagesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8112,6 +8492,7 @@ export type UserUncheckedUpdateWithoutSupportMessagesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8170,6 +8551,7 @@ export type UserCreateWithoutSupportEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8228,6 +8610,7 @@ export type UserUncheckedCreateWithoutSupportEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8302,6 +8685,7 @@ export type UserUpdateWithoutSupportEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8360,6 +8744,7 @@ export type UserUncheckedUpdateWithoutSupportEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8418,6 +8803,7 @@ export type UserCreateWithoutAssignmentsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8476,6 +8862,7 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8550,6 +8937,7 @@ export type UserUpdateWithoutAssignmentsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8608,6 +8996,7 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8666,6 +9055,7 @@ export type UserCreateWithoutAuditLogsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8724,6 +9114,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8798,6 +9189,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8856,6 +9248,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8914,6 +9307,7 @@ export type UserCreateWithoutSiteContentEditsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8972,6 +9366,7 @@ export type UserUncheckedCreateWithoutSiteContentEditsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9046,6 +9441,7 @@ export type UserUpdateWithoutSiteContentEditsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9104,6 +9500,7 @@ export type UserUncheckedUpdateWithoutSiteContentEditsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9162,6 +9559,7 @@ export type UserCreateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9220,6 +9618,7 @@ export type UserUncheckedCreateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9294,6 +9693,7 @@ export type UserUpdateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9352,6 +9752,7 @@ export type UserUncheckedUpdateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9410,6 +9811,7 @@ export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9468,6 +9870,7 @@ export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9542,6 +9945,7 @@ export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9600,6 +10004,7 @@ export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9658,6 +10063,7 @@ export type UserCreateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9716,6 +10122,7 @@ export type UserUncheckedCreateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9790,6 +10197,7 @@ export type UserUpdateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9848,6 +10256,7 @@ export type UserUncheckedUpdateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9906,6 +10315,7 @@ export type UserCreateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9964,6 +10374,7 @@ export type UserUncheckedCreateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10027,6 +10438,7 @@ export type UserCreateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10085,6 +10497,7 @@ export type UserUncheckedCreateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10159,6 +10572,7 @@ export type UserUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10217,6 +10631,7 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10286,6 +10701,7 @@ export type UserUpdateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10344,6 +10760,7 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10402,6 +10819,7 @@ export type UserCreateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10460,6 +10878,7 @@ export type UserUncheckedCreateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10534,6 +10953,7 @@ export type UserUpdateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10592,6 +11012,7 @@ export type UserUncheckedUpdateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10650,6 +11071,7 @@ export type UserCreateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10708,6 +11130,7 @@ export type UserUncheckedCreateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10782,6 +11205,7 @@ export type UserUpdateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10840,6 +11264,7 @@ export type UserUncheckedUpdateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10898,6 +11323,7 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10956,6 +11382,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -11019,6 +11446,7 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -11077,6 +11505,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -11151,6 +11580,7 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -11209,6 +11639,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11278,6 +11709,7 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -11336,6 +11768,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11394,6 +11827,7 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -11452,6 +11886,7 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -11526,6 +11961,7 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -11584,6 +12020,7 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -12015,6 +12452,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   legalHoldAt?: boolean
   legalHoldReason?: boolean
   emailHash?: boolean
+  googleIdentity?: boolean | Prisma.User$googleIdentityArgs<ExtArgs>
   credential?: boolean | Prisma.User$credentialArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   ownedAccounts?: boolean | Prisma.User$ownedAccountsArgs<ExtArgs>
@@ -12115,6 +12553,7 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "emailVerified" | "role" | "createdAt" | "updatedAt" | "suspendedAt" | "lifecycleState" | "privacyRequestedAt" | "pseudonymizedAt" | "retentionExpiresAt" | "legalHoldAt" | "legalHoldReason" | "emailHash", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  googleIdentity?: boolean | Prisma.User$googleIdentityArgs<ExtArgs>
   credential?: boolean | Prisma.User$credentialArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   ownedAccounts?: boolean | Prisma.User$ownedAccountsArgs<ExtArgs>
@@ -12164,6 +12603,7 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    googleIdentity: Prisma.$GoogleIdentityPayload<ExtArgs> | null
     credential: Prisma.$PasswordCredentialPayload<ExtArgs> | null
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     ownedAccounts: Prisma.$CustomerAccountPayload<ExtArgs>[]
@@ -12616,6 +13056,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  googleIdentity<T extends Prisma.User$googleIdentityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$googleIdentityArgs<ExtArgs>>): Prisma.Prisma__GoogleIdentityClient<runtime.Types.Result.GetResult<Prisma.$GoogleIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   credential<T extends Prisma.User$credentialArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$credentialArgs<ExtArgs>>): Prisma.Prisma__PasswordCredentialClient<runtime.Types.Result.GetResult<Prisma.$PasswordCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownedAccounts<T extends Prisma.User$ownedAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13091,6 +13532,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.googleIdentity
+ */
+export type User$googleIdentityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GoogleIdentity
+   */
+  select?: Prisma.GoogleIdentitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GoogleIdentity
+   */
+  omit?: Prisma.GoogleIdentityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GoogleIdentityInclude<ExtArgs> | null
+  where?: Prisma.GoogleIdentityWhereInput
 }
 
 /**
