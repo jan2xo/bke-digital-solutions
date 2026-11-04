@@ -104,6 +104,7 @@ const registered = await db.user.findUniqueOrThrow({
     legalAcceptances: true,
   },
 });
+assert.equal(registered.role, "CUSTOMER");
 assert.equal(registered.emailVerified, null);
 assert.equal(registered.ownedAccounts.length, 1);
 assert.equal(registered.ownedAccounts[0]!.type, "INDIVIDUAL");
@@ -147,6 +148,12 @@ await assert.rejects(
 );
 
 await verifyNativeCustomerEmail(email, secondDelivery.code);
+await assert.rejects(
+  () => verifyNativeCustomerEmail(email, secondDelivery.code),
+  (error: unknown) =>
+    error instanceof NativeCustomerRegistrationError
+    && error.code === "INVALID_VERIFICATION_CODE",
+);
 
 const verified = await db.user.findUniqueOrThrow({
   where: { email },

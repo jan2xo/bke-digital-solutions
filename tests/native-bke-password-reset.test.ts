@@ -1,4 +1,6 @@
+import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { db } from "../platform/host/db";
 import { describe, expect, it } from "vitest";
 
 describe("retired native password reset", () => {
@@ -16,18 +18,45 @@ describe("retired native password reset", () => {
     });
   });
 
-  it("does not reveal whether a native password-reset account exists", async () => {
+  it("returns the same retired response for known and unknown account emails", async () => {
     const { POST } = await import(
       "../app/api/agent-sessions/native/password-reset/request/route"
     );
-    const withoutAccount = await POST();
-    const withAccount = await POST();
-    const withoutBody = await withoutAccount.json();
-    const withBody = await withAccount.json();
+    const invoke: (request: Request) => Promise<Response> = POST;
+    const knownEmail = `known-reset-target-${randomUUID()}@example.test`;
+    const unknownEmail = `unknown-reset-target-${randomUUID()}@example.test`;
+    const knownUser = await db.user.create({
+      data: { email: knownEmail },
+      select: { id: true },
+    });
 
-    expect(withoutAccount.status).toBe(withAccount.status);
-    expect(withoutBody).toEqual(withBody);
-    expect(JSON.stringify(withoutBody)).not.toMatch(/email|token|password/i);
+    try {
+      const [unknownResponse, knownResponse] = await Promise.all([
+        invoke(new Request("https://jl-bke.com/api/agent-sessions/native/password-reset/request", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: unknownEmail }),
+        })),
+        invoke(new Request("https://jl-bke.com/api/agent-sessions/native/password-reset/request", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: knownEmail, password: "must-not-be-reflected" }),
+        })),
+      ]);
+      expect(unknownResponse.status).toBe(knownResponse.status);
+      expect(unknownResponse.headers.get("cache-control")).toBe("no-store");
+      expect(knownResponse.headers.get("cache-control")).toBe("no-store");
+      expect(unknownResponse.headers.get("set-cookie")).toBeNull();
+      expect(knownResponse.headers.get("set-cookie")).toBeNull();
+      const [unknownBody, knownBody] = await Promise.all([
+        unknownResponse.json(),
+        knownResponse.json(),
+      ]);
+      expect(unknownBody).toEqual(knownBody);
+      expect(JSON.stringify(unknownBody)).not.toMatch(/email|token|password/i);
+    } finally {
+      await db.user.delete({ where: { id: knownUser.id } });
+    }
   });
 
   it("continues to invalidate old Agent sessions after a credential epoch change", () => {
