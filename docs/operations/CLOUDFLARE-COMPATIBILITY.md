@@ -10,6 +10,10 @@ The owner authorized implementation from the 2026-11-03 V3 free-tier handoff, ac
 
 The canonical shared Identity prerequisite is tracked in [bke-libraries-typescript PR85](https://github.com/jan2xo/bke-libraries-typescript/pull/85). Adopt an independently certified immutable package before claiming Google-authenticated application compatibility.
 
+### Current staging authorization
+
+The earlier boundary above describes the initial migration intent. The owner later directed the team to use the Cloudflare-owned workers.dev origin and continue the discussed steps. This explicitly authorizes progressing isolated staging setup and a test deployment on eligible Free resources after review and required protected configuration are ready. The app has not yet been deployed. Keep the apex/production cutover, paid activation, production data, and unapproved security-access grants outside this authorization. Do not put staging secrets in ordinary PR or fixture CI; any actual staging deployment must use a separate protected operation.
+
 ## Google OAuth client contract
 
 Owner-confirmed public origin: `https://jl-bke.com`.
@@ -62,6 +66,21 @@ process-lifetime reuse. Library repository methods continue to own their
 operation-level Client/transaction lifecycle. No schema/history changes or
 shared-package republishing are part of this adapter.
 
+### Raw PostgreSQL ownership audit (source inspection, 2026-11-04)
+
+| Source/call site | Ownership and behavior | Evidence boundary |
+|---|---|---|
+| `apps/web/persistence/postgres.ts` | Canonical host `Pool` owner. Within a Workers operation, registers a request-scoped pool through `operationResource` (max 2) and closes it at operation completion; Node keeps its process-scoped pool (max 10). | Inspected source; exact-head runtime lifecycle checks are pending Actions. |
+| `apps/web/audit.ts`, `apps/web/providers/capability.ts`, `apps/web/support/capability.ts`, `apps/web/distribution/licensing-agent-update-admin.ts`, `apps/web/distribution/licensing-agent-update-authority.ts` | Host direct-pg consumers call the canonical pool owner. | Inspected source; not separate runtime acceptance. |
+| `apps/web/security/events.ts` | Now delegates event inserts to `getPostgresPool()`; its former independent process-global `Pool` was removed. A unit check asserts delegation. | Source/test change is committed; test and Worker lifecycle proof are pending Actions. |
+| `apps/web/health/readiness.ts` | Readiness creates short-lived pools and closes them in `finally`; left unchanged. | Inspected source; no new runtime claim. |
+| Released licensing repository | Signing-key and commercial-lease repositories create operation-level PostgreSQL clients; commercial issuance uses the package transaction boundary. | Inspected released source. Workers public-key registry reads do not prove lease signing, issuance, or rollback. |
+
+Prisma-backed application paths, including Prisma raw-query calls, remain owned
+by `platform/host/db.ts` and its operation-scoped Prisma client; those are
+distinct from direct `pg.Pool` call sites. This inventory is a source audit,
+not proof that every listed path has been exercised in workerd.
+
 `HYPERDRIVE_FRESH` must reference a provider configuration with query caching
 disabled before any staging/live acceptance. Its all-zero ID is an explicit
 unprovisioned placeholder; the local connection string is only the disposable
@@ -77,12 +96,7 @@ bytes; their artifact SHA-256 and lockfile provenance are recorded in PR266.
 The ingested lockfile must be unchanged by verification. Sessions are fixtures
 in disposable Actions PostgreSQL, not evidence of Google provider sign-in.
 
-Beyond the verified receiving milestone, still required: raw-pg call-site audit,
-provider cache-disable verification, real Google/Redis configuration and
-sign-in, representative licensing/transaction receiving proof, bounded
-scheduled entrypoint, deployed Free CPU/startup/bundle/memory evidence and
-installed native interaction. Keep the parent PARTIAL until those gates
-are resolved. No merge or deployment is authorized by this candidate.
+Beyond the verified receiving milestone, still required: provider cache-disable verification, real Google/Redis configuration and sign-in, representative licensing/transaction receiving proof, bounded scheduled entrypoint, deployed Free CPU/startup/bundle/memory evidence and installed native interaction. The source-level raw-pg ownership audit is recorded below; runtime lifecycle/receiving checks remain subject to exact-head Actions. Keep the parent PARTIAL until those gates are resolved. PR merge and production deployment remain unauthorized; the owner's later isolated staging authorization is described above.
 
 ### Prisma runtime receiving correction
 
@@ -150,7 +164,7 @@ callback is `/api/auth/google/callback` on that exact origin. The application
 has not been deployed and this origin is not yet live. The active `jl-bke.com`
 DNS zone is in the owner's other Cloudflare account; production/apex cutover
 remains a later, separate operation. Do not transfer the zone, change its DNS,
-or deploy as part of this compatibility work.
+or deploy under the earlier migration boundary alone. The owner's later direction authorizes isolated staging setup and test deployment on eligible Free resources after review and protected configuration are ready. This does not authorize production/apex cutover, paid activation, production data or unapproved access grants; staging deployment uses a separate protected operation, never ordinary PR/fixture CI.
 
 Keep the OAuth client secret, Redis token, database credentials, session secret,
 application-factor encryption key, licensing pepper and signing private key
