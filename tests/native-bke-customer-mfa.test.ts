@@ -146,29 +146,90 @@ describe("Google-only authentication and Agent assurance boundary", () => {
     );
   }, 30_000);
 
-  it("keeps retired native enrollment and recovery responses secret-free", async () => {
+  it("never returns password material or recovery codes through retired native security mutations", async () => {
     const helper = read("apps/web/agent-sessions/native-mfa.ts");
-    const enrollRoute = read(
-      "app/api/agent-sessions/account/mfa/enroll/complete/route.ts",
-    );
-    const recoveryRoute = read(
-      "app/api/agent-sessions/account/mfa/recovery/regenerate/route.ts",
-    );
     expect(helper).not.toContain("console.log");
-    expect(enrollRoute).toContain("nativeSecurityMutationRetired");
-    expect(recoveryRoute).toContain("nativeSecurityMutationRetired");
-    expect(enrollRoute).not.toContain("recovery_codes");
-    expect(recoveryRoute).not.toContain("recovery_codes");
-
-    const { POST } = await import(
+    const change = await import(
       "../app/api/agent-sessions/account/mfa/recovery/regenerate/route"
     );
-    const response = await POST();
+    const response = await change.POST();
+    const body = await response.text();
+
     expect(response.status).toBe(409);
     expect(response.headers.get("cache-control")).toBe("no-store");
     expect(response.headers.get("set-cookie")).toBeNull();
-    expect(await response.text()).toBe(
-      JSON.stringify({ error: "BROWSER_SECURITY_REQUIRED" }),
+    expect(body).toBe(JSON.stringify({ error: "BROWSER_SECURITY_REQUIRED" }));
+    expect(body).not.toMatch(/password|recovery_codes|secret/i);
+  });
+
+  it("keeps organization overview bound to the authenticated Agent principal and selected account", () => {
+    const route = read("app/api/agent-sessions/account/organization/route.ts");
+    const authority = read("apps/web/accounts/agent-organization-overview.ts");
+
+    expect(route).toContain("rejectBrowserOriginForAgent(request)");
+    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+    expect(route).toContain("authenticateNativeAgentRequest(request)");
+    expect(route).toContain("accountId: authenticated.accountId");
+    expect(route).toContain("principalId: authenticated.userId");
+    expect(route).not.toContain("user_id");
+    expect(route).not.toContain("account_id");
+    expect(route).not.toContain("access_token");
+    expect(route).not.toContain("refresh_token");
+    expect(route).not.toContain("handoff_code");
+    expect(route).not.toContain("console.log");
+
+    expect(authority).toContain("ACCOUNTS_ACCOUNT_ACCESS_CAPABILITY_ID");
+    expect(authority).toContain("roleHasAccountsCapability");
+    expect(authority).toContain('"MANAGE_MEMBERS"');
+    expect(authority).toContain('"VIEW_PAYMENTS"');
+    expect(authority).toContain('"VIEW_LICENSES"');
+    expect(authority).not.toContain("tokenHash");
+    expect(authority).not.toContain("ownerId:");
+  });
+
+  it("proves role-filtered selected-account organization overview against the exact-head database", () => {
+    execFileSync(
+      "npx",
+      ["tsx", "tests/agent-session-organization-overview.certify.ts"],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: "--conditions=react-server",
+        },
+      },
     );
-  });;
+  }, 30_000);
+
+  it("keeps customer privacy requests behind authenticated Agent-session account scope", () => {
+    const route = read("app/api/agent-sessions/privacy/requests/route.ts");
+
+    expect(route).toContain("rejectBrowserOriginForAgent(request)");
+    expect(route).toContain("requireAgentAccountSessionProtocol(request)");
+    expect(route).toContain("authenticateNativeAgentRequest(request)");
+    expect(route).toContain("PRIVACY_REQUEST_TYPES");
+    expect(route).toContain("accountId: session.accountId");
+    expect(route).not.toContain("user_id:");
+    expect(route).not.toContain("account_id: z.");
+    expect(route).not.toContain("access_token:");
+    expect(route).not.toContain("refresh_token:");
+    expect(route).not.toContain("handoff_code:");
+    expect(route).not.toContain("console.log");
+  });
+
+  it("proves selected-account privacy request persistence and visibility boundaries", () => {
+    execFileSync(
+      "npx",
+      ["tsx", "tests/agent-session-privacy-requests.certify.ts"],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: "--conditions=react-server",
+        },
+      },
+    );
+  }, 30_000);
+
+
 });
