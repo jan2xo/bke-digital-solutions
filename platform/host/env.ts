@@ -47,5 +47,9 @@ export const env = new Proxy(proxyTarget as ServerEnvironment, {
 /** Resolve deployment configuration at request/operation time. This avoids
  * build-time snapshots for values supplied only by a Workers operation binding. */
 export function getRuntimeEnvironment(): ServerEnvironment {
-  return runtimeEnvironment();
+  if (workersRuntime) return runtimeEnvironment();
+  return parseEnvironment({
+    ...process.env,
+    DATABASE_URL: currentOperationDatabaseUrl() ?? process.env.DATABASE_URL,
+  });
 }
