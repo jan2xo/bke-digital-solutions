@@ -10,25 +10,27 @@ describe("native BKE customer registration", () => {
     const verify = read("app/api/agent-sessions/native/verify-email/route.ts");
     const resend = read("app/api/agent-sessions/native/verification/resend/route.ts");
 
-    for (const route of [preflight, register, verify, resend]) {
+    for (const route of [preflight, verify, resend]) {
       expect(route).toContain("rejectBrowserOriginForAgent(request)");
       expect(route).toContain("requireAgentAccountSessionProtocol(request)");
       expect(route).not.toContain("createSession");
       expect(route).not.toContain("assertSameOrigin");
       expect(route).not.toContain("console.log");
     }
+    expect(register).toContain("nativePasswordAuthRetired");
   });
 
   it("requires the currently published registration legal versions", () => {
     const preflight = read("app/api/agent-sessions/native/registration/route.ts");
     const register = read("app/api/agent-sessions/native/register/route.ts");
-    const authority = read("apps/web/auth/native-customer-registration.ts");
+    const authority = read("apps/web/auth/google-registration.ts");
 
     expect(preflight).toContain("registrationLegalDocuments");
     expect(preflight).toContain("currentPublishedVersionId");
     expect(preflight).toContain("content_markdown");
     expect(preflight).toContain("applyLegalVariables");
-    expect(register).toContain("legal_version_ids");
+    expect(register).toContain("nativePasswordAuthRetired");
+    expect(authority).toContain("registerGoogleCustomer");
     expect(authority).toContain("recordLegalAcceptances");
     expect(authority).toContain('"REGISTRATION"');
   });

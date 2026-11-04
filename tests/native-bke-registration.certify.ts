@@ -8,8 +8,11 @@ process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY ??=
 const { db } = await import("@/platform/host/db");
 const { hashToken } = await import("@/platform/host/security/crypto");
 const {
+  GoogleRegistrationError,
+  registerGoogleCustomer,
+} = await import("@/apps/web/auth/google-registration");
+const {
   NativeCustomerRegistrationError,
-  registerNativeCustomer,
   resendNativeCustomerVerification,
   verifyNativeCustomerEmail,
 } = await import("@/apps/web/auth/native-customer-registration");
@@ -80,18 +83,23 @@ const privacyVersionId = await resolveLegalVersion(
   "Native Cert Privacy",
 );
 
-const firstDelivery = await registerNativeCustomer({
+const googleSubject = `native-registration-cert-subject-${process.pid}`;
+const firstRegistration = await registerGoogleCustomer({
+  subject: googleSubject,
   email,
+  emailVerified: true,
   name,
-  password: "NativeCertPassword123",
   legalVersionIds: [termsVersionId, privacyVersionId],
-  request,
+  request: new Request("https://jl-bke.com/api/auth/google/callback", {
+    headers: { "user-agent": "bke-google-registration-cert" },
+  }),
 });
 
 const registered = await db.user.findUniqueOrThrow({
   where: { email },
   include: {
     credential: true,
+    googleIdentity: true,
     ownedAccounts: true,
     legalAcceptances: true,
   },
@@ -101,38 +109,38 @@ assert.equal(registered.ownedAccounts.length, 1);
 assert.equal(registered.ownedAccounts[0]!.type, "INDIVIDUAL");
 assert.equal(registered.ownedAccounts[0]!.displayName, name);
 assert.equal(registered.legalAcceptances.length, 2);
-assert.ok(registered.credential?.passwordHash);
-assert.notEqual(
-  registered.credential?.passwordHash,
-  "NativeCertPassword123",
-);
+assert.equal(registered.credential, null);
+assert.equal(registered.googleIdentity?.subject, googleSubject);
 
 const initialToken = await db.verificationToken.findFirstOrThrow({
   where: {
     identifier: email,
-    purpose: "VERIFY_EMAIL_NATIVE",
+    purpose: "VERIFY_EMAIL",
     usedAt: null,
   },
 });
-assert.equal(initialToken.tokenHash, hashToken(firstDelivery.code));
-assert.notEqual(initialToken.tokenHash, firstDelivery.code);
+assert.equal(
+  initialToken.tokenHash,
+  hashToken(firstRegistration.verificationToken),
+);
+assert.notEqual(initialToken.tokenHash, firstRegistration.verificationToken);
 
-await db.verificationToken.create({
-  data: {
-    identifier: email,
-    purpose: "VERIFY_EMAIL",
-    tokenHash: hashToken(`browser-verification-cert-token-${process.pid}`),
-    expiresAt: new Date(Date.now() + 30 * 60_000),
-  },
-});
-
-const secondDelivery =
-  await resendNativeCustomerVerification(email);
+const firstNativeDelivery = await resendNativeCustomerVerification(email);
+assert.ok(firstNativeDelivery);
+const secondDelivery = await resendNativeCustomerVerification(email);
 assert.ok(secondDelivery);
-assert.notEqual(secondDelivery.code, firstDelivery.code);
+assert.notEqual(secondDelivery.code, firstNativeDelivery.code);
+const rotatedNativeToken = await db.verificationToken.findUniqueOrThrow({
+  where: { tokenHash: hashToken(firstNativeDelivery.code) },
+});
+assert.ok(rotatedNativeToken.usedAt);
+const activeNativeToken = await db.verificationToken.findUniqueOrThrow({
+  where: { tokenHash: hashToken(secondDelivery.code) },
+});
+assert.equal(activeNativeToken.usedAt, null);
 
 await assert.rejects(
-  () => verifyNativeCustomerEmail(email, firstDelivery.code),
+  () => verifyNativeCustomerEmail(email, firstNativeDelivery!.code),
   (error: unknown) =>
     error instanceof NativeCustomerRegistrationError
     && error.code === "INVALID_VERIFICATION_CODE",
@@ -159,19 +167,20 @@ assert.equal(
 );
 
 await assert.rejects(
-  () => registerNativeCustomer({
+  () => registerGoogleCustomer({
+    subject: `different-subject-${process.pid}`,
     email,
+    emailVerified: true,
     name,
-    password: "NativeCertPassword123",
     legalVersionIds: [termsVersionId, privacyVersionId],
     request,
   }),
   (error: unknown) =>
-    error instanceof NativeCustomerRegistrationError
+    error instanceof GoogleRegistrationError
     && error.code === "ACCOUNT_EXISTS",
 );
 
-console.log("Native customer registration certification: PASS");
+console.log("Google customer registration and native email verification certification: PASS");
 await import("./agent-session-account-purchases.certify");
 await import("./agent-session-license-seat-management.certify");
 await import("./agent-session-license-device-management.certify");

@@ -45,7 +45,6 @@ suite("Google registration PostgreSQL transaction", () => {
     emails.length = 0;
     await db.$transaction(async (tx) => {
       if (ids.length) {
-        await tx.legalAcceptance.deleteMany({ where: { userId: { in: ids } } });
         await tx.googleIdentity.deleteMany({ where: { userId: { in: ids } } });
         await tx.session.deleteMany({ where: { userId: { in: ids } } });
         await tx.customerAccount.deleteMany({ where: { ownerId: { in: ids } } });
@@ -64,7 +63,8 @@ suite("Google registration PostgreSQL transaction", () => {
   it("commits the customer, owned account, legal records, verification token, and stable Google subject together", async () => {
     const input = await registrationInput(`subject-${randomUUID()}`);
     const result = await registerGoogleCustomer(input);
-    userIds.push(result.user.id);
+    // Successful registrations own immutable LegalAcceptance rows. Keep these
+    // unique fixture principals in the disposable CI database until teardown.
 
     const user = await db.user.findUniqueOrThrow({
       where: { id: result.user.id },
@@ -141,7 +141,8 @@ suite("Google registration PostgreSQL transaction", () => {
       registerGoogleCustomer(second),
     ]);
     for (const result of results) {
-      if (result.status === "fulfilled") userIds.push(result.value.user.id);
+      // The winning registration owns immutable legal acceptance rows; leave it
+      // in the disposable CI database until teardown.
     }
 
     expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
