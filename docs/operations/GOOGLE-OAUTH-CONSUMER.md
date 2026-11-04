@@ -19,10 +19,10 @@ Use validated stable Google subject as the external key. Never auto-link by matc
 The assigned staging origin is
 `https://bke-digital-solutions.jlprojectfreedom.workers.dev`, with exact callback
 `https://bke-digital-solutions.jlprojectfreedom.workers.dev/api/auth/google/callback`.
-The Cloudflare Worker has not been deployed yet. Configure staging `APP_URL` and
-the selected Google web client's exact redirect URI to this origin before real
-provider sign-in. The existing `https://jl-bke.com` site is live and must remain
-untouched; do not repoint its hostname or share its state.
+The Cloudflare Worker has not been deployed yet. Infisical Staging `APP_URL`
+is set to this origin. Verify the selected Google web client's exact redirect URI
+before real provider sign-in. The existing `https://jl-bke.com` site is live and
+must remain untouched; do not repoint its hostname or share its state.
 
 After independent acceptance and a separately authorized production cutover,
 the same application can use `APP_URL=https://jl-bke.com` and its matching Google
