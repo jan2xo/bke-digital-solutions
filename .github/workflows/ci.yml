@@ -295,7 +295,7 @@ jobs:
         run: |
           npm run workers:preview -- --port 8787 > /tmp/bke-workerd.log 2>&1 &
           preview_pid=$!
-          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          trap 'kill "$preview_pid" 2>/dev/null || true; sleep 1' EXIT
           npm run workers:smoke
       - name: Require generated lockfile to be committed
         run: git diff --exit-code -- package.json package-lock.json

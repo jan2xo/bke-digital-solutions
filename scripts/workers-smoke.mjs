@@ -13,9 +13,9 @@ for (let attempt = 0; attempt < 90; attempt++) {
 assert.ok(ready, "Actual application did not start in workerd");
 for (let invocation = 0; invocation < 2; invocation++) {
   const response = await fetch(origin + "/", { signal: AbortSignal.timeout(15000) });
-  assert.equal(response.status, 200, "Dynamic application browse failed");
+  const html = await response.text();
+  assert.equal(response.status, 200, "Dynamic application browse failed; digest=" + (html.match(/"digest"\\s*:\\s*"([^"]+)"/)?.[1] ?? "unavailable"));
   assert.match(response.headers.get("content-type") ?? "", /text\/html/);
-  await response.text();
 }
 const login = await fetch(origin + "/login", { signal: AbortSignal.timeout(15000) });
 assert.equal(login.status, 200);
