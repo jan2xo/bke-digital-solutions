@@ -100,9 +100,17 @@ describe("intent-driven certification foundation", () => {
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
     expect(workflow).toContain(
-      "group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}",
+      "group: ${{ inputs.deploy_staging && format('digital-solutions-staging-{0}', inputs.source_sha) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}",
     );
+    expect(workflow).toContain("cancel-in-progress: ${{ !inputs.deploy_staging }}");
+    expect(workflow).toContain("default: false");
+    expect(workflow).toContain(
+      "if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_staging == true && needs.required-certification.result == 'success' }}",
+    );
+    const stagingJob = workflow.split("  staging-deploy:\n")[1]?.split("\n  required-certification:")[0];
+    expect(stagingJob).toContain("cancel-in-progress: false");
     expect(workflow).not.toContain("github.event.pull_request");
+    expect(workflow).not.toContain("push:");
   });
 
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
