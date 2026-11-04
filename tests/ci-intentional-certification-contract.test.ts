@@ -105,10 +105,15 @@ describe("intentional GitHub Actions architecture", () => {
       join(activeDir, "security-generate.yml"),
       "utf8",
     );
+    const ci = readFileSync(join(activeDir, "ci.yml"), "utf8");
     expect(securityGenerate).toContain("policy.classifyPriorRun(");
     expect(securityGenerate).toContain("policy.correlateGeneratorRun(");
     expect(securityGenerate).toContain("policy.artifactBelongsToRun(");
     expect(securityGenerate).toContain("security-generate-dispatch-pr-269");
+    expect(ci).toContain("inputs.security_generator == true");
+    expect(ci).toContain("format('digital-solutions-generator-{0}', inputs.source_sha || github.ref)");
+    expect(ci).toContain("format('digital-solutions-ci-{0}', inputs.source_sha || github.ref)");
+    expect(ci).toContain("cancel-in-progress: ${{ inputs.security_generator != true }}");
   });
 
   it("executes actionlint from the exact candidate checkout", () => {
