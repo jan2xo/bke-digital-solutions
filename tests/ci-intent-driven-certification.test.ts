@@ -23,6 +23,9 @@ const callableWorkflows = [
 ] as const;
 
 const explicitConcurrencyGroups = new Map<string, string>([
+  ["v2-composition.yml", "group: composition-${{ inputs.source_sha }}"],
+  ["v2-host-v1-free.yml", "group: host-v1-free-${{ inputs.source_sha }}"],
+  ["v2-prisma-isolation.yml", "group: prisma-isolation-${{ inputs.source_sha }}"],
   [
     "native-bke-account-handoff.yml",
     "group: native-bke-account-${{ inputs.source_sha }}",
@@ -72,6 +75,19 @@ describe("intent-driven certification foundation", () => {
       expect(workflow).not.toContain("github.event.pull_request");
     },
   );
+
+  it("keeps sibling composition, host and Prisma runs isolated under a shared caller", () => {
+    const groups = ["v2-composition.yml", "v2-host-v1-free.yml", "v2-prisma-isolation.yml"]
+      .map((name) => {
+        const workflow = readFileSync(`${workflowsDir}/${name}`, "utf8");
+        expect(workflow).toContain("cancel-in-progress: true");
+        const group = workflow.match(/^  group: (.+)$/m)?.[1];
+        expect(group).toContain("inputs.source_sha");
+        expect(group).not.toContain("github.workflow");
+        return group;
+      });
+    expect(new Set(groups).size).toBe(3);
+  });
 
   it("makes global CI callable against an explicit exact SHA", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");

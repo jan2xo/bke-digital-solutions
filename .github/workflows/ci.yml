@@ -205,6 +205,105 @@ jobs:
       - name: Build application runner container
         run: docker build --target runner -t bke-digital-solutions:ci .
 
+  workers-application:
+    name: Workers application receiving proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: test
+      DEPLOYMENT_ENV: test
+      APP_URL: https://workers-ci.example.invalid
+      DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
+      SESSION_SECRET: ci-session-secret-with-at-least-32-chars
+      LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
+      LICENSE_SIGNING_KEY_ID: ci-license-signing-key
+      CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+      EMAIL_FROM: build@example.invalid
+      S3_BUCKET: ci-private
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: log
+      WRANGLER_SEND_METRICS: 'false'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify source and workflow provenance
+        env:
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run db:generate
+      - name: Require unchanged generated Prisma client
+        run: git diff --exit-code -- platform/persistence/generated/prisma
+      - run: npm run db:deploy
+      - run: npm run db:seed
+      - name: Create disposable signing keys
+        run: |
+          npm run licensing:keys .certification-secrets
+          {
+            echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_PRIVATE_KEY'
+            cat .certification-secrets/license-signing-private.pem
+            echo 'BKE_PRIVATE_KEY'
+            echo 'LICENSE_SIGNING_PUBLIC_KEY<<BKE_PUBLIC_KEY'
+            cat .certification-secrets/license-signing-public.pem
+            echo 'BKE_PUBLIC_KEY'
+          } >> "$GITHUB_ENV"
+      - name: Write disposable workerd configuration
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from "node:fs";
+          const names = [
+            "DEPLOYMENT_ENV", "APP_URL", "DATABASE_URL", "SESSION_SECRET",
+            "LICENSE_PEPPER", "CRON_SECRET", "EMAIL_FROM", "S3_BUCKET",
+            "PAYMENT_PROVIDER", "EMAIL_PROVIDER",
+            "LICENSE_SIGNING_PRIVATE_KEY", "LICENSE_SIGNING_PUBLIC_KEY", "LICENSE_SIGNING_KEY_ID",
+          ];
+          const values = { NODE_ENV: "production",
+            ...Object.fromEntries(names.map(name => [name, process.env[name]])) };
+          writeFileSync(".dev.vars", Object.entries(values)
+            .map(([key, value]) => key + "=" + JSON.stringify(value)).join("\n") + "\n",
+            { mode: 0o600 });
+          NODE
+      - run: npm run workers:types
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Build actual Workers application
+        run: npm run workers:build
+      - run: npm run workers:typecheck
+      - name: Produce disposable application sessions
+        run: node --conditions=react-server node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
+      - name: Exercise application in workerd
+        run: |
+          npm run workers:preview -- --port 8787 > /tmp/bke-workerd.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          npm run workers:smoke
+      - name: Require generated lockfile to be committed
+        run: git diff --exit-code -- package.json package-lock.json
+      - name: Preserve workerd failure evidence
+        if: failure()
+        run: |
+          if test -f /tmp/bke-workerd.log; then tail -n 120 /tmp/bke-workerd.log; fi
+
   required-certification:
     name: Required certification
     if: ${{ always() }}
@@ -213,6 +312,7 @@ jobs:
       - code-quality-build
       - security
       - deployment-containers
+      - workers-application
     runs-on: ubuntu-latest
     steps:
       - name: Require every core CI module
@@ -221,8 +321,9 @@ jobs:
           CODE_QUALITY_BUILD: ${{ needs.code-quality-build.result }}
           SECURITY: ${{ needs.security.result }}
           DEPLOYMENT_CONTAINERS: ${{ needs.deployment-containers.result }}
+          WORKERS_APPLICATION: ${{ needs.workers-application.result }}
         run: |
-          for value in "$DATABASE_TESTS" "$CODE_QUALITY_BUILD" "$SECURITY" "$DEPLOYMENT_CONTAINERS"; do
+          for value in "$DATABASE_TESTS" "$CODE_QUALITY_BUILD" "$SECURITY" "$DEPLOYMENT_CONTAINERS" "$WORKERS_APPLICATION"; do
             test "$value" = "success" || { echo "Required core CI module did not pass: $value"; exit 1; }
           done
           echo "Required Digital Solutions certification: PASS"
