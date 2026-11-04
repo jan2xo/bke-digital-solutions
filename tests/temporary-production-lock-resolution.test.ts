@@ -25,8 +25,10 @@ function emit(name: string, bytes: Buffer): void {
 
 describe("temporary npm dependency graph resolution emitter", () => {
   it.runIf(ENABLED)("generates and emits the genuine candidate package files", () => {
-    const sourceSha = process.env.BKE_EXPECTED_SOURCE_SHA ?? "";
+    const sourceSha = process.env.SOURCE_SHA ?? process.env.BKE_EXPECTED_SOURCE_SHA ?? "";
     expect(sourceSha).toMatch(/^[0-9a-f]{40}$/);
+    const checkoutSha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+    expect(checkoutSha).toBe(sourceSha);
     const tmp = mkdtempSync(path.join(os.tmpdir(), "bke-npm-repair-"));
     try {
       const root = process.cwd();
