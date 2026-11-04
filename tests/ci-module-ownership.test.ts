@@ -104,6 +104,8 @@ describe("CI module ownership", () => {
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).not.toContain("pull_request:");
     expect(workflow).toContain("Required certification");
-    expect(workflow).toContain("cancel-in-progress: true");
+    expect(workflow).toContain("inputs.security_generator == true");
+    expect(workflow).toContain("format('digital-solutions-generator-{0}', inputs.source_sha || github.ref)");
+    expect(workflow).toContain("cancel-in-progress: ${{ inputs.security_generator != true }}");
   });
 });
