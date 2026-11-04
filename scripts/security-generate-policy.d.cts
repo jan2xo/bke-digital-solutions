@@ -23,6 +23,11 @@ export interface GeneratorJobFixture {
   name: string;
   conclusion: GeneratorConclusion;
 }
+export const GENERATOR_JOB: string;
+export const HEAD_BRANCH: string;
+export const REPOSITORY: string;
+export const PULL_REQUEST: number;
+export const OWNER: string;
 export function authorizeCommenter(input: { association: AuthorizationAssociation; login?: string | null; permission?: string | null }): Decision & {ok: boolean};
 export function validateTarget(input: {
   contextRepository: string;
