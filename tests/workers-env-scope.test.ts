@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
-const keys = ["BKE_RUNTIME","NODE_ENV","DEPLOYMENT_ENV","APP_URL","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","LICENSE_PEPPER","CRON_SECRET","S3_BUCKET","EMAIL_FROM"] as const;
+const keys = ["BKE_RUNTIME","DEPLOYMENT_ENV","APP_URL","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","LICENSE_PEPPER","CRON_SECRET","S3_BUCKET","EMAIL_FROM"] as const;
 const saved = new Map(keys.map((k) => [k, process.env[k]]));
-afterEach(() => { for (const k of keys) { const v=saved.get(k); if(v===undefined) delete process.env[k]; else process.env[k]=v; } vi.resetModules(); });
+afterEach(() => {
+ for (const k of keys) { const v=saved.get(k); if(v===undefined) delete process.env[k]; else process.env[k]=v; }
+ vi.unstubAllEnvs(); vi.resetModules();
+});
 function configure(runtime:"node"|"workers") {
- process.env.BKE_RUNTIME=runtime; process.env.NODE_ENV="test"; process.env.DEPLOYMENT_ENV="test";
+ process.env.BKE_RUNTIME=runtime; vi.stubEnv("NODE_ENV","test"); process.env.DEPLOYMENT_ENV="test";
  process.env.APP_URL=`https://${runtime}-ci.example.invalid`; process.env.SESSION_SECRET="ci-session-secret-with-at-least-32-chars";
  process.env.LICENSE_PEPPER="ci-license-pepper-with-at-least-32-chars"; process.env.CRON_SECRET="ci-cron-secret-with-at-least-32-chars";
  process.env.S3_BUCKET="ci-private"; process.env.EMAIL_FROM="build@example.invalid";
