@@ -154,3 +154,12 @@ Keep the OAuth client secret, Redis token, database credentials, session secret,
 application-factor encryption key, licensing pepper and signing private key
 in protected configuration only. The public client ID and origin may be recorded;
 secret values must not appear in source, profiles, artifacts, comments or Notion.
+
+The owner subsequently selected `https://try.jl-bke.com` for testing and confirmed
+that the apex site is currently live on the VPS. Preserve the apex and its routing.
+The exact test Google callback is
+`https://try.jl-bke.com/api/auth/google/callback`; test runtime configuration must
+use that origin. Infisical is the owner's existing secret manager. Its project,
+test environment and delivery integration still require confirmation; no secret
+values belong in this repository. See the Google consumer contract for delivery
+and production-cutover boundaries.

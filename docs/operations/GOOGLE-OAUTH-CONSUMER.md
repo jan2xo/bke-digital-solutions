@@ -14,6 +14,47 @@ The expected public client audience is configured by GOOGLE_CLIENT_ID. Owner-sup
 
 Use validated stable Google subject as the external key. Never auto-link by matching email or promote from an email/domain. New authorized registrations default to CUSTOMER. Bind the subject atomically within the existing host registration/account/legal transaction, rolling back all records on collisions. Apply existing canonical BKE contact-email verification policy; Google profile claims must not silently mutate role, ownership or contact-verification state.
 
+## Test origin and protected configuration
+
+The owner selected `https://try.jl-bke.com` for the receiving deployment.
+The existing `https://jl-bke.com` site is live and must remain untouched.
+Set the test runtime's `APP_URL=https://try.jl-bke.com`; the derived callback is
+`https://try.jl-bke.com/api/auth/google/callback`. The selected Google web client
+must allow that exact URI before the real test. Do not remove a working production
+callback, repoint the live hostname, share production state, or claim the Google
+console is configured from this document.
+
+After independent acceptance and an authorized production cutover, the same
+application can use `APP_URL=https://jl-bke.com` and its matching Google callback.
+Origin changes require receiving verification and a rollback plan; they do not
+require a separate authentication implementation.
+
+The owner uses Infisical. Reuse the existing project and a separate test
+environment/path once its non-secret identifiers and integration are confirmed.
+The committed `.env.example` records `GOOGLE_CLIENT_ID` and
+`GOOGLE_CLIENT_SECRET` as empty configuration fields. It does not hold their
+runtime values. Repository examples document the contract; they do not prove
+that a database, Redis instance, or protected credential has been provisioned.
+
+Prefer the existing managed secret delivery/sync when suitable. If GitHub Actions
+needs Infisical access, use the vendor-supported action and narrowly scoped OIDC
+trust for the intended repository, protected environment and trusted workflow.
+Do not grant general PR/fixture CI access to Infisical. The current receiving job
+continues to use disposable fixtures only. Do not fetch live secrets during
+dependency installation/build or publish them inside bundles, logs or artifacts.
+Deliver runtime values through protected Worker bindings at the authorized
+deployment boundary. Avoid an Infisical network call on each application request.
+
+Infisical project/identity/environment IDs and names may be recorded as
+non-secret integration metadata. OAuth secrets, database credentials, Redis
+tokens, encryption/session keys and signing private keys must remain in the
+protected store. Never request secret JSON or tokens in chat. No new identity,
+access grant, secret sync or deployment is authorized merely by this contract.
+
+[Infisical's supported GitHub action](https://github.com/Infisical/secrets-action)
+documents OIDC and environment/path scoping. Pin an evaluated immutable action
+commit before adoption.
+
 ## Application-factor and administrator boundaries
 
 Ordinary Google sign-in is BASIC; ordinary Google plus application MFA is MFA_VERIFIED without an automatic recent-auth timestamp. Sensitive actions use the owner-approved fresh BKE factor policy, bound to the exact validated active BKE user/session. Preserve expiry, attempts, consumption/replay, recovery, lifecycle, revocation and fail-closed dependency behavior.
