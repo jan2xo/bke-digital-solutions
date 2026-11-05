@@ -33,6 +33,7 @@ describe("V3 central licensing and GitHub distribution authority", () => {
     }
     expect(migration).toContain("V3_LEGACY_TABLE_NONEMPTY");
     expect(migration).toContain("SELECT EXISTS");
+    expect(migration).toContain("END $$;");
     for (const retiredColumn of ["backupEvidence", "complianceEvidence", "migrationEvidence"]) {
       expect(migration).toContain(`"${retiredColumn}" IS NOT NULL`);
     }
