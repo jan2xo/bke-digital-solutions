@@ -25,7 +25,6 @@ const secrets = {
   ADMIN_OWNER_RECOVERY_KEY: secret,
   PROVIDER_CREDENTIALS_ENCRYPTION_KEY: secret,
   CRON_SECRET: secret,
-  RELEASE_EVIDENCE_INGESTION_TOKEN: secret,
   POSTGRES_PASSWORD: "db-password",
   MINIO_ROOT_PASSWORD: "minio-password",
   S3_SECRET_ACCESS_KEY: "storage-secret",
@@ -109,8 +108,6 @@ describe("V3 disposable certification environment", () => {
       secrets,
       licensePrivateBase64: "license-private",
       licensePublicBase64: "license-public",
-      supplyPrivateBase64: "supply-private",
-      supplyPublicBase64: "supply-public",
       agentUpdateSigningKeysJson: '{"bke-agent-update-preproduction-v1":"private-key-base64"}',
     });
 
@@ -134,8 +131,6 @@ describe("V3 disposable certification environment", () => {
       secrets,
       licensePrivateBase64: "license-private",
       licensePublicBase64: "license-public",
-      supplyPrivateBase64: "supply-private",
-      supplyPublicBase64: "supply-public",
       agentUpdateSigningKeysJson: '{"bke-agent-update-preproduction-v1":"private-key-base64"}',
     });
 

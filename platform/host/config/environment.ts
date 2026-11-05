@@ -109,7 +109,6 @@ export const environmentSchema = z.object({
   if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
   if (protectedEnvironment && (!value.LICENSE_SIGNING_PRIVATE_KEY || !value.LICENSE_SIGNING_PUBLIC_KEY)) context.addIssue({ code: "custom", path: ["LICENSE_SIGNING_PRIVATE_KEY"], message: "Ed25519 lease signing keys are required in protected environments" });
-  if (protectedEnvironment && !value.SUPPLY_CHAIN_SIGNING_PRIVATE_KEY) context.addIssue({ code: "custom", path: ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY"], message: "Supply-chain signing key is required in protected environments" });
   if (value.CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when Claim Code checkout is enabled" });

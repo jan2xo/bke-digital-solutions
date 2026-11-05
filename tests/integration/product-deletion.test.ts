@@ -21,6 +21,12 @@ async function createProduct(options: { archived?: boolean; artifact?: boolean; 
       imageKey: options.image ? `tests/${suffix}/image.png` : null,
     },
   });
+  if (options.image) {
+    await db.product.update({
+      where: { id: product.id },
+      data: { imageKey: `products/${product.id}/images/00000000-0000-4000-8000-000000000001.png` },
+    });
+  }
   const policy = await db.licensePolicy.create({ data: { productId: product.id, name: "Test policy", maxSeats: 1, maxDevicesPerSeat: 1 } });
   const price = await db.price.create({ data: { productId: product.id, licensePolicyId: policy.id, name: "Test price", amountMinor: 10000, billingType: "ONE_TIME" } });
   const edition = await db.edition.create({ data: { productId: product.id, slug: "test", name: "Test", maxUsers: 1, maxDevicesPerUser: 1, purchasePlans: { create: { type: "PERPETUAL", amountMinor: 10000, renewalBehavior: "NONE" } } } });
