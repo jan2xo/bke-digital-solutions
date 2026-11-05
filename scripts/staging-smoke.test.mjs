@@ -89,7 +89,7 @@ describe("public Staging smoke", () => {
   });
 
   it("fails readiness when any required dependency is down or missing", async () => {
-    const cases: Array<[Record<string, string>, RegExp]> = [
+    const cases = [
       [{ postgresql: "up", valkey: "down", providers: "up" }, /valkey down/],
       [{ postgresql: "up", providers: "up" }, /valkey missing/],
     ];
