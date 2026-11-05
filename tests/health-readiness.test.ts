@@ -35,6 +35,7 @@ describe("runtime readiness", () => {
   it("is ready only when infrastructure and selected provider configuration resolve", async () => {
     const { readiness } = await import("@/lib/health");
     await expect(readiness()).resolves.toEqual({ ready: true, checks: { postgresql: "up", valkey: "up", providers: "up" } });
+    expect(mocks.storage).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -48,8 +49,6 @@ describe("runtime readiness", () => {
     expect(result.ready).toBe(false);
     expect(result.checks[dependency as keyof typeof result.checks]).toBe("down");
   });
-});
-
 
 it("checks configured legacy storage and fails closed when it is unavailable", async () => {
   Object.assign(mocks.environment, { S3_BUCKET: "legacy-storage", S3_ACCESS_KEY_ID: "key", S3_SECRET_ACCESS_KEY: "secret" });
@@ -58,4 +57,6 @@ it("checks configured legacy storage and fails closed when it is unavailable", a
   const result = await readiness();
   expect(result.ready).toBe(false);
   expect(result.checks.objectStorage).toBe("down");
+});
+
 });

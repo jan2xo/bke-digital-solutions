@@ -42,7 +42,12 @@ export async function PATCH(
     assertSameOrigin(request);
     const admin = await requireAdmin();
     const { id } = await params;
-    const input = schema.parse(await request.json());
+    const body: unknown = await request.json();
+    if (body && typeof body === "object" && "imageKey" in body) {
+      const imageKey = (body as { imageKey?: unknown }).imageKey;
+      if (imageKey !== null && imageKey !== undefined && !resolveProductImageUrl(imageKey)) throw new Error("INVALID_IMAGE_URL");
+    }
+    const input = schema.parse(body);
 
     const existing = await db.product.findUniqueOrThrow({
       where: { id },

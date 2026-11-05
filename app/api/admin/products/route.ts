@@ -41,7 +41,9 @@ export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const admin = await requireAdmin();
-    const input = schema.parse(await request.json());
+    const body: unknown = await request.json();
+    if (body && typeof body === "object" && "imageKey" in body && !resolveProductImageUrl((body as { imageKey?: unknown }).imageKey)) throw new Error("INVALID_IMAGE_URL");
+    const input = schema.parse(body);
     validateAcceptedVersionRange(input.minimumAcceptedVersion, input.maximumAcceptedVersion);
     const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {

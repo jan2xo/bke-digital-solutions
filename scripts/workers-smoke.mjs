@@ -17,12 +17,17 @@ for (let invocation = 0; invocation < 2; invocation++) {
   assert.equal(response.status, 200, "Dynamic application browse failed; digest=" + (html.match(/"digest"\\s*:\\s*"([^"]+)"/)?.[1] ?? "unavailable"));
   assert.match(response.headers.get("content-type") ?? "", /text\/html/);
   const csp = response.headers.get("content-security-policy") ?? "";
-  assert.ok(csp.includes("data: https:;"));
+  const imgSrc = csp.split(";").map((directive) => directive.trim()).find((directive) => directive.startsWith("img-src "));
+  assert.ok(imgSrc, "Content Security Policy must define img-src");
+  const imgSources = imgSrc.split(/\s+/).slice(1);
+  assert.ok(imgSources.includes("https:") || imgSources.includes("https://raw.githubusercontent.com"), "CSP must authorize GitHub image delivery");
 }
 const products = await fetch(origin + "/products", { signal: AbortSignal.timeout(15000) });
 assert.equal(products.status, 200);
 const productsHtml = await products.text();
-assert.ok(productsHtml.includes("https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/e60c5762ff40d2e2afdcf52dc2cc06ff2d1aa905/public/bke-icon.png"));
+const imageUrl = "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/e60c5762ff40d2e2afdcf52dc2cc06ff2d1aa905/public/bke-icon.png";
+const imageTags = [...productsHtml.matchAll(/<img\b[^>]*>/g)].map(match => match[0]);
+assert.ok(imageTags.some(tag => tag.includes(`src="${imageUrl}"`)), "Catalog must render the validated GitHub image in an img src");
 
 const login = await fetch(origin + "/login", { signal: AbortSignal.timeout(15000) });
 assert.equal(login.status, 200);

@@ -102,9 +102,9 @@ export const environmentSchema = z.object({
   if (origin.pathname !== "/" || origin.search || origin.hash) context.addIssue({ code: "custom", path: ["APP_URL"], message: "must be a canonical origin without a path, query, or fragment" });
   if (Boolean(value.UPSTASH_REDIS_REST_URL) !== Boolean(value.UPSTASH_REDIS_REST_TOKEN)) context.addIssue({ code: "custom", path: ["UPSTASH_REDIS_REST_URL"], message: "URL and token must be configured together" });
   if (protectedEnvironment && !value.REDIS_URL && !value.UPSTASH_REDIS_REST_URL) context.addIssue({ code: "custom", path: ["REDIS_URL"], message: "a distributed Valkey/Redis backend is required" });
-  const storageConfigured = Boolean(value.S3_ENDPOINT || value.S3_PUBLIC_UPLOAD_ENDPOINT || value.S3_ACCESS_KEY_ID || value.S3_SECRET_ACCESS_KEY || (protectedEnvironment && value.S3_BUCKET));
+  const storageConfigured = Boolean(value.S3_BUCKET || value.S3_ENDPOINT || value.S3_PUBLIC_UPLOAD_ENDPOINT || value.S3_ACCESS_KEY_ID || value.S3_SECRET_ACCESS_KEY);
   if (Boolean(value.S3_ACCESS_KEY_ID) !== Boolean(value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "storage access and secret keys must be configured together" });
-  if (storageConfigured && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required when S3 is configured" });
+  if (protectedEnvironment && storageConfigured && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required when S3 is configured" });
   if (storageConfigured && !value.S3_BUCKET) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "is required when S3 is configured" });
   if (protectedEnvironment && storageConfigured && value.S3_ENDPOINT) {
     const storageEndpoint = new URL(value.S3_ENDPOINT);

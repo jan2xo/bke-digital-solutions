@@ -18,10 +18,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       ? resolveProductImageUrl((body as { url?: unknown }).url)
       : null;
     if (!url) throw new Error("INVALID_IMAGE_URL");
-    const current = await db.product.findUniqueOrThrow({ where: { id }, select: { imageKey: true } });
-    await db.$transaction(async (tx) => {
+    const cleanupPending = await db.$transaction(async (tx) => {
+      const current = await tx.product.findUniqueOrThrow({ where: { id }, select: { imageKey: true } });
       await tx.product.update({ where: { id }, data: { imageKey: url } });
-      if (isLegacyProductImageObjectKey(current.imageKey, id)) {
+      const cleanupPending = isLegacyProductImageObjectKey(current.imageKey, id);
+      if (cleanupPending) {
         const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, current.imageKey);
         await tx.storageCleanupJob.upsert({
           where: { idempotencyKey }, update: {},
@@ -32,8 +33,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           },
         });
       }
+      return cleanupPending;
     });
-    await audit({ actorId: admin.id, action: "PRODUCT_IMAGE_UPDATED", targetType: "Product", targetId: id, metadata: { source: "github", cleanupPending: isLegacyProductImageObjectKey(current.imageKey, id) } });
+    await audit({ actorId: admin.id, action: "PRODUCT_IMAGE_UPDATED", targetType: "Product", targetId: id, metadata: { source: "github", cleanupPending } });
     return NextResponse.json({ ok: true });
   } catch (error) {
     return apiError(error);

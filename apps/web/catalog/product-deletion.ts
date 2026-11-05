@@ -178,7 +178,7 @@ async function snapshotWithClient(client: EligibilityClient, productId: string):
       prices: product._count.prices,
       policies: product._count.policies,
       tags: product.tags.length,
-      images: isLegacyProductImageObjectKey(product.imageKey, productId) ? 1 : 0,
+      images: product.imageKey ? 1 : 0,
       storageObjects: artifacts.length + (isLegacyProductImageObjectKey(product.imageKey, productId) ? 1 : 0),
     },
   };

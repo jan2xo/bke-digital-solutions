@@ -18,9 +18,10 @@ async function createProduct(options: { archived?: boolean; artifact?: boolean; 
       type: "SOFTWARE",
       active: false,
       archivedAt: options.archived === false ? null : new Date(),
-      imageKey: options.image ? `tests/${suffix}/image.png` : null,
+      imageKey: null,
     },
   });
+  if (options.image) await db.product.update({ where: { id: product.id }, data: { imageKey: `products/${product.id}/images/123e4567-e89b-42d3-a456-426614174000.png` } });
   const policy = await db.licensePolicy.create({ data: { productId: product.id, name: "Test policy", maxSeats: 1, maxDevicesPerSeat: 1 } });
   const price = await db.price.create({ data: { productId: product.id, licensePolicyId: policy.id, name: "Test price", amountMinor: 10000, billingType: "ONE_TIME" } });
   const edition = await db.edition.create({ data: { productId: product.id, slug: "test", name: "Test", maxUsers: 1, maxDevicesPerUser: 1, purchasePlans: { create: { type: "PERPETUAL", amountMinor: 10000, renewalBehavior: "NONE" } } } });
@@ -59,7 +60,21 @@ describe.sequential("archived product permanent deletion", () => {
     expect(await db.productArtifact.count({ where: { productId: product.id } })).toBe(0);
     expect(await db.edition.count({ where: { productId: product.id } })).toBe(0);
     const log = await db.auditLog.findFirstOrThrow({ where: { targetId: product.id, action: "PRODUCT_DELETION_FINALIZED" } });
-    expect(JSON.stringify(log.metadata)).not.toContain("tests/");
+    expect(JSON.stringify(log.metadata)).not.toContain("products/");
+  });
+
+  it("counts GitHub product images without creating S3 cleanup work", async () => {
+    actorId ||= (await db.user.create({ data: { email: `delete-admin-${suffix}@bke.test`, emailVerified: new Date(), role: "ADMIN" } })).id;
+    const { product } = await createProduct();
+    const imageUrl = "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/main/public/bke-icon.png";
+    await db.product.update({ where: { id: product.id }, data: { imageKey: imageUrl } });
+
+    const eligibility = await evaluateProductDeletionEligibility(product.id);
+    expect(eligibility.removableResources).toMatchObject({ images: 1, storageObjects: 0 });
+    await requestProductDeletion({ productId: product.id, actorId, confirmationName: product.name });
+    expect(await db.storageCleanupJob.count({ where: { productId: product.id } })).toBe(0);
+    await permanentlyDeleteProduct({ productId: product.id, actorId, confirmationName: product.name, deleteStorageObject: async () => { throw new Error("GitHub URL must not be sent to S3"); } });
+    expect(await db.product.findUnique({ where: { id: product.id } })).toBeNull();
   });
 
   it("serializes concurrent deletion requests without duplicating cleanup jobs", async () => {
