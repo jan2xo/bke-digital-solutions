@@ -46,19 +46,29 @@ describe("protected Staging guards",()=>{
   ]) expect(()=>databaseUrl("DIRECT_DATABASE_URL",`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?${query}`,host)).toThrow(/query/);
  });
  it("requires query-string redaction in deployed observability settings",()=>{
-  expect(verifyObservabilityRedaction({observability:{redact_query_string:true}})).toBe(true);
-  expect(()=>verifyObservabilityRedaction({observability:{redact_query_string:false}})).toThrow(/redaction/);
-  expect(()=>verifyObservabilityRedaction({observability:{}})).toThrow(/redaction/);
+  expect(verifyObservabilityRedaction({observability:{enabled:true,logs:{enabled:true},redact_query_string:true}})).toBe(true);
+  expect(()=>verifyObservabilityRedaction({observability:{enabled:true,logs:{enabled:true},redact_query_string:false}})).toThrow(/logs and query-string redaction/);
+  expect(()=>verifyObservabilityRedaction({observability:{enabled:false,logs:{enabled:true},redact_query_string:true}})).toThrow(/logs and query-string redaction/);
+  expect(()=>verifyObservabilityRedaction({observability:{enabled:true,logs:{enabled:false},redact_query_string:true}})).toThrow(/logs and query-string redaction/);
+  expect(()=>verifyObservabilityRedaction({observability:{enabled:true,redact_query_string:true}})).toThrow(/logs and query-string redaction/);
  });
  it("requires the explicit legal initialization acknowledgement before database creation",async()=>{
   const {withAuthorizedStagingDatabase}=await import("../scripts/initialize-staging-legal");
   let created=false;
-  const env={...process.env,NODE_ENV:"production",SOURCE_SHA:"a".repeat(40),GITHUB_ACTOR:"operator"};
+  const env: NodeJS.ProcessEnv={...process.env,NODE_ENV:"production",SOURCE_SHA:"a".repeat(40),GITHUB_ACTOR:"operator"};
   await expect(withAuthorizedStagingDatabase(env,()=>{created=true;throw new Error("unexpected construction");},async()=>undefined)).rejects.toThrow("STAGING_LEGAL_ACK_REQUIRED");
   expect(created).toBe(false);
-  const badTarget={...env,INITIALIZE_STAGING_LEGAL_ACK:"I_APPROVE_THE_REVIEWED_STAGING_TEST_NOTICES",DIRECT_DATABASE_URL:`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require&host=attacker.neon.tech`};
-  await expect(withAuthorizedStagingDatabase(badTarget,()=>{created=true;throw new Error("unexpected construction");},async()=>undefined)).rejects.toThrow("STAGING_LEGAL_CONFIGURATION_INVALID");
-  expect(created).toBe(false);
+  const ack="I_APPROVE_THE_REVIEWED_STAGING_TEST_NOTICES";
+  const invalidSettings: NodeJS.ProcessEnv[] = [
+    {...env,INITIALIZE_STAGING_LEGAL_ACK:ack,NODE_ENV:"test"},
+    {...env,INITIALIZE_STAGING_LEGAL_ACK:ack,DEPLOYMENT_ENV:"production"},
+    {...env,INITIALIZE_STAGING_LEGAL_ACK:ack,APP_URL:"https://jl-bke.com"},
+    {...env,INITIALIZE_STAGING_LEGAL_ACK:ack,DIRECT_DATABASE_URL:`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require&host=attacker.neon.tech`},
+  ];
+  for (const invalid of invalidSettings) {
+    await expect(withAuthorizedStagingDatabase(invalid,()=>{created=true;throw new Error("unexpected construction");},async()=>undefined)).rejects.toThrow();
+    expect(created).toBe(false);
+  }
  });
  it("requires a matching PostgreSQL 5432 Hyperdrive origin and disabled caching",()=>{
   const original=drive(), url=new URL(db);
@@ -90,7 +100,8 @@ describe("protected Staging guards",()=>{
   expect(artifacts.config.vars).not.toHaveProperty("S3_BUCKET");
   expect(()=>buildStagingArtifacts({...config,routes:[{pattern:"*"}]},process.env,"a".repeat(32))).toThrow(/routes/);
   expect(()=>buildStagingArtifacts({...config,env:{staging:{}}},process.env,"a".repeat(32))).toThrow(/environments/);
-  expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,redact_query_string:false}},process.env,"a".repeat(32))).toThrow(/redact/);
+  expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,redact_query_string:false}},process.env,"a".repeat(32))).toThrow(/logs enabled and redact/);
+  expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,logs:{enabled:false},redact_query_string:true}},process.env,"a".repeat(32))).toThrow(/logs enabled and redact/);
   expect(()=>buildStagingArtifacts({...config,vars:{DATABASE_URL:"leak"}},process.env,"a".repeat(32))).toThrow();
  });
 });

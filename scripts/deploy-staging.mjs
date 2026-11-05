@@ -141,13 +141,15 @@ export function verifyHyperdriveMetadata(drive, id, directUrl, expectedHost) {
   return true;
 }
 export function verifyObservabilityRedaction(settings) {
-  if (settings?.observability?.redact_query_string !== true) fail("Cloudflare did not confirm Staging query-string redaction");
+  if (settings?.observability?.enabled !== true || settings?.observability?.logs?.enabled !== true || settings?.observability?.redact_query_string !== true) {
+    fail("Cloudflare did not confirm enabled Staging logs and query-string redaction");
+  }
   return true;
 }
 async function verifyObservability() {
   if (required("CLOUDFLARE_ACCOUNT_ID") !== expected.cloudflareAccountId) fail("Cloudflare account does not match the approved Staging account");
   const token = required("CLOUDFLARE_API_TOKEN");
-  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${expected.cloudflareAccountId}/workers/scripts/bke-digital-solutions/settings`, {
+  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${expected.cloudflareAccountId}/workers/scripts/bke-digital-solutions/script-settings`, {
     headers: { authorization: `Bearer ${token}`, accept: "application/json" },
     signal: AbortSignal.timeout(15000),
   });
@@ -177,7 +179,7 @@ export function buildStagingArtifacts(sourceConfig, env, driveId) {
   const direct = assertStagingSettings(env);
   const config = structuredClone(sourceConfig);
   if (config.name !== "bke-digital-solutions") fail("Unexpected Worker name");
-  if (config.observability?.redact_query_string !== true) fail("Staging deployment must redact query strings in observability logs");
+  if (config.observability?.enabled !== true || config.observability?.logs?.enabled === false || config.observability?.redact_query_string !== true) fail("Staging deployment must keep logs enabled and redact query strings in observability logs");
   if (config.route || config.routes) fail("Custom routes are forbidden for workers.dev-only Staging");
   if (config.env) fail("Wrangler named environments cannot override the Staging target");
   config.workers_dev = true;

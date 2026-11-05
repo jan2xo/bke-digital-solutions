@@ -68,6 +68,15 @@ describe.skipIf(!enabled)("Staging legal notice bootstrap on a fresh disposable 
       expect(await tx.legalAcceptance.count()).toBe(0);
       await tx.user.create({ data: { email: "staging-legal-bootstrap@bke.test", name: "Disposable bootstrap test" } });
       expect(await initializeStagingLegalNoticesInTransaction(tx, notices, authorization)).toBe("already-initialized");
+      const changed = notices.map((notice, index) => index === 0
+        ? { ...notice, markdownContent: `${notice.markdownContent}\\nChanged reviewed text`, renderedHtml: `${notice.renderedHtml}\\n<p>Changed</p>`, contentHash: "f".repeat(64) }
+        : notice);
+      await expect(initializeStagingLegalNoticesInTransaction(tx, changed, authorization)).rejects.toThrow("STAGING_LEGAL_EXISTING_STATE_CONFLICT");
+      expect(await initializeStagingLegalNoticesInTransaction(tx, notices, authorization)).toBe("already-initialized");
+      const unchanged = await tx.legalDocument.findMany({ include: { versions: true } });
+      expect(unchanged).toHaveLength(2);
+      expect(unchanged.every((document) => document.versions.length === 1)).toBe(true);
+      expect(unchanged.every((document) => notices.find((notice) => notice.documentType === document.documentType)?.contentHash === document.versions[0]?.contentHash)).toBe(true);
       expect(await tx.legalAcceptance.count()).toBe(0);
     });
     expect(await db.legalDocument.count()).toBe(0);
