@@ -58,9 +58,13 @@ describe("site content", () => {
       String(statement).includes('INSERT INTO "SiteContent"'),
     );
     expect(writes).toHaveLength(5);
-    expect(writes.map(([, values]) => values[1])).toEqual([
-      "siteName", "heroHeadline", "heroDescription", "supportEmail", "footerText",
-    ]);
+    expect(Object.fromEntries(writes.map(([, values]) => [String(values[1]), values[3]]))).toEqual({
+      siteName: "Acme",
+      heroHeadline: "Hello",
+      heroDescription: "About",
+      supportEmail: "help@acme.test",
+      footerText: "About",
+    });
     expect(clientQuery.mock.calls[0]?.[0]).toBe("BEGIN");
     expect(auditInTransaction).toHaveBeenCalledOnce();
     expect(clientQuery.mock.calls.at(-1)?.[0]).toBe("COMMIT");
