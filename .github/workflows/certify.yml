@@ -20,7 +20,7 @@ permissions:
   issues: read
 
 concurrency:
-  group: intent-certification-${{ (github.event_name == 'issue_comment' && (startsWith(github.event.comment.body, '/certify ') || startsWith(github.event.comment.body, 'BKE CERTIFY ')) && github.event.issue.number) || inputs.source_sha || github.run_id }}
+  group: intent-certification-${{ (github.event_name == 'issue_comment' && github.event.comment.body == '/certify redis' && format('{0}-staging-redis', github.event.issue.number)) || (github.event_name == 'issue_comment' && (startsWith(github.event.comment.body, '/certify ') || startsWith(github.event.comment.body, 'BKE CERTIFY ')) && github.event.issue.number) || inputs.source_sha || github.run_id }}
   cancel-in-progress: true
 
 jobs:
