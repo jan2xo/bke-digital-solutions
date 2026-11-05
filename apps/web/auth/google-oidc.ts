@@ -4,6 +4,7 @@ import * as oauth from "oauth4webapi";
 import { EncryptJWT, jwtDecrypt } from "jose";
 import { getWebHostEnvironment } from "@/apps/web/config/environment";
 import { safeLocalRedirect } from "@/apps/web/security/redirect";
+import { googleAuthenticationTime } from "./google-policy";
 import { consumeOneTimeKey } from "@/apps/web/http/rate-limit";
 
 const GOOGLE_ISSUER_VALUE = "https://accounts.google.com";
@@ -17,10 +18,13 @@ export const GOOGLE_LOGIN_CONTEXT_COOKIE =
     ? "__Host-bke_google_login"
     : "bke_google_login";
 
-export type GoogleLoginFlow = "login" | "register";
+export type GoogleLoginFlow = "login" | "register" | "reauthenticate";
 
 export interface GoogleLoginContext {
   readonly flow: GoogleLoginFlow;
+  readonly sessionId?: string;
+  readonly userId?: string;
+  readonly subject?: string;
   readonly state: string;
   readonly nonce: string;
   readonly codeVerifier: string;
@@ -81,12 +85,18 @@ async function googleAuthorizationServer(): Promise<oauth.AuthorizationServer> {
 
 export async function createGoogleAuthorizationRequest(input: {
   readonly flow: GoogleLoginFlow;
+  readonly sessionId?: string;
+  readonly userId?: string;
+  readonly subject?: string;
   readonly legalVersionIds?: readonly string[];
   readonly returnTo?: string;
 }): Promise<{
   readonly authorizationUrl: string;
   readonly encryptedContext: string;
 }> {
+  if (input.flow === "reauthenticate" && (!input.sessionId || !input.userId || !input.subject)) {
+    throw new Error("INVALID_GOOGLE_LOGIN_CONTEXT");
+  }
   const clientId = googleClientId();
   const redirectUri = googleRedirectUri();
   const state = randomBase64Url();
@@ -94,10 +104,6 @@ export async function createGoogleAuthorizationRequest(input: {
   const codeVerifier = oauth.generateRandomCodeVerifier();
   const codeChallenge = await oauth.calculatePKCECodeChallenge(codeVerifier);
   const metadata = await googleAuthorizationServer();
-  const client: oauth.Client = {
-    client_id: clientId,
-    id_token_signed_response_alg: "RS256",
-  };
   const authorizationUrl = new URL(metadata.authorization_endpoint!);
   authorizationUrl.searchParams.set("client_id", clientId);
   authorizationUrl.searchParams.set("redirect_uri", redirectUri);
@@ -107,9 +113,15 @@ export async function createGoogleAuthorizationRequest(input: {
   authorizationUrl.searchParams.set("nonce", nonce);
   authorizationUrl.searchParams.set("code_challenge", codeChallenge);
   authorizationUrl.searchParams.set("code_challenge_method", "S256");
+  authorizationUrl.searchParams.set("claims", JSON.stringify({ id_token: { auth_time: { essential: true } } }));
+  // Google does not document prompt=login. Account selection is not fresh proof.
+  if (input.flow === "reauthenticate") authorizationUrl.searchParams.set("login_hint", input.subject!);
 
   const context: GoogleLoginContext = {
     flow: input.flow,
+    ...(input.flow === "reauthenticate" ? {
+      sessionId: input.sessionId, userId: input.userId, subject: input.subject,
+    } : {}),
     state,
     nonce,
     codeVerifier,
@@ -136,11 +148,15 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
   const context = payload as unknown as GoogleLoginContext;
   if (
     !context ||
-    (context.flow !== "login" && context.flow !== "register") ||
+    (context.flow !== "login" && context.flow !== "register" && context.flow !== "reauthenticate") ||
     typeof context.state !== "string" ||
     typeof context.nonce !== "string" ||
     typeof context.codeVerifier !== "string" ||
-    !Array.isArray(context.legalVersionIds)
+    !Array.isArray(context.legalVersionIds) ||
+    !context.legalVersionIds.every((id) => typeof id === "string") ||
+    typeof context.returnTo !== "string" ||
+    (context.flow === "reauthenticate" &&
+      (typeof context.sessionId !== "string" || typeof context.userId !== "string" || typeof context.subject !== "string"))
   ) {
     throw new Error("INVALID_GOOGLE_LOGIN_CONTEXT");
   }
@@ -203,6 +219,8 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
       subject: claims.sub,
       email,
       emailVerified,
+      hostedDomain: typeof claims.hd === "string" ? claims.hd : null,
+      authenticatedAt: googleAuthenticationTime(claims.auth_time, claims.iat),
       name: name || null,
     },
   };

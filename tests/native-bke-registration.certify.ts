@@ -6,18 +6,11 @@ process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY ??=
   "native-registration-cert-agent-session-key-8f37de217ce54a8e9b60c421";
 
 const { db } = await import("@/platform/host/db");
-const { hashToken } = await import("@/platform/host/security/crypto");
 const {
   GoogleRegistrationError,
   registerGoogleCustomer,
 } = await import("@/apps/web/auth/google-registration");
-const {
-  NativeCustomerRegistrationError,
-  resendNativeCustomerVerification,
-  verifyNativeCustomerEmail,
-} = await import("@/apps/web/auth/native-customer-registration");
-
-const email = `native-registration-cert-${process.pid}@example.com`;
+const email = `native-registration-cert-${process.pid}@gmail.com`;
 const name = "Native Registration Cert";
 const request = new Request("https://native-cert.bke.test/native-registration", {
   method: "POST",
@@ -105,7 +98,7 @@ const registered = await db.user.findUniqueOrThrow({
   },
 });
 assert.equal(registered.role, "CUSTOMER");
-assert.equal(registered.emailVerified, null);
+assert.ok(registered.emailVerified);
 assert.equal(registered.ownedAccounts.length, 1);
 assert.equal(registered.ownedAccounts[0]!.type, "INDIVIDUAL");
 assert.equal(registered.ownedAccounts[0]!.displayName, name);
@@ -113,65 +106,9 @@ assert.equal(registered.legalAcceptances.length, 2);
 assert.equal(registered.credential, null);
 assert.equal(registered.googleIdentity?.subject, googleSubject);
 
-const initialToken = await db.verificationToken.findFirstOrThrow({
-  where: {
-    identifier: email,
-    purpose: "VERIFY_EMAIL",
-    usedAt: null,
-  },
-});
-assert.equal(
-  initialToken.tokenHash,
-  hashToken(firstRegistration.verificationToken),
-);
-assert.notEqual(initialToken.tokenHash, firstRegistration.verificationToken);
-
-const firstNativeDelivery = await resendNativeCustomerVerification(email);
-assert.ok(firstNativeDelivery);
-const secondDelivery = await resendNativeCustomerVerification(email);
-assert.ok(secondDelivery);
-assert.notEqual(secondDelivery.code, firstNativeDelivery.code);
-const rotatedNativeToken = await db.verificationToken.findUniqueOrThrow({
-  where: { tokenHash: hashToken(firstNativeDelivery.code) },
-});
-assert.ok(rotatedNativeToken.usedAt);
-const activeNativeToken = await db.verificationToken.findUniqueOrThrow({
-  where: { tokenHash: hashToken(secondDelivery.code) },
-});
-assert.equal(activeNativeToken.usedAt, null);
-
-await assert.rejects(
-  () => verifyNativeCustomerEmail(email, firstNativeDelivery!.code),
-  (error: unknown) =>
-    error instanceof NativeCustomerRegistrationError
-    && error.code === "INVALID_VERIFICATION_CODE",
-);
-
-await verifyNativeCustomerEmail(email, secondDelivery.code);
-await assert.rejects(
-  () => verifyNativeCustomerEmail(email, secondDelivery.code),
-  (error: unknown) =>
-    error instanceof NativeCustomerRegistrationError
-    && error.code === "INVALID_VERIFICATION_CODE",
-);
-
-const verified = await db.user.findUniqueOrThrow({
-  where: { email },
-});
-assert.ok(verified.emailVerified);
-
-const outstanding = await db.verificationToken.count({
-  where: {
-    identifier: email,
-    purpose: { in: ["VERIFY_EMAIL", "VERIFY_EMAIL_NATIVE"] },
-    usedAt: null,
-  },
-});
+const outstanding = await db.verificationToken.count({ where: { identifier: email } });
 assert.equal(outstanding, 0);
-assert.equal(
-  await resendNativeCustomerVerification(email),
-  null,
-);
+assert.equal(firstRegistration.user.id, registered.id);
 
 await assert.rejects(
   () => registerGoogleCustomer({
@@ -187,7 +124,7 @@ await assert.rejects(
     && error.code === "ACCOUNT_EXISTS",
 );
 
-console.log("Google customer registration and native email verification certification: PASS");
+console.log("Google customer registration without native email verification certification: PASS");
 await import("./agent-session-account-purchases.certify");
 await import("./agent-session-license-seat-management.certify");
 await import("./agent-session-license-device-management.certify");

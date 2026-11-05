@@ -63,11 +63,12 @@ describe("disposable UTM Launcher fixture", () => {
     expect(pluginSection).not.toContain("supplyChainEvidence");
   });
 
-  it("creates a verified CUSTOMER with a generated password", () => {
+  it("creates a verified Google-bound CUSTOMER without a password", () => {
     expect(fixture).toContain('role: "CUSTOMER"');
     expect(fixture).toContain("emailVerified: now");
-    expect(fixture).toContain("createArgon2PasswordHasher");
-    expect(fixture).toContain("randomBytes(18)");
+    expect(fixture).toContain("db.googleIdentity.upsert");
+    expect(fixture).not.toContain("passwordCredential");
+    expect(fixture).toContain('authenticationProvider: "GOOGLE_OIDC"');
     expect(fixture).toContain("UTM_FIXTURE_CUSTOMER_ACCOUNT_SELECTION_NOT_DETERMINISTIC");
   });
 

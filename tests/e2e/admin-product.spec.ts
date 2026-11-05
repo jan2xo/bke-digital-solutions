@@ -1,45 +1,17 @@
 import "dotenv/config";
-import argon2 from "argon2";
 import { test, expect } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { emailOtpCode, enrollAndLoginAdmin } from "./mfa-helper";
+import { signInGoogleTestUser } from "./google-session-helper";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
 
-test("administrator MFA recovery is single-use and recent authentication is enforced", async ({ page }) => {
-  const suffix = Date.now().toString(36);
-  await page.setExtraHTTPHeaders({ "x-forwarded-for": `10.42.${Math.floor(Math.random() * 200) + 1}.${Math.floor(Math.random() * 200) + 1}` });
-  const email = `mfa-admin-${suffix}@bke.test`;
-  const password = "Admin-MFA-2026!";
-  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  const { recoveryCodes } = await enrollAndLoginAdmin(page, email, password);
-  await page.getByRole("button", { name: "Log out" }).click();
-  await page.getByLabel("Email address").first().fill(email); await page.locator('input[name="password"]').fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
-  await page.getByLabel("Email or recovery code").fill(recoveryCodes[0]!); await page.getByRole("button", { name: "Verify and sign in" }).click();
-  await expect(page).toHaveURL(/admin/);
-  await page.getByRole("button", { name: "Log out" }).click();
-  await page.getByLabel("Email address").first().fill(email); await page.locator('input[name="password"]').fill(password); await page.getByRole("button", { name: "Sign in" }).click(); await expect(page).toHaveURL(/login\/mfa/);
-  await page.getByLabel("Email or recovery code").fill(recoveryCodes[0]!); await page.getByRole("button", { name: "Verify and sign in" }).click();
-  await expect(page.getByText("That code does not match the newest verification email.")).toBeVisible();
-  await page.getByLabel("Email or recovery code").fill(await emailOtpCode(page)); await page.getByRole("button", { name: "Verify and sign in" }).click();
-  await expect(page).toHaveURL(/admin/);
-  await db.session.updateMany({ where: { userId: admin.id }, data: { recentAuthenticatedAt: new Date(Date.now() - 16 * 60_000) } });
-  const denied = await page.request.get("/api/admin/audit/export");
-  expect(denied.status()).toBe(403);
-  await page.goto("/security/recent?returnTo=/admin/security");
-  await page.locator('input[name="password"]').fill(password); const recentChallenge=page.waitForResponse((response)=>response.url().endsWith("/api/auth/mfa/challenge/request")&&response.request().method()==="POST");await page.getByRole("button",{name:"Email my verification code"}).click();expect((await recentChallenge).status()).toBe(200); await page.getByLabel("Email or recovery code").fill(await emailOtpCode(page)); const recentResponse = page.waitForResponse((response) => response.url().endsWith("/api/auth/recent") && response.request().method() === "POST"); await page.getByRole("button", { name: "Confirm identity" }).click(); expect((await recentResponse).status()).toBe(200);
-  await expect(page).toHaveURL(/\/admin\/security$/);
-  expect((await page.request.get("/api/admin/audit/export")).status()).toBe(200);
-});
-
 test("administrator creates, uploads, publishes, and edits a product", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `admin-${suffix}@bke.test`;
-  const password = "Admin-Browser-2026!";
-  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page,email,password);
+  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   await page.goto("/admin/products");
   await expect(page).toHaveURL(/admin\/products/);
 
@@ -68,7 +40,7 @@ test("administrator creates, uploads, publishes, and edits a product", async ({ 
   await expect(productCard.getByText("Published", { exact: true }).first()).toBeVisible();
   expect(await db.auditLog.count({ where: { targetId: product.id } })).toBeGreaterThanOrEqual(3);
   for(const [path,heading] of [["/admin/releases","Release center"],["/admin/artifacts","Artifact manager"],["/admin/customers","Customer manager"],["/admin/licenses","License center"],["/admin/devices","Device manager"],["/admin/orders","Orders"],["/admin/invoices","Invoice center"],["/admin/audit","Audit center"]] as const){await page.goto(path);await expect(page.getByRole("heading",{name:heading})).toBeVisible()}
-  const customer=await db.user.create({data:{email:`managed-${suffix}@bke.test`,emailVerified:new Date(),name:"Managed Customer",ownedAccounts:{create:{type:"INDIVIDUAL",displayName:"Managed Customer",billingEmail:`managed-${suffix}@bke.test`}}}});
+  const customer=await db.user.create({data:{email:`managed-${suffix}@bke.test`,role:"CUSTOMER",emailVerified:new Date(),name:"Managed Customer",ownedAccounts:{create:{type:"INDIVIDUAL",displayName:"Managed Customer",billingEmail:`managed-${suffix}@bke.test`}}}});
   const suspended=await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"SUSPEND"}});expect(suspended.status()).toBe(200);expect((await db.user.findUniqueOrThrow({where:{id:customer.id}})).suspendedAt).not.toBeNull();expect(await db.auditLog.count({where:{targetId:customer.id,action:"CUSTOMER_SUSPEND"}})).toBe(1);
   expect((await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"REACTIVATE"}})).status()).toBe(200);
   await page.goto(`/admin/customers/${customer.id}`);
@@ -87,9 +59,8 @@ test("administrator creates, uploads, publishes, and edits a product", async ({ 
 test("administrator permanently deletes only disposable archived products", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `delete-admin-${suffix}@bke.test`;
-  const password = "Admin-Delete-2026!";
-  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page,email,password);
+  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
 
   const disposable = await db.product.create({ data: { slug: `disposable-${suffix}`, name: `Disposable ${suffix}`, summary: "A disposable browser test product.", description: "A disposable browser test product with no customer history.", type: "SOFTWARE", active: false } });
   const disposablePolicy = await db.licensePolicy.create({ data: { productId: disposable.id, name: "Disposable", maxSeats: 1, maxDevicesPerSeat: 1 } });
@@ -124,7 +95,7 @@ test("administrator permanently deletes only disposable archived products", asyn
   const blockedPolicy = await db.licensePolicy.create({ data: { productId: blocked.id, name: "Retained", maxSeats: 1, maxDevicesPerSeat: 1 } });
   const blockedPrice = await db.price.create({ data: { productId: blocked.id, licensePolicyId: blockedPolicy.id, name: "Retained price", amountMinor: 10000, billingType: "ONE_TIME" } });
   const customerEmail = `delete-customer-${suffix}@bke.test`;
-  const customer = await db.user.create({ data: { email: customerEmail, emailVerified: new Date(), credential: { create: { passwordHash: await argon2.hash(password) } }, ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Delete customer", billingEmail: customerEmail } } }, include: { ownedAccounts: true } });
+  const customer = await db.user.create({ data: { email: customerEmail, role: "CUSTOMER", emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Delete customer", billingEmail: customerEmail } } }, include: { ownedAccounts: true } });
   const order = await db.order.create({ data: { number: `DEL-E2E-${suffix}`, accountId: customer.ownedAccounts[0]!.id, currency: "PHP", subtotalMinor: 10000, taxMinor: 0, totalMinor: 10000, billingSnapshot: {}, items: { create: { productId: blocked.id, priceId: blockedPrice.id, policyId: blockedPolicy.id, productName: blocked.name, priceName: blockedPrice.name, quantity: 1, unitAmountMinor: 10000, totalMinor: 10000, billingType: "ONE_TIME", policySnapshot: {} } } } });
   await page.reload();
   const blockedCard = page.locator("section.card").filter({ hasText: `/${blocked.slug}` });
@@ -142,11 +113,7 @@ test("administrator permanently deletes only disposable archived products", asyn
   await expect(page).toHaveURL(/\/login/);
   const unauthenticated = await page.request.delete(`/api/admin/products/${blocked.id}/deletion`, { headers: { origin: "http://127.0.0.1:3000" }, data: { confirmationName: blocked.name } });
   expect(unauthenticated.status()).toBe(401);
-  await page.goto("/login");
-  await page.getByLabel("Email address").first().fill(customer.email);
-  await page.locator('input[name="password"]').fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page).toHaveURL(/dashboard/);
+  await signInGoogleTestUser(page, customer.email, db); await expect(page).toHaveURL(/dashboard/);
   const forbidden = await page.request.delete(`/api/admin/products/${blocked.id}/deletion`, { headers: { origin: "http://127.0.0.1:3000" }, data: { confirmationName: blocked.name } });
   expect(forbidden.status()).toBe(403);
 });

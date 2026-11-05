@@ -1,7 +1,5 @@
-# Recent authentication
+# recent authentication
 
-High-risk operations require a server-side `recentAuthenticatedAt` timestamp no older than 15 minutes. Administrators request and confirm both their password and a purpose-bound email code, or use a single-use recovery code. Customers confirm their password before license-key disclosure. Browser state and UI visibility never satisfy this check.
+Digital Solutions now uses Google OAuth/OIDC only. The previous BKE password, magic-link, email-OTP, application MFA and recovery-code instructions are retired.
 
-`requireRecentAdmin` protects permanent deletion, customer maintenance and device resets, license administration, product-trial administration, offer mutations, release changes, artifact replacement/removal, audit export, MFA disablement, recovery-code regeneration, and password changes. Future role, session, and API-credential mutations must use the same boundary.
-
-Clients receiving `RECENT_AUTH_REQUIRED` should send the user to `/security/recent?returnTo=<safe local path>`. Return paths are accepted only when they begin with one slash and not two.
+Use the current [Google-only consumer runbook](../operations/GOOGLE-OAUTH-CONSUMER.md) for session policy, signed Google authentication freshness, operator assignment, recovery boundaries and source versus live acceptance. Ordinary Google sign-in does not require BKE MFA. Sensitive actions remain guarded and cannot use a new OAuth callback as a substitute for recent Google authentication proof.

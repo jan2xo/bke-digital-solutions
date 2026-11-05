@@ -5,23 +5,18 @@ import { RecentAuthenticationForm } from "@/components/recent-authentication-for
 
 export default async function RecentAuthenticationPage({
   searchParams,
-}: {
-  searchParams: Promise<{ returnTo?: string }>;
-}) {
-  const context = await currentIdentitySession();
-  if (!context) redirect("/login");
-  if (!context.session.authenticationMethod.startsWith("GOOGLE_OIDC")) redirect("/login");
-  const { returnTo } = await searchParams;
+}: { searchParams: Promise<{ returnTo?: string; error?: string }> }) {
+  if (!(await currentIdentitySession())) redirect("/login");
+  const { returnTo, error } = await searchParams;
   return (
     <section className="motion-fade-up mx-auto max-w-md px-4 py-16">
-      <h1 className="text-4xl font-black">Confirm your identity</h1>
+      <h1 className="text-4xl font-black">Confirm with Google</h1>
       <p className="my-4 text-slate-600">
-        This sensitive action requires a fresh BKE verification factor. Confirmation remains valid for 15 minutes.
+        Sensitive actions require Google to confirm authentication within the last 15 minutes.
+        Choosing an account or granting consent alone does not confirm recent authentication.
       </p>
-      <RecentAuthenticationForm
-        admin={context.principal.role === "ADMIN"}
-        returnTo={safeLocalRedirect(returnTo)}
-      />
+      {error && <p role="alert">Google did not provide the fresh authentication proof required for this action. Authenticate with Google again, then retry. If proof remains unavailable, this action stays locked.</p>}
+      <RecentAuthenticationForm returnTo={safeLocalRedirect(returnTo)} />
     </section>
   );
 }

@@ -146,7 +146,7 @@ const productionLegalConstantConsumers = await Promise.all([
   "../../../app/admin/releases/[id]/page.tsx",
   "../../../app/api/admin/legal/route.ts",
   "../../../app/api/admin/supply-chain/route.ts",
-  "../../../app/api/auth/register/route.ts",
+  "../../../apps/web/auth/google-registration.ts",
   "../../../app/dashboard/accounts/[accountId]/page.tsx",
 ].map((path) => readFile(new URL(path, import.meta.url), "utf8")));
 const productionLegalConstantSource = productionLegalConstantConsumers.join("\n");

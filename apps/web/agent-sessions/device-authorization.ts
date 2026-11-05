@@ -422,34 +422,6 @@ type AgentRefreshTokenRow = Readonly<{
   expiresAt: Date;
 }>;
 
-async function agentSessionPredatesPasswordCredential(
-  tx: Prisma.TransactionClient,
-  session: AgentAccountSessionRow,
-): Promise<boolean> {
-  const credential = await tx.passwordCredential.findUnique({
-    where: { userId: session.userId },
-    select: { changedAt: true },
-  });
-  return Boolean(
-    credential?.changedAt &&
-    credential.changedAt > session.createdAt
-  );
-}
-
-async function agentSessionPredatesMfaAuthorityChange(
-  tx: Prisma.TransactionClient,
-  session: AgentAccountSessionRow,
-): Promise<boolean> {
-  const method = await tx.administratorMfaMethod.findUnique({
-    where: { userId: session.userId },
-    select: { enabledAt: true, disabledAt: true },
-  });
-  return Boolean(
-    (method?.enabledAt && method.enabledAt > session.createdAt)
-    || (method?.disabledAt && method.disabledAt > session.createdAt),
-  );
-}
-
 async function revokeAgentSessionFamily(
   tx: Prisma.TransactionClient,
   sessionId: string,
@@ -523,13 +495,6 @@ export async function refreshAgentAccountSession(
     return { status: "invalid_grant" };
   }
 
-  if (
-    await agentSessionPredatesPasswordCredential(tx, session)
-    || await agentSessionPredatesMfaAuthorityChange(tx, session)
-  ) {
-    await revokeAgentSessionFamily(tx, session.id, now);
-    return { status: "invalid_grant" };
-  }
 
   let account;
   try {
@@ -634,13 +599,6 @@ export async function authenticateAgentAccessToken(
     return { status: "invalid_token" };
   }
 
-  if (
-    await agentSessionPredatesPasswordCredential(tx, session)
-    || await agentSessionPredatesMfaAuthorityChange(tx, session)
-  ) {
-    await revokeAgentSessionFamily(tx, session.id, now);
-    return { status: "invalid_token" };
-  }
 
   try {
     await requireAgentDeviceAccountAccessInTransaction(

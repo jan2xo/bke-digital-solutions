@@ -11,7 +11,6 @@ import {
   type EmailOutboxStore,
   type EmailProvider,
 } from "@/platform/email";
-import { getWebHostEnvironment } from "@/apps/web/config/environment";
 import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { resolveResendConfiguration } from "@/apps/web/providers/capability";
 
@@ -39,7 +38,6 @@ function parseDeploymentEnvironment(value: string | undefined): "development" | 
   return parsed;
 }
 
-const hostEnvironment = getWebHostEnvironment();
 const nodeEnv = parseNodeEnv(process.env.NODE_ENV);
 const emailProviderMode = parseEmailProvider(process.env.EMAIL_PROVIDER);
 const deploymentEnvironment = parseDeploymentEnvironment(process.env.DEPLOYMENT_ENV);
@@ -74,7 +72,7 @@ function render(type: string, payload: Record<string, unknown>) {
     case "INVOICE_ISSUED":
       return `Commercial invoice ${invoice} is available in your customer portal.`;
     case "SECURITY_SESSIONS_REVOKED":
-      return "Administrator session access was revoked. If this was not you, reset your password and review the security dashboard.";
+      return "Administrator session access was revoked. If this was not you, secure your Google account and review the security dashboard.";
     case "SECURITY_NEW_SESSION":
       return "A new administrator session was created. Review the security dashboard if this was not you.";
     case "SECURITY_ACCOUNT_CHANGED":
@@ -163,52 +161,6 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     return (result.rowCount ?? 0) > 0;
   },
 });
-
-function tokenUrl(path: string, token: string) {
-  const url = new URL(path, hostEnvironment.appUrl);
-  url.searchParams.set("token", token);
-  return url;
-}
-
-export async function sendVerificationEmail(email: string, token: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Verify your BKE Digital Solutions account",
-    text: `Verify your account using this one-time link: ${tokenUrl("/api/auth/verify", token)}`,
-  });
-}
-
-export async function sendMagicLink(email: string, token: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Your BKE Digital Solutions sign-in link",
-    text: `Sign in using this one-time link (expires in 15 minutes): ${tokenUrl("/api/auth/magic/consume", token)}`,
-  });
-}
-
-export async function sendPasswordReset(email: string, token: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Reset your BKE Digital Solutions password",
-    text: `Reset your password using this one-time link (expires in 30 minutes): ${tokenUrl("/reset-password", token)}`,
-  });
-}
-
-export async function sendNativeVerificationCode(email: string, code: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Verify your BKE account",
-    text: `Your BKE account verification code is ${code}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid.`,
-  });
-}
-
-export async function sendIdentityLoginCode(email: string, code: string, reference: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: `Your BKE verification code [${reference}]`,
-    text: `Your BKE verification code is ${code}. Verification reference: ${reference}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid. If you did not request this code, do not share it and review your account security.`,
-  });
-}
 
 export async function dispatchEmailOutbox(
   limit = 20,

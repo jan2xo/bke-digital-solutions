@@ -1,9 +1,8 @@
 import "dotenv/config";
-import argon2 from "argon2";
 import { test, expect } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { enrollAndLoginAdmin } from "./mfa-helper";
+import { signInGoogleTestUser } from "./google-session-helper";
 import { createCipheriv, createHash, createHmac, randomBytes } from "node:crypto";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
@@ -12,8 +11,8 @@ test.afterAll(() => db.$disconnect());
 test("administrator can inspect Phase 5 control-plane surfaces", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `phase5-${suffix}@bke.test`;
-  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash("Phase5-Certification-2026!") } } } });
-  await enrollAndLoginAdmin(page, email, "Phase5-Certification-2026!");
+  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   for (const path of ["/admin/releases", "/admin/subscriptions", "/admin/scanner", "/admin/security/commercial-signing-keys", "/admin/backups"]) {
     const response = await page.goto(path);
     expect(response?.status(), path).toBe(200);
@@ -31,9 +30,8 @@ test("protected control-plane APIs reject anonymous access", async ({ request })
 test("artifact confirmation cancellation does not mutate, confirmation does", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `phase5-artifact-${suffix}@bke.test`;
-  const password = "Phase5-Certification-2026!";
-  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, email, password);
+  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   const product = await db.product.create({ data: { slug: `phase5-${suffix}`, name: `Phase 5 ${suffix}`, summary: "Certification fixture", description: "Certification fixture", type: "SOFTWARE", active: true } });
   const version = await db.productVersion.create({ data: { productId: product.id, version: "1.0.0", operatingSystem: "Windows", architecture: "x64", releaseNotes: "Certification fixture", lifecycle: "DRAFT" } });
   const artifact = await db.productArtifact.create({ data: { productId: product.id, versionId: version.id, name: "phase5.zip", objectKey: `certification/${suffix}/phase5.zip`, sha256: "a".repeat(64), sizeBytes: 13, contentType: "application/zip", active: true } });
@@ -55,9 +53,8 @@ test("artifact confirmation cancellation does not mutate, confirmation does", as
 test("release readiness is rendered from the server evaluator", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `phase5-readiness-${suffix}@bke.test`;
-  const password = "Phase5-Certification-2026!";
-  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, email, password);
+  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   const product = await db.product.create({ data: { slug: `phase5-readiness-${suffix}`, name: `Readiness ${suffix}`, summary: "Certification fixture", description: "Certification fixture", type: "SOFTWARE", active: true } });
   const version = await db.productVersion.create({ data: { productId: product.id, version: "1.0.0", operatingSystem: "Windows", architecture: "x64", releaseNotes: "Certification fixture", lifecycle: "DRAFT" } });
   await db.productArtifact.create({ data: { productId: product.id, versionId: version.id, name: "readiness.zip", objectKey: `certification/${suffix}/readiness.zip`, sha256: "c".repeat(64), sizeBytes: 1, contentType: "application/zip", active: true } });
@@ -73,18 +70,18 @@ test("release readiness is rendered from the server evaluator", async ({ page })
 });
 
 test("scanner page reports the live ClamAV state", async ({ page }) => {
-  const suffix = Date.now().toString(36); const email = `phase5-scanner-${suffix}@bke.test`; const password = "Phase5-Certification-2026!";
-  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, email, password);
+  const suffix = Date.now().toString(36); const email = `phase5-scanner-${suffix}@bke.test`;
+  await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   await page.goto("/admin/scanner");
   const expected = process.env.PHASE5_SCANNER_EXPECTED ?? "HEALTHY";
   await expect(page.locator("p").filter({ hasText: `Status: ${expected}` })).toBeVisible();
 });
 
 test("backup confirmations and durable polling use persisted operation state", async ({ page }) => {
-  const suffix = Date.now().toString(36); const email = `phase5-backup-${suffix}@bke.test`; const password = "Phase5-Certification-2026!";
-  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, email, password);
+  const suffix = Date.now().toString(36); const email = `phase5-backup-${suffix}@bke.test`;
+  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   const archive = await db.backupArchive.create({ data: { status: "AVAILABLE", retentionTier: "MANUAL", deploymentId: `certification-${suffix}`, storagePrefix: `certification/${suffix}`, objectCount: 0, sizeBytes: 0n } });
   const expired = await db.backupArchive.create({ data: { status: "EXPIRED", retentionTier: "MANUAL", deploymentId: `certification-${suffix}-expired`, storagePrefix: `certification/${suffix}/expired`, objectCount: 0, sizeBytes: 0n, expiresAt: new Date(Date.now() - 1000) } });
   await page.goto("/admin/backups");
@@ -111,9 +108,9 @@ test("backup confirmations and durable polling use persisted operation state", a
 });
 
 test("license reveal and transfer confirmations use protected operations", async ({ page }) => {
-  const suffix = Date.now().toString(36); const email = `phase5-license-${suffix}@bke.test`; const password = "Phase5-Certification-2026!";
-  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, email, password);
+  const suffix = Date.now().toString(36); const email = `phase5-license-${suffix}@bke.test`;
+  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   const source = await db.user.create({ data: { email: `source-${suffix}@bke.test`, emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: `Source ${suffix}`, billingEmail: `source-${suffix}@bke.test` } } }, include: { ownedAccounts: true } });
   const destination = await db.user.create({ data: { email: `destination-${suffix}@bke.test`, emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: `Destination ${suffix}`, billingEmail: `destination-${suffix}@bke.test` } } }, include: { ownedAccounts: true } });
   const product = await db.product.create({ data: { productId: `phase5-license-${suffix}`, slug: `phase5-license-${suffix}`, name: `License ${suffix}`, summary: "Certification fixture", description: "Certification fixture", type: "SOFTWARE", active: true } });

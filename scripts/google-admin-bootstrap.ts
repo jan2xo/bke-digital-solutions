@@ -38,7 +38,7 @@ export async function bootstrapGoogleAdministrator(
       user.suspendedAt ||
       user.lifecycleState !== "ACTIVE"
     ) {
-      throw new Error("Target must be an active Google-bound user with BKE-verified contact email.");
+      throw new Error("Target must be an active Google-bound user with Google-verified contact email.");
     }
     if (user.role === "ADMIN") {
       throw new Error("Target is already an administrator; use the separate recovery procedure if required.");
@@ -78,7 +78,7 @@ export async function bootstrapGoogleAdministrator(
           deploymentEnvironment: input.deploymentEnvironment,
           revokedSessions: revoked.count,
           agentSessionFamiliesRevoked: true,
-          mfaEnrollmentRequired: true,
+          authenticationPolicy: "GOOGLE_ONLY",
         },
       },
     });

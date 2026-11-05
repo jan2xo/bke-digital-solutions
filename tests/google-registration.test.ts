@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { db } from "../platform/host/db";
-import { hashToken } from "../platform/host/security/crypto";
 import { registerGoogleCustomer } from "../apps/web/auth/google-registration";
 
 const suite = process.env.DATABASE_URL ? describe : describe.skip;
@@ -22,7 +21,7 @@ async function legalVersionIds(): Promise<string[]> {
   return ids;
 }
 
-async function registrationInput(subject: string, email = `google-register-${randomUUID()}@example.test`) {
+async function registrationInput(subject: string, email = `google-register-${randomUUID()}@gmail.com`) {
   emails.push(email);
   return {
     subject,
@@ -60,7 +59,7 @@ suite("Google registration PostgreSQL transaction", () => {
     await db.$disconnect();
   });
 
-  it("commits the customer, owned account, legal records, verification token, and stable Google subject together", async () => {
+  it("commits the customer, owned account, legal records, verified contact, and stable Google subject together", async () => {
     const input = await registrationInput(`subject-${randomUUID()}`);
     const result = await registerGoogleCustomer(input);
     // Successful registrations own immutable LegalAcceptance rows. Keep these
@@ -75,21 +74,29 @@ suite("Google registration PostgreSQL transaction", () => {
         credential: true,
       },
     });
-    const token = await db.verificationToken.findFirstOrThrow({
-      where: { identifier: input.email },
-    });
+    const token = await db.verificationToken.findFirst({ where: { identifier: input.email } });
 
     expect(user.role).toBe("CUSTOMER");
-    expect(user.emailVerified).toBeNull();
+    expect(user.emailVerified).toBeInstanceOf(Date);
     expect(user.ownedAccounts).toHaveLength(1);
     expect(user.legalAcceptances).toHaveLength(2);
     expect(user.googleIdentity?.subject).toBe(input.subject);
     expect(user.credential).toBeNull();
-    expect(token.tokenHash).toBe(hashToken(result.verificationToken));
+    expect(token).toBeNull();
+  });
+
+  it("rejects unverified and non-authoritative third-party contact claims without creating users", async () => {
+    const input = await registrationInput(`subject-${randomUUID()}`);
+    await expect(registerGoogleCustomer({ ...input, emailVerified: false })).rejects.toMatchObject({ code: "EMAIL_NOT_VERIFIED" });
+    const external = `external-${randomUUID()}@example.test`;
+    emails.push(external);
+    await expect(registerGoogleCustomer({ ...input, email: external })).rejects.toMatchObject({ code: "CONTACT_EMAIL_NOT_AUTHORITATIVE" });
+    expect(await db.user.findUnique({ where: { email: input.email } })).toBeNull();
+    expect(await db.user.findUnique({ where: { email: external } })).toBeNull();
   });
 
   it("does not email-link an existing BKE user or mutate its identity", async () => {
-    const email = `existing-${randomUUID()}@example.test`;
+    const email = `existing-${randomUUID()}@gmail.com`;
     emails.push(email);
     const existing = await db.user.create({
       data: { email, emailVerified: null },
@@ -111,7 +118,7 @@ suite("Google registration PostgreSQL transaction", () => {
 
   it("rolls back registration when a stable Google subject is already bound", async () => {
     const subject = `subject-${randomUUID()}`;
-    const ownerEmail = `owner-${randomUUID()}@example.test`;
+    const ownerEmail = `owner-${randomUUID()}@gmail.com`;
     emails.push(ownerEmail);
     const owner = await db.user.create({
       data: {

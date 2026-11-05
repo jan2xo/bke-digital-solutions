@@ -32,7 +32,6 @@ export async function POST(request: Request) {
       throw new Error("UNAUTHENTICATED");
     }
     if (principal.role !== "CUSTOMER") return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
-    if (identitySession.mfaEnabled && !identitySession.session.mfaVerifiedAt) return NextResponse.json({ error: "MFA_REQUIRED" }, { status: 403 });
     if (!principal.emailVerified) {
       return NextResponse.json({ error: "EMAIL_NOT_VERIFIED" }, { status: 403 });
     }
