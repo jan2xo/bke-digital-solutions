@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { databaseUrl, verifyHyperdriveMetadata, verifyObservabilityRedaction } from "../scripts/deploy-staging.mjs";
 const keys=["APP_URL","DEPLOYMENT_ENV","DEPLOYMENT_ID","REDIS_KEY_PREFIX","PAYMENT_PROVIDER","PAYMONGO_LIVEMODE","EMAIL_PROVIDER","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","STAGING_NEON_HOST","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","MFA_ENCRYPTION_KEY","LICENSE_PEPPER","LICENSE_SIGNING_PRIVATE_KEY","LICENSE_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","ADMIN_OWNER_RECOVERY_KEY","CRON_SECRET","REDIS_URL","UPSTASH_REDIS_REST_URL","UPSTASH_REDIS_REST_TOKEN","EMAIL_FROM","CLOUDFLARE_API_TOKEN","HYPERDRIVE_FRESH_ID"] as const;
 const saved=new Map(keys.map(k=>[k,process.env[k]]));
@@ -109,48 +109,56 @@ describe("protected Staging guards",()=>{
   process.env.UPSTASH_REDIS_REST_URL="https://bke-test.upstash.io/";
   process.env.UPSTASH_REDIS_REST_TOKEN="redis-secret";
   process.env.CLOUDFLARE_API_TOKEN="cloudflare-secret";
-  const fetcher=vi.fn(async (_url: URL, _init: RequestInit)=>new Response(JSON.stringify({result:"PONG"}),{status:200}));
-  const result=await verifyUpstashRedis(process.env,fetcher as typeof fetch);
+  const calls: Array<{input: RequestInfo | URL; init?: RequestInit}> = [];
+  const fetcher: typeof fetch = async (input, init) => {
+    calls.push({input,init});
+    return new Response(JSON.stringify({result:"PONG"}),{status:200});
+  };
+  const result=await verifyUpstashRedis(process.env,fetcher);
   expect(result).toEqual({code:"PONG",httpStatus:200,pong:true});
-  expect(fetcher).toHaveBeenCalledTimes(1);
-  const [url,init]=fetcher.mock.calls[0] as unknown as [URL,RequestInit];
-  expect(url.href).toBe("https://bke-test.upstash.io/ping");
-  expect(init.method).toBe("GET");
-  expect(init.credentials).toBe("omit");
-  expect(init.redirect).toBe("manual");
-  const headers=new Headers(init.headers);
+  expect(calls).toHaveLength(1);
+  const request=calls.at(0);
+  expect(request).toBeDefined();
+  if (!request) throw new Error("Missing captured Staging Redis request");
+  expect(new URL(request.input instanceof Request ? request.input.url : String(request.input)).href).toBe("https://bke-test.upstash.io/ping");
+  expect(request.init?.method).toBe("GET");
+  expect(request.init?.credentials).toBe("omit");
+  expect(request.init?.redirect).toBe("manual");
+  const headers=new Headers(request.init?.headers);
   expect(headers.get("authorization")).toBe("Bearer redis-secret");
   expect([...headers.keys()].sort()).toEqual(["accept","authorization"]);
   expect(JSON.stringify(result)).not.toContain("secret");
 
   for(const [status,code] of [[401,"AUTH_UNAUTHORIZED"],[403,"AUTH_FORBIDDEN"],[302,"REDIRECT_BLOCKED"]] as const){
-   const responseFetch=vi.fn(async()=>new Response("sensitive body",{status}));
-   const outcome=await verifyUpstashRedis(process.env,responseFetch as typeof fetch);
+   let callsMade=0;
+   const responseFetch: typeof fetch = async()=>{callsMade++;return new Response("sensitive body",{status});};
+   const outcome=await verifyUpstashRedis(process.env,responseFetch);
    expect(outcome.code).toBe(code);
    expect(outcome.httpStatus).toBe(status);
-   expect(responseFetch).toHaveBeenCalledTimes(1);
+   expect(callsMade).toBe(1);
   }
  });
  it("rejects unsafe endpoints and bounds/sanitizes Upstash responses and transport errors",async()=>{
   const {verifyUpstashRedis}=await import("../scripts/deploy-staging.mjs");
   process.env.UPSTASH_REDIS_REST_TOKEN="redis-secret";
-  const fetcher=vi.fn(async()=>new Response("{}"));
+  let calls=0;
+  const fetcher: typeof fetch = async()=>{calls++;return new Response("{}");};
   for(const url of [
    "http://bke-test.upstash.io","https://upstash.io","https://bke-test.evilupstash.io",
    "https://user@bke-test.upstash.io","https://bke-test.upstash.io:444",
    "https://bke-test.upstash.io/path","https://bke-test.upstash.io/?token=x",
-   "https://bke-test.upstash.io/#fragment","https://bke-test.upstash.io?","https://bke-test.upstash.io#","https://@bke-test.upstash.io",
+   "https://bke-test.upstash.io/#fragment","https://bke-test.upstash.io?","https://bke-test.upstash.io#",
+   "https://@bke-test.upstash.io",
   ]){
    process.env.UPSTASH_REDIS_REST_URL=url;
-   expect((await verifyUpstashRedis(process.env,fetcher as typeof fetch)).code).toBe("INVALID_URL");
+   expect((await verifyUpstashRedis(process.env,fetcher)).code).toBe("INVALID_URL");
   }
-  expect(fetcher).not.toHaveBeenCalled();
+  expect(calls).toBe(0);
   process.env.UPSTASH_REDIS_REST_URL="https://bke-test.upstash.io";
-  expect((await verifyUpstashRedis(process.env,async()=>new Response("not-json") as Response)).code).toBe("INVALID_RESPONSE");
-  expect((await verifyUpstashRedis(process.env,async()=>new Response("x".repeat(4097)) as Response)).code).toBe("BODY_TOO_LARGE");
+  expect((await verifyUpstashRedis(process.env,async()=>new Response("not-json"))).code).toBe("INVALID_RESPONSE");
+  expect((await verifyUpstashRedis(process.env,async()=>new Response("x".repeat(4097)))).code).toBe("BODY_TOO_LARGE");
   const failed=await verifyUpstashRedis(process.env,async()=>{throw new TypeError("redis-secret cloudflare-secret https://private");});
   expect(failed).toEqual({code:"NETWORK_ERROR",httpStatus:null,pong:false});
   expect(JSON.stringify(failed)).not.toMatch(/secret|private|cloudflare/i);
  });
-
 });

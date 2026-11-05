@@ -69,7 +69,7 @@ describe("public Staging smoke", () => {
         dependencies: { postgresql: "up", valkey: "up", providers: "up", objectStorage: "up" },
       }), { headers: { "content-type": "application/json" } }),
     });
-    await assert.rejects(verifyPublicStaging(fetchImpl), /without primary object storage/);
+    await assert.rejects(verifyPublicStaging(fetchImpl), /HTTP 200.*objectStorage present/);
   });
 
   it("reports only whitelisted dependency states from a 503 without passing readiness", async () => {
@@ -82,24 +82,25 @@ describe("public Staging smoke", () => {
     });
     await assert.rejects(verifyPublicStaging(fetchImpl), (error) => {
       assert.ok(error instanceof Error);
-      assert.match(error.message, /HTTP 503; postgresql up, valkey down, providers up; objectStorage absent/);
+      assert.match(error.message, /HTTP 503; postgresql up, valkey down, providers up, objectStorage absent/);
       assert.doesNotMatch(error.message, /private-token-value|secret-value|debug/);
       return true;
     });
   });
 
   it("fails readiness when any required dependency is down or missing", async () => {
-    for (const dependencies of [
-      { postgresql: "up", valkey: "down", providers: "up" },
-      { postgresql: "up", providers: "up" },
-    ]) {
+    const cases: Array<[Record<string, string>, RegExp]> = [
+      [{ postgresql: "up", valkey: "down", providers: "up" }, /valkey down/],
+      [{ postgresql: "up", providers: "up" }, /valkey missing/],
+    ];
+    for (const [dependencies, expected] of cases) {
       const { fetchImpl } = healthyFetch({
         "/api/health/ready": new Response(JSON.stringify({
           status: "ready",
           dependencies,
         }), { headers: { "content-type": "application/json" } }),
       });
-      await assert.rejects(verifyPublicStaging(fetchImpl), /not ready/);
+      await assert.rejects(verifyPublicStaging(fetchImpl), expected);
     }
   });
 
