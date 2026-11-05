@@ -42,6 +42,29 @@ describe("V3 central licensing and GitHub distribution authority", () => {
     expect(existsSync("apps/web/storage/object-storage.ts")).toBe(false);
   });
 
+  it("makes guarded destructive DDL atomic under concurrent legacy writes", () => {
+    const begin = migration.indexOf("BEGIN;");
+    const lock = migration.indexOf("LOCK TABLE");
+    const guard = migration.indexOf("DO $");
+    const drop = migration.indexOf('DROP TABLE "DownloadGrant"');
+    const commit = migration.lastIndexOf("COMMIT;");
+    expect(begin).toBeGreaterThanOrEqual(0);
+    expect(lock).toBeGreaterThan(begin);
+    expect(guard).toBeGreaterThan(lock);
+    expect(drop).toBeGreaterThan(guard);
+    expect(commit).toBeGreaterThan(drop);
+    expect(migration).toContain("SET LOCAL lock_timeout = '5s';");
+    const lockClause = migration.slice(lock, guard);
+    expect(lockClause).toContain("IN ACCESS EXCLUSIVE MODE;");
+    for (const target of [
+      "DownloadGrant", "CommissioningRun", "StorageCleanupJob", "ArtifactUploadSession",
+      "SupplyChainVerificationEvidence", "SupplyChainEvidence", "ReleaseApproval",
+      "ProductArtifact", "ProductVersion",
+    ]) {
+      expect(lockClause).toContain(`"${target}"`);
+    }
+  });
+
   it("does not require product object storage for application readiness", () => {
     const host = read("platform/host/config/environment.ts");
     const health = read("apps/web/health/readiness.ts");

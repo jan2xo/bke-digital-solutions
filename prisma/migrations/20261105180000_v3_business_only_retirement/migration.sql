@@ -1,5 +1,21 @@
 -- V3: GitHub owns public software assets. Prisma owns business and licensing data.
 -- Forward-only migration. Fail closed on legacy records; do not discard evidence.
+-- Guard and destructive DDL must be atomic, including under concurrent legacy writes.
+BEGIN;
+-- Avoid an unbounded wait if a live writer still holds one of these tables.
+SET LOCAL lock_timeout = '5s';
+-- Lock all destructive targets before checking emptiness; retain locks through DROP.
+LOCK TABLE
+  "DownloadGrant",
+  "CommissioningRun",
+  "StorageCleanupJob",
+  "ArtifactUploadSession",
+  "SupplyChainVerificationEvidence",
+  "SupplyChainEvidence",
+  "ReleaseApproval",
+  "ProductArtifact",
+  "ProductVersion"
+IN ACCESS EXCLUSIVE MODE;
 DO $$
 DECLARE
   table_name text;
@@ -46,3 +62,5 @@ DROP TYPE "ArtifactUploadState";
 DROP TYPE "CommissioningStatus";
 DROP TYPE "StorageCleanupJobType";
 DROP TYPE "StorageCleanupStatus";
+
+COMMIT;

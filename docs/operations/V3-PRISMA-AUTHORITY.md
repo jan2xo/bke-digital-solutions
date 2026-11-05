@@ -32,7 +32,10 @@ The forward Prisma migration
 `20261105180000_v3_business_only_retirement` verifies every retired
 table is empty before dropping it, and refuses to proceed otherwise.
 It also rejects populated legacy `ProductVersion` evidence columns before
-dropping those obsolete fields.
+dropping those obsolete fields. The checks and destructive DDL run in one
+PostgreSQL transaction with ACCESS EXCLUSIVE locks on all retired tables
+and `ProductVersion`; a bounded lock wait fails rather than deleting records
+added concurrently or leaving a partially applied retirement.
 This is a clean V3 staging assumption, not proof that any connected
 database is empty. No migration has been run against a connected Neon DB.
 Historical applied migrations remain immutable; do not rewrite them.
