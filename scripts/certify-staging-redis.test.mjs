@@ -93,6 +93,7 @@ test("the comment target cannot be included in full source certification or exec
   const workflow = await readFile(url, "utf8");
   assert.match(workflow, /const standaloneTargets = \["redis"\]/);
   assert.match(workflow, /targets = allowedTargets;/);
+  assert.match(workflow, /tokens.includes\("redis"\) && tokens.length !== 1/);
   assert.match(workflow, /issue.number !== 266/);
   assert.match(workflow, /context.payload.comment\?\.user\?\.login !== context.repo.owner/);
   assert.match(workflow, /context.eventName !== "issue_comment" \|\| targets.length !== 1/);
