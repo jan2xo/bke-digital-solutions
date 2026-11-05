@@ -139,7 +139,7 @@ describe("protected Staging guards",()=>{
    "http://bke-test.upstash.io","https://upstash.io","https://bke-test.evilupstash.io",
    "https://user@bke-test.upstash.io","https://bke-test.upstash.io:444",
    "https://bke-test.upstash.io/path","https://bke-test.upstash.io/?token=x",
-   "https://bke-test.upstash.io/#fragment",
+   "https://bke-test.upstash.io/#fragment","https://bke-test.upstash.io?","https://bke-test.upstash.io#","https://@bke-test.upstash.io",
   ]){
    process.env.UPSTASH_REDIS_REST_URL=url;
    expect((await verifyUpstashRedis(process.env,fetcher as typeof fetch)).code).toBe("INVALID_URL");

@@ -219,8 +219,9 @@ export function validateUpstashRestUrl(value) {
   let url;
   try { url = new URL(value); } catch { fail("UPSTASH_REDIS_REST_URL is invalid"); }
   const host = url.hostname.toLowerCase();
+  const authority = /^https:\/\/([^/?#]*)/i.exec(value)?.[1] ?? "";
   const rawPath = /^[a-z][a-z0-9+.-]*:\/\/[^/?#]*(\/[^?#]*)?/i.exec(value)?.[1];
-  if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
+  if (url.protocol !== "https:" || url.username || url.password || authority.includes("@") || /[?#]/.test(value) || url.search || url.hash ||
       (url.port && url.port !== "443") || url.pathname !== "/" || (rawPath && rawPath !== "/") ||
       !/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+upstash\.io$/.test(host) || host === "upstash.io") {
     fail("UPSTASH_REDIS_REST_URL is not an approved HTTPS Upstash origin");
