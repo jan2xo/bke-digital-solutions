@@ -93,10 +93,10 @@ describe("intent-driven certification foundation", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
     for (const value of [
-      '["@prisma/adapter-pg", "7.9.1"]',
-      '["@prisma/client", "7.9.1"]',
-      '["next", "16.3.6"]',
-      '["zod", "^4.1.5"]',
+      '["dependencies", dependencies, "@prisma/adapter-pg", "7.9.1"]',
+      '["dependencies", dependencies, "@prisma/client", "7.9.1"]',
+      '["dependencies", dependencies, "next", "16.3.6"]',
+      '["dependencies", dependencies, "zod", "^4.1.5"]',
       '["devDependencies", devDependencies, "prisma", "7.9.1"]',
       '["overrides", overrides, "fast-uri", "3.1.5"]',
       '["overrides", overrides, "sharp", "0.35.3"]',
