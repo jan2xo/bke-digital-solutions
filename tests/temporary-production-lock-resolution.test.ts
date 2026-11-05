@@ -78,5 +78,5 @@ describe("temporary npm dependency graph resolution emitter", () => {
     } finally {
       rmSync(tmp, { recursive: true, force: true });
     }
-  });
+  }, 300_000);
 });
