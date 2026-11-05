@@ -114,6 +114,13 @@ jobs:
               return;
             }
 
+            // Never reinterpret "/certify full redis" as ordinary full source CI;
+            // a protected Staging probe must be an explicit, isolated intent.
+            if (tokens.includes("redis") && tokens.length !== 1) {
+              core.setFailed("Staging Redis must be the only requested target.");
+              return;
+            }
+
             let targets;
             if (tokens.includes("full") || tokens.includes("all")) {
               targets = allowedTargets;
