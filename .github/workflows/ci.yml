@@ -118,7 +118,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf node_modules
-          npm ci
+          npm ci --cache "$RUNNER_TEMP/npm-cache" --registry "https://registry.npmjs.org/"
       - name: Enforce production critical and high advisory policy
         run: |
           set -euo pipefail
@@ -128,12 +128,16 @@ jobs:
         run: |
           set -euo pipefail
           npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma
           npx prisma validate
+          npm run lint
           npm run typecheck
       - name: Produce integrity manifest
         run: |
           set -euo pipefail
+          git rev-parse HEAD > dependency-remediation.source
           sha256sum package.json package-lock.json > dependency-remediation.sha256
+          cat dependency-remediation.source
           cat dependency-remediation.sha256
       - uses: actions/upload-artifact@v4
         with:
@@ -141,6 +145,7 @@ jobs:
           path: |
             package.json
             package-lock.json
+            dependency-remediation.source
             dependency-remediation.sha256
           if-no-files-found: error
           retention-days: 7
