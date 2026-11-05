@@ -92,6 +92,7 @@ test("the comment target cannot be included in full source certification or exec
   const url = new URL("../.github/workflows/certify.yml", import.meta.url);
   const workflow = await readFile(url, "utf8");
   assert.match(workflow, /const standaloneTargets = \["redis"\]/);
+  assert.match(workflow, /format\(\'\{0\}-staging-redis\', github.event.issue.number\)/);
   assert.match(workflow, /targets = allowedTargets;/);
   assert.match(workflow, /tokens.includes\("redis"\) && tokens.length !== 1/);
   assert.match(workflow, /issue.number !== 266/);
