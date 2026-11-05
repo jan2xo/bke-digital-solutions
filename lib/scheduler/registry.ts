@@ -1,11 +1,10 @@
 import "server-only";
 import type { ScheduledJob } from "@/platform/scheduler";
 import { schedulerJobDefinitions } from "@/apps/web/scheduler/job-definitions";
-import { commerceLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, preparedRenewalRecovery, renewalReminders, securityCleanup, storageLifecycle } from "@/apps/web/scheduler/handlers";
+import { commerceLifecycle, customerLifecycleReview, emailLifecycle, entitlementExpirations, paymentOperations, preparedRenewalRecovery, renewalReminders, securityCleanup } from "@/apps/web/scheduler/handlers";
 import { backupCreation, backupRetention } from "@/apps/web/backups/scheduler";
 
 const handlers = new Map<string, ScheduledJob["handler"]>([
-  ["storage.lifecycle", storageLifecycle],
   ["email.outbox", emailLifecycle],
   ["subscriptions.renewal-reminders", renewalReminders],
   ["entitlements.expiration", entitlementExpirations],
