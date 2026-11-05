@@ -87,7 +87,7 @@ export function createCoreReadinessChecker(options: Readonly<{
     probes: [
       { name: "postgresql", check: options.dependencies.postgresql },
       { name: "valkey", check: options.dependencies.valkey },
-      { name: "objectStorage", check: options.dependencies.objectStorage },
+      ...(options.dependencies.objectStorage ? [{ name: "objectStorage", check: options.dependencies.objectStorage }] : []),
       { name: "providers", check: options.dependencies.providers },
     ],
     events: options.events,

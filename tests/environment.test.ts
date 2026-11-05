@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { parseEnvironment } from "@/platform/host/config/environment";
+import { environmentSchema, parseEnvironment } from "@/platform/host/config/environment";
 
 const base = {
   NODE_ENV: "production",
@@ -92,4 +92,17 @@ describe("deployment environment validation", () => {
   it.each(["http://minio:9001", "http://minio:9000/path", "http://other-host:9000", "http://localhost:9000"])("rejects unsupported private storage endpoint %s", (S3_ENDPOINT) => expect(() => parseEnvironment({ ...base, S3_ENDPOINT })).toThrow("S3_ENDPOINT"));
   it("rejects live credentials and insecure tunnel origins in local simulation", () => expect(() => parseEnvironment({ ...base, DEPLOYMENT_ENV: "staging", DEPLOYMENT_ID: "bke-local-certification", LOCAL_PRODUCTION_SIMULATION: "true", APP_URL: "https://jl-bke.localhost:8443", PUBLIC_WEBHOOK_ORIGIN: "http://temporary.example.net", REDIS_KEY_PREFIX: "bke-local-certification", S3_BUCKET: "bke-local-certification-private", PAYMONGO_SECRET_KEY: "sk_live_" + "p".repeat(32) })).toThrow(/PUBLIC_WEBHOOK_ORIGIN|PAYMONGO_SECRET_KEY/));
   it("permits mock providers and HTTP only in development", () => expect(parseEnvironment({ ...base, NODE_ENV: "development", DEPLOYMENT_ENV: "development", DEPLOYMENT_ID: "bke-development", APP_URL: "http://localhost:3000", SESSION_SECRET: "x".repeat(32), LICENSE_PEPPER: "y".repeat(32), CRON_SECRET: "z".repeat(32), REDIS_URL: undefined, REDIS_KEY_PREFIX: "bke-development", S3_BUCKET: "bke-private", S3_ACCESS_KEY_ID: undefined, S3_SECRET_ACCESS_KEY: undefined, PAYMENT_PROVIDER: "mock", PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, EMAIL_PROVIDER: "log", RESEND_API_KEY: undefined, EMAIL_FROM: "test@example.com", SUPPORT_EMAIL: "support@example.com" })).toMatchObject({ DEPLOYMENT_ENV: "development" }));
+});
+
+
+describe("GitHub-only protected storage configuration", () => {
+  it("accepts protected startup without S3 configuration", () => {
+    const withoutS3 = Object.fromEntries(Object.entries(base).filter(([key]) => !key.startsWith("S3_")));
+    expect(parseEnvironment(withoutS3).DEPLOYMENT_ENV).toBe("production");
+  });
+
+  it("keeps partial configured S3 fail-closed", () => {
+    const withoutS3 = Object.fromEntries(Object.entries(base).filter(([key]) => !key.startsWith("S3_")));
+    expect(environmentSchema.safeParse({ ...withoutS3, S3_BUCKET: "bke-production-private" }).success).toBe(false);
+  });
 });

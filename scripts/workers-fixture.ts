@@ -18,6 +18,10 @@ try {
     const sessions: { sessionId: string }[] = JSON.parse(await readFile(path, "utf8"));
     await db.session.update({ where: { id: sessions[0]!.sessionId }, data: { revokedAt: new Date() } });
   } else {
+    const imageFixture = "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/e60c5762ff40d2e2afdcf52dc2cc06ff2d1aa905/public/bke-icon.png";
+    const product = await db.product.findFirst({ where: { active: true }, select: { id: true } });
+    if (!product) throw new Error("Published product fixture missing");
+    await db.product.update({ where: { id: product.id }, data: { imageKey: imageFixture } });
     const legal = await registrationLegalDocuments();
     const ids = legal.map((entry) => entry.currentPublishedVersionId);
     if (ids.length !== 2 || ids.some((id) => !id)) throw new Error("Published registration legal fixtures missing");

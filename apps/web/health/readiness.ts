@@ -246,11 +246,13 @@ const events: ReadinessEventSink = {
   },
 };
 
+const storageConfigured = Boolean(optional("S3_BUCKET") || optional("S3_ENDPOINT") || optional("S3_PUBLIC_UPLOAD_ENDPOINT") || optional("S3_ACCESS_KEY_ID") || optional("S3_SECRET_ACCESS_KEY"));
+
 export const readiness = createCoreReadinessChecker({
   dependencies: {
     postgresql: checkPostgreSql,
     valkey: checkValkey,
-    objectStorage: checkObjectStorage,
+    ...(storageConfigured ? { objectStorage: checkObjectStorage } : {}),
     providers: checkConfiguredProviders,
   },
   events,

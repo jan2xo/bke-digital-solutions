@@ -29,11 +29,12 @@ async function checkValkey() {
 }
 
 export async function readiness(correlationId?: string) {
-  const checks: Record<Dependency, "up" | "down"> = { postgresql: "down", valkey: "down", objectStorage: "down", providers: "down" };
+  const storageConfigured = Boolean(env.S3_BUCKET || env.S3_ENDPOINT || env.S3_PUBLIC_UPLOAD_ENDPOINT || env.S3_ACCESS_KEY_ID || env.S3_SECRET_ACCESS_KEY);
+  const checks: Partial<Record<Dependency, "up" | "down">> = { postgresql: "down", valkey: "down", providers: "down", ...(storageConfigured ? { objectStorage: "down" as const } : {}) };
   const operations: Array<[Dependency, () => Promise<unknown>]> = [
     ["postgresql", () => db.$queryRaw`SELECT 1`],
     ["valkey", checkValkey],
-    ["objectStorage", () => checkStorageReadiness(AbortSignal.timeout(3_000))],
+    ...(storageConfigured ? [["objectStorage", () => checkStorageReadiness(AbortSignal.timeout(3_000))] as [Dependency, () => Promise<unknown>]] : []),
     ["providers", async () => {
       if (env.PAYMENT_PROVIDER === "paymongo") await resolvePayMongoConfiguration();
       if (env.EMAIL_PROVIDER === "resend") await resolveResendConfiguration();

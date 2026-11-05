@@ -58,7 +58,7 @@ export const environmentSchema = z.object({
   S3_ENDPOINT: z.preprocess(optional, z.url().optional()),
   S3_PUBLIC_UPLOAD_ENDPOINT: z.preprocess(optional, z.url().optional()),
   S3_REGION: z.string().default("auto"),
-  S3_BUCKET: z.string().min(3),
+  S3_BUCKET: z.preprocess(optional, z.string().min(3).optional()).transform((value) => value ?? ""),
   S3_ACCESS_KEY_ID: z.preprocess(optional, z.string().min(1).optional()),
   S3_SECRET_ACCESS_KEY: z.preprocess(optional, z.string().min(1).optional()),
   S3_FORCE_PATH_STYLE: bool.default(true),
@@ -102,18 +102,19 @@ export const environmentSchema = z.object({
   if (origin.pathname !== "/" || origin.search || origin.hash) context.addIssue({ code: "custom", path: ["APP_URL"], message: "must be a canonical origin without a path, query, or fragment" });
   if (Boolean(value.UPSTASH_REDIS_REST_URL) !== Boolean(value.UPSTASH_REDIS_REST_TOKEN)) context.addIssue({ code: "custom", path: ["UPSTASH_REDIS_REST_URL"], message: "URL and token must be configured together" });
   if (protectedEnvironment && !value.REDIS_URL && !value.UPSTASH_REDIS_REST_URL) context.addIssue({ code: "custom", path: ["REDIS_URL"], message: "a distributed Valkey/Redis backend is required" });
+  const storageConfigured = Boolean(value.S3_ENDPOINT || value.S3_PUBLIC_UPLOAD_ENDPOINT || value.S3_ACCESS_KEY_ID || value.S3_SECRET_ACCESS_KEY || (protectedEnvironment && value.S3_BUCKET));
   if (Boolean(value.S3_ACCESS_KEY_ID) !== Boolean(value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "storage access and secret keys must be configured together" });
-  if (protectedEnvironment && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required" });
-  if (protectedEnvironment && value.S3_ENDPOINT) {
+  if (storageConfigured && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required when S3 is configured" });
+  if (storageConfigured && !value.S3_BUCKET) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "is required when S3 is configured" });
+  if (protectedEnvironment && storageConfigured && value.S3_ENDPOINT) {
     const storageEndpoint = new URL(value.S3_ENDPOINT);
     const privateMinio = value.S3_ENDPOINT === "http://minio:9000";
     if (storageEndpoint.protocol !== "https:" && !privateMinio) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS unless using the private Docker-network MinIO service" });
   }
-  if (protectedEnvironment && value.S3_PUBLIC_UPLOAD_ENDPOINT && new URL(value.S3_PUBLIC_UPLOAD_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must use HTTPS in protected environments" });
-  if (protectedEnvironment && !value.S3_PUBLIC_UPLOAD_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "a dedicated HTTPS upload endpoint is required for direct artifact uploads" });
-  if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === "http://minio:9000") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "the private MinIO endpoint cannot be used by browsers" });
-  if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === value.S3_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must be the externally reachable upload endpoint, not the private storage endpoint" });
-  if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
+  if (protectedEnvironment && storageConfigured && value.S3_PUBLIC_UPLOAD_ENDPOINT && new URL(value.S3_PUBLIC_UPLOAD_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must use HTTPS in protected environments" });
+  if (storageConfigured && value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === "http://minio:9000") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "the private MinIO endpoint cannot be used by browsers" });
+  if (storageConfigured && value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === value.S3_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must be the externally reachable upload endpoint, not the private storage endpoint" });
+  if (protectedEnvironment && storageConfigured && value.S3_BUCKET && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (protectedEnvironment && !value.REDIS_KEY_PREFIX.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["REDIS_KEY_PREFIX"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   const environmentCredentialsRequired = value.NODE_ENV !== "test" && (value.PROVIDER_CONFIG_SOURCE === "environment" || value.PROVIDER_CONFIG_ALLOW_ENV_FALLBACK);
   if (environmentCredentialsRequired && value.PAYMENT_PROVIDER === "paymongo" && (!value.PAYMONGO_SECRET_KEY || !value.PAYMONGO_WEBHOOK_SECRET)) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "PayMongo credentials are required for the selected provider source" });
@@ -144,7 +145,7 @@ export const environmentSchema = z.object({
   if (value.BACKUP_ENABLED) {
     if (!value.BACKUP_BUCKET || !value.BACKUP_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "backup bucket and encryption key are required when backups are enabled" });
     if (!value.BACKUP_S3_ACCESS_KEY_ID || !value.BACKUP_S3_SECRET_ACCESS_KEY) context.addIssue({ code: "custom", path: ["BACKUP_S3_ACCESS_KEY_ID"], message: "dedicated backup-storage credentials are required" });
-    if (value.BACKUP_BUCKET === value.S3_BUCKET) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "must differ from the application object-storage bucket" });
+    if (value.S3_BUCKET && value.BACKUP_BUCKET === value.S3_BUCKET) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "must differ from the application object-storage bucket" });
     if (value.BACKUP_ENCRYPTION_KEY) {
       try {
         if (Buffer.from(value.BACKUP_ENCRYPTION_KEY, "base64").length !== 32) context.addIssue({ code: "custom", path: ["BACKUP_ENCRYPTION_KEY"], message: "must be a base64-encoded 32-byte key" });
@@ -155,7 +156,7 @@ export const environmentSchema = z.object({
     if (protectedEnvironment && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_S3_ENDPOINT && new URL(value.BACKUP_S3_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["BACKUP_S3_ENDPOINT"], message: "must use HTTPS for protected offsite backups" });
   }
   if (value.BACKUP_RESTORE_DATABASE_URL && value.BACKUP_RESTORE_DATABASE_URL === value.DATABASE_URL) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_DATABASE_URL"], message: "must be isolated from the source database" });
-  if (value.BACKUP_RESTORE_S3_BUCKET && [value.S3_BUCKET, value.BACKUP_BUCKET].includes(value.BACKUP_RESTORE_S3_BUCKET)) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_S3_BUCKET"], message: "must be isolated from source and backup buckets" });
+  if (value.BACKUP_RESTORE_S3_BUCKET && [value.S3_BUCKET, value.BACKUP_BUCKET].filter((bucket): bucket is string => Boolean(bucket)).includes(value.BACKUP_RESTORE_S3_BUCKET)) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_S3_BUCKET"], message: "must be isolated from source and backup buckets" });
   if (protectedEnvironment && value.BACKUP_ENABLED && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_OFFSITE_ACK !== "SEPARATE_FAILURE_DOMAIN") context.addIssue({ code: "custom", path: ["BACKUP_OFFSITE_ACK"], message: "must acknowledge an offsite storage failure domain" });
   if (protectedEnvironment) {
     for (const key of ["SESSION_SECRET", "MFA_ENCRYPTION_KEY", "LICENSE_PEPPER", "CRON_SECRET"] as const) {

@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { verifyHyperdriveMetadata } from "../scripts/deploy-staging.mjs";
-const keys=["APP_URL","DEPLOYMENT_ENV","DEPLOYMENT_ID","REDIS_KEY_PREFIX","PAYMENT_PROVIDER","PAYMONGO_LIVEMODE","EMAIL_PROVIDER","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","STAGING_NEON_HOST","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","MFA_ENCRYPTION_KEY","LICENSE_PEPPER","LICENSE_SIGNING_PRIVATE_KEY","LICENSE_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","ADMIN_OWNER_RECOVERY_KEY","CRON_SECRET","S3_ACCESS_KEY_ID","S3_SECRET_ACCESS_KEY","REDIS_URL","UPSTASH_REDIS_REST_URL","UPSTASH_REDIS_REST_TOKEN","EMAIL_FROM","CLOUDFLARE_API_TOKEN","HYPERDRIVE_FRESH_ID"] as const;
+const keys=["APP_URL","DEPLOYMENT_ENV","DEPLOYMENT_ID","REDIS_KEY_PREFIX","PAYMENT_PROVIDER","PAYMONGO_LIVEMODE","EMAIL_PROVIDER","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","STAGING_NEON_HOST","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","MFA_ENCRYPTION_KEY","LICENSE_PEPPER","LICENSE_SIGNING_PRIVATE_KEY","LICENSE_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","ADMIN_OWNER_RECOVERY_KEY","CRON_SECRET","REDIS_URL","UPSTASH_REDIS_REST_URL","UPSTASH_REDIS_REST_TOKEN","EMAIL_FROM","CLOUDFLARE_API_TOKEN","HYPERDRIVE_FRESH_ID"] as const;
 const saved=new Map(keys.map(k=>[k,process.env[k]]));
 const host="ep-example.ap-southeast-1.aws.neon.tech";
 const db=`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require`;
 function setup(){
  delete process.env.UPSTASH_REDIS_REST_URL; delete process.env.UPSTASH_REDIS_REST_TOKEN;
- Object.assign(process.env,{APP_URL:"https://bke-digital-solutions.jlprojectfreedom.workers.dev",DEPLOYMENT_ENV:"staging",DEPLOYMENT_ID:"bke-digital-solutions-try",REDIS_KEY_PREFIX:"bke-digital-solutions-try",PAYMENT_PROVIDER:"mock",PAYMONGO_LIVEMODE:"false",EMAIL_PROVIDER:"log",GOOGLE_CLIENT_ID:"id",GOOGLE_CLIENT_SECRET:"secret",STAGING_NEON_HOST:host,DATABASE_URL:db,DIRECT_DATABASE_URL:db,SESSION_SECRET:"s".repeat(64),MFA_ENCRYPTION_KEY:"m".repeat(64),LICENSE_PEPPER:"p".repeat(64),LICENSE_SIGNING_PRIVATE_KEY:"private-signing-key",LICENSE_SIGNING_PUBLIC_KEY:"public-signing-key",SUPPLY_CHAIN_SIGNING_PRIVATE_KEY:"private-supply-key",ADMIN_OWNER_RECOVERY_KEY:"a".repeat(64),CRON_SECRET:"c".repeat(64),S3_ACCESS_KEY_ID:"key",S3_SECRET_ACCESS_KEY:"secret",REDIS_URL:"rediss://redis.example.invalid:6379",EMAIL_FROM:"staging@example.invalid"});
+ Object.assign(process.env,{APP_URL:"https://bke-digital-solutions.jlprojectfreedom.workers.dev",DEPLOYMENT_ENV:"staging",DEPLOYMENT_ID:"bke-digital-solutions-try",REDIS_KEY_PREFIX:"bke-digital-solutions-try",PAYMENT_PROVIDER:"mock",PAYMONGO_LIVEMODE:"false",EMAIL_PROVIDER:"log",GOOGLE_CLIENT_ID:"id",GOOGLE_CLIENT_SECRET:"secret",STAGING_NEON_HOST:host,DATABASE_URL:db,DIRECT_DATABASE_URL:db,SESSION_SECRET:"s".repeat(64),MFA_ENCRYPTION_KEY:"m".repeat(64),LICENSE_PEPPER:"p".repeat(64),LICENSE_SIGNING_PRIVATE_KEY:"private-signing-key",LICENSE_SIGNING_PUBLIC_KEY:"public-signing-key",SUPPLY_CHAIN_SIGNING_PRIVATE_KEY:"private-supply-key",ADMIN_OWNER_RECOVERY_KEY:"a".repeat(64),CRON_SECRET:"c".repeat(64),REDIS_URL:"rediss://redis.example.invalid:6379",EMAIL_FROM:"staging@example.invalid"});
 }
 beforeEach(setup); afterEach(()=>{for(const k of keys){const v=saved.get(k);if(v===undefined)delete process.env[k];else process.env[k]=v;}});
 function drive(){return {id:"a".repeat(32),name:"bke-digital-solutions-staging-fresh",origin:{database:"bke_staging",user:"bke_staging_owner",host,scheme:"postgres",port:5432},mtls:{sslmode:"require"},caching:{disabled:true}};}
@@ -59,6 +59,8 @@ describe("protected Staging guards",()=>{
   const artifacts=buildStagingArtifacts(config,process.env,"a".repeat(32));
   expect(artifacts.config.workers_dev).toBe(true); expect(artifacts.config.vars).not.toHaveProperty("DATABASE_URL");
   expect(artifacts.secrets).not.toHaveProperty("DIRECT_DATABASE_URL"); expect(artifacts.secrets).not.toHaveProperty("CLOUDFLARE_API_TOKEN");
+  expect(artifacts.secrets).not.toHaveProperty("S3_ACCESS_KEY_ID");
+  expect(artifacts.config.vars).not.toHaveProperty("S3_BUCKET");
   expect(()=>buildStagingArtifacts({...config,routes:[{pattern:"*"}]},process.env,"a".repeat(32))).toThrow(/routes/);
   expect(()=>buildStagingArtifacts({...config,env:{staging:{}}},process.env,"a".repeat(32))).toThrow(/environments/);
   expect(()=>buildStagingArtifacts({...config,vars:{DATABASE_URL:"leak"}},process.env,"a".repeat(32))).toThrow();
