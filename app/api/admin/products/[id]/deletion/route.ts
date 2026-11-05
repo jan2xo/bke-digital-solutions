@@ -52,8 +52,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         });
       }
       if (error.code === "NOT_FOUND") return NextResponse.json({ error: "NOT_FOUND" }, { status: 404, headers: noStore });
-      return NextResponse.json({ error: error.code, message: "Private storage cleanup failed. The product remains archived and the operation can be retried." }, { status: 503, headers: noStore });
-      }
       return NextResponse.json({
         error: "PRODUCT_DELETE_BLOCKED",
         message: error.eligibility?.reason === "PRODUCT_NOT_ARCHIVED"
