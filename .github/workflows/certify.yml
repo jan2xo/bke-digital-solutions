@@ -376,7 +376,7 @@ jobs:
               echo "## Required certification PASS"
             fi
             echo
-            echo "PR source SHA at request: `$SOURCE_SHA`"
+            echo "PR source SHA at request: $SOURCE_SHA"
             echo
             echo "Declared targets: \`$TARGETS_JSON\`"
           } >> "$GITHUB_STEP_SUMMARY"
