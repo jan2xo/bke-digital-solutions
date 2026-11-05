@@ -1,12 +1,10 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { audit } from "@/apps/web/audit";
 import { requireAdmin } from "@/apps/web/auth/session";
 import { apiError } from "@/apps/web/http/api-error";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { db } from "@/platform/host/db";
-import { isLegacyProductImageObjectKey, resolveProductImageUrl } from "@/apps/web/catalog/product-image";
-import { storageCleanupIdempotencyKey } from "@/apps/web/storage/cleanup";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -18,24 +16,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       ? resolveProductImageUrl((body as { url?: unknown }).url)
       : null;
     if (!url) throw new Error("INVALID_IMAGE_URL");
-    const cleanupPending = await db.$transaction(async (tx) => {
-      const current = await tx.product.findUniqueOrThrow({ where: { id }, select: { imageKey: true } });
+    await db.$transaction(async (tx) => {
+      await tx.product.findUniqueOrThrow({ where: { id }, select: { imageKey: true } });
       await tx.product.update({ where: { id }, data: { imageKey: url } });
-      const legacyObjectKey = isLegacyProductImageObjectKey(current.imageKey, id) ? current.imageKey : null;
-      if (legacyObjectKey !== null) {
-        const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, legacyObjectKey);
-        await tx.storageCleanupJob.upsert({
-          where: { idempotencyKey }, update: {},
-          create: {
-            type: "ARTIFACT_REPLACEMENT", targetType: "ProductImage", targetId: id,
-            objectKey: legacyObjectKey, idempotencyKey, correlationId: randomUUID(),
-            productId: id, createdByAdminId: admin.id,
-          },
-        });
-      }
-      return legacyObjectKey !== null;
     });
-    await audit({ actorId: admin.id, action: "PRODUCT_IMAGE_UPDATED", targetType: "Product", targetId: id, metadata: { source: "github", cleanupPending } });
+    await audit({ actorId: admin.id, action: "PRODUCT_IMAGE_UPDATED", targetType: "Product", targetId: id, metadata: { source: "github" } });
     return NextResponse.json({ ok: true });
   } catch (error) {
     return apiError(error);
