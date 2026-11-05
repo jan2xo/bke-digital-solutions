@@ -252,10 +252,10 @@ export async function verifyUpstashRedis(env = process.env, fetchImpl = globalTh
   } catch (error) {
     return result(error?.name === "TimeoutError" || error?.name === "AbortError" ? "TIMEOUT" : "NETWORK_ERROR");
   }
-  if (response.status === 401) return result("AUTH_UNAUTHORIZED", 401);
-  if (response.status === 403) return result("AUTH_FORBIDDEN", 403);
-  if (response.status >= 300 && response.status < 400) return result("REDIRECT_BLOCKED", response.status);
-  if (response.status !== 200) return result("HTTP_ERROR", response.status);
+  if (response.status === 401) { await response.body?.cancel().catch(() => {}); return result("AUTH_UNAUTHORIZED", 401); }
+  if (response.status === 403) { await response.body?.cancel().catch(() => {}); return result("AUTH_FORBIDDEN", 403); }
+  if (response.status >= 300 && response.status < 400) { await response.body?.cancel().catch(() => {}); return result("REDIRECT_BLOCKED", response.status); }
+  if (response.status !== 200) { await response.body?.cancel().catch(() => {}); return result("HTTP_ERROR", response.status); }
   const contentLength = Number(response.headers.get("content-length"));
   if (Number.isFinite(contentLength) && contentLength > REDIS_PING_BODY_LIMIT) {
     await response.body?.cancel().catch(() => {});
@@ -302,7 +302,12 @@ async function main() {
   if (command === "verify") {
     const direct = assertStagingSettings();
     await verifyHyperdrive(direct);
-  } else if (command === "verify-redis") {\n    const result = await verifyUpstashRedis();\n    console.info(JSON.stringify(result));\n    if (!result.pong) process.exitCode = 1;\n  } else if (command === "verify-observability") {
+  } else if (command === "verify-redis") {
+    assertStagingSettings();
+    const result = await verifyUpstashRedis();
+    console.info(JSON.stringify(result));
+    if (!result.pong) process.exitCode = 1;
+  } else if (command === "verify-observability") {
     await verifyObservability();
   } else if (command === "prepare") {
     const direct = assertStagingSettings();
