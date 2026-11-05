@@ -72,11 +72,44 @@ describe("public Staging smoke", () => {
     await assert.rejects(verifyPublicStaging(fetchImpl), /without primary object storage/);
   });
 
+  it("fails readiness when any required dependency is down or missing", async () => {
+    for (const dependencies of [
+      { postgresql: "up", valkey: "down", providers: "up" },
+      { postgresql: "up", providers: "up" },
+    ]) {
+      const { fetchImpl } = healthyFetch({
+        "/api/health/ready": new Response(JSON.stringify({
+          status: "ready",
+          dependencies,
+        }), { headers: { "content-type": "application/json" } }),
+      });
+      await assert.rejects(verifyPublicStaging(fetchImpl), /not ready/);
+    }
+  });
+
+  it("rejects a non-JSON readiness response", async () => {
+    const { fetchImpl } = healthyFetch({
+      "/api/health/ready": new Response("<html>not readiness</html>", {
+        headers: { "content-type": "text/html" },
+      }),
+    });
+    await assert.rejects(verifyPublicStaging(fetchImpl), /did not return JSON/);
+  });
+
+  it("bounds response bodies", async () => {
+    const { fetchImpl } = healthyFetch({
+      "/": new Response("x".repeat(1_048_577), {
+        headers: { "content-type": "text/html" },
+      }),
+    });
+    await assert.rejects(verifyPublicStaging(fetchImpl), /response exceeded its size limit/);
+  });
+
   it("reports network failures without printing response bodies or raw exception text", async () => {
     const failingFetch = async () => { throw new TypeError("sensitive detail must not be surfaced"); };
     await assert.rejects(verifyPublicStaging(failingFetch), (error) => {
       assert.ok(error instanceof Error);
-      assert.match(error.message, /GET \\/ failed \\(NETWORK_ERROR\\)/);
+      assert.equal(error.message, "Public Staging smoke GET / failed (NETWORK_ERROR)");
       assert.doesNotMatch(error.message, /sensitive detail/);
       return true;
     });
