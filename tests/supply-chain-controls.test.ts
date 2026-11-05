@@ -59,6 +59,6 @@ describe("GitHub software release authority", () => {
     expect(route).toContain("publishedAt: null");
     expect(route).toContain("isLatest: false");
     expect(manager).not.toContain("Publish now");
-    expect(manager).toContain("Upload version as DRAFT");
+    expect(manager).toContain("Product artifact files remain in GitHub Releases");
   });
 });

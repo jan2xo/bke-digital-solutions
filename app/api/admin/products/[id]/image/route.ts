@@ -21,19 +21,19 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const cleanupPending = await db.$transaction(async (tx) => {
       const current = await tx.product.findUniqueOrThrow({ where: { id }, select: { imageKey: true } });
       await tx.product.update({ where: { id }, data: { imageKey: url } });
-      const cleanupPending = isLegacyProductImageObjectKey(current.imageKey, id);
-      if (cleanupPending) {
-        const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, current.imageKey);
+      const legacyObjectKey = isLegacyProductImageObjectKey(current.imageKey, id) ? current.imageKey : null;
+      if (legacyObjectKey !== null) {
+        const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, legacyObjectKey);
         await tx.storageCleanupJob.upsert({
           where: { idempotencyKey }, update: {},
           create: {
             type: "ARTIFACT_REPLACEMENT", targetType: "ProductImage", targetId: id,
-            objectKey: current.imageKey, idempotencyKey, correlationId: randomUUID(),
+            objectKey: legacyObjectKey, idempotencyKey, correlationId: randomUUID(),
             productId: id, createdByAdminId: admin.id,
           },
         });
       }
-      return cleanupPending;
+      return legacyObjectKey !== null;
     });
     await audit({ actorId: admin.id, action: "PRODUCT_IMAGE_UPDATED", targetType: "Product", targetId: id, metadata: { source: "github", cleanupPending } });
     return NextResponse.json({ ok: true });
