@@ -62,6 +62,8 @@ jobs:
               "standalone",
               "native-account",
             ];
+            // Staging Redis is a standalone configuration probe, excluded from /certify full.
+            const standaloneTargets = ["redis"];
 
             let sourceSha;
             let requested;
@@ -116,7 +118,8 @@ jobs:
             if (tokens.includes("full") || tokens.includes("all")) {
               targets = allowedTargets;
             } else {
-              const unknown = tokens.filter((target) => !allowedTargets.includes(target));
+              const recognized = new Set([...allowedTargets, ...standaloneTargets]);
+              const unknown = tokens.filter((target) => !recognized.has(target));
               if (unknown.length > 0) {
                 core.setFailed(
                   `Unknown certification target(s): ${unknown.join(", ")}. Allowed: ${allowedTargets.join(", ")}.`,
@@ -124,6 +127,30 @@ jobs:
                 return;
               }
               targets = tokens;
+            }
+
+            if (targets.includes("redis")) {
+              if (context.eventName !== "issue_comment" || targets.length !== 1) {
+                core.setFailed("Staging Redis requires its own PR comment, not a combined or manual dispatch.");
+                return;
+              }
+              const issue = context.payload.issue;
+              const pull = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: issue.number,
+              });
+              if (issue.number !== 266 ||
+                  pull.data.head.repo.full_name !== context.repo.owner + "/" + context.repo.repo ||
+                  pull.data.head.ref !== "feat/workers-free-compatibility-proof" ||
+                  pull.data.base.ref !== "main") {
+                core.setFailed("Staging Redis may be requested only on the current Workers PR #266.");
+                return;
+              }
+              if (context.payload.comment?.user?.login !== context.repo.owner) {
+                core.setFailed("Staging Redis requires the repository owner.");
+                return;
+              }
             }
 
             core.setOutput("source_sha", sourceSha);
@@ -260,6 +287,17 @@ jobs:
     with:
       source_sha: ${{ needs.plan.outputs.source_sha }}
 
+  redis:
+    name: Protected Staging Redis credential verification
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'redis')
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/v2-staging-redis-intent.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
   required-certification:
     name: Required certification
     if: always() && needs.plan.result == 'success'
@@ -283,6 +321,7 @@ jobs:
       - prisma-isolation
       - standalone
       - native-account
+      - redis
     runs-on: ubuntu-latest
     env:
       SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
@@ -311,9 +350,13 @@ jobs:
             process.exit(1);
           }
 
-          console.log(
-            `Required certification PASS for ${process.env.SOURCE_SHA}: ${targets.join(", ")}`,
-          );
+          if (targets.length === 1 && targets[0] === "redis") {
+            console.log("Staging Redis credential PING PASS; PR head is informational only: " + process.env.SOURCE_SHA);
+          } else {
+            console.log(
+              `Required certification PASS for ${process.env.SOURCE_SHA}: ${targets.join(", ")}`,
+            );
+          }
           NODE
       - name: Write exact-head certification summary
         shell: bash
