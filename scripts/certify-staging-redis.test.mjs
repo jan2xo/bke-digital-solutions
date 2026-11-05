@@ -86,3 +86,21 @@ test("TimeoutError fails without a retry or endpoint disclosure", async () => {
   assert.equal(result.code, "TIMEOUT");
   assert.equal(calls, 1);
 });
+
+test("the comment target cannot be included in full source certification or executed on other PRs", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const url = new URL("../.github/workflows/certify.yml", import.meta.url);
+  const workflow = await readFile(url, "utf8");
+  assert.match(workflow, /const standaloneTargets = \["redis"\]/);
+  assert.match(workflow, /targets = allowedTargets;/);
+  assert.match(workflow, /issue.number !== 266/);
+  assert.match(workflow, /context.payload.comment\?\.user\?\.login !== context.repo.owner/);
+  assert.match(workflow, /context.eventName !== "issue_comment" \|\| targets.length !== 1/);
+  assert.match(workflow, /uses: \.\/\.github\/workflows\/v2-staging-redis-intent\.yml/);
+  const probe = await readFile(new URL("../.github/workflows/v2-staging-redis-intent.yml", import.meta.url), "utf8");
+  assert.match(probe, /name: Staging/);
+  assert.match(probe, /id-token: write/);
+  assert.match(probe, /ref: \$\{\{ github.sha \}\}/);
+  assert.match(probe, /run: node scripts\/certify-staging-redis\.mjs/);
+  assert.doesNotMatch(probe, /db:deploy|wrangler deploy|initialize-staging-legal/);
+});
