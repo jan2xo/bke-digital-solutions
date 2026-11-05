@@ -9,7 +9,6 @@ const runtimeConsumers = [
   "app/api/cron/renewals/route.ts",
   "app/api/cron/scheduler/route.ts",
   "apps/web/legal/render.ts",
-  "apps/web/storage/object-storage.ts",
 ];
 
 describe("legacy environment adapter retirement", () => {

@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/apps/web/auth/session";
@@ -6,8 +5,7 @@ import { db } from "@/platform/host/db";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { audit } from "@/apps/web/audit";
 import { apiError } from "@/apps/web/http/api-error";
-import { isLegacyProductImageObjectKey, resolveProductImageUrl } from "@/apps/web/catalog/product-image";
-import { storageCleanupIdempotencyKey } from "@/apps/web/storage/cleanup";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 import {
   acceptedVersionSchema,
   assertProductIdChangeAllowed,
@@ -117,15 +115,6 @@ export async function PATCH(
 
     const product = await db.$transaction(async (tx) => {
       const updated = await tx.product.update({ where: { id }, data });
-      if (input.imageKey !== undefined && isLegacyProductImageObjectKey(existing.imageKey, id)) {
-        const idempotencyKey = storageCleanupIdempotencyKey("ARTIFACT_REPLACEMENT", id, existing.imageKey);
-        await tx.storageCleanupJob.upsert({ where: { idempotencyKey }, update: {}, create: {
-          type: "ARTIFACT_REPLACEMENT", targetType: "ProductImage", targetId: id,
-          objectKey: existing.imageKey, idempotencyKey, correlationId: randomUUID(),
-          productId: id, createdByAdminId: admin.id,
-        } });
-      }
-
       if (input.launcherExecutionType !== undefined) {
         await tx.$executeRaw`
           UPDATE "Product"

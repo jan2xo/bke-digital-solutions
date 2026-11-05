@@ -8,8 +8,6 @@ import {
   requestProductDeletion,
   ProductDeletionError,
 } from "@/apps/web/catalog/product-deletion";
-import { processStorageCleanupJob } from "@/apps/web/storage/cleanup";
-import { db } from "@/platform/host/db";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { apiError } from "@/apps/web/http/api-error";
 
@@ -23,8 +21,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     const { id } = await params;
     const eligibility = await evaluateProductDeletionEligibility(idSchema.parse(id));
     if (!eligibility.productExists) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404, headers: noStore });
-    const cleanupJobs = await db.storageCleanupJob.groupBy({ by: ["status"], where: { productId: id }, _count: true });
-    return NextResponse.json({ ...eligibility, cleanupJobs }, { headers: noStore });
+    return NextResponse.json({ ...eligibility, cleanupJobs: [] }, { headers: noStore });
   } catch (error) {
     return apiError(error);
   }
@@ -39,13 +36,13 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     productId = idSchema.parse((await params).id);
     const input = bodySchema.parse(await request.json());
     const result = await requestProductDeletion({ productId, actorId: admin.id, confirmationName: input.confirmationName });
-    return NextResponse.json({ status: "CLEANUP_PENDING", queuedJobs: result.queuedJobs }, { status: 202, headers: noStore });
+    return NextResponse.json({ status: "DELETION_REQUESTED", queuedJobs: result.queuedJobs }, { status: 202, headers: noStore });
   } catch (error) {
     if (error instanceof ProductDeletionError) {
       if (admin && productId && error.code !== "NOT_FOUND") {
         await audit({
           actorId: admin.id,
-          action: error.code === "STORAGE_CLEANUP_FAILED" ? "PRODUCT_DELETE_STORAGE_CLEANUP_FAILED" : "PRODUCT_DELETE_BLOCKED",
+          action: "PRODUCT_DELETE_BLOCKED",
           targetType: "Product",
           targetId: productId,
           metadata: {
@@ -55,9 +52,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         });
       }
       if (error.code === "NOT_FOUND") return NextResponse.json({ error: "NOT_FOUND" }, { status: 404, headers: noStore });
-      if (error.code === "STORAGE_CLEANUP_FAILED") {
-        return NextResponse.json({ error: error.code, message: "Private storage cleanup failed. The product remains archived and the operation can be retried." }, { status: 503, headers: noStore });
-      }
       return NextResponse.json({
         error: "PRODUCT_DELETE_BLOCKED",
         message: error.eligibility?.reason === "PRODUCT_NOT_ARCHIVED"
@@ -78,12 +72,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     assertSameOrigin(request);
     const admin = await requireRecentAdmin();
     const productId = idSchema.parse((await params).id);
-    const jobs = await db.storageCleanupJob.findMany({ where: { productId, status: { in: ["PENDING", "RETRYING"] } }, select: { id: true } });
-    for (const job of jobs) await processStorageCleanupJob(job.id);
     await finalizeProductDeletion({ productId, actorId: admin.id });
     return new NextResponse(null, { status: 204, headers: noStore });
   } catch (error) {
-    if (error instanceof ProductDeletionError) return NextResponse.json({ error: error.code }, { status: error.code === "STORAGE_CLEANUP_FAILED" ? 503 : 409, headers: noStore });
+    if (error instanceof ProductDeletionError) return NextResponse.json({ error: error.code }, { status: 409, headers: noStore });
     return apiError(error);
   }
 }

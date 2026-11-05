@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { isLegacyProductImageObjectKey, resolveProductImageUrl } from "@/apps/web/catalog/product-image";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 
 const mocks = vi.hoisted(() => ({
   requireAdmin: vi.fn(),
@@ -7,7 +7,6 @@ const mocks = vi.hoisted(() => ({
   transaction: vi.fn(),
   txFindProduct: vi.fn(),
   txUpdateProduct: vi.fn(),
-  cleanupUpsert: vi.fn(),
   productFindUnique: vi.fn(),
   productUpdate: vi.fn(),
   productCreate: vi.fn(),
@@ -18,9 +17,6 @@ vi.mock("@/apps/web/auth/session", () => ({ requireAdmin: mocks.requireAdmin }))
 vi.mock("@/apps/web/audit", () => ({ audit: mocks.audit }));
 vi.mock("@/apps/web/config/environment", () => ({
   getWebHostEnvironment: () => ({ appUrl: "https://shop.test", trustedOrigins: [], trustProxyHops: 1 }),
-}));
-vi.mock("@/apps/web/storage/cleanup", () => ({
-  storageCleanupIdempotencyKey: (type: string, target: string, objectKey: string) => type + ":" + target + ":" + objectKey,
 }));
 vi.mock("@/platform/host/db", () => ({
   db: {
@@ -61,10 +57,8 @@ describe("product GitHub image references", () => {
     mocks.audit.mockResolvedValue(undefined);
     mocks.txFindProduct.mockResolvedValue({ imageKey: null });
     mocks.txUpdateProduct.mockResolvedValue({ id: productId });
-    mocks.cleanupUpsert.mockResolvedValue({});
     mocks.transaction.mockImplementation(async (callback: (tx: unknown) => Promise<unknown>) => callback({
       product: { findUniqueOrThrow: mocks.txFindProduct, update: mocks.txUpdateProduct },
-      storageCleanupJob: { upsert: mocks.cleanupUpsert },
     }));
   });
 
@@ -83,12 +77,6 @@ describe("product GitHub image references", () => {
     "products/product-1/images/legacy.png",
   ])("rejects untrusted or non-raster reference %s", (value) => {
     expect(resolveProductImageUrl(value)).toBeNull();
-  });
-
-  it("recognizes only the prior UUID product-image object-key format", () => {
-    expect(isLegacyProductImageObjectKey("products/product-1/images/123e4567-e89b-42d3-a456-426614174000.webp", productId)).toBe(true);
-    expect(isLegacyProductImageObjectKey(valid, productId)).toBe(false);
-    expect(isLegacyProductImageObjectKey("products/other/images/123e4567-e89b-42d3-a456-426614174000.webp", productId)).toBe(false);
   });
 
   it.each([["missing", "UNAUTHENTICATED", 401], ["forbidden", "FORBIDDEN", 403]] as const)(
@@ -115,7 +103,7 @@ describe("product GitHub image references", () => {
     expect(mocks.transaction).not.toHaveBeenCalled();
   });
 
-  it("stores a validated URL inside the transaction and queues no S3 cleanup for a previous GitHub URL", async () => {
+  it("stores a validated GitHub URL without touching software storage", async () => {
     mocks.txFindProduct.mockResolvedValue({ imageKey: valid });
     const response = await postImage({ url: "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/main/public/other.png" });
     expect(response.status).toBe(200);
@@ -123,19 +111,14 @@ describe("product GitHub image references", () => {
     expect(mocks.txFindProduct).toHaveBeenCalledOnce();
     expect(mocks.transaction.mock.invocationCallOrder[0]).toBeLessThan(mocks.txFindProduct.mock.invocationCallOrder[0]);
     expect(mocks.txUpdateProduct).toHaveBeenCalledWith({ where: { id: productId }, data: { imageKey: "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/main/public/other.png" } });
-    expect(mocks.cleanupUpsert).not.toHaveBeenCalled();
-    expect(mocks.audit).toHaveBeenCalledWith(expect.objectContaining({ metadata: { source: "github", cleanupPending: false } }));
+    expect(mocks.audit).toHaveBeenCalledWith(expect.objectContaining({ metadata: { source: "github" } }));
   });
 
-  it("queues only the exact previous legacy image key when replacing it", async () => {
-    const legacyKey = "products/product-1/images/123e4567-e89b-42d3-a456-426614174000.webp";
-    mocks.txFindProduct.mockResolvedValue({ imageKey: legacyKey });
+  it("updates a GitHub reference without storage cleanup", async () => {
+    mocks.txFindProduct.mockResolvedValue({ imageKey: valid });
     const response = await postImage({ url: valid });
     expect(response.status).toBe(200);
-    expect(mocks.cleanupUpsert).toHaveBeenCalledOnce();
-    expect(mocks.cleanupUpsert.mock.calls[0]?.[0]).toMatchObject({
-      create: { objectKey: legacyKey, targetType: "ProductImage", targetId: productId },
-    });
+    expect(mocks.txUpdateProduct).toHaveBeenCalledWith({ where: { id: productId }, data: { imageKey: valid } });
   });
 
   it("returns INVALID_IMAGE_URL before unrelated validation or writes on product create and update", async () => {

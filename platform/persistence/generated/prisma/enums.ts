@@ -48,42 +48,6 @@ export const CustomerLifecycleState = {
 export type CustomerLifecycleState = (typeof CustomerLifecycleState)[keyof typeof CustomerLifecycleState]
 
 
-export const StorageCleanupStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  RETRYING: 'RETRYING',
-  SUCCEEDED: 'SUCCEEDED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED'
-} as const
-
-export type StorageCleanupStatus = (typeof StorageCleanupStatus)[keyof typeof StorageCleanupStatus]
-
-
-export const ArtifactUploadState = {
-  PENDING: 'PENDING',
-  UPLOADED: 'UPLOADED',
-  VERIFYING: 'VERIFYING',
-  VERIFIED: 'VERIFIED',
-  FAILED: 'FAILED',
-  EXPIRED: 'EXPIRED'
-} as const
-
-export type ArtifactUploadState = (typeof ArtifactUploadState)[keyof typeof ArtifactUploadState]
-
-
-export const CommissioningStatus = {
-  PENDING: 'PENDING',
-  VERIFYING: 'VERIFYING',
-  ANALYZING: 'ANALYZING',
-  EVIDENCE_READY: 'EVIDENCE_READY',
-  FAILED: 'FAILED',
-  SUPERSEDED: 'SUPERSEDED'
-} as const
-
-export type CommissioningStatus = (typeof CommissioningStatus)[keyof typeof CommissioningStatus]
-
-
 export const ScheduledJobRunStatus = {
   QUEUED: 'QUEUED',
   RUNNING: 'RUNNING',
@@ -184,17 +148,6 @@ export const ObservabilityAlertStatus = {
 } as const
 
 export type ObservabilityAlertStatus = (typeof ObservabilityAlertStatus)[keyof typeof ObservabilityAlertStatus]
-
-
-export const StorageCleanupJobType = {
-  PRODUCT_DELETION: 'PRODUCT_DELETION',
-  ARTIFACT_REPLACEMENT: 'ARTIFACT_REPLACEMENT',
-  ARTIFACT_REMOVAL: 'ARTIFACT_REMOVAL',
-  ABANDONED_UPLOAD: 'ABANDONED_UPLOAD',
-  ORPHANED_OBJECT: 'ORPHANED_OBJECT'
-} as const
-
-export type StorageCleanupJobType = (typeof StorageCleanupJobType)[keyof typeof StorageCleanupJobType]
 
 
 export const ProductType = {

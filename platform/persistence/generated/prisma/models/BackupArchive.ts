@@ -817,6 +817,14 @@ export type EnumBackupRetentionTierFieldUpdateOperationsInput = {
   set?: $Enums.BackupRetentionTier
 }
 
+export type BigIntFieldUpdateOperationsInput = {
+  set?: bigint | number
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
 export type BackupArchiveCreateNestedOneWithoutOperationsInput = {
   create?: Prisma.XOR<Prisma.BackupArchiveCreateWithoutOperationsInput, Prisma.BackupArchiveUncheckedCreateWithoutOperationsInput>
   connectOrCreate?: Prisma.BackupArchiveCreateOrConnectWithoutOperationsInput
