@@ -72,6 +72,22 @@ describe("public Staging smoke", () => {
     await assert.rejects(verifyPublicStaging(fetchImpl), /without primary object storage/);
   });
 
+  it("reports only whitelisted dependency states from a 503 without passing readiness", async () => {
+    const { fetchImpl } = healthyFetch({
+      "/api/health/ready": new Response(JSON.stringify({
+        status: "not_ready",
+        dependencies: { postgresql: "up", valkey: "down", providers: "up", debug: "private-token-value" },
+        private: "secret-value",
+      }), { status: 503, headers: { "content-type": "application/json" } }),
+    });
+    await assert.rejects(verifyPublicStaging(fetchImpl), (error) => {
+      assert.ok(error instanceof Error);
+      assert.match(error.message, /HTTP 503; postgresql up, valkey down, providers up; objectStorage absent/);
+      assert.doesNotMatch(error.message, /private-token-value|secret-value|debug/);
+      return true;
+    });
+  });
+
   it("fails readiness when any required dependency is down or missing", async () => {
     for (const dependencies of [
       { postgresql: "up", valkey: "down", providers: "up" },

@@ -215,6 +215,80 @@ export function buildStagingArtifacts(sourceConfig, env, driveId) {
   if (Object.keys(secrets).length > 100) fail("Runtime secret allowlist exceeds Cloudflare's bulk limit");
   return { config, secrets, direct };
 }
+export function validateUpstashRestUrl(value) {
+  let url;
+  try { url = new URL(value); } catch { fail("UPSTASH_REDIS_REST_URL is invalid"); }
+  const host = url.hostname.toLowerCase();
+  const rawPath = /^[a-z][a-z0-9+.-]*:\/\/[^/?#]*(\/[^?#]*)?/i.exec(value)?.[1];
+  if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
+      (url.port && url.port !== "443") || url.pathname !== "/" || (rawPath && rawPath !== "/") ||
+      !/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+upstash\.io$/.test(host) || host === "upstash.io") {
+    fail("UPSTASH_REDIS_REST_URL is not an approved HTTPS Upstash origin");
+  }
+  return new URL("/ping", url.origin);
+}
+
+const REDIS_PING_BODY_LIMIT = 4096;
+export async function verifyUpstashRedis(env = process.env, fetchImpl = globalThis.fetch) {
+  const token = env.UPSTASH_REDIS_REST_TOKEN;
+  const rawUrl = env.UPSTASH_REDIS_REST_URL;
+  const result = (code, httpStatus = null, pong = false) => ({ code, httpStatus, pong });
+  if (typeof token !== "string" || !token.trim() || typeof rawUrl !== "string" || !rawUrl.trim()) {
+    return result("CONFIG_MISSING");
+  }
+  let endpoint;
+  try { endpoint = validateUpstashRestUrl(rawUrl); } catch { return result("INVALID_URL"); }
+  let response;
+  try {
+    response = await fetchImpl(endpoint, {
+      method: "GET",
+      headers: { authorization: `Bearer ${token}`, accept: "application/json" },
+      credentials: "omit",
+      redirect: "manual",
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch (error) {
+    return result(error?.name === "TimeoutError" || error?.name === "AbortError" ? "TIMEOUT" : "NETWORK_ERROR");
+  }
+  if (response.status === 401) return result("AUTH_UNAUTHORIZED", 401);
+  if (response.status === 403) return result("AUTH_FORBIDDEN", 403);
+  if (response.status >= 300 && response.status < 400) return result("REDIRECT_BLOCKED", response.status);
+  if (response.status !== 200) return result("HTTP_ERROR", response.status);
+  const contentLength = Number(response.headers.get("content-length"));
+  if (Number.isFinite(contentLength) && contentLength > REDIS_PING_BODY_LIMIT) {
+    await response.body?.cancel().catch(() => {});
+    return result("BODY_TOO_LARGE", 200);
+  }
+  let text;
+  try {
+    const reader = response.body?.getReader();
+    if (!reader) return result("INVALID_RESPONSE", 200);
+    const chunks = [];
+    let bytes = 0;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        bytes += value.byteLength;
+        if (bytes > REDIS_PING_BODY_LIMIT) {
+          await reader.cancel();
+          return result("BODY_TOO_LARGE", 200);
+        }
+        chunks.push(Buffer.from(value));
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    text = Buffer.concat(chunks, bytes).toString("utf8");
+  } catch {
+    return result("BODY_READ_ERROR", 200);
+  }
+  let body;
+  try { body = JSON.parse(text); } catch { return result("INVALID_RESPONSE", 200); }
+  return body?.result === "PONG" ? result("PONG", 200, true) : result("PONG_MISMATCH", 200);
+}
+
 export async function prepare(driveId) {
   const source = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
   const artifacts = buildStagingArtifacts(source, process.env, driveId);
@@ -227,7 +301,7 @@ async function main() {
   if (command === "verify") {
     const direct = assertStagingSettings();
     await verifyHyperdrive(direct);
-  } else if (command === "verify-observability") {
+  } else if (command === "verify-redis") {\n    const result = await verifyUpstashRedis();\n    console.info(JSON.stringify(result));\n    if (!result.pong) process.exitCode = 1;\n  } else if (command === "verify-observability") {
     await verifyObservability();
   } else if (command === "prepare") {
     const direct = assertStagingSettings();
@@ -237,7 +311,7 @@ async function main() {
   } else if (command === "cleanup") {
     await Promise.all([rm(configPath, { force: true }), rm(secretsPath, { force: true })]);
   } else {
-    fail("Usage: node scripts/deploy-staging.mjs <verify|verify-observability|prepare|cleanup>");
+    fail("Usage: node scripts/deploy-staging.mjs <verify|verify-redis|verify-observability|prepare|cleanup>");
   }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   redisPing: vi.fn(),
   redisQuit: vi.fn(),
   s3Send: vi.fn(),
+  upstashPing: vi.fn(),
 }));
 
 vi.mock("pg", () => ({
@@ -24,7 +25,7 @@ vi.mock("redis", () => ({
   }),
 }));
 vi.mock("@upstash/redis", () => ({
-  Redis: class { ping() { return Promise.resolve("PONG"); } },
+  Redis: class { ping() { return mocks.upstashPing(); } },
 }));
 vi.mock("@aws-sdk/client-s3", () => ({
   HeadBucketCommand: class { constructor(readonly input: unknown) {} },
@@ -57,6 +58,7 @@ describe("active web readiness storage boundary", () => {
     mocks.redisPing.mockResolvedValue("PONG");
     mocks.redisQuit.mockResolvedValue(undefined);
     mocks.s3Send.mockResolvedValue(undefined);
+    mocks.upstashPing.mockResolvedValue("PONG");
   });
 
   afterEach(() => {
@@ -69,6 +71,27 @@ describe("active web readiness storage boundary", () => {
     const result = await readiness();
     expect(result).toEqual({ ready: true, checks: { postgresql: "up", valkey: "up", providers: "up" } });
     expect(mocks.s3Send).not.toHaveBeenCalled();
+  });
+
+  it("emits only fixed Valkey diagnostic enums and preserves down readiness on an authentication error", async () => {
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "https://bke-test.upstash.io");
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "private-redis-token");
+    mocks.upstashPing.mockRejectedValue(new Error("WRONGPASS private-redis-token https://private-endpoint"));
+    const warning = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const readiness = await getReadiness();
+    const result = await readiness();
+    expect(result.ready).toBe(false);
+    expect(result.checks.valkey).toBe("down");
+    const diagnostic = warning.mock.calls.map(([value]) => String(value))
+      .find((value) => value.includes('"event":"valkey_probe_failed"'));
+    expect(diagnostic).toBe(JSON.stringify({
+      event: "valkey_probe_failed",
+      dependency: "valkey",
+      transport: "upstash",
+      reason: "authentication_rejected",
+    }));
+    expect(diagnostic).not.toContain("private");
+    expect(diagnostic).not.toContain("WRONGPASS");
   });
 
   it("fails readiness only for explicitly configured S3 that is unavailable", async () => {

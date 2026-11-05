@@ -416,6 +416,8 @@ jobs:
         env:
           NODE_ENV: production
         run: npm run config:validate
+      - name: Verify protected Upstash Redis REST reachability
+        run: node scripts/deploy-staging.mjs verify-redis
       - name: Verify Neon and cache-disabled Hyperdrive metadata
         env:
           NODE_ENV: production

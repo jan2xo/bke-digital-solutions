@@ -174,24 +174,53 @@ async function checkPostgreSql(): Promise<void> {
   }
 }
 
+function valkeyTransport(upstashUrl: string | undefined, upstashToken: string | undefined, redisUrl: string | undefined): "upstash" | "redis" | "unconfigured" {
+  if (upstashUrl && upstashToken) return "upstash";
+  if (!upstashUrl && !upstashToken && redisUrl) return "redis";
+  return "unconfigured";
+}
+
+type ValkeyFailureReason = "configuration_missing" | "authentication_rejected" | "timeout" | "sdk_or_transport_error" | "unavailable";
+
+function valkeyFailureReason(error: unknown, transport: "upstash" | "redis" | "unconfigured"): ValkeyFailureReason {
+  if (transport === "unconfigured") return "configuration_missing";
+  const name = error && typeof error === "object" && "name" in error && typeof error.name === "string" ? error.name : "";
+  const message = error instanceof Error ? error.message : "";
+  if (/\b(?:AUTH|NOAUTH|WRONGPASS)\b/i.test(message)) return "authentication_rejected";
+  if (name === "TimeoutError" || name === "AbortError") return "timeout";
+  if (name === "UpstashError" || name === "RedisError" || name === "TypeError") return "sdk_or_transport_error";
+  return "unavailable";
+}
+
 async function checkValkey(): Promise<void> {
   const upstashUrl = optional("UPSTASH_REDIS_REST_URL");
   const upstashToken = optional("UPSTASH_REDIS_REST_TOKEN");
-  if (Boolean(upstashUrl) !== Boolean(upstashToken)) {
-    throw new Error("VALKEY_NOT_CONFIGURED");
-  }
-  if (upstashUrl && upstashToken) {
-    await new UpstashRedis({ url: upstashUrl, token: upstashToken }).ping();
-    return;
-  }
   const redisUrl = optional("REDIS_URL");
-  if (!redisUrl) throw new Error("VALKEY_NOT_CONFIGURED");
-  const client = createClient({ url: redisUrl, socket: { connectTimeout: 2_500 } });
+  const transport = valkeyTransport(upstashUrl, upstashToken, redisUrl);
   try {
-    await client.connect();
-    await client.ping();
-  } finally {
-    if (client.isOpen) await client.quit();
+    if (Boolean(upstashUrl) !== Boolean(upstashToken)) {
+      throw new Error("VALKEY_NOT_CONFIGURED");
+    }
+    if (upstashUrl && upstashToken) {
+      await new UpstashRedis({ url: upstashUrl, token: upstashToken }).ping();
+      return;
+    }
+    if (!redisUrl) throw new Error("VALKEY_NOT_CONFIGURED");
+    const client = createClient({ url: redisUrl, socket: { connectTimeout: 2_500 } });
+    try {
+      await client.connect();
+      await client.ping();
+    } finally {
+      if (client.isOpen) await client.quit();
+    }
+  } catch (error) {
+    console.warn(JSON.stringify({
+      event: "valkey_probe_failed",
+      dependency: "valkey",
+      transport,
+      reason: valkeyFailureReason(error, transport),
+    }));
+    throw error;
   }
 }
 

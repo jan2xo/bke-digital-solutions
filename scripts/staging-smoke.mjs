@@ -47,7 +47,7 @@ async function boundedText(response, path, limitBytes) {
   return Buffer.concat(chunks, bytes).toString("utf8");
 }
 
-async function get(path, accept, fetchImpl) {
+async function get(path, accept, fetchImpl, allowedStatuses = [200]) {
   let response;
   try {
     response = await fetchImpl(new URL(path, STAGING_ORIGIN), {
@@ -60,7 +60,7 @@ async function get(path, accept, fetchImpl) {
   } catch (error) {
     throw new Error(`Public Staging smoke GET ${path} failed (${networkCode(error)})`);
   }
-  if (response.status !== 200) {
+  if (!allowedStatuses.includes(response.status)) {
     throw new Error(`Public Staging smoke GET ${path} expected HTTP 200, received ${response.status}`);
   }
   const contentType = response.headers.get("content-type") ?? "";
@@ -70,31 +70,34 @@ async function get(path, accept, fetchImpl) {
   if (accept === "application/json" && !contentType.toLowerCase().includes("application/json")) {
     throw new Error(`Public Staging smoke GET ${path} did not return JSON`);
   }
-  return boundedText(response, path, accept === "text/html" ? HTML_LIMIT_BYTES : JSON_LIMIT_BYTES);
+  return { status: response.status, text: await boundedText(response, path, accept === "text/html" ? HTML_LIMIT_BYTES : JSON_LIMIT_BYTES) };
 }
 
 export async function verifyPublicStaging(fetchImpl = globalThis.fetch) {
   const home = await get("/", "text/html", fetchImpl);
-  if (!home.toLowerCase().includes("<html")) {
+  if (!home.text.toLowerCase().includes("<html")) {
     throw new Error("Public Staging smoke GET / returned no HTML document");
   }
 
   const login = await get("/login", "text/html", fetchImpl);
-  if (!login.includes("Sign in with Google")) {
+  if (!login.text.includes("Sign in with Google")) {
     throw new Error("Public Staging smoke GET /login lacks the Google sign-in affordance");
   }
 
-  const rawReadiness = await get("/api/health/ready", "application/json", fetchImpl);
+  const { status: readinessStatus, text: rawReadiness } = await get("/api/health/ready", "application/json", fetchImpl, [200, 503]);
   let health;
   try {
     health = JSON.parse(rawReadiness);
   } catch {
     throw new Error("Public Staging readiness returned invalid JSON");
   }
-  if (health?.status !== "ready" || !health.dependencies ||
+  const dependencySummary = health?.dependencies && typeof health.dependencies === "object"
+    ? [...REQUIRED_DEPENDENCIES.map((name) => `${name} ${health.dependencies[name] === "up" ? "up" : health.dependencies[name] === "down" ? "down" : "missing"}`), `objectStorage ${Object.hasOwn(health.dependencies, "objectStorage") ? "present" : "absent"}`].join(", ")
+    : "dependency statuses missing";
+  if (readinessStatus !== 200 || health?.status !== "ready" || !health.dependencies ||
       REQUIRED_DEPENDENCIES.some((name) => health.dependencies[name] !== "up") ||
       Object.hasOwn(health.dependencies, "objectStorage")) {
-    throw new Error("Public Staging readiness is not ready for PostgreSQL, Valkey and providers without primary object storage");
+    throw new Error(`Public Staging readiness failed (HTTP ${readinessStatus}; ${dependencySummary})`);
   }
 
   console.log("Public Staging smoke passed: / 200, /login 200 with Google sign-in, readiness 200 (postgresql, valkey, providers up).");

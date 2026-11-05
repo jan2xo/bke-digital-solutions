@@ -34,6 +34,9 @@ The job prepares and validates a private explicit runtime allowlist before apply
 
 **Prior certification:** [CI #2270](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41835344651) passed exact source/workflow `982aece38f966b8ca70ad5bf40cbfaec57dcfe6e`: 740 passed, 5 skipped, all five core jobs passed, bundle size 15,854,468 bytes. CI #2276 passed all five core jobs, aggregate certification and the protected Staging deployment at exact source/workflow `51784c69034267c3df843b8b349fa7e656b927fd` ([run](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41985060439)). It applied the reviewed migrations to the fresh Neon Staging database and deployed Worker version `c6f8051d-d071-4e70-8bef-a4d28146f884`. That run did not include the query-redaction setting or a public post-deployment smoke, and does not establish Google sign-in acceptance.
 
+
+**Current public readiness diagnosis:** CI #2278 passed all five core jobs and deployed version `8f2b43ee-a0bf-4308-ab7b-a654568fea62`; query-string redaction and the approved Staging legal initialization passed. The subsequent fixed-origin public smoke returned HTTP 503 because the Valkey dependency was down; Cloudflare telemetry showed the same single sanitized Valkey failure. Google sign-in remains unverified. The protected delivery now checks the configured Upstash REST endpoint with a bounded read-only [`GET /ping`](https://upstash.com/docs/redis/features/restapi) before any migration or deployment, and the public smoke reports only the whitelisted readiness dependency states on HTTP 503. This diagnostic does not waive the readiness requirement or change the Worker’s failure behavior.
+
 ## Google OAuth client contract
 
 The saved isolated Staging origin is `https://bke-digital-solutions.jlprojectfreedom.workers.dev`. The existing apex `https://jl-bke.com` remains in the live production OAuth configuration and is not used for this staging deployment.
