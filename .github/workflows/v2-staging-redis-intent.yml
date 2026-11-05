@@ -1,0 +1,99 @@
+name: Staging Redis Intent (read-only)
+
+# Cheap PR tests are unprivileged. Only trusted default-branch /certify redis
+# can reach Infisical Staging OIDC via the separately protected job.
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        description: Informational PR head for the Staging configuration proof
+        required: true
+        type: string
+  pull_request:
+    paths:
+      - ".github/workflows/certify.yml"
+      - ".github/workflows/v2-staging-redis-intent.yml"
+      - "scripts/certify-staging-redis.mjs"
+      - "scripts/certify-staging-redis.test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  unprivileged-tests:
+    name: Redis intent contract regression tests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout PR source for unprivileged tests ONLY
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate only pure PING contract and failure categories
+        run: node --test scripts/certify-staging-redis.test.mjs
+
+  protected-ping:
+    name: Protected Staging Upstash REST PING (no deployment)
+    if: github.event_name == 'issue_comment'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: Staging
+    concurrency:
+      group: digital-solutions-protected-staging-redis-ping
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout trusted default-branch code (never the PR head)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify trusted source/workflow provenance
+        shell: bash
+        env:
+          EXPECTED_TRUSTED_MAIN: ${{ github.sha }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_TRUSTED_MAIN"
+          test "$WORKFLOW_SHA" = "$EXPECTED_TRUSTED_MAIN"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check trusted PING safety contract without credentials
+        run: node --test scripts/certify-staging-redis.test.mjs
+      - name: Fetch approved protected Staging configuration through Infisical OIDC
+        uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
+        with:
+          method: oidc
+          identity-id: ${{ vars.INFISICAL_STAGING_IDENTITY_ID }}
+          domain: https://app.infisical.com
+          project-id: f029af60-06f3-428c-b305-c70f8bcf7850
+          env-slug: staging
+          secret-path: /
+          include-imports: 'false'
+          recursive: 'false'
+      - name: Check real authenticated Upstash REST PING (read-only)
+        run: node scripts/certify-staging-redis.mjs
+      - name: Record bounded verification
+        if: success()
+        env:
+          REQUESTED_PR_HEAD: ${{ inputs.source_sha }}
+          TRUSTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
+        shell: bash
+        run: |
+          {
+            echo '## Protected Staging Redis PING: PASS'
+            echo
+            echo 'Actual Upstash REST response: HTTP 200, PONG.'
+            echo "Trusted main workflow SHA: $TRUSTED_WORKFLOW_SHA"
+            echo "PR head at comment: $REQUESTED_PR_HEAD (informational only; no PR source executed)"
+            echo 'No migration, build, Worker deployment, legal publication, or secret/configuration mutation was performed.'
+          } >> "$GITHUB_STEP_SUMMARY"
