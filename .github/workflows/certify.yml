@@ -369,9 +369,14 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Required certification PASS"
+            if [ "$TARGETS_JSON" = '["redis"]' ]; then
+              echo '## Staging Redis provider PING PASS (not source certification)'
+              echo 'PR source SHA is informational; only trusted main code ran with protected configuration.'
+            else
+              echo "## Required certification PASS"
+            fi
             echo
-            echo "Exact source SHA: \`$SOURCE_SHA\`"
+            echo "PR source SHA at request: `$SOURCE_SHA`"
             echo
             echo "Declared targets: \`$TARGETS_JSON\`"
           } >> "$GITHUB_STEP_SUMMARY"
