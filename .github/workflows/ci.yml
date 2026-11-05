@@ -12,13 +12,18 @@ on:
         description: Exact commit SHA to certify
         required: true
         type: string
+      security_generator:
+        description: Run the guarded production dependency remediation generator
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
 concurrency:
-  group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}
-  cancel-in-progress: true
+  group: ${{ inputs.security_generator == true && format('digital-solutions-generator-{0}', inputs.source_sha || github.ref) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}
+  cancel-in-progress: ${{ inputs.security_generator != true }}
 
 env:
   SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
@@ -34,6 +39,117 @@ env:
   LICENSE_SIGNING_KEY_ID: ci-license-signing-key
 
 jobs:
+  security-dependency-generator:
+    name: Guarded production dependency generator
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.security_generator == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Require authorized branch and exact source head
+        env:
+          DISPATCH_SHA: ${{ inputs.source_sha }}
+          EXPECTED_BRANCH: fix/v3-production-dependency-security
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/$EXPECTED_BRANCH"
+          test "$DISPATCH_SHA" = "$GITHUB_SHA"
+          test "${#DISPATCH_SHA}" -eq 40
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+          persist-credentials: false
+      - name: Verify checked-out source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$GITHUB_REF" = "refs/heads/fix/v3-production-dependency-security"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+      - name: Generate pinned production dependency repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const path = "package.json";
+          const pkg = JSON.parse(fs.readFileSync(path, "utf8"));
+          const dependencies = pkg.dependencies ?? {};
+          const devDependencies = pkg.devDependencies ?? {};
+          const overrides = pkg.overrides ?? {};
+          const baseline = [
+            ["dependencies", dependencies, "@prisma/adapter-pg", "7.9.1"],
+            ["dependencies", dependencies, "@prisma/client", "7.9.1"],
+            ["dependencies", dependencies, "next", "16.3.6"],
+            ["dependencies", dependencies, "zod", "^4.1.5"],
+            ["devDependencies", devDependencies, "prisma", "7.9.1"],
+            ["overrides", overrides, "fast-uri", "3.1.5"],
+            ["overrides", overrides, "sharp", "0.35.3"],
+          ];
+          for (const [scope, values, name, expected] of baseline) {
+            if (values[name] !== expected) {
+              throw new Error("Unexpected " + scope + "." + name + " baseline; stop for re-audit");
+            }
+          }
+          if (overrides["source-map-js"] !== undefined) {
+            throw new Error("Unexpected source-map-js override baseline; stop for re-audit");
+          }
+          pkg.dependencies = {
+            ...dependencies,
+            "@prisma/adapter-pg": "7.10.1",
+            "@prisma/client": "7.10.1",
+            next: "16.4.5",
+            zod: "4.6.7",
+          };
+          pkg.devDependencies = { ...devDependencies, prisma: "7.10.1" };
+          pkg.overrides = {
+            ...overrides,
+            "fast-uri": "3.1.9",
+            sharp: "0.35.5",
+            "source-map-js": "1.2.2",
+          };
+          fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n");
+          NODE
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund --cache "$RUNNER_TEMP/npm-cache" --registry "https://registry.npmjs.org/"
+      - name: Verify clean reproducible install
+        run: |
+          set -euo pipefail
+          rm -rf node_modules
+          npm ci --cache "$RUNNER_TEMP/npm-cache" --registry "https://registry.npmjs.org/"
+      - name: Enforce production critical and high advisory policy
+        run: |
+          set -euo pipefail
+          npm audit --omit=dev --audit-level=critical
+          npm audit --omit=dev --audit-level=high
+      - name: Verify Next.js and Prisma compatibility
+        run: |
+          set -euo pipefail
+          npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma
+          npx prisma validate
+          npm run lint
+          npm run typecheck
+      - name: Produce integrity manifest
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD > dependency-remediation.source
+          sha256sum package.json package-lock.json > dependency-remediation.sha256
+          cat dependency-remediation.source
+          cat dependency-remediation.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bke-production-dependency-repair-${{ github.sha }}
+          path: |
+            package.json
+            package-lock.json
+            dependency-remediation.source
+            dependency-remediation.sha256
+          if-no-files-found: error
+          retention-days: 7
+
   database-tests:
     name: Database contracts + runtime tests
     runs-on: ubuntu-latest

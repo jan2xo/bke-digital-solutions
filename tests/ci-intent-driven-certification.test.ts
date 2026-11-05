@@ -83,10 +83,37 @@ describe("intent-driven certification foundation", () => {
       "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(workflow).toContain(
-      "group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}",
-    );
+    expect(workflow).toContain("group: ${{ inputs.security_generator == true && format('digital-solutions-generator-{0}', inputs.source_sha || github.ref) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}");
+    expect(workflow).toContain("cancel-in-progress: ${{ inputs.security_generator != true }}");
+    expect(workflow).toContain("digital-solutions-generator-{0}");
     expect(workflow).not.toContain("github.event.pull_request");
+  });
+
+  it("pins the guarded production dependency generator to the reviewed remediation", () => {
+    const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
+
+    for (const value of [
+      '["dependencies", dependencies, "@prisma/adapter-pg", "7.9.1"]',
+      '["dependencies", dependencies, "@prisma/client", "7.9.1"]',
+      '["dependencies", dependencies, "next", "16.3.6"]',
+      '["dependencies", dependencies, "zod", "^4.1.5"]',
+      '["devDependencies", devDependencies, "prisma", "7.9.1"]',
+      '["overrides", overrides, "fast-uri", "3.1.5"]',
+      '["overrides", overrides, "sharp", "0.35.3"]',
+      '"@prisma/adapter-pg": "7.10.1"',
+      '"@prisma/client": "7.10.1"',
+      'next: "16.4.5"',
+      'zod: "4.6.7"',
+      'prisma: "7.10.1"',
+      '"fast-uri": "3.1.9"',
+      'sharp: "0.35.5"',
+      '"source-map-js": "1.2.2"',
+      'npm audit --omit=dev --audit-level=high',
+      'git diff --exit-code -- platform/persistence/generated/prisma',
+      'dependency-remediation.source',
+    ]) {
+      expect(workflow).toContain(value);
+    }
   });
 
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
