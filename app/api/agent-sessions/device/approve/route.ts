@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { approveAgentDeviceAuthorization } from "@/apps/web/agent-sessions/device-authorization";
-import { requireIdentityUser } from "@/apps/web/auth/session";
+import { currentIdentitySession } from "@/apps/web/auth/session";
 import { apiError } from "@/apps/web/http/api-error";
 import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
@@ -21,7 +21,17 @@ export async function POST(request: Request) {
     }
 
     assertSameOrigin(request);
-    const principal = await requireIdentityUser();
+    const identitySession = await currentIdentitySession();
+    if (!identitySession) throw new Error("UNAUTHENTICATED");
+    const principal = identitySession.principal;
+    const currentPrincipal = await db.user.findUnique({
+      where: { id: principal.id },
+      select: { lifecycleState: true, suspendedAt: true },
+    });
+    if (!currentPrincipal || currentPrincipal.lifecycleState !== "ACTIVE" || currentPrincipal.suspendedAt) {
+      throw new Error("UNAUTHENTICATED");
+    }
+    if (principal.role !== "CUSTOMER") return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
     if (!principal.emailVerified) {
       return NextResponse.json({ error: "EMAIL_NOT_VERIFIED" }, { status: 403 });
     }

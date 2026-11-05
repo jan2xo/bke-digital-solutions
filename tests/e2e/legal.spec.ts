@@ -1,9 +1,8 @@
 import "dotenv/config";
-import argon2 from "argon2";
 import { expect, test } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { enrollAndLoginAdmin } from "./mfa-helper";
+import { signInGoogleTestUser } from "./google-session-helper";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
@@ -12,10 +11,9 @@ test("admin publishes a sanitized legal version and a customer completes require
   const suffix = Date.now().toString(36);
   const adminEmail = `legal-admin-${suffix}@bke.test`;
   const customerEmail = `legal-customer-${suffix}@bke.test`;
-  const password = "Legal-Browser-2026!";
-  await db.user.create({ data: { email: adminEmail, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  const customer = await db.user.create({ data: { email: customerEmail, name: "Legal Browser Customer", emailVerified: new Date(), credential: { create: { passwordHash: await argon2.hash(password) } }, ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Legal Browser Customer", billingEmail: customerEmail } } } });
-  await enrollAndLoginAdmin(page, adminEmail, password);
+  await db.user.create({ data: { email: adminEmail, emailVerified: new Date(), role: "ADMIN", } });
+  const customer = await db.user.create({ data: { email: customerEmail, role: "CUSTOMER", name: "Legal Browser Customer", emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Legal Browser Customer", billingEmail: customerEmail } } } });
+  await signInGoogleTestUser(page, adminEmail, db);
 
   await page.goto("/admin/legal");
   await expect(page.getByRole("navigation", { name: "Administration" }).getByRole("link", { name: "Security" })).toBeAttached();
@@ -50,9 +48,7 @@ test("admin publishes a sanitized legal version and a customer completes require
   await expect(page).toHaveURL(/\/login$/);
   expect(await page.evaluate(async () => (await fetch("/api/admin/legal")).status)).toBe(401);
 
-  await page.getByLabel("Email address").first().fill(customerEmail);
-  await page.locator('input[name="password"]').fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await signInGoogleTestUser(page, customerEmail, db);
   await expect(page).toHaveURL(/legal\/accept/);
   expect(await page.evaluate(async () => (await fetch("/api/orders/cm00000000000000000000000")).status)).toBe(409);
   await page.getByRole("button", { name: "Accept and continue" }).click();

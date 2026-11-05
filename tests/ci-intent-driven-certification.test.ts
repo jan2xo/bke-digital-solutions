@@ -23,6 +23,9 @@ const callableWorkflows = [
 ] as const;
 
 const explicitConcurrencyGroups = new Map<string, string>([
+  ["v2-composition.yml", "group: composition-${{ inputs.source_sha }}"],
+  ["v2-host-v1-free.yml", "group: host-v1-free-${{ inputs.source_sha }}"],
+  ["v2-prisma-isolation.yml", "group: prisma-isolation-${{ inputs.source_sha }}"],
   [
     "native-bke-account-handoff.yml",
     "group: native-bke-account-${{ inputs.source_sha }}",
@@ -42,6 +45,12 @@ const explicitConcurrencyGroups = new Map<string, string>([
 ]);
 
 describe("intent-driven certification foundation", () => {
+  it("isolates the composed host and Prisma workflows while deduplicating the same source", () => {
+    const groups = ["v2-composition.yml", "v2-host-v1-free.yml", "v2-prisma-isolation.yml"]
+      .map((name) => readFileSync(`${workflowsDir}/${name}`, "utf8").match(/^  group: (.+)$/m)?.[1]);
+    expect(groups.every((group) => group?.includes("inputs.source_sha"))).toBe(true);
+    expect(new Set(groups).size).toBe(groups.length);
+  });
   it("accepts explicit certification intent instead of guessing ownership", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 

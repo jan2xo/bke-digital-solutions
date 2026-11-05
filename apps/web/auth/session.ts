@@ -2,7 +2,6 @@ import "server-only";
 import { cookies } from "next/headers";
 import {
   IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID,
-  type IdentitySessionAuthenticationMethod,
   type IdentitySessionIssuanceCapability,
 } from "@bke/identity/contracts/session.contract";
 import {
@@ -15,25 +14,16 @@ import {
   type IdentitySessionValidationCapability,
 } from "@bke/identity/contracts/session-validation.contract";
 import type { IdentityPrincipal } from "@bke/identity/contracts/identity.contract";
-import { createArgon2PasswordHasher } from "@bke/identity/providers/argon2-password-hasher";
-import { createArgon2PasswordVerifier } from "@bke/identity/providers/argon2-password-verifier";
 import { safeNetworkHint, summarizeUserAgent } from "@/platform/host/security/session-display";
 import { clientIp } from "../http/request";
-import { getV2WebApplication } from "../runtime";
+import { getIdentityWebApplication } from "./runtime";
+import { db } from "@/platform/host/db";
+import { hasFreshGoogleAuthentication } from "./google-policy";
 
 const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000;
-const passwordHasher = createArgon2PasswordHasher();
-const passwordVerifier = createArgon2PasswordVerifier();
 
 class IdentitySessionOperationError extends Error {
-  readonly code: string;
-  readonly status: number;
-
-  constructor(code: string, status: number) {
-    super(code);
-    this.code = code;
-    this.status = status;
-  }
+  constructor(readonly code: string, readonly status: number) { super(code); }
 }
 
 function cookieName() {
@@ -49,11 +39,8 @@ export async function writeIdentitySessionCookie(
   expiresAt = new Date(Date.now() + SESSION_LIFETIME_MS),
 ): Promise<void> {
   (await cookies()).set(cookieName(), token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    expires: expiresAt,
+    httpOnly: true, secure: process.env.NODE_ENV === "production",
+    sameSite: "lax", path: "/", expires: expiresAt,
   });
 }
 
@@ -64,11 +51,11 @@ export async function clearIdentitySessionCookie(): Promise<void> {
 export async function terminateCurrentIdentitySession(): Promise<void> {
   const token = await currentIdentitySessionToken();
   if (token) {
-    const application = await getV2WebApplication();
-    const sessionTermination = application.get<IdentitySessionTerminationCapability>(
+    const application = await getIdentityWebApplication();
+    const termination = application.get<IdentitySessionTerminationCapability>(
       IDENTITY_SESSION_TERMINATION_CAPABILITY_ID,
     );
-    const result = await sessionTermination.terminate(token);
+    const result = await termination.terminate(token);
     if (result.status === "FAILED") throw new IdentitySessionOperationError(result.code, 503);
   }
   await clearIdentitySessionCookie();
@@ -77,122 +64,124 @@ export async function terminateCurrentIdentitySession(): Promise<void> {
 export async function currentIdentitySession(): Promise<IdentitySessionContext | null> {
   const token = await currentIdentitySessionToken();
   if (!token) return null;
-  const application = await getV2WebApplication();
-  const sessionValidation = application.get<IdentitySessionValidationCapability>(
+  const application = await getIdentityWebApplication();
+  const validation = application.get<IdentitySessionValidationCapability>(
     IDENTITY_SESSION_VALIDATION_CAPABILITY_ID,
   );
-  const result = await sessionValidation.validate(token);
-  if (result.status === "VALID") return result.context;
+  const result = await validation.validate(token);
   if (result.status === "INVALID") return null;
-  throw new Error(result.code);
+  if (result.status === "FAILED") throw new IdentitySessionOperationError(result.code, 503);
+  // Consumer policy accepts Google primary sessions only. Historical password
+  // and application-MFA methods in the shared package do not gain admission.
+  if (result.context.session.authenticationMethod !== "GOOGLE_OIDC") return null;
+  const principal = await db.user.findUnique({
+    where: { id: result.context.principal.id },
+    select: { lifecycleState: true, suspendedAt: true, googleIdentity: { select: { subject: true } } },
+  });
+  if (!principal || principal.lifecycleState !== "ACTIVE" || principal.suspendedAt ||
+      !principal.googleIdentity) return null;
+  return result.context;
 }
 
-export async function issueIdentitySession(
-  userId: string,
-  request?: Request,
-  authenticationMethod: IdentitySessionAuthenticationMethod = "PASSWORD",
-) {
-  const application = await getV2WebApplication();
+/** Persist only Google's authenticated-at fact, never callback time or token iat. */
+export async function recordGoogleSessionFreshness(input: {
+  sessionId: string;
+  userId: string;
+  subject: string;
+  authenticatedAt: Date | null;
+}): Promise<void> {
+  if (!hasFreshGoogleAuthentication(input.authenticatedAt)) throw new Error("RECENT_AUTH_REQUIRED");
+  const now = new Date();
+  const changed = await db.session.updateMany({
+    where: {
+      id: input.sessionId, userId: input.userId, authenticationMethod: "GOOGLE_OIDC",
+      revokedAt: null, expiresAt: { gt: now }, absoluteExpiresAt: { gt: now },
+      user: {
+        lifecycleState: "ACTIVE", suspendedAt: null,
+        googleIdentity: { subject: input.subject },
+      },
+    },
+    data: {
+      recentAuthenticatedAt: input.authenticatedAt,
+      assuranceLevel: "RECENTLY_AUTHENTICATED",
+      mfaVerifiedAt: null,
+    },
+  });
+  if (changed.count !== 1) throw new Error("UNAUTHENTICATED");
+}
+
+/** This entrypoint is called only with a subject from the validated OIDC callback. */
+export async function issueGoogleIdentitySession(input: {
+  userId: string;
+  subject: string;
+  authenticatedAt: Date | null;
+  request: Request;
+}) {
+  const principal = await db.user.findUnique({
+    where: { id: input.userId },
+    select: { lifecycleState: true, suspendedAt: true, googleIdentity: { select: { subject: true } } },
+  });
+  if (!principal || principal.lifecycleState !== "ACTIVE" || principal.suspendedAt ||
+      principal.googleIdentity?.subject !== input.subject) throw new Error("UNAUTHENTICATED");
+  const application = await getIdentityWebApplication();
   const issuance = application.get<IdentitySessionIssuanceCapability>(
     IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID,
   );
   const result = await issuance.issue({
-    userId,
-    authenticationMethod,
-    userAgentSummary: summarizeUserAgent(request?.headers.get("user-agent")),
-    networkHint: safeNetworkHint(request ? clientIp(request) : "unknown"),
+    userId: input.userId, authenticationMethod: "GOOGLE_OIDC",
+    userAgentSummary: summarizeUserAgent(input.request.headers.get("user-agent")),
+    networkHint: safeNetworkHint(clientIp(input.request)),
   });
   if (result.status === "REJECTED") throw new Error(result.code);
   if (result.status === "FAILED") throw new IdentitySessionOperationError(result.code, 503);
+  if (hasFreshGoogleAuthentication(input.authenticatedAt)) {
+    await recordGoogleSessionFreshness({
+      sessionId: result.session.id, userId: input.userId,
+      subject: input.subject, authenticatedAt: input.authenticatedAt,
+    });
+  }
   await writeIdentitySessionCookie(result.token, result.session.expiresAt);
   return result.session;
 }
 
-export async function hashIdentityPassword(password: string) {
-  return passwordHasher.hash(password);
-}
-
-export async function verifyIdentityPassword(hash: string, password: string) {
-  return passwordVerifier.verify(hash, password);
-}
-
 export async function requireIdentityUser(): Promise<IdentityPrincipal> {
-  const session = await currentIdentitySession();
-  if (!session) throw new Error("UNAUTHENTICATED");
-  return session.principal;
-}
-
-export async function requireIdentityAdmin(): Promise<IdentitySessionContext> {
-  const session = await currentIdentitySession();
-  if (!session) throw new Error("UNAUTHENTICATED");
-  if (session.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  if (!session.mfaEnabled) throw new Error("MFA_ENROLLMENT_REQUIRED");
-  if (!session.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
-  return session;
-}
-
-export async function requireRecentIdentitySession(maxAgeMinutes = 15): Promise<IdentitySessionContext> {
-  const session = await currentIdentitySession();
-  if (!session) throw new Error("UNAUTHENTICATED");
-  const recent = session.session.recentAuthenticatedAt;
-  if (!recent || recent < new Date(Date.now() - maxAgeMinutes * 60_000)) throw new Error("RECENT_AUTH_REQUIRED");
-  return session;
-}
-
-// Compatibility surface for the production host while callers converge on the
-// native Identity context. These functions contain no authentication policy of
-// their own; they delegate to the released @bke/identity capabilities above.
-export const hashPassword = hashIdentityPassword;
-export const verifyPassword = verifyIdentityPassword;
-export const clearSessionCookie = clearIdentitySessionCookie;
-export const destroySession = terminateCurrentIdentitySession;
-
-export async function createSession(
-  userId: string,
-  request?: Request,
-  options?: {
-    mfaVerified?: boolean;
-    recent?: boolean;
-    authenticationMethod?: IdentitySessionAuthenticationMethod;
-  },
-) {
-  const authenticationMethod = options?.authenticationMethod
-    ?? (options?.mfaVerified ? "PASSWORD_EMAIL_OTP" : "PASSWORD");
-  return issueIdentitySession(userId, request, authenticationMethod);
-}
-
-export async function currentUser() {
-  return (await currentIdentitySession())?.principal ?? null;
-}
-
-export const requireUser = requireIdentityUser;
-
-export async function requireAdmin() {
-  return (await requireIdentityAdmin()).principal;
-}
-
-function legacySessionView(context: IdentitySessionContext) {
-  return Object.freeze({ ...context.session, user: context.principal });
-}
-
-export async function requireRecentSession(maxAgeMinutes = 15) {
-  return legacySessionView(await requireRecentIdentitySession(maxAgeMinutes));
-}
-
-export async function requireRecentUser(maxAgeMinutes = 15) {
-  return (await requireRecentIdentitySession(maxAgeMinutes)).principal;
-}
-
-export async function requireRecentAdmin(maxAgeMinutes = 15) {
-  const context = await requireRecentIdentitySession(maxAgeMinutes);
-  if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  if (!context.mfaEnabled || !context.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
+  const context = await currentIdentitySession();
+  if (!context) throw new Error("UNAUTHENTICATED");
   return context.principal;
 }
 
+export async function requireIdentityAdmin(): Promise<IdentitySessionContext> {
+  const context = await currentIdentitySession();
+  if (!context) throw new Error("UNAUTHENTICATED");
+  if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
+  return context;
+}
+
+export async function requireRecentIdentitySession(maxAgeMinutes = 15): Promise<IdentitySessionContext> {
+  const context = await currentIdentitySession();
+  if (!context) throw new Error("UNAUTHENTICATED");
+  if (context.session.assuranceLevel !== "RECENTLY_AUTHENTICATED" ||
+      context.session.mfaVerifiedAt !== null ||
+      !hasFreshGoogleAuthentication(context.session.recentAuthenticatedAt, maxAgeMinutes)) {
+    throw new Error("RECENT_AUTH_REQUIRED");
+  }
+  return context;
+}
+
+export const clearSessionCookie = clearIdentitySessionCookie;
+export async function currentUser() { return (await currentIdentitySession())?.principal ?? null; }
+export const requireUser = requireIdentityUser;
+export async function requireAdmin() { return (await requireIdentityAdmin()).principal; }
+export async function requireRecentUser(maxAgeMinutes = 15) {
+  return (await requireRecentIdentitySession(maxAgeMinutes)).principal;
+}
+export async function requireRecentAdmin(maxAgeMinutes = 15) {
+  const context = await requireRecentIdentitySession(maxAgeMinutes);
+  if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
+  return context.principal;
+}
 export async function requireRecentAdminSession(maxAgeMinutes = 15) {
   const context = await requireRecentIdentitySession(maxAgeMinutes);
   if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  if (!context.mfaEnabled || !context.session.mfaVerifiedAt) throw new Error("MFA_REQUIRED");
-  return legacySessionView(context);
+  return Object.freeze({ ...context.session, user: context.principal });
 }

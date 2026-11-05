@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  GoogleIdentity: 'GoogleIdentity',
   PasswordCredential: 'PasswordCredential',
   Session: 'Session',
   AdministratorMfaMethod: 'AdministratorMfaMethod',
@@ -164,6 +165,16 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const GoogleIdentityScalarFieldEnum = {
+  userId: 'userId',
+  subject: 'subject',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GoogleIdentityScalarFieldEnum = (typeof GoogleIdentityScalarFieldEnum)[keyof typeof GoogleIdentityScalarFieldEnum]
+
+
 export const PasswordCredentialScalarFieldEnum = {
   userId: 'userId',
   passwordHash: 'passwordHash',
@@ -228,6 +239,8 @@ export const MfaChallengeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   purpose: 'purpose',
+  primaryAuthenticationMethod: 'primaryAuthenticationMethod',
+  sessionId: 'sessionId',
   tokenHash: 'tokenHash',
   codeHash: 'codeHash',
   expiresAt: 'expiresAt',

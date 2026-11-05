@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model GoogleIdentity
+ *
+ */
+export type GoogleIdentity = Prisma.GoogleIdentityModel
+/**
  * Model PasswordCredential
  *
  */

@@ -51,6 +51,9 @@ type SecurityEventOptions = {
   provider?: "PAYMONGO" | "RESEND";
   authenticationMethod?:
     | "PASSWORD"
+    | "GOOGLE_OIDC"
+    | "GOOGLE_OIDC_EMAIL_OTP"
+    | "GOOGLE_OIDC_RECOVERY"
     | "PASSWORD_TOTP"
     | "PASSWORD_EMAIL_OTP"
     | "PASSWORD_RECOVERY"
@@ -76,7 +79,7 @@ const defaults: Definition = {
 };
 
 const definitions: Partial<Record<SecurityEventType, Definition>> = {
-  ADMIN_LOGIN_SUCCEEDED: { label: "Administrator signed in", outcome: "SUCCESS", severity: "LOW", explanation: "A password and MFA protected administrator sign-in completed." },
+  ADMIN_LOGIN_SUCCEEDED: { label: "Administrator signed in", outcome: "SUCCESS", severity: "LOW", explanation: "An administrator sign-in completed. The recorded authentication method describes its provider; this event alone does not prove MFA." },
   ADMIN_LOGIN_FAILED: { label: "Administrator sign-in failed", outcome: "FAILURE", severity: "MEDIUM", explanation: "An administrator sign-in attempt did not complete." },
   ADMIN_PASSWORD_REJECTED: { label: "Administrator password rejected", outcome: "FAILURE", severity: "MEDIUM", explanation: "A password attempt for an administrator account was rejected." },
   ADMIN_SESSION_CREATED: { label: "New administrator session", outcome: "SUCCESS", severity: "LOW", explanation: "A new authenticated administrator session was created." },

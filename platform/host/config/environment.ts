@@ -18,7 +18,6 @@ export const environmentSchema = z.object({
   DATABASE_URL: z.string().min(1),
   DIRECT_DATABASE_URL: z.preprocess(optional, z.string().min(1).optional()),
   SESSION_SECRET: secret,
-  MFA_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_PEPPER: secret,
   CLAIM_CODE_CHECKOUT_ENABLED: bool.default(false),
   CLAIM_CODE_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
@@ -43,8 +42,6 @@ export const environmentSchema = z.object({
   MALWARE_SCANNER_TIMEOUT_MS: z.coerce.number().int().min(100).max(120000).default(30000),
   MALWARE_SCANNER_MAX_BYTES: z.coerce.number().int().min(1).max(536870912).default(262144000),
   ALLOW_BREAK_GLASS: z.preprocess(optional, z.enum(["true", "false"]).default("false")),
-  ADMIN_OWNER_RECOVERY_KEY: z.preprocess(optional, secret.optional()),
-  ADMIN_OWNER_RECOVERY_KEY_VERSION: z.coerce.number().int().min(1).default(1),
   CRON_SECRET: secret,
   PROVIDER_CREDENTIALS_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   PROVIDER_CREDENTIALS_KEY_VERSION: z.coerce.number().int().min(1).default(1),
@@ -158,16 +155,11 @@ export const environmentSchema = z.object({
   if (value.BACKUP_RESTORE_S3_BUCKET && [value.S3_BUCKET, value.BACKUP_BUCKET].includes(value.BACKUP_RESTORE_S3_BUCKET)) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_S3_BUCKET"], message: "must be isolated from source and backup buckets" });
   if (protectedEnvironment && value.BACKUP_ENABLED && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_OFFSITE_ACK !== "SEPARATE_FAILURE_DOMAIN") context.addIssue({ code: "custom", path: ["BACKUP_OFFSITE_ACK"], message: "must acknowledge an offsite storage failure domain" });
   if (protectedEnvironment) {
-    for (const key of ["SESSION_SECRET", "MFA_ENCRYPTION_KEY", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
-      if (key === "MFA_ENCRYPTION_KEY" && !value[key]) {
-        context.addIssue({ code: "custom", path: [key], message: "is required in staging and production" });
-        continue;
-      }
+    for (const key of ["SESSION_SECRET", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
       const configured = value[key];
       if (!configured || configured.length < 48 || placeholder.test(configured)) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
     }
     if (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY && (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY.length < 48 || placeholder.test(value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY))) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "must be at least 48 characters and not a placeholder" });
-    if (!value.ADMIN_OWNER_RECOVERY_KEY || value.ADMIN_OWNER_RECOVERY_KEY.length < 48 || placeholder.test(value.ADMIN_OWNER_RECOVERY_KEY)) context.addIssue({ code: "custom", path: ["ADMIN_OWNER_RECOVERY_KEY"], message: "must be configured, at least 48 characters, and not a placeholder" });
     for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"] as const) {
       if (value[key] && placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must not be a placeholder" });
     }

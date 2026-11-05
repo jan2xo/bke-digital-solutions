@@ -9,14 +9,11 @@ const base = {
   APP_URL: "https://commerce.bke.example",
   DATABASE_URL: "postgresql://application:password@database:5432/bke",
   SESSION_SECRET: "s".repeat(64),
-  MFA_ENCRYPTION_KEY: "m".repeat(64),
   LICENSE_PEPPER: "l".repeat(64),
   LICENSE_SIGNING_PRIVATE_KEY: "p".repeat(96),
   LICENSE_SIGNING_PUBLIC_KEY: "u".repeat(64),
   LICENSE_SIGNING_KEY_ID: "test-license-ed25519-v1",
   SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: "supply-chain-private-test-material-" + "s".repeat(64),
-  ADMIN_OWNER_RECOVERY_KEY: "owner-recovery-key-" + "o".repeat(64),
-  ADMIN_OWNER_RECOVERY_KEY_VERSION: "3",
   CRON_SECRET: "c".repeat(64),
   REDIS_URL: "redis://valkey:6379",
   REDIS_KEY_PREFIX: "bke-production",
@@ -42,10 +39,7 @@ const productionRuntimeEnvironment = () => {
 };
 
 const validatedProductionRuntimeNames = [
-  "ADMIN_OWNER_RECOVERY_KEY",
-  "ADMIN_OWNER_RECOVERY_KEY_VERSION",
   "SESSION_SECRET",
-  "MFA_ENCRYPTION_KEY",
   "LICENSE_PEPPER",
   "BKE_AGENT_UPDATE_SIGNING_KEYS",
   "CRON_SECRET",
@@ -61,9 +55,10 @@ describe("deployment environment validation", () => {
   it("wires validated production runtime variable names through Compose without secret values", () => {
     const names = productionRuntimeEnvironment();
     expect(names).toEqual(expect.arrayContaining(validatedProductionRuntimeNames));
-    expect(names).toContain("ADMIN_OWNER_RECOVERY_KEY");
-    expect(names).toContain("ADMIN_OWNER_RECOVERY_KEY_VERSION");
     expect(names.every((name) => /^[A-Z0-9_]+$/.test(name))).toBe(true);
+  });
+  it("does not require retired BKE MFA or owner-MFA-recovery keys", () => {
+    expect(parseEnvironment(base)).toMatchObject({ DEPLOYMENT_ENV: "production" });
   });
   it("accepts an isolated production configuration", () => expect(parseEnvironment(base)).toMatchObject({ DEPLOYMENT_ENV: "production", PAYMENT_PROVIDER: "paymongo", EMAIL_PROVIDER: "resend" }));
   it("rejects insecure production origins and mock providers", () => expect(() => parseEnvironment({ ...base, APP_URL: "http://commerce.bke.example", PAYMENT_PROVIDER: "mock" })).toThrow(/APP_URL|PAYMENT_PROVIDER/));

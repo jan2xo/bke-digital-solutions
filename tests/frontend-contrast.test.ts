@@ -32,15 +32,8 @@ describe("customer-facing contrast safeguards", () => {
     expect(licensingPage).toContain("text-[#a8b5c4]");
   });
 
-  it("keeps authentication notices readable on light utility surfaces", () => {
-    const styles = read("app/globals.css");
-    const mfaPage = read("app/login/mfa/page.tsx");
-    const magicLink = read("components/magic-link-form.tsx");
-    expect(styles).toContain("main > section .bg-blue-50");
-    expect(styles).toContain("main > section .bg-amber-50");
-    expect(styles).toContain("main > section .bg-emerald-50");
-    expect(mfaPage).toContain("text-blue-950");
-    expect(mfaPage).toContain("text-amber-950");
-    expect(magicLink).toContain("text-emerald-950");
+  it("keeps Google sign-in and required legal consent on shared readable surfaces", () => {
+    expect(read("components/google-auth-button.tsx")).toContain("legal-consent-panel");
+    expect(read("app/login/page.tsx")).toContain("GoogleAuthButton");
   });
 });

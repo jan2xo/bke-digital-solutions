@@ -5,7 +5,7 @@ import {
   rejectBrowserOriginForAgent,
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
-import { authenticateNativeAgentRequest } from "@/apps/web/agent-sessions/native-mfa";
+import { authenticateNativeAgentRequest } from "@/apps/web/agent-sessions/native-session";
 import {
   resolveAgentLicenseSeatManagementHandle,
   resolveAgentLicenseSeatTargetHandle,
