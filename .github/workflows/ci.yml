@@ -17,6 +17,11 @@ on:
         required: false
         default: false
         type: boolean
+      initialize_staging_legal:
+        description: Initialize the two reviewed Staging test notices after deployment
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -94,6 +99,10 @@ jobs:
         run: npm run db:status
       - name: Run post-migration smoke
         run: npm run db:smoke
+      - name: Verify Staging legal initialization against disposable PostgreSQL
+        env:
+          RUN_STAGING_LEGAL_BOOTSTRAP_TESTS: 'true'
+        run: npm test -- tests/integration/staging-legal-bootstrap.test.ts
       - name: Seed disposable test database
         run: npm run db:seed
       - name: Generate disposable test signing keys
@@ -429,6 +438,20 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
           WRANGLER_SEND_METRICS: 'false'
         run: npx --no-install wrangler deploy --config .wrangler-staging.json --secrets-file .wrangler-staging-secrets.json
+      - name: Verify deployed Staging query-string redaction
+        env:
+          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/deploy-staging.mjs verify-observability
+      - name: Initialize reviewed Staging legal test notices
+        if: ${{ inputs.initialize_staging_legal == true }}
+        env:
+          NODE_ENV: production
+          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
+          INITIALIZE_STAGING_LEGAL_ACK: I_APPROVE_THE_REVIEWED_STAGING_TEST_NOTICES
+          SOURCE_SHA: ${{ env.SOURCE_SHA }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/initialize-staging-legal.ts
       - name: Verify public Staging pages and dependency readiness
         run: node scripts/staging-smoke.mjs
       - name: Remove temporary protected deployment files

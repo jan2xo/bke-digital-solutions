@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { verifyHyperdriveMetadata } from "../scripts/deploy-staging.mjs";
+import { databaseUrl, verifyHyperdriveMetadata, verifyObservabilityRedaction } from "../scripts/deploy-staging.mjs";
 const keys=["APP_URL","DEPLOYMENT_ENV","DEPLOYMENT_ID","REDIS_KEY_PREFIX","PAYMENT_PROVIDER","PAYMONGO_LIVEMODE","EMAIL_PROVIDER","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","STAGING_NEON_HOST","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","MFA_ENCRYPTION_KEY","LICENSE_PEPPER","LICENSE_SIGNING_PRIVATE_KEY","LICENSE_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","ADMIN_OWNER_RECOVERY_KEY","CRON_SECRET","REDIS_URL","UPSTASH_REDIS_REST_URL","UPSTASH_REDIS_REST_TOKEN","EMAIL_FROM","CLOUDFLARE_API_TOKEN","HYPERDRIVE_FRESH_ID"] as const;
 const saved=new Map(keys.map(k=>[k,process.env[k]]));
 const host="ep-example.ap-southeast-1.aws.neon.tech";
@@ -33,6 +33,33 @@ describe("protected Staging guards",()=>{
   setup();
   process.env.STAGING_NEON_HOST="wrong.neon.tech"; expect(()=>assertStagingSettings()).toThrow();
  });
+ it("rejects PostgreSQL connection query target overrides and duplicates",()=>{
+  const valid=`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require&channel_binding=require`;
+  expect(databaseUrl("DIRECT_DATABASE_URL",valid,host).hostname).toBe(host);
+  for(const query of [
+   "sslmode=require&host=other.neon.tech",
+   "sslmode=require&user=other",
+   "sslmode=require&port=6543",
+   "sslmode=require&%68ost=other.neon.tech",
+   "sslmode=disable&sslmode=require",
+   "sslmode=require&sslmode=disable",
+  ]) expect(()=>databaseUrl("DIRECT_DATABASE_URL",`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?${query}`,host)).toThrow(/query/);
+ });
+ it("requires query-string redaction in deployed observability settings",()=>{
+  expect(verifyObservabilityRedaction({observability:{redact_query_string:true}})).toBe(true);
+  expect(()=>verifyObservabilityRedaction({observability:{redact_query_string:false}})).toThrow(/redaction/);
+  expect(()=>verifyObservabilityRedaction({observability:{}})).toThrow(/redaction/);
+ });
+ it("requires the explicit legal initialization acknowledgement before database creation",async()=>{
+  const {withAuthorizedStagingDatabase}=await import("../scripts/initialize-staging-legal");
+  let created=false;
+  const env={...process.env,NODE_ENV:"production",SOURCE_SHA:"a".repeat(40),GITHUB_ACTOR:"operator"};
+  await expect(withAuthorizedStagingDatabase(env,()=>{created=true;throw new Error("unexpected construction");},async()=>undefined)).rejects.toThrow("STAGING_LEGAL_ACK_REQUIRED");
+  expect(created).toBe(false);
+  const badTarget={...env,INITIALIZE_STAGING_LEGAL_ACK:"I_APPROVE_THE_REVIEWED_STAGING_TEST_NOTICES",DIRECT_DATABASE_URL:`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require&host=attacker.neon.tech`};
+  await expect(withAuthorizedStagingDatabase(badTarget,()=>{created=true;throw new Error("unexpected construction");},async()=>undefined)).rejects.toThrow("STAGING_LEGAL_CONFIGURATION_INVALID");
+  expect(created).toBe(false);
+ });
  it("requires a matching PostgreSQL 5432 Hyperdrive origin and disabled caching",()=>{
   const original=drive(), url=new URL(db);
   expect(verifyHyperdriveMetadata(original,original.id,url,host)).toBe(true);
@@ -50,7 +77,7 @@ describe("protected Staging guards",()=>{
  });
  it("requires Redis and strips inherited routes, vars, DB and deployment credentials",async()=>{
   const {buildStagingArtifacts}=await import("../scripts/deploy-staging.mjs");
-  const config={name:"bke-digital-solutions",hyperdrive:[{binding:"HYPERDRIVE_FRESH",id:"0".repeat(32),localConnectionString:"postgresql://fixture"}],vars:{BKE_RUNTIME:"workers"},triggers:{}};
+  const config={name:"bke-digital-solutions",hyperdrive:[{binding:"HYPERDRIVE_FRESH",id:"0".repeat(32),localConnectionString:"postgresql://fixture"}],observability:{enabled:true,redact_query_string:true},vars:{BKE_RUNTIME:"workers"},triggers:{}};
   delete process.env.REDIS_URL; expect(()=>buildStagingArtifacts(config,process.env,"a".repeat(32))).toThrow(/Redis/);
   process.env.UPSTASH_REDIS_REST_URL="http://redis.example.invalid"; process.env.UPSTASH_REDIS_REST_TOKEN="token";
   expect(()=>buildStagingArtifacts(config,process.env,"a".repeat(32))).toThrow(/HTTPS/);
@@ -63,6 +90,7 @@ describe("protected Staging guards",()=>{
   expect(artifacts.config.vars).not.toHaveProperty("S3_BUCKET");
   expect(()=>buildStagingArtifacts({...config,routes:[{pattern:"*"}]},process.env,"a".repeat(32))).toThrow(/routes/);
   expect(()=>buildStagingArtifacts({...config,env:{staging:{}}},process.env,"a".repeat(32))).toThrow(/environments/);
+  expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,redact_query_string:false}},process.env,"a".repeat(32))).toThrow(/redact/);
   expect(()=>buildStagingArtifacts({...config,vars:{DATABASE_URL:"leak"}},process.env,"a".repeat(32))).toThrow();
  });
 });

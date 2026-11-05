@@ -80,6 +80,17 @@ const publicVariables = [
 function fail(message) {
   throw new Error(message);
 }
+
+const databaseIdentityParameters = new Set(["host", "hostaddr", "user", "username", "password", "port", "database", "dbname", "service", "servicefile"]);
+function rejectConnectionQueryOverrides(name, url) {
+  const seen = new Set();
+  for (const [rawKey] of url.searchParams) {
+    const key = rawKey.toLowerCase();
+    if (seen.has(key)) fail(`${name} must not repeat PostgreSQL query parameters`);
+    seen.add(key);
+    if (databaseIdentityParameters.has(key)) fail(`${name} query parameters cannot override the verified database target`);
+  }
+}
 function required(name, environment = process.env) {
   const value = environment[name];
   if (typeof value !== "string" || value.length === 0) fail(`Missing required Staging setting: ${name}`);
@@ -89,6 +100,7 @@ export function databaseUrl(name, value, expectedHost) {
   let url;
   try { url = new URL(value); } catch { fail(`${name} must be a valid PostgreSQL URL`); }
   if (!["postgres:", "postgresql:"].includes(url.protocol)) fail(`${name} must use PostgreSQL`);
+  rejectConnectionQueryOverrides(name, url);
   if (decodeURIComponent(url.pathname.slice(1)) !== expected.databaseName) fail(`${name} must target bke_staging`);
   if (decodeURIComponent(url.username) !== expected.databaseRole) fail(`${name} must use bke_staging_owner`);
   if (!expectedHost || url.hostname.toLowerCase() !== expectedHost.toLowerCase()) fail(`${name} must match STAGING_NEON_HOST exactly`);
@@ -128,6 +140,22 @@ export function verifyHyperdriveMetadata(drive, id, directUrl, expectedHost) {
   if (drive.mtls?.sslmode !== undefined && !["require", "verify-ca", "verify-full"].includes(drive.mtls.sslmode)) fail("Hyperdrive TLS must not be disabled");
   return true;
 }
+export function verifyObservabilityRedaction(settings) {
+  if (settings?.observability?.redact_query_string !== true) fail("Cloudflare did not confirm Staging query-string redaction");
+  return true;
+}
+async function verifyObservability() {
+  if (required("CLOUDFLARE_ACCOUNT_ID") !== expected.cloudflareAccountId) fail("Cloudflare account does not match the approved Staging account");
+  const token = required("CLOUDFLARE_API_TOKEN");
+  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${expected.cloudflareAccountId}/workers/scripts/bke-digital-solutions/settings`, {
+    headers: { authorization: `Bearer ${token}`, accept: "application/json" },
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!response.ok) fail(`Cloudflare observability check failed (HTTP ${response.status})`);
+  const body = await response.json();
+  if (body.success !== true || !verifyObservabilityRedaction(body.result)) fail("Cloudflare observability metadata is invalid");
+  console.info("Verified deployed Worker query-string redaction.");
+}
 async function verifyHyperdrive(directUrl) {
   if (required("CLOUDFLARE_ACCOUNT_ID") !== expected.cloudflareAccountId) fail("Cloudflare account does not match the approved Staging account");
   const id = required("HYPERDRIVE_FRESH_ID");
@@ -149,6 +177,7 @@ export function buildStagingArtifacts(sourceConfig, env, driveId) {
   const direct = assertStagingSettings(env);
   const config = structuredClone(sourceConfig);
   if (config.name !== "bke-digital-solutions") fail("Unexpected Worker name");
+  if (config.observability?.redact_query_string !== true) fail("Staging deployment must redact query strings in observability logs");
   if (config.route || config.routes) fail("Custom routes are forbidden for workers.dev-only Staging");
   if (config.env) fail("Wrangler named environments cannot override the Staging target");
   config.workers_dev = true;
@@ -196,6 +225,8 @@ async function main() {
   if (command === "verify") {
     const direct = assertStagingSettings();
     await verifyHyperdrive(direct);
+  } else if (command === "verify-observability") {
+    await verifyObservability();
   } else if (command === "prepare") {
     const direct = assertStagingSettings();
     const id = required("HYPERDRIVE_FRESH_ID");
@@ -204,7 +235,7 @@ async function main() {
   } else if (command === "cleanup") {
     await Promise.all([rm(configPath, { force: true }), rm(secretsPath, { force: true })]);
   } else {
-    fail("Usage: node scripts/deploy-staging.mjs <verify|prepare|cleanup>");
+    fail("Usage: node scripts/deploy-staging.mjs <verify|verify-observability|prepare|cleanup>");
   }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
