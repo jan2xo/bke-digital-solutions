@@ -124,14 +124,14 @@ suite("Google administrator bootstrap persistence", () => {
     expect(revokedSession.revocationReason).toBe("ADMIN_GOOGLE_BOOTSTRAP");
     expect(audit.metadata).toMatchObject({
       operatorId: "ci-test-operator",
-      mfaEnrollmentRequired: true,
+      authenticationPolicy: "GOOGLE_ONLY",
     });
     expect(existingAdminId).not.toBe(targetId);
   });
 
   it.each([
     { googleBound: false, emailVerified: true, suspended: false, label: "unbound user" },
-    { googleBound: true, emailVerified: false, suspended: false, label: "unverified BKE contact" },
+    { googleBound: true, emailVerified: false, suspended: false, label: "unverified Google contact" },
     { googleBound: true, emailVerified: true, suspended: true, label: "inactive user" },
   ])("rejects $label", async ({ googleBound, emailVerified, suspended }) => {
     if (!database) throw new Error("DATABASE_URL is required for this test.");

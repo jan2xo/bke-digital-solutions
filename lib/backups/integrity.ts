@@ -28,7 +28,7 @@ export const backupManifestSchema = z.object({
     paymentProvider: z.string(),
     emailProvider: z.string(),
     providerConfigSource: z.string(),
-    sourceBucket: z.string(),
+    sourceBucket: z.string().optional(),
   }),
 });
 

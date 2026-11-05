@@ -44,6 +44,9 @@ try {
       });
       const issued = await issuance.issue({ userId: user.id, authenticationMethod: "GOOGLE_OIDC" });
       if (!("token" in issued)) throw new Error("Fixture session issuance failed");
+      if (issued.session.authenticationMethod !== "GOOGLE_OIDC" || issued.session.mfaVerifiedAt !== null) {
+        throw new Error("Google session fixture must not claim application MFA");
+      }
       sessions.push({ name, token: issued.token, sessionId: issued.session.id });
     }
     await writeFile(path, JSON.stringify(sessions), { mode: 0o600 });

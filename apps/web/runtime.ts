@@ -25,11 +25,10 @@ async function composeWebApplication(): Promise<ComposedApplication> {
   const connectionString = currentOperationDatabaseUrl() ?? required("DATABASE_URL");
   const sessionSecret = required("SESSION_SECRET");
   const licensePepper = required("LICENSE_PEPPER");
-  const mfaEncryptionKey = process.env.MFA_ENCRYPTION_KEY?.trim() || undefined;
   const payments = createWebPaymentsAdapter();
 
   return composeCapabilities([
-    createIdentityModule({ connectionString, sessionSecret, mfaEncryptionKey }),
+    createIdentityModule({ connectionString, sessionSecret }),
     createAccountsModule({ connectionString }),
     createLegalModule({
       connectionString,

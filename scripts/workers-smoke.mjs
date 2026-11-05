@@ -36,7 +36,7 @@ const retired = await fetch(origin + "/api/auth/login", {
   method: "POST", headers: { "content-type": "application/json" },
   body: JSON.stringify({ email: "fixture@example.invalid", password: "retired" }),
 });
-assert.equal(retired.status, 410, "Retired password login must remain retired");
+assert.equal(retired.status, 404, "Removed password login route must not be exposed");
 
 const signingKeysResponse = await fetch(origin + "/api/licensing/keys", { signal: AbortSignal.timeout(15000) });
 assert.equal(signingKeysResponse.status, 200, "Worker signing-key registry lookup failed");

@@ -36,8 +36,7 @@ export default async function DeviceAuthorizationPage({
     redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
   }
 
-  const mfaRequired = identitySession!.mfaEnabled && !identitySession!.session.mfaVerifiedAt;
-  const eligible = user.role === "CUSTOMER" && !mfaRequired;
+  const eligible = user.role === "CUSTOMER";
   const accounts = user.emailVerified && eligible
     ? await listAgentDeviceAuthorizationAccounts(user.id)
     : [];
@@ -50,12 +49,12 @@ export default async function DeviceAuthorizationPage({
       </p>
 
       {!eligible ? (
-        <div className="card p-8"><h2 className="text-xl font-black">Complete account security before connecting</h2><p className="mt-3 text-slate-600">Device authorization requires an active customer session with required application MFA completed.</p></div>
+        <div className="card p-8"><h2 className="text-xl font-black">Complete account security before connecting</h2><p className="mt-3 text-slate-600">Device authorization requires an active Google-authenticated customer session.</p></div>
       ) : !user.emailVerified ? (
         <div className="card p-8">
-          <h2 className="text-xl font-black">Verify your email first</h2>
+          <h2 className="text-xl font-black">Google contact verification required</h2>
           <p className="mt-3 text-slate-600">
-            Device authorization requires a verified BKE identity.
+            Sign in again with a supported Gmail or Google Workspace account.
           </p>
         </div>
       ) : (

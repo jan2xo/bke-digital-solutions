@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { EncryptJWT, exportJWK, generateKeyPair, jwtDecrypt, SignJWT } from "jose";
 
@@ -37,8 +38,9 @@ const metadata = {
 let signing: Awaited<ReturnType<typeof generateKeyPair>>;
 let wrongSigning: Awaited<ReturnType<typeof generateKeyPair>>;
 let publicJwk: Awaited<ReturnType<typeof exportJWK>>;
-let tokenFactory: (nonce: string, privateKey?: Awaited<ReturnType<typeof generateKeyPair>>["privateKey"], claims?: { issuer?: string; audience?: string }) => Promise<string>;
+let tokenFactory: (nonce: string, privateKey?: Awaited<ReturnType<typeof generateKeyPair>>["privateKey"], claims?: { issuer?: string; audience?: string; auth_time?: unknown; exp?: number }) => Promise<string>;
 let tokenEndpointCalls = 0;
+let tokenEndpointBody: URLSearchParams | undefined;
 let idToken: string;
 
 function jsonResponse(value: unknown): Response {
@@ -68,16 +70,17 @@ beforeAll(async () => {
       email: "customer@example.test",
       email_verified: true,
       name: "Test Customer",
+      ...(claims.auth_time !== undefined ? { auth_time: claims.auth_time } : {}),
     })
       .setProtectedHeader({ alg: "RS256", kid: "google-test-key" })
       .setIssuer(claims.issuer ?? GOOGLE_ISSUER)
       .setAudience(claims.audience ?? CLIENT_ID)
       .setSubject("google-subject-123")
       .setIssuedAt()
-      .setExpirationTime("5m")
+      .setExpirationTime(claims.exp ?? "5m")
       .sign(privateKey);
 
-  vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+  vi.stubGlobal("fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
     const rawUrl = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
     const url = new URL(rawUrl);
     if (url.href === "https://accounts.google.com/.well-known/openid-configuration") {
@@ -85,6 +88,7 @@ beforeAll(async () => {
     }
     if (url.href === TOKEN_ENDPOINT) {
       tokenEndpointCalls += 1;
+      tokenEndpointBody = new URLSearchParams(await new Request(input, init).text());
       return jsonResponse({
         access_token: "access-token",
         token_type: "Bearer",
@@ -99,6 +103,7 @@ beforeAll(async () => {
 
 afterEach(() => {
   tokenEndpointCalls = 0;
+  tokenEndpointBody = undefined;
 });
 
 async function startLogin() {
@@ -117,6 +122,7 @@ async function startLogin() {
   }
   return {
     encryptedContext: request.encryptedContext,
+    codeChallenge: new URL(request.authorizationUrl).searchParams.get("code_challenge"),
     callbackUrl: `https://jl-bke.com/api/auth/google/callback?code=authorization-code&state=${encodeURIComponent(state)}`,
     nonce: payload.nonce,
   };
@@ -196,6 +202,53 @@ describe("Google OIDC callback validation", () => {
     const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
     await expect(completeGoogleAuthorization(login.callbackUrl, expiredContext)).rejects.toThrow();
     expect(tokenEndpointCalls).toBe(0);
+  });
+
+  it("requests the optional auth_time claim and does not equate account selection with reauthentication", async () => {
+    const { createGoogleAuthorizationRequest } = await import("../apps/web/auth/google-oidc");
+    const result = await createGoogleAuthorizationRequest({ flow: "reauthenticate", sessionId: "session-a", userId: "user-a", subject: "google-subject-123" });
+    const url = new URL(result.authorizationUrl);
+    expect(JSON.parse(url.searchParams.get("claims")!)).toEqual({ id_token: { auth_time: { essential: true } } });
+    expect(url.searchParams.get("prompt")).toBeNull();
+    expect(url.searchParams.get("login_hint")).toBe("google-subject-123");
+  });
+
+  it("propagates only validated Google auth_time and permits basic sign-in without it", async () => {
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    const first = await startLogin();
+    idToken = await tokenFactory(first.nonce);
+    expect((await completeGoogleAuthorization(first.callbackUrl, first.encryptedContext)).identity.authenticatedAt).toBeNull();
+    const second = await startLogin();
+    const authTime = Math.floor(Date.now() / 1000) - 60;
+    idToken = await tokenFactory(second.nonce, undefined, { auth_time: authTime });
+    expect((await completeGoogleAuthorization(second.callbackUrl, second.encryptedContext)).identity.authenticatedAt?.getTime()).toBe(authTime * 1000);
+  });
+
+  it.each(["1800000000", -1, Math.floor(Date.now() / 1000) + 3600])("rejects invalid signed auth_time %s", async (authTime) => {
+    const login = await startLogin();
+    idToken = await tokenFactory(login.nonce, undefined, { auth_time: authTime });
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    await expect(completeGoogleAuthorization(login.callbackUrl, login.encryptedContext)).rejects.toThrow();
+  });
+
+  it("rejects expired ID tokens", async () => {
+    const login = await startLogin();
+    idToken = await tokenFactory(login.nonce, undefined, { exp: Math.floor(Date.now() / 1000) - 120 });
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    await expect(completeGoogleAuthorization(login.callbackUrl, login.encryptedContext)).rejects.toThrow();
+  });
+
+  it("transmits the matching PKCE verifier, client authentication and exact redirect to the token endpoint", async () => {
+    const login = await startLogin();
+    idToken = await tokenFactory(login.nonce);
+    const { completeGoogleAuthorization } = await import("../apps/web/auth/google-oidc");
+    await completeGoogleAuthorization(login.callbackUrl, login.encryptedContext);
+    const verifier = tokenEndpointBody?.get("code_verifier");
+    expect(verifier).toMatch(/^[A-Za-z0-9._~-]{43,128}$/);
+    expect(createHash("sha256").update(verifier!).digest("base64url")).toBe(login.codeChallenge);
+    expect(tokenEndpointBody?.get("client_id")).toBe(CLIENT_ID);
+    expect(tokenEndpointBody?.get("client_secret")).toBe(CLIENT_SECRET);
+    expect(tokenEndpointBody?.get("redirect_uri")).toBe("https://jl-bke.com/api/auth/google/callback");
   });
 
 });

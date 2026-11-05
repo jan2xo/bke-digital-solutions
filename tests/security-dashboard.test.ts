@@ -15,9 +15,9 @@ describe("security dashboard safety", () => {
     expect(sanitizeSecurityMetadata({ reason: "login", count: 2, token: "secret", email: "private@example.com" } as never)).toEqual({ reason: "login", count: 2 });
   });
 
-  it("creates conservative signals without claiming compromise", async () => {
+  it("creates conservative signals for repeated sign-in failures without claiming compromise", async () => {
     const { deriveSecurityReviewSignals } = await import("@/lib/security/review-signals");
-    const events = Array.from({ length: 3 }, () => ({ type: "MFA_CHALLENGE_FAILED" as const, severity: "MEDIUM" as const, createdAt: new Date() }));
+    const events = Array.from({ length: 3 }, () => ({ type: "ADMIN_LOGIN_FAILED" as const, severity: "MEDIUM" as const, createdAt: new Date() }));
     const signals = deriveSecurityReviewSignals(events);
     expect(signals[0]?.title).toBe("Repeated authentication failures");
     expect(JSON.stringify(signals).toLowerCase()).not.toContain("compromised");

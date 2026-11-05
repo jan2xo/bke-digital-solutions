@@ -34,32 +34,8 @@ enum CustomerLifecycleState {
   PURGE_ELIGIBLE
 }
 
-enum StorageCleanupStatus {
-  PENDING
-  PROCESSING
-  RETRYING
-  SUCCEEDED
-  FAILED
-  CANCELLED
-}
 
-enum ArtifactUploadState {
-  PENDING
-  UPLOADED
-  VERIFYING
-  VERIFIED
-  FAILED
-  EXPIRED
-}
 
-enum CommissioningStatus {
-  PENDING
-  VERIFYING
-  ANALYZING
-  EVIDENCE_READY
-  FAILED
-  SUPERSEDED
-}
 
 enum ScheduledJobRunStatus {
   QUEUED
@@ -136,13 +112,6 @@ enum ObservabilityAlertStatus {
   RESOLVED
 }
 
-enum StorageCleanupJobType {
-  PRODUCT_DELETION
-  ARTIFACT_REPLACEMENT
-  ARTIFACT_REMOVAL
-  ABANDONED_UPLOAD
-  ORPHANED_OBJECT
-}
 
 enum ProductType {
   SOFTWARE
@@ -432,13 +401,11 @@ model User {
   mfaChallenges                   MfaChallenge[]
   emergencyMfaAuthorizations     EmergencyMfaEnrollmentAuthorization[]
   securityEvents                  SecurityEvent[]
-  artifactUploadSessions          ArtifactUploadSession[]          @relation("ArtifactUploadCreator")
   providerConfigurationsCreated   ExternalProviderConfiguration[] @relation("ProviderConfigurationCreator")
   providerConfigurationsUpdated   ExternalProviderConfiguration[] @relation("ProviderConfigurationUpdater")
   providerCredentialsCreated      ExternalProviderCredential[]    @relation("ProviderCredentialCreator")
   legalVersionsAuthored           LegalDocumentVersion[]          @relation("LegalVersionAuthor")
   legalAcceptances                LegalAcceptance[]
-  storageCleanupJobsCreated       StorageCleanupJob[]             @relation("StorageCleanupCreator")
   refundOperationsRequested       RefundOperation[]               @relation("RefundRequester")
   reconciliationsRun              PaymentReconciliation[]         @relation("ReconciliationRunner")
   reconciliationsAcknowledged     PaymentReconciliation[]         @relation("ReconciliationAcknowledger")
@@ -451,9 +418,6 @@ model User {
   privacyRequests                 PrivacyRequest[]            @relation("PrivacyRequestUser")
   privacyRequestsReviewed         PrivacyRequest[]            @relation("PrivacyRequestReviewer")
   privacyRequestEvents            PrivacyRequestEvent[]       @relation("PrivacyRequestEventActor")
-  releaseApprovalsCreated         ReleaseApproval[] @relation("ReleaseApprovalCreator")
-  releaseApprovalsReviewed        ReleaseApproval[] @relation("ReleaseApprovalReviewer")
-  releaseApprovalsApproved        ReleaseApproval[] @relation("ReleaseApprovalApprover")
   supportTicketsCreated           SupportTicket[]   @relation("SupportTicketCreator")
   supportTicketsAssigned          SupportTicket[]   @relation("SupportTicketAssignee")
   supportMessages                 SupportTicketMessage[] @relation("SupportMessageAuthor")
@@ -820,14 +784,10 @@ model Product {
   editions            Edition[]
   prices              Price[]
   policies            LicensePolicy[]
-  artifacts           ProductArtifact[]
-  artifactUploadSessions ArtifactUploadSession[]
   licenses            License[]
   subscriptions       Subscription[]
   trials              TrialGrant[]
   offers              DiscountOffer[]
-  cleanupJobs         StorageCleanupJob[]
-  commissioningRuns   CommissioningRun[]
 
   @@index([launcherExecutionType])
   @@index([deletionRequestedAt])
@@ -899,111 +859,13 @@ model ProductVersion {
   publishedAt     DateTime?
   releasedAt      DateTime          @default(now())
   product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
-  artifacts       ProductArtifact[]
-  artifactUploadSessions ArtifactUploadSession[]
-  supplyChainEvidence SupplyChainEvidence?
-  approvals       ReleaseApproval[]
-  backupEvidence  String?
-  complianceEvidence String?
-  migrationEvidence String?
-  commissioningRuns CommissioningRun[]
 
   @@unique([productId, version])
 }
 
-model ArtifactUploadSession {
-  id               String              @id @default(cuid())
-  productId        String
-  versionId        String
-  objectKey        String              @unique
-  originalFilename String
-  extension        String
-  contentType      String
-  expectedSize     BigInt
-  expectedSha256   String?
-  state            ArtifactUploadState  @default(PENDING)
-  createdById      String
-  expiresAt        DateTime
-  completedAt      DateTime?
-  failedAt         DateTime?
-  failureReason    String?
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  product          Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
-  version          ProductVersion      @relation(fields: [versionId], references: [id], onDelete: Cascade)
-  createdBy        User                @relation("ArtifactUploadCreator", fields: [createdById], references: [id], onDelete: Restrict)
 
-  @@index([versionId, state])
-  @@index([expiresAt, state])
-}
 
-model ReleaseApproval {
-  id          String        @id @default(cuid())
-  versionId   String
-  stage       ReleaseLifecycle
-  createdById String
-  reviewedById String?
-  approvedById String?
-  approvedAt  DateTime?
-  reviewedAt  DateTime?
-  payloadHash String?
-  notes       String?
-  createdAt   DateTime      @default(now())
-  version     ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
-  createdBy   User          @relation("ReleaseApprovalCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  reviewedBy  User?         @relation("ReleaseApprovalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
-  approvedBy  User?         @relation("ReleaseApprovalApprover", fields: [approvedById], references: [id], onDelete: SetNull)
-  @@index([versionId, stage])
-}
 
-model SupplyChainEvidence {
-  id                 String   @id @default(cuid())
-  versionId          String   @unique
-  releaseIdentifier  String
-  commitHash         String
-  branch             String
-  buildEnvironment   String
-  builderIdentity    String
-  builtAt            DateTime
-  manifestJson       Json     @default("{}")
-  sbomReference      String?
-  sbomFormat         String?
-  manifestSignature  String?
-  signatureVerified  Boolean  @default(false)
-  canonicalPayloadHash String?
-  signatureAlgorithm String?
-  signatureKeyId    String?
-  signedAt          DateTime?
-  dependencyVerified Boolean  @default(false)
-  malwareStatus      String   @default("PENDING_SCAN")
-  certificateStatus  String   @default("PENDING_PROVISIONING")
-  provenanceStatus   String   @default("RECORDED")
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  version            ProductVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
-  verificationEvidence SupplyChainVerificationEvidence[]
-  @@index([malwareStatus, certificateStatus])
-}
-
-model SupplyChainVerificationEvidence {
-  id                String   @id @default(cuid())
-  evidenceId        String
-  kind              String
-  artifactHash      String
-  signerKeyId       String?
-  scannerId         String?
-  scannerVersion    String?
-  result            String
-  reference         String?
-  documentObjectKey String?
-  documentSha256    String?
-  failureReason     String?
-  verifiedAt        DateTime @default(now())
-  metadata          Json     @default("{}")
-  evidence          SupplyChainEvidence @relation(fields: [evidenceId], references: [id], onDelete: Restrict)
-  @@index([evidenceId, kind, verifiedAt])
-  @@index([documentObjectKey])
-}
 
 model LicensePolicy {
   id                String  @id @default(cuid())
@@ -1037,85 +899,8 @@ model Price {
   @@index([productId, active])
 }
 
-model ProductArtifact {
-  id            String              @id @default(cuid())
-  productId     String
-  versionId     String?
-  name          String
-  objectKey     String              @unique
-  sha256        String
-  sizeBytes     BigInt
-  contentType   String
-  active        Boolean             @default(true)
-  downloadCount Int                 @default(0)
-  removedAt     DateTime?
-  createdAt     DateTime            @default(now())
-  product       Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
-  version       ProductVersion?     @relation(fields: [versionId], references: [id])
-  grants        DownloadGrant[]
-  cleanupJobs   StorageCleanupJob[]
-  commissioningRuns CommissioningRun[]
-}
 
-model CommissioningRun {
-  id                 String             @id @default(cuid())
-  productId          String
-  versionId          String
-  artifactId         String
-  artifactSha256     String
-  artifactSizeBytes  BigInt
-  payloadHash        String?
-  policyVersion      String
-  generatorVersion   String
-  status             CommissioningStatus @default(PENDING)
-  classification     String
-  sbomStatus         String             @default("UNDETERMINED")
-  dependencyStatus   String             @default("UNDETERMINED")
-  migrationCategory  String             @default("UNKNOWN")
-  migrationStatus    String             @default("UNDETERMINED")
-  evidence           Json               @default("{}")
-  limitations        Json               @default("[]")
-  errorCode          String?
-  attempts           Int                @default(0)
-  startedAt          DateTime?
-  completedAt        DateTime?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  product            Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
-  version            ProductVersion     @relation(fields: [versionId], references: [id], onDelete: Cascade)
-  artifact           ProductArtifact   @relation(fields: [artifactId], references: [id], onDelete: Restrict)
-  @@unique([artifactId, artifactSha256, payloadHash, policyVersion, generatorVersion])
-  @@index([status, createdAt])
-  @@index([versionId, status])
-}
 
-model StorageCleanupJob {
-  id               String                @id @default(cuid())
-  type             StorageCleanupJobType
-  status           StorageCleanupStatus  @default(PENDING)
-  targetType       String
-  targetId         String
-  objectKey        String
-  idempotencyKey   String                @unique
-  attempts         Int                   @default(0)
-  nextAttemptAt    DateTime              @default(now())
-  lastErrorCode    String?
-  correlationId    String
-  productId        String?
-  artifactId       String?
-  createdByAdminId String?
-  createdAt        DateTime              @default(now())
-  startedAt        DateTime?
-  completedAt      DateTime?
-  product          Product?              @relation(fields: [productId], references: [id], onDelete: SetNull)
-  artifact         ProductArtifact?      @relation(fields: [artifactId], references: [id], onDelete: SetNull)
-  createdByAdmin   User?                 @relation("StorageCleanupCreator", fields: [createdByAdminId], references: [id], onDelete: SetNull)
-
-  @@index([status, nextAttemptAt])
-  @@index([targetType, targetId])
-  @@index([productId, status])
-  @@index([artifactId, status])
-}
 
 model Cart {
   id        String          @id @default(cuid())
@@ -1466,7 +1251,6 @@ model License {
   purchasePlan      PurchasePlan?       @relation(fields: [purchasePlanId], references: [id])
   assignments       LicenseAssignment[]
   activations       DeviceActivation[]
-  grants            DownloadGrant[]
   events            LicenseEvent[]
   leaseHistory      LicenseLeaseRecord[]
   leaseOperations   CommercialLeaseOperation[]
@@ -1653,17 +1437,6 @@ model DeviceActivation {
   @@index([licenseId, active])
 }
 
-model DownloadGrant {
-  id         String          @id @default(cuid())
-  licenseId  String
-  artifactId String
-  tokenHash  String          @unique
-  expiresAt  DateTime
-  usedAt     DateTime?
-  processingAt DateTime?
-  license    License         @relation(fields: [licenseId], references: [id], onDelete: Cascade)
-  artifact   ProductArtifact @relation(fields: [artifactId], references: [id])
-}
 
 model LicenseEvent {
   id        String   @id @default(cuid())

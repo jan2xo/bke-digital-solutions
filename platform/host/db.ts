@@ -1,11 +1,17 @@
 import "server-only";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/platform/persistence/generated/prisma/client";
-import { env } from "@/platform/host/env";
 import { currentOperationDatabaseUrl, operationResource } from "@/platform/host/operation-scope";
 
 const globals = globalThis as typeof globalThis & { prisma?: PrismaClient };
 let nodeClient: PrismaClient | undefined;
+
+function requiredDatabaseUrl(): string {
+  const value = process.env.DATABASE_URL?.trim();
+  if (!value) throw new Error("Missing database configuration: DATABASE_URL");
+  return value;
+}
+
 function client(): PrismaClient {
   const connectionString = currentOperationDatabaseUrl();
   if (connectionString) {
@@ -17,9 +23,9 @@ function client(): PrismaClient {
   }
   if (process.env.BKE_RUNTIME === "workers") throw new Error("WORKER_OPERATION_SCOPE_REQUIRED");
   nodeClient ??= globals.prisma ?? new PrismaClient({
-    adapter: new PrismaPg({ connectionString: env.DATABASE_URL }),
+    adapter: new PrismaPg({ connectionString: requiredDatabaseUrl() }),
   });
-  if (env.NODE_ENV !== "production") globals.prisma = nodeClient;
+  if (process.env.NODE_ENV !== "production") globals.prisma = nodeClient;
   return nodeClient;
 }
 

@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [feat/workers-free-compatibility-proof]
   workflow_call:
     inputs:
       source_sha:
@@ -44,7 +46,70 @@ env:
   LICENSE_SIGNING_KEY_ID: ci-license-signing-key
 
 jobs:
+  integration-generated-artifacts:
+    name: Generate integration review artifacts (not certification)
+    if: ${{ github.event_name == 'push' && github.repository == 'jan2xo/bke-digital-solutions' && github.ref == 'refs/heads/feat/workers-free-compatibility-proof' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    outputs:
+      changes_needed: ${{ steps.generated.outputs.changes_needed }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify exact integration source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/feat/workers-free-compatibility-proof"
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$SOURCE_SHA" = "$GITHUB_SHA"
+          printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$GITHUB_WORKFLOW_SHA" "$GITHUB_WORKFLOW_REF"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Generate authentic lock and client from the reviewed composition
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund --cache "$RUNNER_TEMP/npm-cache" --registry https://registry.npmjs.org/
+          npm ci --ignore-scripts --no-audit --no-fund --cache "$RUNNER_TEMP/npm-cache" --registry https://registry.npmjs.org/
+          npm run db:generate
+          git diff --exit-code -- package.json prisma/schema.prisma
+      - name: Record changed generated output and source provenance
+        id: generated
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -z "$(git status --porcelain --untracked-files=all -- package-lock.json platform/persistence/generated/prisma)"; then
+            echo "changes_needed=false" >> "$GITHUB_OUTPUT"
+            echo "Lock and client match source. This job is not application certification." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changes_needed=true" >> "$GITHUB_OUTPUT"
+            echo "Generated review files must be inspected and committed before certification. No deployment or repository write occurs here." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          git rev-parse HEAD > integration-generation.source
+          sha256sum package.json package-lock.json prisma/schema.prisma > integration-generation.sha256
+      - name: Preserve public generated source for review
+        if: ${{ steps.generated.outputs.changes_needed == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: integration-generated-${{ env.SOURCE_SHA }}
+          path: |
+            package.json
+            package-lock.json
+            prisma/schema.prisma
+            platform/persistence/generated/prisma/
+            integration-generation.source
+            integration-generation.sha256
+          if-no-files-found: error
+          retention-days: 3
+
   database-tests:
+    if: ${{ github.event_name != 'push' }}
     name: Database contracts + runtime tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -120,6 +185,7 @@ jobs:
         run: npm test
 
   code-quality-build:
+    if: ${{ github.event_name != 'push' }}
     name: Code quality + application build
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -165,6 +231,7 @@ jobs:
         run: git diff --check
 
   security:
+    if: ${{ github.event_name != 'push' }}
     name: Repository + dependency security
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -186,6 +253,7 @@ jobs:
         run: npm audit --omit=dev --audit-level=critical
 
   deployment-containers:
+    if: ${{ github.event_name != 'push' }}
     name: Deployment contracts + container builds
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -220,6 +288,8 @@ jobs:
         run: docker build --target runner -t bke-digital-solutions:ci .
 
   workers-application:
+    needs: integration-generated-artifacts
+    if: ${{ !cancelled() && (github.event_name != 'push' || (needs.integration-generated-artifacts.result == 'success' && needs.integration-generated-artifacts.outputs.changes_needed == 'false')) }}
     name: Workers application receiving proof
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -464,8 +534,8 @@ jobs:
         run: node scripts/deploy-staging.mjs cleanup
 
   required-certification:
-    name: Required certification
-    if: ${{ always() }}
+    name: ${{ github.event_name == 'push' && 'Generation only - not certification' || 'Required certification' }}
+    if: ${{ always() && github.event_name != 'push' }}
     needs:
       - database-tests
       - code-quality-build

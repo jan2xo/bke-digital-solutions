@@ -4,6 +4,8 @@ import { registrationLegalDocuments } from "@/apps/web/legal/service";
 import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { createGoogleAuthorizationRequest, GOOGLE_LOGIN_CONTEXT_COOKIE } from "@/apps/web/auth/google-oidc";
+import { currentIdentitySession } from "@/apps/web/auth/session";
+import { db } from "@/platform/host/db";
 import { apiError } from "@/apps/web/http/api-error";
 
 const loginSchema = z.object({
@@ -13,6 +15,11 @@ const loginSchema = z.object({
 const registerSchema = z.object({
   flow: z.literal("register"),
   legalVersionIds: z.array(z.string().cuid()).length(2),
+}).strict();
+
+const reauthenticateSchema = z.object({
+  flow: z.literal("reauthenticate"),
+  returnTo: z.string().max(2048).optional(),
 }).strict();
 
 export async function POST(request: Request) {
@@ -25,7 +32,8 @@ export async function POST(request: Request) {
     const body: unknown = await request.json();
     let input:
       | { flow: "login"; returnTo?: string }
-      | { flow: "register"; legalVersionIds: string[] };
+      | { flow: "register"; legalVersionIds: string[] }
+      | { flow: "reauthenticate"; returnTo?: string; sessionId: string; userId: string; subject: string };
     if (typeof body === "object" && body !== null && "flow" in body && body.flow === "register") {
       input = registerSchema.parse(body);
       const docs = await registrationLegalDocuments();
@@ -33,6 +41,13 @@ export async function POST(request: Request) {
       if (required.length !== 2 || !input.legalVersionIds.every((id) => required.includes(id))) {
         return NextResponse.json({ error: "LEGAL_ACCEPTANCE_REQUIRED" }, { status: 409 });
       }
+    } else if (typeof body === "object" && body !== null && "flow" in body && body.flow === "reauthenticate") {
+      const parsed = reauthenticateSchema.parse(body);
+      const current = await currentIdentitySession();
+      if (!current) throw new Error("UNAUTHENTICATED");
+      const bound = await db.googleIdentity.findUnique({ where: { userId: current.principal.id }, select: { subject: true } });
+      if (!bound) throw new Error("UNAUTHENTICATED");
+      input = { ...parsed, sessionId: current.session.id, userId: current.principal.id, subject: bound.subject };
     } else {
       input = loginSchema.parse(body);
     }

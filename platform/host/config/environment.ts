@@ -18,7 +18,6 @@ export const environmentSchema = z.object({
   DATABASE_URL: z.string().min(1),
   DIRECT_DATABASE_URL: z.preprocess(optional, z.string().min(1).optional()),
   SESSION_SECRET: secret,
-  MFA_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_PEPPER: secret,
   CLAIM_CODE_CHECKOUT_ENABLED: bool.default(false),
   CLAIM_CODE_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
@@ -29,22 +28,7 @@ export const environmentSchema = z.object({
   LICENSE_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   LICENSE_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-ed25519-v1"),
   BKE_AGENT_UPDATE_SIGNING_KEYS: z.preprocess(optional, z.string().min(2).optional()),
-  SUPPLY_CHAIN_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
-  SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
-  SUPPLY_CHAIN_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-supply-chain-ed25519-v1"),
-  SUPPLY_CHAIN_TRUSTED_KEYS: z.preprocess(optional, z.string().optional()),
-  RELEASE_EVIDENCE_INGESTION_TOKEN: z.preprocess(optional, secret.optional()),
-  RELEASE_EVIDENCE_TRUSTED_REPOSITORY: z.preprocess(optional, z.string().min(1).optional()),
-  RELEASE_EVIDENCE_TRUSTED_WORKFLOW: z.preprocess(optional, z.string().min(1).optional()),
-  MALWARE_SCANNER_PROVIDER: z.preprocess(optional, z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional()),
-  MALWARE_SCANNER_VERSION: z.preprocess(optional, z.string().max(128).optional()),
-  MALWARE_SCANNER_HOST: z.preprocess(optional, z.string().min(1).optional()),
-  MALWARE_SCANNER_PORT: z.coerce.number().int().min(1).max(65535).default(3310),
-  MALWARE_SCANNER_TIMEOUT_MS: z.coerce.number().int().min(100).max(120000).default(30000),
-  MALWARE_SCANNER_MAX_BYTES: z.coerce.number().int().min(1).max(536870912).default(262144000),
   ALLOW_BREAK_GLASS: z.preprocess(optional, z.enum(["true", "false"]).default("false")),
-  ADMIN_OWNER_RECOVERY_KEY: z.preprocess(optional, secret.optional()),
-  ADMIN_OWNER_RECOVERY_KEY_VERSION: z.coerce.number().int().min(1).default(1),
   CRON_SECRET: secret,
   PROVIDER_CREDENTIALS_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   PROVIDER_CREDENTIALS_KEY_VERSION: z.coerce.number().int().min(1).default(1),
@@ -55,14 +39,6 @@ export const environmentSchema = z.object({
   REDIS_KEY_PREFIX: z.string().regex(/^[a-z0-9:-]+$/).default("bke-development"),
   UPSTASH_REDIS_REST_URL: z.preprocess(optional, z.url().optional()),
   UPSTASH_REDIS_REST_TOKEN: z.preprocess(optional, z.string().min(1).optional()),
-  S3_ENDPOINT: z.preprocess(optional, z.url().optional()),
-  S3_PUBLIC_UPLOAD_ENDPOINT: z.preprocess(optional, z.url().optional()),
-  S3_REGION: z.string().default("auto"),
-  S3_BUCKET: z.preprocess(optional, z.string().min(3).optional()).transform((value) => value ?? ""),
-  S3_ACCESS_KEY_ID: z.preprocess(optional, z.string().min(1).optional()),
-  S3_SECRET_ACCESS_KEY: z.preprocess(optional, z.string().min(1).optional()),
-  S3_FORCE_PATH_STYLE: bool.default(true),
-  MAX_ARTIFACT_BYTES: z.coerce.number().int().min(1_048_576).max(536_870_912).default(262_144_000),
   PAYMENT_PROVIDER: z.enum(["mock", "paymongo"]).default("mock"),
   PAYMONGO_SECRET_KEY: z.preprocess(optional, z.string().min(1).optional()),
   PAYMONGO_WEBHOOK_SECRET: z.preprocess(optional, z.string().min(1).optional()),
@@ -89,7 +65,6 @@ export const environmentSchema = z.object({
   BACKUP_RETENTION_MONTHLY: z.coerce.number().int().min(1).max(120).default(12),
   BACKUP_WORKER_POLL_SECONDS: z.coerce.number().int().min(2).max(300).default(10),
   BACKUP_RESTORE_DATABASE_URL: z.preprocess(optional, z.string().min(1).optional()),
-  BACKUP_RESTORE_S3_BUCKET: z.preprocess(optional, z.string().min(3).optional()),
   BACKUP_RESTORE_ACK: z.preprocess(optional, z.string().optional()),
   BACKUP_OFFSITE_ACK: z.preprocess(optional, z.string().optional()),
 }).superRefine((value, context) => {
@@ -102,19 +77,6 @@ export const environmentSchema = z.object({
   if (origin.pathname !== "/" || origin.search || origin.hash) context.addIssue({ code: "custom", path: ["APP_URL"], message: "must be a canonical origin without a path, query, or fragment" });
   if (Boolean(value.UPSTASH_REDIS_REST_URL) !== Boolean(value.UPSTASH_REDIS_REST_TOKEN)) context.addIssue({ code: "custom", path: ["UPSTASH_REDIS_REST_URL"], message: "URL and token must be configured together" });
   if (protectedEnvironment && !value.REDIS_URL && !value.UPSTASH_REDIS_REST_URL) context.addIssue({ code: "custom", path: ["REDIS_URL"], message: "a distributed Valkey/Redis backend is required" });
-  const storageConfigured = Boolean(value.S3_BUCKET || value.S3_ENDPOINT || value.S3_PUBLIC_UPLOAD_ENDPOINT || value.S3_ACCESS_KEY_ID || value.S3_SECRET_ACCESS_KEY);
-  if (Boolean(value.S3_ACCESS_KEY_ID) !== Boolean(value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "storage access and secret keys must be configured together" });
-  if (protectedEnvironment && storageConfigured && (!value.S3_ACCESS_KEY_ID || !value.S3_SECRET_ACCESS_KEY)) context.addIssue({ code: "custom", path: ["S3_ACCESS_KEY_ID"], message: "private object-storage credentials are required when S3 is configured" });
-  if (storageConfigured && !value.S3_BUCKET) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "is required when S3 is configured" });
-  if (protectedEnvironment && storageConfigured && value.S3_ENDPOINT) {
-    const storageEndpoint = new URL(value.S3_ENDPOINT);
-    const privateMinio = value.S3_ENDPOINT === "http://minio:9000";
-    if (storageEndpoint.protocol !== "https:" && !privateMinio) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS unless using the private Docker-network MinIO service" });
-  }
-  if (protectedEnvironment && storageConfigured && value.S3_PUBLIC_UPLOAD_ENDPOINT && new URL(value.S3_PUBLIC_UPLOAD_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must use HTTPS in protected environments" });
-  if (storageConfigured && value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === "http://minio:9000") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "the private MinIO endpoint cannot be used by browsers" });
-  if (storageConfigured && value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === value.S3_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must be the externally reachable upload endpoint, not the private storage endpoint" });
-  if (protectedEnvironment && storageConfigured && value.S3_BUCKET && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   if (protectedEnvironment && !value.REDIS_KEY_PREFIX.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["REDIS_KEY_PREFIX"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
   const environmentCredentialsRequired = value.NODE_ENV !== "test" && (value.PROVIDER_CONFIG_SOURCE === "environment" || value.PROVIDER_CONFIG_ALLOW_ENV_FALLBACK);
   if (environmentCredentialsRequired && value.PAYMENT_PROVIDER === "paymongo" && (!value.PAYMONGO_SECRET_KEY || !value.PAYMONGO_WEBHOOK_SECRET)) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "PayMongo credentials are required for the selected provider source" });
@@ -123,7 +85,6 @@ export const environmentSchema = z.object({
   if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
   if (protectedEnvironment && (!value.LICENSE_SIGNING_PRIVATE_KEY || !value.LICENSE_SIGNING_PUBLIC_KEY)) context.addIssue({ code: "custom", path: ["LICENSE_SIGNING_PRIVATE_KEY"], message: "Ed25519 lease signing keys are required in protected environments" });
-  if (protectedEnvironment && !value.SUPPLY_CHAIN_SIGNING_PRIVATE_KEY) context.addIssue({ code: "custom", path: ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY"], message: "Supply-chain signing key is required in protected environments" });
   if (value.CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when Claim Code checkout is enabled" });
@@ -145,7 +106,6 @@ export const environmentSchema = z.object({
   if (value.BACKUP_ENABLED) {
     if (!value.BACKUP_BUCKET || !value.BACKUP_ENCRYPTION_KEY) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "backup bucket and encryption key are required when backups are enabled" });
     if (!value.BACKUP_S3_ACCESS_KEY_ID || !value.BACKUP_S3_SECRET_ACCESS_KEY) context.addIssue({ code: "custom", path: ["BACKUP_S3_ACCESS_KEY_ID"], message: "dedicated backup-storage credentials are required" });
-    if (value.S3_BUCKET && value.BACKUP_BUCKET === value.S3_BUCKET) context.addIssue({ code: "custom", path: ["BACKUP_BUCKET"], message: "must differ from the application object-storage bucket" });
     if (value.BACKUP_ENCRYPTION_KEY) {
       try {
         if (Buffer.from(value.BACKUP_ENCRYPTION_KEY, "base64").length !== 32) context.addIssue({ code: "custom", path: ["BACKUP_ENCRYPTION_KEY"], message: "must be a base64-encoded 32-byte key" });
@@ -156,20 +116,14 @@ export const environmentSchema = z.object({
     if (protectedEnvironment && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_S3_ENDPOINT && new URL(value.BACKUP_S3_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["BACKUP_S3_ENDPOINT"], message: "must use HTTPS for protected offsite backups" });
   }
   if (value.BACKUP_RESTORE_DATABASE_URL && value.BACKUP_RESTORE_DATABASE_URL === value.DATABASE_URL) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_DATABASE_URL"], message: "must be isolated from the source database" });
-  if (value.BACKUP_RESTORE_S3_BUCKET && [value.S3_BUCKET, value.BACKUP_BUCKET].filter((bucket): bucket is string => Boolean(bucket)).includes(value.BACKUP_RESTORE_S3_BUCKET)) context.addIssue({ code: "custom", path: ["BACKUP_RESTORE_S3_BUCKET"], message: "must be isolated from source and backup buckets" });
   if (protectedEnvironment && value.BACKUP_ENABLED && !value.LOCAL_PRODUCTION_SIMULATION && value.BACKUP_OFFSITE_ACK !== "SEPARATE_FAILURE_DOMAIN") context.addIssue({ code: "custom", path: ["BACKUP_OFFSITE_ACK"], message: "must acknowledge an offsite storage failure domain" });
   if (protectedEnvironment) {
-    for (const key of ["SESSION_SECRET", "MFA_ENCRYPTION_KEY", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
-      if (key === "MFA_ENCRYPTION_KEY" && !value[key]) {
-        context.addIssue({ code: "custom", path: [key], message: "is required in staging and production" });
-        continue;
-      }
+    for (const key of ["SESSION_SECRET", "LICENSE_PEPPER", "CRON_SECRET"] as const) {
       const configured = value[key];
       if (!configured || configured.length < 48 || placeholder.test(configured)) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
     }
     if (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY && (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY.length < 48 || placeholder.test(value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY))) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "must be at least 48 characters and not a placeholder" });
-    if (!value.ADMIN_OWNER_RECOVERY_KEY || value.ADMIN_OWNER_RECOVERY_KEY.length < 48 || placeholder.test(value.ADMIN_OWNER_RECOVERY_KEY)) context.addIssue({ code: "custom", path: ["ADMIN_OWNER_RECOVERY_KEY"], message: "must be configured, at least 48 characters, and not a placeholder" });
-    for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"] as const) {
+    for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY"] as const) {
       if (value[key] && placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must not be a placeholder" });
     }
   }

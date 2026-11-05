@@ -1,81 +1,65 @@
-# Google-only authentication consumer acceptance
+# Digital Solutions Google-only authentication
 
-Starting canonical Digital Solutions main: a36d9decffa6936114a9578857558a9687ca4e7f. This independent authentication intent prepares the existing V3 application for the Workers compatibility proof in PR266; it does not deploy the application or replace its architecture.
+## Approved consumer policy
 
-## Required behavior
+Google OAuth/OIDC is the sole customer and administrator sign-in provider. This policy supersedes the earlier Digital Solutions BKE MFA requirement. The owner confirmed this is fresh infrastructure and approved contact verification for Gmail and Google Workspace addresses only.
 
-Use an independently certified immutable @bke/identity package from library PR85, reviewed at f703256274ed1f5f211bf7abeeb6e5cc46dffed5. Verify actual publication/source/bytes before adopting a release dependency; do not invent an available package URL. Preserve account IDs, customer/organization authorization, legal acceptance, application sessions, MFA, licensing and audit.
+Customer flow: Google sign-in → secure BKE session → pending legal acceptance → dashboard. Registration records current legal versions transactionally with the customer, owned account and immutable Google subject. No password, magic link, email OTP, BKE MFA enrollment/challenge/recovery code, or separate BKE email-verification link is required or exposed.
 
-Digital Solutions offers Google OAuth/OIDC only. Retire password signup/login/reset/change and magic-link authentication fallback across browser and native-facing server entrypoints, with coherent UI/errors and no reachable native password-provider binding in the Worker application. Other consumers of the shared library may retain password capabilities.
+Google authenticates the person. BKE remains authoritative for lifecycle, sessions, roles, account membership, purchasing, Claim Codes, entitlements, license activation, signing and administrative authorization. Google email addresses never select an existing principal or grant an administrator role.
 
-Implement authorization code flow at /api/auth/google/callback. Production origin is https://jl-bke.com; exact redirect is https://jl-bke.com/api/auth/google/callback. Derive it from validated APP_URL, never arbitrary request headers. Use state, PKCE and nonce, verify signature, issuer, audience and expiry using an evaluated authoritative upstream library, and reject replay, wrong-browser context and unsafe return URLs. Keep login context short-lived and single-use using existing platform facilities where appropriate.
+## Trust and contact boundaries
 
-The expected public client audience is configured by GOOGLE_CLIENT_ID. Owner-supplied value: 762330940636-uuqstj4ig6ads84nid0bik35jkum4kt1.apps.googleusercontent.com. GOOGLE_CLIENT_SECRET belongs only in protected deployment configuration. Do not request secret JSON, retain Google refresh tokens merely for sign-in, log codes/tokens or introduce a second session authority.
+The OIDC consumer retains authorization-code flow, PKCE S256, encrypted short-lived browser context, state, nonce, one-use Redis consumption, explicit ID-token signature verification and issuer/audience/expiration checks. No provider token or authorization code belongs in an application error, log, URL redirect or evidence artifact.
 
-Use validated stable Google subject as the external key. Never auto-link by matching email or promote from an email/domain. New authorized registrations default to CUSTOMER. Bind the subject atomically within the existing host registration/account/legal transaction, rolling back all records on collisions. Apply existing canonical BKE contact-email verification policy; Google profile claims must not silently mutate role, ownership or contact-verification state.
+Bind by Google's immutable subject, never email. A matching email belonging to a different BKE user is a conflict, not account linking. A returning subject retains its BKE user ID, ownership and entitlements. Its Google-authoritative contact may update that same principal; uniqueness conflicts fail closed.
 
-## Test origin and protected configuration
+Contact is authoritative only when signed `email_verified=true` and the signed email is Gmail or a signed nonempty Workspace `hd` is present. Third-party Google account addresses without this authority are rejected; no fallback verification email creates an alternative sign-in or recovery path. See [Google backend verification guidance](https://developers.google.com/identity/sign-in/web/backend-auth).
 
-The assigned staging origin is
-`https://bke-digital-solutions.jlprojectfreedom.workers.dev`, with exact callback
-`https://bke-digital-solutions.jlprojectfreedom.workers.dev/api/auth/google/callback`.
-The Cloudflare Worker has not been deployed yet. Infisical Staging `APP_URL`
-is set to this origin. Verify the selected Google web client's exact redirect URI
-before real provider sign-in. The existing `https://jl-bke.com` site is live and
-must remain untouched; do not repoint its hostname or share its state.
+## Sessions and sensitive operations
 
-After independent acceptance and a separately authorized production cutover,
-the same application can use `APP_URL=https://jl-bke.com` and its matching Google
-callback. That future apex routing/TLS change is separate from Workers staging.
-Origin changes require receiving verification and a rollback plan; they do not
-require a separate authentication implementation.
+Only exact `GOOGLE_OIDC` browser sessions are admitted. Shared password and application-MFA session methods remain unsupported in this consumer. Existing shared-package session expiration, idle timeout, revocation and last-seen handling remain. Each admitted browser session also requires an active, non-suspended, Google-bound BKE principal.
 
-The owner uses Infisical. Reuse the existing project and a separate test
-environment/path once its non-secret identifiers and integration are confirmed.
-The committed `.env.example` records `GOOGLE_CLIENT_ID` and
-`GOOGLE_CLIENT_SECRET` as empty configuration fields. It does not hold their
-runtime values. Repository examples document the contract; they do not prove
-that a database, Redis instance, or protected credential has been provisioned.
+Ordinary Google sessions are BASIC. Sensitive operations retain their existing recent-authentication guards. They require validated signed Google `auth_time` within 15 minutes, persisted for the exact BKE session with `mfaVerifiedAt=null`. Token `iat`, callback time, consent and account selection never substitute for authentication time and are never labeled MFA.
 
-Prefer the existing managed secret delivery/sync when suitable. If GitHub Actions
-needs Infisical access, use the vendor-supported action and narrowly scoped OIDC
-trust for the intended repository, protected environment and trusted workflow.
-Do not grant general PR/fixture CI access to Infisical. The current receiving job
-continues to use disposable fixtures only. Do not fetch live secrets during
-dependency installation/build or publish them inside bundles, logs or artifacts.
-Deliver runtime values through protected Worker bindings at the authorized
-deployment boundary. Avoid an Infisical network call on each application request.
+The consumer requests `claims={"id_token":{"auth_time":{"essential":true}}}`. Google documents that this claim must also be enabled in client settings. A reauthentication context binds the active BKE session ID, BKE user ID and existing Google subject. A switched account, different/revoked browser session, missing/stale/future/invalid proof cannot refresh the session. Reauthentication does not issue a new BKE session.
 
-Infisical project/identity/environment IDs and names may be recorded as
-non-secret integration metadata. OAuth secrets, database credentials, Redis
-tokens, encryption/session keys and signing private keys must remain in the
-protected store. Never request secret JSON or tokens in chat. No new identity,
-access grant, secret sync or deployment is authorized merely by this contract.
+Google's documented prompt values do not guarantee forced primary reauthentication. If the configured client cannot return a recent signed authentication time, protected operations remain locked. This is a real availability limitation requiring provider acceptance, not a successful reauthentication claim. See [Google OIDC claims and request parameters](https://developers.google.com/identity/openid-connect/openid-connect).
 
-[Infisical's supported GitHub action](https://github.com/Infisical/secrets-action)
-documents OIDC and environment/path scoping. Pin an evaluated immutable action
-commit before adoption.
+## Administrator assignment and recovery
 
-## Application-factor and administrator boundaries
+Operator bootstrap selects an existing active Google-bound, Google-contact-verified BKE user ID. It requires explicit operator identity and reason, refuses an additional administrator without the existing explicit switch, revokes browser and Agent session families, and audits the promotion. No email allowlist or OAuth domain grants administrator status.
 
-Ordinary Google sign-in is BASIC; ordinary Google plus application MFA is MFA_VERIFIED without an automatic recent-auth timestamp. Sensitive actions use the owner-approved fresh BKE factor policy, bound to the exact validated active BKE user/session. Preserve expiry, attempts, consumption/replay, recovery, lifecycle, revocation and fail-closed dependency behavior.
+Google owns ordinary Google account recovery. BKE offers no email-link, OTP, password, MFA recovery-code or automatic subject-rebinding recovery path. A lost Google account cannot take over an existing BKE principal merely by knowing its contact address. Exceptional ownership recovery requires a separate owner-approved operator procedure; support email alone is not authorization.
 
-Verified-contact unenrolled administrators may establish recent application-factor proof to enter/resume enrollment; this does not enable MFA or grant administrator privilege. Every other protected administrator operation must require enabled and verified MFA. Preserve Google methods when normal enrollment issues a replacement session; the current PASSWORD_EMAIL_OTP hardcode must not remain. Emergency enrollment retains its scoped owner authorization and Google provenance.
+Removing BKE MFA means a compromised Google account or active Google session can authenticate to BKE. Sensitive freshness and BKE session revocation reduce some risks but do not replace an independently operated second factor. Google account security and recovery are now the identity-provider boundary. Neither token issuance nor this source review proves Google MFA occurred.
 
-Inspect all relevant session producers/callers, including recovery and native browser handoff. An operator bootstrap must target an explicitly authorized bound BKE principal; no default password or automatic email-to-admin rule. Do not change native Agent/product repositories under this intent. Report incompatible native receiving behavior as a separate gate rather than silently retaining a password fallback.
+## Runtime and retained data
 
-## Verification
+Authentication composes only the released Identity consumer capabilities. Database construction validates its database connection independently of unrelated provider configuration; full deployment validation remains an explicit CI/deployment operation. Sign-in does not initialize outbound email, payments or licensing providers.
 
-Use the existing intentional certification mechanism documented in .github/workflows/README.md. GitHub Actions is the default execution environment; no automatic duplicate push/PR pipeline is needed.
+Cloudflare is the approved primary business-email transport and Resend the fallback. Wiring/delivery acceptance of that business integration is separate. Neither is an authentication dependency.
 
-Required receiving proof includes legitimate returning/new Google users, invalid signature/issuer/audience/nonce/state, replay/expired context, unsafe redirects, binding/email collision, concurrent registration, failed transaction rollback, inactive/revoked/expired principals/sessions, login MFA/resend, fresh factor/administrator enrollment-resumption/recovery, logout, retired password surfaces, and preserved account/licensing contracts. Exercise actual request handlers and persistence where relevant, including error responses and side effects. Clearly identify mocks/controlled OAuth fixtures, real PostgreSQL, real browser/provider calls and workerd as different evidence.
+The shared immutable `@bke/identity` 0.5.0 artifact remains unchanged for other applications. This consumer exposes only Google binding/authentication, principal lookup and session issue/validation/termination/administration. Historical migrations, generated schema and shared-package MFA tables are not silently deleted or rewritten. No live database cleanup is part of this source task.
 
-Run relevant existing types/lint/tests, database migration replay, composition/security checks and the Node production build. Only necessary additive Google/session/challenge schema changes are allowed; no schema cleanup or history rewrite. Keep Docker source and existing domain behavior. Later Workers proof must verify the actual reachable bundle/runtime; a successful Node build does not prove Workers compatibility.
+Native sign-in uses the existing browser device-authorization flow. Bearer-token/account authorization remains in the native session helper; password/MFA consumers are removed. Existing protected native operations must not manufacture freshness from an Agent access-token issuance. Native gift-code reveal remains denied without its existing session-specific recent proof; no new bridge or native feature acceptance is claimed by this cleanup. Installed Launcher/Agent interaction requires separate native verification.
 
-## Authority and completion
+## Evidence checklist
 
-Implementation is pending when this contract is created. Primary agent owns orchestration/review; owner-selected GPT-6 Luna low effort owns coding. Preserve unrelated work and earlier scratch without wholesale adoption.
+- [ ] Exact resulting source head recorded in PR #267.
+- [ ] Core lint, typecheck, application build, disposable PostgreSQL replay and runtime tests inspected.
+- [ ] Google token/signature/issuer/audience/expiry/state/nonce/PKCE and replay fixtures pass.
+- [ ] New/returning customer, immutable binding, concurrent registration, legal and contact policy tested.
+- [ ] Ordinary administrator access, role rejection, protected-action freshness, revoked/suspended session and recovery boundaries tested.
+- [ ] Existing purchase, Claim Code redemption, licensing, logout, revocation and native account authorization suites pass.
+- [ ] Shared-package consumer, composition and host-boundary checks pass.
+- [ ] Final integrated dependency/security gate passes with PR #269's reviewed dependency choices.
+- [ ] Real configured Google sign-in and optional signed auth_time behavior observed.
+- [ ] Installed Launcher/Agent handoff and sensitive native feature behavior observed.
+- [ ] Production deployment verification separately authorized and completed.
 
-The owner explicitly authorized PR85 merge and Identity 0.5.0 publication. Library main/tag identity-v0.5.0 resolves to a8590377f913a5ce8802fca5cdaf562ad8d4ff7e, with tree 8346014c9e3cb7b31b760f41ede5bd7ffe7ea090 identical to the reviewed source. Publication run 41641996989 passed. The published bke-identity-0.5.0.tgz asset digest and certified build log agree on SHA-256 d78e365d2db23044fe1175114affb540823599380c5dda85042dfe8073e1a2b9. Adopt the actual immutable release and verify downloaded bytes in consumer certification. This does not authorize application merge/deployment, paid resources or provider changes.
+CI fixtures and source checks do not establish real Google configuration, email delivery, installed native behavior or production acceptance. New source evidence supersedes the old MFA-policy acceptance only at its exact reviewed head. No merge, deployment or authentication cutover is authorized.
 
-No production deployment, provisioning, paid activation, live secrets, Google project changes, native repository edits or automatic application merge. Real Google client behavior, native interoperability, Workers resource/Free fit and production acceptance remain separate gates. Report source/CI/fixture acceptance honestly.
+## Disposable browser fixtures
+
+The retained business browser specs use `tests/e2e/google-session-helper.ts`. Run them only with explicit `BKE_E2E_DISPOSABLE_DB=1`, a loopback disposable PostgreSQL URL and localhost app in non-production Node mode, or the explicitly opted-in private certification Docker topology (test deployment, postgres database host, https://caddy app). The helper composes the released Identity module only in the test runner, binds an existing fixture principal, issues a real BKE `GOOGLE_OIDC` session and writes synthetic recency for protected-operation scenarios. It never assigns roles or automates Google. These fixtures do not certify provider authentication, Google contact claims or actual Google authentication time. Real callback protocol and signed-claim behavior have separate tests/provider acceptance.
