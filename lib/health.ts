@@ -3,11 +3,10 @@ import { Redis as UpstashRedis } from "@upstash/redis";
 import { createClient } from "redis";
 import { db } from "@/platform/host/db";
 import { env } from "@/platform/host/env";
-import { checkStorageReadiness } from "@/lib/storage";
 import { operationalLog } from "@/lib/logger";
 import { resolvePayMongoConfiguration, resolveResendConfiguration } from "@/lib/provider-config/service";
 
-type Dependency = "postgresql" | "valkey" | "objectStorage" | "providers";
+type Dependency = "postgresql" | "valkey" | "providers";
 
 async function withinTimeout(operation: () => Promise<unknown>, milliseconds = 3_000) {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -29,11 +28,10 @@ async function checkValkey() {
 }
 
 export async function readiness(correlationId?: string) {
-  const checks: Record<Dependency, "up" | "down"> = { postgresql: "down", valkey: "down", objectStorage: "down", providers: "down" };
+  const checks: Record<Dependency, "up" | "down"> = { postgresql: "down", valkey: "down", providers: "down" };
   const operations: Array<[Dependency, () => Promise<unknown>]> = [
     ["postgresql", () => db.$queryRaw`SELECT 1`],
     ["valkey", checkValkey],
-    ["objectStorage", () => checkStorageReadiness(AbortSignal.timeout(3_000))],
     ["providers", async () => {
       if (env.PAYMENT_PROVIDER === "paymongo") await resolvePayMongoConfiguration();
       if (env.EMAIL_PROVIDER === "resend") await resolveResendConfiguration();

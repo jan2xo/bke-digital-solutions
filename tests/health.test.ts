@@ -13,10 +13,10 @@ describe("operational health endpoints", () => {
     expect(readiness).not.toHaveBeenCalled();
   });
   it("reports generic readiness and a 503 when a dependency is down", async () => {
-    readiness.mockResolvedValue({ ready: false, checks: { postgresql: "up", valkey: "down", objectStorage: "up" } });
+    readiness.mockResolvedValue({ ready: false, checks: { postgresql: "up", valkey: "down", providers: "up" } });
     const { GET } = await import("@/app/api/health/ready/route");
     const response = await GET();
     expect(response.status).toBe(503);
-    expect(await response.json()).toEqual({ status: "unavailable", dependencies: { postgresql: "up", valkey: "down", objectStorage: "up" } });
+    expect(await response.json()).toEqual({ status: "unavailable", dependencies: { postgresql: "up", valkey: "down", providers: "up" } });
   });
 });

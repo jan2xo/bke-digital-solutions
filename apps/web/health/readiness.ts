@@ -1,6 +1,5 @@
 import "server-only";
 
-import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
 import { Redis as UpstashRedis } from "@upstash/redis";
 import { Pool } from "pg";
 import { createClient } from "redis";
@@ -194,18 +193,6 @@ async function checkValkey(): Promise<void> {
   }
 }
 
-async function checkObjectStorage(): Promise<void> {
-  const accessKeyId = required("S3_ACCESS_KEY_ID");
-  const secretAccessKey = required("S3_SECRET_ACCESS_KEY");
-  const client = new S3Client({
-    region: optional("S3_REGION") ?? "auto",
-    endpoint: optional("S3_ENDPOINT"),
-    forcePathStyle: boolean("S3_FORCE_PATH_STYLE", true),
-    credentials: { accessKeyId, secretAccessKey },
-  });
-  await client.send(new HeadBucketCommand({ Bucket: required("S3_BUCKET") }));
-}
-
 async function checkConfiguredProviders(): Promise<void> {
   const paymentProvider = optional("PAYMENT_PROVIDER") ?? "mock";
   const emailProvider = optional("EMAIL_PROVIDER") ?? "log";
@@ -249,7 +236,6 @@ export const readiness = createCoreReadinessChecker({
   dependencies: {
     postgresql: checkPostgreSql,
     valkey: checkValkey,
-    objectStorage: checkObjectStorage,
     providers: checkConfiguredProviders,
   },
   events,
