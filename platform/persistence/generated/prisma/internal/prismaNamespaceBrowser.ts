@@ -74,15 +74,8 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
-  ArtifactUploadSession: 'ArtifactUploadSession',
-  ReleaseApproval: 'ReleaseApproval',
-  SupplyChainEvidence: 'SupplyChainEvidence',
-  SupplyChainVerificationEvidence: 'SupplyChainVerificationEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
-  ProductArtifact: 'ProductArtifact',
-  CommissioningRun: 'CommissioningRun',
-  StorageCleanupJob: 'StorageCleanupJob',
   Cart: 'Cart',
   CartItem: 'CartItem',
   Order: 'Order',
@@ -107,7 +100,6 @@ export const ModelName = {
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
-  DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
   ProductGraceOverride: 'ProductGraceOverride',
@@ -517,102 +509,10 @@ export const ProductVersionScalarFieldEnum = {
   architecture: 'architecture',
   isLatest: 'isLatest',
   publishedAt: 'publishedAt',
-  releasedAt: 'releasedAt',
-  backupEvidence: 'backupEvidence',
-  complianceEvidence: 'complianceEvidence',
-  migrationEvidence: 'migrationEvidence'
+  releasedAt: 'releasedAt'
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
-
-
-export const ArtifactUploadSessionScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  versionId: 'versionId',
-  objectKey: 'objectKey',
-  originalFilename: 'originalFilename',
-  extension: 'extension',
-  contentType: 'contentType',
-  expectedSize: 'expectedSize',
-  expectedSha256: 'expectedSha256',
-  state: 'state',
-  createdById: 'createdById',
-  expiresAt: 'expiresAt',
-  completedAt: 'completedAt',
-  failedAt: 'failedAt',
-  failureReason: 'failureReason',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ArtifactUploadSessionScalarFieldEnum = (typeof ArtifactUploadSessionScalarFieldEnum)[keyof typeof ArtifactUploadSessionScalarFieldEnum]
-
-
-export const ReleaseApprovalScalarFieldEnum = {
-  id: 'id',
-  versionId: 'versionId',
-  stage: 'stage',
-  createdById: 'createdById',
-  reviewedById: 'reviewedById',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
-  reviewedAt: 'reviewedAt',
-  payloadHash: 'payloadHash',
-  notes: 'notes',
-  createdAt: 'createdAt'
-} as const
-
-export type ReleaseApprovalScalarFieldEnum = (typeof ReleaseApprovalScalarFieldEnum)[keyof typeof ReleaseApprovalScalarFieldEnum]
-
-
-export const SupplyChainEvidenceScalarFieldEnum = {
-  id: 'id',
-  versionId: 'versionId',
-  releaseIdentifier: 'releaseIdentifier',
-  commitHash: 'commitHash',
-  branch: 'branch',
-  buildEnvironment: 'buildEnvironment',
-  builderIdentity: 'builderIdentity',
-  builtAt: 'builtAt',
-  manifestJson: 'manifestJson',
-  sbomReference: 'sbomReference',
-  sbomFormat: 'sbomFormat',
-  manifestSignature: 'manifestSignature',
-  signatureVerified: 'signatureVerified',
-  canonicalPayloadHash: 'canonicalPayloadHash',
-  signatureAlgorithm: 'signatureAlgorithm',
-  signatureKeyId: 'signatureKeyId',
-  signedAt: 'signedAt',
-  dependencyVerified: 'dependencyVerified',
-  malwareStatus: 'malwareStatus',
-  certificateStatus: 'certificateStatus',
-  provenanceStatus: 'provenanceStatus',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SupplyChainEvidenceScalarFieldEnum = (typeof SupplyChainEvidenceScalarFieldEnum)[keyof typeof SupplyChainEvidenceScalarFieldEnum]
-
-
-export const SupplyChainVerificationEvidenceScalarFieldEnum = {
-  id: 'id',
-  evidenceId: 'evidenceId',
-  kind: 'kind',
-  artifactHash: 'artifactHash',
-  signerKeyId: 'signerKeyId',
-  scannerId: 'scannerId',
-  scannerVersion: 'scannerVersion',
-  result: 'result',
-  reference: 'reference',
-  documentObjectKey: 'documentObjectKey',
-  documentSha256: 'documentSha256',
-  failureReason: 'failureReason',
-  verifiedAt: 'verifiedAt',
-  metadata: 'metadata'
-} as const
-
-export type SupplyChainVerificationEvidenceScalarFieldEnum = (typeof SupplyChainVerificationEvidenceScalarFieldEnum)[keyof typeof SupplyChainVerificationEvidenceScalarFieldEnum]
 
 
 export const LicensePolicyScalarFieldEnum = {
@@ -643,76 +543,6 @@ export const PriceScalarFieldEnum = {
 } as const
 
 export type PriceScalarFieldEnum = (typeof PriceScalarFieldEnum)[keyof typeof PriceScalarFieldEnum]
-
-
-export const ProductArtifactScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  versionId: 'versionId',
-  name: 'name',
-  objectKey: 'objectKey',
-  sha256: 'sha256',
-  sizeBytes: 'sizeBytes',
-  contentType: 'contentType',
-  active: 'active',
-  downloadCount: 'downloadCount',
-  removedAt: 'removedAt',
-  createdAt: 'createdAt'
-} as const
-
-export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
-
-
-export const CommissioningRunScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  versionId: 'versionId',
-  artifactId: 'artifactId',
-  artifactSha256: 'artifactSha256',
-  artifactSizeBytes: 'artifactSizeBytes',
-  payloadHash: 'payloadHash',
-  policyVersion: 'policyVersion',
-  generatorVersion: 'generatorVersion',
-  status: 'status',
-  classification: 'classification',
-  sbomStatus: 'sbomStatus',
-  dependencyStatus: 'dependencyStatus',
-  migrationCategory: 'migrationCategory',
-  migrationStatus: 'migrationStatus',
-  evidence: 'evidence',
-  limitations: 'limitations',
-  errorCode: 'errorCode',
-  attempts: 'attempts',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CommissioningRunScalarFieldEnum = (typeof CommissioningRunScalarFieldEnum)[keyof typeof CommissioningRunScalarFieldEnum]
-
-
-export const StorageCleanupJobScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  status: 'status',
-  targetType: 'targetType',
-  targetId: 'targetId',
-  objectKey: 'objectKey',
-  idempotencyKey: 'idempotencyKey',
-  attempts: 'attempts',
-  nextAttemptAt: 'nextAttemptAt',
-  lastErrorCode: 'lastErrorCode',
-  correlationId: 'correlationId',
-  productId: 'productId',
-  artifactId: 'artifactId',
-  createdByAdminId: 'createdByAdminId',
-  createdAt: 'createdAt',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt'
-} as const
-
-export type StorageCleanupJobScalarFieldEnum = (typeof StorageCleanupJobScalarFieldEnum)[keyof typeof StorageCleanupJobScalarFieldEnum]
 
 
 export const CartScalarFieldEnum = {
@@ -1170,19 +1000,6 @@ export const DeviceActivationScalarFieldEnum = {
 } as const
 
 export type DeviceActivationScalarFieldEnum = (typeof DeviceActivationScalarFieldEnum)[keyof typeof DeviceActivationScalarFieldEnum]
-
-
-export const DownloadGrantScalarFieldEnum = {
-  id: 'id',
-  licenseId: 'licenseId',
-  artifactId: 'artifactId',
-  tokenHash: 'tokenHash',
-  expiresAt: 'expiresAt',
-  usedAt: 'usedAt',
-  processingAt: 'processingAt'
-} as const
-
-export type DownloadGrantScalarFieldEnum = (typeof DownloadGrantScalarFieldEnum)[keyof typeof DownloadGrantScalarFieldEnum]
 
 
 export const LicenseEventScalarFieldEnum = {

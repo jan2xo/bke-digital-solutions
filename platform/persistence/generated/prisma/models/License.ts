@@ -332,7 +332,6 @@ export type LicenseWhereInput = {
   purchasePlan?: Prisma.XOR<Prisma.PurchasePlanNullableScalarRelationFilter, Prisma.PurchasePlanWhereInput> | null
   assignments?: Prisma.LicenseAssignmentListRelationFilter
   activations?: Prisma.DeviceActivationListRelationFilter
-  grants?: Prisma.DownloadGrantListRelationFilter
   events?: Prisma.LicenseEventListRelationFilter
   leaseHistory?: Prisma.LicenseLeaseRecordListRelationFilter
   leaseOperations?: Prisma.CommercialLeaseOperationListRelationFilter
@@ -367,7 +366,6 @@ export type LicenseOrderByWithRelationInput = {
   purchasePlan?: Prisma.PurchasePlanOrderByWithRelationInput
   assignments?: Prisma.LicenseAssignmentOrderByRelationAggregateInput
   activations?: Prisma.DeviceActivationOrderByRelationAggregateInput
-  grants?: Prisma.DownloadGrantOrderByRelationAggregateInput
   events?: Prisma.LicenseEventOrderByRelationAggregateInput
   leaseHistory?: Prisma.LicenseLeaseRecordOrderByRelationAggregateInput
   leaseOperations?: Prisma.CommercialLeaseOperationOrderByRelationAggregateInput
@@ -405,7 +403,6 @@ export type LicenseWhereUniqueInput = Prisma.AtLeast<{
   purchasePlan?: Prisma.XOR<Prisma.PurchasePlanNullableScalarRelationFilter, Prisma.PurchasePlanWhereInput> | null
   assignments?: Prisma.LicenseAssignmentListRelationFilter
   activations?: Prisma.DeviceActivationListRelationFilter
-  grants?: Prisma.DownloadGrantListRelationFilter
   events?: Prisma.LicenseEventListRelationFilter
   leaseHistory?: Prisma.LicenseLeaseRecordListRelationFilter
   leaseOperations?: Prisma.CommercialLeaseOperationListRelationFilter
@@ -484,7 +481,6 @@ export type LicenseCreateInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -513,7 +509,6 @@ export type LicenseUncheckedCreateInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -542,7 +537,6 @@ export type LicenseUpdateInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -571,7 +565,6 @@ export type LicenseUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -1073,20 +1066,6 @@ export type LicenseUpdateOneRequiredWithoutActivationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LicenseUpdateToOneWithWhereWithoutActivationsInput, Prisma.LicenseUpdateWithoutActivationsInput>, Prisma.LicenseUncheckedUpdateWithoutActivationsInput>
 }
 
-export type LicenseCreateNestedOneWithoutGrantsInput = {
-  create?: Prisma.XOR<Prisma.LicenseCreateWithoutGrantsInput, Prisma.LicenseUncheckedCreateWithoutGrantsInput>
-  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutGrantsInput
-  connect?: Prisma.LicenseWhereUniqueInput
-}
-
-export type LicenseUpdateOneRequiredWithoutGrantsNestedInput = {
-  create?: Prisma.XOR<Prisma.LicenseCreateWithoutGrantsInput, Prisma.LicenseUncheckedCreateWithoutGrantsInput>
-  connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutGrantsInput
-  upsert?: Prisma.LicenseUpsertWithoutGrantsInput
-  connect?: Prisma.LicenseWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.LicenseUpdateToOneWithWhereWithoutGrantsInput, Prisma.LicenseUpdateWithoutGrantsInput>, Prisma.LicenseUncheckedUpdateWithoutGrantsInput>
-}
-
 export type LicenseCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.LicenseCreateWithoutEventsInput, Prisma.LicenseUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.LicenseCreateOrConnectWithoutEventsInput
@@ -1121,7 +1100,6 @@ export type LicenseCreateWithoutAccountInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1149,7 +1127,6 @@ export type LicenseUncheckedCreateWithoutAccountInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1227,7 +1204,6 @@ export type LicenseCreateWithoutProductInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1255,7 +1231,6 @@ export type LicenseUncheckedCreateWithoutProductInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1309,7 +1284,6 @@ export type LicenseCreateWithoutEditionInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1337,7 +1311,6 @@ export type LicenseUncheckedCreateWithoutEditionInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1391,7 +1364,6 @@ export type LicenseCreateWithoutPurchasePlanInput = {
   edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1419,7 +1391,6 @@ export type LicenseUncheckedCreateWithoutPurchasePlanInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1473,7 +1444,6 @@ export type LicenseCreateWithoutOrderInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1501,7 +1471,6 @@ export type LicenseUncheckedCreateWithoutOrderInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1555,7 +1524,6 @@ export type LicenseCreateWithoutSubscriptionInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1583,7 +1551,6 @@ export type LicenseUncheckedCreateWithoutSubscriptionInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1638,7 +1605,6 @@ export type LicenseCreateWithoutSupportTicketsInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -1666,7 +1632,6 @@ export type LicenseUncheckedCreateWithoutSupportTicketsInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -1710,7 +1675,6 @@ export type LicenseUpdateWithoutSupportTicketsInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -1738,7 +1702,6 @@ export type LicenseUncheckedUpdateWithoutSupportTicketsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -1766,7 +1729,6 @@ export type LicenseCreateWithoutLeaseHistoryInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
   trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
@@ -1794,7 +1756,6 @@ export type LicenseUncheckedCreateWithoutLeaseHistoryInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
   trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
@@ -1838,7 +1799,6 @@ export type LicenseUpdateWithoutLeaseHistoryInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
   trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
@@ -1866,7 +1826,6 @@ export type LicenseUncheckedUpdateWithoutLeaseHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
   trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
@@ -1894,7 +1853,6 @@ export type LicenseCreateWithoutLeaseOperationsInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
@@ -1922,7 +1880,6 @@ export type LicenseUncheckedCreateWithoutLeaseOperationsInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
@@ -1966,7 +1923,6 @@ export type LicenseUpdateWithoutLeaseOperationsInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
@@ -1994,7 +1950,6 @@ export type LicenseUncheckedUpdateWithoutLeaseOperationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
@@ -2022,7 +1977,6 @@ export type LicenseCreateWithoutTrialGrantInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -2050,7 +2004,6 @@ export type LicenseUncheckedCreateWithoutTrialGrantInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -2094,7 +2047,6 @@ export type LicenseUpdateWithoutTrialGrantInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2122,7 +2074,6 @@ export type LicenseUncheckedUpdateWithoutTrialGrantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -2149,7 +2100,6 @@ export type LicenseCreateWithoutAssignmentsInput = {
   edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -2177,7 +2127,6 @@ export type LicenseUncheckedCreateWithoutAssignmentsInput = {
   expiresAt?: Date | string | null
   createdAt?: Date | string
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -2221,7 +2170,6 @@ export type LicenseUpdateWithoutAssignmentsInput = {
   edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2249,7 +2197,6 @@ export type LicenseUncheckedUpdateWithoutAssignmentsInput = {
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -2277,7 +2224,6 @@ export type LicenseCreateWithoutActivationsInput = {
   edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
@@ -2305,7 +2251,6 @@ export type LicenseUncheckedCreateWithoutActivationsInput = {
   expiresAt?: Date | string | null
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
@@ -2349,7 +2294,6 @@ export type LicenseUpdateWithoutActivationsInput = {
   edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2377,135 +2321,6 @@ export type LicenseUncheckedUpdateWithoutActivationsInput = {
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
-  events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
-  leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
-  leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
-  trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
-  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutLicenseNestedInput
-}
-
-export type LicenseCreateWithoutGrantsInput = {
-  id?: string
-  publicId: string
-  keyHash: string
-  keyLastFour: string
-  keyCiphertext?: string | null
-  keyRevealedAt?: Date | string | null
-  orderItemId: string
-  status?: $Enums.LicenseStatus
-  maxSeats: number
-  maxDevicesPerSeat: number
-  expiresAt?: Date | string | null
-  createdAt?: Date | string
-  account: Prisma.CustomerAccountCreateNestedOneWithoutLicensesInput
-  order: Prisma.OrderCreateNestedOneWithoutLicensesInput
-  subscription?: Prisma.SubscriptionCreateNestedOneWithoutLicensesInput
-  product: Prisma.ProductCreateNestedOneWithoutLicensesInput
-  edition?: Prisma.EditionCreateNestedOneWithoutLicensesInput
-  purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
-  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
-  activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  events?: Prisma.LicenseEventCreateNestedManyWithoutLicenseInput
-  leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
-  leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
-  trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
-  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutLicenseInput
-}
-
-export type LicenseUncheckedCreateWithoutGrantsInput = {
-  id?: string
-  publicId: string
-  keyHash: string
-  keyLastFour: string
-  keyCiphertext?: string | null
-  keyRevealedAt?: Date | string | null
-  accountId: string
-  orderId: string
-  orderItemId: string
-  productId: string
-  editionId?: string | null
-  purchasePlanId?: string | null
-  subscriptionId?: string | null
-  status?: $Enums.LicenseStatus
-  maxSeats: number
-  maxDevicesPerSeat: number
-  expiresAt?: Date | string | null
-  createdAt?: Date | string
-  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
-  activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  events?: Prisma.LicenseEventUncheckedCreateNestedManyWithoutLicenseInput
-  leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
-  leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
-  trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
-  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutLicenseInput
-}
-
-export type LicenseCreateOrConnectWithoutGrantsInput = {
-  where: Prisma.LicenseWhereUniqueInput
-  create: Prisma.XOR<Prisma.LicenseCreateWithoutGrantsInput, Prisma.LicenseUncheckedCreateWithoutGrantsInput>
-}
-
-export type LicenseUpsertWithoutGrantsInput = {
-  update: Prisma.XOR<Prisma.LicenseUpdateWithoutGrantsInput, Prisma.LicenseUncheckedUpdateWithoutGrantsInput>
-  create: Prisma.XOR<Prisma.LicenseCreateWithoutGrantsInput, Prisma.LicenseUncheckedCreateWithoutGrantsInput>
-  where?: Prisma.LicenseWhereInput
-}
-
-export type LicenseUpdateToOneWithWhereWithoutGrantsInput = {
-  where?: Prisma.LicenseWhereInput
-  data: Prisma.XOR<Prisma.LicenseUpdateWithoutGrantsInput, Prisma.LicenseUncheckedUpdateWithoutGrantsInput>
-}
-
-export type LicenseUpdateWithoutGrantsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
-  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
-  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
-  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
-  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
-  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  account?: Prisma.CustomerAccountUpdateOneRequiredWithoutLicensesNestedInput
-  order?: Prisma.OrderUpdateOneRequiredWithoutLicensesNestedInput
-  subscription?: Prisma.SubscriptionUpdateOneWithoutLicensesNestedInput
-  product?: Prisma.ProductUpdateOneRequiredWithoutLicensesNestedInput
-  edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
-  purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
-  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
-  activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
-  leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
-  leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
-  trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
-  supportTickets?: Prisma.SupportTicketUpdateManyWithoutLicenseNestedInput
-}
-
-export type LicenseUncheckedUpdateWithoutGrantsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  keyHash?: Prisma.StringFieldUpdateOperationsInput | string
-  keyLastFour?: Prisma.StringFieldUpdateOperationsInput | string
-  keyCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyRevealedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderItemId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
-  editionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  purchasePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumLicenseStatusFieldUpdateOperationsInput | $Enums.LicenseStatus
-  maxSeats?: Prisma.IntFieldUpdateOperationsInput | number
-  maxDevicesPerSeat?: Prisma.IntFieldUpdateOperationsInput | number
-  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
-  activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -2534,7 +2349,6 @@ export type LicenseCreateWithoutEventsInput = {
   purchasePlan?: Prisma.PurchasePlanCreateNestedOneWithoutLicensesInput
   assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationCreateNestedManyWithoutLicenseInput
   trialGrant?: Prisma.TrialGrantCreateNestedOneWithoutLicenseInput
@@ -2562,7 +2376,6 @@ export type LicenseUncheckedCreateWithoutEventsInput = {
   createdAt?: Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutLicenseInput
   activations?: Prisma.DeviceActivationUncheckedCreateNestedManyWithoutLicenseInput
-  grants?: Prisma.DownloadGrantUncheckedCreateNestedManyWithoutLicenseInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedCreateNestedManyWithoutLicenseInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedCreateNestedManyWithoutLicenseInput
   trialGrant?: Prisma.TrialGrantUncheckedCreateNestedOneWithoutLicenseInput
@@ -2606,7 +2419,6 @@ export type LicenseUpdateWithoutEventsInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
   trialGrant?: Prisma.TrialGrantUpdateOneWithoutLicenseNestedInput
@@ -2634,7 +2446,6 @@ export type LicenseUncheckedUpdateWithoutEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
   trialGrant?: Prisma.TrialGrantUncheckedUpdateOneWithoutLicenseNestedInput
@@ -2681,7 +2492,6 @@ export type LicenseUpdateWithoutAccountInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2709,7 +2519,6 @@ export type LicenseUncheckedUpdateWithoutAccountInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -2777,7 +2586,6 @@ export type LicenseUpdateWithoutProductInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2805,7 +2613,6 @@ export type LicenseUncheckedUpdateWithoutProductInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -2873,7 +2680,6 @@ export type LicenseUpdateWithoutEditionInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2901,7 +2707,6 @@ export type LicenseUncheckedUpdateWithoutEditionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -2969,7 +2774,6 @@ export type LicenseUpdateWithoutPurchasePlanInput = {
   edition?: Prisma.EditionUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -2997,7 +2801,6 @@ export type LicenseUncheckedUpdateWithoutPurchasePlanInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -3065,7 +2868,6 @@ export type LicenseUpdateWithoutOrderInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -3093,7 +2895,6 @@ export type LicenseUncheckedUpdateWithoutOrderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -3161,7 +2962,6 @@ export type LicenseUpdateWithoutSubscriptionInput = {
   purchasePlan?: Prisma.PurchasePlanUpdateOneWithoutLicensesNestedInput
   assignments?: Prisma.LicenseAssignmentUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUpdateManyWithoutLicenseNestedInput
@@ -3189,7 +2989,6 @@ export type LicenseUncheckedUpdateWithoutSubscriptionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutLicenseNestedInput
   activations?: Prisma.DeviceActivationUncheckedUpdateManyWithoutLicenseNestedInput
-  grants?: Prisma.DownloadGrantUncheckedUpdateManyWithoutLicenseNestedInput
   events?: Prisma.LicenseEventUncheckedUpdateManyWithoutLicenseNestedInput
   leaseHistory?: Prisma.LicenseLeaseRecordUncheckedUpdateManyWithoutLicenseNestedInput
   leaseOperations?: Prisma.CommercialLeaseOperationUncheckedUpdateManyWithoutLicenseNestedInput
@@ -3225,7 +3024,6 @@ export type LicenseUncheckedUpdateManyWithoutSubscriptionInput = {
 export type LicenseCountOutputType = {
   assignments: number
   activations: number
-  grants: number
   events: number
   leaseHistory: number
   leaseOperations: number
@@ -3235,7 +3033,6 @@ export type LicenseCountOutputType = {
 export type LicenseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignments?: boolean | LicenseCountOutputTypeCountAssignmentsArgs
   activations?: boolean | LicenseCountOutputTypeCountActivationsArgs
-  grants?: boolean | LicenseCountOutputTypeCountGrantsArgs
   events?: boolean | LicenseCountOutputTypeCountEventsArgs
   leaseHistory?: boolean | LicenseCountOutputTypeCountLeaseHistoryArgs
   leaseOperations?: boolean | LicenseCountOutputTypeCountLeaseOperationsArgs
@@ -3264,13 +3061,6 @@ export type LicenseCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.T
  */
 export type LicenseCountOutputTypeCountActivationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DeviceActivationWhereInput
-}
-
-/**
- * LicenseCountOutputType without action
- */
-export type LicenseCountOutputTypeCountGrantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DownloadGrantWhereInput
 }
 
 /**
@@ -3329,7 +3119,6 @@ export type LicenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
   assignments?: boolean | Prisma.License$assignmentsArgs<ExtArgs>
   activations?: boolean | Prisma.License$activationsArgs<ExtArgs>
-  grants?: boolean | Prisma.License$grantsArgs<ExtArgs>
   events?: boolean | Prisma.License$eventsArgs<ExtArgs>
   leaseHistory?: boolean | Prisma.License$leaseHistoryArgs<ExtArgs>
   leaseOperations?: boolean | Prisma.License$leaseOperationsArgs<ExtArgs>
@@ -3423,7 +3212,6 @@ export type LicenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   purchasePlan?: boolean | Prisma.License$purchasePlanArgs<ExtArgs>
   assignments?: boolean | Prisma.License$assignmentsArgs<ExtArgs>
   activations?: boolean | Prisma.License$activationsArgs<ExtArgs>
-  grants?: boolean | Prisma.License$grantsArgs<ExtArgs>
   events?: boolean | Prisma.License$eventsArgs<ExtArgs>
   leaseHistory?: boolean | Prisma.License$leaseHistoryArgs<ExtArgs>
   leaseOperations?: boolean | Prisma.License$leaseOperationsArgs<ExtArgs>
@@ -3459,7 +3247,6 @@ export type $LicensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     purchasePlan: Prisma.$PurchasePlanPayload<ExtArgs> | null
     assignments: Prisma.$LicenseAssignmentPayload<ExtArgs>[]
     activations: Prisma.$DeviceActivationPayload<ExtArgs>[]
-    grants: Prisma.$DownloadGrantPayload<ExtArgs>[]
     events: Prisma.$LicenseEventPayload<ExtArgs>[]
     leaseHistory: Prisma.$LicenseLeaseRecordPayload<ExtArgs>[]
     leaseOperations: Prisma.$CommercialLeaseOperationPayload<ExtArgs>[]
@@ -3887,7 +3674,6 @@ export interface Prisma__LicenseClient<T, Null = never, ExtArgs extends runtime.
   purchasePlan<T extends Prisma.License$purchasePlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$purchasePlanArgs<ExtArgs>>): Prisma.Prisma__PurchasePlanClient<runtime.Types.Result.GetResult<Prisma.$PurchasePlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignments<T extends Prisma.License$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activations<T extends Prisma.License$activationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$activationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceActivationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  grants<T extends Prisma.License$grantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$grantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DownloadGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.License$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaseHistory<T extends Prisma.License$leaseHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$leaseHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicenseLeaseRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaseOperations<T extends Prisma.License$leaseOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.License$leaseOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommercialLeaseOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4443,30 +4229,6 @@ export type License$activationsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.DeviceActivationScalarFieldEnum | Prisma.DeviceActivationScalarFieldEnum[]
-}
-
-/**
- * License.grants
- */
-export type License$grantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DownloadGrant
-   */
-  select?: Prisma.DownloadGrantSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DownloadGrant
-   */
-  omit?: Prisma.DownloadGrantOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DownloadGrantInclude<ExtArgs> | null
-  where?: Prisma.DownloadGrantWhereInput
-  orderBy?: Prisma.DownloadGrantOrderByWithRelationInput | Prisma.DownloadGrantOrderByWithRelationInput[]
-  cursor?: Prisma.DownloadGrantWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DownloadGrantScalarFieldEnum | Prisma.DownloadGrantScalarFieldEnum[]
 }
 
 /**

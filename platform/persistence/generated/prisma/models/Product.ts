@@ -310,14 +310,10 @@ export type ProductWhereInput = {
   editions?: Prisma.EditionListRelationFilter
   prices?: Prisma.PriceListRelationFilter
   policies?: Prisma.LicensePolicyListRelationFilter
-  artifacts?: Prisma.ProductArtifactListRelationFilter
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionListRelationFilter
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
-  cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
-  commissioningRuns?: Prisma.CommissioningRunListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -346,14 +342,10 @@ export type ProductOrderByWithRelationInput = {
   editions?: Prisma.EditionOrderByRelationAggregateInput
   prices?: Prisma.PriceOrderByRelationAggregateInput
   policies?: Prisma.LicensePolicyOrderByRelationAggregateInput
-  artifacts?: Prisma.ProductArtifactOrderByRelationAggregateInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionOrderByRelationAggregateInput
   licenses?: Prisma.LicenseOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
   trials?: Prisma.TrialGrantOrderByRelationAggregateInput
   offers?: Prisma.DiscountOfferOrderByRelationAggregateInput
-  cleanupJobs?: Prisma.StorageCleanupJobOrderByRelationAggregateInput
-  commissioningRuns?: Prisma.CommissioningRunOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -385,14 +377,10 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   editions?: Prisma.EditionListRelationFilter
   prices?: Prisma.PriceListRelationFilter
   policies?: Prisma.LicensePolicyListRelationFilter
-  artifacts?: Prisma.ProductArtifactListRelationFilter
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionListRelationFilter
   licenses?: Prisma.LicenseListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   trials?: Prisma.TrialGrantListRelationFilter
   offers?: Prisma.DiscountOfferListRelationFilter
-  cleanupJobs?: Prisma.StorageCleanupJobListRelationFilter
-  commissioningRuns?: Prisma.CommissioningRunListRelationFilter
 }, "id" | "slug" | "productId">
 
 export type ProductOrderByWithAggregationInput = {
@@ -475,14 +463,10 @@ export type ProductCreateInput = {
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -511,14 +495,10 @@ export type ProductUncheckedCreateInput = {
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -547,14 +527,10 @@ export type ProductUpdateInput = {
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -583,14 +559,10 @@ export type ProductUncheckedUpdateInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -798,20 +770,6 @@ export type ProductUpdateOneRequiredWithoutVersionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutVersionsInput, Prisma.ProductUpdateWithoutVersionsInput>, Prisma.ProductUncheckedUpdateWithoutVersionsInput>
 }
 
-export type ProductCreateNestedOneWithoutArtifactUploadSessionsInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutArtifactUploadSessionsInput, Prisma.ProductUncheckedCreateWithoutArtifactUploadSessionsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutArtifactUploadSessionsInput
-  connect?: Prisma.ProductWhereUniqueInput
-}
-
-export type ProductUpdateOneRequiredWithoutArtifactUploadSessionsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutArtifactUploadSessionsInput, Prisma.ProductUncheckedCreateWithoutArtifactUploadSessionsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutArtifactUploadSessionsInput
-  upsert?: Prisma.ProductUpsertWithoutArtifactUploadSessionsInput
-  connect?: Prisma.ProductWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutArtifactUploadSessionsInput, Prisma.ProductUpdateWithoutArtifactUploadSessionsInput>, Prisma.ProductUncheckedUpdateWithoutArtifactUploadSessionsInput>
-}
-
 export type ProductCreateNestedOneWithoutPoliciesInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutPoliciesInput, Prisma.ProductUncheckedCreateWithoutPoliciesInput>
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutPoliciesInput
@@ -838,50 +796,6 @@ export type ProductUpdateOneRequiredWithoutPricesNestedInput = {
   upsert?: Prisma.ProductUpsertWithoutPricesInput
   connect?: Prisma.ProductWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutPricesInput, Prisma.ProductUpdateWithoutPricesInput>, Prisma.ProductUncheckedUpdateWithoutPricesInput>
-}
-
-export type ProductCreateNestedOneWithoutArtifactsInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutArtifactsInput, Prisma.ProductUncheckedCreateWithoutArtifactsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutArtifactsInput
-  connect?: Prisma.ProductWhereUniqueInput
-}
-
-export type ProductUpdateOneRequiredWithoutArtifactsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutArtifactsInput, Prisma.ProductUncheckedCreateWithoutArtifactsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutArtifactsInput
-  upsert?: Prisma.ProductUpsertWithoutArtifactsInput
-  connect?: Prisma.ProductWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutArtifactsInput, Prisma.ProductUpdateWithoutArtifactsInput>, Prisma.ProductUncheckedUpdateWithoutArtifactsInput>
-}
-
-export type ProductCreateNestedOneWithoutCommissioningRunsInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCommissioningRunsInput
-  connect?: Prisma.ProductWhereUniqueInput
-}
-
-export type ProductUpdateOneRequiredWithoutCommissioningRunsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCommissioningRunsInput
-  upsert?: Prisma.ProductUpsertWithoutCommissioningRunsInput
-  connect?: Prisma.ProductWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutCommissioningRunsInput, Prisma.ProductUpdateWithoutCommissioningRunsInput>, Prisma.ProductUncheckedUpdateWithoutCommissioningRunsInput>
-}
-
-export type ProductCreateNestedOneWithoutCleanupJobsInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCleanupJobsInput
-  connect?: Prisma.ProductWhereUniqueInput
-}
-
-export type ProductUpdateOneWithoutCleanupJobsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCleanupJobsInput
-  upsert?: Prisma.ProductUpsertWithoutCleanupJobsInput
-  disconnect?: Prisma.ProductWhereInput | boolean
-  delete?: Prisma.ProductWhereInput | boolean
-  connect?: Prisma.ProductWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutCleanupJobsInput, Prisma.ProductUpdateWithoutCleanupJobsInput>, Prisma.ProductUncheckedUpdateWithoutCleanupJobsInput>
 }
 
 export type ProductCreateNestedOneWithoutSubscriptionsInput = {
@@ -967,14 +881,10 @@ export type ProductCreateWithoutEditionsInput = {
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutEditionsInput = {
@@ -1002,14 +912,10 @@ export type ProductUncheckedCreateWithoutEditionsInput = {
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutEditionsInput = {
@@ -1053,14 +959,10 @@ export type ProductUpdateWithoutEditionsInput = {
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutEditionsInput = {
@@ -1088,14 +990,10 @@ export type ProductUncheckedUpdateWithoutEditionsInput = {
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutVersionsInput = {
@@ -1123,14 +1021,10 @@ export type ProductCreateWithoutVersionsInput = {
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutVersionsInput = {
@@ -1158,14 +1052,10 @@ export type ProductUncheckedCreateWithoutVersionsInput = {
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutVersionsInput = {
@@ -1209,14 +1099,10 @@ export type ProductUpdateWithoutVersionsInput = {
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutVersionsInput = {
@@ -1244,170 +1130,10 @@ export type ProductUncheckedUpdateWithoutVersionsInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
-}
-
-export type ProductCreateWithoutArtifactUploadSessionsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
-}
-
-export type ProductUncheckedCreateWithoutArtifactUploadSessionsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
-}
-
-export type ProductCreateOrConnectWithoutArtifactUploadSessionsInput = {
-  where: Prisma.ProductWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductCreateWithoutArtifactUploadSessionsInput, Prisma.ProductUncheckedCreateWithoutArtifactUploadSessionsInput>
-}
-
-export type ProductUpsertWithoutArtifactUploadSessionsInput = {
-  update: Prisma.XOR<Prisma.ProductUpdateWithoutArtifactUploadSessionsInput, Prisma.ProductUncheckedUpdateWithoutArtifactUploadSessionsInput>
-  create: Prisma.XOR<Prisma.ProductCreateWithoutArtifactUploadSessionsInput, Prisma.ProductUncheckedCreateWithoutArtifactUploadSessionsInput>
-  where?: Prisma.ProductWhereInput
-}
-
-export type ProductUpdateToOneWithWhereWithoutArtifactUploadSessionsInput = {
-  where?: Prisma.ProductWhereInput
-  data: Prisma.XOR<Prisma.ProductUpdateWithoutArtifactUploadSessionsInput, Prisma.ProductUncheckedUpdateWithoutArtifactUploadSessionsInput>
-}
-
-export type ProductUpdateWithoutArtifactUploadSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
-}
-
-export type ProductUncheckedUpdateWithoutArtifactUploadSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPoliciesInput = {
@@ -1435,14 +1161,10 @@ export type ProductCreateWithoutPoliciesInput = {
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPoliciesInput = {
@@ -1470,14 +1192,10 @@ export type ProductUncheckedCreateWithoutPoliciesInput = {
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPoliciesInput = {
@@ -1521,14 +1239,10 @@ export type ProductUpdateWithoutPoliciesInput = {
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPoliciesInput = {
@@ -1556,14 +1270,10 @@ export type ProductUncheckedUpdateWithoutPoliciesInput = {
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutPricesInput = {
@@ -1591,14 +1301,10 @@ export type ProductCreateWithoutPricesInput = {
   versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPricesInput = {
@@ -1626,14 +1332,10 @@ export type ProductUncheckedCreateWithoutPricesInput = {
   versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPricesInput = {
@@ -1677,14 +1379,10 @@ export type ProductUpdateWithoutPricesInput = {
   versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPricesInput = {
@@ -1712,482 +1410,10 @@ export type ProductUncheckedUpdateWithoutPricesInput = {
   versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
-}
-
-export type ProductCreateWithoutArtifactsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
-}
-
-export type ProductUncheckedCreateWithoutArtifactsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
-}
-
-export type ProductCreateOrConnectWithoutArtifactsInput = {
-  where: Prisma.ProductWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductCreateWithoutArtifactsInput, Prisma.ProductUncheckedCreateWithoutArtifactsInput>
-}
-
-export type ProductUpsertWithoutArtifactsInput = {
-  update: Prisma.XOR<Prisma.ProductUpdateWithoutArtifactsInput, Prisma.ProductUncheckedUpdateWithoutArtifactsInput>
-  create: Prisma.XOR<Prisma.ProductCreateWithoutArtifactsInput, Prisma.ProductUncheckedCreateWithoutArtifactsInput>
-  where?: Prisma.ProductWhereInput
-}
-
-export type ProductUpdateToOneWithWhereWithoutArtifactsInput = {
-  where?: Prisma.ProductWhereInput
-  data: Prisma.XOR<Prisma.ProductUpdateWithoutArtifactsInput, Prisma.ProductUncheckedUpdateWithoutArtifactsInput>
-}
-
-export type ProductUpdateWithoutArtifactsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
-}
-
-export type ProductUncheckedUpdateWithoutArtifactsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
-}
-
-export type ProductCreateWithoutCommissioningRunsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-}
-
-export type ProductUncheckedCreateWithoutCommissioningRunsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-}
-
-export type ProductCreateOrConnectWithoutCommissioningRunsInput = {
-  where: Prisma.ProductWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
-}
-
-export type ProductUpsertWithoutCommissioningRunsInput = {
-  update: Prisma.XOR<Prisma.ProductUpdateWithoutCommissioningRunsInput, Prisma.ProductUncheckedUpdateWithoutCommissioningRunsInput>
-  create: Prisma.XOR<Prisma.ProductCreateWithoutCommissioningRunsInput, Prisma.ProductUncheckedCreateWithoutCommissioningRunsInput>
-  where?: Prisma.ProductWhereInput
-}
-
-export type ProductUpdateToOneWithWhereWithoutCommissioningRunsInput = {
-  where?: Prisma.ProductWhereInput
-  data: Prisma.XOR<Prisma.ProductUpdateWithoutCommissioningRunsInput, Prisma.ProductUncheckedUpdateWithoutCommissioningRunsInput>
-}
-
-export type ProductUpdateWithoutCommissioningRunsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-}
-
-export type ProductUncheckedUpdateWithoutCommissioningRunsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-}
-
-export type ProductCreateWithoutCleanupJobsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
-}
-
-export type ProductUncheckedCreateWithoutCleanupJobsInput = {
-  id?: string
-  slug: string
-  productId?: string | null
-  minimumAcceptedVersion?: string | null
-  maximumAcceptedVersion?: string | null
-  name: string
-  summary: string
-  description: string
-  type: $Enums.ProductType
-  launcherExecutionType?: $Enums.LauncherExecutionType | null
-  category?: string
-  licenseType?: string
-  featured?: boolean
-  imageKey?: string | null
-  tags?: Prisma.ProductCreatetagsInput | string[]
-  active?: boolean
-  publishedAt?: Date | string | null
-  archivedAt?: Date | string | null
-  deletionRequestedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  versions?: Prisma.ProductVersionUncheckedCreateNestedManyWithoutProductInput
-  editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
-  prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
-  policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
-  licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
-  trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
-  offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
-}
-
-export type ProductCreateOrConnectWithoutCleanupJobsInput = {
-  where: Prisma.ProductWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
-}
-
-export type ProductUpsertWithoutCleanupJobsInput = {
-  update: Prisma.XOR<Prisma.ProductUpdateWithoutCleanupJobsInput, Prisma.ProductUncheckedUpdateWithoutCleanupJobsInput>
-  create: Prisma.XOR<Prisma.ProductCreateWithoutCleanupJobsInput, Prisma.ProductUncheckedCreateWithoutCleanupJobsInput>
-  where?: Prisma.ProductWhereInput
-}
-
-export type ProductUpdateToOneWithWhereWithoutCleanupJobsInput = {
-  where?: Prisma.ProductWhereInput
-  data: Prisma.XOR<Prisma.ProductUpdateWithoutCleanupJobsInput, Prisma.ProductUncheckedUpdateWithoutCleanupJobsInput>
-}
-
-export type ProductUpdateWithoutCleanupJobsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
-}
-
-export type ProductUncheckedUpdateWithoutCleanupJobsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minimumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maximumAcceptedVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
-  launcherExecutionType?: Prisma.NullableEnumLauncherExecutionTypeFieldUpdateOperationsInput | $Enums.LauncherExecutionType | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseType?: Prisma.StringFieldUpdateOperationsInput | string
-  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.ProductUpdatetagsInput | string[]
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletionRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  versions?: Prisma.ProductVersionUncheckedUpdateManyWithoutProductNestedInput
-  editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
-  prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
-  policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
-  licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
-  trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
-  offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutSubscriptionsInput = {
@@ -2216,13 +1442,9 @@ export type ProductCreateWithoutSubscriptionsInput = {
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutSubscriptionsInput = {
@@ -2251,13 +1473,9 @@ export type ProductUncheckedCreateWithoutSubscriptionsInput = {
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutSubscriptionsInput = {
@@ -2302,13 +1520,9 @@ export type ProductUpdateWithoutSubscriptionsInput = {
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
@@ -2337,13 +1551,9 @@ export type ProductUncheckedUpdateWithoutSubscriptionsInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutOffersInput = {
@@ -2372,13 +1582,9 @@ export type ProductCreateWithoutOffersInput = {
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutOffersInput = {
@@ -2407,13 +1613,9 @@ export type ProductUncheckedCreateWithoutOffersInput = {
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutOffersInput = {
@@ -2458,13 +1660,9 @@ export type ProductUpdateWithoutOffersInput = {
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutOffersInput = {
@@ -2493,13 +1691,9 @@ export type ProductUncheckedUpdateWithoutOffersInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutLicensesInput = {
@@ -2528,13 +1722,9 @@ export type ProductCreateWithoutLicensesInput = {
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutLicensesInput = {
@@ -2563,13 +1753,9 @@ export type ProductUncheckedCreateWithoutLicensesInput = {
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   trials?: Prisma.TrialGrantUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutLicensesInput = {
@@ -2614,13 +1800,9 @@ export type ProductUpdateWithoutLicensesInput = {
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutLicensesInput = {
@@ -2649,13 +1831,9 @@ export type ProductUncheckedUpdateWithoutLicensesInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   trials?: Prisma.TrialGrantUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutTrialsInput = {
@@ -2684,13 +1862,9 @@ export type ProductCreateWithoutTrialsInput = {
   editions?: Prisma.EditionCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutTrialsInput = {
@@ -2719,13 +1893,9 @@ export type ProductUncheckedCreateWithoutTrialsInput = {
   editions?: Prisma.EditionUncheckedCreateNestedManyWithoutProductInput
   prices?: Prisma.PriceUncheckedCreateNestedManyWithoutProductInput
   policies?: Prisma.LicensePolicyUncheckedCreateNestedManyWithoutProductInput
-  artifacts?: Prisma.ProductArtifactUncheckedCreateNestedManyWithoutProductInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutProductInput
   licenses?: Prisma.LicenseUncheckedCreateNestedManyWithoutProductInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutProductInput
   offers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutProductInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutProductInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutTrialsInput = {
@@ -2770,13 +1940,9 @@ export type ProductUpdateWithoutTrialsInput = {
   editions?: Prisma.EditionUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutTrialsInput = {
@@ -2805,13 +1971,9 @@ export type ProductUncheckedUpdateWithoutTrialsInput = {
   editions?: Prisma.EditionUncheckedUpdateManyWithoutProductNestedInput
   prices?: Prisma.PriceUncheckedUpdateManyWithoutProductNestedInput
   policies?: Prisma.LicensePolicyUncheckedUpdateManyWithoutProductNestedInput
-  artifacts?: Prisma.ProductArtifactUncheckedUpdateManyWithoutProductNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutProductNestedInput
   licenses?: Prisma.LicenseUncheckedUpdateManyWithoutProductNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutProductNestedInput
   offers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutProductNestedInput
-  cleanupJobs?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutProductNestedInput
-  commissioningRuns?: Prisma.CommissioningRunUncheckedUpdateManyWithoutProductNestedInput
 }
 
 
@@ -2824,14 +1986,10 @@ export type ProductCountOutputType = {
   editions: number
   prices: number
   policies: number
-  artifacts: number
-  artifactUploadSessions: number
   licenses: number
   subscriptions: number
   trials: number
   offers: number
-  cleanupJobs: number
-  commissioningRuns: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2839,14 +1997,10 @@ export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   editions?: boolean | ProductCountOutputTypeCountEditionsArgs
   prices?: boolean | ProductCountOutputTypeCountPricesArgs
   policies?: boolean | ProductCountOutputTypeCountPoliciesArgs
-  artifacts?: boolean | ProductCountOutputTypeCountArtifactsArgs
-  artifactUploadSessions?: boolean | ProductCountOutputTypeCountArtifactUploadSessionsArgs
   licenses?: boolean | ProductCountOutputTypeCountLicensesArgs
   subscriptions?: boolean | ProductCountOutputTypeCountSubscriptionsArgs
   trials?: boolean | ProductCountOutputTypeCountTrialsArgs
   offers?: boolean | ProductCountOutputTypeCountOffersArgs
-  cleanupJobs?: boolean | ProductCountOutputTypeCountCleanupJobsArgs
-  commissioningRuns?: boolean | ProductCountOutputTypeCountCommissioningRunsArgs
 }
 
 /**
@@ -2890,20 +2044,6 @@ export type ProductCountOutputTypeCountPoliciesArgs<ExtArgs extends runtime.Type
 /**
  * ProductCountOutputType without action
  */
-export type ProductCountOutputTypeCountArtifactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProductArtifactWhereInput
-}
-
-/**
- * ProductCountOutputType without action
- */
-export type ProductCountOutputTypeCountArtifactUploadSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ArtifactUploadSessionWhereInput
-}
-
-/**
- * ProductCountOutputType without action
- */
 export type ProductCountOutputTypeCountLicensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LicenseWhereInput
 }
@@ -2927,20 +2067,6 @@ export type ProductCountOutputTypeCountTrialsArgs<ExtArgs extends runtime.Types.
  */
 export type ProductCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DiscountOfferWhereInput
-}
-
-/**
- * ProductCountOutputType without action
- */
-export type ProductCountOutputTypeCountCleanupJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StorageCleanupJobWhereInput
-}
-
-/**
- * ProductCountOutputType without action
- */
-export type ProductCountOutputTypeCountCommissioningRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CommissioningRunWhereInput
 }
 
 
@@ -2970,14 +2096,10 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
   prices?: boolean | Prisma.Product$pricesArgs<ExtArgs>
   policies?: boolean | Prisma.Product$policiesArgs<ExtArgs>
-  artifacts?: boolean | Prisma.Product$artifactsArgs<ExtArgs>
-  artifactUploadSessions?: boolean | Prisma.Product$artifactUploadSessionsArgs<ExtArgs>
   licenses?: boolean | Prisma.Product$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Product$subscriptionsArgs<ExtArgs>
   trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.Product$offersArgs<ExtArgs>
-  cleanupJobs?: boolean | Prisma.Product$cleanupJobsArgs<ExtArgs>
-  commissioningRuns?: boolean | Prisma.Product$commissioningRunsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -3059,14 +2181,10 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   editions?: boolean | Prisma.Product$editionsArgs<ExtArgs>
   prices?: boolean | Prisma.Product$pricesArgs<ExtArgs>
   policies?: boolean | Prisma.Product$policiesArgs<ExtArgs>
-  artifacts?: boolean | Prisma.Product$artifactsArgs<ExtArgs>
-  artifactUploadSessions?: boolean | Prisma.Product$artifactUploadSessionsArgs<ExtArgs>
   licenses?: boolean | Prisma.Product$licensesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Product$subscriptionsArgs<ExtArgs>
   trials?: boolean | Prisma.Product$trialsArgs<ExtArgs>
   offers?: boolean | Prisma.Product$offersArgs<ExtArgs>
-  cleanupJobs?: boolean | Prisma.Product$cleanupJobsArgs<ExtArgs>
-  commissioningRuns?: boolean | Prisma.Product$commissioningRunsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3079,14 +2197,10 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     editions: Prisma.$EditionPayload<ExtArgs>[]
     prices: Prisma.$PricePayload<ExtArgs>[]
     policies: Prisma.$LicensePolicyPayload<ExtArgs>[]
-    artifacts: Prisma.$ProductArtifactPayload<ExtArgs>[]
-    artifactUploadSessions: Prisma.$ArtifactUploadSessionPayload<ExtArgs>[]
     licenses: Prisma.$LicensePayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
     trials: Prisma.$TrialGrantPayload<ExtArgs>[]
     offers: Prisma.$DiscountOfferPayload<ExtArgs>[]
-    cleanupJobs: Prisma.$StorageCleanupJobPayload<ExtArgs>[]
-    commissioningRuns: Prisma.$CommissioningRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3508,14 +2622,10 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   editions<T extends Prisma.Product$editionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$editionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EditionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   prices<T extends Prisma.Product$pricesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$pricesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   policies<T extends Prisma.Product$policiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$policiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensePolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  artifacts<T extends Prisma.Product$artifactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$artifactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  artifactUploadSessions<T extends Prisma.Product$artifactUploadSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$artifactUploadSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArtifactUploadSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   licenses<T extends Prisma.Product$licensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$licensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.Product$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   trials<T extends Prisma.Product$trialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$trialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrialGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offers<T extends Prisma.Product$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiscountOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  cleanupJobs<T extends Prisma.Product$cleanupJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$cleanupJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageCleanupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  commissioningRuns<T extends Prisma.Product$commissioningRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$commissioningRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissioningRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4055,54 +3165,6 @@ export type Product$policiesArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Product.artifacts
- */
-export type Product$artifactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProductArtifact
-   */
-  select?: Prisma.ProductArtifactSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProductArtifact
-   */
-  omit?: Prisma.ProductArtifactOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProductArtifactInclude<ExtArgs> | null
-  where?: Prisma.ProductArtifactWhereInput
-  orderBy?: Prisma.ProductArtifactOrderByWithRelationInput | Prisma.ProductArtifactOrderByWithRelationInput[]
-  cursor?: Prisma.ProductArtifactWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ProductArtifactScalarFieldEnum | Prisma.ProductArtifactScalarFieldEnum[]
-}
-
-/**
- * Product.artifactUploadSessions
- */
-export type Product$artifactUploadSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ArtifactUploadSession
-   */
-  select?: Prisma.ArtifactUploadSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ArtifactUploadSession
-   */
-  omit?: Prisma.ArtifactUploadSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ArtifactUploadSessionInclude<ExtArgs> | null
-  where?: Prisma.ArtifactUploadSessionWhereInput
-  orderBy?: Prisma.ArtifactUploadSessionOrderByWithRelationInput | Prisma.ArtifactUploadSessionOrderByWithRelationInput[]
-  cursor?: Prisma.ArtifactUploadSessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ArtifactUploadSessionScalarFieldEnum | Prisma.ArtifactUploadSessionScalarFieldEnum[]
-}
-
-/**
  * Product.licenses
  */
 export type Product$licensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4196,54 +3258,6 @@ export type Product$offersArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.DiscountOfferScalarFieldEnum | Prisma.DiscountOfferScalarFieldEnum[]
-}
-
-/**
- * Product.cleanupJobs
- */
-export type Product$cleanupJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StorageCleanupJob
-   */
-  select?: Prisma.StorageCleanupJobSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StorageCleanupJob
-   */
-  omit?: Prisma.StorageCleanupJobOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StorageCleanupJobInclude<ExtArgs> | null
-  where?: Prisma.StorageCleanupJobWhereInput
-  orderBy?: Prisma.StorageCleanupJobOrderByWithRelationInput | Prisma.StorageCleanupJobOrderByWithRelationInput[]
-  cursor?: Prisma.StorageCleanupJobWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StorageCleanupJobScalarFieldEnum | Prisma.StorageCleanupJobScalarFieldEnum[]
-}
-
-/**
- * Product.commissioningRuns
- */
-export type Product$commissioningRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CommissioningRun
-   */
-  select?: Prisma.CommissioningRunSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the CommissioningRun
-   */
-  omit?: Prisma.CommissioningRunOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CommissioningRunInclude<ExtArgs> | null
-  where?: Prisma.CommissioningRunWhereInput
-  orderBy?: Prisma.CommissioningRunOrderByWithRelationInput | Prisma.CommissioningRunOrderByWithRelationInput[]
-  cursor?: Prisma.CommissioningRunWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.CommissioningRunScalarFieldEnum | Prisma.CommissioningRunScalarFieldEnum[]
 }
 
 /**
