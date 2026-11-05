@@ -69,7 +69,8 @@ async function createArchive(operation: BackupOperation & { backup: NonNullable<
     const dump = await readFile(dumpPath);
     const encryptedDatabase = encryptBuffer(dump, encryptionKey());
     const databaseKey = `${backup.storagePrefix}/database.dump.enc`;
-    await backupClient().send(new PutObjectCommand({ Bucket: env.BACKUP_BUCKET!, Key: databaseKey, Body: encryptedDatabase.encrypted, ContentType: "application/octet-stream" }));
+    const destination = backupClient();
+    await destination.send(new PutObjectCommand({ Bucket: env.BACKUP_BUCKET!, Key: databaseKey, Body: encryptedDatabase.encrypted, ContentType: "application/octet-stream" }));
 
     const backedObjects: BackupManifest["objects"] = [];
     const absent: string[] = [];
