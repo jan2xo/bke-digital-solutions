@@ -2,7 +2,6 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../platform/persistence/generated/prisma/client";
 import { createHash } from "node:crypto";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const catalog = [
@@ -74,15 +73,10 @@ async function main() {
     }
 
     if (item.slug === "bke-cloudops") {
-      const version = await db.productVersion.upsert({
+      await db.productVersion.upsert({
         where: { productId_version: { productId: product.id, version: "1.0.0" } },
         update: { active: true, isLatest: true },
         create: { productId: product.id, version: "1.0.0", releaseNotes: "Initial stable release.", operatingSystem: "Any", architecture: "universal", active: true, isLatest: true, publishedAt: new Date() },
-      });
-      await db.productArtifact.upsert({
-        where: { objectKey: "installers/bke-installer.bin" },
-        update: { active: true, versionId: version.id },
-        create: { productId: product.id, versionId: version.id, name: "BKE CloudOps Installer.bin", objectKey: "installers/bke-installer.bin", sha256: "523b125a5fba47594385b3d41c1bc474c58d9e0161ce5e731be7db8c5da95fd5", sizeBytes: 37, contentType: "application/octet-stream" },
       });
     }
   }
@@ -103,11 +97,6 @@ async function main() {
   ] as const;
   for (const [key, title, category, status, description] of compliance) {
     await db.complianceRequirement.upsert({ where: { key }, update: { title, category, status, description }, create: { key, title, category, status, description } });
-  }
-  if (process.env.LOCAL_PRODUCTION_SIMULATION === "true") {
-    const body = Buffer.from("BKE Digital Solutions test installer\n");
-    const storage = new S3Client({ region: process.env.S3_REGION ?? "auto", endpoint: process.env.S3_ENDPOINT, forcePathStyle: process.env.S3_FORCE_PATH_STYLE !== "false", credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID!, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY! } });
-    await storage.send(new PutObjectCommand({ Bucket: process.env.S3_BUCKET!, Key: "installers/bke-installer.bin", Body: body, ContentType: "application/octet-stream" }));
   }
   console.info(`Seeded ${catalog.length} BKE Digital Solutions products and editions.`);
 }
