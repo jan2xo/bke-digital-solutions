@@ -14,7 +14,6 @@ const base = {
   LICENSE_SIGNING_PRIVATE_KEY: "p".repeat(96),
   LICENSE_SIGNING_PUBLIC_KEY: "u".repeat(64),
   LICENSE_SIGNING_KEY_ID: "test-license-ed25519-v1",
-  SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: "supply-chain-private-test-material-" + "s".repeat(64),
   ADMIN_OWNER_RECOVERY_KEY: "owner-recovery-key-" + "o".repeat(64),
   ADMIN_OWNER_RECOVERY_KEY_VERSION: "3",
   CRON_SECRET: "c".repeat(64),
@@ -66,6 +65,7 @@ describe("deployment environment validation", () => {
     expect(names.every((name) => /^[A-Z0-9_]+$/.test(name))).toBe(true);
   });
   it("accepts an isolated production configuration", () => expect(parseEnvironment(base)).toMatchObject({ DEPLOYMENT_ENV: "production", PAYMENT_PROVIDER: "paymongo", EMAIL_PROVIDER: "resend" }));
+  it("does not require a browser upload endpoint for retired artifact uploads", () => expect(parseEnvironment({ ...base, S3_PUBLIC_UPLOAD_ENDPOINT: undefined })).toMatchObject({ DEPLOYMENT_ENV: "production" }));
   it("rejects insecure production origins and mock providers", () => expect(() => parseEnvironment({ ...base, APP_URL: "http://commerce.bke.example", PAYMENT_PROVIDER: "mock" })).toThrow(/APP_URL|PAYMENT_PROVIDER/));
   it("rejects paths on the canonical origin", () => expect(() => parseEnvironment({ ...base, APP_URL: "https://commerce.bke.example/app" })).toThrow("APP_URL"));
   it("rejects shared storage and Valkey namespaces", () => expect(() => parseEnvironment({ ...base, S3_BUCKET: "shared-private", REDIS_KEY_PREFIX: "shared" })).toThrow(/S3_BUCKET|REDIS_KEY_PREFIX/));

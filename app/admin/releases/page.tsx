@@ -5,7 +5,7 @@ import { AdminActionButton } from "@/components/admin-action-button";
 
 export default async function Releases() {
   const rows = await db.productVersion.findMany({
-    include: { product: true, artifacts: true },
+    include: { product: true },
     orderBy: { releasedAt: "desc" },
     take: 250,
   });
@@ -17,7 +17,7 @@ export default async function Releases() {
         GitHub owns software release authority. Digital Solutions records catalog lifecycle and commercial availability only.
       </p>
       <AdminTable
-        headers={["Release", "Product", "Lifecycle", "Published", "Assets", "Actions"]}
+        headers={["Release", "Product", "Lifecycle", "Published", "Actions"]}
         rows={rows.map((version) => [
           <Link className="font-bold text-[#3D75A7]" href={`/admin/releases/${version.id}`} key={version.id}>
             {version.version}
@@ -25,7 +25,6 @@ export default async function Releases() {
           version.product.name,
           version.lifecycle,
           version.publishedAt ? "Published" : "Hidden",
-          String(version.artifacts.length),
           [
             <AdminActionButton
               key="promote"

@@ -1,3 +1,4 @@
+import { isLegacyProductImageObjectKey } from "@/apps/web/catalog/product-image";
 import "server-only";
 import { execFile } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile, chmod } from "node:fs/promises";
@@ -53,17 +54,6 @@ async function getBytes(client: S3Client, bucket: string, key: string) {
   return Buffer.from(await result.Body.transformToByteArray());
 }
 
-async function verifyRestoredEvidenceObjects(databaseUrl: string, manifest: BackupManifest) {
-  const rows = await exec("psql", ["--tuples-only", "--no-align", "--dbname", new URL(databaseUrl).pathname.slice(1), "-c", 'SELECT "documentObjectKey", "documentSha256" FROM "SupplyChainVerificationEvidence" WHERE "documentObjectKey" IS NOT NULL'], { env: pgEnvironment(databaseUrl), maxBuffer: 4 * 1024 * 1024 });
-  const objects = new Map(manifest.objects.map((object) => [object.sourceKey, object]));
-  for (const line of rows.stdout.split("\n").map((value) => value.trim()).filter(Boolean)) {
-    const [key, expectedHash] = line.split("|");
-    const object = objects.get(key);
-    if (!object) throw new Error("RESTORE_EVIDENCE_OBJECT_MISSING");
-    if (object.sha256 !== expectedHash) throw new Error("RESTORE_EVIDENCE_OBJECT_CHECKSUM_MISMATCH");
-  }
-}
-
 async function tableCounts() {
   const [users, orders, payments, invoices, licenses, subscriptions, legalAcceptances, audits, scheduledRuns] = await Promise.all([
     db.user.count(), db.order.count(), db.payment.count(), db.invoice.count(), db.license.count(), db.subscription.count(), db.legalAcceptance.count(), db.auditLog.count(), db.scheduledJobRun.count(),
@@ -76,10 +66,10 @@ async function createArchive(operation: BackupOperation & { backup: NonNullable<
   if (operation.dryRun) {
     const [artifactKeys, imageKeys, objectKeys] = await Promise.all([
       db.productArtifact.findMany({ select: { objectKey: true } }),
-      db.product.findMany({ where: { imageKey: { not: null } }, select: { imageKey: true } }),
+      db.product.findMany({ where: { imageKey: { not: null } }, select: { id: true, imageKey: true } }),
       allObjectKeys(sourceClient(), env.S3_BUCKET),
     ]);
-    const expected = [...artifactKeys.map((item) => item.objectKey), ...imageKeys.flatMap((item) => item.imageKey ? [item.imageKey] : [])];
+    const expected = [...artifactKeys.map((item) => item.objectKey), ...imageKeys.flatMap((item) => isLegacyProductImageObjectKey(item.imageKey, item.id) ? [item.imageKey!] : [])];
     return { dryRun: true, sourceObjects: objectKeys.length, missingSourceObjects: missingObjects(expected, objectKeys).length };
   }
   if (!env.BACKUP_ENABLED) throw new Error("BACKUPS_DISABLED");
@@ -99,9 +89,8 @@ async function createArchive(operation: BackupOperation & { backup: NonNullable<
     const destination = backupClient();
     const objectKeys = await allObjectKeys(source, env.S3_BUCKET);
     const artifacts = await db.productArtifact.findMany({ select: { objectKey: true } });
-    const evidenceDocuments = await db.supplyChainVerificationEvidence.findMany({ where: { documentObjectKey: { not: null } }, select: { documentObjectKey: true } });
-    const images = await db.product.findMany({ where: { imageKey: { not: null } }, select: { imageKey: true } });
-    const expected = [...artifacts.map((item) => item.objectKey), ...images.flatMap((item) => item.imageKey ? [item.imageKey] : []), ...evidenceDocuments.flatMap((item) => item.documentObjectKey ? [item.documentObjectKey] : [])];
+    const images = await db.product.findMany({ where: { imageKey: { not: null } }, select: { id: true, imageKey: true } });
+    const expected = [...artifacts.map((item) => item.objectKey), ...images.flatMap((item) => isLegacyProductImageObjectKey(item.imageKey, item.id) ? [item.imageKey!] : [])];
     const absent = missingObjects(expected, objectKeys);
     const backedObjects: BackupManifest["objects"] = [];
     for (const sourceKey of objectKeys) {
@@ -200,7 +189,6 @@ async function restoreIsolated(backupId: string) {
       if (sha256(plainText) !== object.sha256) throw new Error("RESTORE_OBJECT_CHECKSUM_MISMATCH");
       await target.send(new PutObjectCommand({ Bucket: env.BACKUP_RESTORE_S3_BUCKET, Key: object.sourceKey, Body: plainText }));
     }
-    await verifyRestoredEvidenceObjects(env.BACKUP_RESTORE_DATABASE_URL, manifest);
     return { backupId, targetFingerprint, restoredObjects: manifest.objects.length, isolated: true };
   } finally {
     await rm(work, { recursive: true, force: true });

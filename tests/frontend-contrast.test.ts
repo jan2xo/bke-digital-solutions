@@ -17,7 +17,6 @@ describe("customer-facing contrast safeguards", () => {
 
   it("keeps standalone admin light panels readable", () => {
     expect(read("app/admin/compliance/page.tsx")).toContain('className="card p-5"');
-    expect(read("app/admin/supply-chain/page.tsx")).toContain('className="card mt-8 p-6"');
   });
 
   it("keeps account metadata and secondary content on readable dark-theme colors", () => {

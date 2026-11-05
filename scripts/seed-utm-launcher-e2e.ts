@@ -225,57 +225,6 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
       data: { isLatest: false },
     });
 
-    const releaseEvidence = await db.supplyChainEvidence.upsert({
-      where: { versionId: version.id },
-      update: {
-        releaseIdentifier: `${PRODUCT_SLUG}@${PRODUCT_VERSION}`,
-        commitHash: releaseProof.releaseTargetSha,
-        branch: `refs/tags/${releaseProof.tag}`,
-        buildEnvironment: "disposable-utm",
-        builderIdentity: "github-release-contract",
-        builtAt: now,
-        manifestJson: {
-          authority: "GITHUB_RELEASES",
-          repository: releaseProof.repository,
-          tag: releaseProof.tag,
-          packageSha256: releaseProof.packageSha256,
-        },
-      },
-      create: {
-        versionId: version.id,
-        releaseIdentifier: `${PRODUCT_SLUG}@${PRODUCT_VERSION}`,
-        commitHash: releaseProof.releaseTargetSha,
-        branch: `refs/tags/${releaseProof.tag}`,
-        buildEnvironment: "disposable-utm",
-        builderIdentity: "github-release-contract",
-        builtAt: now,
-        manifestJson: {
-          authority: "GITHUB_RELEASES",
-          repository: releaseProof.repository,
-          tag: releaseProof.tag,
-          packageSha256: releaseProof.packageSha256,
-        },
-      },
-    });
-
-    await db.supplyChainVerificationEvidence.deleteMany({
-      where: {
-        evidenceId: releaseEvidence.id,
-        kind: "GITHUB_RELEASE_CONTRACT",
-      },
-    });
-    await db.supplyChainVerificationEvidence.create({
-      data: {
-        evidenceId: releaseEvidence.id,
-        kind: "GITHUB_RELEASE_CONTRACT",
-        artifactHash: releaseProof.packageSha256,
-        result: "VERIFIED",
-        reference:
-          `https://github.com/${releaseProof.repository}/releases/tag/${releaseProof.tag}`,
-        metadata: { ...releaseProof },
-      },
-    });
-
     let policy = await db.licensePolicy.findFirst({
       where: { productId: product.id, name: "UTM Single User" },
     });

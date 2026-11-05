@@ -5,6 +5,7 @@ import { db } from "@/platform/host/db";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { audit } from "@/apps/web/audit";
 import { apiError } from "@/apps/web/http/api-error";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 import {
   createEditionWithCommerce,
   editionPlanInputSchema,
@@ -24,7 +25,7 @@ const schema = z.object({
   category: z.string().trim().min(2).max(80).default("General"),
   licenseType: z.string().trim().min(2).max(80).default("Commercial"),
   featured: z.boolean().default(false),
-  imageKey: z.string().trim().max(500).optional(),
+  imageKey: z.string().trim().max(500).refine((value) => resolveProductImageUrl(value) !== null, "INVALID_IMAGE_URL").optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
   edition: editionPlanInputSchema,
 }).strict();
@@ -40,7 +41,9 @@ export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const admin = await requireAdmin();
-    const input = schema.parse(await request.json());
+    const body: unknown = await request.json();
+    if (body && typeof body === "object" && "imageKey" in body && !resolveProductImageUrl((body as { imageKey?: unknown }).imageKey)) throw new Error("INVALID_IMAGE_URL");
+    const input = schema.parse(body);
     validateAcceptedVersionRange(input.minimumAcceptedVersion, input.maximumAcceptedVersion);
     const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {

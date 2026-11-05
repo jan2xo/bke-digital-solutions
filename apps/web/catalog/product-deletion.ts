@@ -1,3 +1,4 @@
+import { isLegacyProductImageObjectKey } from "@/apps/web/catalog/product-image";
 import "server-only";
 
 import { randomUUID } from "node:crypto";
@@ -178,7 +179,7 @@ async function snapshotWithClient(client: EligibilityClient, productId: string):
       policies: product._count.policies,
       tags: product.tags.length,
       images: product.imageKey ? 1 : 0,
-      storageObjects: artifacts.length + (product.imageKey ? 1 : 0),
+      storageObjects: artifacts.length + (isLegacyProductImageObjectKey(product.imageKey, productId) ? 1 : 0),
     },
   };
 }
@@ -213,7 +214,7 @@ export async function requestProductDeletion(input: {
 
     await tx.product.update({ where: { id: input.productId }, data: plan.productUpdate });
     const jobs = [
-      ...(product?.imageKey
+      ...(product && isLegacyProductImageObjectKey(product.imageKey, input.productId)
         ? [{ type: "PRODUCT_DELETION" as const, targetType: "Product", targetId: input.productId, objectKey: product.imageKey, productId: input.productId }]
         : []),
       ...artifacts.map((artifact) => ({

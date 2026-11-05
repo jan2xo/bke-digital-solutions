@@ -13,3 +13,9 @@ export function githubLatestReleaseUrl(productId: string | null | undefined) {
   const repository = githubReleaseRepository(productId);
   return repository ? `https://github.com/${repository}/releases/latest` : null;
 }
+
+export function githubVersionReleaseUrl(productId: string | null | undefined, version: string) {
+  const repository = githubReleaseRepository(productId);
+  if (!repository || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) return null;
+  return `https://github.com/${repository}/releases/tag/v${encodeURIComponent(version)}`;
+}

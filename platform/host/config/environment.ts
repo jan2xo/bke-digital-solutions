@@ -29,19 +29,6 @@ export const environmentSchema = z.object({
   LICENSE_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
   LICENSE_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-ed25519-v1"),
   BKE_AGENT_UPDATE_SIGNING_KEYS: z.preprocess(optional, z.string().min(2).optional()),
-  SUPPLY_CHAIN_SIGNING_PUBLIC_KEY: z.preprocess(optional, z.string().min(32).optional()),
-  SUPPLY_CHAIN_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
-  SUPPLY_CHAIN_SIGNING_KEY_ID: z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).default("development-supply-chain-ed25519-v1"),
-  SUPPLY_CHAIN_TRUSTED_KEYS: z.preprocess(optional, z.string().optional()),
-  RELEASE_EVIDENCE_INGESTION_TOKEN: z.preprocess(optional, secret.optional()),
-  RELEASE_EVIDENCE_TRUSTED_REPOSITORY: z.preprocess(optional, z.string().min(1).optional()),
-  RELEASE_EVIDENCE_TRUSTED_WORKFLOW: z.preprocess(optional, z.string().min(1).optional()),
-  MALWARE_SCANNER_PROVIDER: z.preprocess(optional, z.string().regex(/^[A-Za-z0-9._-]{1,64}$/).optional()),
-  MALWARE_SCANNER_VERSION: z.preprocess(optional, z.string().max(128).optional()),
-  MALWARE_SCANNER_HOST: z.preprocess(optional, z.string().min(1).optional()),
-  MALWARE_SCANNER_PORT: z.coerce.number().int().min(1).max(65535).default(3310),
-  MALWARE_SCANNER_TIMEOUT_MS: z.coerce.number().int().min(100).max(120000).default(30000),
-  MALWARE_SCANNER_MAX_BYTES: z.coerce.number().int().min(1).max(536870912).default(262144000),
   ALLOW_BREAK_GLASS: z.preprocess(optional, z.enum(["true", "false"]).default("false")),
   ADMIN_OWNER_RECOVERY_KEY: z.preprocess(optional, secret.optional()),
   ADMIN_OWNER_RECOVERY_KEY_VERSION: z.coerce.number().int().min(1).default(1),
@@ -110,7 +97,6 @@ export const environmentSchema = z.object({
     if (storageEndpoint.protocol !== "https:" && !privateMinio) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS unless using the private Docker-network MinIO service" });
   }
   if (protectedEnvironment && value.S3_PUBLIC_UPLOAD_ENDPOINT && new URL(value.S3_PUBLIC_UPLOAD_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must use HTTPS in protected environments" });
-  if (protectedEnvironment && !value.S3_PUBLIC_UPLOAD_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "a dedicated HTTPS upload endpoint is required for direct artifact uploads" });
   if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === "http://minio:9000") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "the private MinIO endpoint cannot be used by browsers" });
   if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === value.S3_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must be the externally reachable upload endpoint, not the private storage endpoint" });
   if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });
@@ -122,7 +108,6 @@ export const environmentSchema = z.object({
   if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
   if (protectedEnvironment && (!value.LICENSE_SIGNING_PRIVATE_KEY || !value.LICENSE_SIGNING_PUBLIC_KEY)) context.addIssue({ code: "custom", path: ["LICENSE_SIGNING_PRIVATE_KEY"], message: "Ed25519 lease signing keys are required in protected environments" });
-  if (protectedEnvironment && !value.SUPPLY_CHAIN_SIGNING_PRIVATE_KEY) context.addIssue({ code: "custom", path: ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY"], message: "Supply-chain signing key is required in protected environments" });
   if (value.CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when Claim Code checkout is enabled" });

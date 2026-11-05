@@ -27,7 +27,6 @@ const REQUIRED_SECRETS = [
   "ADMIN_OWNER_RECOVERY_KEY",
   "PROVIDER_CREDENTIALS_ENCRYPTION_KEY",
   "CRON_SECRET",
-  "RELEASE_EVIDENCE_INGESTION_TOKEN",
   "POSTGRES_PASSWORD",
   "MINIO_ROOT_PASSWORD",
   "S3_SECRET_ACCESS_KEY",
@@ -152,14 +151,9 @@ export function renderDisposableEnvironment({
   secrets,
   licensePrivateBase64,
   licensePublicBase64,
-  supplyPrivateBase64,
-  supplyPublicBase64,
   agentUpdateSigningKeysJson,
 }) {
   for (const key of REQUIRED_SECRETS) requireSecret(secrets, key);
-
-  const supplyKeyId = "bke-v3-disposable-supply-chain-ed25519-v1";
-  const trustedSupplyKeys = JSON.stringify({ [supplyKeyId]: supplyPublicBase64 });
 
   const values = [
     ["BKE_DISPOSABLE_CERTIFICATION", "true"],
@@ -193,20 +187,9 @@ export function renderDisposableEnvironment({
     ["LICENSE_SIGNING_PRIVATE_KEY", licensePrivateBase64],
     ["LICENSE_SIGNING_PUBLIC_KEY", licensePublicBase64],
     ["BKE_AGENT_UPDATE_SIGNING_KEYS", agentUpdateSigningKeysJson],
-    ["SUPPLY_CHAIN_SIGNING_KEY_ID", supplyKeyId],
-    ["SUPPLY_CHAIN_SIGNING_PRIVATE_KEY", supplyPrivateBase64],
-    ["SUPPLY_CHAIN_SIGNING_PUBLIC_KEY", supplyPublicBase64],
-    ["SUPPLY_CHAIN_TRUSTED_KEYS", trustedSupplyKeys],
-    ["RELEASE_EVIDENCE_INGESTION_TOKEN", requireSecret(secrets, "RELEASE_EVIDENCE_INGESTION_TOKEN")],
     ["ALLOW_BREAK_GLASS", "false"],
     ["ADMIN_OWNER_RECOVERY_KEY", requireSecret(secrets, "ADMIN_OWNER_RECOVERY_KEY")],
     ["ADMIN_OWNER_RECOVERY_KEY_VERSION", "1"],
-    ["MALWARE_SCANNER_PROVIDER", ""],
-    ["MALWARE_SCANNER_VERSION", ""],
-    ["MALWARE_SCANNER_HOST", ""],
-    ["MALWARE_SCANNER_PORT", "3310"],
-    ["MALWARE_SCANNER_TIMEOUT_MS", "30000"],
-    ["MALWARE_SCANNER_MAX_BYTES", "536870912"],
     ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY", requireSecret(secrets, "PROVIDER_CREDENTIALS_ENCRYPTION_KEY")],
     ["PROVIDER_CREDENTIALS_KEY_VERSION", "1"],
     ["PROVIDER_CREDENTIALS_PREVIOUS_KEYS", ""],
@@ -285,16 +268,12 @@ export function materializeDisposableEnvironment({
   const signingDir = join(bundleDir, "signing");
   const licensePrivatePath = join(signingDir, "license-signing-private.pem");
   const licensePublicPath = join(signingDir, "license-signing-public.pem");
-  const supplyPrivatePath = join(signingDir, "supply-chain-signing-private.pem");
-  const supplyPublicPath = join(signingDir, "supply-chain-signing-public.pem");
   const agentUpdatePrivatePath = join(signingDir, "agent-update-signing-private.pem");
   const agentUpdatePublicDocumentPath = join(signingDir, "agent-update-signing-public.json");
 
   for (const path of [
     licensePrivatePath,
     licensePublicPath,
-    supplyPrivatePath,
-    supplyPublicPath,
     agentUpdatePrivatePath,
     agentUpdatePublicDocumentPath,
   ]) {
@@ -302,7 +281,6 @@ export function materializeDisposableEnvironment({
   }
 
   assertEd25519Pair(licensePrivatePath, licensePublicPath, "LICENSE_SIGNING");
-  assertEd25519Pair(supplyPrivatePath, supplyPublicPath, "SUPPLY_CHAIN_SIGNING");
   const agentUpdateSigning = readAgentUpdateSigningBundle(
     agentUpdatePrivatePath,
     agentUpdatePublicDocumentPath,
@@ -313,8 +291,6 @@ export function materializeDisposableEnvironment({
     secrets,
     licensePrivateBase64: encodedPem(licensePrivatePath),
     licensePublicBase64: encodedPem(licensePublicPath),
-    supplyPrivateBase64: encodedPem(supplyPrivatePath),
-    supplyPublicBase64: encodedPem(supplyPublicPath),
     agentUpdateSigningKeysJson: agentUpdateSigning.signingKeysJson,
   });
 
