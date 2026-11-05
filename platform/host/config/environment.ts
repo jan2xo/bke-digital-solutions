@@ -97,7 +97,6 @@ export const environmentSchema = z.object({
     if (storageEndpoint.protocol !== "https:" && !privateMinio) context.addIssue({ code: "custom", path: ["S3_ENDPOINT"], message: "must use HTTPS unless using the private Docker-network MinIO service" });
   }
   if (protectedEnvironment && value.S3_PUBLIC_UPLOAD_ENDPOINT && new URL(value.S3_PUBLIC_UPLOAD_ENDPOINT).protocol !== "https:") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must use HTTPS in protected environments" });
-  if (protectedEnvironment && !value.S3_PUBLIC_UPLOAD_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "a dedicated HTTPS upload endpoint is required for direct artifact uploads" });
   if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === "http://minio:9000") context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "the private MinIO endpoint cannot be used by browsers" });
   if (value.S3_PUBLIC_UPLOAD_ENDPOINT && value.S3_PUBLIC_UPLOAD_ENDPOINT === value.S3_ENDPOINT) context.addIssue({ code: "custom", path: ["S3_PUBLIC_UPLOAD_ENDPOINT"], message: "must be the externally reachable upload endpoint, not the private storage endpoint" });
   if (protectedEnvironment && !value.S3_BUCKET.includes(value.DEPLOYMENT_ID)) context.addIssue({ code: "custom", path: ["S3_BUCKET"], message: "must contain DEPLOYMENT_ID to prevent cross-environment sharing" });

@@ -39,7 +39,8 @@ describe("disposable UTM Launcher fixture", () => {
     expect(standaloneSection).toContain('architecture: "x64"');
     expect(standaloneSection).not.toContain('architecture: "universal"');
     expect(fixture).toContain("verifyGitHubStandaloneReleaseContract");
-    expect(fixture).toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(fixture).not.toContain("db.supplyChainEvidence");
+    expect(fixture).not.toContain("db.supplyChainVerificationEvidence");
     expect(fixture).toContain("releaseContractVerified: true");
     expect(fixture).toContain('"Entitlement"');
   });
