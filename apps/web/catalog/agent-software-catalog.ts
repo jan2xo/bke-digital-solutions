@@ -117,7 +117,7 @@ export async function readAgentSoftwareCatalog(
          AND pv."publishedAt" IS NOT NULL
          AND pv."lifecycle" IN ('STABLE', 'LTS')
          AND (
-           LOWER(pv."operatingSystem" = ${input.platform}
+           LOWER(pv."operatingSystem") = ${input.platform}
            OR LOWER(pv."operatingSystem") IN ('any', 'universal')
          )
          AND (
