@@ -12,7 +12,7 @@ The canonical shared Identity prerequisite is tracked in [bke-libraries-typescri
 
 ### Current staging authorization
 
-The earlier boundary above describes the initial migration intent. The owner later directed the team to use the Cloudflare-owned workers.dev origin and continue the discussed steps. This explicitly authorizes progressing isolated staging setup and a test deployment on eligible Free resources after review and required protected configuration are ready. The app has not yet been deployed. Keep the apex/production cutover, paid activation, production data, and unapproved security-access grants outside this authorization. Do not put staging secrets in ordinary PR or fixture CI; any actual staging deployment must use a separate protected operation.
+The earlier boundary above describes the initial migration intent. The owner later directed the team to use the Cloudflare-owned workers.dev origin and continue the discussed steps. This explicitly authorizes progressing isolated staging setup and a test deployment on eligible Free resources after review and required protected configuration are ready. The Worker has since been deployed to isolated Staging as version `c6f8051d-d071-4e70-8bef-a4d28146f884`; this establishes deployment only, not production acceptance. Keep the apex/production cutover, paid activation, production data, and unapproved security-access grants outside this authorization. Do not put staging secrets in ordinary PR or fixture CI; any actual staging deployment must use a separate protected operation.
 
 ### Protected isolated Staging runbook
 
@@ -26,9 +26,11 @@ The job prepares and validates a private explicit runtime allowlist before apply
 
 **Product images and downloads:** Product images use public GitHub repository URLs restricted to canonical PNG/JPEG/WebP files under `raw.githubusercontent.com/jan2xo/`; the application stores the URL and does not fetch or copy image bytes. Downloadable product artifacts remain GitHub Release links through the existing licensed delivery flow. This path requires no S3 or R2. Existing object-storage cleanup and backup facilities remain optional legacy operations and fail explicitly when invoked without configuration.
 
+**OAuth logging privacy and public acceptance:** The deployed baseline was observed with persisted logs enabled and query-string redaction disabled. Do not run the real Google OAuth flow until a protected deployment applies and verifies the source-controlled `observability.redact_query_string: true` setting; the pinned Wrangler 4.157.0 supports this field. Logging and tracing remain enabled. Each deploy-enabled workflow run now makes fixed-origin, unauthenticated requests to `/`, `/login`, and `/api/health/ready` after deploy and before cleanup. It requires 200 HTML with the Google sign-in affordance and 200 JSON readiness with PostgreSQL, Valkey, and provider checks up and no primary object-storage dependency. The public smoke uses no cookies, does not follow redirects, and never sends the Cloudflare API token to the Worker. This smoke does not prove Google provider sign-in. [Wrangler observability configuration](https://developers.cloudflare.com/workers/wrangler/configuration/#observability), [pinned Wrangler change](https://github.com/cloudflare/workers-sdk/blob/wrangler%404.157.0/packages/workers-utils/CHANGELOG.md).
+
 **Operator prerequisites:** Neon credential transfer into the dedicated protected Staging Infisical project, actual GitHub environment protection, the project-scoped read-only Viewer identity authenticated by OIDC, Cloudflare token, independent `STAGING_NEON_HOST`, Redis, approved stable signing/secret keys. No S3 or R2 resource is required for GitHub-hosted images or GitHub Release downloads.
 
-**Prior certification:** [CI #2270](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41835344651) passed exact source/workflow `982aece38f966b8ca70ad5bf40cbfaec57dcfe6e`: 740 passed, 5 skipped, all five core jobs passed, bundle size 15,854,468 bytes. The new protected staging changes are not covered by that result and still require exact-head Actions validation.
+**Prior certification:** [CI #2270](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41835344651) passed exact source/workflow `982aece38f966b8ca70ad5bf40cbfaec57dcfe6e`: 740 passed, 5 skipped, all five core jobs passed, bundle size 15,854,468 bytes. CI #2276 passed all five core jobs, aggregate certification and the protected Staging deployment at exact source/workflow `51784c69034267c3df843b8b349fa7e656b927fd` ([run](https://github.com/jan2xo/bke-digital-solutions/actions/runs/41985060439)). It applied the reviewed migrations to the fresh Neon Staging database and deployed Worker version `c6f8051d-d071-4e70-8bef-a4d28146f884`. That run did not include the query-redaction setting or a public post-deployment smoke, and does not establish Google sign-in acceptance.
 
 ## Google OAuth client contract
 
@@ -101,7 +103,7 @@ not proof that every listed path has been exercised in workerd.
 disabled before any staging/live acceptance. Its all-zero ID is an explicit
 unprovisioned placeholder; the local connection string is only the disposable
 Actions PostgreSQL service. Neither its binding name nor local tests prove
-provider cache configuration. No resources are created or deployed by CI.
+provider cache configuration. Ordinary CI does not create or deploy resources; only the separate protected `deploy_staging=true` job can deploy, after all required certification passes.
 
 Workers receiving proof is a required job in the existing explicitly invoked
 `ci.yml`, alongside its existing database/source, Node build, Docker and security

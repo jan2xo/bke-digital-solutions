@@ -294,6 +294,8 @@ jobs:
       - name: Build actual Workers application
         run: npm run workers:build
       - run: npm run workers:typecheck
+      - name: Test public Staging smoke contract
+        run: node --test scripts/staging-smoke.test.mjs
       - name: Verify bundle measurement boundary
         run: node --test scripts/check-worker-bundle.test.mjs
       - name: Produce actual Worker upload without deployment
@@ -427,6 +429,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
           WRANGLER_SEND_METRICS: 'false'
         run: npx --no-install wrangler deploy --config .wrangler-staging.json --secrets-file .wrangler-staging-secrets.json
+      - name: Verify public Staging pages and dependency readiness
+        run: node scripts/staging-smoke.mjs
       - name: Remove temporary protected deployment files
         if: always()
         run: node scripts/deploy-staging.mjs cleanup
