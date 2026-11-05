@@ -19,11 +19,6 @@ const base = {
   CRON_SECRET: "c".repeat(64),
   REDIS_URL: "redis://valkey:6379",
   REDIS_KEY_PREFIX: "bke-production",
-  S3_ENDPOINT: "http://minio:9000",
-  S3_PUBLIC_UPLOAD_ENDPOINT: "https://uploads.bke.example",
-  S3_BUCKET: "bke-production-private",
-  S3_ACCESS_KEY_ID: "storage-access-value",
-  S3_SECRET_ACCESS_KEY: "storage-secret-value",
   PAYMENT_PROVIDER: "paymongo",
   PAYMONGO_SECRET_KEY: "sk_test_" + "p".repeat(32),
   PAYMONGO_WEBHOOK_SECRET: "webhook-key-" + "w".repeat(32),
@@ -52,8 +47,6 @@ const validatedProductionRuntimeNames = [
   "PAYMONGO_SECRET_KEY",
   "PAYMONGO_WEBHOOK_SECRET",
   "RESEND_API_KEY",
-  "S3_ACCESS_KEY_ID",
-  "S3_SECRET_ACCESS_KEY",
 ];
 
 describe("deployment environment validation", () => {
@@ -68,7 +61,6 @@ describe("deployment environment validation", () => {
   it("does not require a browser upload endpoint for retired artifact uploads", () => expect(parseEnvironment({ ...base, S3_PUBLIC_UPLOAD_ENDPOINT: undefined })).toMatchObject({ DEPLOYMENT_ENV: "production" }));
   it("rejects insecure production origins and mock providers", () => expect(() => parseEnvironment({ ...base, APP_URL: "http://commerce.bke.example", PAYMENT_PROVIDER: "mock" })).toThrow(/APP_URL|PAYMENT_PROVIDER/));
   it("rejects paths on the canonical origin", () => expect(() => parseEnvironment({ ...base, APP_URL: "https://commerce.bke.example/app" })).toThrow("APP_URL"));
-  it("rejects shared storage and Valkey namespaces", () => expect(() => parseEnvironment({ ...base, S3_BUCKET: "shared-private", REDIS_KEY_PREFIX: "shared" })).toThrow(/S3_BUCKET|REDIS_KEY_PREFIX/));
   it("rejects placeholder secrets", () => expect(() => parseEnvironment({ ...base, SESSION_SECRET: "replace-with-a-production-session-secret-value-123456" })).toThrow("SESSION_SECRET"));
   it("keeps Agent account sessions disabled without dedicated secrets", () => expect(parseEnvironment(base)).toMatchObject({ AGENT_ACCOUNT_SESSION_ENABLED: false }));
   it("requires dedicated Agent account-session secrets only when explicitly enabled", () => {
@@ -88,8 +80,6 @@ describe("deployment environment validation", () => {
   it("rejects source-bucket reuse and invalid backup encryption keys", () => expect(() => parseEnvironment({ ...base, BACKUP_ENABLED: "true", BACKUP_BUCKET: base.S3_BUCKET, BACKUP_S3_ACCESS_KEY_ID: "backup-access", BACKUP_S3_SECRET_ACCESS_KEY: "backup-secret", BACKUP_ENCRYPTION_KEY: "not-a-32-byte-base64-key", BACKUP_OFFSITE_ACK: "SEPARATE_FAILURE_DOMAIN" })).toThrow(/BACKUP_BUCKET|BACKUP_ENCRYPTION_KEY/));
   it("rejects restore targets that reuse source destinations", () => expect(() => parseEnvironment({ ...base, BACKUP_RESTORE_DATABASE_URL: base.DATABASE_URL, BACKUP_RESTORE_S3_BUCKET: base.S3_BUCKET })).toThrow(/BACKUP_RESTORE_DATABASE_URL|BACKUP_RESTORE_S3_BUCKET/));
   it("accepts a staging-only local production simulation", () => expect(parseEnvironment({ ...base, DEPLOYMENT_ENV: "staging", DEPLOYMENT_ID: "bke-local-certification", LOCAL_PRODUCTION_SIMULATION: "true", APP_URL: "https://jl-bke.localhost:8443", INTERNAL_APP_URL: "http://app:3000", PUBLIC_WEBHOOK_ORIGIN: "https://temporary.example.net", REDIS_KEY_PREFIX: "bke-local-certification", S3_ENDPOINT: "http://minio:9000", S3_PUBLIC_UPLOAD_ENDPOINT: "https://uploads.bke.example", S3_BUCKET: "bke-local-certification-private" })).toMatchObject({ LOCAL_PRODUCTION_SIMULATION: true }));
-  it("accepts only the exact private production MinIO origin", () => expect(parseEnvironment({ ...base, S3_ENDPOINT: "http://minio:9000" })).toMatchObject({ S3_ENDPOINT: "http://minio:9000" }));
-  it.each(["http://minio:9001", "http://minio:9000/path", "http://other-host:9000", "http://localhost:9000"])("rejects unsupported private storage endpoint %s", (S3_ENDPOINT) => expect(() => parseEnvironment({ ...base, S3_ENDPOINT })).toThrow("S3_ENDPOINT"));
   it("rejects live credentials and insecure tunnel origins in local simulation", () => expect(() => parseEnvironment({ ...base, DEPLOYMENT_ENV: "staging", DEPLOYMENT_ID: "bke-local-certification", LOCAL_PRODUCTION_SIMULATION: "true", APP_URL: "https://jl-bke.localhost:8443", PUBLIC_WEBHOOK_ORIGIN: "http://temporary.example.net", REDIS_KEY_PREFIX: "bke-local-certification", S3_BUCKET: "bke-local-certification-private", PAYMONGO_SECRET_KEY: "sk_live_" + "p".repeat(32) })).toThrow(/PUBLIC_WEBHOOK_ORIGIN|PAYMONGO_SECRET_KEY/));
   it("permits mock providers and HTTP only in development", () => expect(parseEnvironment({ ...base, NODE_ENV: "development", DEPLOYMENT_ENV: "development", DEPLOYMENT_ID: "bke-development", APP_URL: "http://localhost:3000", SESSION_SECRET: "x".repeat(32), LICENSE_PEPPER: "y".repeat(32), CRON_SECRET: "z".repeat(32), REDIS_URL: undefined, REDIS_KEY_PREFIX: "bke-development", S3_BUCKET: "bke-private", S3_ACCESS_KEY_ID: undefined, S3_SECRET_ACCESS_KEY: undefined, PAYMENT_PROVIDER: "mock", PAYMONGO_SECRET_KEY: undefined, PAYMONGO_WEBHOOK_SECRET: undefined, EMAIL_PROVIDER: "log", RESEND_API_KEY: undefined, EMAIL_FROM: "test@example.com", SUPPORT_EMAIL: "support@example.com" })).toMatchObject({ DEPLOYMENT_ENV: "development" }));
 });
