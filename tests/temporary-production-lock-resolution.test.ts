@@ -75,7 +75,8 @@ describe("temporary npm dependency graph resolution emitter", () => {
       }
       emit("package.json", outPkg);
       emit("package-lock.json", outLock);
-    });
-    } finally { rmSync(tmp, { recursive: true, force: true }); }
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
   });
-}
+});
