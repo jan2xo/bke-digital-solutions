@@ -21,8 +21,8 @@ let subject: string;
 let sessionId: string;
 suite("Google-only browser session and protected-action PostgreSQL policy", () => {
   beforeEach(async () => {
-    const module = createIdentityModule({ connectionString: process.env.DATABASE_URL!, sessionSecret: "test-google-session-policy-secret-48-characters-long" });
-    const capabilities = await module.start({ has: () => false, get: () => { throw new Error("No dependency expected"); } });
+    const identityModule = createIdentityModule({ connectionString: process.env.DATABASE_URL!, sessionSecret: "test-google-session-policy-secret-48-characters-long" });
+    const capabilities = await identityModule.start({ has: () => false, get: () => { throw new Error("No dependency expected"); } });
     state.capabilities = new Map(capabilities.map(({ id, value }) => [id, value]));
     const suffix = randomUUID();
     subject = `subject-${suffix}`;
