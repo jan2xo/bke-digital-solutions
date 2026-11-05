@@ -15,7 +15,18 @@ BEGIN
       RAISE EXCEPTION 'V3_LEGACY_TABLE_NONEMPTY: %', table_name;
     END IF;
   END LOOP;
-END $$;
+
+  -- These legacy release-evidence fields are not part of V3's business catalog.
+  -- A non-null value is historical evidence and must never be silently dropped.
+  IF EXISTS (
+    SELECT 1 FROM "ProductVersion"
+     WHERE "backupEvidence" IS NOT NULL
+        OR "complianceEvidence" IS NOT NULL
+        OR "migrationEvidence" IS NOT NULL
+  ) THEN
+    RAISE EXCEPTION 'V3_LEGACY_RELEASE_EVIDENCE_NONEMPTY';
+  END IF;
+END $;
 
 DROP TABLE "DownloadGrant";
 DROP TABLE "CommissioningRun";

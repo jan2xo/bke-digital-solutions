@@ -31,6 +31,8 @@ tax and accountable owner-review decisions, not software scanner results.
 The forward Prisma migration
 `20261105180000_v3_business_only_retirement` verifies every retired
 table is empty before dropping it, and refuses to proceed otherwise.
+It also rejects populated legacy `ProductVersion` evidence columns before
+dropping those obsolete fields.
 This is a clean V3 staging assumption, not proof that any connected
 database is empty. No migration has been run against a connected Neon DB.
 Historical applied migrations remain immutable; do not rewrite them.
