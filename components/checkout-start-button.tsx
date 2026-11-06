@@ -182,7 +182,7 @@ function CheckoutStartButtonClient({
   const [recoveryRequired, setRecoveryRequired] = useState(false);
   const legalPanel = useRef<HTMLFieldSetElement>(null);
   const storage = storageKey(currentEmail, purchasePlanId, accountId);
-  const pollStartedAt = useRef<number | null>(pending?.record.orderId ? Date.now() : null);
+  const pollStartedAt = useRef<number | null>(null);
   const checkoutRequestGeneration = useRef(0);
   const checkoutTerminal = useRef(false);
   const activeCheckoutRequest = useRef<AbortController | null>(null);
