@@ -42,6 +42,8 @@ describe("intentional exact-head disposable staging", () => {
     expect(workflow).toContain("Infisical/secrets-action@");
     expect(workflow).toContain("Browser-check unauthenticated Staging");
     expect(workflow).toContain("Not verified by this workflow: real Google OAuth");
+    expect(workflow).toContain("Exact source SHA: $SOURCE_SHA");
+    expect(workflow).toContain("Exact deployed source SHA: $SOURCE_SHA");
   });
   it("skips only Docker-only image builds when staging requests it; normal CI remains unchanged", () => {
     expect(core).toContain("skip_containers:");
