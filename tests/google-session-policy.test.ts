@@ -13,7 +13,7 @@ vi.mock("../apps/web/auth/runtime", () => ({
 }));
 import { db } from "../platform/host/db";
 import { createIdentityModule } from "../modules/identity/module";
-import { currentIdentitySession, requireAdmin, requireRecentAdmin, recordGoogleSessionFreshness } from "../apps/web/auth/session";
+import { currentIdentitySession, requireAdmin, requireRecentAdmin, requireRecentAdminSession, requireRecentUser, recordGoogleSessionFreshness } from "../apps/web/auth/session";
 
 const suite = process.env.DATABASE_URL ? describe : describe.skip;
 let userId: string;
@@ -48,18 +48,32 @@ suite("Google-only browser session and protected-action PostgreSQL policy", () =
   it("accepts returning Google sessions but cannot promote a customer to administrator", async () => {
     expect((await currentIdentitySession())?.principal.id).toBe(userId);
     await expect(requireAdmin()).rejects.toThrow("FORBIDDEN");
+    await expect(requireRecentAdmin()).rejects.toThrow("FORBIDDEN");
+    await expect(requireRecentAdminSession()).rejects.toThrow("FORBIDDEN");
     const authentication = state.capabilities.get(IDENTITY_GOOGLE_AUTHENTICATION_CAPABILITY_ID) as IdentityGoogleAuthenticationCapability;
     expect(await authentication.authenticate({ subject })).toMatchObject({ status: "PRIMARY_AUTHENTICATED", route: "SESSION", principal: { id: userId, role: "CUSTOMER" } });
   });
-  it("allows operator-assigned administrators without BKE MFA but preserves freshness for protected operations", async () => {
+  it("permits administrator operations without fresh Google auth_time", async () => {
     await db.user.update({ where: { id: userId }, data: { role: "ADMIN" } });
+    const before = await db.session.findUniqueOrThrow({ where: { id: sessionId } });
+    expect(before.authenticationMethod).toBe("GOOGLE_OIDC");
+    expect(before.recentAuthenticatedAt).toBeNull();
     expect((await requireAdmin()).id).toBe(userId);
-    await expect(requireRecentAdmin()).rejects.toThrow("RECENT_AUTH_REQUIRED");
+    expect((await requireRecentAdmin()).id).toBe(userId);
+    expect((await requireRecentAdminSession()).user.id).toBe(userId);
+    await db.session.update({
+      where: { id: sessionId },
+      data: { assuranceLevel: "BASIC", recentAuthenticatedAt: new Date(Date.now() - 24 * 60 * 60_000) },
+    });
+    expect((await requireRecentAdmin()).id).toBe(userId);
+    expect((await requireRecentAdminSession()).user.id).toBe(userId);
+  });
+  it("preserves customer-sensitive signed Google freshness checks", async () => {
+    await expect(requireRecentUser()).rejects.toThrow("RECENT_AUTH_REQUIRED");
     const authenticatedAt = new Date(Date.now() - 60_000);
     await recordGoogleSessionFreshness({ sessionId, userId, subject, authenticatedAt });
-    expect((await requireRecentAdmin()).id).toBe(userId);
+    expect((await requireRecentUser()).id).toBe(userId);
     const stored = await db.session.findUniqueOrThrow({ where: { id: sessionId } });
-    expect(stored.authenticationMethod).toBe("GOOGLE_OIDC");
     expect(stored.mfaVerifiedAt).toBeNull();
     expect(stored.recentAuthenticatedAt).toEqual(authenticatedAt);
   });
@@ -76,15 +90,18 @@ suite("Google-only browser session and protected-action PostgreSQL policy", () =
     await db.session.update({ where: { id: sessionId }, data: { revokedAt: new Date() } });
     await expect(recordGoogleSessionFreshness({ sessionId, userId, subject, authenticatedAt })).rejects.toThrow("UNAUTHENTICATED");
     expect(await currentIdentitySession()).toBeNull();
+    await expect(requireRecentAdmin()).rejects.toThrow("UNAUTHENTICATED");
   });
   it("blocks suspended principals and password-family sessions even if their bearer token is valid", async () => {
     await db.user.update({ where: { id: userId }, data: { lifecycleState: "SUSPENDED", suspendedAt: new Date() } });
     expect(await currentIdentitySession()).toBeNull();
+    await expect(requireRecentAdmin()).rejects.toThrow("UNAUTHENTICATED");
     await db.user.update({ where: { id: userId }, data: { lifecycleState: "ACTIVE", suspendedAt: null } });
     const issuance = state.capabilities.get(IDENTITY_SESSION_ISSUANCE_CAPABILITY_ID) as IdentitySessionIssuanceCapability;
     const result = await issuance.issue({ userId, authenticationMethod: "PASSWORD" });
     if (result.status !== "ISSUED") throw new Error(result.code);
     state.token = result.token;
     expect(await currentIdentitySession()).toBeNull();
+    await expect(requireRecentAdmin()).rejects.toThrow("UNAUTHENTICATED");
   });
 });

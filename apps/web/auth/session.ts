@@ -175,13 +175,16 @@ export async function requireAdmin() { return (await requireIdentityAdmin()).pri
 export async function requireRecentUser(maxAgeMinutes = 15) {
   return (await requireRecentIdentitySession(maxAgeMinutes)).principal;
 }
-export async function requireRecentAdmin(maxAgeMinutes = 15) {
-  const context = await requireRecentIdentitySession(maxAgeMinutes);
-  if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
-  return context.principal;
+/**
+ * Compatibility entrypoints for existing admin API routes.
+ * Owner-retired Google auth_time step-up must not gate administration.
+ * An active Google OIDC session, immutable binding and explicit ADMIN role
+ * remain mandatory. Customer/Agent-sensitive freshness stays independent.
+ */
+export async function requireRecentAdmin(_maxAgeMinutes = 15) {
+  return (await requireIdentityAdmin()).principal;
 }
-export async function requireRecentAdminSession(maxAgeMinutes = 15) {
-  const context = await requireRecentIdentitySession(maxAgeMinutes);
-  if (context.principal.role !== "ADMIN") throw new Error("FORBIDDEN");
+export async function requireRecentAdminSession(_maxAgeMinutes = 15) {
+  const context = await requireIdentityAdmin();
   return Object.freeze({ ...context.session, user: context.principal });
 }

@@ -20,11 +20,11 @@ Contact is authoritative only when signed `email_verified=true` and the signed e
 
 Only exact `GOOGLE_OIDC` browser sessions are admitted. Shared password and application-MFA session methods remain unsupported in this consumer. Existing shared-package session expiration, idle timeout, revocation and last-seen handling remain. Each admitted browser session also requires an active, non-suspended, Google-bound BKE principal.
 
-Ordinary Google sessions are BASIC. Sensitive operations retain their existing recent-authentication guards. They require validated signed Google `auth_time` within 15 minutes, persisted for the exact BKE session with `mfaVerifiedAt=null`. Token `iat`, callback time, consent and account selection never substitute for authentication time and are never labeled MFA.
+Ordinary Google sessions are BASIC. **Administrator operations no longer require a separate 15-minute Google `auth_time` step-up**. They require an active, non-suspended, Google-subject-bound `GOOGLE_OIDC` browser session and explicit BKE `ADMIN` role. Existing origin/CSRF, per-operation confirmation, rate-limits, audit logging and payment/licensing policies remain. This deliberately reduces defense in depth against stolen active administrator sessions; it is not equivalent-security replacement. Customer-sensitive and Agent-native operations that still own freshness requirements retain their checks. Token `iat`, callback time, consent and account selection are never labeled MFA or recent primary authentication.
 
 The consumer requests `claims={"id_token":{"auth_time":{"essential":true}}}`. Google documents that this claim must also be enabled in client settings. A reauthentication context binds the active BKE session ID, BKE user ID and existing Google subject. A switched account, different/revoked browser session, missing/stale/future/invalid proof cannot refresh the session. Reauthentication does not issue a new BKE session.
 
-Google's documented prompt values do not guarantee forced primary reauthentication. If the configured client cannot return a recent signed authentication time, protected operations remain locked. This is a real availability limitation requiring provider acceptance, not a successful reauthentication claim. See [Google OIDC claims and request parameters](https://developers.google.com/identity/openid-connect/openid-connect).
+Google's documented prompt values do not guarantee forced primary reauthentication. A missing signed authentication time no longer blocks administrator management, although customer-sensitive operations requiring freshness still fail closed. This distinction must be certified independently; it is not proof of a successful Google reauthentication. See [Google OIDC claims and request parameters](https://developers.google.com/identity/openid-connect/openid-connect).
 
 ## Administrator assignment and recovery
 
@@ -32,7 +32,7 @@ Operator bootstrap selects an existing active Google-bound, Google-contact-verif
 
 Google owns ordinary Google account recovery. BKE offers no email-link, OTP, password, MFA recovery-code or automatic subject-rebinding recovery path. A lost Google account cannot take over an existing BKE principal merely by knowing its contact address. Exceptional ownership recovery requires a separate owner-approved operator procedure; support email alone is not authorization.
 
-Removing BKE MFA means a compromised Google account or active Google session can authenticate to BKE. Sensitive freshness and BKE session revocation reduce some risks but do not replace an independently operated second factor. Google account security and recovery are now the identity-provider boundary. Neither token issuance nor this source review proves Google MFA occurred.
+Removing BKE MFA means a compromised Google account or active Google session can authenticate to BKE. Customer-sensitive freshness and BKE session revocation reduce some risks but do not replace an independently operated second factor. Administrator operations no longer have the short-lived freshness requirement and rely on the authenticated Google session and explicit BKE authorization. Google account security and recovery are now the identity-provider boundary. Neither token issuance nor this source review proves Google MFA occurred.
 
 ## Runtime and retained data
 
@@ -50,7 +50,7 @@ Native sign-in uses the existing browser device-authorization flow. Bearer-token
 - [ ] Core lint, typecheck, application build, disposable PostgreSQL replay and runtime tests inspected.
 - [ ] Google token/signature/issuer/audience/expiry/state/nonce/PKCE and replay fixtures pass.
 - [ ] New/returning customer, immutable binding, concurrent registration, legal and contact policy tested.
-- [ ] Ordinary administrator access, role rejection, protected-action freshness, revoked/suspended session and recovery boundaries tested.
+- [ ] Ordinary and privileged administrator access without recency, role rejection, customer-sensitive freshness, revoked/suspended session and recovery boundaries tested.
 - [ ] Existing purchase, Claim Code redemption, licensing, logout, revocation and native account authorization suites pass.
 - [ ] Shared-package consumer, composition and host-boundary checks pass.
 - [ ] Final integrated dependency/security gate passes with PR #269's reviewed dependency choices.
