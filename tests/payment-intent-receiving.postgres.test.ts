@@ -276,7 +276,12 @@ describe.skipIf(!runPostgres)("PayMongo PaymentIntent receiving on isolated Post
       },
     });
     const schedulerPreview = await paymentOperations(schedulerContext);
-    expect(schedulerPreview.retryableWebhooks).toBe(previewBeforeStale.retryableWebhooks + 1);
+    const beforeRetryableWebhooks = previewBeforeStale.retryableWebhooks;
+    const afterRetryableWebhooks = schedulerPreview.retryableWebhooks;
+    if (typeof beforeRetryableWebhooks !== "number" || typeof afterRetryableWebhooks !== "number") {
+      throw new Error("Payment operations dry-run must report numeric retryable webhook counts");
+    }
+    expect(afterRetryableWebhooks).toBe(beforeRetryableWebhooks + 1);
     await retryStoredWebhook(schedulerRow.id);
     expect(await prisma.webhookEvent.findUniqueOrThrow({ where: { id: schedulerRow.id } })).toMatchObject({ status: "PROCESSED" });
     await expect(retryStoredWebhook(schedulerRow.id)).rejects.toThrow("PAYMENT_RECONCILIATION_REQUIRED");
