@@ -173,6 +173,7 @@ describe("log-only Staging email authority", () => {
     const { buildStagingArtifacts } = await import("../scripts/deploy-staging.mjs");
     const source = {
       name: "bke-digital-solutions",
+      vars: { BKE_RUNTIME: "workers" },
       observability: { enabled: true, redact_query_string: true },
       hyperdrive: [{ binding: "HYPERDRIVE_FRESH", id: "0".repeat(32) }],
       send_email: [{ name: "EMAIL" }],
