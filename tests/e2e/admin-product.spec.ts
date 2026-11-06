@@ -7,7 +7,7 @@ import { signInGoogleTestUser } from "./google-session-helper";
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
 
-test("administrator creates, uploads, publishes, and edits a product", async ({ page }) => {
+test("administrator creates, catalogs a GitHub release, publishes, and edits a product", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `admin-${suffix}@bke.test`;
   await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
@@ -31,15 +31,19 @@ test("administrator creates, uploads, publishes, and edits a product", async ({ 
   const product = await db.product.findUniqueOrThrow({ where: { slug } });
   const update = await page.request.patch(`/api/admin/products/${product.id}`, { headers:{origin:"http://127.0.0.1:3000"},data: { summary: "An updated secure browser-created MVP product." } });
   expect(update.status()).toBe(200);
-  const upload = await page.request.post(`/api/admin/products/${product.id}/versions`, { headers:{origin:"http://127.0.0.1:3000"},multipart: { version: "1.2.3", operatingSystem: "Windows", architecture: "x64", releaseNotes: "First secure release", publish: "true", latest: "true", installer: { name: "bke-mvp.zip", mimeType: "application/zip", buffer: Buffer.from("BKE MVP installer fixture") } } });
-  expect(upload.status()).toBe(201);
+  const version = await page.request.post(`/api/admin/products/${product.id}/versions`, {
+    headers: { origin: "http://127.0.0.1:3000" },
+    data: { version: "1.2.3", operatingSystem: "Windows", architecture: "x64", releaseNotes: "First GitHub release" },
+  });
+  expect(version.status()).toBe(201);
+  expect(await version.json()).toMatchObject({ version: "1.2.3", distribution: "GITHUB_RELEASES" });
   await page.reload();
   const productCard=page.locator("section.card").filter({hasText:`/${slug}`});
-  await expect(productCard.getByText("1.2.3 · Windows x64 · Published · Latest")).toBeVisible();
+  await expect(productCard.getByText("1.2.3 · Unpublished")).toBeVisible();
   await Promise.all([page.waitForResponse(r=>r.url().endsWith(`/api/admin/products/${product.id}`)&&r.request().method()==="PATCH"),productCard.getByRole("button", { name: "Publish",exact:true }).click()]);
   await expect(productCard.getByText("Published", { exact: true }).first()).toBeVisible();
   expect(await db.auditLog.count({ where: { targetId: product.id } })).toBeGreaterThanOrEqual(3);
-  for(const [path,heading] of [["/admin/releases","Release center"],["/admin/artifacts","Artifact manager"],["/admin/customers","Customer manager"],["/admin/licenses","License center"],["/admin/devices","Device manager"],["/admin/orders","Orders"],["/admin/invoices","Invoice center"],["/admin/audit","Audit center"]] as const){await page.goto(path);await expect(page.getByRole("heading",{name:heading})).toBeVisible()}
+  for(const [path,heading] of [["/admin/releases","Release catalog"],["/admin/customers","Customer manager"],["/admin/licenses","License center"],["/admin/devices","Device manager"],["/admin/orders","Orders"],["/admin/invoices","Invoice center"],["/admin/audit","Audit center"]] as const){await page.goto(path);await expect(page.getByRole("heading",{name:heading})).toBeVisible()}
   const customer=await db.user.create({data:{email:`managed-${suffix}@bke.test`,role:"CUSTOMER",emailVerified:new Date(),name:"Managed Customer",ownedAccounts:{create:{type:"INDIVIDUAL",displayName:"Managed Customer",billingEmail:`managed-${suffix}@bke.test`}}}});
   const suspended=await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"SUSPEND"}});expect(suspended.status()).toBe(200);expect((await db.user.findUniqueOrThrow({where:{id:customer.id}})).suspendedAt).not.toBeNull();expect(await db.auditLog.count({where:{targetId:customer.id,action:"CUSTOMER_SUSPEND"}})).toBe(1);
   expect((await page.request.patch(`/api/admin/customers/${customer.id}`,{headers:{origin:"http://127.0.0.1:3000"},data:{action:"REACTIVATE"}})).status()).toBe(200);

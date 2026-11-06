@@ -112,7 +112,7 @@
     "tailwindcss": "4.3.3",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
-    "vitest": "^3.2.4",
+    "vitest": "5.1.0",
     "wrangler": "4.157.0"
   },
   "overrides": {
@@ -125,6 +125,11 @@
     "source-map-js": "1.2.2",
     "@opennextjs/cloudflare@1.20.15": {
       "glob": "14.0.2"
-    }
+    },
+    "@node-minify/core@9.0.2": {
+      "glob": "14.0.2"
+    },
+    "brace-expansion@^1.1.0": "1.1.21",
+    "js-yaml@^4.0.0": "4.3.2"
   }
 }
