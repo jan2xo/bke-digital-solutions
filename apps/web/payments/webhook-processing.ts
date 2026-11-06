@@ -13,6 +13,7 @@ import { decryptLicenseKey, sha256 } from "@/platform/host/security/crypto";
 import { paymentProvider } from "@/apps/web/payments/compatibility-provider";
 import { ingestPaymentWebhook } from "@/apps/web/payments/webhook-ingestion";
 import { reactToPaidSettlement } from "@/apps/web/payments/settlement-transaction";
+import { ignoredNonFinancialPaymentEventCode } from "@/apps/web/payments/webhook-event-policy";
 import { persistNotification } from "@/apps/web/notifications/center";
 import { revokeOrderEntitlements } from "@/apps/web/entitlements/refund-revocation";
 
@@ -22,6 +23,7 @@ type StoredEvent = Readonly<{
   type: PaymentsVerifiedProviderEventSnapshot["type"];
   externalPaymentId?: string;
   externalCheckoutId?: string;
+  paymentIntentId?: string;
   reference?: string;
   externalRefundId?: string;
   refundStatus?: PaymentsVerifiedProviderEventSnapshot["refundStatus"];
@@ -40,6 +42,7 @@ type OwnerEventRow = Readonly<{
   type: PaymentsVerifiedProviderEventSnapshot["type"];
   externalPaymentId: string | null;
   externalCheckoutId: string | null;
+  paymentIntentId: string | null;
   reference: string | null;
   externalRefundId: string | null;
   refundStatus: PaymentsVerifiedProviderEventSnapshot["refundStatus"] | null;
@@ -73,6 +76,7 @@ function snapshot(row: OwnerEventRow): PaymentsVerifiedProviderEventSnapshot {
     type: row.type,
     ...(row.externalPaymentId ? { externalPaymentId: row.externalPaymentId } : {}),
     ...(row.externalCheckoutId ? { externalCheckoutId: row.externalCheckoutId } : {}),
+    ...(row.paymentIntentId ? { paymentIntentId: row.paymentIntentId } : {}),
     ...(row.reference ? { reference: row.reference } : {}),
     ...(row.externalRefundId ? { externalRefundId: row.externalRefundId } : {}),
     ...(row.refundStatus ? { refundStatus: row.refundStatus } : {}),
@@ -97,7 +101,7 @@ async function ownerEventForStoredWebhook(row: {
 }) {
   const existing = await db.$queryRaw<OwnerEventRow[]>`
     SELECT "id", "provider", "eventId", "rawType", "type", "externalPaymentId", "externalCheckoutId",
-           "reference", "externalRefundId", "refundStatus", "amountMinor", "currency", "livemode",
+           "paymentIntentId", "reference", "externalRefundId", "refundStatus", "amountMinor", "currency", "livemode",
            "occurredAt", "receivedAt"
       FROM "PaymentProviderEvent"
      WHERE "provider" = ${row.provider} AND "eventId" = ${row.externalEventId}
@@ -110,12 +114,12 @@ async function ownerEventForStoredWebhook(row: {
   await db.$executeRaw`
     INSERT INTO "PaymentProviderEvent" (
       "id", "provider", "eventId", "payloadHash", "eventFingerprint", "rawType", "type",
-      "externalPaymentId", "externalCheckoutId", "reference", "externalRefundId", "refundStatus",
+      "externalPaymentId", "externalCheckoutId", "paymentIntentId", "reference", "externalRefundId", "refundStatus",
       "amountMinor", "currency", "livemode", "occurredAt", "receivedAt"
     ) VALUES (
       ${row.id}, ${row.provider}, ${row.externalEventId}, ${row.payloadHash}, ${eventFingerprint},
       ${row.rawEventType ?? event.rawType ?? null}, ${event.type}, ${event.externalPaymentId ?? null},
-      ${event.externalCheckoutId ?? null}, ${event.reference ?? null}, ${event.externalRefundId ?? null},
+      ${event.externalCheckoutId ?? null}, ${event.paymentIntentId ?? null}, ${event.reference ?? null}, ${event.externalRefundId ?? null},
       ${event.refundStatus ?? null}, ${event.amountMinor ?? null}, ${event.currency ?? null}, ${row.livemode},
       ${row.occurredAt ?? new Date(event.occurredAt)}, ${row.receivedAt}
     )
@@ -123,7 +127,7 @@ async function ownerEventForStoredWebhook(row: {
   `;
   const created = await db.$queryRaw<OwnerEventRow[]>`
     SELECT "id", "provider", "eventId", "rawType", "type", "externalPaymentId", "externalCheckoutId",
-           "reference", "externalRefundId", "refundStatus", "amountMinor", "currency", "livemode",
+           "paymentIntentId", "reference", "externalRefundId", "refundStatus", "amountMinor", "currency", "livemode",
            "occurredAt", "receivedAt"
       FROM "PaymentProviderEvent"
      WHERE "provider" = ${row.provider} AND "eventId" = ${row.externalEventId}
@@ -134,12 +138,11 @@ async function ownerEventForStoredWebhook(row: {
 }
 
 async function recordFailure(eventId: string, code: string, retryable: boolean) {
-  await db.webhookEvent.update({
+  await db.webhookEvent.updateMany({
     where: {
-      provider_externalEventId: {
-        provider: paymentProvider.name,
-        externalEventId: eventId,
-      },
+      provider: paymentProvider.name,
+      externalEventId: eventId,
+      status: { in: ["RECEIVED", "FAILED"] },
     },
     data: {
       status: "FAILED",
@@ -175,6 +178,28 @@ async function resolveOperationalOrder(
   const packageOrder = packageAttempt
     ? await tx.order.findUnique({ where: { id: packageAttempt.commercialReference } })
     : null;
+  const paymentIntentAttemptRows = event.paymentIntentId && !event.externalCheckoutId
+    ? await tx.$queryRaw<Array<{
+        id: string;
+        commercialReference: string;
+        provider: string;
+        paymentIntentId: string;
+        amountMinor: number;
+        currency: string;
+        livemode: boolean;
+        status: string;
+      }>>`
+        SELECT "id", "commercialReference", "provider", "paymentIntentId", "amountMinor", "currency", "livemode", "status"
+          FROM "PaymentIntentAttempt"
+         WHERE "provider" = ${event.provider} AND "paymentIntentId" = ${event.paymentIntentId}
+           AND "livemode" = ${event.livemode}
+         LIMIT 1
+      `
+    : [];
+  const paymentIntentAttempt = paymentIntentAttemptRows[0];
+  const paymentIntentOrder = paymentIntentAttempt
+    ? await tx.order.findUnique({ where: { id: paymentIntentAttempt.commercialReference } })
+    : null;
   const byReference = event.reference
     ? await tx.order.findFirst({
         where: { OR: [{ id: event.reference }, { number: event.reference }] },
@@ -192,13 +217,26 @@ async function resolveOperationalOrder(
       })
     : null;
 
+  if (event.paymentIntentId && !event.externalCheckoutId && !paymentIntentAttempt) {
+    throw new PaymentLifecycleError("PAYMENT_CHECKOUT_MISMATCH");
+  }
   if (event.externalCheckoutId && !hostAttempt && !packageAttempt && !knownPayment) {
     throw new PaymentLifecycleError("PAYMENT_CHECKOUT_MISMATCH");
   }
-  const order = hostAttempt?.order ?? packageOrder ?? byReference ?? knownPayment?.order;
+  const order = hostAttempt?.order ?? packageOrder ?? paymentIntentOrder ?? byReference ?? knownPayment?.order;
   if (!order) throw new PaymentLifecycleError("PAYMENT_REFERENCE_MISMATCH");
   if (hostAttempt && packageOrder && hostAttempt.orderId !== packageOrder.id) {
     throw new PaymentLifecycleError("PAYMENT_CHECKOUT_MISMATCH");
+  }
+  if (paymentIntentAttempt && paymentIntentAttempt.commercialReference !== order.id) {
+    throw new PaymentLifecycleError("PAYMENT_CHECKOUT_MISMATCH");
+  }
+  if (paymentIntentAttempt && (
+    paymentIntentAttempt.amountMinor !== order.totalMinor ||
+    paymentIntentAttempt.currency.toUpperCase() !== order.currency.toUpperCase() ||
+    paymentIntentAttempt.livemode !== event.livemode
+  )) {
+    throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
   }
   if (byReference && byReference.id !== order.id) {
     throw new PaymentLifecycleError("PAYMENT_REFERENCE_MISMATCH");
@@ -386,7 +424,8 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
   if (event.livemode !== (process.env.PAYMONGO_LIVEMODE === "true")) {
     throw new PaymentLifecycleError("PAYMENT_MODE_MISMATCH");
   }
-  if (event.type === "unknown") {
+  const ignoredCode = ignoredNonFinancialPaymentEventCode(event.type);
+  if (ignoredCode) {
     await db.webhookEvent.update({
       where: {
         provider_externalEventId: {
@@ -396,7 +435,7 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
       },
       data: {
         status: "IGNORED",
-        lastErrorCode: "PAYMENT_EVENT_UNSUPPORTED",
+        lastErrorCode: ignoredCode,
         processedAt: new Date(),
         resolutionStatus: "ACKNOWLEDGED",
       },
@@ -500,6 +539,9 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
           });
         }
       } else if (order.status === "PAID") {
+        if (!event.externalPaymentId || !knownPayment || knownPayment.orderId !== order.id) {
+          throw new PaymentLifecycleError("PAYMENT_REFUND_CONFLICT");
+        }
         await tx.payment.updateMany({
           where: {
             orderId: order.id,
@@ -712,12 +754,12 @@ export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
 export async function retryStoredWebhook(webhookId: string) {
   const row = await db.webhookEvent.findUnique({ where: { id: webhookId } });
   if (!row) throw new Error("NOT_FOUND");
-  if (row.status !== "FAILED" || !row.normalizedData) {
+  if ((row.status !== "RECEIVED" && row.status !== "FAILED") || !row.normalizedData) {
     throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
   }
   const event = await ownerEventForStoredWebhook(row);
-  await db.webhookEvent.update({
-    where: { id: row.id },
+  const retry = await db.webhookEvent.updateMany({
+    where: { id: row.id, status: { in: ["RECEIVED", "FAILED"] } },
     data: {
       status: "RECEIVED",
       processingAttempts: { increment: 1 },
@@ -726,6 +768,16 @@ export async function retryStoredWebhook(webhookId: string) {
       lastErrorCode: null,
     },
   });
+  if (retry.count === 0) {
+    const raced = await db.webhookEvent.findUniqueOrThrow({
+      where: { id: row.id },
+      select: { status: true },
+    });
+    if (raced.status === "PROCESSED" || raced.status === "IGNORED") {
+      return { duplicate: true as const };
+    }
+    throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
+  }
   try {
     return await processVerifiedEvent(event);
   } catch (error) {

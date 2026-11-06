@@ -17,6 +17,7 @@ import type {
   PaymentsSettlementFactRepository,
 } from "@bke/payments/logic/settlement-fact-repository";
 import type { PaymentsCheckoutAttemptRecord } from "@bke/payments/logic/checkout-attempt-repository";
+import type { PaymentsPaymentIntentAttemptRecord } from "@bke/payments/logic/payment-intent-repository";
 import type { PaymentsProviderEventRecord } from "@bke/payments/logic/provider-event-repository";
 import type { PaymentsSettlementFactSnapshot } from "@bke/payments/contracts/settlement-fact.contract";
 import { PaymentLifecycleError, type PaymentErrorCode } from "@bke/payments/logic/payment-errors";
@@ -32,6 +33,7 @@ type ProviderEventRow = Readonly<{
   type: PaymentsProviderEventRecord["type"];
   externalPaymentId: string | null;
   externalCheckoutId: string | null;
+  paymentIntentId: string | null;
   reference: string | null;
   externalRefundId: string | null;
   refundStatus: PaymentsProviderEventRecord["refundStatus"];
@@ -67,7 +69,8 @@ type SettlementFactRow = Readonly<{
   provider: string;
   eventId: string;
   externalPaymentId: string;
-  externalCheckoutId: string;
+  externalCheckoutId: string | null;
+  paymentIntentId: string | null;
   commercialReference: string;
   amountMinor: number;
   currency: string;
@@ -114,7 +117,8 @@ function settlementRecord(row: SettlementFactRow): PaymentsSettlementFactSnapsho
     provider: row.provider,
     eventId: row.eventId,
     externalPaymentId: row.externalPaymentId,
-    externalCheckoutId: row.externalCheckoutId,
+    ...(row.externalCheckoutId ? { externalCheckoutId: row.externalCheckoutId } : {}),
+    ...(row.paymentIntentId ? { paymentIntentId: row.paymentIntentId } : {}),
     commercialReference: row.commercialReference,
     amountMinor: Number(row.amountMinor),
     currency: row.currency,
@@ -124,18 +128,37 @@ function settlementRecord(row: SettlementFactRow): PaymentsSettlementFactSnapsho
   });
 }
 
-function createPaymentsRepository(tx: Prisma.TransactionClient): PaymentsSettlementFactRepository {
+function createPaymentsRepository(tx: Prisma.TransactionClient, expectedLivemode: boolean): PaymentsSettlementFactRepository {
   return Object.freeze({
     async findProviderEventById(id: string) {
       const rows = await tx.$queryRaw<ProviderEventRow[]>`
         SELECT "id", "provider", "eventId", "payloadHash", "eventFingerprint", "rawType", "type",
-               "externalPaymentId", "externalCheckoutId", "reference", "externalRefundId", "refundStatus",
+               "externalPaymentId", "externalCheckoutId", "paymentIntentId", "reference", "externalRefundId", "refundStatus",
                "amountMinor", "currency", "livemode", "occurredAt", "receivedAt"
           FROM "PaymentProviderEvent"
          WHERE "id" = ${id}
          LIMIT 1
       `;
       return rows[0] ? paymentRecord(rows[0]) : null;
+    },
+
+    async findPaymentIntentAttempt(provider: string, paymentIntentId: string): Promise<PaymentsPaymentIntentAttemptRecord | null> {
+      const rows = await tx.$queryRaw<PaymentsPaymentIntentAttemptRecord[]>`
+        SELECT "id", "sourceReference", "commercialReference", "provider", "requestFingerprint",
+               "amountMinor", "currency", "paymentMethodAllowed", "livemode", "idempotencyKey",
+               "idempotencyExpiresAt", "createDispatchedAt", "createLeaseUntil", "createLeaseToken",
+               "statusObservedAt", "paymentIntentId", "status", "failureCode", "createdAt", "updatedAt"
+          FROM "PaymentIntentAttempt"
+         WHERE "provider" = ${provider} AND "paymentIntentId" = ${paymentIntentId}
+           AND "livemode" = ${expectedLivemode}
+         LIMIT 1
+      `;
+      const row = rows[0];
+      return row ? Object.freeze({
+        ...row,
+        amountMinor: Number(row.amountMinor),
+        paymentMethodAllowed: Object.freeze([...row.paymentMethodAllowed]),
+      }) : null;
     },
 
     async findCheckoutAttempt(provider: string, externalCheckoutId: string) {
@@ -154,28 +177,31 @@ function createPaymentsRepository(tx: Prisma.TransactionClient): PaymentsSettlem
       const inserted = await tx.$queryRaw<SettlementFactRow[]>`
         INSERT INTO "PaymentSettlementFact" (
           "id", "providerEventRecordId", "checkoutAttemptId", "provider", "eventId",
-          "externalPaymentId", "externalCheckoutId", "commercialReference", "amountMinor",
+          "externalPaymentId", "externalCheckoutId", "paymentIntentId", "commercialReference", "amountMinor",
           "currency", "livemode", "settledAt"
         ) VALUES (
           ${input.id}, ${input.providerEventRecordId}, ${input.checkoutAttemptId}, ${input.provider}, ${input.eventId},
-          ${input.externalPaymentId}, ${input.externalCheckoutId}, ${input.commercialReference}, ${input.amountMinor},
+          ${input.externalPaymentId}, ${input.externalCheckoutId}, ${input.paymentIntentId}, ${input.commercialReference}, ${input.amountMinor},
           ${input.currency}, ${input.livemode}, ${input.settledAt}
         )
         ON CONFLICT DO NOTHING
         RETURNING "id", "providerEventRecordId", "checkoutAttemptId", "provider", "eventId",
-                  "externalPaymentId", "externalCheckoutId", "commercialReference", "amountMinor",
+                  "externalPaymentId", "externalCheckoutId", "paymentIntentId", "commercialReference", "amountMinor",
                   "currency", "livemode", "settledAt", "createdAt"
       `;
       if (inserted[0]) return { created: true, record: settlementRecord(inserted[0]) };
 
       const existing = await tx.$queryRaw<SettlementFactRow[]>`
         SELECT "id", "providerEventRecordId", "checkoutAttemptId", "provider", "eventId",
-               "externalPaymentId", "externalCheckoutId", "commercialReference", "amountMinor",
+               "externalPaymentId", "externalCheckoutId", "paymentIntentId", "commercialReference", "amountMinor",
                "currency", "livemode", "settledAt", "createdAt"
           FROM "PaymentSettlementFact"
          WHERE "providerEventRecordId" = ${input.providerEventRecordId}
             OR ("provider" = ${input.provider} AND "externalPaymentId" = ${input.externalPaymentId})
-         ORDER BY CASE WHEN "providerEventRecordId" = ${input.providerEventRecordId} THEN 0 ELSE 1 END
+            OR ("provider" = ${input.provider} AND "paymentIntentId" = ${input.paymentIntentId})
+         ORDER BY CASE WHEN "providerEventRecordId" = ${input.providerEventRecordId} THEN 0
+                       WHEN "provider" = ${input.provider} AND "externalPaymentId" = ${input.externalPaymentId} THEN 1
+                       ELSE 2 END
          LIMIT 1
       `;
       if (!existing[0]) throw new Error("PAYMENTS_SETTLEMENT_FACT_DISAPPEARED");
@@ -338,6 +364,7 @@ function rejectionCode(code: string): PaymentErrorCode {
   switch (code) {
     case "MODE_MISMATCH": return "PAYMENT_MODE_MISMATCH";
     case "CHECKOUT_MISMATCH": return "PAYMENT_CHECKOUT_MISMATCH";
+    case "PAYMENT_INTENT_MISMATCH": return "PAYMENT_CHECKOUT_MISMATCH";
     case "REFERENCE_MISMATCH": return "PAYMENT_REFERENCE_MISMATCH";
     case "AMOUNT_MISMATCH": return "PAYMENT_AMOUNT_MISMATCH";
     case "CURRENCY_MISMATCH": return "PAYMENT_CURRENCY_MISMATCH";
@@ -351,7 +378,7 @@ export async function reactToPaidSettlement(
   providerEventRecordId: string,
   expectedLivemode: boolean,
 ) {
-  const payments = createPaymentsSettlementFactCapability(createPaymentsRepository(tx));
+  const payments = createPaymentsSettlementFactCapability(createPaymentsRepository(tx, expectedLivemode));
   const settlement = await payments.reconcile({ providerEventRecordId, expectedLivemode });
   if (settlement.status === "REJECTED") {
     throw new PaymentLifecycleError(rejectionCode(settlement.code));
