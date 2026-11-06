@@ -167,3 +167,18 @@ describe("protected Staging guards",()=>{
   expect(JSON.stringify(failed)).not.toMatch(/secret|private|cloudflare/i);
  });
 });
+
+describe("log-only Staging email authority", () => {
+  it("removes a source email binding instead of enabling live sending implicitly", async () => {
+    const { buildStagingArtifacts } = await import("../scripts/deploy-staging.mjs");
+    const source = {
+      name: "bke-digital-solutions",
+      observability: { enabled: true, redact_query_string: true },
+      hyperdrive: [{ binding: "HYPERDRIVE_FRESH", id: "0".repeat(32) }],
+      send_email: [{ name: "EMAIL" }],
+    };
+    const result = buildStagingArtifacts(source, process.env, "a".repeat(32));
+    expect(result.config).not.toHaveProperty("send_email");
+    expect(source.send_email).toEqual([{ name: "EMAIL" }]);
+  });
+});

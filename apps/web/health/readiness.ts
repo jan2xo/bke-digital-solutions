@@ -1,6 +1,8 @@
 import "server-only";
 
-import { currentOperationDatabaseUrl } from "@/platform/host/operation-scope";
+import { CLOUDFLARE_EMAIL_SEND_RESOURCE, type CloudflareEmailSend } from "@/platform/email/cloudflare-provider";
+import { parseEmailSender } from "@/platform/email/sender";
+import { operationResource, currentOperationDatabaseUrl } from "@/platform/host/operation-scope";
 import { Redis as UpstashRedis } from "@upstash/redis";
 import { Pool } from "pg";
 import { createClient } from "redis";
@@ -246,10 +248,18 @@ async function checkConfiguredProviders(): Promise<void> {
   if (paymentProvider !== "mock" && paymentProvider !== "paymongo") {
     throw new Error("PROVIDER_SELECTION_INVALID");
   }
-  if (emailProvider !== "log" && emailProvider !== "resend") {
+  if (emailProvider !== "log" && emailProvider !== "resend" && emailProvider !== "cloudflare") {
     throw new Error("PROVIDER_SELECTION_INVALID");
   }
-  if (paymentProvider === "mock" && emailProvider === "log") return;
+  if (emailProvider === "resend" && process.env.BKE_RUNTIME === "workers" &&
+      process.env.DEPLOYMENT_ENV === "production") throw new Error("PROVIDER_SELECTION_INVALID");
+  if (emailProvider === "cloudflare") {
+    if (!parseEmailSender(process.env.EMAIL_FROM) || process.env.BKE_RUNTIME !== "workers" ||
+        !operationResource<CloudflareEmailSend | undefined>(CLOUDFLARE_EMAIL_SEND_RESOURCE, () => undefined)) {
+      throw new Error("CLOUDFLARE_EMAIL_NOT_CONFIGURED");
+    }
+  }
+  if (paymentProvider === "mock" && (emailProvider === "log" || emailProvider === "cloudflare")) return;
 
   const pool = new Pool({ connectionString: required("DATABASE_URL"), max: 1 });
   try {

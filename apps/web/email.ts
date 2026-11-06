@@ -2,6 +2,11 @@ import "server-only";
 
 import {
   createLoggingEmailProvider,
+  createCloudflareEmailProvider,
+  CLOUDFLARE_EMAIL_SEND_RESOURCE,
+  EmailDeliveryError,
+  parseEmailSender,
+  type CloudflareEmailSend,
   createResendEmailProvider,
   dispatchEmailOutbox as dispatchPlatformEmailOutbox,
   type EmailMessage,
@@ -11,6 +16,7 @@ import {
   type EmailOutboxStore,
   type EmailProvider,
 } from "@/platform/email";
+import { operationResource } from "@/platform/host/operation-scope";
 import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { resolveResendConfiguration } from "@/apps/web/providers/capability";
 
@@ -22,9 +28,9 @@ function parseNodeEnv(value: string | undefined): "development" | "test" | "prod
   return parsed;
 }
 
-function parseEmailProvider(value: string | undefined): "log" | "resend" {
+function parseEmailProvider(value: string | undefined): "log" | "resend" | "cloudflare" {
   const parsed = value ?? "log";
-  if (parsed !== "log" && parsed !== "resend") {
+  if (parsed !== "log" && parsed !== "resend" && parsed !== "cloudflare") {
     throw new Error("Invalid web host environment: EMAIL_PROVIDER");
   }
   return parsed;
@@ -38,25 +44,62 @@ function parseDeploymentEnvironment(value: string | undefined): "development" | 
   return parsed;
 }
 
-const nodeEnv = parseNodeEnv(process.env.NODE_ENV);
-const emailProviderMode = parseEmailProvider(process.env.EMAIL_PROVIDER);
-const deploymentEnvironment = parseDeploymentEnvironment(process.env.DEPLOYMENT_ENV);
-if (deploymentEnvironment === "production" && emailProviderMode === "log") {
-  throw new Error("Invalid web host environment: log email transport is forbidden in production");
-}
-
 const loggingProvider = createLoggingEmailProvider();
 const resendProvider = createResendEmailProvider({ resolveConfiguration: resolveResendConfiguration });
 
-const runtimeEmailProvider: EmailProvider = Object.freeze({
-  async send(message: EmailMessage) {
-    const disabled =
-      process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true" ||
-      (nodeEnv === "test" && !process.env.RESEND_SANDBOX_TO);
-    const useLog = emailProviderMode !== "resend" && !process.env.RESEND_SANDBOX_TO;
-    if (disabled || useLog) return loggingProvider.send(message);
-    return resendProvider.send(message);
-  },
+function runtimeProvider(): EmailProvider {
+  const nodeEnv = parseNodeEnv(process.env.NODE_ENV);
+  const mode = parseEmailProvider(process.env.EMAIL_PROVIDER);
+  const deployment = parseDeploymentEnvironment(process.env.DEPLOYMENT_ENV);
+  if (deployment === "production" && process.env.BKE_RUNTIME === "workers" && mode === "resend") {
+    throw new Error("Workers production requires Cloudflare primary email; Resend is fallback only");
+  }
+  if (deployment === "production" &&
+      (mode === "log" || process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true")) {
+    throw new Error("Production business email must have an enabled external transport");
+  }
+  const sandboxTo = process.env.RESEND_SANDBOX_TO?.trim();
+  if (process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true" || (nodeEnv === "test" && !sandboxTo)) {
+    return loggingProvider;
+  }
+  if (mode === "log" && !sandboxTo) return loggingProvider;
+  const selected = mode === "cloudflare"
+    ? createCloudflareEmailProvider({
+        sendPrimary: process.env.BKE_RUNTIME === "workers"
+          ? operationResource<CloudflareEmailSend | undefined>(CLOUDFLARE_EMAIL_SEND_RESOURCE, () => undefined)
+          : undefined,
+        resendFallback: createResendEmailProvider({
+          async resolveConfiguration() {
+            const sender = parseEmailSender(process.env.EMAIL_FROM);
+            const configuration = await resolveResendConfiguration();
+            if (!sender || sender.email.toLowerCase() !== configuration.senderEmail.toLowerCase()) {
+              throw new EmailDeliveryError(
+                { provider: "resend", category: "SENDER_REJECTED" },
+                { acceptance: "REJECTED", retry: "STOP", fallbackEligible: false, preCall: true },
+              );
+            }
+            return configuration;
+          },
+        }),
+      })
+    : resendProvider;
+  if (!sandboxTo) return selected;
+  return Object.freeze({
+    async send(message: EmailMessage) {
+      if (message.to.toLowerCase() !== sandboxTo.toLowerCase()) {
+        throw new EmailDeliveryError(
+          { provider: "sandbox", category: "INVALID_RECIPIENT" },
+          { acceptance: "REJECTED", retry: "STOP", fallbackEligible: false, preCall: true },
+        );
+      }
+      return selected.send(message);
+    },
+  });
+}
+
+// Transport selection is lazy: queue-only imports never validate email settings.
+export const emailProvider: EmailProvider = Object.freeze({
+  async send(message: EmailMessage) { return runtimeProvider().send(message); },
 });
 
 const DURABLE_EMAIL_TYPES = Object.freeze([
@@ -92,11 +135,14 @@ type DispatchRow = Readonly<{
   payload: Record<string, unknown>;
 }>;
 
-const emailOutboxStore: EmailOutboxStore = Object.freeze({
+export function createPostgresEmailOutboxStore(getPool: typeof getPostgresPool = getPostgresPool): EmailOutboxStore {
+  return Object.freeze({
   async recoverExpiredClaims(now: Date) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
-          SET "status" = 'FAILED', "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
+          SET "status" = 'PERMANENTLY_FAILED', "lastError" = 'DELIVERY_UNCONFIRMED',
+              "attempts" = "attempts" + 1,
+              "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
         WHERE "status" = 'PROCESSING' AND "claimExpiresAt" < $1`,
       [now],
     );
@@ -106,7 +152,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   async listDispatchable(
     { limit, maxAttempts }: Readonly<{ limit: number; maxAttempts: number }>,
   ): Promise<readonly EmailOutboxRecord[]> {
-    const result = await getPostgresPool().query<DispatchRow>(
+    const result = await getPool().query<DispatchRow>(
       `SELECT "id", "status"::text AS "status", "attempts", "recipient", "subject", "type", "payload"
          FROM "EmailOutbox"
         WHERE "status" IN ('PENDING', 'FAILED')
@@ -130,7 +176,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   },
 
   async claim(input: Parameters<EmailOutboxStore["claim"]>[0]) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'PROCESSING', "claimedBy" = $4, "claimedAt" = $5, "claimExpiresAt" = $6
         WHERE "id" = $1 AND "status"::text = $2 AND "attempts" = $3`,
@@ -140,7 +186,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   },
 
   async markSent(input: Parameters<EmailOutboxStore["markSent"]>[0]) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'SENT', "sentAt" = $3, "attempts" = $4, "lastError" = NULL,
               "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
@@ -151,9 +197,9 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   },
 
   async markFailed(input: Parameters<EmailOutboxStore["markFailed"]>[0]) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
-          SET "status" = $3::"EmailOutboxStatus", "attempts" = $4, "lastError" = $5,
+          SET "status" = $3, "attempts" = $4, "lastError" = $5,
               "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
         WHERE "id" = $1 AND "status" = 'PROCESSING' AND "claimedBy" = $2`,
       [input.id, input.workerId, input.status, input.attempts, input.failureCode],
@@ -161,6 +207,9 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     return (result.rowCount ?? 0) > 0;
   },
 });
+}
+
+const emailOutboxStore = createPostgresEmailOutboxStore();
 
 export async function dispatchEmailOutbox(
   limit = 20,
@@ -174,7 +223,7 @@ export async function dispatchEmailOutbox(
     log: (event, result) => console.info(event, result),
   };
   return dispatchPlatformEmailOutbox(
-    { store: emailOutboxStore, provider: runtimeEmailProvider },
+    { store: emailOutboxStore, provider: runtimeProvider() },
     platformOptions,
   );
 }

@@ -118,4 +118,31 @@ describe("active web readiness storage boundary", () => {
     expect(mocks.redisPing).toHaveBeenCalled();
     expect(mocks.s3Send).not.toHaveBeenCalled();
   });
+  it("keeps readiness down when Cloudflare primary lacks its scoped binding", async () => {
+    vi.stubEnv("EMAIL_PROVIDER", "cloudflare");
+    vi.stubEnv("EMAIL_FROM", "BKE <billing@bke.example>");
+    vi.stubEnv("BKE_RUNTIME", "workers");
+    const readiness = await getReadiness();
+    expect(await readiness()).toMatchObject({ ready: false, checks: { providers: "down" } });
+  });
+
+  it("checks Cloudflare configuration without sending or requiring Resend credentials", async () => {
+    vi.stubEnv("EMAIL_PROVIDER", "cloudflare");
+    vi.stubEnv("EMAIL_FROM", "BKE <billing@bke.example>");
+    vi.stubEnv("BKE_RUNTIME", "workers");
+    vi.stubEnv("RESEND_API_KEY", "");
+    const { withOperationResponse, operationResource } = await import("@/platform/host/operation-scope");
+    const { CLOUDFLARE_EMAIL_SEND_RESOURCE } = await import("@/platform/email/cloudflare-provider");
+    const send = vi.fn(async () => ({ messageId: "not-actually-sent" }));
+    const waits: Promise<unknown>[] = [];
+    const readiness = await getReadiness();
+    const response = await withOperationResponse("postgresql://fixture@db.example/test", async () => {
+      operationResource(CLOUDFLARE_EMAIL_SEND_RESOURCE, () => send);
+      return Response.json(await readiness());
+    }, pending => waits.push(pending));
+    expect(await response.json()).toMatchObject({ ready: true, checks: { providers: "up" } });
+    await Promise.all(waits);
+    expect(send).not.toHaveBeenCalled();
+  });
+
 });

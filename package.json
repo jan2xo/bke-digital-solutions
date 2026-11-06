@@ -63,7 +63,8 @@
     "workers:types": "wrangler types --env-interface CloudflareEnv workers/env.d.ts",
     "workers:typecheck": "tsc --project workers/tsconfig.json --noEmit",
     "workers:preview": "wrangler dev --local",
-    "workers:smoke": "node scripts/workers-smoke.mjs"
+    "workers:smoke": "node scripts/workers-smoke.mjs",
+    "pretypecheck": "npm run workers:types && npm run workers:typecheck"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.883.0",

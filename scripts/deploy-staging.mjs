@@ -172,6 +172,8 @@ async function verifyHyperdrive(directUrl) {
 export function buildStagingArtifacts(sourceConfig, env, driveId) {
   const direct = assertStagingSettings(env);
   const config = structuredClone(sourceConfig);
+  // The authorized Staging operation is log-only; do not grant mail capability.
+  delete config.send_email;
   if (config.name !== "bke-digital-solutions") fail("Unexpected Worker name");
   if (config.observability?.enabled !== true || config.observability?.logs?.enabled === false || config.observability?.redact_query_string !== true) fail("Staging deployment must keep logs enabled and redact query strings in observability logs");
   if (config.route || config.routes) fail("Custom routes are forbidden for workers.dev-only Staging");

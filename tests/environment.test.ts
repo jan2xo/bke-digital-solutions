@@ -101,3 +101,14 @@ describe("GitHub-only protected storage configuration", () => {
     expect(parsed).not.toHaveProperty("S3_ACCESS_KEY_ID");
   });
 });
+
+describe("Cloudflare business email selection", () => {
+  it("accepts the primary mode without making Resend an obligatory credential", () => {
+    expect(parseEnvironment({ ...base, EMAIL_PROVIDER: "cloudflare", RESEND_API_KEY: undefined }))
+      .toMatchObject({ EMAIL_PROVIDER: "cloudflare" });
+  });
+  it("rejects an invalid or injected Cloudflare sender", () => {
+    expect(() => parseEnvironment({ ...base, EMAIL_PROVIDER: "cloudflare", EMAIL_FROM: "bad\r\nBcc: outsider@bke.example" }))
+      .toThrow("EMAIL_FROM");
+  });
+});
