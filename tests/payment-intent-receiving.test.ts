@@ -7,7 +7,6 @@ import type { PaymentsPaymentIntentAttemptRecord } from "@bke/payments/logic/pay
 import type { PaymentsProviderEventRecord, PaymentsProviderEventRepository } from "@bke/payments/logic/provider-event-repository";
 import type { PaymentsSettlementFactClaim, PaymentsSettlementFactRepository } from "@bke/payments/logic/settlement-fact-repository";
 import type { PaymentsSettlementFactSnapshot } from "@bke/payments/contracts/settlement-fact.contract";
-import type { PaymentsVerifiedProviderEventSnapshot } from "@bke/payments/contracts/provider-event-ingestion.contract";
 import { createPaymentsProviderEventIngestionCapability } from "@bke/payments/logic/provider-event-ingestion";
 import { createPaymentsSettlementFactCapability } from "@bke/payments/logic/settlement-fact";
 import { ignoredNonFinancialPaymentEventCode } from "@/apps/web/payments/webhook-event-policy";
@@ -49,7 +48,7 @@ function signedEvent(options: {
         attributes: {},
       }
     : {
-        id: options.externalPaymentId ?? "pay_synthetic_1",
+        id: options.externalCheckoutId ?? options.externalPaymentId ?? "pay_synthetic_1",
         type: options.externalCheckoutId ? "checkout_session" : "payment",
         attributes: {
           ...(options.paymentIntentId ? { payment_intent_id: options.paymentIntentId } : {}),
@@ -127,7 +126,7 @@ function eventRepository(): {
   readonly records: Map<string, PaymentsProviderEventRecord>;
 } {
   const records = new Map<string, PaymentsProviderEventRecord>();
-  const repository: PaymentsProviderEventRepository = Object.freeze({
+  const repository: PaymentsProviderEventRepository = Object.freeze<PaymentsProviderEventRepository>({
     async claim(input) {
       const key = input.provider + ":" + input.eventId;
       const existing = records.get(key);
@@ -149,17 +148,17 @@ function settlementRepository(records: Map<string, PaymentsProviderEventRecord>,
 } = {}) {
   const facts: PaymentsSettlementFactSnapshot[] = [];
   let claimCount = 0;
-  const repository: PaymentsSettlementFactRepository = Object.freeze({
-    async findProviderEventById(id) {
+  const repository: PaymentsSettlementFactRepository = Object.freeze<PaymentsSettlementFactRepository>({
+    async findProviderEventById(id: string) {
       return [...records.values()].find((record) => record.id === id) ?? null;
     },
-    async findCheckoutAttempt(providerName, externalCheckoutId) {
+    async findCheckoutAttempt(providerName: string, externalCheckoutId: string) {
       const attempt = options.hostedAttempt ?? null;
       return attempt && attempt.provider === providerName && attempt.externalCheckoutId === externalCheckoutId
         ? attempt
         : null;
     },
-    async findPaymentIntentAttempt(providerName, paymentIntentId) {
+    async findPaymentIntentAttempt(providerName: string, paymentIntentId: string) {
       const attempt = options.intentAttempt === undefined ? paymentIntentAttempt() : options.intentAttempt;
       return attempt && attempt.provider === providerName && attempt.paymentIntentId === paymentIntentId
         ? attempt
@@ -354,14 +353,19 @@ describe("Payment Intent webhook receiving", () => {
       name: "mock",
       async createCheckout() { throw new Error("checkout must not be called"); },
     };
-    const module = createPaymentsModule({
+    const paymentsModule = createPaymentsModule({
       connectionString: "postgresql://fixture:fixture@127.0.0.1:1/fixture",
       provider,
       eventVerifier: { name: "mock", async verifyAndParse() { throw new Error("webhook must not be called"); } },
       refundProvider: { name: "mock", async createRefund() { throw new Error("refund must not be called"); } },
       reconciliationProvider: { name: "mock", async retrievePayment() { throw new Error("reconciliation must not be called"); } },
     });
-    const registration = module.start().find((item) => item.id === PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID);
+    const safeResolver: CapabilityResolver = {
+      has() { return false; },
+      get<T>() { throw new Error("disabled fixture must not resolve capabilities"); },
+    };
+    const registrations = await paymentsModule.start(safeResolver);
+    const registration = registrations.find((item) => item.id === PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID);
     expect(registration).toBeDefined();
     const capability = registration?.value as PaymentsPaymentIntentCapability;
 
@@ -386,11 +390,12 @@ describe("Payment Intent webhook receiving", () => {
       async grant() { return { status: "FAILED" as const, code: "PERSISTENCE_UNAVAILABLE" as const }; },
     };
     const resolver = { get: () => inert } as unknown as CapabilityResolver;
-    const module = createCommerceModule({
+    const commerceModule = createCommerceModule({
       connectionString: "postgresql://fixture:fixture@127.0.0.1:1/fixture",
       claimUnits: { async issue() { throw new Error("claim issuance must not run"); } },
     });
-    const registration = module.start(resolver).find((item) => item.id === COMMERCE_PAYMENT_INTENT_CHECKOUT_CAPABILITY_ID);
+    const registrations = await commerceModule.start(resolver);
+    const registration = registrations.find((item) => item.id === COMMERCE_PAYMENT_INTENT_CHECKOUT_CAPABILITY_ID);
     expect(registration).toBeDefined();
     const capability = registration?.value as CommercePaymentIntentCheckoutCapability;
 

@@ -20,7 +20,7 @@ const prisma = runPostgres ? new PrismaClient({ adapter: new PrismaPg({ connecti
 // The normal receiver resolves PayMongo credentials through its environment-backed
 // provider configuration. These are fixture-only test credentials; no API request
 // is made by webhook verification or settlement.
-const webhookSecret = "whsec_bke_postgres_payment_intent_fixture_only";
+const webhookSecret = "whsk_bke_postgres_payment_intent_fixture_only";
 const providerEnvKeys = ["PAYMENT_PROVIDER", "PROVIDER_CONFIG_SOURCE", "PROVIDER_CONFIG_ALLOW_ENV_FALLBACK", "PAYMONGO_LIVEMODE", "PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET"] as const;
 const priorProviderEnv = new Map(providerEnvKeys.map((key) => [key, process.env[key]]));
 let processPaymentWebhook: typeof import("../apps/web/payments/webhook-processing").processPaymentWebhook;

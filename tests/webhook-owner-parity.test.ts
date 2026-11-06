@@ -62,8 +62,8 @@ describe("payment webhook owner-adoption parity", () => {
     expect(processorSource).toContain('event.type === "payment.paid"');
     expect(processorSource).toContain('event.type === "payment.failed"');
     expect(processorSource).toContain('event.type === "payment.refund.updated"');
-    expect(processorSource).toContain('event.type === "unknown"');
-    expect(processorSource).toContain('PAYMENT_EVENT_UNSUPPORTED');
+    expect(eventPolicySource).toContain('case "unknown"');
+    expect(eventPolicySource).toContain('"PAYMENT_EVENT_UNSUPPORTED"');
     expect(processorSource).toContain('db.$transaction');
     expect(processorSource).toContain('isolationLevel: "Serializable"');
     expect(processorSource).toContain('fulfillOrderLicensing');
