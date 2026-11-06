@@ -89,6 +89,15 @@ describe("intent-driven certification foundation", () => {
     expect(workflow).not.toContain("github.event.pull_request");
   });
 
+  it("isolates Platform proof from caller-named reusable workflow cancellation", () => {
+    const platform = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
+    expect(platform).toContain("group: platform-${{ inputs.source_sha }}");
+    expect(platform).toContain("cancel-in-progress: false");
+    expect(platform).not.toContain("group: ${{ github.workflow }}");
+    expect(platform).toContain("Verify Platform and staging workflow contracts");
+    const stage = readFileSync(`${workflowsDir}/stage.yml`, "utf8");
+    expect(stage).toContain("needs: [plan, platform]");
+  });
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
     const workflow = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
 
