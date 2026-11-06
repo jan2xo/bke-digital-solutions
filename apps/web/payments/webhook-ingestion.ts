@@ -21,6 +21,7 @@ type StoredProviderEvent = Readonly<{
   type: PaymentsVerifiedProviderEvent["type"];
   externalPaymentId?: string;
   externalCheckoutId?: string;
+  paymentIntentId?: string;
   reference?: string;
   externalRefundId?: string;
   refundStatus?: PaymentsVerifiedProviderEvent["refundStatus"];
@@ -41,6 +42,7 @@ type ProviderEventRow = Readonly<{
   type: PaymentsProviderEventRecord["type"];
   externalPaymentId: string | null;
   externalCheckoutId: string | null;
+  paymentIntentId: string | null;
   reference: string | null;
   externalRefundId: string | null;
   refundStatus: PaymentsProviderEventRecord["refundStatus"];
@@ -65,6 +67,7 @@ function storedEvent(input: PaymentsProviderEventClaim): StoredProviderEvent {
     type: input.type,
     ...(input.externalPaymentId ? { externalPaymentId: input.externalPaymentId } : {}),
     ...(input.externalCheckoutId ? { externalCheckoutId: input.externalCheckoutId } : {}),
+    ...(input.paymentIntentId ? { paymentIntentId: input.paymentIntentId } : {}),
     ...(input.reference ? { reference: input.reference } : {}),
     ...(input.externalRefundId ? { externalRefundId: input.externalRefundId } : {}),
     ...(input.refundStatus ? { refundStatus: input.refundStatus } : {}),
@@ -125,11 +128,11 @@ const repository: PaymentsProviderEventRepository = Object.freeze({
       await tx.$executeRaw`
         INSERT INTO "PaymentProviderEvent" (
           "id", "provider", "eventId", "payloadHash", "eventFingerprint", "rawType", "type",
-          "externalPaymentId", "externalCheckoutId", "reference", "externalRefundId", "refundStatus",
+          "externalPaymentId", "externalCheckoutId", "paymentIntentId", "reference", "externalRefundId", "refundStatus",
           "amountMinor", "currency", "livemode", "occurredAt"
         ) VALUES (
           ${operational.id}, ${input.provider}, ${input.eventId}, ${operational.payloadHash}, ${fingerprint},
-          ${input.rawType}, ${input.type}, ${input.externalPaymentId}, ${input.externalCheckoutId}, ${input.reference},
+          ${input.rawType}, ${input.type}, ${input.externalPaymentId}, ${input.externalCheckoutId}, ${input.paymentIntentId}, ${input.reference},
           ${input.externalRefundId}, ${input.refundStatus}, ${input.amountMinor}, ${input.currency},
           ${operational.livemode}, ${operational.occurredAt ?? input.occurredAt}
         )
@@ -137,7 +140,7 @@ const repository: PaymentsProviderEventRepository = Object.freeze({
       `;
       const ownerRows = await tx.$queryRaw<ProviderEventRow[]>`
         SELECT "id", "provider", "eventId", "payloadHash", "eventFingerprint", "rawType", "type",
-               "externalPaymentId", "externalCheckoutId", "reference", "externalRefundId", "refundStatus",
+               "externalPaymentId", "externalCheckoutId", "paymentIntentId", "reference", "externalRefundId", "refundStatus",
                "amountMinor", "currency", "livemode", "occurredAt", "receivedAt"
           FROM "PaymentProviderEvent"
          WHERE "provider" = ${input.provider} AND "eventId" = ${input.eventId}
