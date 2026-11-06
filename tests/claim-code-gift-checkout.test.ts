@@ -9,7 +9,9 @@ describe("Claim Code gift checkout", () => {
     expect(validation).toContain('purchaseFor: z.enum(["SELF", "GIFT"])');
     expect(route).toContain('const giftPurchase = input.purchaseFor === "GIFT"');
     expect(route).toContain('fulfillmentMode: giftPurchase ? "CLAIM_CODE" : "ACCOUNT_ENTITLEMENT"');
-    expect(route).toContain("fulfillmentSnapshot: {}");
+    // The classic checkout may use an empty snapshot; Payment Intents now
+    // persist a server-bound recovery snapshot. Exercise both POST contracts
+    // in payment-intent-checkout.routes.test.ts rather than freezing source text.
     expect(route).not.toContain("recipientEmail");
   });
 

@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 const processorSource = readFileSync("apps/web/payments/webhook-processing.ts", "utf8");
 const ingestionSource = readFileSync("apps/web/payments/webhook-ingestion.ts", "utf8");
 const settlementSource = readFileSync("apps/web/payments/settlement-transaction.ts", "utf8");
+const eventPolicySource = readFileSync("apps/web/payments/webhook-event-policy.ts", "utf8");
 const licensingSource = readFileSync("apps/web/licensing/entitlement-management.ts", "utf8");
 const publicRouteSource = readFileSync("app/api/webhooks/payments/route.ts", "utf8");
 const adminRouteSource = readFileSync("app/api/admin/payments/webhooks/[id]/route.ts", "utf8");
@@ -61,8 +62,8 @@ describe("payment webhook owner-adoption parity", () => {
     expect(processorSource).toContain('event.type === "payment.paid"');
     expect(processorSource).toContain('event.type === "payment.failed"');
     expect(processorSource).toContain('event.type === "payment.refund.updated"');
-    expect(processorSource).toContain('event.type === "unknown"');
-    expect(processorSource).toContain('PAYMENT_EVENT_UNSUPPORTED');
+    expect(eventPolicySource).toContain('case "unknown"');
+    expect(eventPolicySource).toContain('"PAYMENT_EVENT_UNSUPPORTED"');
     expect(processorSource).toContain('db.$transaction');
     expect(processorSource).toContain('isolationLevel: "Serializable"');
     expect(processorSource).toContain('fulfillOrderLicensing');
@@ -73,6 +74,22 @@ describe("payment webhook owner-adoption parity", () => {
     expect(processorSource).toContain('event: "PAYMENT_RECEIVED"');
     expect(notificationCenterSource).toContain("NOTIFICATIONS_INTENT_CAPABILITY_ID");
     expect(notificationCenterSource).toContain("NOTIFICATIONS_INBOX_POLICY_CAPABILITY_ID");
+  });
+
+  it("locks Payment Intent identity through signed ingestion to strict financial settlement", () => {
+    expect(ingestionSource).toContain('"paymentIntentId"');
+    expect(ingestionSource).toContain('${input.paymentIntentId}');
+    expect(settlementSource).toContain("findPaymentIntentAttempt");
+    expect(settlementSource).toContain('FROM "PaymentIntentAttempt"');
+    expect(settlementSource).toContain('"livemode" = ${expectedLivemode}');
+    expect(settlementSource).toContain('"paymentIntentId"');
+    expect(processorSource).toContain("ignoredNonFinancialPaymentEventCode(event.type)");
+    expect(processorSource).toContain("!event.externalPaymentId || !knownPayment || knownPayment.orderId !== order.id");
+    expect(eventPolicySource).toContain('"PAYMENT_INTENT_LIFECYCLE_IGNORED"');
+    const ignoredIndex = processorSource.indexOf("ignoredNonFinancialPaymentEventCode(event.type)");
+    const financialBranchIndex = processorSource.indexOf('event.type === "payment.paid"');
+    expect(ignoredIndex).toBeGreaterThanOrEqual(0);
+    expect(financialBranchIndex).toBeGreaterThan(ignoredIndex);
   });
 
   it("locks all production callers onto the V2 processor and retires lib/webhooks.ts", () => {

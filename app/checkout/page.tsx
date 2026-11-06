@@ -98,7 +98,9 @@ export default async function CheckoutReview({
   const legalDocuments = requirementsResult.requirements;
 
   const authorizedAccounts = await listPurchaseAuthorizedAccounts(principal.id);
-  const giftCheckoutEnabled = getRuntimeEnvironment().CLAIM_CODE_CHECKOUT_ENABLED;
+  const runtimeEnvironment = getRuntimeEnvironment();
+  const giftCheckoutEnabled = runtimeEnvironment.CLAIM_CODE_CHECKOUT_ENABLED;
+  const paymentIntentEnabled = runtimeEnvironment.PROVIDER_CONFIG_SOURCE === "environment" && runtimeEnvironment.PAYMENT_PROVIDER === "paymongo" && Boolean(runtimeEnvironment.PAYMONGO_PUBLIC_KEY);
   const annual =
     plan.type === "ANNUAL"
       ? { savingsMinor: terms.savingsMinor, effectiveMonthlyMinor: terms.effectiveMonthlyMinor ?? 0 }
@@ -139,6 +141,7 @@ export default async function CheckoutReview({
         purchasePlanId={plan.id}
         currentEmail={principal.email}
         giftCheckoutEnabled={giftCheckoutEnabled}
+        paymentIntentEnabled={paymentIntentEnabled}
         accounts={authorizedAccounts.map((account) => ({ id: account.id, name: account.displayName }))}
         legalDocuments={legalDocuments.map((document) => ({
           versionId: document.documentVersionId,

@@ -43,12 +43,36 @@ Use the existing /certify intent for exact-head checks. The trusted default-bran
 - [ ] Verify private encrypted backup execution through its Node-capable path.
 - [ ] Obtain separate integration/merge and deployment authority.
 
+## Payment Intent ownership and recovery
+
+Payments 0.10.0 and Commerce 0.16.0 are published shared dependencies, adopted directly in PR266. The lock pins the actual released bytes. Consumer certification compares the reviewed SHA-256 and derived SHA-512 integrity with every shipped installed file. GitHub native immutable-release locking is not enabled; version-reuse policy and verified digests are separate controls.
+
+Commerce owns authorization delegation, legal checking, renewal/offer pricing, orders and fulfillment. Payments owns provider operations, durable intent attempts and verified financial facts. The browser supplies an opaque retry nonce; the server scopes its source to the authenticated principal/account and binds the original commercial request. A nonce is not authorization, a price or a payment confirmation.
+
+The host resolves an existing canonical order before creating another. Automatic paid recovery requires a matching durable Payments attempt: a bare PENDING order is not evidence that renewal and offer preparation completed. Unproven preparation and interrupted zero-payment fulfillment return controlled recovery-required state without provider calls. Their manual repair remains an operational acceptance item; do not silently charge the base price, rerun current catalog pricing over an existing intent, or manufacture another source. Successful initial zero-payment/gift fulfillment continues through the existing Commerce owner.
+
+The first-party QR path keeps the provider client key on the server. It returns the final payable amount/currency and QR instructions. The renderer accepts bounded PNG data images from the documented PayMongo Base64 response, plus HTTPS images; it rejects active MIME types, invalid PNG signatures and oversized data. Polling reads authenticated local order state; provider lifecycle success does not grant rights or establish payment completion. The ordinary mock/hosted path remains selected by server configuration. Staging stays mock payments and log-only email.
+
+Verified webhook ingestion and completed processing are distinct durable stages. A crash after a RECEIVED claim must remain recoverable. Only PROCESSED/IGNORED are terminal duplicates; nonterminal retries and failure writes cannot downgrade terminal success. The existing bounded payment-operations job also selects RECEIVED claims older than five minutes. Existing provider-event/payment/intent identity and the transaction-bound Commerce, Entitlements and Licensing owners protect financial idempotency. No new queue, lease service or schema is required for that recovery.
+
+### Evidence and remaining acceptance
+
+- [x] Publish and verify the separately authorized shared [Payments 0.10.0](https://github.com/jan2xo/bke-libraries-typescript/releases/tag/payments-v0.10.0) and [Commerce 0.16.0](https://github.com/jan2xo/bke-libraries-typescript/releases/tag/commerce-v0.16.0) releases.
+- [x] Verify the bounded backend/adoption slice at 368b576: [independent source review](https://github.com/jan2xo/bke-digital-solutions/pull/266#pullrequestreview-5799010101), actual 809-test core run and package/composition/standalone checks. That review does not transfer to later commits or prove browser/provider/Workers acceptance.
+- [x] Identify the pre-existing [interrupted-claim recovery and terminal-state race](https://github.com/jan2xo/bke-digital-solutions/pull/266#issuecomment-6683239287) from actual source; add interruption/concurrency and delayed failure-path regression coverage.
+- [ ] Certify the final exact head, including recovery, authenticated API/request binding, actual PostgreSQL decoder compatibility, free/offer/renewal/gift boundaries, build/security and relevant module checks.
+- [ ] Obtain independent source acceptance of the final combined checkout/recovery delta.
+- [ ] Exercise QR UI reload, lost-response and deferred-response/terminal ordering in an actual browser runtime. Static typing and mocked routes do not prove those browser transitions.
+- [ ] Run the final application through workerd and real protected configuration. The trusted-main core workflow used for the backend checkpoint did not execute the candidate Workers job.
+- [ ] Complete the already-authorized first Staging administrator operation through the existing audited CLI in a permitted protected execution context; verify role/audit/session revocation and human Google re-login. Do not substitute raw role SQL, an email grant or a public bootstrap route.
+- [ ] Verify live merchant methods/capabilities and prepare separately guarded live receiving. Do not put live credentials into mock-only Staging.
+- [ ] Approve an exact real payer/amount/refund scope, then verify provider settlement, invoice, entitlement, license issuance/activation and reconciliation. Fixtures and sandbox results cannot replace that milestone.
+- [ ] Review production legal/business disclosures, sending configuration, operational recovery and commercial activation separately.
+
 ## Continue the product plan
 
-After the held authentication/integration source passes its required gates, continue through the existing provider boundaries:
+1. Cloudflare primary business email with Resend fallback is implemented in the held source. It is independent of Google sign-in. The approved policy stops on uncertain provider acceptance and requires review; fallback is limited to definite eligible rejection. Actual sender activation and delivery remain separate acceptance gates. Keep Node/Docker support and private database backups distinct from public GitHub software distribution.
+2. Complete first-party PayMongo checkout directly in PR266 using the published owners above. PR275 remains parked as reference material. The final target is LIVE receiving, not a substituted sandbox milestone. Retain server pricing, explicit current legal consent, account/role authorization, source-bound recovery, central licensing and genuine bank/wallet authorization.
+3. Complete Google administration and exercise purchasing, Claim Codes, activation/revocation, protected operations and GitHub download routing through the combined application. Missing or stale signed Google auth_time keeps sensitive actions locked; no BKE MFA is reintroduced.
 
-1. Implement Cloudflare primary business email with Resend fallback. Neither may become an authentication dependency. Preserve durable invoice/security delivery ownership. Do not retry or fall back blindly after ambiguous provider acceptance; Cloudflare's binding documentation does not provide an idempotency input. Confirm the delivery-uncertainty policy and actual sender/configuration before enabling real sending. Keep Node/Docker fallback capability explicit.
-2. Complete the existing branded PayMongo checkout receiving requirements from PR271, preserving server-owned pricing, order/payment idempotency, entitlement issuance and licensing authorization.
-3. Exercise purchasing, Claim Codes, license activation/revocation, protected/admin operations and GitHub download routing through the resulting integrated application.
-
-No production/apex DNS change, live database mutation, merge, deployment, paid-resource change, new secret destination or live mail enabling is included in this plan's source authorization.
+No production/apex DNS change, live database mutation, PR266 merge/deployment, new secret destination, real payment/refund or live mail enabling is included in this runbook's source authorization.

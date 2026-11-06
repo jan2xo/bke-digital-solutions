@@ -24,13 +24,16 @@ export const loginSchema = z.object({
   password: z.string().min(1).max(128),
 });
 
+export const opaqueEntityIdSchema = z.string().trim().min(1).max(128).regex(/^[A-Za-z0-9_-]+$/);
+
 export const checkoutSchema = z
   .object({
-    purchasePlanId: z.string().cuid(),
-    customerAccountId: z.string().cuid(),
+    purchasePlanId: opaqueEntityIdSchema,
+    customerAccountId: opaqueEntityIdSchema,
+    paymentIntentNonce: z.uuid().optional(),
     purchaseFor: z.enum(["SELF", "GIFT"]).default("SELF"),
     offerIdentifier: z.string().trim().min(1).max(100).optional(),
-    legalVersionIds: z.array(z.string().cuid()).min(2).max(3),
+    legalVersionIds: z.array(opaqueEntityIdSchema).min(2).max(3),
   })
   .strict();
 
