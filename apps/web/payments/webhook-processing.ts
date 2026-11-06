@@ -138,12 +138,11 @@ async function ownerEventForStoredWebhook(row: {
 }
 
 async function recordFailure(eventId: string, code: string, retryable: boolean) {
-  await db.webhookEvent.update({
+  await db.webhookEvent.updateMany({
     where: {
-      provider_externalEventId: {
-        provider: paymentProvider.name,
-        externalEventId: eventId,
-      },
+      provider: paymentProvider.name,
+      externalEventId: eventId,
+      status: { in: ["RECEIVED", "FAILED"] },
     },
     data: {
       status: "FAILED",
@@ -755,12 +754,12 @@ export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
 export async function retryStoredWebhook(webhookId: string) {
   const row = await db.webhookEvent.findUnique({ where: { id: webhookId } });
   if (!row) throw new Error("NOT_FOUND");
-  if (row.status !== "FAILED" || !row.normalizedData) {
+  if ((row.status !== "RECEIVED" && row.status !== "FAILED") || !row.normalizedData) {
     throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
   }
   const event = await ownerEventForStoredWebhook(row);
-  await db.webhookEvent.update({
-    where: { id: row.id },
+  const retry = await db.webhookEvent.updateMany({
+    where: { id: row.id, status: { in: ["RECEIVED", "FAILED"] } },
     data: {
       status: "RECEIVED",
       processingAttempts: { increment: 1 },
@@ -769,6 +768,16 @@ export async function retryStoredWebhook(webhookId: string) {
       lastErrorCode: null,
     },
   });
+  if (retry.count === 0) {
+    const raced = await db.webhookEvent.findUniqueOrThrow({
+      where: { id: row.id },
+      select: { status: true },
+    });
+    if (raced.status === "PROCESSED" || raced.status === "IGNORED") {
+      return { duplicate: true as const };
+    }
+    throw new PaymentLifecycleError("PAYMENT_RECONCILIATION_REQUIRED");
+  }
   try {
     return await processVerifiedEvent(event);
   } catch (error) {

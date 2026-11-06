@@ -24,6 +24,8 @@ const webhookSecret = "whsk_bke_postgres_payment_intent_fixture_only";
 const providerEnvKeys = ["PAYMENT_PROVIDER", "PROVIDER_CONFIG_SOURCE", "PROVIDER_CONFIG_ALLOW_ENV_FALLBACK", "PAYMONGO_LIVEMODE", "PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET"] as const;
 const priorProviderEnv = new Map(providerEnvKeys.map((key) => [key, process.env[key]]));
 let processPaymentWebhook: typeof import("../apps/web/payments/webhook-processing").processPaymentWebhook;
+let retryStoredWebhook: typeof import("../apps/web/payments/webhook-processing").retryStoredWebhook;
+let ingestPaymentWebhook: typeof import("../apps/web/payments/webhook-ingestion").ingestPaymentWebhook;
 
 const suffix = randomUUID().replaceAll("-", "");
 const id = (name: string) => `${name}_${suffix}`;
@@ -73,7 +75,8 @@ describe.skipIf(!runPostgres)("PayMongo PaymentIntent receiving on isolated Post
     process.env.PAYMONGO_LIVEMODE = "false";
     process.env.PAYMONGO_SECRET_KEY = "sk_test_bke_postgres_fixture";
     process.env.PAYMONGO_WEBHOOK_SECRET = webhookSecret;
-    ({ processPaymentWebhook } = await import("../apps/web/payments/webhook-processing"));
+    ({ processPaymentWebhook, retryStoredWebhook } = await import("../apps/web/payments/webhook-processing"));
+    ({ ingestPaymentWebhook } = await import("../apps/web/payments/webhook-ingestion"));
 
     const seededPrice = await prisma.price.findFirst({
       where: { active: true, billingType: "ONE_TIME", amountMinor: { gt: 0 }, product: { active: true } },
@@ -199,7 +202,39 @@ describe.skipIf(!runPostgres)("PayMongo PaymentIntent receiving on isolated Post
     expect(await countFinancialRows()).toEqual({ payments: 0, licenses: 0, invoices: 0, rights: 0, intentFacts: 0 });
 
     const paid = paymentEvent(`evt_${suffix}_paid`);
-    await expect(processPaymentWebhook(paid.raw, paid.headers)).resolves.toMatchObject({ processed: true });
+    // Commit the authentic webhook and Payments event, then simulate a crash before
+    // processing begins. No financial state may exist until the redelivery resumes it.
+    const ingested = await ingestPaymentWebhook(paid.raw, paid.headers);
+    expect(ingested.duplicate).toBe(false);
+    const orphan = await prisma.webhookEvent.findUniqueOrThrow({
+      where: { provider_externalEventId: { provider: "paymongo", externalEventId: `evt_${suffix}_paid` } },
+    });
+    expect(orphan.status).toBe("RECEIVED");
+    expect(await countFinancialRows()).toEqual({ payments: 0, licenses: 0, invoices: 0, rights: 0, intentFacts: 0 });
+
+    // Concurrent same-event redeliveries may race; settlement identity plus guarded
+    // failure writes must leave one completed financial identity.
+    const concurrent = await Promise.allSettled([
+      processPaymentWebhook(paid.raw, paid.headers),
+      processPaymentWebhook(paid.raw, paid.headers),
+    ]);
+    expect(concurrent).toHaveLength(2);
+    const rejected = concurrent.filter((result): result is PromiseRejectedResult => result.status === "rejected");
+    for (const result of rejected) {
+      expect(result.reason).toMatchObject({ code: "PAYMENT_PROCESSING_RETRYABLE" });
+    }
+    const completedBeforeRetry = concurrent.some(
+      (result) => result.status === "fulfilled" &&
+        (("processed" in result.value && result.value.processed) ||
+          ("duplicate" in result.value && result.value.duplicate)),
+    );
+    if (completedBeforeRetry) {
+      expect(await prisma.webhookEvent.findUniqueOrThrow({ where: { id: orphan.id } }))
+        .toMatchObject({ status: "PROCESSED" });
+    }
+    const recovered = await processPaymentWebhook(paid.raw, paid.headers);
+    expect(("processed" in recovered && recovered.processed) || ("duplicate" in recovered && recovered.duplicate)).toBe(true);
+    expect(await prisma.webhookEvent.findUniqueOrThrow({ where: { id: orphan.id } })).toMatchObject({ status: "PROCESSED" });
     expect(await countFinancialRows()).toEqual({ payments: 1, licenses: 1, invoices: 1, rights: 1, intentFacts: 1 });
     const normalized = await prisma.$queryRaw<Array<{ paymentIntentId: string | null }>>`SELECT "paymentIntentId" FROM "PaymentProviderEvent" WHERE "provider" = 'paymongo' AND "eventId" = ${`evt_${suffix}_paid`}`;
     expect(normalized[0]?.paymentIntentId).toBe(externalIntentId);
@@ -208,6 +243,44 @@ describe.skipIf(!runPostgres)("PayMongo PaymentIntent receiving on isolated Post
     await expect(processPaymentWebhook(paid.raw, paid.headers)).resolves.toMatchObject({ duplicate: true });
     const secondEvent = paymentEvent(`evt_${suffix}_paid_again`);
     await expect(processPaymentWebhook(secondEvent.raw, secondEvent.headers)).resolves.toMatchObject({ processed: true });
+    expect(await countFinancialRows()).toEqual({ payments: 1, licenses: 1, invoices: 1, rights: 1, intentFacts: 1 });
+
+    // Exercise conditional FAILED->RECEIVED recovery with the same signed event.
+    const failedRetryEvent = paymentEvent(`evt_${suffix}_failed_retry`);
+    await ingestPaymentWebhook(failedRetryEvent.raw, failedRetryEvent.headers);
+    const failedRetryRow = await prisma.webhookEvent.findUniqueOrThrow({
+      where: { provider_externalEventId: { provider: "paymongo", externalEventId: `evt_${suffix}_failed_retry` } },
+    });
+    await prisma.webhookEvent.updateMany({
+      where: { id: failedRetryRow.id, status: "RECEIVED" },
+      data: { status: "FAILED", error: "PAYMENT_PROCESSING_RETRYABLE", lastErrorCode: "PAYMENT_PROCESSING_RETRYABLE" },
+    });
+    await expect(processPaymentWebhook(failedRetryEvent.raw, failedRetryEvent.headers)).resolves.toMatchObject({ processed: true });
+    expect(await prisma.webhookEvent.findUniqueOrThrow({ where: { id: failedRetryRow.id } })).toMatchObject({ status: "PROCESSED" });
+
+    // The existing bounded scheduler considers RECEIVED rows stale after five minutes.
+    const { paymentOperations } = await import("../apps/web/scheduler/handlers");
+    const schedulerEvent = paymentEvent(`evt_${suffix}_scheduler_recovery`);
+    await ingestPaymentWebhook(schedulerEvent.raw, schedulerEvent.headers);
+    const schedulerRow = await prisma.webhookEvent.findUniqueOrThrow({
+      where: { provider_externalEventId: { provider: "paymongo", externalEventId: `evt_${suffix}_scheduler_recovery` } },
+    });
+    const schedulerNow = new Date();
+    const schedulerContext = { now: schedulerNow, dryRun: true, correlationId: `pi-recovery-${suffix}` };
+    const previewBeforeStale = await paymentOperations(schedulerContext);
+    await prisma.webhookEvent.update({
+      where: { id: schedulerRow.id },
+      data: {
+        receivedAt: new Date("2000-01-01T00:00:00.000Z"),
+        lastAttemptAt: new Date(schedulerNow.getTime() - 6 * 60_000),
+      },
+    });
+    const schedulerPreview = await paymentOperations(schedulerContext);
+    expect(schedulerPreview.retryableWebhooks).toBe(previewBeforeStale.retryableWebhooks + 1);
+    await retryStoredWebhook(schedulerRow.id);
+    expect(await prisma.webhookEvent.findUniqueOrThrow({ where: { id: schedulerRow.id } })).toMatchObject({ status: "PROCESSED" });
+    await expect(retryStoredWebhook(schedulerRow.id)).rejects.toThrow("PAYMENT_RECONCILIATION_REQUIRED");
+
     expect(await countFinancialRows()).toEqual({ payments: 1, licenses: 1, invoices: 1, rights: 1, intentFacts: 1 });
 
     for (const [name, resource] of [

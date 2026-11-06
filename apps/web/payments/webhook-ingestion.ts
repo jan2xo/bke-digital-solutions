@@ -229,18 +229,36 @@ export async function ingestPaymentWebhook(raw: Buffer, headers: Headers): Promi
       },
       select: { id: true, status: true },
     });
-    if (existing.status !== "FAILED") return { event, duplicate: true };
-    await db.webhookEvent.update({
-      where: { id: existing.id },
-      data: {
-        status: "RECEIVED",
-        error: null,
-        lastErrorCode: null,
-        processedAt: null,
-        processingAttempts: { increment: 1 },
-        lastAttemptAt: new Date(),
-      },
-    });
+    if (existing.status === "PROCESSED" || existing.status === "IGNORED") {
+      return { event, duplicate: true };
+    }
+    if (existing.status === "FAILED") {
+      const reset = await db.webhookEvent.updateMany({
+        where: { id: existing.id, status: "FAILED" },
+        data: {
+          status: "RECEIVED",
+          error: null,
+          lastErrorCode: null,
+          processedAt: null,
+          processingAttempts: { increment: 1 },
+          lastAttemptAt: new Date(),
+        },
+      });
+      if (reset.count === 0) {
+        const raced = await db.webhookEvent.findUniqueOrThrow({
+          where: { id: existing.id },
+          select: { status: true },
+        });
+        if (raced.status === "PROCESSED" || raced.status === "IGNORED") {
+          return { event, duplicate: true };
+        }
+        if (raced.status !== "RECEIVED") {
+          throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
+        }
+      }
+    } else if (existing.status !== "RECEIVED") {
+      throw new PaymentLifecycleError("PAYMENT_PROCESSING_RETRYABLE", true);
+    }
   }
   return { event, duplicate: false };
 }
