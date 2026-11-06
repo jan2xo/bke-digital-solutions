@@ -14,7 +14,7 @@ let adminId = "";
 let accountId = "";
 let otherAccountId = "";
 
-describe.sequential("Digital Solutions durable notification center", () => {
+describe("Digital Solutions durable notification center", { concurrent: false }, () => {
   beforeAll(async () => {
     const owner = await db.user.create({
       data: {

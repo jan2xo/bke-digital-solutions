@@ -12,7 +12,7 @@ let accountId = "";
 let fixtureDocumentId = "";
 let fixtureVersionId = "";
 
-describe.sequential("legal document persistence and immutable acceptance history", () => {
+describe("legal document persistence and immutable acceptance history", { concurrent: false }, () => {
   beforeAll(async () => {
     const user = await db.user.create({
       data: {

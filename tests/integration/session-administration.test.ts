@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/platform/host/env", () => ({ env: { SESSION_SECRET: "integration-session-secret-value", DATABASE_URL: process.env.DATABASE_URL } }));
 
-describe.sequential("administrator session administration", () => {
+describe("administrator session administration", { concurrent: false }, () => {
   let db: typeof import("@/platform/host/db")["db"];
   let userId = "";
   beforeAll(async () => {

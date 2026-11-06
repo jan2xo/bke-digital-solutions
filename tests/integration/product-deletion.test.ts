@@ -35,7 +35,7 @@ async function createCustomerOrder(productId: string, priceId: string, policyId:
   return { user, account: user.ownedAccounts[0]!, order };
 }
 
-describe.sequential("archived product permanent deletion", () => {
+describe("archived product permanent deletion", { concurrent: false }, () => {
   afterAll(async () => db.$disconnect());
 
   it("reports non-archived products as ineligible", async () => {
