@@ -6,6 +6,11 @@ on:
       source_sha:
         required: true
         type: string
+      skip_containers:
+        description: Skip Docker-only deployment image builds for Workers staging certification
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       source_sha:
@@ -163,6 +168,7 @@ jobs:
         run: npm audit --omit=dev --audit-level=critical
 
   deployment-containers:
+    if: ${{ !inputs.skip_containers }}
     name: Deployment contracts + container builds
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -212,8 +218,12 @@ jobs:
           CODE_QUALITY_BUILD: ${{ needs.code-quality-build.result }}
           SECURITY: ${{ needs.security.result }}
           DEPLOYMENT_CONTAINERS: ${{ needs.deployment-containers.result }}
+          SKIP_CONTAINERS: ${{ inputs.skip_containers }}
         run: |
-          for value in "$DATABASE_TESTS" "$CODE_QUALITY_BUILD" "$SECURITY" "$DEPLOYMENT_CONTAINERS"; do
+          for value in "$DATABASE_TESTS" "$CODE_QUALITY_BUILD" "$SECURITY"; do
             test "$value" = "success" || { echo "Required core CI module did not pass: $value"; exit 1; }
           done
+          if [ "$SKIP_CONTAINERS" != "true" ]; then
+            test "$DEPLOYMENT_CONTAINERS" = "success" || { echo "Required container certification did not pass: $DEPLOYMENT_CONTAINERS"; exit 1; }
+          fi
           echo "Required Digital Solutions certification: PASS"
