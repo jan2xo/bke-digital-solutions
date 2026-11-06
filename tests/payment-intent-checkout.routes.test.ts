@@ -152,6 +152,52 @@ beforeEach(() => {
 });
 
 describe("checkout route integration boundary", () => {
+  it.each(["mock", "paymongo"] as const)(
+    "creates an unbound Claim Code gift through the %s POST checkout owner",
+    async (mode) => {
+      configureApp();
+      state.env.CLAIM_CODE_CHECKOUT_ENABLED = true;
+      if (mode === "paymongo") {
+        state.env.PAYMENT_PROVIDER = "paymongo";
+        state.env.PAYMONGO_PUBLIC_KEY = "pk_test_fixture";
+      }
+      const response = await checkoutPost(request("/api/checkout", baseBody({
+        purchaseFor: "GIFT",
+        ...(mode === "paymongo" ? { paymentIntentNonce: nonce } : {}),
+      })));
+      expect(response.status).toBe(201);
+      const start = mode === "paymongo" ? state.commerceIntentStart : state.checkoutStart;
+      expect(start).toHaveBeenCalledTimes(1);
+      const input = start.mock.calls[0]?.[0] as {
+        principalId: string;
+        accountId: string;
+        order: { fulfillmentMode: string; fulfillmentSnapshot: unknown };
+      };
+      expect(input.principalId).toBe(state.principal.id);
+      expect(input.accountId).toBe(accountId);
+      expect(input.order.fulfillmentMode).toBe("CLAIM_CODE");
+      expect(JSON.stringify(input)).not.toMatch(/recipientEmail|recipientUserId|recipientAccountId/);
+      if (mode === "paymongo") {
+        expect(input.order.fulfillmentSnapshot).toMatchObject({
+          checkoutBinding: {
+            principalId: state.principal.id,
+            accountId,
+            purchaseFor: "GIFT",
+            fulfillmentMode: "CLAIM_CODE",
+            sourceReference,
+          },
+        });
+        expect(state.checkoutStart).not.toHaveBeenCalled();
+        expect(state.createMethod).toHaveBeenCalledTimes(1);
+        expect(state.attachMethod).toHaveBeenCalledTimes(1);
+      } else {
+        expect(input.order.fulfillmentSnapshot).toEqual({});
+        expect(state.commerceIntentStart).not.toHaveBeenCalled();
+        expect(state.createMethod).not.toHaveBeenCalled();
+      }
+    },
+  );
+
   it("keeps a client nonce on the mock/hosted legacy path and never calls Payment Intent capabilities", async () => {
     configureApp();
     const response = await checkoutPost(request("/api/checkout", baseBody({ paymentIntentNonce: nonce })));
