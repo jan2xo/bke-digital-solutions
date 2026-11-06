@@ -15,7 +15,9 @@ export default {
       if (env.EMAIL && sender) {
         operationResource<CloudflareEmailSend>(CLOUDFLARE_EMAIL_SEND_RESOURCE, () => async (message) => {
           const pending = env.EMAIL.send({
-            to: message.to, from: sender, subject: message.subject,
+            to: message.to,
+            from: sender.name ? { email: sender.email, name: sender.name } : sender.email,
+            subject: message.subject,
             text: message.text,
             html: "<p>" + message.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
               .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;")
