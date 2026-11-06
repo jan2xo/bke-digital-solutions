@@ -79,6 +79,34 @@ jobs:
           npm ci --ignore-scripts --no-audit --no-fund --cache "$RUNNER_TEMP/npm-cache" --registry https://registry.npmjs.org/
           npm run db:generate
           git diff --exit-code -- package.json prisma/schema.prisma
+      - name: Preserve dependency audit details for review
+        shell: bash
+        run: |
+          set -euo pipefail
+          for scope in full production; do
+            if test "$scope" = production; then
+              audit_args=(--omit=dev)
+            else
+              audit_args=()
+            fi
+            if npm audit "${audit_args[@]}" --json > "integration-$scope-audit.json"; then
+              :
+            else
+              audit_status=$?
+              test "$audit_status" -eq 1 || exit "$audit_status"
+            fi
+            node --input-type=module - "integration-$scope-audit.json" <<'NODE'
+          import fs from "node:fs";
+          const report = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const counts = report.metadata?.vulnerabilities;
+          if (Object.hasOwn(report, "error") || report.auditReportVersion !== 2 ||
+              !report.vulnerabilities || typeof report.vulnerabilities !== "object" ||
+              !counts || ["info", "low", "moderate", "high", "critical", "total"]
+                .some(key => !Number.isSafeInteger(counts[key]) || counts[key] < 0)) {
+            throw new Error("Audit response is not a valid vulnerability report");
+          }
+          NODE
+          done
       - name: Record changed generated output and source provenance
         id: generated
         shell: bash
@@ -105,6 +133,8 @@ jobs:
             platform/persistence/generated/prisma/
             integration-generation.source
             integration-generation.sha256
+            integration-full-audit.json
+            integration-production-audit.json
           if-no-files-found: error
           retention-days: 3
 
@@ -370,6 +400,8 @@ jobs:
       - run: npm run workers:types
       - run: npm run lint
       - run: npm run typecheck
+      - name: Enforce production high and critical advisory policy
+        run: npm audit --omit=dev --audit-level=high
       - name: Build actual Workers application
         run: npm run workers:build
       - run: npm run workers:typecheck

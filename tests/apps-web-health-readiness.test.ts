@@ -94,26 +94,26 @@ describe("active web readiness storage boundary", () => {
     expect(diagnostic).not.toContain("WRONGPASS");
   });
 
-  it("fails readiness only for explicitly configured S3 that is unavailable", async () => {
+  it("ignores complete stale product S3 settings after product storage retirement", async () => {
     vi.stubEnv("S3_BUCKET", "bke-staging-private");
-    vi.stubEnv("S3_ACCESS_KEY_ID", "key");
-    vi.stubEnv("S3_SECRET_ACCESS_KEY", "secret");
-    mocks.s3Send.mockRejectedValue(new Error("bucket unavailable"));
+    vi.stubEnv("S3_ENDPOINT", "https://retired-storage.example");
+    vi.stubEnv("S3_PUBLIC_UPLOAD_ENDPOINT", "https://retired-upload.example");
+    vi.stubEnv("S3_ACCESS_KEY_ID", "retired-key");
+    vi.stubEnv("S3_SECRET_ACCESS_KEY", "retired-secret");
+    mocks.s3Send.mockRejectedValue(new Error("retired bucket unavailable"));
     const readiness = await getReadiness();
     const result = await readiness();
-    expect(result.ready).toBe(false);
-    expect(result.checks).toEqual({ postgresql: "up", valkey: "up", objectStorage: "down", providers: "up" });
+    expect(result).toEqual({ ready: true, checks: { postgresql: "up", valkey: "up", providers: "up" } });
     expect(mocks.pgQuery).toHaveBeenCalled();
     expect(mocks.redisPing).toHaveBeenCalled();
-    expect(mocks.s3Send).toHaveBeenCalled();
+    expect(mocks.s3Send).not.toHaveBeenCalled();
   });
 
-  it("fails partial S3 configuration while keeping other dependency checks healthy", async () => {
+  it("ignores partial stale product S3 settings without adding an object-storage check", async () => {
     vi.stubEnv("S3_BUCKET", "bke-staging-private");
     const readiness = await getReadiness();
     const result = await readiness();
-    expect(result.ready).toBe(false);
-    expect(result.checks).toEqual({ postgresql: "up", valkey: "up", objectStorage: "down", providers: "up" });
+    expect(result).toEqual({ ready: true, checks: { postgresql: "up", valkey: "up", providers: "up" } });
     expect(mocks.pgQuery).toHaveBeenCalled();
     expect(mocks.redisPing).toHaveBeenCalled();
     expect(mocks.s3Send).not.toHaveBeenCalled();

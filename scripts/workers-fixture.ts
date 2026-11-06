@@ -9,7 +9,14 @@ import {
 } from "@bke/identity/contracts/session.contract";
 
 const database = new URL(process.env.DATABASE_URL ?? "");
-if (process.env.GITHUB_ACTIONS !== "true" || database.pathname !== "/bke_test") {
+if (
+  process.env.GITHUB_ACTIONS !== "true" ||
+  process.env.NODE_ENV !== "test" ||
+  !["postgres:", "postgresql:"].includes(database.protocol) ||
+  database.hostname !== "127.0.0.1" ||
+  database.port !== "5432" ||
+  database.pathname !== "/bke_test"
+) {
   throw new Error("Workers fixtures require the isolated Actions bke_test database");
 }
 const path = ".certification-secrets/workers-sessions.json";
@@ -32,6 +39,7 @@ try {
       const user = await db.$transaction(async (tx) => {
         const created = await tx.user.create({
           data: { email: name.replaceAll(" ", ".").toLowerCase() + "@example.invalid", name, emailVerified: new Date(),
+            googleIdentity: { create: { subject: "workers-ci-synthetic:" + name.toLowerCase().replaceAll(" ", "-") } },
             ownedAccounts: { create: { type: "INDIVIDUAL", displayName: name + " account", billingEmail: "billing@example.invalid" } } },
           include: { ownedAccounts: true },
         });

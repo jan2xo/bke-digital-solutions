@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { environmentSchema, parseEnvironment } from "@/platform/host/config/environment";
+import { parseEnvironment } from "@/platform/host/config/environment";
 
 const base = {
   NODE_ENV: "production",
@@ -86,8 +86,18 @@ describe("GitHub-only protected storage configuration", () => {
     expect(parseEnvironment(withoutS3).DEPLOYMENT_ENV).toBe("production");
   });
 
-  it("keeps partial configured S3 fail-closed", () => {
+  it("ignores stale product-storage S3 variables after product storage retirement", () => {
     const withoutS3 = Object.fromEntries(Object.entries(base).filter(([key]) => !key.startsWith("S3_")));
-    expect(environmentSchema.safeParse({ ...withoutS3, S3_BUCKET: "bke-production-private" }).success).toBe(false);
+    const parsed = parseEnvironment({
+      ...withoutS3,
+      S3_BUCKET: "bke-production-private",
+      S3_ENDPOINT: "https://retired-product-storage.example",
+      S3_PUBLIC_UPLOAD_ENDPOINT: "https://retired-upload.example",
+      S3_ACCESS_KEY_ID: "retired-product-storage-key",
+      S3_SECRET_ACCESS_KEY: "retired-product-storage-secret",
+    });
+    expect(parsed.DEPLOYMENT_ENV).toBe("production");
+    expect(parsed).not.toHaveProperty("S3_BUCKET");
+    expect(parsed).not.toHaveProperty("S3_ACCESS_KEY_ID");
   });
 });
