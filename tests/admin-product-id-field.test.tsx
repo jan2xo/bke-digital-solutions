@@ -30,6 +30,10 @@ describe("administrator product ID input", () => {
     for (const value of [undefined, "bke-media-organizer"]) {
       const markup = renderToStaticMarkup(<AdminProductIdField defaultValue={value} />);
       expect(markup).toContain('name="productId"');
+      expect(markup).toContain('>Product ID</label>');
+      const hint = markup.match(/aria-describedby="([^"]+)"/)?.[1];
+      expect(hint).toBeTruthy();
+      expect(markup).toContain(`id="${hint}"`);
       expect(markup).toContain(`pattern="${ADMIN_PRODUCT_ID_INPUT_PATTERN}"`);
       expect(markup.toLowerCase()).toContain(`maxlength="${CATALOG_PRODUCT_ID_MAX_LENGTH}"`);
       expect(markup).toContain('placeholder="bke-media-organizer"');
