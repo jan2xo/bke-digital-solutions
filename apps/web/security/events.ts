@@ -2,7 +2,7 @@ import "server-only";
 
 import { createHmac, randomBytes } from "node:crypto";
 import { hostname } from "node:os";
-import { Pool } from "pg";
+import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { clientIp } from "../http/request";
 
 export type SecurityEventType =
@@ -51,6 +51,9 @@ type SecurityEventOptions = {
   provider?: "PAYMONGO" | "RESEND";
   authenticationMethod?:
     | "PASSWORD"
+    | "GOOGLE_OIDC"
+    | "GOOGLE_OIDC_EMAIL_OTP"
+    | "GOOGLE_OIDC_RECOVERY"
     | "PASSWORD_TOTP"
     | "PASSWORD_EMAIL_OTP"
     | "PASSWORD_RECOVERY"
@@ -76,7 +79,7 @@ const defaults: Definition = {
 };
 
 const definitions: Partial<Record<SecurityEventType, Definition>> = {
-  ADMIN_LOGIN_SUCCEEDED: { label: "Administrator signed in", outcome: "SUCCESS", severity: "LOW", explanation: "A password and MFA protected administrator sign-in completed." },
+  ADMIN_LOGIN_SUCCEEDED: { label: "Administrator signed in", outcome: "SUCCESS", severity: "LOW", explanation: "An administrator sign-in completed. The recorded authentication method describes its provider; this event alone does not prove MFA." },
   ADMIN_LOGIN_FAILED: { label: "Administrator sign-in failed", outcome: "FAILURE", severity: "MEDIUM", explanation: "An administrator sign-in attempt did not complete." },
   ADMIN_PASSWORD_REJECTED: { label: "Administrator password rejected", outcome: "FAILURE", severity: "MEDIUM", explanation: "A password attempt for an administrator account was rejected." },
   ADMIN_SESSION_CREATED: { label: "New administrator session", outcome: "SUCCESS", severity: "LOW", explanation: "A new authenticated administrator session was created." },
@@ -100,10 +103,6 @@ const definitions: Partial<Record<SecurityEventType, Definition>> = {
   CUSTOMER_LIFECYCLE_CHANGED: { label: "Customer lifecycle changed", outcome: "SUCCESS", severity: "HIGH", explanation: "An administrator changed customer access, retention, privacy, or legal-hold state." },
   CUSTOMER_PURGE_EXECUTED: { label: "Customer purge executed", outcome: "SUCCESS", severity: "CRITICAL", explanation: "An eligible pseudonymized customer record was irreversibly purged." },
   STORAGE_CLEANUP_FAILED: { label: "Storage cleanup failed", outcome: "FAILURE", severity: "HIGH", explanation: "A durable private-storage cleanup job exhausted its automatic retries." },
-};
-
-const globalForSecurityEvents = globalThis as typeof globalThis & {
-  bkeV2SecurityEventPool?: Pool;
 };
 
 let cuidCounter = 0;
@@ -145,17 +144,10 @@ function createCuid() {
   return `c${Date.now().toString(cuidBase)}${pad(counter.toString(cuidBase), cuidBlockSize)}${cuidFingerprint()}${cuidRandomBlock()}${cuidRandomBlock()}`;
 }
 
-function requiredRuntimeValue(name: "DATABASE_URL" | "SESSION_SECRET") {
+function requiredRuntimeValue(name: "SESSION_SECRET") {
   const value = process.env[name];
   if (!value) throw new Error(`Missing web host environment: ${name}`);
   return value;
-}
-
-function securityEventPool() {
-  if (!globalForSecurityEvents.bkeV2SecurityEventPool) {
-    globalForSecurityEvents.bkeV2SecurityEventPool = new Pool({ connectionString: requiredRuntimeValue("DATABASE_URL") });
-  }
-  return globalForSecurityEvents.bkeV2SecurityEventPool;
 }
 
 function hint(value: string) {
@@ -182,7 +174,7 @@ export async function securityEvent(
   options?: SecurityEventOptions,
 ) {
   const definition = securityEventDefinition(type);
-  await securityEventPool().query(
+  await getPostgresPool().query(
     `INSERT INTO "SecurityEvent" (
       "id",
       "userId",

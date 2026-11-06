@@ -37,7 +37,7 @@ export default async function CheckoutReview({
   const session = await currentIdentitySession();
   if (!session) redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
   const principal = session.principal;
-  if (!principal.emailVerified) redirect("/verify-email");
+  if (!principal.emailVerified) redirect("/login?error=CONTACT_EMAIL_NOT_AUTHORITATIVE");
 
   const application = await getV2WebApplication();
   const reacceptance = application.get<LegalReacceptanceStatusCapability>(

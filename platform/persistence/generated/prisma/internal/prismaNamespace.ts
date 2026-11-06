@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.9.1
- * Query Engine version: e922089b7d7502aff4249d5da3420f6fa55fc6ad
+ * Prisma Client JS version: 7.10.1
+ * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.9.1",
-  engine: "e922089b7d7502aff4249d5da3420f6fa55fc6ad"
+  client: "7.10.1",
+  engine: "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8"
 }
 
 /**
@@ -398,6 +398,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  GoogleIdentity: 'GoogleIdentity',
   PasswordCredential: 'PasswordCredential',
   Session: 'Session',
   AdministratorMfaMethod: 'AdministratorMfaMethod',
@@ -420,15 +421,8 @@ export const ModelName = {
   Edition: 'Edition',
   PurchasePlan: 'PurchasePlan',
   ProductVersion: 'ProductVersion',
-  ArtifactUploadSession: 'ArtifactUploadSession',
-  ReleaseApproval: 'ReleaseApproval',
-  SupplyChainEvidence: 'SupplyChainEvidence',
-  SupplyChainVerificationEvidence: 'SupplyChainVerificationEvidence',
   LicensePolicy: 'LicensePolicy',
   Price: 'Price',
-  ProductArtifact: 'ProductArtifact',
-  CommissioningRun: 'CommissioningRun',
-  StorageCleanupJob: 'StorageCleanupJob',
   Cart: 'Cart',
   CartItem: 'CartItem',
   Order: 'Order',
@@ -453,7 +447,6 @@ export const ModelName = {
   TrialGrant: 'TrialGrant',
   LicenseAssignment: 'LicenseAssignment',
   DeviceActivation: 'DeviceActivation',
-  DownloadGrant: 'DownloadGrant',
   LicenseEvent: 'LicenseEvent',
   AuditLog: 'AuditLog',
   ProductGraceOverride: 'ProductGraceOverride',
@@ -486,7 +479,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "artifactUploadSession" | "releaseApproval" | "supplyChainEvidence" | "supplyChainVerificationEvidence" | "licensePolicy" | "price" | "productArtifact" | "commissioningRun" | "storageCleanupJob" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "downloadGrant" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "notificationMessage" | "notificationReceipt" | "externalProviderConfiguration" | "externalProviderCredential"
+    modelProps: "user" | "googleIdentity" | "passwordCredential" | "session" | "administratorMfaMethod" | "administratorRecoveryCode" | "mfaChallenge" | "emergencyMfaEnrollmentAuthorization" | "securityEvent" | "verificationToken" | "passwordResetToken" | "customerAccount" | "legalDocument" | "legalDocumentVersion" | "legalAcceptance" | "privacyRequest" | "privacyRequestEvent" | "organizationProfile" | "membership" | "invitation" | "product" | "edition" | "purchasePlan" | "productVersion" | "licensePolicy" | "price" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "paymentAttempt" | "webhookEvent" | "refundOperation" | "paymentReconciliation" | "invoice" | "invoiceLine" | "subscription" | "discountOffer" | "offerRedemption" | "license" | "supportTicket" | "supportTicketMessage" | "supportTicketEvent" | "licenseLeaseRecord" | "commercialLeaseOperation" | "commercialSigningKey" | "trialGrant" | "licenseAssignment" | "deviceActivation" | "licenseEvent" | "auditLog" | "productGraceOverride" | "siteContent" | "complianceRequirement" | "complianceEvidence" | "jobRun" | "scheduledJobDefinition" | "scheduledJobRun" | "backupArchive" | "backupOperation" | "observabilityAlert" | "emailOutbox" | "notificationMessage" | "notificationReceipt" | "externalProviderConfiguration" | "externalProviderCredential"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -561,6 +554,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    GoogleIdentity: {
+      payload: Prisma.$GoogleIdentityPayload<ExtArgs>
+      fields: Prisma.GoogleIdentityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GoogleIdentityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GoogleIdentityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>
+        }
+        findFirst: {
+          args: Prisma.GoogleIdentityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GoogleIdentityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>
+        }
+        findMany: {
+          args: Prisma.GoogleIdentityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>[]
+        }
+        create: {
+          args: Prisma.GoogleIdentityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>
+        }
+        createMany: {
+          args: Prisma.GoogleIdentityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GoogleIdentityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>[]
+        }
+        delete: {
+          args: Prisma.GoogleIdentityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>
+        }
+        update: {
+          args: Prisma.GoogleIdentityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>
+        }
+        deleteMany: {
+          args: Prisma.GoogleIdentityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GoogleIdentityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GoogleIdentityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>[]
+        }
+        upsert: {
+          args: Prisma.GoogleIdentityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoogleIdentityPayload>
+        }
+        aggregate: {
+          args: Prisma.GoogleIdentityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGoogleIdentity>
+        }
+        groupBy: {
+          args: Prisma.GoogleIdentityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GoogleIdentityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GoogleIdentityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GoogleIdentityCountAggregateOutputType> | number
         }
       }
     }
@@ -2192,302 +2259,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    ArtifactUploadSession: {
-      payload: Prisma.$ArtifactUploadSessionPayload<ExtArgs>
-      fields: Prisma.ArtifactUploadSessionFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ArtifactUploadSessionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ArtifactUploadSessionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
-        }
-        findFirst: {
-          args: Prisma.ArtifactUploadSessionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ArtifactUploadSessionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
-        }
-        findMany: {
-          args: Prisma.ArtifactUploadSessionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>[]
-        }
-        create: {
-          args: Prisma.ArtifactUploadSessionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
-        }
-        createMany: {
-          args: Prisma.ArtifactUploadSessionCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ArtifactUploadSessionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>[]
-        }
-        delete: {
-          args: Prisma.ArtifactUploadSessionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
-        }
-        update: {
-          args: Prisma.ArtifactUploadSessionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
-        }
-        deleteMany: {
-          args: Prisma.ArtifactUploadSessionDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ArtifactUploadSessionUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ArtifactUploadSessionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>[]
-        }
-        upsert: {
-          args: Prisma.ArtifactUploadSessionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtifactUploadSessionPayload>
-        }
-        aggregate: {
-          args: Prisma.ArtifactUploadSessionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateArtifactUploadSession>
-        }
-        groupBy: {
-          args: Prisma.ArtifactUploadSessionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ArtifactUploadSessionGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ArtifactUploadSessionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ArtifactUploadSessionCountAggregateOutputType> | number
-        }
-      }
-    }
-    ReleaseApproval: {
-      payload: Prisma.$ReleaseApprovalPayload<ExtArgs>
-      fields: Prisma.ReleaseApprovalFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ReleaseApprovalFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ReleaseApprovalFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
-        }
-        findFirst: {
-          args: Prisma.ReleaseApprovalFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ReleaseApprovalFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
-        }
-        findMany: {
-          args: Prisma.ReleaseApprovalFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>[]
-        }
-        create: {
-          args: Prisma.ReleaseApprovalCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
-        }
-        createMany: {
-          args: Prisma.ReleaseApprovalCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ReleaseApprovalCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>[]
-        }
-        delete: {
-          args: Prisma.ReleaseApprovalDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
-        }
-        update: {
-          args: Prisma.ReleaseApprovalUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
-        }
-        deleteMany: {
-          args: Prisma.ReleaseApprovalDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ReleaseApprovalUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ReleaseApprovalUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>[]
-        }
-        upsert: {
-          args: Prisma.ReleaseApprovalUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseApprovalPayload>
-        }
-        aggregate: {
-          args: Prisma.ReleaseApprovalAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateReleaseApproval>
-        }
-        groupBy: {
-          args: Prisma.ReleaseApprovalGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ReleaseApprovalGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ReleaseApprovalCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ReleaseApprovalCountAggregateOutputType> | number
-        }
-      }
-    }
-    SupplyChainEvidence: {
-      payload: Prisma.$SupplyChainEvidencePayload<ExtArgs>
-      fields: Prisma.SupplyChainEvidenceFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SupplyChainEvidenceFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SupplyChainEvidenceFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
-        }
-        findFirst: {
-          args: Prisma.SupplyChainEvidenceFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SupplyChainEvidenceFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
-        }
-        findMany: {
-          args: Prisma.SupplyChainEvidenceFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>[]
-        }
-        create: {
-          args: Prisma.SupplyChainEvidenceCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
-        }
-        createMany: {
-          args: Prisma.SupplyChainEvidenceCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SupplyChainEvidenceCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>[]
-        }
-        delete: {
-          args: Prisma.SupplyChainEvidenceDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
-        }
-        update: {
-          args: Prisma.SupplyChainEvidenceUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
-        }
-        deleteMany: {
-          args: Prisma.SupplyChainEvidenceDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SupplyChainEvidenceUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SupplyChainEvidenceUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>[]
-        }
-        upsert: {
-          args: Prisma.SupplyChainEvidenceUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainEvidencePayload>
-        }
-        aggregate: {
-          args: Prisma.SupplyChainEvidenceAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSupplyChainEvidence>
-        }
-        groupBy: {
-          args: Prisma.SupplyChainEvidenceGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SupplyChainEvidenceGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SupplyChainEvidenceCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SupplyChainEvidenceCountAggregateOutputType> | number
-        }
-      }
-    }
-    SupplyChainVerificationEvidence: {
-      payload: Prisma.$SupplyChainVerificationEvidencePayload<ExtArgs>
-      fields: Prisma.SupplyChainVerificationEvidenceFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SupplyChainVerificationEvidenceFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SupplyChainVerificationEvidenceFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
-        }
-        findFirst: {
-          args: Prisma.SupplyChainVerificationEvidenceFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SupplyChainVerificationEvidenceFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
-        }
-        findMany: {
-          args: Prisma.SupplyChainVerificationEvidenceFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>[]
-        }
-        create: {
-          args: Prisma.SupplyChainVerificationEvidenceCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
-        }
-        createMany: {
-          args: Prisma.SupplyChainVerificationEvidenceCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SupplyChainVerificationEvidenceCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>[]
-        }
-        delete: {
-          args: Prisma.SupplyChainVerificationEvidenceDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
-        }
-        update: {
-          args: Prisma.SupplyChainVerificationEvidenceUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
-        }
-        deleteMany: {
-          args: Prisma.SupplyChainVerificationEvidenceDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SupplyChainVerificationEvidenceUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SupplyChainVerificationEvidenceUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>[]
-        }
-        upsert: {
-          args: Prisma.SupplyChainVerificationEvidenceUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyChainVerificationEvidencePayload>
-        }
-        aggregate: {
-          args: Prisma.SupplyChainVerificationEvidenceAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSupplyChainVerificationEvidence>
-        }
-        groupBy: {
-          args: Prisma.SupplyChainVerificationEvidenceGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SupplyChainVerificationEvidenceGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SupplyChainVerificationEvidenceCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SupplyChainVerificationEvidenceCountAggregateOutputType> | number
-        }
-      }
-    }
     LicensePolicy: {
       payload: Prisma.$LicensePolicyPayload<ExtArgs>
       fields: Prisma.LicensePolicyFieldRefs
@@ -2633,228 +2404,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PriceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PriceCountAggregateOutputType> | number
-        }
-      }
-    }
-    ProductArtifact: {
-      payload: Prisma.$ProductArtifactPayload<ExtArgs>
-      fields: Prisma.ProductArtifactFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ProductArtifactFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ProductArtifactFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>
-        }
-        findFirst: {
-          args: Prisma.ProductArtifactFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ProductArtifactFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>
-        }
-        findMany: {
-          args: Prisma.ProductArtifactFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>[]
-        }
-        create: {
-          args: Prisma.ProductArtifactCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>
-        }
-        createMany: {
-          args: Prisma.ProductArtifactCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ProductArtifactCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>[]
-        }
-        delete: {
-          args: Prisma.ProductArtifactDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>
-        }
-        update: {
-          args: Prisma.ProductArtifactUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>
-        }
-        deleteMany: {
-          args: Prisma.ProductArtifactDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ProductArtifactUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ProductArtifactUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>[]
-        }
-        upsert: {
-          args: Prisma.ProductArtifactUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductArtifactPayload>
-        }
-        aggregate: {
-          args: Prisma.ProductArtifactAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateProductArtifact>
-        }
-        groupBy: {
-          args: Prisma.ProductArtifactGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProductArtifactGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ProductArtifactCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProductArtifactCountAggregateOutputType> | number
-        }
-      }
-    }
-    CommissioningRun: {
-      payload: Prisma.$CommissioningRunPayload<ExtArgs>
-      fields: Prisma.CommissioningRunFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.CommissioningRunFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.CommissioningRunFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
-        }
-        findFirst: {
-          args: Prisma.CommissioningRunFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.CommissioningRunFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
-        }
-        findMany: {
-          args: Prisma.CommissioningRunFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>[]
-        }
-        create: {
-          args: Prisma.CommissioningRunCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
-        }
-        createMany: {
-          args: Prisma.CommissioningRunCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.CommissioningRunCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>[]
-        }
-        delete: {
-          args: Prisma.CommissioningRunDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
-        }
-        update: {
-          args: Prisma.CommissioningRunUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
-        }
-        deleteMany: {
-          args: Prisma.CommissioningRunDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.CommissioningRunUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.CommissioningRunUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>[]
-        }
-        upsert: {
-          args: Prisma.CommissioningRunUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissioningRunPayload>
-        }
-        aggregate: {
-          args: Prisma.CommissioningRunAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateCommissioningRun>
-        }
-        groupBy: {
-          args: Prisma.CommissioningRunGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.CommissioningRunGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.CommissioningRunCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.CommissioningRunCountAggregateOutputType> | number
-        }
-      }
-    }
-    StorageCleanupJob: {
-      payload: Prisma.$StorageCleanupJobPayload<ExtArgs>
-      fields: Prisma.StorageCleanupJobFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.StorageCleanupJobFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.StorageCleanupJobFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
-        }
-        findFirst: {
-          args: Prisma.StorageCleanupJobFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.StorageCleanupJobFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
-        }
-        findMany: {
-          args: Prisma.StorageCleanupJobFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>[]
-        }
-        create: {
-          args: Prisma.StorageCleanupJobCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
-        }
-        createMany: {
-          args: Prisma.StorageCleanupJobCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.StorageCleanupJobCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>[]
-        }
-        delete: {
-          args: Prisma.StorageCleanupJobDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
-        }
-        update: {
-          args: Prisma.StorageCleanupJobUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
-        }
-        deleteMany: {
-          args: Prisma.StorageCleanupJobDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.StorageCleanupJobUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.StorageCleanupJobUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>[]
-        }
-        upsert: {
-          args: Prisma.StorageCleanupJobUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StorageCleanupJobPayload>
-        }
-        aggregate: {
-          args: Prisma.StorageCleanupJobAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateStorageCleanupJob>
-        }
-        groupBy: {
-          args: Prisma.StorageCleanupJobGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StorageCleanupJobGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.StorageCleanupJobCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StorageCleanupJobCountAggregateOutputType> | number
         }
       }
     }
@@ -4634,80 +4183,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    DownloadGrant: {
-      payload: Prisma.$DownloadGrantPayload<ExtArgs>
-      fields: Prisma.DownloadGrantFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.DownloadGrantFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.DownloadGrantFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>
-        }
-        findFirst: {
-          args: Prisma.DownloadGrantFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.DownloadGrantFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>
-        }
-        findMany: {
-          args: Prisma.DownloadGrantFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>[]
-        }
-        create: {
-          args: Prisma.DownloadGrantCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>
-        }
-        createMany: {
-          args: Prisma.DownloadGrantCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.DownloadGrantCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>[]
-        }
-        delete: {
-          args: Prisma.DownloadGrantDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>
-        }
-        update: {
-          args: Prisma.DownloadGrantUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>
-        }
-        deleteMany: {
-          args: Prisma.DownloadGrantDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.DownloadGrantUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.DownloadGrantUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>[]
-        }
-        upsert: {
-          args: Prisma.DownloadGrantUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DownloadGrantPayload>
-        }
-        aggregate: {
-          args: Prisma.DownloadGrantAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateDownloadGrant>
-        }
-        groupBy: {
-          args: Prisma.DownloadGrantGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DownloadGrantGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.DownloadGrantCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DownloadGrantCountAggregateOutputType> | number
-        }
-      }
-    }
     LicenseEvent: {
       payload: Prisma.$LicenseEventPayload<ExtArgs>
       fields: Prisma.LicenseEventFieldRefs
@@ -6026,6 +5501,16 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const GoogleIdentityScalarFieldEnum = {
+  userId: 'userId',
+  subject: 'subject',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GoogleIdentityScalarFieldEnum = (typeof GoogleIdentityScalarFieldEnum)[keyof typeof GoogleIdentityScalarFieldEnum]
+
+
 export const PasswordCredentialScalarFieldEnum = {
   userId: 'userId',
   passwordHash: 'passwordHash',
@@ -6090,6 +5575,8 @@ export const MfaChallengeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   purpose: 'purpose',
+  primaryAuthenticationMethod: 'primaryAuthenticationMethod',
+  sessionId: 'sessionId',
   tokenHash: 'tokenHash',
   codeHash: 'codeHash',
   expiresAt: 'expiresAt',
@@ -6379,102 +5866,10 @@ export const ProductVersionScalarFieldEnum = {
   architecture: 'architecture',
   isLatest: 'isLatest',
   publishedAt: 'publishedAt',
-  releasedAt: 'releasedAt',
-  backupEvidence: 'backupEvidence',
-  complianceEvidence: 'complianceEvidence',
-  migrationEvidence: 'migrationEvidence'
+  releasedAt: 'releasedAt'
 } as const
 
 export type ProductVersionScalarFieldEnum = (typeof ProductVersionScalarFieldEnum)[keyof typeof ProductVersionScalarFieldEnum]
-
-
-export const ArtifactUploadSessionScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  versionId: 'versionId',
-  objectKey: 'objectKey',
-  originalFilename: 'originalFilename',
-  extension: 'extension',
-  contentType: 'contentType',
-  expectedSize: 'expectedSize',
-  expectedSha256: 'expectedSha256',
-  state: 'state',
-  createdById: 'createdById',
-  expiresAt: 'expiresAt',
-  completedAt: 'completedAt',
-  failedAt: 'failedAt',
-  failureReason: 'failureReason',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ArtifactUploadSessionScalarFieldEnum = (typeof ArtifactUploadSessionScalarFieldEnum)[keyof typeof ArtifactUploadSessionScalarFieldEnum]
-
-
-export const ReleaseApprovalScalarFieldEnum = {
-  id: 'id',
-  versionId: 'versionId',
-  stage: 'stage',
-  createdById: 'createdById',
-  reviewedById: 'reviewedById',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
-  reviewedAt: 'reviewedAt',
-  payloadHash: 'payloadHash',
-  notes: 'notes',
-  createdAt: 'createdAt'
-} as const
-
-export type ReleaseApprovalScalarFieldEnum = (typeof ReleaseApprovalScalarFieldEnum)[keyof typeof ReleaseApprovalScalarFieldEnum]
-
-
-export const SupplyChainEvidenceScalarFieldEnum = {
-  id: 'id',
-  versionId: 'versionId',
-  releaseIdentifier: 'releaseIdentifier',
-  commitHash: 'commitHash',
-  branch: 'branch',
-  buildEnvironment: 'buildEnvironment',
-  builderIdentity: 'builderIdentity',
-  builtAt: 'builtAt',
-  manifestJson: 'manifestJson',
-  sbomReference: 'sbomReference',
-  sbomFormat: 'sbomFormat',
-  manifestSignature: 'manifestSignature',
-  signatureVerified: 'signatureVerified',
-  canonicalPayloadHash: 'canonicalPayloadHash',
-  signatureAlgorithm: 'signatureAlgorithm',
-  signatureKeyId: 'signatureKeyId',
-  signedAt: 'signedAt',
-  dependencyVerified: 'dependencyVerified',
-  malwareStatus: 'malwareStatus',
-  certificateStatus: 'certificateStatus',
-  provenanceStatus: 'provenanceStatus',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SupplyChainEvidenceScalarFieldEnum = (typeof SupplyChainEvidenceScalarFieldEnum)[keyof typeof SupplyChainEvidenceScalarFieldEnum]
-
-
-export const SupplyChainVerificationEvidenceScalarFieldEnum = {
-  id: 'id',
-  evidenceId: 'evidenceId',
-  kind: 'kind',
-  artifactHash: 'artifactHash',
-  signerKeyId: 'signerKeyId',
-  scannerId: 'scannerId',
-  scannerVersion: 'scannerVersion',
-  result: 'result',
-  reference: 'reference',
-  documentObjectKey: 'documentObjectKey',
-  documentSha256: 'documentSha256',
-  failureReason: 'failureReason',
-  verifiedAt: 'verifiedAt',
-  metadata: 'metadata'
-} as const
-
-export type SupplyChainVerificationEvidenceScalarFieldEnum = (typeof SupplyChainVerificationEvidenceScalarFieldEnum)[keyof typeof SupplyChainVerificationEvidenceScalarFieldEnum]
 
 
 export const LicensePolicyScalarFieldEnum = {
@@ -6505,76 +5900,6 @@ export const PriceScalarFieldEnum = {
 } as const
 
 export type PriceScalarFieldEnum = (typeof PriceScalarFieldEnum)[keyof typeof PriceScalarFieldEnum]
-
-
-export const ProductArtifactScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  versionId: 'versionId',
-  name: 'name',
-  objectKey: 'objectKey',
-  sha256: 'sha256',
-  sizeBytes: 'sizeBytes',
-  contentType: 'contentType',
-  active: 'active',
-  downloadCount: 'downloadCount',
-  removedAt: 'removedAt',
-  createdAt: 'createdAt'
-} as const
-
-export type ProductArtifactScalarFieldEnum = (typeof ProductArtifactScalarFieldEnum)[keyof typeof ProductArtifactScalarFieldEnum]
-
-
-export const CommissioningRunScalarFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  versionId: 'versionId',
-  artifactId: 'artifactId',
-  artifactSha256: 'artifactSha256',
-  artifactSizeBytes: 'artifactSizeBytes',
-  payloadHash: 'payloadHash',
-  policyVersion: 'policyVersion',
-  generatorVersion: 'generatorVersion',
-  status: 'status',
-  classification: 'classification',
-  sbomStatus: 'sbomStatus',
-  dependencyStatus: 'dependencyStatus',
-  migrationCategory: 'migrationCategory',
-  migrationStatus: 'migrationStatus',
-  evidence: 'evidence',
-  limitations: 'limitations',
-  errorCode: 'errorCode',
-  attempts: 'attempts',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CommissioningRunScalarFieldEnum = (typeof CommissioningRunScalarFieldEnum)[keyof typeof CommissioningRunScalarFieldEnum]
-
-
-export const StorageCleanupJobScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  status: 'status',
-  targetType: 'targetType',
-  targetId: 'targetId',
-  objectKey: 'objectKey',
-  idempotencyKey: 'idempotencyKey',
-  attempts: 'attempts',
-  nextAttemptAt: 'nextAttemptAt',
-  lastErrorCode: 'lastErrorCode',
-  correlationId: 'correlationId',
-  productId: 'productId',
-  artifactId: 'artifactId',
-  createdByAdminId: 'createdByAdminId',
-  createdAt: 'createdAt',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt'
-} as const
-
-export type StorageCleanupJobScalarFieldEnum = (typeof StorageCleanupJobScalarFieldEnum)[keyof typeof StorageCleanupJobScalarFieldEnum]
 
 
 export const CartScalarFieldEnum = {
@@ -7032,19 +6357,6 @@ export const DeviceActivationScalarFieldEnum = {
 } as const
 
 export type DeviceActivationScalarFieldEnum = (typeof DeviceActivationScalarFieldEnum)[keyof typeof DeviceActivationScalarFieldEnum]
-
-
-export const DownloadGrantScalarFieldEnum = {
-  id: 'id',
-  licenseId: 'licenseId',
-  artifactId: 'artifactId',
-  tokenHash: 'tokenHash',
-  expiresAt: 'expiresAt',
-  usedAt: 'usedAt',
-  processingAt: 'processingAt'
-} as const
-
-export type DownloadGrantScalarFieldEnum = (typeof DownloadGrantScalarFieldEnum)[keyof typeof DownloadGrantScalarFieldEnum]
 
 
 export const LicenseEventScalarFieldEnum = {
@@ -7529,6 +6841,20 @@ export type ListEnumMfaChallengePurposeFieldRefInput<$PrismaModel> = FieldRefInp
 
 
 /**
+ * Reference to a field of type 'MfaChallengeAuthenticationMethod'
+ */
+export type EnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MfaChallengeAuthenticationMethod'>
+
+
+
+/**
+ * Reference to a field of type 'MfaChallengeAuthenticationMethod[]'
+ */
+export type ListEnumMfaChallengeAuthenticationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MfaChallengeAuthenticationMethod[]'>
+
+
+
+/**
  * Reference to a field of type 'SecurityEventType'
  */
 export type EnumSecurityEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityEventType'>
@@ -7746,34 +7072,6 @@ export type ListEnumReleaseLifecycleFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
- * Reference to a field of type 'BigInt'
- */
-export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-
-
-
-/**
- * Reference to a field of type 'BigInt[]'
- */
-export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
-
-
-
-/**
- * Reference to a field of type 'ArtifactUploadState'
- */
-export type EnumArtifactUploadStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArtifactUploadState'>
-
-
-
-/**
- * Reference to a field of type 'ArtifactUploadState[]'
- */
-export type ListEnumArtifactUploadStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArtifactUploadState[]'>
-
-
-
-/**
  * Reference to a field of type 'BillingType'
  */
 export type EnumBillingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingType'>
@@ -7798,48 +7096,6 @@ export type EnumIntervalUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'IntervalUnit[]'
  */
 export type ListEnumIntervalUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IntervalUnit[]'>
-
-
-
-/**
- * Reference to a field of type 'CommissioningStatus'
- */
-export type EnumCommissioningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissioningStatus'>
-
-
-
-/**
- * Reference to a field of type 'CommissioningStatus[]'
- */
-export type ListEnumCommissioningStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissioningStatus[]'>
-
-
-
-/**
- * Reference to a field of type 'StorageCleanupJobType'
- */
-export type EnumStorageCleanupJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupJobType'>
-
-
-
-/**
- * Reference to a field of type 'StorageCleanupJobType[]'
- */
-export type ListEnumStorageCleanupJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupJobType[]'>
-
-
-
-/**
- * Reference to a field of type 'StorageCleanupStatus'
- */
-export type EnumStorageCleanupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupStatus'>
-
-
-
-/**
- * Reference to a field of type 'StorageCleanupStatus[]'
- */
-export type ListEnumStorageCleanupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StorageCleanupStatus[]'>
 
 
 
@@ -8078,6 +7334,20 @@ export type EnumBackupRetentionTierFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'BackupRetentionTier[]'
  */
 export type ListEnumBackupRetentionTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupRetentionTier[]'>
+
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
 
 
 
@@ -8358,6 +7628,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  googleIdentity?: Prisma.GoogleIdentityOmit
   passwordCredential?: Prisma.PasswordCredentialOmit
   session?: Prisma.SessionOmit
   administratorMfaMethod?: Prisma.AdministratorMfaMethodOmit
@@ -8380,15 +7651,8 @@ export type GlobalOmitConfig = {
   edition?: Prisma.EditionOmit
   purchasePlan?: Prisma.PurchasePlanOmit
   productVersion?: Prisma.ProductVersionOmit
-  artifactUploadSession?: Prisma.ArtifactUploadSessionOmit
-  releaseApproval?: Prisma.ReleaseApprovalOmit
-  supplyChainEvidence?: Prisma.SupplyChainEvidenceOmit
-  supplyChainVerificationEvidence?: Prisma.SupplyChainVerificationEvidenceOmit
   licensePolicy?: Prisma.LicensePolicyOmit
   price?: Prisma.PriceOmit
-  productArtifact?: Prisma.ProductArtifactOmit
-  commissioningRun?: Prisma.CommissioningRunOmit
-  storageCleanupJob?: Prisma.StorageCleanupJobOmit
   cart?: Prisma.CartOmit
   cartItem?: Prisma.CartItemOmit
   order?: Prisma.OrderOmit
@@ -8413,7 +7677,6 @@ export type GlobalOmitConfig = {
   trialGrant?: Prisma.TrialGrantOmit
   licenseAssignment?: Prisma.LicenseAssignmentOmit
   deviceActivation?: Prisma.DeviceActivationOmit
-  downloadGrant?: Prisma.DownloadGrantOmit
   licenseEvent?: Prisma.LicenseEventOmit
   auditLog?: Prisma.AuditLogOmit
   productGraceOverride?: Prisma.ProductGraceOverrideOmit

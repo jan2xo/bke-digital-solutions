@@ -1,19 +1,17 @@
 import "dotenv/config";
-import argon2 from "argon2";
 import { expect, test } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { enrollAndLoginAdmin } from "./mfa-helper";
+import { signInGoogleTestUser } from "./google-session-helper";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
 
 test("provider settings are administrator-only and live payments stay locked", async ({ page }) => {
   const suffix = Date.now().toString(36);
-  const password = "Provider-Admin-2026!";
   const adminEmail = `provider-admin-${suffix}@bke.test`;
-  await db.user.create({ data: { email: adminEmail, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, adminEmail, password);
+  await db.user.create({ data: { email: adminEmail, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, adminEmail, db);
   await page.goto("/admin/providers");
   await expect(page.getByRole("heading", { name: "External providers" })).toBeVisible();
   await expect(page.getByText("No database credentials stored.")).toHaveCount(2);
@@ -24,12 +22,8 @@ test("provider settings are administrator-only and live payments stay locked", a
   await page.getByRole("button", { name: "Log out" }).click();
 
   const customerEmail = `provider-customer-${suffix}@bke.test`;
-  await db.user.create({ data: { email: customerEmail, emailVerified: new Date(), credential: { create: { passwordHash: await argon2.hash(password) } }, ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Provider Customer", billingEmail: customerEmail } } } });
-  await page.goto("/login");
-  await page.getByLabel("Email address").first().fill(customerEmail);
-  await page.locator('input[name="password"]').fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page).toHaveURL(/dashboard/);
+  await db.user.create({ data: { email: customerEmail, role: "CUSTOMER", emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Provider Customer", billingEmail: customerEmail } } } });
+  await signInGoogleTestUser(page, customerEmail, db); await expect(page).toHaveURL(/dashboard/);
   await page.goto("/admin/providers");
   await expect(page).toHaveURL(/dashboard/);
   expect((await page.request.get("/api/admin/providers")).status()).toBe(403);
