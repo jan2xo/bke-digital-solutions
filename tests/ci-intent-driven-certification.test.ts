@@ -39,6 +39,13 @@ const explicitConcurrencyGroups = new Map<string, string>([
     "v2-legal.yml",
     "group: legal-${{ inputs.source_sha }}",
   ],
+  ["v2-catalog.yml", "group: catalog-${{ inputs.source_sha }}"],
+  ["v2-commerce.yml", "group: commerce-${{ inputs.source_sha }}"],
+  ["v2-payments.yml", "group: payments-${{ inputs.source_sha }}"],
+  ["v2-licensing.yml", "group: licensing-${{ inputs.source_sha }}"],
+  ["v2-entitlements.yml", "group: entitlements-${{ inputs.source_sha }}"],
+  ["v2-notifications.yml", "group: notifications-${{ inputs.source_sha }}"],
+  ["v2-standalone.yml", "group: standalone-${{ inputs.source_sha }}"],
 ]);
 
 describe("intent-driven certification foundation", () => {
@@ -97,6 +104,18 @@ describe("intent-driven certification foundation", () => {
     expect(platform).toContain("Verify Platform and staging workflow contracts");
     const stage = readFileSync(`${workflowsDir}/stage.yml`, "utf8");
     expect(stage).toContain("needs: [plan, platform]");
+  });
+  it("preserves all staging module proof without caller-name cancellation", () => {
+    const names = ["platform", "catalog", "commerce", "payments", "licensing", "entitlements", "notifications", "standalone"];
+    const actual = names.map((name) => {
+      const source = readFileSync(`${workflowsDir}/v2-${name}.yml`, "utf8");
+      const expected = `group: ${name}-\${{ inputs.source_sha }}`;
+      expect(source, name).toContain(expected);
+      expect(source, name).toContain("cancel-in-progress: false");
+      expect(source, name).not.toContain("group: \${{ github.workflow }}");
+      return expected;
+    });
+    expect(new Set(actual).size).toBe(names.length);
   });
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
     const workflow = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
