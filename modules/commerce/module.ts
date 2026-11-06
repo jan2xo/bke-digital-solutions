@@ -4,7 +4,6 @@ import {
 } from "@bke/accounts/contracts/purchase-access.contract";
 import { COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-offer-pricing.contract";
 import { COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID } from "@bke/commerce/contracts/checkout-orchestration.contract";
-import { COMMERCE_PAYMENT_INTENT_CHECKOUT_CAPABILITY_ID, type CommercePaymentIntentCheckoutCapability, type CommercePaymentIntentCheckoutPolicy } from "@bke/commerce/contracts/payment-intent-checkout.contract";
 import { COMMERCE_OFFER_REDEMPTION_CAPABILITY_ID } from "@bke/commerce/contracts/offer-redemption.contract";
 import { COMMERCE_ORDER_INVOICE_CREATION_CAPABILITY_ID } from "@bke/commerce/contracts/order-invoice-creation.contract";
 import { COMMERCE_ORDER_SOURCE_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/order-source-lookup.contract";
@@ -17,7 +16,7 @@ import { COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID } from "@bke/commerce/con
 import { COMMERCE_SUBSCRIPTION_STATUS_LOOKUP_CAPABILITY_ID } from "@bke/commerce/contracts/subscription-status-lookup.contract";
 import { COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID } from "@bke/commerce/contracts/zero-payment-fulfillment.contract";
 import { createCommerceCheckoutOfferPricingCapability } from "@bke/commerce/logic/checkout-offer-pricing";
-import { createCommerceCheckoutOrchestrationCapability, createCommercePaymentIntentCheckoutCapability } from "@bke/commerce/logic/checkout-orchestration";
+import { createCommerceCheckoutOrchestrationCapability } from "@bke/commerce/logic/checkout-orchestration";
 import type {
   CommerceAccountPurchaseAuthorizer,
   CommerceLegalAcceptanceChecker,
@@ -68,14 +67,11 @@ import {
   PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
   type PaymentsSettlementFactCapability,
 } from "@bke/payments/contracts/settlement-fact.contract";
-import { PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID, type PaymentsPaymentIntentCapability } from "@bke/payments/contracts/payment-intent.contract";
 import type { CapabilityModule, CapabilityResolver } from "../../contracts/capability";
 
 export interface CommerceModuleOptions {
   readonly connectionString: string;
   readonly claimUnits: CommerceClaimUnitIssuer;
-  /** Only configured from the host payment adapter; omit to expose immediate fail-closed checkout. */
-  readonly paymentIntentPolicy?: CommercePaymentIntentCheckoutPolicy;
 }
 
 export function createCommerceModule(options: CommerceModuleOptions): CapabilityModule {
@@ -124,7 +120,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       LEGAL_ACCEPTANCE_CAPABILITY_ID,
       PAYMENTS_CHECKOUT_ATTEMPT_CAPABILITY_ID,
       PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
-      PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID,
       ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
     ],
     provides: [
@@ -136,7 +131,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID,
       COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID,
       COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID,
-      COMMERCE_PAYMENT_INTENT_CHECKOUT_CAPABILITY_ID,
       COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID,
       COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID,
       COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID,
@@ -159,9 +153,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
       );
       const paymentSettlement = resolver.get<PaymentsSettlementFactCapability>(
         PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID,
-      );
-      const paymentIntent = resolver.get<PaymentsPaymentIntentCapability>(
-        PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID,
       );
       const entitlementGrant = resolver.get<EntitlementsDurableRightGrantCapability>(
         ENTITLEMENTS_DURABLE_RIGHT_GRANT_CAPABILITY_ID,
@@ -232,23 +223,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         paymentStarter,
       });
 
-      const paymentIntentCheckout: CommercePaymentIntentCheckoutCapability = options.paymentIntentPolicy
-        ? createCommercePaymentIntentCheckoutCapability({
-            accountAuthorizer,
-            legalChecker,
-            orderInvoiceCreation,
-            renewalCheckoutPricing,
-            checkoutOfferPricing,
-            zeroPaymentFulfillment,
-            paymentIntentStarter: paymentIntent,
-            policy: options.paymentIntentPolicy,
-          })
-        : Object.freeze({
-            async start() {
-              return { status: "FAILED" as const, code: "PAYMENT_INTENT_CREATION_DISABLED" as const };
-            },
-          });
-
       const payments: CommercePaymentsSettlementReconciler = {
         async reconcile(input) {
           const result = await paymentSettlement.reconcile(input);
@@ -279,7 +253,6 @@ export function createCommerceModule(options: CommerceModuleOptions): Capability
         { id: COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID, value: checkoutOfferPricing },
         { id: COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID, value: publicPromotionPreview },
         { id: COMMERCE_CHECKOUT_ORCHESTRATION_CAPABILITY_ID, value: checkoutOrchestration },
-        { id: COMMERCE_PAYMENT_INTENT_CHECKOUT_CAPABILITY_ID, value: paymentIntentCheckout },
         { id: COMMERCE_SETTLEMENT_REACTION_CAPABILITY_ID, value: settlementReaction },
         { id: COMMERCE_SETTLEMENT_FULFILLMENT_CAPABILITY_ID, value: settlementFulfillment },
         { id: COMMERCE_ZERO_PAYMENT_FULFILLMENT_CAPABILITY_ID, value: zeroPaymentFulfillment },

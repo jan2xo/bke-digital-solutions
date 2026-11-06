@@ -438,27 +438,14 @@ export async function securityCleanup(context: JobContext): Promise<JobSummary> 
 }
 
 export async function paymentOperations(context: JobContext): Promise<JobSummary> {
-  const staleReceivedBefore = new Date(context.now.getTime() - 5 * 60_000);
-  const retryableWebhooks = {
-    OR: [
-      {
-        status: "FAILED",
-        resolutionStatus: "OPEN",
-        lastErrorCode: {
-          in: ["PAYMENT_PROCESSING_RETRYABLE", "PAYMENT_PROVIDER_UNAVAILABLE"],
-        },
+  const failed = await db.webhookEvent.findMany({
+    where: {
+      status: "FAILED",
+      resolutionStatus: "OPEN",
+      lastErrorCode: {
+        in: ["PAYMENT_PROCESSING_RETRYABLE", "PAYMENT_PROVIDER_UNAVAILABLE"],
       },
-      {
-        status: "RECEIVED",
-        OR: [
-          { lastAttemptAt: { lte: staleReceivedBefore } },
-          { lastAttemptAt: null, receivedAt: { lte: staleReceivedBefore } },
-        ],
-      },
-    ],
-  } satisfies Prisma.WebhookEventWhereInput;
-  const webhooks = await db.webhookEvent.findMany({
-    where: retryableWebhooks,
+    },
     select: { id: true },
     orderBy: { receivedAt: "asc" },
     take: 20,
@@ -472,7 +459,7 @@ export async function paymentOperations(context: JobContext): Promise<JobSummary
   });
   if (context.dryRun) {
     return {
-      retryableWebhooks: webhooks.length,
+      retryableWebhooks: failed.length,
       reconciliationCandidates,
       automaticSettlement: false,
       emailQueued: 0,
@@ -481,7 +468,7 @@ export async function paymentOperations(context: JobContext): Promise<JobSummary
 
   let retried = 0;
   let failedRetries = 0;
-  for (const webhook of webhooks) {
+  for (const webhook of failed) {
     try {
       await retryStoredWebhook(webhook.id);
       retried += 1;
@@ -503,7 +490,7 @@ export async function paymentOperations(context: JobContext): Promise<JobSummary
         body: `Failed retries: ${failedRetries}. Reconciliation candidates: ${reconciliationCandidates}.`,
         category: "SYSTEM",
         data: {
-          retryableWebhooks: webhooks.length,
+          retryableWebhooks: failed.length,
           retried,
           failedRetries,
           reconciliationCandidates,

@@ -1,14 +1,13 @@
-import { verifyPinnedPackage } from "../../../tooling/verify-pinned-package";
 import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.16.0/bke-commerce-0.16.0.tgz";
-const EXPECTED_VERSION = "0.16.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.15.0/bke-commerce-0.15.0.tgz";
+const EXPECTED_VERSION = "0.15.0";
 const EXPECTED_SHA256 =
-  "bb12b53f920f0906e5a4463514c995500c025505ea6c35525412b6dcdcc89404";
+  "798e28a21e4c3ad0e87cf327662e77db3843cec89e6eda67170a66ba4e0a6003";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [moduleSource, packageSource, lockSource, nextConfigSource, commerceWorkflowSource, standaloneWorkflowSource] =
@@ -54,8 +53,6 @@ for (const marker of [
   "@bke/commerce/logic/",
   "@bke/commerce/prisma/repositories/",
   "@bke/commerce/module.manifest",
-  "COMMERCE_PAYMENT_INTENT_CHECKOUT_CAPABILITY_ID",
-  "createCommercePaymentIntentCheckoutCapability",
   "COMMERCE_CHECKOUT_OFFER_PRICING_CAPABILITY_ID",
   "createCommerceCheckoutOfferPricingCapability",
   "createPostgresCommerceCheckoutOfferPricingRepository",
@@ -170,8 +167,6 @@ const testEntries = readdirSync(resolve(moduleRoot, "test")).sort();
 if (JSON.stringify(testEntries) !== JSON.stringify(["consumer-adoption.certify.ts"])) {
   throw new Error(`Commerce staging tests must remain retired: ${JSON.stringify(testEntries)}`);
 }
-
-await verifyPinnedPackage({ name: "@bke/commerce", version: EXPECTED_VERSION, url: EXPECTED_RELEASE, sha256: EXPECTED_SHA256 });
 
 console.log(
   `Commerce package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedCommerce.integrity}`,

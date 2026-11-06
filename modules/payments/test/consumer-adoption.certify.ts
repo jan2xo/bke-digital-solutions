@@ -1,14 +1,13 @@
-import { verifyPinnedPackage } from "../../../tooling/verify-pinned-package";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.10.0/bke-payments-0.10.0.tgz";
-const EXPECTED_VERSION = "0.10.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/payments-v0.9.0/bke-payments-0.9.0.tgz";
+const EXPECTED_VERSION = "0.9.0";
 const EXPECTED_SHA256 =
-  "4bdd4e35bcdde99ef2835af2cf9faad91103486e4988887d84c2b9b3d80e0006";
+  "9ab16f457bc308fc26935ed47b3b8f2cfae3eb28036a3751f6460e3e93217f27";
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const [
@@ -47,9 +46,6 @@ const requiredPackageSurfaces = [
   "@bke/payments/logic/",
   "@bke/payments/prisma/repositories/",
   "@bke/payments/module.manifest",
-  "PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID",
-  "createPaymentsPaymentIntentCapability",
-  "createPostgresPaymentsPaymentIntentRepository",
   "PAYMENTS_RECONCILIATION_CAPABILITY_ID",
   "PAYMENTS_CHECKOUT_ATTEMPT_LOOKUP_CAPABILITY_ID",
   "createPaymentsCheckoutAttemptLookupCapability",
@@ -181,8 +177,6 @@ if (!migrationCompositorSource.includes("configuredMigrationsRoot")) {
     "The migration compositor must support module-owned external migration roots.",
   );
 }
-
-await verifyPinnedPackage({ name: "@bke/payments", version: EXPECTED_VERSION, url: EXPECTED_RELEASE, sha256: EXPECTED_SHA256 });
 
 console.log(
   `Payments package-backed consumer adoption and staging retirement GREEN; version=${EXPECTED_VERSION} integrity=${lockedPayments.integrity}`,

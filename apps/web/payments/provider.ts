@@ -1,7 +1,5 @@
 import "server-only";
 import { createPayMongoPaymentsAdapter } from "@bke/payments/providers/paymongo/paymongo-adapter";
-import { createPayMongoPaymentIntentAdapter } from "@bke/payments/providers/paymongo/paymongo-payment-intent-adapter";
-import type { PaymentsPaymentIntentProvider } from "@bke/payments/logic/payment-intent-provider";
 import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-attempt-provider";
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconciliation-provider";
@@ -68,30 +66,5 @@ export function createWebPaymentsAdapter(): WebPaymentsAdapter {
     paymentMethodTypes: ["qrph"],
     successUrl: (input) => `${origin}/checkout/success?order=${encodeURIComponent(input.commercialReference)}`,
     cancelUrl: (input) => `${origin}/checkout/cancel?order=${encodeURIComponent(input.commercialReference)}`,
-  });
-}
-
-
-/** Returns no Payment Intent provider until an optional public key is configured; mock/hosted-only operation needs no Payment Intent persistence. */
-export function createWebPaymentIntentProvider(): PaymentsPaymentIntentProvider | undefined {
-  const source = process.env.PROVIDER_CONFIG_SOURCE?.trim() || "environment";
-  if (source !== "environment") throw new Error("V2_DATABASE_PROVIDER_CONFIGURATION_NOT_MIGRATED");
-
-  const provider = process.env.PAYMENT_PROVIDER?.trim() || "mock";
-  if (provider === "mock") {
-    assertMockPaymentsAllowed();
-    return undefined;
-  }
-  if (provider !== "paymongo") throw new Error("V2_PAYMENT_PROVIDER_UNSUPPORTED");
-
-  const publicKey = process.env.PAYMONGO_PUBLIC_KEY?.trim();
-  if (!publicKey) return undefined;
-
-  const livemode = process.env.PAYMONGO_LIVEMODE === "true";
-  return createPayMongoPaymentIntentAdapter({
-    secretKey: required("PAYMONGO_SECRET_KEY"),
-    publicKey,
-    livemode,
-    paymentMethodTypes: ["qrph"],
   });
 }

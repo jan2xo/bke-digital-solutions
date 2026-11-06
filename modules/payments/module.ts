@@ -6,7 +6,6 @@ import { PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID } from "@bke/payments/c
 import { PAYMENTS_RECONCILIATION_CAPABILITY_ID } from "@bke/payments/contracts/reconciliation.contract";
 import { PAYMENTS_REFUND_INITIATION_CAPABILITY_ID } from "@bke/payments/contracts/refund-initiation.contract";
 import { PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID } from "@bke/payments/contracts/settlement-fact.contract";
-import { PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID, type PaymentsPaymentIntentCapability } from "@bke/payments/contracts/payment-intent.contract";
 import { createPaymentsCheckoutAttemptCapability } from "@bke/payments/logic/checkout-attempt";
 import { createPaymentsCheckoutAttemptLookupCapability } from "@bke/payments/logic/checkout-attempt-lookup";
 import { createPaymentsCommercialEventMatchCapability } from "@bke/payments/logic/commercial-event-match";
@@ -18,15 +17,12 @@ import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconci
 import { createPaymentsRefundInitiationCapability } from "@bke/payments/logic/refund-initiation";
 import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
 import { createPaymentsSettlementFactCapability } from "@bke/payments/logic/settlement-fact";
-import { createPaymentsPaymentIntentCapability } from "@bke/payments/logic/payment-intent";
-import type { PaymentsPaymentIntentProvider } from "@bke/payments/logic/payment-intent-provider";
 import { paymentsModuleManifest } from "@bke/payments/module.manifest";
 import { createPostgresPaymentsCheckoutAttemptRepository } from "@bke/payments/prisma/repositories/postgres-checkout-attempt-repository";
 import { createPostgresPaymentsProviderEventRepository } from "@bke/payments/prisma/repositories/postgres-provider-event-repository";
 import { createPostgresPaymentsReconciliationRepository } from "@bke/payments/prisma/repositories/postgres-reconciliation-repository";
 import { createPostgresPaymentsRefundRepository } from "@bke/payments/prisma/repositories/postgres-refund-repository";
 import { createPostgresPaymentsSettlementFactRepository } from "@bke/payments/prisma/repositories/postgres-settlement-fact-repository";
-import { createPostgresPaymentsPaymentIntentRepository } from "@bke/payments/prisma/repositories/postgres-payment-intent-repository";
 
 export interface PaymentsModuleOptions {
   readonly connectionString: string;
@@ -34,22 +30,6 @@ export interface PaymentsModuleOptions {
   readonly eventVerifier: PaymentsProviderEventVerifier;
   readonly refundProvider: PaymentsRefundProvider;
   readonly reconciliationProvider: PaymentsReconciliationProvider;
-  /** Omit for mock/standalone composition; omission exposes an immediate no-I/O disabled capability. */
-  readonly paymentIntentProvider?: PaymentsPaymentIntentProvider;
-}
-
-function disabledPaymentIntentCapability(): PaymentsPaymentIntentCapability {
-  return Object.freeze({
-    async create() {
-      return { status: "FAILED" as const, code: "CREATION_DISABLED" as const };
-    },
-    async createPaymentMethod() {
-      return { status: "FAILED" as const, code: "PROVIDER_UNAVAILABLE" as const };
-    },
-    async attachPaymentMethod() {
-      return { status: "FAILED" as const, code: "PROVIDER_UNAVAILABLE" as const };
-    },
-  });
 }
 
 export function createPaymentsModule(options: PaymentsModuleOptions): CapabilityModule {
@@ -61,8 +41,7 @@ export function createPaymentsModule(options: PaymentsModuleOptions): Capability
     !providerName ||
     providerName !== verifierName ||
     providerName !== refundProviderName ||
-    providerName !== reconciliationProviderName ||
-    (options.paymentIntentProvider && options.paymentIntentProvider.name.trim().toLowerCase() !== providerName)
+    providerName !== reconciliationProviderName
   ) {
     throw new Error("PAYMENTS_PROVIDER_VERIFIER_MISMATCH");
   }
@@ -83,12 +62,6 @@ export function createPaymentsModule(options: PaymentsModuleOptions): Capability
   const settlementFact = createPaymentsSettlementFactCapability(
     createPostgresPaymentsSettlementFactRepository(options.connectionString),
   );
-  const paymentIntent = options.paymentIntentProvider
-    ? createPaymentsPaymentIntentCapability(
-        createPostgresPaymentsPaymentIntentRepository(options.connectionString),
-        options.paymentIntentProvider,
-      )
-    : disabledPaymentIntentCapability();
   const refundInitiation = createPaymentsRefundInitiationCapability(
     createPostgresPaymentsRefundRepository(options.connectionString),
     options.refundProvider,
@@ -107,7 +80,6 @@ export function createPaymentsModule(options: PaymentsModuleOptions): Capability
         { id: PAYMENTS_COMMERCIAL_EVENT_MATCH_CAPABILITY_ID, value: commercialEventMatch },
         { id: PAYMENTS_PROVIDER_EVENT_INGESTION_CAPABILITY_ID, value: providerEventIngestion },
         { id: PAYMENTS_SETTLEMENT_FACT_CAPABILITY_ID, value: settlementFact },
-        { id: PAYMENTS_PAYMENT_INTENT_CAPABILITY_ID, value: paymentIntent },
         { id: PAYMENTS_REFUND_INITIATION_CAPABILITY_ID, value: refundInitiation },
         { id: PAYMENTS_RECONCILIATION_CAPABILITY_ID, value: reconciliation },
       ];

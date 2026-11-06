@@ -41,7 +41,6 @@ export const environmentSchema = z.object({
   UPSTASH_REDIS_REST_URL: z.preprocess(optional, z.url().optional()),
   UPSTASH_REDIS_REST_TOKEN: z.preprocess(optional, z.string().min(1).optional()),
   PAYMENT_PROVIDER: z.enum(["mock", "paymongo"]).default("mock"),
-  PAYMONGO_PUBLIC_KEY: z.preprocess(optional, z.string().min(1).optional()),
   PAYMONGO_SECRET_KEY: z.preprocess(optional, z.string().min(1).optional()),
   PAYMONGO_WEBHOOK_SECRET: z.preprocess(optional, z.string().min(1).optional()),
   PAYMONGO_LIVEMODE: bool.default(false),
@@ -83,7 +82,6 @@ export const environmentSchema = z.object({
   const environmentCredentialsRequired = value.NODE_ENV !== "test" && (value.PROVIDER_CONFIG_SOURCE === "environment" || value.PROVIDER_CONFIG_ALLOW_ENV_FALLBACK);
   if (environmentCredentialsRequired && value.PAYMENT_PROVIDER === "paymongo" && (!value.PAYMONGO_SECRET_KEY || !value.PAYMONGO_WEBHOOK_SECRET)) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "PayMongo credentials are required for the selected provider source" });
   if (environmentCredentialsRequired && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_LIVEMODE && value.PAYMONGO_SECRET_KEY?.startsWith("sk_live_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "live PayMongo credentials are forbidden when livemode is false" });
-  if (value.PAYMONGO_PUBLIC_KEY && !value.PAYMONGO_PUBLIC_KEY.startsWith(value.PAYMONGO_LIVEMODE ? "pk_live_" : "pk_test_")) context.addIssue({ code: "custom", path: ["PAYMONGO_PUBLIC_KEY"], message: "must match the selected PayMongo mode" });
   if (environmentCredentialsRequired && value.LOCAL_PRODUCTION_SIMULATION && value.PAYMENT_PROVIDER === "paymongo" && !value.PAYMONGO_SECRET_KEY?.startsWith("sk_test_")) context.addIssue({ code: "custom", path: ["PAYMONGO_SECRET_KEY"], message: "local production simulation accepts PayMongo test credentials only" });
   if (value.LOCAL_PRODUCTION_SIMULATION && value.PAYMONGO_LIVEMODE) context.addIssue({ code: "custom", path: ["PAYMONGO_LIVEMODE"], message: "must remain false in local production simulation" });
   if (value.DEPLOYMENT_ENV === "production" && value.PAYMENT_PROVIDER === "mock") context.addIssue({ code: "custom", path: ["PAYMENT_PROVIDER"], message: "mock payments are forbidden in production" });
@@ -127,7 +125,7 @@ export const environmentSchema = z.object({
       if (!configured || configured.length < 48 || placeholder.test(configured)) context.addIssue({ code: "custom", path: [key], message: "must be at least 48 characters and not a placeholder" });
     }
     if (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY && (value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY.length < 48 || placeholder.test(value.PROVIDER_CREDENTIALS_ENCRYPTION_KEY))) context.addIssue({ code: "custom", path: ["PROVIDER_CREDENTIALS_ENCRYPTION_KEY"], message: "must be at least 48 characters and not a placeholder" });
-    for (const key of ["PAYMONGO_PUBLIC_KEY", "PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY"] as const) {
+    for (const key of ["PAYMONGO_SECRET_KEY", "PAYMONGO_WEBHOOK_SECRET", "RESEND_API_KEY"] as const) {
       if (value[key] && placeholder.test(value[key])) context.addIssue({ code: "custom", path: [key], message: "must not be a placeholder" });
     }
   }
