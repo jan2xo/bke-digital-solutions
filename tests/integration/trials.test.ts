@@ -6,7 +6,7 @@ import { changeTrial, grantProductTrial } from "@/apps/web/trials/service";
 
 const db=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.DATABASE_URL!})});
 let userId="",adminId="",accountId="",editionId="",trialId="",licenseId="";
-describe.sequential("product trial lifecycle",()=>{
+describe("product trial lifecycle", { concurrent: false },()=>{
   beforeAll(async()=>{const suffix=Date.now().toString(36);const user=await db.user.create({data:{email:`trial-${suffix}@bke.test`,emailVerified:new Date(),ownedAccounts:{create:{type:"INDIVIDUAL",displayName:"Trial Customer",billingEmail:`trial-${suffix}@bke.test`}}},include:{ownedAccounts:true}});userId=user.id;accountId=user.ownedAccounts[0]!.id;adminId=(await db.user.create({data:{email:`trial-admin-${suffix}@bke.test`,emailVerified:new Date(),role:"ADMIN"}})).id;editionId=(await db.edition.findFirstOrThrow({where:{product:{slug:"bke-deskflow"},active:true}})).id});
   afterAll(()=>db.$disconnect());
   it("issues one seven-day self-service product entitlement",async()=>{const trial=await grantProductTrial({accountId,editionId,source:"SELF_SERVICE",actorId:userId});trialId=trial.id;licenseId=trial.licenseId;expect(trial.selfServiceYear).toBe(new Date().getUTCFullYear());expect(trial.trialEndsAt.getTime()-trial.trialStartsAt.getTime()).toBe(7*86400000);expect(trial.graceEndsAt).toEqual(trial.trialEndsAt);const license=await db.license.findUniqueOrThrow({where:{id:licenseId},include:{order:true}});expect(license.status).toBe("ACTIVE");expect(license.order.totalMinor).toBe(0);expect(license.expiresAt).toEqual(trial.graceEndsAt)});

@@ -12,7 +12,7 @@ describe("commercial control-plane separation", () => {
 
   it("keeps catalog lifecycle independent from GitHub release certification", () => {
     const route = readFileSync("app/api/admin/versions/[id]/route.ts", "utf8");
-    expect(route).toContain('releaseAuthority: "GITHUB"');
+    expect(route).toContain('distributionAuthority: "GITHUB_RELEASES"');
     expect(route).toContain("RELEASE_PUBLICATION_REQUIRES_STABLE");
     expect(route).not.toContain("@/lib/supply-chain/readiness");
     expect(route).not.toContain("@/lib/releases/release-gate");
@@ -23,7 +23,7 @@ describe("commercial control-plane separation", () => {
     const page = readFileSync("app/admin/releases/[id]/page.tsx", "utf8");
     expect(page).toContain("Enable for Licensing");
     expect(page).toContain("Disable for Licensing");
-    expect(page).toContain("Independent from GitHub release authority");
-    expect(page).toContain("Software release authority");
+    expect(page).toContain("Commercial lease eligibility remains controlled");
+    expect(page).toContain("GitHub owns software builds and distribution");
   });
 });

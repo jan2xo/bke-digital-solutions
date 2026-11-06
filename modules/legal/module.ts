@@ -5,6 +5,7 @@ import { LEGAL_REACCEPTANCE_STATUS_CAPABILITY_ID } from "@bke/legal/contracts/re
 import { createLegalAcceptanceCapability } from "@bke/legal/logic/acceptance";
 import { createLegalCheckoutRequirementsCapability } from "@bke/legal/logic/checkout-requirements";
 import { createLegalReacceptanceStatusCapability } from "@bke/legal/logic/reacceptance-status";
+import type { LegalReacceptanceStatusRepository } from "@bke/legal/logic/reacceptance-status-repository";
 import { legalModuleManifest } from "@bke/legal/module.manifest";
 import { createPostgresLegalAcceptanceRepository } from "@bke/legal/prisma/repositories/postgres-acceptance-repository";
 import { createPostgresLegalCheckoutRequirementsRepository } from "@bke/legal/prisma/repositories/postgres-checkout-requirements-repository";
@@ -12,6 +13,7 @@ import { createPostgresLegalReacceptanceStatusRepository } from "@bke/legal/pris
 
 export interface LegalModuleOptions {
   readonly connectionString: string;
+  readonly reacceptanceStatusRepository?: LegalReacceptanceStatusRepository;
 }
 
 export function createLegalModule(options: LegalModuleOptions): CapabilityModule {
@@ -22,7 +24,8 @@ export function createLegalModule(options: LegalModuleOptions): CapabilityModule
     createPostgresLegalCheckoutRequirementsRepository(options.connectionString),
   );
   const reacceptanceStatus = createLegalReacceptanceStatusCapability(
-    createPostgresLegalReacceptanceStatusRepository(options.connectionString),
+    options.reacceptanceStatusRepository ??
+      createPostgresLegalReacceptanceStatusRepository(options.connectionString),
   );
 
   return Object.freeze({

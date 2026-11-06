@@ -12,7 +12,6 @@ import {
   preparedRenewalRecovery,
   renewalReminders,
   securityCleanup,
-  storageLifecycle,
 } from "@/apps/web/scheduler/handlers";
 import { backupCreation, backupRetention } from "@/apps/web/backups/scheduler";
 import { schedulerStore } from "@/platform/host/scheduler/store";
@@ -20,7 +19,6 @@ import { schedulerLockProvider } from "@/platform/host/scheduler/lock-provider";
 import { schedulerEventSink } from "@/platform/host/scheduler/event-sink";
 
 const handlers = new Map<string, ScheduledJob["handler"]>([
-  ["storage.lifecycle", storageLifecycle],
   ["email.outbox", emailLifecycle],
   ["subscriptions.renewal-reminders", renewalReminders],
   ["entitlements.expiration", entitlementExpirations],

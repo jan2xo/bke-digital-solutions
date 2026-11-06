@@ -1,22 +1,16 @@
 import "server-only";
-import { Resend } from "resend";
-import { env } from "@/platform/host/env";
-import { db } from "@/platform/host/db";
 import type { Prisma } from "@/platform/host/generated/prisma/client";
-import { resolveResendConfiguration } from "@/lib/provider-config/service";
-import { EmailDeliveryError, normalizeEmailFailure, safeEmailFailureCode } from "@/lib/email/failures";
+import type { EmailMessage, EmailProvider } from "@/platform/email/contracts";
 
-type Message={to:string;subject:string;text:string;idempotencyKey?:string};
-export interface EmailProvider{send(message:Message):Promise<void>}
-class ResendProvider implements EmailProvider{async send(message:Message){const config=await resolveResendConfiguration();const client=new Resend(config.apiKey);try{const {idempotencyKey,...email}=message;const result=await client.emails.send({from:`${config.senderName} <${config.senderEmail}>`,...email},idempotencyKey?{idempotencyKey}:undefined);if(result.error)throw new EmailDeliveryError(normalizeEmailFailure(result.error));}catch(error){if(error instanceof EmailDeliveryError)throw error;throw new EmailDeliveryError(normalizeEmailFailure(error));}}}
-class DevelopmentProvider implements EmailProvider{async send(message:Message){console.info(`[development email] queued: ${message.subject}`)}}
-class RuntimeEmailProvider implements EmailProvider{async send(message:Message){const disabled=process.env.BKE_DISABLE_EXTERNAL_EMAIL==="true"||(env.NODE_ENV==="test"&&!process.env.RESEND_SANDBOX_TO);const useLog=env.EMAIL_PROVIDER!=="resend"&&!process.env.RESEND_SANDBOX_TO;if(disabled||useLog)return new DevelopmentProvider().send(message);return new ResendProvider().send(message)}}
-export const emailProvider:EmailProvider=new RuntimeEmailProvider();
-
-export async function sendVerificationEmail(email:string,token:string){const url=new URL("/api/auth/verify",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Verify your BKE Digital Solutions account",text:`Verify your account using this one-time link: ${url}`})}
-export async function sendMagicLink(email:string,token:string){const url=new URL("/api/auth/magic/consume",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Your BKE Digital Solutions sign-in link",text:`Sign in using this one-time link (expires in 15 minutes): ${url}`})}
-export async function sendPasswordReset(email:string,token:string){const url=new URL("/reset-password",env.APP_URL);url.searchParams.set("token",token);await emailProvider.send({to:email,subject:"Reset your BKE Digital Solutions password",text:`Reset your password using this one-time link (expires in 30 minutes): ${url}`})}
-export async function sendAdministratorLoginCode(email:string,code:string,reference:string){await emailProvider.send({to:email,subject:`Your BKE administrator verification code [${reference}]`,text:`Your BKE administrator verification code is ${code}. Verification reference: ${reference}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid. If you did not request this code, do not share it and review your account security.`})}
+// Queueing never loads transport configuration, keeping security operations
+// independent of outbound email. Delivery has one canonical implementation.
+export type { EmailProvider } from "@/platform/email/contracts";
+export const emailProvider: EmailProvider = Object.freeze({
+  async send(message: EmailMessage) {
+    const delivery = await import("@/apps/web/email");
+    return delivery.emailProvider.send(message);
+  },
+});
 
 export async function queueCommerceEmail(tx:Prisma.TransactionClient,input:{type:string;recipient:string;subject:string;payload:Record<string,unknown>;deduplicationKey?:string}){
   const data={...input,payload:input.payload as Prisma.InputJsonValue};
@@ -24,6 +18,8 @@ export async function queueCommerceEmail(tx:Prisma.TransactionClient,input:{type
   await tx.emailOutbox.create({data});
 }
 export async function queueSecurityEmail(tx:Prisma.TransactionClient,input:{type:string;recipient:string;subject:string;deduplicationKey:string;payload?:Record<string,unknown>}){await tx.emailOutbox.createMany({data:[{...input,payload:(input.payload??{}) as Prisma.InputJsonValue}],skipDuplicates:true})}
-const DURABLE_EMAIL_TYPES=["INVOICE_ISSUED","SECURITY_SESSIONS_REVOKED","SECURITY_NEW_SESSION","SECURITY_ACCOUNT_CHANGED"] as const;
-function render(type:string,payload:Record<string,unknown>){const invoice=String(payload.invoiceNumber??"");if(type==="INVOICE_ISSUED")return `Commercial invoice ${invoice} is available in your customer portal.`;if(type==="SECURITY_SESSIONS_REVOKED")return "Administrator session access was revoked. If this was not you, reset your password and review the security dashboard.";if(type==="SECURITY_NEW_SESSION")return "A new administrator session was created. Review the security dashboard if this was not you.";if(type==="SECURITY_ACCOUNT_CHANGED")return "A high-impact administrator security setting changed. Review the security dashboard if this was not you.";throw new Error("EMAIL_TYPE_NOT_DELIVERABLE")}
-export async function dispatchEmailOutbox(limit=20, options:{workerId?:string;claimTtlMs?:number}={}){const workerId=options.workerId??`email-worker:${crypto.randomUUID()}`;const claimTtlMs=options.claimTtlMs??5*60_000;const now=new Date();const expiry=new Date(now.getTime()+claimTtlMs);const recovered=await db.emailOutbox.updateMany({where:{status:"PROCESSING",claimExpiresAt:{lt:now}},data:{status:"FAILED",claimedBy:null,claimedAt:null,claimExpiresAt:null}});const rows=await db.emailOutbox.findMany({where:{status:{in:["PENDING","FAILED"]},attempts:{lt:5},type:{in:[...DURABLE_EMAIL_TYPES]}},orderBy:{createdAt:"asc"},take:limit});let sent=0,failed=0,terminal=0,skipped=0;for(const row of rows){const claimed=await db.emailOutbox.updateMany({where:{id:row.id,status:row.status,attempts:row.attempts},data:{status:"PROCESSING",claimedBy:workerId,claimedAt:now,claimExpiresAt:expiry}});if(!claimed.count){skipped++;continue}try{await emailProvider.send({to:row.recipient,subject:row.subject,text:render(row.type,row.payload as Record<string,unknown>),idempotencyKey:row.id});const completed=await db.emailOutbox.updateMany({where:{id:row.id,status:"PROCESSING",claimedBy:workerId},data:{status:"SENT",sentAt:new Date(),attempts:{increment:1},lastError:null,claimedBy:null,claimedAt:null,claimExpiresAt:null}});if(completed.count)sent++;else skipped++}catch(error){const final=row.attempts+1>=5;const completed=await db.emailOutbox.updateMany({where:{id:row.id,status:"PROCESSING",claimedBy:workerId},data:{status:final?"PERMANENTLY_FAILED":"FAILED",attempts:{increment:1},lastError:safeEmailFailureCode(error),claimedBy:null,claimedAt:null,claimExpiresAt:null}});if(completed.count){failed++;if(final)terminal++}else skipped++}}const result={selected:rows.length,recovered:recovered.count,sent,failed,terminal,skipped,workerId};console.info("email_outbox.dispatch",result);return result}
+
+export async function dispatchEmailOutbox(limit = 20, options: { workerId?: string; claimTtlMs?: number } = {}) {
+  const delivery = await import("@/apps/web/email");
+  return delivery.dispatchEmailOutbox(limit, options);
+}

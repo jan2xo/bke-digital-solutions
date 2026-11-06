@@ -1,9 +1,8 @@
 import "dotenv/config";
-import argon2 from "argon2";
 import { expect, test } from "@playwright/test";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { enrollAndLoginAdmin } from "./mfa-helper";
+import { signInGoogleTestUser } from "./google-session-helper";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
@@ -11,9 +10,8 @@ test.afterAll(() => db.$disconnect());
 test("administrator can request a backup dry run while customers fail closed", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `backup-browser-${suffix}@bke.test`;
-  const password = "Backup-Browser-2026!";
-  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", credential: { create: { passwordHash: await argon2.hash(password) } } } });
-  await enrollAndLoginAdmin(page, email, password);
+  const admin = await db.user.create({ data: { email, emailVerified: new Date(), role: "ADMIN", } });
+  await signInGoogleTestUser(page, email, db);
   await page.goto("/admin/backups");
   await expect(page.getByRole("heading", { name: "Backups" })).toBeVisible();
   const response = page.waitForResponse((item) => item.url().endsWith("/api/admin/backups") && item.request().method() === "POST");

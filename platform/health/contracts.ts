@@ -25,6 +25,5 @@ export interface ReadinessEventSink {
 export type CoreReadinessDependencies = Readonly<{
   postgresql(): Promise<unknown>;
   valkey(): Promise<unknown>;
-  objectStorage(): Promise<unknown>;
   providers(): Promise<unknown>;
 }>;

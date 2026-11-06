@@ -14,3 +14,14 @@ test-results
 .certification-secrets/
 .supply-chain/
 .bke-disposable/
+
+.open-next/
+.wrangler/
+.dev.vars
+.dev.vars.*
+workers/env.d.ts
+
+.workers-build/
+
+.wrangler-staging.json
+.wrangler-staging-secrets.json

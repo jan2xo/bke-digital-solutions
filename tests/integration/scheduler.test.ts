@@ -11,7 +11,7 @@ const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,
 let adminId = "", accountId = "", subscriptionId = "", licenseId = "";
 const runIds: string[] = [];
 
-describe.sequential("durable scheduler", () => {
+describe("durable scheduler", { concurrent: false }, () => {
   beforeAll(async () => {
     const admin = await db.user.create({ data: { email: `scheduler-admin-${suffix}@bke.test`, emailVerified: new Date(), role: "ADMIN" } }); adminId = admin.id;
     const owner = await db.user.create({ data: { email: `scheduler-owner-${suffix}@bke.test`, emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Scheduler Test", billingEmail: `scheduler-owner-${suffix}@bke.test` } } }, include: { ownedAccounts: true } }); accountId = owner.ownedAccounts[0]!.id;
