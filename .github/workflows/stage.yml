@@ -376,7 +376,7 @@ jobs:
         run: |
           {
             echo "## Disposable browser acceptance"
-            echo "Exact source: `$SOURCE_SHA`"
+            echo "Exact source SHA: $SOURCE_SHA"
             echo "Synthetic Google-bound sessions against fresh loopback PostgreSQL only."
             echo "Provider Google OAuth and real staging administrator are not simulated or claimed."
           } >> "$GITHUB_STEP_SUMMARY"
@@ -573,7 +573,7 @@ jobs:
         run: |
           {
             echo "## Staging acceptance boundary"
-            echo "Exact deployed source: `$SOURCE_SHA`"
+            echo "Exact deployed source SHA: $SOURCE_SHA"
             echo "Automated: public pages, dependency readiness and unauthenticated admin browser denial."
             echo "Not verified by this workflow: real Google OAuth, administrator login, create/edit/archive/delete through a human-authenticated browser, suspended-user and revoked-session integration."
           } >> "$GITHUB_STEP_SUMMARY"
