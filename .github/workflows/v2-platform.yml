@@ -17,8 +17,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.source_sha || github.sha }}
-  cancel-in-progress: true
+  group: platform-${{ inputs.source_sha }}
+  cancel-in-progress: false
 
 jobs:
   platform:
@@ -38,6 +38,8 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Verify Platform and staging workflow contracts
+        run: npx --no-install vitest run tests/ci-intent-driven-certification.test.ts tests/staging-trigger-ci.test.ts
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Typecheck architecture

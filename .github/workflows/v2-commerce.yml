@@ -17,8 +17,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.source_sha }}
-  cancel-in-progress: true
+  group: commerce-${{ inputs.source_sha }}
+  cancel-in-progress: false
 
 jobs:
   commerce:
