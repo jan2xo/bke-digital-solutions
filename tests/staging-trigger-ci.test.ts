@@ -26,6 +26,8 @@ describe("intentional exact-head disposable staging", () => {
     expect(workflow).toContain("cancel-in-progress: false");
     expect(workflow).toContain("Required exact-head certification aggregate");
     expect(workflow).toContain("needs.workers-application.result == 'success'");
+    expect(workflow).toContain("needs.browser-fixture.result == 'success'");
+    expect(workflow).toContain("BKE_E2E_DISPOSABLE_DB: '1'");
     expect(workflow).toContain("needs.required-certification.result == 'success'");
     expect(workflow).toContain("const required =");
     expect(workflow).toContain("results[name]?.result !== \"success\"");
