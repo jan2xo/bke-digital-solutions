@@ -9,6 +9,7 @@ const expectedActive = [
   "certify.yml",
   "ci.yml",
   "native-bke-account-handoff.yml",
+  "stage.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-catalog.yml",
