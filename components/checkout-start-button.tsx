@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { parseCheckoutQrImage } from "./checkout-qr-image";
 
 type CheckoutAccount = Readonly<{ id: string; name: string }>;
@@ -95,33 +95,86 @@ const KNOWN_PRE_CREATION_ERRORS = new Set([
   "RATE_LIMITED",
 ]);
 
-export function CheckoutStartButton({
-  purchasePlanId,
-  currentEmail,
-  giftCheckoutEnabled,
-  paymentIntentEnabled,
-  accounts,
-  legalDocuments,
-}: {
+type CheckoutStartButtonProps = {
   purchasePlanId: string;
   currentEmail: string;
   giftCheckoutEnabled: boolean;
   paymentIntentEnabled: boolean;
   accounts: CheckoutAccount[];
   legalDocuments: LegalDocument[];
-}) {
+};
+
+// React reads the server snapshot during hydration, so no localStorage state is
+// consumed until after hydration. This avoids both markup mismatches and effect
+// setters that could erase an interrupted Payment Intent checkout.
+const subscribeToHydration = () => () => {};
+const clientHydrationSnapshot = () => true;
+const serverHydrationSnapshot = () => false;
+
+export function CheckoutStartButton(props: CheckoutStartButtonProps) {
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration, clientHydrationSnapshot, serverHydrationSnapshot,
+  );
+  if (props.paymentIntentEnabled && !hydrated) {
+    return <p className="mt-6 text-sm text-slate-400" role="status">Restoring your secure checkout…</p>;
+  }
+  return <CheckoutStartButtonClient
+    key={props.currentEmail.trim().toLowerCase() + "\0" + props.purchasePlanId}
+    {...props}
+  />;
+}
+
+type RestoredCheckout = Readonly<{ accountId: string; record: StoredCheckoutState }>;
+
+function readPendingCheckout(
+  currentEmail: string, purchasePlanId: string, accounts: readonly CheckoutAccount[],
+): RestoredCheckout | null {
+  try {
+    for (const account of accounts) {
+      const raw = window.localStorage.getItem(storageKey(currentEmail, purchasePlanId, account.id));
+      if (!raw) continue;
+      try {
+        const parsed: unknown = JSON.parse(raw);
+        if (isRecord(parsed) &&
+          parsed.email === currentEmail &&
+          parsed.purchasePlanId === purchasePlanId &&
+          parsed.customerAccountId === account.id &&
+          (parsed.locked || parsed.uncertain || Boolean(parsed.orderId))) {
+          return { accountId: account.id, record: parsed };
+        }
+      } catch {
+        // A malformed record cannot authorize or replace a valid pending order.
+      }
+    }
+  } catch {
+    // Storage failures never result in an untracked provider request: persist()
+    // must still succeed before starting the checkout API call.
+  }
+  return null;
+}
+
+function CheckoutStartButtonClient({
+  purchasePlanId, currentEmail, giftCheckoutEnabled,
+  paymentIntentEnabled, accounts, legalDocuments,
+}: CheckoutStartButtonProps) {
+  const [pending] = useState(() =>
+    paymentIntentEnabled ? readPendingCheckout(currentEmail, purchasePlanId, accounts) : null,
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [accountId, setAccountId] = useState(accounts[0]?.id ?? "");
-  const [offer, setOffer] = useState("");
-  const [purchaseFor, setPurchaseFor] = useState<"SELF" | "GIFT">("SELF");
-  const [accepted, setAccepted] = useState<string[]>([]);
+  const [accountId, setAccountId] = useState(pending?.accountId ?? accounts[0]?.id ?? "");
+  const [offer, setOffer] = useState(pending?.record.offer ?? "");
+  const [purchaseFor, setPurchaseFor] = useState<"SELF" | "GIFT">(pending?.record.purchaseFor ?? "SELF");
+  const [accepted, setAccepted] = useState<string[]>(() =>
+    (pending?.record.accepted ?? []).filter((item) =>
+      legalDocuments.some((document) => document.versionId === item)),
+  );
   const [legalAttempted, setLegalAttempted] = useState(false);
-  const [restored, setRestored] = useState(!paymentIntentEnabled);
-  const [locked, setLocked] = useState(false);
-  const [uncertain, setUncertain] = useState(false);
-  const [nonce, setNonce] = useState("");
-  const [orderId, setOrderId] = useState("");
+  const restored = true;
+  const [locked, setLocked] = useState(Boolean(pending));
+  const [uncertain, setUncertain] = useState(pending?.record.uncertain ?? false);
+  const [nonce, setNonce] = useState(pending?.record.paymentIntentNonce ?? "");
+  const [orderId, setOrderId] = useState(pending?.record.orderId ?? "");
   const [orderNumber, setOrderNumber] = useState("");
   const [paymentIntent, setPaymentIntent] = useState<PaymentIntentUi | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | undefined>();
@@ -129,9 +182,7 @@ export function CheckoutStartButton({
   const [recoveryRequired, setRecoveryRequired] = useState(false);
   const legalPanel = useRef<HTMLFieldSetElement>(null);
   const storage = storageKey(currentEmail, purchasePlanId, accountId);
-  const restoreContext = currentEmail.trim().toLowerCase() + "\0" + purchasePlanId;
-  const restoredContext = useRef<string | null>(null);
-  const pollStartedAt = useRef<number | null>(null);
+  const pollStartedAt = useRef<number | null>(pending?.record.orderId ? Date.now() : null);
   const checkoutRequestGeneration = useRef(0);
   const checkoutTerminal = useRef(false);
   const activeCheckoutRequest = useRef<AbortController | null>(null);
@@ -185,72 +236,6 @@ export function CheckoutStartButton({
     setUncertain(false);
     pollStartedAt.current = null;
   }, [nonce, removeOwnedSavedCheckout]);
-
-  useEffect(() => {
-    if (!paymentIntentEnabled) {
-      setRestored(true);
-      return;
-    }
-    if (restoredContext.current === restoreContext) {
-      setRestored(true);
-      return;
-    }
-    restoredContext.current = restoreContext;
-    setRestored(false);
-    const candidates: Array<{ accountId: string; record: StoredCheckoutState }> = [];
-    try {
-      for (const account of accounts) {
-        const raw = window.localStorage.getItem(storageKey(currentEmail, purchasePlanId, account.id));
-        if (!raw) continue;
-        try {
-          const parsed: unknown = JSON.parse(raw);
-          if (isRecord(parsed) &&
-              parsed.email === currentEmail &&
-              parsed.purchasePlanId === purchasePlanId &&
-              parsed.customerAccountId === account.id) {
-            candidates.push({ accountId: account.id, record: parsed });
-          }
-        } catch {
-          // Ignore malformed entries and continue looking for a valid pending checkout.
-        }
-      }
-      const pending = candidates.find(({ record }) => record.locked || record.uncertain || Boolean(record.orderId));
-      if (pending) {
-        const { accountId: savedAccountId, record } = pending;
-        setAccountId(savedAccountId);
-        setPurchaseFor(record.purchaseFor);
-        setOffer(record.offer);
-        setNonce(record.paymentIntentNonce);
-        setLocked(true);
-        setUncertain(record.uncertain);
-        setOrderId(record.orderId ?? "");
-        setPaymentIntent(null);
-        setPaymentStatus(undefined);
-        setAccepted((record.accepted ?? []).filter((item) => legalDocuments.some((document) => document.versionId === item)));
-        if (record.orderId) pollStartedAt.current = Date.now();
-      }
-      for (const { accountId: savedAccountId, record } of candidates) {
-        if (!record.locked && !record.uncertain && !record.orderId) {
-          const key = storageKey(currentEmail, purchasePlanId, savedAccountId);
-          try {
-            const latestRaw = window.localStorage.getItem(key);
-            if (latestRaw) {
-              const latest: unknown = JSON.parse(latestRaw);
-              if (isRecord(latest) && latest.paymentIntentNonce === record.paymentIntentNonce &&
-                  !latest.locked && !latest.uncertain && !latest.orderId) {
-                window.localStorage.removeItem(key);
-              }
-            }
-          } catch {
-            // Preserve records that cannot be read and compared safely.
-          }
-        }
-      }
-    } catch {
-      // Storage access failures do not trigger provider calls; start will fail closed if persistence is unavailable.
-    }
-    setRestored(true);
-  }, [restoreContext, currentEmail, purchasePlanId, accounts, legalDocuments, paymentIntentEnabled]);
 
   useEffect(() => {
     if (!paymentIntentEnabled || checkoutTerminal.current || !orderId || !locked || paymentStatus === "PAID" || paymentStatus === "CANCELLED" || paymentStatus === "REFUNDED") {
