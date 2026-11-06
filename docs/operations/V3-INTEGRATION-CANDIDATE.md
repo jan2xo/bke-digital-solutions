@@ -1,33 +1,54 @@
 # V3 held integration candidate
 
-This source assembly reuses existing intents without merging or deploying: security PR269 at 0bcdddc6612b53ec30a87c4194e1ce9f9df9aa11; Supply Chain consumer retirement PR273 at 9094b53cc9c27a26357258ed3f6868eb64ee104b; business-only database PR274 at 17085d124d354d6415122719eb1e205a1c1cee39; Google-only policy PR267 at a91d2cd7c7c03d9d9e0dfdf369cadeedc11007ba; Workers baseline PR266 at b808245f90cb244862ac8edc505b851e952540f1. Main remains a36d9decffa6936114a9578857558a9687ca4e7f until separately approved integration.
+This is the source integration plan and evidence boundary for PR266. No merge, deployment or production authentication cutover is authorized. GitHub is canonical; the PR ledger records the exact current head and Actions runs.
 
-The final schema contains 67 models: business/licensing authority and GoogleIdentity, with the eight retired artifact/storage/release models removed. Both approved forward migrations remain unchanged and ordered. Shared Identity remains the immutable 0.5.0 release, including historical package-owned structures required by other consumers. No live database is modified by source assembly.
+## Source and responsibility ownership
 
-Security dependency choices are copied from reviewed PR269: Prisma client/adapter/CLI7.10.1, Next16.4.5, Zod4.6.7 and its security overrides. Preserve OpenNext1.20.15, Wrangler4.157.0 and the Workers lint configuration. Do not splice npm lock integrity or generated Prisma internals.
+The assembly starts from Workers PR266 at b808245f90cb244862ac8edc505b851e952540f1 and incorporates frozen source from security PR269 at 0bcdddc6612b53ec30a87c4194e1ce9f9df9aa11, Supply Chain retirement PR273 at 9094b53cc9c27a26357258ed3f6868eb64ee104b, business-only persistence PR274 at 17085d124d354d6415122719eb1e205a1c1cee39, and Google-only PR267 at a91d2cd7c7c03d9d9e0dfdf369cadeedc11007ba. Those source PRs remain unmerged. Default main was verified at a36d9decffa6936114a9578857558a9687ca4e7f on 2026-11-06; reverify before integration.
 
-## Disposable generation and verification
+Google owns primary identity. BKE binds immutable Google subjects and owns sessions, lifecycle/revocation, roles, legal consent and business authorization. Gmail and verified Workspace contacts satisfy the approved contact policy. Password, magic-link, email OTP and application MFA consumers are retired. Administrator roles require explicit BKE authority; an email address never grants a role. Sensitive actions remain locked without a fresh validated signed Google auth_time; account selection, callback time and token iat are not reauthentication or MFA.
 
-The existing CI workflow has a read-only push path restricted to the single integration branch. It uses pinned official checkout/setup/upload Actions, verifies the exact pushed source, regenerates the npm lock and normalized Prisma client on Actions, and uploads only public source plus provenance. It has no repository write, deployment, OIDC or protected environment access. PR270's privileged dispatcher stays parked.
+GitHub owns public product images and distributable artifacts. Digital Solutions owns catalog/pricing, accounts/orders, entitlements, licensing/signing, version policy and controlled download routing. Product artifact ingestion, malware/scanner/evidence storage and download-grant tables are retired. Private encrypted database backup is separate; Node/Docker pg_dump/pg_restore capability is not represented as Worker-native.
 
-A successful generation job means only that review artifacts were produced. Inspect its successful job, exact source and artifact provenance, retain the unchanged manifest/schema, then commit the authentic lock/client. On subsequent branch pushes, generation must produce no diff before the existing workerd receiving proof runs. The ordinary core certification gates remain unchanged for manual/reusable invocation. Push generation is not full certification; protected deployment still requires its existing workflow-dispatch inputs, core gates and environment review.
+The combined schema has 67 models including one GoogleIdentity. The eight dedicated retirement models are absent. Approved forward migrations remain unchanged and ordered; historical/shared Identity structures stay intact. No live database is modified by this source assembly.
 
-Use the existing /certify intent for exact-head core/module checks; the trusted default-branch caller uses main workflow definitions. Keep branch-defined Workers proof separate and record both source and workflow provenance. Host/composition may need sequential requests because the trusted main definitions share a concurrency group.
+Workers retain operation-scoped database/capability lifetimes and Hyperdrive-backed receiving. Node/Docker remains a cold fallback target. No new service, queue, storage system or privileged controller is introduced.
 
-## Receiving boundaries and remaining checklist
+## Authentic generation and security evidence
 
-- [x] Preserve central account, business, entitlement, licensing/signing and activation ownership.
-- [x] Keep public product images and distributable artifacts on GitHub.
-- [x] Carry the Google-only policy without restoring password/MFA/email login.
-- [x] Preserve Worker operation-scoped clients and Node/Docker fallback lifetime.
-- [ ] Inspect and commit Actions-generated lock and complete normalized Prisma client.
-- [ ] Pass exact-head core, module, security and actual workerd receiving checks.
-- [ ] Execute retirement refusal, lock-contention and rollback tests against disposable PostgreSQL.
-- [ ] Execute the retained browser business scenarios in their validated disposable environment.
-- [ ] Implement/certify Cloudflare primary business email with Resend fallback through the existing provider boundary; neither is an authentication dependency.
-- [ ] Observe real Google sign-in and signed auth_time availability. Protected actions stay locked without valid fresh proof.
-- [ ] Verify Workers Paid effective settings/cold-warm resource use and installed Agent/Launcher behavior separately.
-- [ ] Verify private encrypted database backup execution through a Node-capable path; Worker source does not provide pg_dump/pg_restore.
+The first complete normalized Prisma client and combined lock were generated by Actions run42129345626 at source00fefd394909eb587020103d54a45642cfba0e48 and committed at b372d17f6c9afb83bc3d2ca641d134d98032aba5. Artifact SHA-256 c2cb4eea721cae37f1183108476ad68cfb929474f93e6824e4c296e474d20101 was independently verified before import. All 67 generated model modules match the schema; the eight obsolete generated models were removed.
+
+Security versions include Prisma client/adapter/CLI7.10.1, Next16.4.5 and Zod4.6.7, preserving OpenNext1.20.15 and Wrangler4.157.0. Actual audits exposed vulnerable OpenNext build dependencies and Vitest/Tinypool development dependencies. Explicit parent-scoped glob14.0.2 overrides and compatible brace-expansion1/js-yaml4/Vite7 fixes were verified against real generated output. Vitest5.1.0 replaces the vulnerable Tinypool chain; clearMocks:false preserves prior default behavior. Fifteen database suites use the supported concurrent:false option instead of the removed describe.sequential API, retaining their assertions and ordering.
+
+The final security lock was generated at source2027c92b32cf9328fa074066b8326c97db7db2da by Actions run42137967141 and committed at c50e3889c3d680af21ea69fdb1f675e260db55a9. Artifact13465684367 SHA-256 is 7b048a7fad8a7558fa00c8809e7ce62b61fd907475a2cc2d6864268692c00c90. Independent comparison confirmed the commit changes only the authentic lock, while manifest/schema/generated output match the artifact.
+
+Captured production audit: zero vulnerabilities. Full install: eight moderate, zero high, zero critical. The remaining moderate entries propagate one minimatch10.2.6 advisory through the development TypeScript-ESLint/Next lint chain. Do not describe the full install as vulnerability-free or override minimatch to a new incompatible major merely to clear the report.
+
+The temporary branch-push generation bootstrap had read-only contents permission, pinned Actions, no protected environment/secrets/OIDC/repository writes and no deployment. Existing ownership checks correctly rejected an automatic push trigger. That bootstrap is removed from the final workflow; intentional-CI rules and detectors are preserved. PR270's privileged dispatcher and PR272's Redis controller remain parked. Successful artifact generation never substitutes for certification.
+
+Use the existing /certify intent for exact-head checks. The trusted default-branch caller uses main workflow definitions, distinct from its candidate source checkout. Host, composition and Prisma isolation may require sequential requests while trusted main shares concurrency groups. Record run/attempt/source/workflow identity; do not transfer an earlier head's result to a later commit.
+
+## Evidence and remaining checklist
+
+- [x] Assemble frozen source lanes, preserve business/identity authority and the Worker scope.
+- [x] Independently verify and commit authentic normalized client and repaired lock.
+- [x] Execute all14 retirement safety tests against disposable PostgreSQL at b372d17: empty retirement, populated-state/evidence refusal, concurrent writer timeout and partial-DDL rollback passed. Final-head suite rerun remains required.
+- [x] Correct missing synthetic Google fixture binding without relaxing real session admission; restore scoped readiness and fixed enum-only Valkey diagnostics.
+- [x] Align admin catalog browser coverage with JSON GitHub-release metadata, retaining business/admin authorization assertions.
+- [ ] Pass the final exact-head core/full test, build, security and relevant module certification.
+- [x] Actual Workers receiving run42160368123 passed at9fbe50dfc6f6c373d42e6ae6caa6055d7460a2c6: lint/typecheck, production high/critical audit, genuine OpenNext build/upload, local startup profile, public browse/key registry, concurrent authenticated dashboards, logout and fresh revocation via local Hyperdrive with direct database URLs removed. Upload was12628.56KiB (gzip3247.25KiB), below the measured64MiB contract. This is local receiving evidence, not provider sign-in, commercial signing or deployed resource acceptance. The subsequent final cleanup changes only workflow/runbook; it does not rerun workerd at its own new SHA.
+- [ ] Execute retained browser business scenarios in their validated disposable environment. Fixtures prove post-Google sessions, not real provider authentication.
+- [ ] Observe real Google sign-in, returning sessions, signed auth_time availability and native Agent/Launcher handoff separately.
+- [ ] Verify effective Workers Paid settings, cold/warm resources and real commercial lease/transaction behavior before deployment acceptance.
+- [ ] Verify private encrypted backup execution through its Node-capable path.
 - [ ] Obtain separate integration/merge and deployment authority.
 
-No production authentication cutover, apex/DNS change, deployment, paid-resource change or connected Neon deletion is authorized.
+## Continue the product plan
+
+After the held authentication/integration source passes its required gates, continue through the existing provider boundaries:
+
+1. Implement Cloudflare primary business email with Resend fallback. Neither may become an authentication dependency. Preserve durable invoice/security delivery ownership. Do not retry or fall back blindly after ambiguous provider acceptance; Cloudflare's binding documentation does not provide an idempotency input. Confirm the delivery-uncertainty policy and actual sender/configuration before enabling real sending. Keep Node/Docker fallback capability explicit.
+2. Complete the existing branded PayMongo checkout receiving requirements from PR271, preserving server-owned pricing, order/payment idempotency, entitlement issuance and licensing authorization.
+3. Exercise purchasing, Claim Codes, license activation/revocation, protected/admin operations and GitHub download routing through the resulting integrated application.
+
+No production/apex DNS change, live database mutation, merge, deployment, paid-resource change, new secret destination or live mail enabling is included in this plan's source authorization.
