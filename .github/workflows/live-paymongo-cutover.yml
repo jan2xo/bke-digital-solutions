@@ -1,0 +1,152 @@
+name: Protected LIVE PayMongo Cutover
+
+# Never triggered by push, pull_request, synchronization or a checkout request.
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact current main SHA with certified legacy payments and legal guards
+        type: string
+        required: true
+      required_ci_run_id:
+        description: Successful exact-SHA CI run proving Required certification
+        type: string
+        required: true
+      mode:
+        description: Read-only verify or explicitly approved production cutover
+        type: choice
+        options:
+          - verify_only
+          - deploy_live
+        required: true
+        default: verify_only
+      confirmation:
+        description: For deploy_live enter ENABLE_REAL_PAYMONGO_CHARGES exactly
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
+concurrency:
+  group: bke-digital-solutions-live-paymongo-cutover
+  cancel-in-progress: false
+
+jobs:
+  production:
+    name: Protected live PayMongo origin / secrets / database verification
+    # A candidate PR or detached branch is never a live deployment source.
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: Production
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      REQUIRED_CI_RUN_ID: ${{ inputs.required_ci_run_id }}
+      CUTOVER_MODE: ${{ inputs.mode }}
+      CUTOVER_CONFIRMATION: ${{ inputs.confirmation }}
+      CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
+      PRODUCTION_NEON_HOST: ${{ vars.PRODUCTION_NEON_HOST }}
+      HYPERDRIVE_ID: ${{ vars.HYPERDRIVE_ID }}
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: Require exact main source, separately recorded certification and explicit live intent
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          const sha = process.env.SOURCE_SHA || "";
+          if (!/^[0-9a-f]{40}$/.test(sha) || sha !== process.env.GITHUB_SHA) {
+            throw new Error("LIVE_SOURCE_SHA_NOT_CURRENT_MAIN");
+          }
+          if (process.env.CUTOVER_MODE === "deploy_live" &&
+              process.env.CUTOVER_CONFIRMATION !== "ENABLE_REAL_PAYMONGO_CHARGES") {
+            throw new Error("LIVE_DEPLOYMENT_AUTHORIZATION_REQUIRED");
+          }
+          if (!["verify_only","deploy_live"].includes(process.env.CUTOVER_MODE)) {
+            throw new Error("LIVE_CUTOVER_MODE_INVALID");
+          }
+          const id=process.env.REQUIRED_CI_RUN_ID || "";
+          if (!/^[1-9][0-9]{5,18}$/.test(id)) throw new Error("LIVE_CERTIFICATION_RUN_ID_INVALID");
+          const path="https://api.github.com/repos/"+process.env.GITHUB_REPOSITORY+"/actions/runs/"+id;
+          const opts={headers:{authorization:"Bearer "+process.env.GITHUB_TOKEN,
+            accept:"application/vnd.github+json","x-github-api-version":"2022-11-28"}};
+          const runResp=await fetch(path,opts);
+          if (!runResp.ok) throw new Error("LIVE_CERTIFICATION_UNAVAILABLE");
+          const run=await runResp.json();
+          if (run.head_sha!==sha || run.name!=="CI" || run.conclusion!=="success") {
+            throw new Error("LIVE_CERTIFICATION_NOT_AT_EXACT_MAIN");
+          }
+          const jobsResp=await fetch(path+"/jobs?per_page=100",opts);
+          if (!jobsResp.ok) throw new Error("LIVE_CERTIFICATION_JOBS_UNAVAILABLE");
+          const jobs=await jobsResp.json();
+          if (!jobs.jobs?.some(j=>j.name==="Required certification"&&j.conclusion==="success")) {
+            throw new Error("LIVE_REQUIRED_CERTIFICATION_MISSING");
+          }
+          console.log("PASS: exact main and declared required certification verified.");
+          NODE
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+          persist-credentials: false
+      - name: Verify immutable source checkout
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned dependencies
+        run: npm ci
+      - name: Check production configuration contract without secrets
+        run: node --test scripts/prepare-live-paymongo.test.mjs
+      - name: Fetch dedicated Production configuration via Infisical OIDC
+        uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
+        with:
+          method: oidc
+          identity-id: ${{ vars.INFISICAL_PRODUCTION_IDENTITY_ID }}
+          domain: https://app.infisical.com
+          project-id: ${{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}
+          env-slug: production
+          secret-path: /
+          include-imports: "false"
+          recursive: "false"
+      - name: Require genuine production PayMongo keys and isolated resources
+        env:
+          NODE_ENV: production
+        run: node scripts/prepare-live-paymongo.mjs validate
+      - name: Verify production-only Neon Hyperdrive origin (read-only)
+        env:
+          NODE_ENV: production
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/prepare-live-paymongo.mjs verify
+      - name: Prepare tightly allowlisted Worker artifacts
+        env:
+          NODE_ENV: production
+        run: node scripts/prepare-live-paymongo.mjs prepare
+      - name: Confirm no irreversible action when only verifying
+        if: ${{ inputs.mode == 'verify_only' }}
+        run: echo "Production readiness verified without deploy, checkout, payments, or database mutations."
+      - name: Deploy exact certified Worker with LIVE PayMongo
+        if: ${{ inputs.mode == 'deploy_live' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --no-install wrangler deploy --config .wrangler-live.json --secrets-file .wrangler-live-secrets.json
+      - name: Public HTTPS and readiness verification
+        if: ${{ inputs.mode == 'deploy_live' }}
+        run: node scripts/staging-smoke.mjs
+      - name: Record bounded deployment outcome
+        if: ${{ success() }}
+        run: |
+          {
+            echo "### PayMongo production source"
+            echo "Exact source: $SOURCE_SHA"
+            echo "Mode: $CUTOVER_MODE"
+            echo "Legacy hosted Checkout Sessions (not PR #275 Payment Intents)."
+            echo "Webhook acceptance requires separate genuine signed live payment receiving and reconciliation."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Erase temporary live configuration and credentials
+        if: always()
+        run: node scripts/prepare-live-paymongo.mjs cleanup
