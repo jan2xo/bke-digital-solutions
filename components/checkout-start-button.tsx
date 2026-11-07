@@ -58,6 +58,8 @@ export function CheckoutStartButton({
       setError(({
         LEGAL_ACCEPTANCE_REQUIRED: "Accept every required legal document before checkout.",
         LEGAL_DOCUMENTS_UNAVAILABLE: "Checkout is unavailable until the required legal documents are published.",
+        CHECKOUT_HOST_CONFIGURATION_UNAVAILABLE: "Checkout is unavailable: required merchant contact information has not been verified. No payment was started.",
+        PAYMENT_PROVIDER_UNAVAILABLE: "Payment checkout is temporarily unavailable. No payment was started.",
         OFFER_NOT_FOUND: "This offer is unavailable for the selected account or plan.",
         OFFER_LIMIT_REACHED: "This offer has reached its redemption limit.",
         OFFER_ACCOUNT_LIMIT_REACHED: "This account has already used this offer.",
