@@ -1,6 +1,6 @@
 import { pathToFileURL } from "node:url";
 
-export const STAGING_ORIGIN = "https://bke-digital-solutions.jlprojectfreedom.workers.dev";
+export const STAGING_ORIGIN = "https://bkedigitalsolutions.com";
 const REQUEST_TIMEOUT_MS = 10_000;
 const HTML_LIMIT_BYTES = 1_048_576;
 const JSON_LIMIT_BYTES = 65_536;
