@@ -100,6 +100,41 @@ jobs:
           cache: npm
       - name: Install pinned dependencies
         run: npm ci
+      - name: Build exact candidate with disposable CI signing material
+        if: ${{ inputs.mode == 'deploy_live' }}
+        env:
+          NODE_ENV: test
+          DEPLOYMENT_ENV: test
+          APP_URL: https://workers-ci.example.invalid
+          DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
+          SESSION_SECRET: ci-session-secret-with-at-least-32-chars
+          LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
+          LICENSE_SIGNING_KEY_ID: ci-license-signing-key
+          CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+          EMAIL_FROM: build@example.invalid
+          S3_BUCKET: ci-private
+          PAYMENT_PROVIDER: mock
+          EMAIL_PROVIDER: log
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: |
+          set -euo pipefail
+          npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma
+          npm run licensing:keys .certification-secrets
+          node --input-type=module <<'NODE'
+          import {readFileSync} from "node:fs";
+          import {spawnSync} from "node:child_process";
+          const env={...process.env,
+            LICENSE_SIGNING_PRIVATE_KEY:readFileSync(".certification-secrets/license-signing-private.pem","utf8"),
+            LICENSE_SIGNING_PUBLIC_KEY:readFileSync(".certification-secrets/license-signing-public.pem","utf8"),
+          };
+          const result=spawnSync("npm",["run","workers:build"],{stdio:"inherit",env});
+          if(result.error) throw result.error;
+          if(result.status!==0) process.exit(result.status??1);
+          NODE
+          git diff --exit-code -- package.json package-lock.json platform/persistence/generated/prisma
+          rm -rf .certification-secrets .dev.vars
+
       - name: Check production configuration contract without secrets
         run: node --test scripts/prepare-live-paymongo.test.mjs
       - name: Fetch dedicated Production configuration via Infisical OIDC
@@ -117,6 +152,10 @@ jobs:
         env:
           NODE_ENV: production
         run: node scripts/prepare-live-paymongo.mjs validate
+      - name: Validate all production runtime environment contracts
+        env:
+          NODE_ENV: production
+        run: npm run config:validate
       - name: Verify production-only Neon Hyperdrive origin (read-only)
         env:
           NODE_ENV: production
