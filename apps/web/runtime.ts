@@ -13,6 +13,7 @@ import { createPaymentsModule } from "../../modules/payments/module";
 import { composeCapabilities } from "../../platform/composition/composer";
 import { createWebPaymentsAdapter } from "./payments/provider";
 import { createHostLegalReacceptanceStatusRepository } from "./legal/reacceptance-repository";
+import { createHostLegalAcceptanceRepository, createHostLegalCheckoutRequirementsRepository } from "./legal/checkout-repositories";
 import { createCommerceClaimUnitIssuer } from "./entitlements/commerce-claim-unit-issuer";
 
 function required(name: string): string {
@@ -33,6 +34,8 @@ async function composeWebApplication(): Promise<ComposedApplication> {
     createLegalModule({
       connectionString,
       reacceptanceStatusRepository: createHostLegalReacceptanceStatusRepository(),
+      checkoutRequirementsRepository: createHostLegalCheckoutRequirementsRepository(),
+      acceptanceRepository: createHostLegalAcceptanceRepository(),
     }),
     createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
     createCommerceModule({ connectionString, claimUnits: createCommerceClaimUnitIssuer() }),
