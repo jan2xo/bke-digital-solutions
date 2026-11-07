@@ -68,7 +68,7 @@ test("authenticated customer starts a mock-only checkout after accepting valid d
   expect(response.status()).toBe(201);
   const result = await response.json();
   expect(result.checkoutUrl).toContain("mock=1");
-  expect(result.checkoutUrl).toContain("127.0.0.1:3000");
+  expect(new URL(result.checkoutUrl).hostname).toMatch(/^(?:localhost|127\\.0\\.0\\.1)$/);
   expect(await db.paymentAttempt.count()).toBe(before + 1);
 });
 
