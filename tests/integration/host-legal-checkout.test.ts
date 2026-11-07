@@ -17,12 +17,26 @@ afterAll(async () => db.$disconnect());
 
 describe("V3 host Legal checkout compatibility (real PostgreSQL)", { concurrent: false }, () => {
   it("returns a missing-notice status, not persistence failure, when checkout agreements are unpublished", async () => {
-    const required = createLegalCheckoutRequirementsCapability(
-      createHostLegalCheckoutRequirementsRepository(db),
-    );
-    const result = await required.resolve({ planType: "PERPETUAL" });
-    // Disposable CI seeds registration notices only. Missing checkout legal
-    // must fail closed as LEGAL_DOCUMENTS_UNAVAILABLE, not old-schema SQL 42703.
+    // Seeded CI can already have checkout notices. Hide the refund notice
+    // inside a rollback-only real transaction to prove the missing-document
+    // receiving path without mutating disposable test fixtures.
+    let result: Awaited<ReturnType<ReturnType<typeof createLegalCheckoutRequirementsCapability>["resolve"]>> | undefined;
+    try {
+      await db.$transaction(async (tx) => {
+        const refund = await tx.legalDocument.findFirst({ where: { documentType: "REFUND_POLICY" } });
+        if (refund) await tx.legalDocument.update({
+          where: { id: refund.id },
+          data: { currentPublishedVersionId: null },
+        });
+        const required = createLegalCheckoutRequirementsCapability(
+          createHostLegalCheckoutRequirementsRepository(tx),
+        );
+        result = await required.resolve({ planType: "PERPETUAL" });
+        throw rollback;
+      });
+    } catch (error) {
+      if (error !== rollback) throw error;
+    }
     expect(result).toEqual({ status: "FAILED", code: "LEGAL_DOCUMENTS_UNAVAILABLE" });
   });
 
@@ -36,6 +50,15 @@ describe("V3 host Legal checkout compatibility (real PostgreSQL)", { concurrent:
         ["SOFTWARE_LICENSE_AGREEMENT", "Test Software License"],
         ["REFUND_POLICY", "Test Refund Policy"],
       ] as const) {
+        const existing = await tx.legalDocument.findFirst({
+          where: { documentType: type },
+          include: { currentPublishedVersion: true },
+        });
+        if (existing) {
+          expect(existing.status).toBe("ACTIVE");
+          expect(existing.currentPublishedVersion?.status).toBe("PUBLISHED");
+          continue;
+        }
         const markdownContent = `# ${title}\nApplies to {{company_name}}.`;
         const document = await tx.legalDocument.create({
           data: { slug: `host-legal-${type.toLowerCase().replaceAll("_", "-")}-${suffix}`, title, documentType: type, status: "ACTIVE" },
@@ -87,8 +110,10 @@ describe("V3 host Legal checkout compatibility (real PostgreSQL)", { concurrent:
         .toEqual({ status: "NOT_ACCEPTED" });
       const mismatched = await acceptance.record({ ...request, slaVersion: "999" });
       expect(mismatched).toEqual({ status: "REJECTED", code: "DOCUMENT_VERSION_MISMATCH" });
-      const subscription = await requirements.resolve({ planType: "MONTHLY" });
-      expect(subscription).toEqual({ status: "FAILED", code: "LEGAL_DOCUMENTS_UNAVAILABLE" });
+      const incomplete = await requirements.resolve({
+        planType: "PERPETUAL", selectedVersionIds: [first.documentVersionId],
+      });
+      expect(incomplete).toEqual({ status: "REJECTED", code: "LEGAL_ACCEPTANCE_REQUIRED" });
       throw rollback;
     })).rejects.toBe(rollback);
   });
