@@ -17,10 +17,10 @@ describe("intentional exact-head disposable staging", () => {
   it("separates trusted workflow provenance and exact candidate checkout", () => {
     expect(workflow).toContain('pr.head.repo?.full_name !== fullRepo');
     expect(workflow).toContain('currentMain.data.object.sha !== workflowSha');
-    expect(workflow).toContain('test "$WORKFLOW_SHA" = "$TRUSTED_WORKFLOW_SHA"');
+    expect(workflow).toContain("process.env.WORKFLOW_SHA !== trustedSha");
     expect(workflow).not.toContain('test "$WORKFLOW_SHA" = "$SOURCE_SHA"');
     expect(workflow).toContain('test "$(git rev-parse HEAD)" = "$SOURCE_SHA"');
-    expect(workflow.match(/pr.head.sha !== process.env.EXPECTED_SOURCE/g)).toHaveLength(2);
+    expect(workflow.match(/pr.head.sha !== sourceSha/g)).toHaveLength(1);
   });
   it("requires complete exact-head proof and cancels no in-progress staging", () => {
     expect(workflow).toContain("cancel-in-progress: false");
