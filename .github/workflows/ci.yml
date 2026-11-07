@@ -307,6 +307,8 @@ jobs:
       - run: npm run workers:typecheck
       - name: Test public Staging smoke contract
         run: node --test scripts/staging-smoke.test.mjs
+      - name: Certify guarded live PayMongo configuration without secret access or deployment
+        run: node --test scripts/prepare-live-paymongo.test.mjs
       - name: Verify bundle measurement boundary
         run: node --test scripts/check-worker-bundle.test.mjs
       - name: Produce actual Worker upload without deployment
