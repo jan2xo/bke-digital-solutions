@@ -5,6 +5,9 @@ export function assertMockPaymentsAllowed(
   if (deploymentEnvironment === "production") {
     throw new Error("V2_MOCK_PAYMENTS_FORBIDDEN_IN_PRODUCTION");
   }
+  if (environment.PAYMONGO_LIVEMODE === "true" || environment.PAYMONGO_SECRET_KEY?.startsWith("sk_live_")) {
+    throw new Error("PAYMONGO_LIVE_KEY_FORBIDDEN_IN_MOCK_RUNTIME");
+  }
 }
 
 /**
