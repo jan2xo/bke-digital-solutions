@@ -2,6 +2,7 @@ import Link from "next/link";
 import { currentUser } from "@/apps/web/auth/session";
 import { LogoutButton } from "@/components/logout-button";
 import { getSiteContent } from "@/apps/web/site-content";
+import { MobileNavigation } from "@/components/mobile-navigation";
 
 export async function Header() {
   const user = await currentUser();
@@ -35,27 +36,10 @@ export async function Header() {
           {publicLinks}
           {accountLinks}
         </nav>
-        <details key={user?.id ?? "guest"} className="mobile-menu">
-          <summary aria-label="Open navigation menu">Menu</summary>
-          <nav aria-label="Mobile navigation" className="mobile-menu-panel">
-            <a href="/products">Products</a>
-            <a href="/products#pricing">Pricing</a>
-            <a href="/licensing">How it works</a>
-            <a href="/bke">Download BKE</a>
-            {user ? (
-              <>
-                <a href={user.role === "ADMIN" ? "/admin/notifications" : "/dashboard/notifications"}>Notifications</a>
-                <a className="button button-yellow mobile-account-action" href={user.role === "ADMIN" ? "/admin" : "/dashboard"}>{user.role === "ADMIN" ? "Admin" : "Dashboard"}</a>
-                <LogoutButton />
-              </>
-            ) : (
-              <>
-                <a href="/login">Sign in</a>
-                <a className="button button-yellow mobile-account-action" href="/register">Get started</a>
-              </>
-            )}
-          </nav>
-        </details>
+        <MobileNavigation key={user?.id ?? "guest"}>
+          {publicLinks}
+          {accountLinks}
+        </MobileNavigation>
       </div>
     </header>
   );
