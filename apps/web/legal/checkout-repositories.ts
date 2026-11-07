@@ -6,7 +6,7 @@ import type { LegalAcceptanceRepository } from "@bke/legal/logic/acceptance-repo
 import type { LegalCheckoutRequirementsRepository } from "@bke/legal/logic/checkout-requirements-repository";
 import { legalRenderedContentSha256, normalizeLegalVariables } from "@bke/legal/logic/render";
 import { db } from "@/platform/host/db";
-import { isUnapprovedLegalReviewDraft } from "./review-draft-policy";
+import { isCheckoutLegalNoticeAllowed } from "./review-draft-policy";
 
 // Digital Solutions owns the V3 versionNumber/contentHash/userId schema mapping.
 // The published @bke/legal package still owns legal validation, hashing and decisions.
@@ -32,7 +32,7 @@ export function createHostLegalCheckoutRequirementsRepository(
         }
         // A privileged PUBLISHED transition does not certify review/approval.
         // Do not expose accidental REVIEW DRAFT publications as checkout terms.
-        if (isUnapprovedLegalReviewDraft(document.title, version.markdownContent)) return [];
+        if (!isCheckoutLegalNoticeAllowed(document.title, version.markdownContent)) return [];
         return [Object.freeze({
           documentId: document.id,
           documentType: document.documentType as LegalDocumentType,
@@ -97,7 +97,7 @@ export function createHostLegalAcceptanceRepository(
       const variables = normalizeLegalVariables(input.variablesSnapshot);
       if (
         !variables ||
-        isUnapprovedLegalReviewDraft(version.document.title, version.markdownContent) ||
+        !isCheckoutLegalNoticeAllowed(version.document.title, version.markdownContent) ||
         version.documentId !== input.documentId ||
         version.status !== "PUBLISHED" ||
         version.document.status !== "ACTIVE" ||

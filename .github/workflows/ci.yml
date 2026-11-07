@@ -159,6 +159,8 @@ jobs:
           node --check scripts/v3-disposable-env.mjs
           node --check scripts/v3-disposable-compose.mjs
           node --check scripts/v3-disposable-doctor.mjs
+      - name: Certify live PayMongo configuration segregation and fail-closed contracts
+        run: node --test scripts/prepare-live-paymongo.test.mjs
       - name: Build application
         run: npm run build
       - name: Repository diff hygiene
@@ -307,6 +309,8 @@ jobs:
       - run: npm run workers:typecheck
       - name: Test public Staging smoke contract
         run: node --test scripts/staging-smoke.test.mjs
+      - name: Certify guarded live PayMongo configuration without secret access or deployment
+        run: node --test scripts/prepare-live-paymongo.test.mjs
       - name: Verify bundle measurement boundary
         run: node --test scripts/check-worker-bundle.test.mjs
       - name: Produce actual Worker upload without deployment
