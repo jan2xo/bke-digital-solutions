@@ -93,6 +93,19 @@ export default async function CheckoutReview({
     LEGAL_CHECKOUT_REQUIREMENTS_CAPABILITY_ID,
   );
   const requirementsResult = await requirementsCapability.resolve({ planType: plan.type });
+  if (requirementsResult.status === "FAILED" && requirementsResult.code === "LEGAL_DOCUMENTS_UNAVAILABLE") {
+    // Never start a payment before the current license/refund agreements exist.
+    return (
+      <section className="mx-auto max-w-2xl px-4 py-14" role="status">
+        <h1 className="text-3xl font-bold">Checkout temporarily unavailable</h1>
+        <p className="mt-4 text-slate-400">
+          This purchase cannot proceed until the required legal agreements are published.
+          No payment has been started.
+        </p>
+        <a href="/products" className="mt-6 inline-block underline">Return to products</a>
+      </section>
+    );
+  }
   if (requirementsResult.status === "REJECTED") throw new Error(requirementsResult.code);
   if (requirementsResult.status === "FAILED") throw new Error(requirementsResult.code);
   const legalDocuments = requirementsResult.requirements;
