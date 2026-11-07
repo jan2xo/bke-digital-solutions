@@ -6,6 +6,8 @@ import { createLegalAcceptanceCapability } from "@bke/legal/logic/acceptance";
 import { createLegalCheckoutRequirementsCapability } from "@bke/legal/logic/checkout-requirements";
 import { createLegalReacceptanceStatusCapability } from "@bke/legal/logic/reacceptance-status";
 import type { LegalReacceptanceStatusRepository } from "@bke/legal/logic/reacceptance-status-repository";
+import type { LegalCheckoutRequirementsRepository } from "@bke/legal/logic/checkout-requirements-repository";
+import type { LegalAcceptanceRepository } from "@bke/legal/logic/acceptance-repository";
 import { legalModuleManifest } from "@bke/legal/module.manifest";
 import { createPostgresLegalAcceptanceRepository } from "@bke/legal/prisma/repositories/postgres-acceptance-repository";
 import { createPostgresLegalCheckoutRequirementsRepository } from "@bke/legal/prisma/repositories/postgres-checkout-requirements-repository";
@@ -14,14 +16,16 @@ import { createPostgresLegalReacceptanceStatusRepository } from "@bke/legal/pris
 export interface LegalModuleOptions {
   readonly connectionString: string;
   readonly reacceptanceStatusRepository?: LegalReacceptanceStatusRepository;
+  readonly checkoutRequirementsRepository?: LegalCheckoutRequirementsRepository;
+  readonly acceptanceRepository?: LegalAcceptanceRepository;
 }
 
 export function createLegalModule(options: LegalModuleOptions): CapabilityModule {
   const acceptance = createLegalAcceptanceCapability(
-    createPostgresLegalAcceptanceRepository(options.connectionString),
+    options.acceptanceRepository ?? createPostgresLegalAcceptanceRepository(options.connectionString),
   );
   const checkoutRequirements = createLegalCheckoutRequirementsCapability(
-    createPostgresLegalCheckoutRequirementsRepository(options.connectionString),
+    options.checkoutRequirementsRepository ?? createPostgresLegalCheckoutRequirementsRepository(options.connectionString),
   );
   const reacceptanceStatus = createLegalReacceptanceStatusCapability(
     options.reacceptanceStatusRepository ??
