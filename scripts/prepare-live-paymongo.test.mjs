@@ -71,7 +71,7 @@ describe("legacy PayMongo LIVE cutover preflight — NO provider calls",()=>{
    [{PROVIDER_CONFIG_ALLOW_ENV_FALLBACK:"true"},"LIVE_PROVIDER_SOURCE"],
    [{EMAIL_PROVIDER:"log"},"LIVE_EMAIL_PROVIDER"],
    [{BACKUP_ENABLED:"false"},"LIVE_BACKUP_REQUIRED"],
-   [{DIRECT_DATABASE_URL:url.replace("bke_production","bke_staging")},"LIVE_DATABASE_NAME"],
+   [{DIRECT_DATABASE_URL:url.replace("/bke_production?","/bke_staging?")},"LIVE_DATABASE_NAME"],
    [{DATABASE_URL:url.replace("bke_production_owner","bke_staging_owner")},"LIVE_DATABASE_ROLE"],
    [{DATABASE_URL:url+"&host=evil.neon.tech"},"LIVE_DATABASE_QUERY_OVERRIDE"],
    [{STAGING_NEON_HOST:host},"LIVE_STAGING_RESOURCE_INJECTION"],
