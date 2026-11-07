@@ -6,6 +6,7 @@ import type { LegalAcceptanceRepository } from "@bke/legal/logic/acceptance-repo
 import type { LegalCheckoutRequirementsRepository } from "@bke/legal/logic/checkout-requirements-repository";
 import { legalRenderedContentSha256, normalizeLegalVariables } from "@bke/legal/logic/render";
 import { db } from "@/platform/host/db";
+import { isUnapprovedLegalReviewDraft } from "./review-draft-policy";
 
 // Digital Solutions owns the V3 versionNumber/contentHash/userId schema mapping.
 // The published @bke/legal package still owns legal validation, hashing and decisions.
@@ -24,12 +25,15 @@ export function createHostLegalCheckoutRequirementsRepository(
         },
         include: { currentPublishedVersion: true },
       });
-      return Object.freeze(documents.map((document) => {
+      return Object.freeze(documents.flatMap((document) => {
         const version = document.currentPublishedVersion;
         if (!version || version.documentId !== document.id || version.status !== "PUBLISHED") {
           throw new Error("LEGAL_PUBLISHED_VERSION_INVALID");
         }
-        return Object.freeze({
+        // A privileged PUBLISHED transition does not certify review/approval.
+        // Do not expose accidental REVIEW DRAFT publications as checkout terms.
+        if (isUnapprovedLegalReviewDraft(document.title, version.markdownContent)) return [];
+        return [Object.freeze({
           documentId: document.id,
           documentType: document.documentType as LegalDocumentType,
           title: document.title,
@@ -40,7 +44,7 @@ export function createHostLegalCheckoutRequirementsRepository(
           publishedContentSha256: version.contentHash,
           markdownContent: version.markdownContent,
           requiresReacceptance: version.requiresReacceptance,
-        });
+        })];
       }));
     },
   });
@@ -93,6 +97,7 @@ export function createHostLegalAcceptanceRepository(
       const variables = normalizeLegalVariables(input.variablesSnapshot);
       if (
         !variables ||
+        isUnapprovedLegalReviewDraft(version.document.title, version.markdownContent) ||
         version.documentId !== input.documentId ||
         version.status !== "PUBLISHED" ||
         version.document.status !== "ACTIVE" ||
