@@ -17,6 +17,16 @@ on:
         description: Exact commit SHA to certify
         required: true
         type: string
+      deploy_staging:
+        description: Branch-owned Staging CI only; no deploy job on main
+        required: false
+        default: false
+        type: boolean
+      initialize_staging_legal:
+        description: Optional reviewed Staging test notices on authorized branch
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read

@@ -383,8 +383,8 @@ jobs:
             echo "Provider Google OAuth and real staging administrator are not simulated or claimed."
           } >> "$GITHUB_STEP_SUMMARY"
 
-  staging-deploy:
-    name: Protected isolated Staging deployment
+  dispatch-branch-staging:
+    name: Dispatch exact-head branch-owned Staging (not deployment proof)
     if: ${{ needs.workers-application.result == 'success' && needs.browser-fixture.result == 'success' && needs.required-certification.result == 'success' }}
     needs:
       - plan
@@ -392,194 +392,62 @@ jobs:
       - workers-application
       - browser-fixture
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    environment:
-      name: Staging
-    env:
-      SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
-      # CI fixture defaults must not become partial Staging storage configuration.
-      S3_BUCKET: ""
+    timeout-minutes: 8
+    # Actions-write is only held by the non-secret-bearing handoff job.
     permissions:
       contents: read
       pull-requests: read
-      id-token: write
+      actions: write
     concurrency:
-      group: bke-digital-solutions-staging-deploy
+      group: bke-digital-solutions-staging-dispatch-266
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_SHA }}
-          persist-credentials: false
-      - name: Require exact source and workflow provenance
+      - name: Validate source and dispatch branch-owned Staging
+        uses: actions/github-script@v7
         env:
+          EXPECTED_SOURCE: ${{ needs.plan.outputs.source_sha }}
+          EXPECTED_WORKFLOW: ${{ needs.plan.outputs.trusted_workflow_sha }}
           WORKFLOW_SHA: ${{ github.workflow_sha }}
-          TRUSTED_WORKFLOW_SHA: ${{ needs.plan.outputs.trusted_workflow_sha }}
           WORKFLOW_REF: ${{ github.workflow_ref }}
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
-          test "$WORKFLOW_SHA" = "$TRUSTED_WORKFLOW_SHA"
-          test "$WORKFLOW_REF" = "jan2xo/bke-digital-solutions/.github/workflows/stage.yml@refs/heads/main"
-          printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies without protected configuration
-        run: npm ci
-      - name: Build candidate with disposable CI signing material
-        env:
-          NODE_ENV: test
-          DEPLOYMENT_ENV: test
-          APP_URL: https://workers-ci.example.invalid
-          DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
-          SESSION_SECRET: ci-session-secret-with-at-least-32-chars
-          LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
-          LICENSE_SIGNING_KEY_ID: ci-license-signing-key
-          CRON_SECRET: ci-cron-secret-with-at-least-32-chars
-          EMAIL_FROM: build@example.invalid
-          S3_BUCKET: ci-private
-          PAYMENT_PROVIDER: mock
-          EMAIL_PROVIDER: log
-          WRANGLER_SEND_METRICS: 'false'
-          NEXT_TELEMETRY_DISABLED: '1'
-        run: |
-          set -euo pipefail
-          npm run db:generate
-          git diff --exit-code -- platform/persistence/generated/prisma
-          npm run licensing:keys .certification-secrets
-          node --input-type=module <<'NODE'
-          import { readFileSync } from "node:fs";
-          import { spawnSync } from "node:child_process";
-          const env = {
-            ...process.env,
-            LICENSE_SIGNING_PRIVATE_KEY: readFileSync(".certification-secrets/license-signing-private.pem", "utf8"),
-            LICENSE_SIGNING_PUBLIC_KEY: readFileSync(".certification-secrets/license-signing-public.pem", "utf8"),
-          };
-          const result = spawnSync("npm", ["run", "workers:build"], { stdio: "inherit", env });
-          if (result.error) throw result.error;
-          if (result.status !== 0) process.exit(result.status ?? 1);
-          NODE
-          git diff --exit-code -- package.json package-lock.json platform/persistence/generated/prisma
-          rm -rf .certification-secrets .dev.vars
-      - name: Fail closed if candidate PR head or trusted workflow changed
-        uses: actions/github-script@v7
-        env:
-          EXPECTED_SOURCE: ${{ needs.plan.outputs.source_sha }}
-          EXPECTED_WORKFLOW: ${{ needs.plan.outputs.trusted_workflow_sha }}
         with:
           script: |
-            const pr = (await github.rest.pulls.get({...context.repo, pull_number:266})).data;
-            const main = await github.rest.git.getRef({...context.repo, ref:"heads/main"});
-            if (pr.head.sha !== process.env.EXPECTED_SOURCE || pr.state !== "open" ||
-                pr.merged || pr.base.ref !== "main" ||
-                pr.head.repo?.full_name !== context.repo.owner + "/" + context.repo.repo ||
-                main.data.object.sha !== process.env.EXPECTED_WORKFLOW) {
-              core.setFailed("Refusing Staging deploy: candidate head or trusted workflow changed.");
+            const { owner, repo } = context.repo;
+            const fullRepo = owner + "/" + repo;
+            const authorizedBranch = "feat/workers-free-compatibility-proof";
+            const sourceSha = process.env.EXPECTED_SOURCE;
+            const trustedSha = process.env.EXPECTED_WORKFLOW;
+            if (context.actor !== owner) throw new Error("Only the repository owner may dispatch Staging.");
+            if (!/^[0-9a-f]{40}$/.test(sourceSha ?? "") || !/^[0-9a-f]{40}$/.test(trustedSha ?? "")) {
+              throw new Error("Staging dispatch requires two exact commit SHAs.");
             }
-      - name: Fetch approved Staging configuration through Infisical OIDC
-        uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
-        with:
-          method: oidc
-          identity-id: ${{ vars.INFISICAL_STAGING_IDENTITY_ID }}
-          domain: https://app.infisical.com
-          project-id: f029af60-06f3-428c-b305-c70f8bcf7850
-          env-slug: staging
-          secret-path: /
-          include-imports: 'false'
-          recursive: 'false'
-      - name: Validate protected Staging runtime configuration
-        env:
-          NODE_ENV: production
-        run: npm run config:validate
-      - name: Verify protected Upstash Redis REST reachability
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-        run: node scripts/deploy-staging.mjs verify-redis
-      - name: Verify Neon and cache-disabled Hyperdrive metadata
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: node scripts/deploy-staging.mjs verify
-      - name: Prepare isolated Worker configuration and runtime secret allowlist
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-        run: node scripts/deploy-staging.mjs prepare
-      - name: Apply reviewed migrations to fresh Staging only
-        env:
-          NODE_ENV: production
-        run: npm run db:deploy
-      - name: Recheck exact candidate and trusted main immediately before Wrangler deployment
-        uses: actions/github-script@v7
-        env:
-          EXPECTED_SOURCE: ${{ needs.plan.outputs.source_sha }}
-          EXPECTED_WORKFLOW: ${{ needs.plan.outputs.trusted_workflow_sha }}
-        with:
-          script: |
-            const pr = (await github.rest.pulls.get({...context.repo, pull_number:266})).data;
-            const main = await github.rest.git.getRef({...context.repo, ref:"heads/main"});
-            if (pr.head.sha !== process.env.EXPECTED_SOURCE || pr.state !== "open" ||
-                pr.merged || pr.base.ref !== "main" ||
-                pr.head.repo?.full_name !== context.repo.owner + "/" + context.repo.repo ||
-                main.data.object.sha !== process.env.EXPECTED_WORKFLOW) {
-              core.setFailed("Refusing Staging deploy: candidate head or trusted workflow changed.");
+            if (process.env.WORKFLOW_SHA !== trustedSha ||
+                process.env.WORKFLOW_REF !== fullRepo + "/.github/workflows/stage.yml@refs/heads/main") {
+              throw new Error("Staging dispatch requires the trusted main workflow revision.");
             }
-      - name: Deploy certified Worker with allowlisted runtime secrets
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
-          WRANGLER_SEND_METRICS: 'false'
-        run: npx --no-install wrangler deploy --config .wrangler-staging.json --secrets-file .wrangler-staging-secrets.json
-      - name: Verify deployed Staging query-string redaction
-        env:
-          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: node scripts/deploy-staging.mjs verify-observability
-      - name: Initialize reviewed Staging legal test notices
-        if: ${{ inputs.initialize_staging_legal == true }}
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-          INITIALIZE_STAGING_LEGAL_ACK: I_APPROVE_THE_REVIEWED_STAGING_TEST_NOTICES
-          SOURCE_SHA: ${{ env.SOURCE_SHA }}
-          GITHUB_ACTOR: ${{ github.actor }}
-        run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/initialize-staging-legal.ts
-      - name: Verify public Staging pages and dependency readiness
-        run: node scripts/staging-smoke.mjs
-      - name: Browser-check unauthenticated Staging and admin access denial
-        run: |
-          npx --no-install playwright install chromium
-          node --input-type=module <<'NODE'
-          import assert from "node:assert/strict";
-          import { chromium } from "@playwright/test";
-          const origin = "https://bke-digital-solutions.jlprojectfreedom.workers.dev";
-          const browser = await chromium.launch({ headless: true });
-          try {
-            const context = await browser.newContext({ ignoreHTTPSErrors: false });
-            const page = await context.newPage();
-            const response = await page.goto(origin + "/admin/products", { waitUntil: "domcontentloaded", timeout: 30000 });
-            assert.ok(response, "Admin navigation returned no response");
-            assert.equal(new URL(page.url()).pathname, "/login", "Unauthenticated admin browser was not redirected to login");
-            assert.match(await page.locator("body").innerText(), /google/i, "Google sign-in not available");
-            const denied = await context.request.get(origin + "/api/admin/products", { maxRedirects: 0, timeout: 15000 });
-            assert.ok([401, 403].includes(denied.status()), "Unauthenticated admin API unexpectedly allowed: " + denied.status());
-            console.log("PASS: deployed browser redirects unauthenticated admin; admin API denies unauthorized access");
-          } finally { await browser.close(); }
-          NODE
-      - name: Explicitly record human Google administrator acceptance boundary
-        shell: bash
-        run: |
-          {
-            echo "## Staging acceptance boundary"
-            echo "Exact deployed source SHA: $SOURCE_SHA"
-            echo "Automated: public pages, dependency readiness and unauthenticated admin browser denial."
-            echo "Not verified by this workflow: real Google OAuth, administrator login, create/edit/archive/delete through a human-authenticated browser, suspended-user and revoked-session integration."
-          } >> "$GITHUB_STEP_SUMMARY"
-      - name: Remove temporary protected deployment files
-        if: always()
-        run: node scripts/deploy-staging.mjs cleanup
-
+            const [main, branch, response] = await Promise.all([
+              github.rest.git.getRef({ owner, repo, ref: "heads/main" }),
+              github.rest.git.getRef({ owner, repo, ref: "heads/" + authorizedBranch }),
+              github.rest.pulls.get({ owner, repo, pull_number: 266 }),
+            ]);
+            const pr = response.data;
+            if (main.data.object.sha !== trustedSha ||
+                branch.data.object.sha !== sourceSha ||
+                pr.state !== "open" || pr.merged ||
+                pr.base.ref !== "main" ||
+                pr.head.repo?.full_name !== fullRepo ||
+                pr.head.ref !== authorizedBranch || pr.head.sha !== sourceSha) {
+              throw new Error("Staging dispatch denied: candidate branch, PR head or trusted main changed.");
+            }
+            await github.rest.actions.createWorkflowDispatch({
+              owner, repo, workflow_id: "ci.yml", ref: authorizedBranch,
+              inputs: {
+                source_sha: sourceSha,
+                deploy_staging: "true",
+                initialize_staging_legal: "false",
+              },
+            });
+            core.info("Branch-owned Staging CI dispatched for exact source " + sourceSha);
+            await core.summary.addHeading("BKE protected branch-owned Staging")
+              .addRaw("Certified candidate: `" + sourceSha + "`\n\n")
+              .addRaw("Dispatched `ci.yml` at `" + authorizedBranch + "`. This job proves dispatch only; the branch CI run must independently PASS deployment and live smoke.")
+              .write();
