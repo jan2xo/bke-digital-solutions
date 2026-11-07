@@ -40,6 +40,46 @@ describe("V3 host Legal checkout compatibility (real PostgreSQL)", { concurrent:
     expect(result).toEqual({ status: "FAILED", code: "LEGAL_DOCUMENTS_UNAVAILABLE" });
   });
 
+  it("refuses review-draft publications even if an admin set PUBLISHED", async () => {
+    let unavailable: unknown;
+    let refused: unknown;
+    try {
+      await db.$transaction(async (tx) => {
+        const eula = await tx.legalDocument.findFirstOrThrow({
+          where: { documentType: "SOFTWARE_LICENSE_AGREEMENT" },
+          include: { currentPublishedVersion: true },
+        });
+        if (!eula.currentPublishedVersion) throw new Error("Missing disposable EULA fixture");
+        await tx.legalDocument.update({
+          where: { id: eula.id },
+          data: { title: "Software License Agreement - REVIEW DRAFT" },
+        });
+        const requirements = createLegalCheckoutRequirementsCapability(
+          createHostLegalCheckoutRequirementsRepository(tx),
+        );
+        unavailable = await requirements.resolve({ planType: "PERPETUAL" });
+        const acceptance = createLegalAcceptanceCapability(
+          createHostLegalAcceptanceRepository(tx),
+        );
+        refused = await acceptance.record({
+          principalId: "not-used-when-rejected",
+          customerAccountId: null,
+          documentId: eula.id,
+          documentVersionId: eula.currentPublishedVersion.id,
+          acceptanceContext: "CHECKOUT",
+          slaVersion: String(eula.currentPublishedVersion.versionNumber),
+          renderedContentSha256: legalRenderedContentSha256(eula.currentPublishedVersion.markdownContent, {}),
+          variablesSnapshot: {},
+        });
+        throw rollback;
+      });
+    } catch (error) {
+      if (error !== rollback) throw error;
+    }
+    expect(unavailable).toEqual({ status: "FAILED", code: "LEGAL_DOCUMENTS_UNAVAILABLE" });
+    expect(refused).toEqual({ status: "REJECTED", code: "DOCUMENT_VERSION_MISMATCH" });
+  });
+
   it("resolves V3 published versionNumber/contentHash and records immutable acceptance", async () => {
     await expect(db.$transaction(async (tx) => {
       const suffix = randomUUID().slice(0, 8);
