@@ -41,6 +41,8 @@ describe("intentional exact-head disposable staging", () => {
     expect(workflow).toContain("EMAIL_PROVIDER: log");
     expect(workflow).toContain("Infisical/secrets-action@");
     expect(workflow).toContain("Browser-check unauthenticated Staging");
+    expect(workflow).toContain("NODE_OPTIONS: --import=tsx");
+    expect(workflow).toContain("npm run test:e2e -- tests/e2e/admin-product.spec.ts");
     expect(workflow).toContain("Not verified by this workflow: real Google OAuth");
     expect(workflow).toContain("Exact source SHA: $SOURCE_SHA");
     expect(workflow).toContain("Exact deployed source SHA: $SOURCE_SHA");
