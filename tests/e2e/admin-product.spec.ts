@@ -66,9 +66,12 @@ test("authenticated customer starts a mock-only checkout after accepting valid d
   await page.getByRole("button", { name: "Continue to secure payment" }).click();
   const response = await posted;
   expect(response.status()).toBe(201);
-  const result = await response.json();
-  expect(result.checkoutUrl).toContain("mock=1");
-  expect(new URL(result.checkoutUrl).hostname).toMatch(/^(?:localhost|127\.0\.0\.1)$/);
+  // The application immediately navigates after 201; reading response.json()
+  // here races the browser navigation and loses Chromium's old resource body.
+  await expect(page).toHaveURL(/\/checkout\/success\?.*mock=1/);
+  const destination = new URL(page.url());
+  expect(destination.hostname).toMatch(/^(?:localhost|127\.0\.0\.1)$/);
+  expect(destination.searchParams.get("mock")).toBe("1");
   expect(await db.paymentAttempt.count()).toBe(before + 1);
 });
 
