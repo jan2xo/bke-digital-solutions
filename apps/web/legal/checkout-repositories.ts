@@ -15,7 +15,7 @@ export function createHostLegalCheckoutRequirementsRepository(
   client: HostLegalClient = db,
 ): LegalCheckoutRequirementsRepository {
   return Object.freeze({
-    async findCurrent(documentTypes) {
+    async findCurrent(documentTypes: readonly LegalDocumentType[]) {
       const documents = await client.legalDocument.findMany({
         where: {
           status: "ACTIVE",

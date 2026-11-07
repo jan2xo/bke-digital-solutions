@@ -7,6 +7,34 @@ import { signInGoogleTestUser } from "./google-session-helper";
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 test.afterAll(() => db.$disconnect());
 
+test("authenticated customer reviews a seeded purchase plan without starting payment", async ({ page }) => {
+  const suffix = Date.now().toString(36);
+  const email = `checkout-${suffix}@bke.test`;
+  await db.user.create({
+    data: {
+      email, emailVerified: new Date(), role: "CUSTOMER",
+      ownedAccounts: { create: {
+        type: "INDIVIDUAL", displayName: "Checkout regression customer", billingEmail: email,
+      } },
+    },
+  });
+  const plan = await db.purchasePlan.findFirst({
+    where: {
+      type: "PERPETUAL", active: true,
+      edition: { active: true, product: { slug: "bke-deskflow", active: true, archivedAt: null } },
+    },
+  });
+  expect(plan, "Disposable seed must have a published perpetual product plan").not.toBeNull();
+  await signInGoogleTestUser(page, email, db);
+  const count = await db.paymentAttempt.count();
+  const response = await page.goto(`/checkout?purchasePlanId=${plan!.id}`);
+  expect(response?.status()).toBe(200);
+  await expect(page.getByText("Checkout review", { exact: true })).toBeVisible();
+  await expect(page.getByText("Catalog total", { exact: true })).toBeVisible();
+  await expect(page.getByText("Checkout temporarily unavailable")).toHaveCount(0);
+  expect(await db.paymentAttempt.count()).toBe(count);
+});
+
 test("administrator creates, catalogs a GitHub release, publishes, and edits a product", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `admin-${suffix}@bke.test`;
