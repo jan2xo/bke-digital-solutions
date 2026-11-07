@@ -2,7 +2,7 @@ import { readFile, writeFile, rm } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
 export const expected = {
-  appUrl: "https://bke-digital-solutions.jlprojectfreedom.workers.dev",
+  appUrl: "https://bkedigitalsolutions.com",
   deploymentEnv: "staging",
   databaseName: "bke_staging",
   databaseRole: "bke_staging_owner",
@@ -175,7 +175,9 @@ export function buildStagingArtifacts(sourceConfig, env, driveId) {
   delete config.send_email;
   if (config.name !== "bke-digital-solutions") fail("Unexpected Worker name");
   if (config.observability?.enabled !== true || config.observability?.logs?.enabled === false || config.observability?.redact_query_string !== true) fail("Staging deployment must keep logs enabled and redact query strings in observability logs");
-  if (config.route || config.routes) fail("Custom routes are forbidden for workers.dev-only Staging");
+  if (config.route || config.routes) fail("Source Wrangler routes must not override the fixed owner-authorized apex hostname");
+  // The user authorized the bare apex hostname. No staging.* or www.* alias.
+  config.routes = [{ pattern: "bkedigitalsolutions.com", custom_domain: true }];
   if (config.env) fail("Wrangler named environments cannot override the Staging target");
   config.workers_dev = true;
   const bindings = config.hyperdrive;

@@ -6,7 +6,7 @@ const host="ep-example.ap-southeast-1.aws.neon.tech";
 const db=`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require`;
 function setup(){
  delete process.env.UPSTASH_REDIS_REST_URL; delete process.env.UPSTASH_REDIS_REST_TOKEN; delete process.env.BUSINESS_ADDRESS;
- Object.assign(process.env,{APP_URL:"https://bke-digital-solutions.jlprojectfreedom.workers.dev",DEPLOYMENT_ENV:"staging",DEPLOYMENT_ID:"bke-digital-solutions-try",REDIS_KEY_PREFIX:"bke-digital-solutions-try",PAYMENT_PROVIDER:"mock",PAYMONGO_LIVEMODE:"false",EMAIL_PROVIDER:"log",GOOGLE_CLIENT_ID:"id",GOOGLE_CLIENT_SECRET:"secret",STAGING_NEON_HOST:host,DATABASE_URL:db,DIRECT_DATABASE_URL:db,SESSION_SECRET:"s".repeat(64),LICENSE_PEPPER:"p".repeat(64),LICENSE_SIGNING_PRIVATE_KEY:"private-signing-key",LICENSE_SIGNING_PUBLIC_KEY:"public-signing-key",CRON_SECRET:"c".repeat(64),REDIS_URL:"rediss://redis.example.invalid:6379",EMAIL_FROM:"staging@example.invalid"});
+ Object.assign(process.env,{APP_URL:"https://bkedigitalsolutions.com",DEPLOYMENT_ENV:"staging",DEPLOYMENT_ID:"bke-digital-solutions-try",REDIS_KEY_PREFIX:"bke-digital-solutions-try",PAYMENT_PROVIDER:"mock",PAYMONGO_LIVEMODE:"false",EMAIL_PROVIDER:"log",GOOGLE_CLIENT_ID:"id",GOOGLE_CLIENT_SECRET:"secret",STAGING_NEON_HOST:host,DATABASE_URL:db,DIRECT_DATABASE_URL:db,SESSION_SECRET:"s".repeat(64),LICENSE_PEPPER:"p".repeat(64),LICENSE_SIGNING_PRIVATE_KEY:"private-signing-key",LICENSE_SIGNING_PUBLIC_KEY:"public-signing-key",CRON_SECRET:"c".repeat(64),REDIS_URL:"rediss://redis.example.invalid:6379",EMAIL_FROM:"staging@example.invalid"});
 }
 beforeEach(setup); afterEach(()=>{for(const k of keys){const v=saved.get(k);if(v===undefined)delete process.env[k];else process.env[k]=v;}});
 function drive(){return {id:"a".repeat(32),name:"bke-digital-solutions-staging-fresh",origin:{database:"bke_staging",user:"bke_staging_owner",host,scheme:"postgres",port:5432},mtls:{sslmode:"require"},caching:{disabled:true}};}
@@ -15,6 +15,7 @@ describe("protected Staging guards",()=>{
   const {assertStagingSettings}=await import("../scripts/deploy-staging.mjs");
   expect(()=>assertStagingSettings()).not.toThrow();
   process.env.APP_URL="https://jl-bke.com"; expect(()=>assertStagingSettings()).toThrow();
+  process.env.APP_URL="https://bke-digital-solutions.jlprojectfreedom.workers.dev"; expect(()=>assertStagingSettings()).toThrow();
   setup(); process.env.DEPLOYMENT_ID="staging"; expect(()=>assertStagingSettings()).toThrow();
   setup(); process.env.REDIS_KEY_PREFIX="staging"; expect(()=>assertStagingSettings()).toThrow();
  });
@@ -96,7 +97,7 @@ describe("protected Staging guards",()=>{
   process.env.MFA_ENCRYPTION_KEY="retired"; process.env.ADMIN_OWNER_RECOVERY_KEY="retired";
   process.env.SUPPLY_CHAIN_SIGNING_PRIVATE_KEY="retired"; process.env.SUPPLY_CHAIN_SIGNING_PUBLIC_KEY="retired"; process.env.SUPPLY_CHAIN_SIGNING_KEY_ID="retired";
   const artifacts=buildStagingArtifacts(config,process.env,"a".repeat(32));
-  expect(artifacts.config.workers_dev).toBe(true); expect(artifacts.config.vars).not.toHaveProperty("DATABASE_URL");
+  expect(artifacts.config.workers_dev).toBe(true); expect(artifacts.config.routes).toEqual([{pattern:"bkedigitalsolutions.com",custom_domain:true}]); expect(artifacts.config.vars).not.toHaveProperty("DATABASE_URL");
   expect(artifacts.secrets).not.toHaveProperty("DIRECT_DATABASE_URL"); expect(artifacts.secrets).not.toHaveProperty("CLOUDFLARE_API_TOKEN");
   expect(artifacts.secrets).not.toHaveProperty("MFA_ENCRYPTION_KEY"); expect(artifacts.secrets).not.toHaveProperty("ADMIN_OWNER_RECOVERY_KEY");
   expect(artifacts.secrets).not.toHaveProperty("SUPPLY_CHAIN_SIGNING_PRIVATE_KEY"); expect(artifacts.secrets).not.toHaveProperty("SUPPLY_CHAIN_SIGNING_PUBLIC_KEY");
