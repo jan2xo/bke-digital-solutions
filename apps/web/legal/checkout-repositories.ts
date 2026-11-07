@@ -5,12 +5,11 @@ import type { LegalDocumentType } from "@bke/legal/contracts/checkout-requiremen
 import type { LegalAcceptanceRepository } from "@bke/legal/logic/acceptance-repository";
 import type { LegalCheckoutRequirementsRepository } from "@bke/legal/logic/checkout-requirements-repository";
 import { legalRenderedContentSha256, normalizeLegalVariables } from "@bke/legal/logic/render";
-import type { Prisma, PrismaClient } from "@/platform/host/generated/prisma/client";
 import { db } from "@/platform/host/db";
 
 // Digital Solutions owns the V3 versionNumber/contentHash/userId schema mapping.
 // The published @bke/legal package still owns legal validation, hashing and decisions.
-type HostLegalClient = Pick<PrismaClient, "legalDocument" | "legalDocumentVersion" | "legalAcceptance">;
+type HostLegalClient = Pick<typeof db, "legalDocument" | "legalDocumentVersion" | "legalAcceptance">;
 
 export function createHostLegalCheckoutRequirementsRepository(
   client: HostLegalClient = db,
@@ -54,7 +53,7 @@ type HostAcceptanceRow = {
   documentVersionId: string;
   acceptanceContext: string;
   renderedContentHash: string;
-  variablesSnapshot: Prisma.JsonValue;
+  variablesSnapshot: unknown;
   ipAddress: string | null;
   userAgent: string | null;
   acceptedAt: Date;
@@ -112,7 +111,7 @@ export function createHostLegalAcceptanceRepository(
         data: [{
           ...where,
           renderedContentHash: input.renderedContentSha256,
-          variablesSnapshot: variables as Prisma.InputJsonValue,
+          variablesSnapshot: variables,
           ipAddress: input.ipAddress ?? null,
           userAgent: input.userAgent ?? null,
         }],
