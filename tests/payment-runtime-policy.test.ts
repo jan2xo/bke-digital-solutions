@@ -9,6 +9,11 @@ describe("mock payment runtime policy", () => {
     })).not.toThrow();
   });
 
+  it("forbids live keys and live flags in a mock-only runtime", () => {
+    expect(() => assertMockPaymentsAllowed({ DEPLOYMENT_ENV: "staging", PAYMONGO_LIVEMODE: "true" })).toThrow("PAYMONGO_LIVE_KEY_FORBIDDEN_IN_MOCK_RUNTIME");
+    expect(() => assertMockPaymentsAllowed({ DEPLOYMENT_ENV: "test", PAYMONGO_SECRET_KEY: "sk_live_secret" })).toThrow("PAYMONGO_LIVE_KEY_FORBIDDEN_IN_MOCK_RUNTIME");
+  });
+
   it("forbids mock payments for the production deployment", () => {
     expect(() => assertMockPaymentsAllowed({
       NODE_ENV: "production",
