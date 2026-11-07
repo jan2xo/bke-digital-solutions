@@ -17,10 +17,10 @@ describe("intentional exact-head disposable staging", () => {
   it("separates trusted workflow provenance and exact candidate checkout", () => {
     expect(workflow).toContain('pr.head.repo?.full_name !== fullRepo');
     expect(workflow).toContain('currentMain.data.object.sha !== workflowSha');
-    expect(workflow).toContain('test "$WORKFLOW_SHA" = "$TRUSTED_WORKFLOW_SHA"');
+    expect(workflow).toContain("process.env.WORKFLOW_SHA !== trustedSha");
     expect(workflow).not.toContain('test "$WORKFLOW_SHA" = "$SOURCE_SHA"');
     expect(workflow).toContain('test "$(git rev-parse HEAD)" = "$SOURCE_SHA"');
-    expect(workflow.match(/pr.head.sha !== process.env.EXPECTED_SOURCE/g)).toHaveLength(2);
+    expect(workflow.match(/pr.head.sha !== sourceSha/g)).toHaveLength(1);
   });
   it("requires complete exact-head proof and cancels no in-progress staging", () => {
     expect(workflow).toContain("cancel-in-progress: false");
@@ -36,16 +36,21 @@ describe("intentional exact-head disposable staging", () => {
     expect(workflow).toContain("needs: [plan, commerce]");
   });
   it("retains protected disposable Staging, explicit no-real-payments and browser negatives", () => {
-    expect(workflow).toContain("name: Staging");
+    expect(workflow).not.toContain("      name: Staging");
+    expect(workflow).toContain("Dispatch exact-head branch-owned Staging");
+    expect(workflow).toContain('workflow_id: "ci.yml", ref: authorizedBranch');
+    expect(workflow).toContain('deploy_staging: "true"');
     expect(workflow).toContain("PAYMENT_PROVIDER: mock");
     expect(workflow).toContain("EMAIL_PROVIDER: log");
-    expect(workflow).toContain("Infisical/secrets-action@");
-    expect(workflow).toContain("Browser-check unauthenticated Staging");
+    expect(workflow).not.toContain("Infisical/secrets-action@");
+    expect(workflow).toContain("actions: write");
+    expect(workflow).toContain("pr.head.sha !== sourceSha");
+    expect(workflow).toContain("Browser-accept disposable admin create/edit/archive/delete");
     expect(workflow).toContain("NODE_OPTIONS: --import=tsx");
     expect(workflow).toContain("npm run test:e2e -- tests/e2e/admin-product.spec.ts");
-    expect(workflow).toContain("Not verified by this workflow: real Google OAuth");
+    expect(workflow).toContain("Provider Google OAuth and real staging administrator are not simulated or claimed.");
     expect(workflow).toContain("Exact source SHA: $SOURCE_SHA");
-    expect(workflow).toContain("Exact deployed source SHA: $SOURCE_SHA");
+    expect(workflow).toContain("the branch CI run must independently PASS deployment and live smoke");
   });
   it("skips only Docker-only image builds when staging requests it; normal CI remains unchanged", () => {
     expect(core).toContain("skip_containers:");
