@@ -9,8 +9,6 @@ export const expected = {
   deploymentId: "bke-digital-solutions-try",
   redisPrefix: "bke-digital-solutions-try",
   hyperdriveName: "bke-digital-solutions-staging-fresh",
-  // A disclosure, NOT a physical address. Staging uses mock-only payments.
-  stagingUnverifiedBusinessAddress: "Staging test only - no verified business address; not valid commercial contact details",
   cloudflareAccountId: "384c6c13373eb94a2925e0d865139970",
 };
 const configPath = ".wrangler-staging.json";
@@ -48,7 +46,6 @@ const publicVariables = [
   "EMAIL_FROM",
   "REDIS_KEY_PREFIX",
   "SUPPORT_EMAIL",
-  "BUSINESS_ADDRESS",
   "MAX_ARTIFACT_BYTES",
   "LOG_LEVEL",
   "TRUSTED_ORIGINS",
@@ -190,10 +187,6 @@ export function buildStagingArtifacts(sourceConfig, env, driveId) {
     .filter((name) => env[name] !== undefined && env[name] !== "")
     .map((name) => [name, env[name]]));
   Object.assign(vars, { NODE_ENV: "production", BKE_RUNTIME: "workers" });
-  // Checkout requires a host legal contact. A missing real address must not be
-  // disguised as one: isolated mock-only Staging explicitly labels the gap.
-  // Production does not use this builder and keeps its required host fact guard.
-  vars.BUSINESS_ADDRESS = env.BUSINESS_ADDRESS?.trim() || expected.stagingUnverifiedBusinessAddress;
   const forbidden = ["DATABASE_URL", "DIRECT_DATABASE_URL", "STAGING_NEON_HOST", "HYPERDRIVE_FRESH_ID", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "INFISICAL_STAGING_IDENTITY_ID"];
   if (Object.keys(config.vars ?? {}).some((name) => forbidden.includes(name))) fail("Wrangler config contains forbidden Staging credential variables");
   config.vars = vars;
