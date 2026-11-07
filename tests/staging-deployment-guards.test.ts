@@ -109,15 +109,14 @@ describe("protected Staging guards",()=>{
   expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,logs:{enabled:false},redact_query_string:true}},process.env,"a".repeat(32))).toThrow(/logs enabled and redact/);
   expect(()=>buildStagingArtifacts({...config,vars:{DATABASE_URL:"leak"}},process.env,"a".repeat(32))).toThrow();
  });
- it("provides an explicitly non-address Staging mock checkout contact only in the guarded deployment artifact",async()=>{
-  const {buildStagingArtifacts,expected}=await import("../scripts/deploy-staging.mjs");
+ it("keeps the legacy mock checkout free of synthetic merchant-address bindings",async()=>{
+  const {buildStagingArtifacts}=await import("../scripts/deploy-staging.mjs");
   const source={name:"bke-digital-solutions",hyperdrive:[{binding:"HYPERDRIVE_FRESH",id:"0".repeat(32)}],observability:{enabled:true,redact_query_string:true},vars:{},triggers:{}};
-  const fallback=buildStagingArtifacts(source,process.env,"a".repeat(32));
-  expect(fallback.config.vars.BUSINESS_ADDRESS).toBe(expected.stagingUnverifiedBusinessAddress);
-  expect(fallback.config.vars.BUSINESS_ADDRESS).toMatch(/Staging test only.*not valid commercial contact/i);
-  expect(fallback.secrets).not.toHaveProperty("BUSINESS_ADDRESS");
-  process.env.BUSINESS_ADDRESS="Reviewed Staging operator business contact, example fixture";
-  expect(buildStagingArtifacts(source,process.env,"a".repeat(32)).config.vars.BUSINESS_ADDRESS).toBe(process.env.BUSINESS_ADDRESS);
+  const artifact=buildStagingArtifacts(source,process.env,"a".repeat(32));
+  expect(artifact.config.vars).not.toHaveProperty("BUSINESS_ADDRESS");
+  expect(artifact.secrets).not.toHaveProperty("BUSINESS_ADDRESS");
+  process.env.BUSINESS_ADDRESS="Unused operator value, not needed for checkout";
+  expect(buildStagingArtifacts(source,process.env,"a".repeat(32)).config.vars).not.toHaveProperty("BUSINESS_ADDRESS");
   process.env.PAYMENT_PROVIDER="paymongo";
   expect(()=>buildStagingArtifacts(source,process.env,"a".repeat(32))).toThrow(/mock payments/);
  });
