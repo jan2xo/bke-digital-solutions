@@ -362,6 +362,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test "$WORKFLOW_SHA" = "$SOURCE_SHA"
+          test "$WORKFLOW_REF" = "jan2xo/bke-digital-solutions/.github/workflows/ci.yml@refs/heads/feat/workers-free-compatibility-proof"
           printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF"
       - uses: actions/setup-node@v4
         with:
@@ -461,6 +462,34 @@ jobs:
         run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/initialize-staging-legal.ts
       - name: Verify public Staging pages and dependency readiness
         run: node scripts/staging-smoke.mjs
+      - name: Browser-check unauthenticated deployed Staging and admin access denial
+        run: |
+          npx --no-install playwright install chromium
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict";
+          import { chromium } from "@playwright/test";
+          const origin = "https://bke-digital-solutions.jlprojectfreedom.workers.dev";
+          const browser = await chromium.launch({ headless: true });
+          try {
+            const context = await browser.newContext({ ignoreHTTPSErrors: false });
+            const page = await context.newPage();
+            const response = await page.goto(origin + "/admin/products", { waitUntil: "domcontentloaded", timeout: 30000 });
+            assert.ok(response, "Admin navigation returned no response");
+            assert.equal(new URL(page.url()).pathname, "/login", "Unauthenticated admin browser was not redirected to login");
+            assert.match(await page.locator("body").innerText(), /google/i, "Google sign-in not available");
+            const denied = await context.request.get(origin + "/api/admin/products", { maxRedirects: 0, timeout: 15000 });
+            assert.ok([401, 403].includes(denied.status()), "Unauthenticated admin API unexpectedly allowed: " + denied.status());
+            console.log("PASS: deployed browser redirects unauthenticated admin; admin API denies unauthorized access");
+          } finally { await browser.close(); }
+          NODE
+      - name: Record human Google administrator acceptance boundary
+        run: |
+          {
+            echo "## Staging acceptance boundary"
+            echo "Exact deployed source SHA: $SOURCE_SHA"
+            echo "Automated: public pages, dependency readiness and unauthenticated admin browser denial."
+            echo "Unverified: real Google OAuth and human-authenticated admin actions."
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Remove temporary protected deployment files
         if: always()
         run: node scripts/deploy-staging.mjs cleanup
