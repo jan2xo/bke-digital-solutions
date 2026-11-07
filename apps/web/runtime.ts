@@ -15,6 +15,7 @@ import { createWebPaymentsAdapter } from "./payments/provider";
 import { createHostLegalReacceptanceStatusRepository } from "./legal/reacceptance-repository";
 import { createHostLegalAcceptanceRepository, createHostLegalCheckoutRequirementsRepository } from "./legal/checkout-repositories";
 import { createCommerceClaimUnitIssuer } from "./entitlements/commerce-claim-unit-issuer";
+import { createHostCatalogLookupRepository } from "./catalog/lookup-repository";
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -37,7 +38,7 @@ async function composeWebApplication(): Promise<ComposedApplication> {
       checkoutRequirementsRepository: createHostLegalCheckoutRequirementsRepository(),
       acceptanceRepository: createHostLegalAcceptanceRepository(),
     }),
-    createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
+    createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema", lookupRepository: createHostCatalogLookupRepository() }),
     createCommerceModule({ connectionString, claimUnits: createCommerceClaimUnitIssuer() }),
     createPaymentsModule({
       connectionString,
