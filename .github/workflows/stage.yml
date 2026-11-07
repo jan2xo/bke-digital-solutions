@@ -370,6 +370,8 @@ jobs:
       - name: Install disposable Chromium
         run: npx --no-install playwright install --with-deps chromium
       - name: Browser-accept disposable admin create/edit/archive/delete and denial paths
+        env:
+          NODE_OPTIONS: --import=tsx
         run: npm run test:e2e -- tests/e2e/admin-product.spec.ts
       - name: Record synthetic session acceptance boundary
         if: always()
