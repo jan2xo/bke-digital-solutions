@@ -19,6 +19,7 @@ import {
   type LegalReacceptanceStatusCapability,
 } from "@bke/legal/contracts/reacceptance-status.contract";
 import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
 import { CheckoutStartButton } from "@/components/checkout-start-button";
 import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-account-list";
 import { currentIdentitySession } from "@/apps/web/auth/session";
@@ -102,7 +103,7 @@ export default async function CheckoutReview({
           This purchase cannot proceed until the required legal agreements are published.
           No payment has been started.
         </p>
-        <a href="/products" className="mt-6 inline-block underline">Return to products</a>
+        <Link href="/products" className="mt-6 inline-block underline">Return to products</Link>
       </section>
     );
   }
