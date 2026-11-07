@@ -115,10 +115,18 @@ export function LandingExperience({ content, products }: { content: LandingConte
 
       <section className="solutions-section commerce-products">
         <div className="shell">
-          <div className="section-heading"><div><p className="eyebrow eyebrow-yellow">{content.solutionsEyebrow}</p><h2>{content.solutionsHeading}<br /><span>{content.solutionsAccent}</span></h2></div><Link href="/products" className="text-link">{content.solutionsLinkLabel} <span>→</span></Link></div>
-          <div className="solution-grid">
-            {products.map((product) => <Link href={`/products/${product.slug}`} key={product.id} className="solution-card commerce-product-card" style={{ display: "flex", flexDirection: "column" }}><p className="solution-type" style={{ marginTop: 0 }}>{product.type}</p><h3>{product.name}</h3><p style={{ marginBottom: "1.5rem" }}>{product.summary}</p><strong style={{ position: "static", alignSelf: "flex-end", marginTop: "auto", paddingTop: "1rem" }}>{product.priceLabel} <span>↗</span></strong></Link>)}
-          </div>
+          <div className="section-heading"><div><p className="eyebrow eyebrow-yellow">{content.solutionsEyebrow}</p><h2>{content.solutionsHeading}<br /><span>{content.solutionsAccent}</span></h2></div>{products.length > 0 && <Link href="/products" className="text-link">{content.solutionsLinkLabel} <span>→</span></Link>}</div>
+          {products.length > 0 ? (
+            <div className="solution-grid">
+              {products.map((product) => <Link href={`/products/${product.slug}`} key={product.id} className="solution-card commerce-product-card"><p className="solution-type">{product.type}</p><h3>{product.name}</h3><p className="commerce-product-summary">{product.summary}</p><strong className="commerce-product-price">{product.priceLabel} <span>↗</span></strong></Link>)}
+            </div>
+          ) : (
+            <div className="empty-products-state">
+              <p className="eyebrow eyebrow-yellow">CATALOG UPDATE</p>
+              <p>No products are available right now. Please check back later.</p>
+              <Link className="text-link" href="/products">View product catalog <span>→</span></Link>
+            </div>
+          )}
         </div>
       </section>
     </>
