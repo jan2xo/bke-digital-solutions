@@ -59,7 +59,7 @@ test("authenticated customer starts a mock-only checkout after accepting valid d
   const boxes = page.getByRole("checkbox");
   await expect(boxes).toHaveCount(2);
   for (const box of await boxes.all()) await box.check();
-  const before = await db.paymentAttempt.count();
+  const before = await db.order.count();
   const posted = page.waitForResponse(response =>
     response.url().endsWith("/api/checkout") && response.request().method() === "POST"
   );
@@ -72,7 +72,9 @@ test("authenticated customer starts a mock-only checkout after accepting valid d
   const destination = new URL(page.url());
   expect(destination.hostname).toMatch(/^(?:localhost|127\.0\.0\.1)$/);
   expect(destination.searchParams.get("mock")).toBe("1");
-  expect(await db.paymentAttempt.count()).toBe(before + 1);
+  // Legacy mock checkout creates an Order and redirects to a local success page;
+  // it does not promise a row in the host PaymentAttempt model.
+  expect(await db.order.count()).toBe(before + 1);
 });
 
 test("administrator creates, catalogs a GitHub release, publishes, and edits a product", async ({ page }) => {

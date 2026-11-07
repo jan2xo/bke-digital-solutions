@@ -55,7 +55,7 @@ function fail(code: string, status: number): never {
   throw new CheckoutHttpError(code, status);
 }
 
-function requiredHostFact(name: "APP_URL" | "SUPPORT_EMAIL" | "BUSINESS_ADDRESS"): string {
+function requiredHostFact(name: "APP_URL" | "SUPPORT_EMAIL"): string {
   const value = process.env[name]?.trim();
   if (!value) fail("CHECKOUT_HOST_CONFIGURATION_UNAVAILABLE", 503);
   return value;
@@ -97,6 +97,9 @@ function commerceFailure(code: string): never {
   }
 }
 
+// Legacy hosted Checkout Session / mock checkout only. First-party PayMongo
+// Payment Intent API and branded payment UX are owned exclusively by PR #275.
+// Never depend on a physical business address to initiate this checkout.
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
@@ -217,7 +220,6 @@ export async function POST(request: Request) {
         company_name: "BKE Digital Solutions",
         support_email: requiredHostFact("SUPPORT_EMAIL"),
         website: requiredHostFact("APP_URL"),
-        business_address: requiredHostFact("BUSINESS_ADDRESS"),
       },
     });
     if (requirementsResult.status === "REJECTED") fail(requirementsResult.code, 409);
