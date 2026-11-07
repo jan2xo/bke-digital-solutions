@@ -159,6 +159,8 @@ jobs:
           node --check scripts/v3-disposable-env.mjs
           node --check scripts/v3-disposable-compose.mjs
           node --check scripts/v3-disposable-doctor.mjs
+      - name: Certify live PayMongo configuration segregation and fail-closed contracts
+        run: node --test scripts/prepare-live-paymongo.test.mjs
       - name: Build application
         run: npm run build
       - name: Repository diff hygiene
