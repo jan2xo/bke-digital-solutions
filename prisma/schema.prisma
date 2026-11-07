@@ -1208,6 +1208,8 @@ model OfferRedemption {
   orderId        String                @unique
   status         OfferRedemptionStatus @default(RESERVED)
   discountBps    Int
+  // Durable Commerce offer snapshot, never rederive from mutable DiscountOffer.
+  discountedBillingCycles Int?
   baseMinor      Int
   discountMinor  Int
   finalMinor     Int
