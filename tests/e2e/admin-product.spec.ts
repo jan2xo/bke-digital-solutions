@@ -88,7 +88,9 @@ test("administrator permanently deletes only disposable archived products", asyn
   await dialog.getByLabel(new RegExp(`Type ${disposable.name}`)).fill(disposable.name);
   await dialog.getByRole("button", { name: "Request deletion" }).click();
   await expect(dialog.getByText("Deletion requested.")).toBeVisible();
-  await dialog.getByRole("button", { name: "Run cleanup and finalize" }).click();
+  const finalizedResponse = page.waitForResponse((response) => response.url().endsWith(`/api/admin/products/${disposable.id}/deletion`) && response.request().method() === "PATCH");
+  await dialog.getByRole("button", { name: "Confirm final deletion" }).click();
+  expect((await finalizedResponse).status()).toBe(204);
   await expect(card).toHaveCount(0);
   expect(await db.product.findUnique({ where: { id: disposable.id } })).toBeNull();
   expect(await db.auditLog.count({ where: { actorId: admin.id, targetId: disposable.id, action: "PRODUCT_DELETION_FINALIZED" } })).toBe(1);
