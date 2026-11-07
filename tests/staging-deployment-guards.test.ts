@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { databaseUrl, verifyHyperdriveMetadata, verifyObservabilityRedaction } from "../scripts/deploy-staging.mjs";
-const keys=["MFA_ENCRYPTION_KEY","ADMIN_OWNER_RECOVERY_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","SUPPLY_CHAIN_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_KEY_ID","APP_URL","DEPLOYMENT_ENV","DEPLOYMENT_ID","REDIS_KEY_PREFIX","PAYMENT_PROVIDER","PAYMONGO_LIVEMODE","EMAIL_PROVIDER","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","STAGING_NEON_HOST","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","MFA_ENCRYPTION_KEY","LICENSE_PEPPER","LICENSE_SIGNING_PRIVATE_KEY","LICENSE_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","ADMIN_OWNER_RECOVERY_KEY","CRON_SECRET","REDIS_URL","UPSTASH_REDIS_REST_URL","UPSTASH_REDIS_REST_TOKEN","EMAIL_FROM","CLOUDFLARE_API_TOKEN","HYPERDRIVE_FRESH_ID"] as const;
+const keys=["MFA_ENCRYPTION_KEY","ADMIN_OWNER_RECOVERY_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","SUPPLY_CHAIN_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_KEY_ID","APP_URL","DEPLOYMENT_ENV","DEPLOYMENT_ID","REDIS_KEY_PREFIX","PAYMENT_PROVIDER","PAYMONGO_LIVEMODE","EMAIL_PROVIDER","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","STAGING_NEON_HOST","DATABASE_URL","DIRECT_DATABASE_URL","SESSION_SECRET","MFA_ENCRYPTION_KEY","LICENSE_PEPPER","LICENSE_SIGNING_PRIVATE_KEY","LICENSE_SIGNING_PUBLIC_KEY","SUPPLY_CHAIN_SIGNING_PRIVATE_KEY","ADMIN_OWNER_RECOVERY_KEY","CRON_SECRET","REDIS_URL","UPSTASH_REDIS_REST_URL","UPSTASH_REDIS_REST_TOKEN","EMAIL_FROM","CLOUDFLARE_API_TOKEN","HYPERDRIVE_FRESH_ID","BUSINESS_ADDRESS"] as const;
 const saved=new Map(keys.map(k=>[k,process.env[k]]));
 const host="ep-example.ap-southeast-1.aws.neon.tech";
 const db=`postgresql://bke_staging_owner:secret@${host}:5432/bke_staging?sslmode=require`;
 function setup(){
- delete process.env.UPSTASH_REDIS_REST_URL; delete process.env.UPSTASH_REDIS_REST_TOKEN;
+ delete process.env.UPSTASH_REDIS_REST_URL; delete process.env.UPSTASH_REDIS_REST_TOKEN; delete process.env.BUSINESS_ADDRESS;
  Object.assign(process.env,{APP_URL:"https://bke-digital-solutions.jlprojectfreedom.workers.dev",DEPLOYMENT_ENV:"staging",DEPLOYMENT_ID:"bke-digital-solutions-try",REDIS_KEY_PREFIX:"bke-digital-solutions-try",PAYMENT_PROVIDER:"mock",PAYMONGO_LIVEMODE:"false",EMAIL_PROVIDER:"log",GOOGLE_CLIENT_ID:"id",GOOGLE_CLIENT_SECRET:"secret",STAGING_NEON_HOST:host,DATABASE_URL:db,DIRECT_DATABASE_URL:db,SESSION_SECRET:"s".repeat(64),LICENSE_PEPPER:"p".repeat(64),LICENSE_SIGNING_PRIVATE_KEY:"private-signing-key",LICENSE_SIGNING_PUBLIC_KEY:"public-signing-key",CRON_SECRET:"c".repeat(64),REDIS_URL:"rediss://redis.example.invalid:6379",EMAIL_FROM:"staging@example.invalid"});
 }
 beforeEach(setup); afterEach(()=>{for(const k of keys){const v=saved.get(k);if(v===undefined)delete process.env[k];else process.env[k]=v;}});
@@ -108,6 +108,18 @@ describe("protected Staging guards",()=>{
   expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,redact_query_string:false}},process.env,"a".repeat(32))).toThrow(/logs enabled and redact/);
   expect(()=>buildStagingArtifacts({...config,observability:{enabled:true,logs:{enabled:false},redact_query_string:true}},process.env,"a".repeat(32))).toThrow(/logs enabled and redact/);
   expect(()=>buildStagingArtifacts({...config,vars:{DATABASE_URL:"leak"}},process.env,"a".repeat(32))).toThrow();
+ });
+ it("provides an explicitly non-address Staging mock checkout contact only in the guarded deployment artifact",async()=>{
+  const {buildStagingArtifacts,expected}=await import("../scripts/deploy-staging.mjs");
+  const source={name:"bke-digital-solutions",hyperdrive:[{binding:"HYPERDRIVE_FRESH",id:"0".repeat(32)}],observability:{enabled:true,redact_query_string:true},vars:{},triggers:{}};
+  const fallback=buildStagingArtifacts(source,process.env,"a".repeat(32));
+  expect(fallback.config.vars.BUSINESS_ADDRESS).toBe(expected.stagingUnverifiedBusinessAddress);
+  expect(fallback.config.vars.BUSINESS_ADDRESS).toMatch(/Staging test only.*not valid commercial contact/i);
+  expect(fallback.secrets).not.toHaveProperty("BUSINESS_ADDRESS");
+  process.env.BUSINESS_ADDRESS="Reviewed Staging operator business contact, example fixture";
+  expect(buildStagingArtifacts(source,process.env,"a".repeat(32)).config.vars.BUSINESS_ADDRESS).toBe(process.env.BUSINESS_ADDRESS);
+  process.env.PAYMENT_PROVIDER="paymongo";
+  expect(()=>buildStagingArtifacts(source,process.env,"a".repeat(32))).toThrow(/mock payments/);
  });
  it("probes only the approved Upstash REST ping without exposing credentials",async()=>{
   const {verifyUpstashRedis}=await import("../scripts/deploy-staging.mjs");

@@ -35,6 +35,43 @@ test("authenticated customer reviews a seeded purchase plan without starting pay
   expect(await db.paymentAttempt.count()).toBe(count);
 });
 
+test("authenticated customer starts a mock-only checkout after accepting valid disposable legal fixtures", async ({ page }) => {
+  const suffix = Date.now().toString(36);
+  const email = `checkout-start-${suffix}@bke.test`;
+  await db.user.create({
+    data: {
+      email, emailVerified: new Date(), role: "CUSTOMER",
+      ownedAccounts: { create: {
+        type: "INDIVIDUAL", displayName: "Checkout start fixture customer", billingEmail: email,
+      } },
+    },
+  });
+  const plan = await db.purchasePlan.findFirst({
+    where: {
+      type: "PERPETUAL", active: true,
+      edition: { active: true, product: { slug: "bke-deskflow", active: true, archivedAt: null } },
+    },
+  });
+  expect(plan).not.toBeNull();
+  await signInGoogleTestUser(page, email, db);
+  await page.goto(`/checkout?purchasePlanId=${plan!.id}`);
+  await expect(page.getByText("Checkout review", { exact: true })).toBeVisible();
+  const boxes = page.getByRole("checkbox");
+  await expect(boxes).toHaveCount(2);
+  for (const box of await boxes.all()) await box.check();
+  const before = await db.paymentAttempt.count();
+  const posted = page.waitForResponse(response =>
+    response.url().endsWith("/api/checkout") && response.request().method() === "POST"
+  );
+  await page.getByRole("button", { name: "Continue to secure payment" }).click();
+  const response = await posted;
+  expect(response.status()).toBe(201);
+  const result = await response.json();
+  expect(result.checkoutUrl).toContain("mock=1");
+  expect(new URL(result.checkoutUrl).hostname).toMatch(/^(?:localhost|127\.0\.0\.1)$/);
+  expect(await db.paymentAttempt.count()).toBe(before + 1);
+});
+
 test("administrator creates, catalogs a GitHub release, publishes, and edits a product", async ({ page }) => {
   const suffix = Date.now().toString(36);
   const email = `admin-${suffix}@bke.test`;
