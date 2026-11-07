@@ -3,6 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { afterAll, describe, expect, it } from "vitest";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
 import { createCatalogLookupCapability } from "@bke/catalog/logic/catalog";
+import { createPostgresCatalogRepository } from "@bke/catalog/prisma/repositories/postgres-catalog-repository";
 import { createHostCatalogLookupRepository } from "../../apps/web/catalog/lookup-repository";
 
 const db = new PrismaClient({
@@ -11,7 +12,10 @@ const db = new PrismaClient({
 afterAll(async () => db.$disconnect());
 
 describe("V3 Catalog Product/Edition checkout receiving (real PostgreSQL)", () => {
-  const lookup = createCatalogLookupCapability(createHostCatalogLookupRepository(db));
+  const lookup = createCatalogLookupCapability({
+    ...createPostgresCatalogRepository(process.env.DATABASE_URL!),
+    ...createHostCatalogLookupRepository(db),
+  });
 
   it("resolves a seeded published purchase plan's actual V3 Product and Edition", async () => {
     const plan = await db.purchasePlan.findFirst({
