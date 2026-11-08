@@ -421,6 +421,10 @@ jobs:
           recursive: 'false'
       - name: Pin owner-authorized apex as the only canonical website origin
         run: printf '%s\n' 'APP_URL=https://bkedigitalsolutions.com' >> "$GITHUB_ENV"
+      - name: Probe existing live PayMongo secret and QR Ph capability read-only from Staging OIDC
+        # Uses the protected Staging identity. Does not deploy this credential,
+        # create a Checkout Session, charge anyone, or write to Neon.
+        run: node scripts/probe-staging-paymongo.mjs
       - name: Validate protected Staging runtime configuration
         env:
           NODE_ENV: production
