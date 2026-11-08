@@ -153,11 +153,21 @@ jobs:
           secret-path: /
           include-imports: "false"
           recursive: "false"
+      # Initial schema preparation is not a live payment or website cutover.
+      # It still requires exact-main certification, Production review and
+      # source-bound Neon + Hyperdrive identity; no merchant keys are loaded.
+      - name: Validate isolated Production schema target without commercial activation
+        if: ${{ inputs.mode == 'prepare_database' }}
+        env:
+          NODE_ENV: production
+        run: node scripts/prepare-live-paymongo.mjs validate_schema
       - name: Require genuine production PayMongo keys and isolated resources
+        if: ${{ inputs.mode != 'prepare_database' }}
         env:
           NODE_ENV: production
         run: node scripts/prepare-live-paymongo.mjs validate
       - name: Validate all production runtime environment contracts
+        if: ${{ inputs.mode != 'prepare_database' }}
         env:
           NODE_ENV: production
         run: npm run config:validate
@@ -165,7 +175,12 @@ jobs:
         env:
           NODE_ENV: production
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: node scripts/prepare-live-paymongo.mjs verify
+        run: |
+          if [ "$CUTOVER_MODE" = "prepare_database" ]; then
+            node scripts/prepare-live-paymongo.mjs verify_schema
+          else
+            node scripts/prepare-live-paymongo.mjs verify
+          fi
       - name: Apply reviewed migrations to verified empty or isolated Production database
         if: ${{ inputs.mode == 'prepare_database' }}
         env:

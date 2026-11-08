@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { assertLiveSettings, buildLiveArtifacts, verifyLiveHyperdrive, LIVE_ORIGIN } from "./prepare-live-paymongo.mjs";
+import { assertLiveSettings, assertProductionSchemaSettings, buildLiveArtifacts, verifyLiveHyperdrive, LIVE_ORIGIN } from "./prepare-live-paymongo.mjs";
 import { assertPublishedCommercialLegal, requiredCommercialDocumentTypes } from "./verify-live-legal.mjs";
 import { readFileSync } from "node:fs";
 
@@ -42,6 +42,68 @@ it("pins protected GitHub Production to the actual Infisical prod slug",()=>{
   assert.doesNotMatch(workflow,/^\s+env-slug: production\s*$/m);
   assert.match(workflow,/^\s+secret-path: \/\s*$/m);
   assert.ok(workflow.includes("project-id: " + "$" + "{{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}"));
+});
+
+describe("fresh Production schema preparation — payments and public deployment remain locked",()=>{
+  const schemaOnly={
+    APP_URL:LIVE_ORIGIN,
+    DEPLOYMENT_ENV:"production",
+    PRODUCTION_NEON_HOST:host,
+    DATABASE_URL:url,
+    DIRECT_DATABASE_URL:url,
+    HYPERDRIVE_ID:realId,
+    // Intentionally NO live PayMongo, Google OAuth, Redis, storage or signing keys.
+  };
+
+  it("accepts only the isolated direct Neon Production target without merchant credentials",()=>{
+    assert.equal(assertProductionSchemaSettings(schemaOnly).hostname,host);
+    assert.throws(()=>assertLiveSettings(schemaOnly),{message:"LIVE_REQUIRED_DEPLOYMENT_ID"});
+    assert.equal(verifyLiveHyperdrive(drive,realId,new URL(url),schemaOnly),true);
+  });
+
+  const unsafe=[
+    [{DEPLOYMENT_ENV:"staging"},"LIVE_DEPLOYMENT_ENV"],
+    [{APP_URL:"https://staging.bkedigitalsolutions.com"},"LIVE_APP_ORIGIN"],
+    [{PRODUCTION_NEON_HOST:host.replace("ep-live","ep-staging")},"LIVE_DATABASE_HOST"],
+    [{PRODUCTION_NEON_HOST:host+"-pooler"},"LIVE_NEON_HOST"],
+    [{DATABASE_URL:url.replace("/bke_production?","/bke_staging?")},"LIVE_DATABASE_NAME"],
+    [{DIRECT_DATABASE_URL:url.replace("bke_production_owner","bke_staging_owner")},"LIVE_DATABASE_ROLE"],
+    [{DATABASE_URL:url+"&host=malicious.example"},"LIVE_DATABASE_QUERY_OVERRIDE"],
+    [{DATABASE_URL:url.replace("?sslmode=require","")},"LIVE_DATABASE_TLS"],
+    [{DATABASE_URL:url+"&sslmode=require"},"LIVE_DATABASE_QUERY_OVERRIDE"],
+    [{DATABASE_URL:url.replace(":secret@",":other@")},"LIVE_DATABASE_CREDENTIAL_MISMATCH"],
+    [{STAGING_NEON_HOST:host},"LIVE_STAGING_RESOURCE_INJECTION"],
+  ];
+
+  for (const [patch, code] of unsafe) {
+    it("rejects schema target violation: "+Object.keys(patch).join(","),()=>{
+      assert.throws(()=>assertProductionSchemaSettings({...schemaOnly,...patch}),{message:code});
+    });
+  }
+
+  it("requires explicit TLS and cache-disabled origin even for schema preparation",()=>{
+    assert.throws(()=>verifyLiveHyperdrive({...drive,mtls:{}},realId,new URL(url),schemaOnly),{message:"LIVE_HYPERDRIVE_TRUST"});
+    assert.throws(()=>verifyLiveHyperdrive({...drive,caching:{disabled:false}},realId,new URL(url),schemaOnly),{message:"LIVE_HYPERDRIVE_TRUST"});
+    assert.throws(()=>verifyLiveHyperdrive({...drive,origin:{...drive.origin,database:"bke_staging"}},realId,new URL(url),schemaOnly),{message:"LIVE_HYPERDRIVE_DATABASE"});
+  });
+
+  it("keeps schema writes behind the existing protected exact-main workflow",()=>{
+    const workflow=readFileSync(new URL("../.github/workflows/live-paymongo-cutover.yml",import.meta.url),"utf8");
+    assert.match(workflow,/^\s+workflow_dispatch:\s*$/m);
+    assert.doesNotMatch(workflow,/^\s+(push|pull_request):\s*$/m);
+    assert.match(workflow,/^\s+name: Production\s*$/m);
+    assert.match(workflow,/LIVE_SOURCE_SHA_NOT_CURRENT_MAIN/);
+    assert.match(workflow,/LIVE_REQUIRED_CERTIFICATION_MISSING/);
+    assert.match(workflow,/PREPARE_PRODUCTION_SCHEMA/);
+    assert.match(workflow,/node scripts\/prepare-live-paymongo\.mjs validate_schema/);
+    assert.match(workflow,/node scripts\/prepare-live-paymongo\.mjs verify_schema/);
+    assert.match(workflow,/^\s+if: \x24\{\{ inputs\.mode == 'prepare_database' \}\}\s*$/m);
+    assert.match(workflow,/^\s+if: \x24\{\{ inputs\.mode != 'prepare_database' \}\}\s*$/m);
+    assert.match(workflow,/^\s+run: npm run db:status\s*$/m);
+    assert.match(workflow,/^\s+npm run db:deploy\s*$/m);
+    assert.match(workflow,/^\s+if: \x24\{\{ inputs\.mode == 'deploy_live' \}\}\s*$/m);
+    assert.match(workflow,/^\s+env-slug: prod\s*$/m);
+  });
 });
 
 describe("legacy PayMongo LIVE cutover preflight — NO provider calls",()=>{
