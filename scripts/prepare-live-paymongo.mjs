@@ -57,6 +57,20 @@ function pgUrl(value, host) {
   return parsed;
 }
 
+// Schema bootstrap is a separate protected intent from commercial activation.
+// It validates only the destination/trust needed for reviewed Prisma migrations.
+export function assertProductionSchemaSettings(env = process.env) {
+  if (required(env, "APP_URL") !== LIVE_ORIGIN) fail("LIVE_APP_ORIGIN");
+  if (required(env, "DEPLOYMENT_ENV") !== "production") fail("LIVE_DEPLOYMENT_ENV");
+  const host = required(env, "PRODUCTION_NEON_HOST");
+  if (host.includes("://") || host.includes(":") || host.includes("/") || host.includes("pooler")) fail("LIVE_NEON_HOST");
+  const direct = pgUrl(required(env, "DIRECT_DATABASE_URL"), host);
+  const runtime = pgUrl(required(env, "DATABASE_URL"), host);
+  if (direct.href !== runtime.href) fail("LIVE_DATABASE_CREDENTIAL_MISMATCH");
+  if (env.HYPERDRIVE_FRESH_ID || env.STAGING_NEON_HOST) fail("LIVE_STAGING_RESOURCE_INJECTION");
+  return direct;
+}
+
 export function assertLiveSettings(env = process.env) {
   if (required(env, "APP_URL") !== LIVE_ORIGIN) fail("LIVE_APP_ORIGIN");
   if (required(env, "DEPLOYMENT_ENV") !== "production") fail("LIVE_DEPLOYMENT_ENV");
@@ -100,8 +114,8 @@ export function verifyLiveHyperdrive(drive, id, direct, env = process.env) {
     origin.host !== direct.hostname || origin.host !== required(env,"PRODUCTION_NEON_HOST") ||
     !["postgres","postgresql"].includes(String(origin.scheme).toLowerCase()) ||
     Number(origin.port) !== 5432) fail("LIVE_HYPERDRIVE_DATABASE");
-  if (drive.caching?.disabled !== true || (drive.mtls?.sslmode !== undefined &&
-    !["require","verify-ca","verify-full"].includes(drive.mtls.sslmode))) fail("LIVE_HYPERDRIVE_TRUST");
+  if (drive.caching?.disabled !== true ||
+    !["require","verify-ca","verify-full"].includes(drive.mtls?.sslmode)) fail("LIVE_HYPERDRIVE_TRUST");
   return true;
 }
 
@@ -125,8 +139,8 @@ export function buildLiveArtifacts(source, env = process.env, hyperdriveId) {
   return {config,secrets,direct};
 }
 
-async function verifyRemoteDrive(env) {
-  const direct=assertLiveSettings(env);
+async function verifyRemoteDrive(env, schemaOnly = false) {
+  const direct = schemaOnly ? assertProductionSchemaSettings(env) : assertLiveSettings(env);
   if (required(env,"CLOUDFLARE_ACCOUNT_ID") !== LIVE_ACCOUNT) fail("LIVE_CLOUDFLARE_ACCOUNT");
   const id=required(env,"HYPERDRIVE_ID");
   const token=required(env,"CLOUDFLARE_API_TOKEN");
@@ -140,7 +154,9 @@ async function verifyRemoteDrive(env) {
 }
 async function main() {
   const action=process.argv[2];
-  if (action==="validate") {assertLiveSettings();console.info("PASS: isolated live PayMongo configuration validated (no provider call, no charge).");}
+  if (action==="validate_schema") {assertProductionSchemaSettings();console.info("PASS: production schema target validated (no provider call, no charge).");}
+  else if (action==="verify_schema") {await verifyRemoteDrive(process.env, true);console.info("PASS: production schema Hyperdrive verified (read-only).");}
+  else if (action==="validate") {assertLiveSettings();console.info("PASS: isolated live PayMongo configuration validated (no provider call, no charge).");}
   else if (action==="verify") {await verifyRemoteDrive(process.env);console.info("PASS: production-only Hyperdrive verified.");}
   else if (action==="prepare") {
     const source=JSON.parse(await readFile("wrangler.jsonc","utf8"));
