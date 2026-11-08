@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { assertLiveSettings, buildLiveArtifacts, verifyLiveHyperdrive, LIVE_ORIGIN } from "./prepare-live-paymongo.mjs";
+import { assertPublishedCommercialLegal, requiredCommercialDocumentTypes } from "./verify-live-legal.mjs";
+import { readFileSync } from "node:fs";
 
 const host="ep-live.ap-southeast-1.aws.neon.tech";
 const url="postgresql://bke_production_owner:secret@"+host+"/bke_production?sslmode=require";
@@ -99,4 +101,49 @@ describe("legacy PayMongo LIVE cutover preflight — NO provider calls",()=>{
    try {assertLiveSettings({...env,PAYMONGO_SECRET_KEY:"sk_test_private_value"});assert.fail("expected");}
    catch(e){assert.equal(e.message,"LIVE_PAYMONGO_KEY_MODE");assert.ok(!e.message.includes("private_value"));}
  });
+});
+
+describe("protected production schema and legal release boundaries", () => {
+  const instant = new Date("2026-11-08T00:00:00Z");
+  const published = requiredCommercialDocumentTypes.map((type) => ({
+    type,
+    title: type.replaceAll("_", " "),
+    docStatus: "ACTIVE",
+    versionStatus: "PUBLISHED",
+    publishedAt: new Date("2026-11-01T00:00:00Z"),
+    effectiveAt: new Date("2026-11-01T00:00:00Z"),
+    contentHash: "a".repeat(64),
+    markdownContent: "Approved commercial terms: subject to actual human/legal review.",
+    renderedHtml: "<p>Approved commercial terms</p>",
+  }));
+  it("requires all five published non-test commercial notices", () => {
+    assert.equal(requiredCommercialDocumentTypes.length, 5);
+    assert.equal(assertPublishedCommercialLegal(published, instant), true);
+  });
+  for (const [name, edit] of [
+    ["missing document", (a) => a.slice(1)],
+    ["duplicate document", (a) => [...a, a[0]]],
+    ["draft publication", (a) => a.map((r,i) => i ? r : {...r,versionStatus:"DRAFT"})],
+    ["missing publication time", (a) => a.map((r,i) => i ? r : {...r,publishedAt:null})],
+    ["future effective date", (a) => a.map((r,i) => i ? r : {...r,effectiveAt:"2030-01-01T00:00:00Z"})],
+    ["missing legal content hash", (a) => a.map((r,i) => i ? r : {...r,contentHash:""})],
+    ["noncommercial mock notice", (a) => a.map((r,i) => i ? r : {...r,markdownContent:"Noncommercial mock checkout TEST-ONLY"})],
+    ["review draft title", (a) => a.map((r,i) => i ? r : {...r,title:"REVIEW DRAFT"})],
+  ]) {
+    it("fails closed on "+name, () => {
+      assert.throws(() => assertPublishedCommercialLegal(edit(published), instant), { message: "LIVE_LEGAL_APPROVAL_REQUIRED" });
+    });
+  }
+  it("requires explicit schema authorization and keeps all production modes manual and main-only", () => {
+    const workflow = readFileSync(".github/workflows/live-paymongo-cutover.yml", "utf8");
+    assert.ok(workflow.includes("PREPARE_PRODUCTION_SCHEMA"));
+    assert.ok(workflow.includes("ENABLE_REAL_PAYMONGO_CHARGES"));
+    assert.ok(workflow.includes("LIVE_DATABASE_PREPARATION_AUTHORIZATION_REQUIRED"));
+    assert.ok(workflow.includes("github.ref == 'refs/heads/main'"));
+    assert.ok(workflow.includes("node scripts/verify-live-legal.mjs"));
+    assert.ok(workflow.includes("npm run db:deploy"));
+    assert.ok(workflow.includes("if: ${{ inputs.mode == 'prepare_database' }}"));
+    assert.ok(workflow.includes("if: ${{ inputs.mode == 'deploy_live' }}"));
+    assert.ok(!/^  (?:push|pull_request):/m.test(workflow));
+  });
 });

@@ -13,15 +13,16 @@ on:
         type: string
         required: true
       mode:
-        description: Read-only verify or explicitly approved production cutover
+        description: Read-only verify, guarded schema preparation or explicitly approved production cutover
         type: choice
         options:
           - verify_only
+          - prepare_database
           - deploy_live
         required: true
         default: verify_only
       confirmation:
-        description: For deploy_live enter ENABLE_REAL_PAYMONGO_CHARGES exactly
+        description: Enter PREPARE_PRODUCTION_SCHEMA for database preparation or ENABLE_REAL_PAYMONGO_CHARGES for deploy
         type: string
         required: false
 
@@ -66,7 +67,11 @@ jobs:
               process.env.CUTOVER_CONFIRMATION !== "ENABLE_REAL_PAYMONGO_CHARGES") {
             throw new Error("LIVE_DEPLOYMENT_AUTHORIZATION_REQUIRED");
           }
-          if (!["verify_only","deploy_live"].includes(process.env.CUTOVER_MODE)) {
+          if (process.env.CUTOVER_MODE === "prepare_database" &&
+              process.env.CUTOVER_CONFIRMATION !== "PREPARE_PRODUCTION_SCHEMA") {
+            throw new Error("LIVE_DATABASE_PREPARATION_AUTHORIZATION_REQUIRED");
+          }
+          if (!["verify_only","prepare_database","deploy_live"].includes(process.env.CUTOVER_MODE)) {
             throw new Error("LIVE_CUTOVER_MODE_INVALID");
           }
           const id=process.env.REQUIRED_CI_RUN_ID || "";
@@ -161,7 +166,31 @@ jobs:
           NODE_ENV: production
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: node scripts/prepare-live-paymongo.mjs verify
+      - name: Apply reviewed migrations to verified empty or isolated Production database
+        if: ${{ inputs.mode == 'prepare_database' }}
+        env:
+          NODE_ENV: production
+        run: |
+          set -euo pipefail
+          npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma
+          npm run db:deploy
+          npm run db:status
+      - name: Require complete production migrations before commercial mode
+        if: ${{ inputs.mode != 'prepare_database' }}
+        env:
+          NODE_ENV: production
+        run: npm run db:status
+      - name: Verify commercial legal documents without modifying database
+        if: ${{ inputs.mode != 'prepare_database' }}
+        env:
+          NODE_ENV: production
+        run: node scripts/verify-live-legal.mjs
+      - name: Record schema-only preparation outcome
+        if: ${{ inputs.mode == 'prepare_database' }}
+        run: echo "Source-reviewed production migrations completed; no Worker deployment or payment attempted."
       - name: Prepare tightly allowlisted Worker artifacts
+        if: ${{ inputs.mode == 'deploy_live' }}
         env:
           NODE_ENV: production
         run: node scripts/prepare-live-paymongo.mjs prepare
