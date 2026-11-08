@@ -37,11 +37,11 @@ const drive={id:realId,name:"bke-digital-solutions-production",
 
 it("pins protected GitHub Production to the actual Infisical prod slug",()=>{
   const workflow=readFileSync(new URL("../.github/workflows/live-paymongo-cutover.yml",import.meta.url),"utf8");
-  assert.match(workflow,/^\\s+environment:\\s*\\n\\s+name: Production\\s*$/m);
-  assert.match(workflow,/^\\s+env-slug: prod\\s*$/m);
-  assert.doesNotMatch(workflow,/^\\s+env-slug: production\\s*$/m);
-  assert.match(workflow,/^\\s+secret-path: \\/\\s*$/m);
-  assert.match(workflow,/^\\s+project-id: \\$\\{\\{ vars\\.INFISICAL_PRODUCTION_PROJECT_ID \\$\\}\\}\\s*$/m);
+  assert.match(workflow,/^\s+environment:\s*\n\s+name: Production\s*$/m);
+  assert.match(workflow,/^\s+env-slug: prod\s*$/m);
+  assert.doesNotMatch(workflow,/^\s+env-slug: production\s*$/m);
+  assert.match(workflow,/^\s+secret-path: \/\s*$/m);
+  assert.ok(workflow.includes("project-id: " + "$" + "{{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}"));
 });
 
 describe("legacy PayMongo LIVE cutover preflight — NO provider calls",()=>{
