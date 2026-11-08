@@ -149,7 +149,7 @@ jobs:
           identity-id: ${{ vars.INFISICAL_PRODUCTION_IDENTITY_ID }}
           domain: https://app.infisical.com
           project-id: ${{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}
-          env-slug: production
+          env-slug: prod
           secret-path: /
           include-imports: "false"
           recursive: "false"
