@@ -9,6 +9,7 @@ const expectedActive = [
   "certify.yml",
   "ci.yml",
   "live-paymongo-cutover.yml",
+  "stage.yml",
   "native-bke-account-handoff.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",

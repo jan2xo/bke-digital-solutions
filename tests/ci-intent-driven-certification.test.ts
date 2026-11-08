@@ -26,6 +26,13 @@ const explicitConcurrencyGroups = new Map<string, string>([
   ["v2-composition.yml", "group: composition-${{ inputs.source_sha }}"],
   ["v2-host-v1-free.yml", "group: host-v1-free-${{ inputs.source_sha }}"],
   ["v2-prisma-isolation.yml", "group: prisma-isolation-${{ inputs.source_sha }}"],
+  ["v2-catalog.yml", "group: catalog-${{ inputs.source_sha }}"],
+  ["v2-commerce.yml", "group: commerce-${{ inputs.source_sha }}"],
+  ["v2-payments.yml", "group: payments-${{ inputs.source_sha }}"],
+  ["v2-licensing.yml", "group: licensing-${{ inputs.source_sha }}"],
+  ["v2-entitlements.yml", "group: entitlements-${{ inputs.source_sha }}"],
+  ["v2-notifications.yml", "group: notifications-${{ inputs.source_sha }}"],
+  ["v2-standalone.yml", "group: standalone-${{ inputs.source_sha }}"],
   [
     "native-bke-account-handoff.yml",
     "group: native-bke-account-${{ inputs.source_sha }}",
@@ -101,6 +108,8 @@ describe("intent-driven certification foundation", () => {
     expect(workflow).toContain("workflow_call:");
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("source_sha:");
+    expect(workflow).toContain("skip_containers:");
+    expect(workflow).toContain("if: ${{ !inputs.skip_containers }}");
     expect(workflow).toContain(
       "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );

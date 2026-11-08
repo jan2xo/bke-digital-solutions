@@ -1,0 +1,453 @@
+name: Intentional Disposable Staging
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Approved candidate PR (266)
+        required: true
+        type: number
+      source_sha:
+        description: Exact 40-character candidate PR head
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: intentional-staging-266
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Verify authorized trigger and source/workflow identity
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'issue_comment' && github.event.issue.number == 266 && github.event.comment.body == '/stage 266') }}
+    runs-on: ubuntu-latest
+    outputs:
+      source_sha: ${{ steps.plan.outputs.source_sha }}
+      trusted_workflow_sha: ${{ steps.plan.outputs.trusted_workflow_sha }}
+    steps:
+      - name: Resolve trusted exact-head staging intent
+        id: plan
+        uses: actions/github-script@v7
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          INPUT_PR_NUMBER: ${{ inputs.pr_number }}
+          INPUT_SOURCE_SHA: ${{ inputs.source_sha }}
+        with:
+          script: |
+            const fullRepo = context.repo.owner + "/" + context.repo.repo;
+            if (context.actor !== context.repo.owner) {
+              core.setFailed("Only the repository owner may authorize Staging."); return;
+            }
+            const expectedWorkflowRef = fullRepo + "/.github/workflows/stage.yml@refs/heads/main";
+            const workflowRef = process.env.WORKFLOW_REF;
+            const workflowSha = process.env.WORKFLOW_SHA;
+            if (workflowRef !== expectedWorkflowRef || !/^[0-9a-f]{40}$/.test(workflowSha || "")) {
+              core.setFailed("Staging requires trusted default-branch workflow provenance."); return;
+            }
+            const currentMain = await github.rest.git.getRef({...context.repo, ref: "heads/main"});
+            if (currentMain.data.object.sha !== workflowSha) {
+              core.setFailed("Trusted staging workflow revision is no longer the current main SHA."); return;
+            }
+            const targetPr = 266;
+            if (context.eventName === "issue_comment") {
+              if (context.payload.issue?.number !== targetPr ||
+                  !context.payload.issue?.pull_request ||
+                  (context.payload.comment?.body ?? "").trim() !== "/stage 266" ||
+                  context.payload.comment?.author_association !== "OWNER") {
+                core.setFailed("Staging command must be an owner /stage 266 comment on PR #266."); return;
+              }
+            } else if (context.eventName === "workflow_dispatch") {
+              if (Number(process.env.INPUT_PR_NUMBER) !== targetPr) {
+                core.setFailed("Staging is scoped to PR #266."); return;
+              }
+            } else {
+              core.setFailed("Untrusted staging event."); return;
+            }
+            const pr = (await github.rest.pulls.get({...context.repo, pull_number: targetPr})).data;
+            if (pr.state !== "open" || pr.merged || pr.base.ref !== "main" ||
+                pr.head.repo?.full_name !== fullRepo) {
+              core.setFailed("PR #266 is not an open local unmerged candidate against main."); return;
+            }
+            const sourceSha = pr.head.sha;
+            if (!/^[0-9a-f]{40}$/.test(sourceSha)) {
+              core.setFailed("Invalid candidate source SHA."); return;
+            }
+            if (context.eventName === "workflow_dispatch" &&
+                (process.env.INPUT_SOURCE_SHA ?? "").trim().toLowerCase() !== sourceSha) {
+              core.setFailed("Dispatch SHA does not equal the live PR #266 exact head."); return;
+            }
+            core.setOutput("source_sha", sourceSha);
+            core.setOutput("trusted_workflow_sha", workflowSha);
+            await core.summary.addHeading("BKE intentional Staging certification")
+              .addRaw("PR #266 exact source: `" + sourceSha + "`\n\n")
+              .addRaw("Trusted main workflow: `" + workflowSha + "`\n\n")
+              .addRaw("Core, identity, accounts, catalog, commerce, payments, licensing, legal, notifications, entitlements, composition, platform, standalone; workerd; Staging if green.").write();
+
+  core:
+    needs: plan
+    uses: ./.github/workflows/ci.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+      skip_containers: true
+
+  identity:
+    needs: plan
+    uses: ./.github/workflows/v2-identity.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  accounts:
+    needs: plan
+    uses: ./.github/workflows/v2-accounts.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  legal:
+    needs: plan
+    uses: ./.github/workflows/v2-legal.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  composition:
+    needs: plan
+    uses: ./.github/workflows/v2-composition.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  platform:
+    needs: plan
+    uses: ./.github/workflows/v2-platform.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  catalog:
+    needs: [plan, platform]
+    uses: ./.github/workflows/v2-catalog.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  commerce:
+    needs: [plan, catalog]
+    uses: ./.github/workflows/v2-commerce.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  payments:
+    needs: [plan, commerce]
+    uses: ./.github/workflows/v2-payments.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  licensing:
+    needs: [plan, payments]
+    uses: ./.github/workflows/v2-licensing.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  entitlements:
+    needs: [plan, licensing]
+    uses: ./.github/workflows/v2-entitlements.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  notifications:
+    needs: [plan, entitlements]
+    uses: ./.github/workflows/v2-notifications.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  standalone:
+    needs: [plan, notifications]
+    uses: ./.github/workflows/v2-standalone.yml
+    with:
+      source_sha: ${{ needs.plan.outputs.source_sha }}
+
+  required-certification:
+    name: Required exact-head certification aggregate
+    if: ${{ always() && needs.plan.result == 'success' }}
+    needs: [plan, core, identity, accounts, legal, composition, platform, catalog, commerce, payments, licensing, entitlements, notifications, standalone]
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
+      NEEDS_JSON: ${{ toJSON(needs) }}
+    steps:
+      - name: Require every declared certification module to pass
+        shell: bash
+        run: |
+          node <<'NODE'
+          const required = ["core","identity","accounts","legal","composition","platform","catalog","commerce","payments","licensing","entitlements","notifications","standalone"];
+          const results = JSON.parse(process.env.NEEDS_JSON);
+          const invalid = required.filter(name => results[name]?.result !== "success")
+            .map(name => name + "=" + (results[name]?.result ?? "missing"));
+          if (invalid.length) {
+            console.error("Exact-head required certification FAILED for " + process.env.SOURCE_SHA + ": " + invalid.join(", "));
+            process.exit(1);
+          }
+          console.log("Exact-head required certification PASS " + process.env.SOURCE_SHA + ": " + required.join(", "));
+          
+          NODE
+
+  workers-application:
+    needs: [plan, required-certification]
+    name: Workers application receiving proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
+      NODE_ENV: test
+      DEPLOYMENT_ENV: test
+      APP_URL: https://workers-ci.example.invalid
+      DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
+      SESSION_SECRET: ci-session-secret-with-at-least-32-chars
+      LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
+      LICENSE_SIGNING_KEY_ID: ci-license-signing-key
+      CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+      EMAIL_FROM: build@example.invalid
+      S3_BUCKET: ci-private
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: log
+      WRANGLER_SEND_METRICS: 'false'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify source and workflow provenance
+        env:
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run db:generate
+      - name: Require unchanged generated Prisma client
+        run: git diff --exit-code -- platform/persistence/generated/prisma
+      - run: npm run db:deploy
+      - run: npm run db:seed
+      - name: Create disposable signing keys
+        run: |
+          npm run licensing:keys .certification-secrets
+          {
+            echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_PRIVATE_KEY'
+            cat .certification-secrets/license-signing-private.pem
+            echo 'BKE_PRIVATE_KEY'
+            echo 'LICENSE_SIGNING_PUBLIC_KEY<<BKE_PUBLIC_KEY'
+            cat .certification-secrets/license-signing-public.pem
+            echo 'BKE_PUBLIC_KEY'
+          } >> "$GITHUB_ENV"
+      - name: Write disposable workerd configuration
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from "node:fs";
+          const names = [
+            "DEPLOYMENT_ENV", "APP_URL", "SESSION_SECRET",
+            "LICENSE_PEPPER", "CRON_SECRET", "EMAIL_FROM",
+            "PAYMENT_PROVIDER", "EMAIL_PROVIDER",
+            "LICENSE_SIGNING_PRIVATE_KEY", "LICENSE_SIGNING_PUBLIC_KEY", "LICENSE_SIGNING_KEY_ID",
+          ];
+          const values = { NODE_ENV: "production",
+            ...Object.fromEntries(names.map(name => [name, process.env[name]])) };
+          writeFileSync(".dev.vars", Object.entries(values)
+            .map(([key, value]) => key + "=" + JSON.stringify(value)).join("\n") + "\n",
+            { mode: 0o600 });
+          NODE
+      - run: npm run workers:types
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Enforce production high and critical advisory policy
+        run: npm audit --omit=dev --audit-level=high
+      - name: Build actual Workers application
+        run: npm run workers:build
+      - run: npm run workers:typecheck
+      - name: Test public Staging smoke contract
+        run: node --test scripts/staging-smoke.test.mjs
+      - name: Verify bundle measurement boundary
+        run: node --test scripts/check-worker-bundle.test.mjs
+      - name: Produce actual Worker upload without deployment
+        run: npx --no-install wrangler deploy --dry-run --outfile .workers-build/worker.bundle --metafile .workers-build/wrangler-meta.json
+      - name: Require Worker upload to fit the platform size limit
+        run: node scripts/check-worker-bundle.mjs .workers-build/worker.bundle
+      - name: Measure local startup without deployment
+        run: npx --no-install wrangler check startup --worker .workers-build/worker.bundle --outfile .workers-build/startup.cpuprofile
+      - name: Produce disposable application sessions
+        run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
+      - name: Exercise application in workerd
+        run: |
+          env -u DATABASE_URL -u DIRECT_DATABASE_URL -u S3_BUCKET -u S3_ENDPOINT -u S3_PUBLIC_UPLOAD_ENDPOINT -u S3_ACCESS_KEY_ID -u S3_SECRET_ACCESS_KEY -u S3_REGION -u S3_FORCE_PATH_STYLE npm run workers:preview -- --port 8787 > /tmp/bke-workerd.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true; sleep 1' EXIT
+          npm run workers:smoke
+      - name: Require generated lockfile to be committed
+        run: git diff --exit-code -- package.json package-lock.json
+      - name: Preserve workerd failure evidence
+        if: failure()
+        run: |
+          if test -f /tmp/bke-workerd.log; then tail -n 120 /tmp/bke-workerd.log; fi
+
+
+  browser-fixture:
+    name: Disposable Google-bound admin Playwright acceptance
+    needs: [plan, required-certification]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
+      NODE_ENV: test
+      DEPLOYMENT_ENV: test
+      APP_URL: http://127.0.0.1:3000
+      DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
+      SESSION_SECRET: ci-session-secret-with-at-least-32-chars
+      LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
+      LICENSE_SIGNING_KEY_ID: ci-license-signing-key
+      CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+      EMAIL_FROM: build@example.invalid
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: log
+      S3_BUCKET: ci-private
+      BKE_E2E_DISPOSABLE_DB: '1'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify exact source checkout
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: git diff --exit-code -- platform/persistence/generated/prisma
+      - run: npm run db:deploy
+      - run: npm run db:seed
+      - name: Generate disposable keys for local auth fixtures
+        run: |
+          npm run licensing:keys .certification-secrets
+          {
+            echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_PRIVATE_KEY'
+            cat .certification-secrets/license-signing-private.pem
+            echo 'BKE_PRIVATE_KEY'
+            echo 'LICENSE_SIGNING_PUBLIC_KEY<<BKE_PUBLIC_KEY'
+            cat .certification-secrets/license-signing-public.pem
+            echo 'BKE_PUBLIC_KEY'
+          } >> "$GITHUB_ENV"
+      - name: Install disposable Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Browser-accept disposable admin create/edit/archive/delete and denial paths
+        env:
+          NODE_OPTIONS: --import=tsx
+        run: npm run test:e2e -- tests/e2e/admin-product.spec.ts
+      - name: Record synthetic session acceptance boundary
+        if: always()
+        run: |
+          {
+            echo "## Disposable browser acceptance"
+            echo "Exact source SHA: $SOURCE_SHA"
+            echo "Synthetic Google-bound sessions against fresh loopback PostgreSQL only."
+            echo "Provider Google OAuth and real staging administrator are not simulated or claimed."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  dispatch-branch-staging:
+    name: Dispatch exact-head branch-owned Staging (not deployment proof)
+    if: ${{ needs.workers-application.result == 'success' && needs.browser-fixture.result == 'success' && needs.required-certification.result == 'success' }}
+    needs:
+      - plan
+      - required-certification
+      - workers-application
+      - browser-fixture
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    # Actions-write is only held by the non-secret-bearing handoff job.
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: write
+    concurrency:
+      group: bke-digital-solutions-staging-dispatch-266
+      cancel-in-progress: false
+    steps:
+      - name: Validate source and dispatch branch-owned Staging
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_SOURCE: ${{ needs.plan.outputs.source_sha }}
+          EXPECTED_WORKFLOW: ${{ needs.plan.outputs.trusted_workflow_sha }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const fullRepo = owner + "/" + repo;
+            const authorizedBranch = "feat/workers-free-compatibility-proof";
+            const sourceSha = process.env.EXPECTED_SOURCE;
+            const trustedSha = process.env.EXPECTED_WORKFLOW;
+            if (context.actor !== owner) throw new Error("Only the repository owner may dispatch Staging.");
+            if (!/^[0-9a-f]{40}$/.test(sourceSha ?? "") || !/^[0-9a-f]{40}$/.test(trustedSha ?? "")) {
+              throw new Error("Staging dispatch requires two exact commit SHAs.");
+            }
+            if (process.env.WORKFLOW_SHA !== trustedSha ||
+                process.env.WORKFLOW_REF !== fullRepo + "/.github/workflows/stage.yml@refs/heads/main") {
+              throw new Error("Staging dispatch requires the trusted main workflow revision.");
+            }
+            const [main, branch, response] = await Promise.all([
+              github.rest.git.getRef({ owner, repo, ref: "heads/main" }),
+              github.rest.git.getRef({ owner, repo, ref: "heads/" + authorizedBranch }),
+              github.rest.pulls.get({ owner, repo, pull_number: 266 }),
+            ]);
+            const pr = response.data;
+            if (main.data.object.sha !== trustedSha ||
+                branch.data.object.sha !== sourceSha ||
+                pr.state !== "open" || pr.merged ||
+                pr.base.ref !== "main" ||
+                pr.head.repo?.full_name !== fullRepo ||
+                pr.head.ref !== authorizedBranch || pr.head.sha !== sourceSha) {
+              throw new Error("Staging dispatch denied: candidate branch, PR head or trusted main changed.");
+            }
+            await github.rest.actions.createWorkflowDispatch({
+              owner, repo, workflow_id: "ci.yml", ref: authorizedBranch,
+              inputs: {
+                source_sha: sourceSha,
+                deploy_staging: "true",
+                initialize_staging_legal: "false",
+              },
+            });
+            core.info("Branch-owned Staging CI dispatched for exact source " + sourceSha);
+            await core.summary.addHeading("BKE protected branch-owned Staging")
+              .addRaw("Certified candidate: `" + sourceSha + "`\n\n")
+              .addRaw("Dispatched `ci.yml` at `" + authorizedBranch + "`. This job proves dispatch only; the branch CI run must independently PASS deployment and live smoke.")
+              .write();
