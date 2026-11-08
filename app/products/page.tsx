@@ -5,6 +5,7 @@ import {
 import Link from "next/link";
 import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 
 export const metadata = { title: "Products" };
 
@@ -33,7 +34,9 @@ export default async function ProductsPage() {
             return result.pricing.amountMinor;
           })
           .sort((a, b) => a - b)[0];
-        return <article className="card products-card" key={product.id}>
+        const imageUrl = resolveProductImageUrl(product.imageKey);
+      return <article className="card products-card" key={product.id}>
+          {imageUrl && <img className="mb-5 max-h-48 w-full rounded-xl object-contain" src={imageUrl} alt="" />}
           <p className="text-xs font-bold tracking-widest text-[#ffe08a]">{product.type}</p>
           <h2>{product.name}</h2>
           <p className="products-card-summary">{product.summary}</p>

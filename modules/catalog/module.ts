@@ -19,12 +19,14 @@ import {
 import { catalogModuleManifest } from "@bke/catalog/module.manifest";
 import { createLegacySchemaCatalogLicensingVersionFactsRepository } from "@bke/catalog/prisma/repositories/legacy-schema-licensing-version-facts-repository";
 import { createPostgresCatalogRepository } from "@bke/catalog/prisma/repositories/postgres-catalog-repository";
+import type { CatalogRepository } from "@bke/catalog/logic/catalog-repository";
 import { createPostgresCatalogLicensingVersionFactsRepository } from "@bke/catalog/prisma/repositories/postgres-licensing-version-facts-repository";
 import type { CapabilityModule } from "../../contracts/capability";
 
 export interface CatalogModuleOptions {
   readonly connectionString: string;
   readonly licensingVersionFactsStorage?: "native" | "legacy-product-schema";
+  readonly lookupRepository?: Pick<CatalogRepository, "findProductById" | "findProductBySlug" | "findEditionById" | "listEditions">;
 }
 
 const productDeletionPolicy = Object.freeze({
@@ -37,6 +39,9 @@ const productDeletionPolicy = Object.freeze({
 
 export function createCatalogModule(options: CatalogModuleOptions): CapabilityModule {
   const repository = createPostgresCatalogRepository(options.connectionString);
+  const lookupRepository = options.lookupRepository
+    ? Object.freeze({ ...repository, ...options.lookupRepository })
+    : repository;
   const licensingVersionFactsRepository =
     options.licensingVersionFactsStorage === "legacy-product-schema"
       ? createLegacySchemaCatalogLicensingVersionFactsRepository(options.connectionString)
@@ -50,7 +55,7 @@ export function createCatalogModule(options: CatalogModuleOptions): CapabilityMo
       return [
         {
           id: CATALOG_LOOKUP_CAPABILITY_ID,
-          value: createCatalogLookupCapability(repository),
+          value: createCatalogLookupCapability(lookupRepository),
         },
         {
           id: CATALOG_MANAGEMENT_CAPABILITY_ID,

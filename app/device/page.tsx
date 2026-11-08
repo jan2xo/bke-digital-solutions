@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { AgentDeviceApprovalForm } from "@/components/agent-device-approval-form";
 import { listAgentDeviceAuthorizationAccounts } from "@/apps/web/accounts/agent-device-account-list";
-import { currentUser } from "@/apps/web/auth/session";
+import { currentIdentitySession } from "@/apps/web/auth/session";
 import { getRuntimeEnvironment } from "@/platform/host/env";
 
 const userCodePattern = /^BKE-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/;
@@ -29,13 +29,15 @@ export default async function DeviceAuthorizationPage({
     );
   }
 
-  const user = await currentUser();
+  const identitySession = await currentIdentitySession();
+  const user = identitySession?.principal ?? null;
   if (!user) {
     const returnTo = `/device?code=${encodeURIComponent(userCode)}`;
     redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
   }
 
-  const accounts = user.emailVerified
+  const eligible = user.role === "CUSTOMER";
+  const accounts = user.emailVerified && eligible
     ? await listAgentDeviceAuthorizationAccounts(user.id)
     : [];
 
@@ -46,11 +48,13 @@ export default async function DeviceAuthorizationPage({
         Signed in as <strong>{user.email}</strong>. Choose which BKE account this device may use.
       </p>
 
-      {!user.emailVerified ? (
+      {!eligible ? (
+        <div className="card p-8"><h2 className="text-xl font-black">Complete account security before connecting</h2><p className="mt-3 text-slate-600">Device authorization requires an active Google-authenticated customer session.</p></div>
+      ) : !user.emailVerified ? (
         <div className="card p-8">
-          <h2 className="text-xl font-black">Verify your email first</h2>
+          <h2 className="text-xl font-black">Google contact verification required</h2>
           <p className="mt-3 text-slate-600">
-            Device authorization requires a verified BKE identity.
+            Sign in again with a supported Gmail or Google Workspace account.
           </p>
         </div>
       ) : (

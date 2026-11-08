@@ -140,43 +140,22 @@ describe("V3 Agent software catalog contract", () => {
     expect(source).toContain('pv."publishedAt" IS NOT NULL');
   });
 
-  it("requires durable GitHub release-contract proof for standalone installability", () => {
-    const source = readFileSync(
-      "apps/web/catalog/agent-software-catalog.ts",
-      "utf8",
-    );
-    const releaseRoute = readFileSync(
-      "app/api/admin/versions/[id]/route.ts",
-      "utf8",
-    );
-    const apiError = readFileSync(
-      "apps/web/http/api-error.ts",
-      "utf8",
-    );
-
-    expect(source).toContain('release_contract."kind" = \'GITHUB_RELEASE_CONTRACT\'');
-    expect(source).toContain('release_contract."result" = \'VERIFIED\'');
-    expect(source).toContain('release_contract."metadata"->>\'platform\' = ${input.platform}');
-    expect(source).toContain('release_contract."metadata"->>\'architecture\' = ${input.architecture}');
-    expect(releaseRoute).toContain("verifyGitHubStandaloneReleaseContract");
-    expect(releaseRoute).toContain('"GITHUB_RELEASE_CONTRACT"');
-    expect(releaseRoute).toContain("RELEASE_DISTRIBUTION_CONTRACT_INVALID");
-    expect(apiError).toContain("RELEASE_DISTRIBUTION_CONTRACT_INVALID: 409");
-    expect(apiError).toContain("RELEASE_DISTRIBUTION_UNAVAILABLE: 503");
+  it("delegates standalone release verification to the existing external GitHub package contract", () => {
+    const catalog = readFileSync("apps/web/catalog/agent-software-catalog.ts", "utf8");
+    const fixture = readFileSync("scripts/seed-utm-launcher-e2e.ts", "utf8");
+    expect(catalog).not.toContain("GITHUB_RELEASE_CONTRACT");
+    expect(catalog).toContain('pv."publishedAt" IS NOT NULL');
+    expect(catalog).toContain('pv."lifecycle" IN (\'STABLE\', \'LTS\')');
+    expect(fixture).toContain("verifyGitHubStandaloneReleaseContract");
+    expect(fixture).not.toContain("db.supplyChainEvidence");
+    expect(fixture).not.toContain("db.supplyChainVerificationEvidence");
   });
 
-  it("requires GitHub release evidence only for standalone execution", () => {
-    const source = readFileSync(
-      "apps/web/catalog/agent-software-catalog.ts",
-      "utf8",
-    );
-
-    expect(source).toContain(
-      'p."launcherExecutionType"::text IS DISTINCT FROM \'STANDALONE\'',
-    );
-    expect(source).toContain(
-      'release_contract."kind" = \'GITHUB_RELEASE_CONTRACT\'',
-    );
+  it("requires entitlement, declared execution type and published version for standalone and bundled plugins", () => {
+    const catalog = readFileSync("apps/web/catalog/agent-software-catalog.ts", "utf8");
+    expect(catalog).toContain('FROM "Entitlement" e');
+    expect(catalog).toContain('pv."active" = TRUE');
+    expect(catalog).toContain('pv."publishedAt" IS NOT NULL');
 
     expect(projectAgentSoftwareCatalogRow({
       productId: "bke-trial-product",
@@ -189,7 +168,6 @@ describe("V3 Agent software catalog contract", () => {
       executionType: "LAUNCHER_PLUGIN",
       entitled: true,
       installable: true,
-      latestVersion: "2.0.0",
     });
   });
 

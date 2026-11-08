@@ -9,7 +9,7 @@ const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.
 let userId = "";
 let accountId = "";
 
-describe.sequential("edition and multi-plan commerce", () => {
+describe("edition and multi-plan commerce", { concurrent: false }, () => {
   beforeAll(async () => {
     const suffix = Date.now().toString(36);
     const user = await db.user.create({ data: { email: `plans-${suffix}@bke.test`, name: "Plan Customer", emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Plan Customer", billingEmail: `plans-${suffix}@bke.test` } } }, include: { ownedAccounts: true } });

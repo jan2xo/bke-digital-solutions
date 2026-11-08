@@ -1,10 +1,22 @@
 import Link from "next/link";
-import { AuthForm } from "@/components/auth-form";
-import { MagicLinkForm } from "@/components/magic-link-form";
+import { GoogleAuthButton } from "@/components/google-auth-button";
 import { safeLocalRedirect } from "@/apps/web/security/redirect";
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ returnTo?: string }> }) {
-  const { returnTo } = await searchParams;
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ returnTo?: string; error?: string }>;
+}) {
+  const { returnTo, error } = await searchParams;
   const destination = safeLocalRedirect(returnTo);
-  return <section className="motion-fade-up mx-auto max-w-md px-4 py-16"><h1 className="mb-8 text-4xl font-black">Welcome back</h1><AuthForm mode="login" returnTo={destination}/><p className="mt-3 text-right text-sm"><Link className="font-bold text-[#8cc8f5]" href="/forgot-password">Forgot password?</Link></p><div className="my-6 flex items-center gap-3 text-xs font-semibold text-slate-400"><span className="h-px flex-1 bg-slate-200"/><span className="whitespace-nowrap">Sign in without a password</span><span className="h-px flex-1 bg-slate-200"/></div><MagicLinkForm/><p className="mt-5 text-center text-sm">New here? <Link className="font-bold text-[#8cc8f5]" href="/register">Create an account</Link></p></section>;
+  return (
+    <section className="motion-fade-up mx-auto max-w-md px-4 py-16">
+      <h1 className="mb-8 text-4xl font-black">Welcome back</h1>
+      {error && <p role="alert" className="mb-4 text-sm text-red-700">{error === "CONTACT_EMAIL_NOT_AUTHORITATIVE" ? "Use a verified Gmail or Google Workspace account to continue." : "Google sign-in could not be completed. Try again."}</p>}
+      <GoogleAuthButton flow="login" returnTo={destination} />
+      <p className="mt-5 text-center text-sm">
+        New here? <Link className="font-bold text-[#8cc8f5]" href="/register">Create an account</Link>
+      </p>
+    </section>
+  );
 }

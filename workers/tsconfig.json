@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "incremental": false
+  },
+  "include": [
+    "entry.ts",
+    "env.d.ts"
+  ],
+  "exclude": [
+    "../node_modules",
+    "../.open-next"
+  ]
+}

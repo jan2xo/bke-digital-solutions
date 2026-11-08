@@ -39,8 +39,8 @@ export default async function AdminProducts() {
       <p className="font-bold text-[#0b7197]">Administration</p>
       <h1 className="mt-2 text-4xl font-black">Products, editions, and plans</h1>
       <p className="mb-8 mt-3 text-slate-600">
-        Define edition capabilities once, offer multiple purchase plans, upload private
-        installers, and explicitly choose whether desktop software runs inside Launcher
+        Define edition capabilities once, offer multiple purchase plans, manage GitHub Release
+        references, and explicitly choose whether desktop software runs inside Launcher
         or standalone.
       </p>
       <AdminProductManager

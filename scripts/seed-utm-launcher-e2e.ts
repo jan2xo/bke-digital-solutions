@@ -1,10 +1,9 @@
 import "dotenv/config";
 
-import { randomBytes, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../platform/persistence/generated/prisma/client";
-import { createArgon2PasswordHasher } from "@bke/identity/providers/argon2-password-hasher";
 import {
   encryptLicenseKey,
   generateLicenseKey,
@@ -66,19 +65,12 @@ export function assertDisposableUtmFixtureEnvironment(
   required("LICENSE_PEPPER", environment);
 }
 
-function generateFixturePassword() {
-  return `BKE-UTM-${randomBytes(18).toString("base64url")}!`;
-}
-
 async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
   assertDisposableUtmFixtureEnvironment(environment);
 
   const db = new PrismaClient({
     adapter: new PrismaPg({ connectionString: required("DATABASE_URL", environment) }),
   });
-  const passwordHasher = createArgon2PasswordHasher();
-  const password = generateFixturePassword();
-  const passwordHash = await passwordHasher.hash(password);
   const now = new Date();
   const validFrom = new Date(now.getTime() - 60_000);
 
@@ -113,10 +105,10 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
       },
     });
 
-    await db.passwordCredential.upsert({
+    await db.googleIdentity.upsert({
       where: { userId: user.id },
-      update: { passwordHash, changedAt: now },
-      create: { userId: user.id, passwordHash, changedAt: now },
+      update: {},
+      create: { userId: user.id, subject: "disposable-utm-launcher-subject" },
     });
 
     const account = await db.customerAccount.upsert({
@@ -223,57 +215,6 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
         id: { not: version.id },
       },
       data: { isLatest: false },
-    });
-
-    const releaseEvidence = await db.supplyChainEvidence.upsert({
-      where: { versionId: version.id },
-      update: {
-        releaseIdentifier: `${PRODUCT_SLUG}@${PRODUCT_VERSION}`,
-        commitHash: releaseProof.releaseTargetSha,
-        branch: `refs/tags/${releaseProof.tag}`,
-        buildEnvironment: "disposable-utm",
-        builderIdentity: "github-release-contract",
-        builtAt: now,
-        manifestJson: {
-          authority: "GITHUB_RELEASES",
-          repository: releaseProof.repository,
-          tag: releaseProof.tag,
-          packageSha256: releaseProof.packageSha256,
-        },
-      },
-      create: {
-        versionId: version.id,
-        releaseIdentifier: `${PRODUCT_SLUG}@${PRODUCT_VERSION}`,
-        commitHash: releaseProof.releaseTargetSha,
-        branch: `refs/tags/${releaseProof.tag}`,
-        buildEnvironment: "disposable-utm",
-        builderIdentity: "github-release-contract",
-        builtAt: now,
-        manifestJson: {
-          authority: "GITHUB_RELEASES",
-          repository: releaseProof.repository,
-          tag: releaseProof.tag,
-          packageSha256: releaseProof.packageSha256,
-        },
-      },
-    });
-
-    await db.supplyChainVerificationEvidence.deleteMany({
-      where: {
-        evidenceId: releaseEvidence.id,
-        kind: "GITHUB_RELEASE_CONTRACT",
-      },
-    });
-    await db.supplyChainVerificationEvidence.create({
-      data: {
-        evidenceId: releaseEvidence.id,
-        kind: "GITHUB_RELEASE_CONTRACT",
-        artifactHash: releaseProof.packageSha256,
-        result: "VERIFIED",
-        reference:
-          `https://github.com/${releaseProof.repository}/releases/tag/${releaseProof.tag}`,
-        metadata: { ...releaseProof },
-      },
     });
 
     let policy = await db.licensePolicy.findFirst({
@@ -650,7 +591,7 @@ async function seedFixture(environment: NodeJS.ProcessEnv = process.env) {
       testOnly: true,
       fixture: "utm-launcher-e2e",
       email: FIXTURE_EMAIL,
-      password,
+      authenticationProvider: "GOOGLE_OIDC",
       accountId: account.id,
       products: [
         {

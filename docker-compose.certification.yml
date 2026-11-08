@@ -68,6 +68,7 @@ services:
     pids_limit: 256
     environment:
       NODE_ENV: test
+      BKE_E2E_DISPOSABLE_DB: "1"
       DEPLOYMENT_ENV: test
       LOCAL_PRODUCTION_SIMULATION: "false"
       APP_URL: https://caddy

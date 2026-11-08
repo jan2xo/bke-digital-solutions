@@ -7,7 +7,7 @@ import type {
 } from "@bke/payments/logic/provider-event-verifier";
 import { createPayMongoPaymentsAdapter } from "@bke/payments/providers/paymongo/paymongo-adapter";
 import { resolvePayMongoConfiguration } from "@/apps/web/providers/capability";
-import { assertMockPaymentsAllowed } from "@/apps/web/payments/runtime-policy";
+import { assertMockPaymentsAllowed, assertPayMongoModeAllowed } from "@/apps/web/payments/runtime-policy";
 import { env } from "@/platform/host/env";
 
 export type WebCheckoutInput = Readonly<{
@@ -43,6 +43,7 @@ function configuredProvider(): "mock" | "paymongo" {
   const value = process.env.PAYMENT_PROVIDER?.trim() || "mock";
   if (value !== "mock" && value !== "paymongo") throw new Error("V2_PAYMENT_PROVIDER_UNSUPPORTED");
   if (value === "mock") assertMockPaymentsAllowed();
+  else assertPayMongoModeAllowed();
   return value;
 }
 

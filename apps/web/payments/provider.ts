@@ -4,7 +4,7 @@ import type { PaymentsCheckoutProvider } from "@bke/payments/logic/checkout-atte
 import type { PaymentsProviderEventVerifier } from "@bke/payments/logic/provider-event-verifier";
 import type { PaymentsReconciliationProvider } from "@bke/payments/logic/reconciliation-provider";
 import type { PaymentsRefundProvider } from "@bke/payments/logic/refund-provider";
-import { assertMockPaymentsAllowed } from "@/apps/web/payments/runtime-policy";
+import { assertMockPaymentsAllowed, assertPayMongoModeAllowed } from "@/apps/web/payments/runtime-policy";
 
 type WebPaymentsAdapter = PaymentsCheckoutProvider &
   PaymentsProviderEventVerifier &
@@ -57,6 +57,7 @@ export function createWebPaymentsAdapter(): WebPaymentsAdapter {
   if (provider === "mock") return createMockAdapter();
   if (provider !== "paymongo") throw new Error("V2_PAYMENT_PROVIDER_UNSUPPORTED");
 
+  assertPayMongoModeAllowed();
   const livemode = process.env.PAYMONGO_LIVEMODE === "true";
   const origin = appOrigin();
   return createPayMongoPaymentsAdapter({
