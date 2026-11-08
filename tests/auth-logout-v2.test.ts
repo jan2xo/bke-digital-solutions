@@ -17,8 +17,8 @@ vi.mock("next/headers", () => ({
   })),
 }));
 
-vi.mock("../apps/web/runtime", () => ({
-  getV2WebApplication: vi.fn(async () => ({ get: mocks.applicationGet })),
+vi.mock("../apps/web/auth/runtime", () => ({
+  getIdentityWebApplication: vi.fn(async () => ({ get: mocks.applicationGet })),
 }));
 
 beforeEach(() => {

@@ -8,7 +8,7 @@ const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 let adminId = "", customerId = "", customerEmail = "", accountId = "", orderId = "", paymentId = "", licenseId = "";
 
-describe.sequential("safe customer lifecycle", () => {
+describe("safe customer lifecycle", { concurrent: false }, () => {
   beforeAll(async () => {
     customerEmail = `customer-lifecycle-${suffix}@bke.test`;
     const [admin, catalog] = await Promise.all([

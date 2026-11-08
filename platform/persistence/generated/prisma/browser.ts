@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model GoogleIdentity
+ *
+ */
+export type GoogleIdentity = Prisma.GoogleIdentityModel
+/**
  * Model PasswordCredential
  *
  */
@@ -133,26 +138,6 @@ export type PurchasePlan = Prisma.PurchasePlanModel
  */
 export type ProductVersion = Prisma.ProductVersionModel
 /**
- * Model ArtifactUploadSession
- *
- */
-export type ArtifactUploadSession = Prisma.ArtifactUploadSessionModel
-/**
- * Model ReleaseApproval
- *
- */
-export type ReleaseApproval = Prisma.ReleaseApprovalModel
-/**
- * Model SupplyChainEvidence
- *
- */
-export type SupplyChainEvidence = Prisma.SupplyChainEvidenceModel
-/**
- * Model SupplyChainVerificationEvidence
- *
- */
-export type SupplyChainVerificationEvidence = Prisma.SupplyChainVerificationEvidenceModel
-/**
  * Model LicensePolicy
  *
  */
@@ -162,21 +147,6 @@ export type LicensePolicy = Prisma.LicensePolicyModel
  *
  */
 export type Price = Prisma.PriceModel
-/**
- * Model ProductArtifact
- *
- */
-export type ProductArtifact = Prisma.ProductArtifactModel
-/**
- * Model CommissioningRun
- *
- */
-export type CommissioningRun = Prisma.CommissioningRunModel
-/**
- * Model StorageCleanupJob
- *
- */
-export type StorageCleanupJob = Prisma.StorageCleanupJobModel
 /**
  * Model Cart
  *
@@ -297,11 +267,6 @@ export type LicenseAssignment = Prisma.LicenseAssignmentModel
  *
  */
 export type DeviceActivation = Prisma.DeviceActivationModel
-/**
- * Model DownloadGrant
- *
- */
-export type DownloadGrant = Prisma.DownloadGrantModel
 /**
  * Model LicenseEvent
  *

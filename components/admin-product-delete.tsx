@@ -33,7 +33,7 @@ export function AdminProductDelete({ productId, productName }: { productId: stri
   const [eligibility, setEligibility] = useState<ProductDeletionEligibility | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [cleanupPending, setCleanupPending] = useState(false);
+  const [deletionRequested, setDeletionRequested] = useState(false);
 
   async function showDialog() {
     setOpen(true);
@@ -55,8 +55,8 @@ export function AdminProductDelete({ productId, productName }: { productId: stri
     });
     const payload = await response.json().catch(() => null);
     if (response.status === 202) {
-      setCleanupPending(true);
-      setError("Deletion requested. Storage cleanup is durable and must complete before final deletion.");
+      setDeletionRequested(true);
+      setError("Deletion requested. Confirm final deletion once more.");
       setBusy(false);
       return;
     }
@@ -70,7 +70,7 @@ export function AdminProductDelete({ productId, productName }: { productId: stri
     const response = await fetch(`/api/admin/products/${productId}/deletion`, { method: "PATCH", headers: { "content-type": "application/json" }, body: "{}" });
     if (response.status === 204) { setOpen(false); router.refresh(); return; }
     const payload = await response.json().catch(() => null);
-    setError(payload?.error === "STORAGE_CLEANUP_FAILED" ? "Cleanup failed and remains visible for manual retry." : payload?.error ?? "Cleanup is not ready to finalize.");
+    setError(payload?.error ?? "The deletion could not be finalized.");
     setBusy(false);
   }
 
@@ -97,8 +97,8 @@ export function AdminProductDelete({ productId, productName }: { productId: stri
         {error && <p className="mt-4 font-bold text-red-700" role="alert">{error}</p>}
         <div className="mt-6 flex justify-end gap-3">
           <button type="button" className="button secondary" disabled={busy} onClick={() => setOpen(false)}>Cancel</button>
-          {eligibility?.canDelete && !cleanupPending && <button type="button" className="button danger disabled:cursor-not-allowed disabled:opacity-50" disabled={busy || confirmation !== productName} onClick={remove}>{busy ? "Requesting…" : "Request deletion"}</button>}
-          {cleanupPending && <button type="button" className="button danger disabled:cursor-not-allowed disabled:opacity-50" disabled={busy} onClick={finalize}>{busy ? "Processing…" : "Run cleanup and finalize"}</button>}
+          {eligibility?.canDelete && !deletionRequested && <button type="button" className="button danger disabled:cursor-not-allowed disabled:opacity-50" disabled={busy || confirmation !== productName} onClick={remove}>{busy ? "Requesting…" : "Request deletion"}</button>}
+          {deletionRequested && <button type="button" className="button danger disabled:cursor-not-allowed disabled:opacity-50" disabled={busy} onClick={finalize}>{busy ? "Processing…" : "Confirm final deletion"}</button>}
         </div>
       </section>
     </div>}

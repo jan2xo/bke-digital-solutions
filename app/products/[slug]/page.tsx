@@ -13,6 +13,7 @@ import { TrialStartButton } from "@/components/trial-start-button";
 import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-account-list";
 import { currentIdentitySession } from "@/apps/web/auth/session";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -40,7 +41,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   );
   const accounts = session ? await listPurchaseAuthorizedAccounts(session.principal.id) : [];
 
+  const imageUrl = resolveProductImageUrl(product.imageKey);
   return <section className="shell py-16 motion-fade-up">
+    {imageUrl && <img className="mb-8 max-h-96 w-full rounded-xl object-contain" src={imageUrl} alt="" />}
     <p className="font-bold text-[#ffd15a]">{product.type}</p>
     <h1 className="mt-2 text-5xl font-black">{product.name}</h1>
     <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>

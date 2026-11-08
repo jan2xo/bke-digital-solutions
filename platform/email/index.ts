@@ -24,3 +24,9 @@ export type {
   EmailOutboxStore,
   EmailProvider,
 } from "./contracts";
+
+export { createCloudflareEmailProvider, CLOUDFLARE_EMAIL_SEND_RESOURCE } from "./cloudflare-provider";
+export type { CloudflareEmailSend } from "./cloudflare-provider";
+export { parseEmailSender } from "./sender";
+export type { EmailSender } from "./sender";
+export type { EmailDeliveryPolicy } from "./failures";

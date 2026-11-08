@@ -5,6 +5,7 @@ import { db } from "@/platform/host/db";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { audit } from "@/apps/web/audit";
 import { apiError } from "@/apps/web/http/api-error";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 import {
   acceptedVersionSchema,
   assertProductIdChangeAllowed,
@@ -26,7 +27,7 @@ const schema = z.object({
   category: z.string().trim().min(2).max(80).optional(),
   licenseType: z.string().trim().min(2).max(80).optional(),
   featured: z.boolean().optional(),
-  imageKey: z.string().trim().max(500).nullable().optional(),
+  imageKey: z.string().trim().max(500).refine((value) => resolveProductImageUrl(value) !== null, "INVALID_IMAGE_URL").nullable().optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
   action: z.enum(["PUBLISH", "UNPUBLISH", "ARCHIVE", "RESTORE"]).optional(),
 }).strict();
@@ -39,7 +40,12 @@ export async function PATCH(
     assertSameOrigin(request);
     const admin = await requireAdmin();
     const { id } = await params;
-    const input = schema.parse(await request.json());
+    const body: unknown = await request.json();
+    if (body && typeof body === "object" && "imageKey" in body) {
+      const imageKey = (body as { imageKey?: unknown }).imageKey;
+      if (imageKey !== null && imageKey !== undefined && !resolveProductImageUrl(imageKey)) throw new Error("INVALID_IMAGE_URL");
+    }
+    const input = schema.parse(body);
 
     const existing = await db.product.findUniqueOrThrow({
       where: { id },
@@ -49,6 +55,7 @@ export async function PATCH(
         maximumAcceptedVersion: true,
         active: true,
         publishedAt: true,
+        imageKey: true,
       },
     });
 
@@ -108,7 +115,6 @@ export async function PATCH(
 
     const product = await db.$transaction(async (tx) => {
       const updated = await tx.product.update({ where: { id }, data });
-
       if (input.launcherExecutionType !== undefined) {
         await tx.$executeRaw`
           UPDATE "Product"

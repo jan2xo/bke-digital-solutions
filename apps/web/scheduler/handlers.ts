@@ -2,8 +2,6 @@ import "server-only";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { db } from "@/platform/host/db";
 import { dispatchEmailOutbox } from "@/apps/web/email";
-import { finalizeProductDeletion } from "@/apps/web/catalog/product-deletion";
-import { processReadyStorageCleanupJobs } from "@/apps/web/storage/cleanup";
 import { retryStoredWebhook } from "@/apps/web/payments/webhook-processing";
 import { persistNotification } from "@/apps/web/notifications/center";
 import { issueCommercialLease } from "@/apps/web/licensing/commercial-lease";
@@ -12,21 +10,6 @@ import type { JobContext, JobSummary } from "@/platform/scheduler";
 
 const DAY = 86_400_000;
 const dayKey = (value: Date) => value.toISOString().slice(0, 10);
-
-export async function storageLifecycle(context: JobContext): Promise<JobSummary> {
-  const due = await db.storageCleanupJob.count({ where: { status: { in: ["PENDING", "RETRYING"] }, nextAttemptAt: { lte: context.now } } });
-  const abandoned = await db.storageCleanupJob.count({ where: { status: "PROCESSING", startedAt: { lt: new Date(context.now.getTime() - 15 * 60_000) } } });
-  const finalizable = await db.product.findMany({ where: { deletionRequestedAt: { not: null }, cleanupJobs: { every: { status: "SUCCEEDED" } } }, select: { id: true, cleanupJobs: { select: { createdByAdminId: true }, take: 1 } }, take: 20 });
-  if (context.dryRun) return { due, abandoned, finalizable: finalizable.length };
-  const results = await processReadyStorageCleanupJobs(100);
-  let finalized = 0;
-  for (const product of finalizable) {
-    const actorId = product.cleanupJobs[0]?.createdByAdminId ?? (await db.auditLog.findFirst({ where: { action: "PRODUCT_DELETION_REQUESTED", targetId: product.id }, orderBy: { createdAt: "desc" }, select: { actorId: true } }))?.actorId;
-    if (!actorId) continue;
-    try { await finalizeProductDeletion({ productId: product.id, actorId }); finalized++; } catch { /* eligibility may have changed; next run re-evaluates */ }
-  }
-  return { due, abandoned, processed: results.length, finalized };
-}
 
 const RETIRED_COMMERCE_EMAIL_TYPES = [
   "PAYMENT_RECEIPT",
@@ -202,9 +185,6 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
     },
     take: 1000,
   });
-  const expiredGrants = await db.downloadGrant.count({
-    where: { expiresAt: { lte: context.now } },
-  });
   const inactiveDevices = await db.deviceActivation.count({
     where: {
       active: true,
@@ -217,7 +197,6 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
       subscriptions: subscriptions.length,
       licenses: licenses.length,
       endingTrials: endingTrials.length,
-      expiredDownloadGrants: expiredGrants,
       inactiveDevicesForReview: inactiveDevices,
       emailQueued: 0,
     };
@@ -365,16 +344,12 @@ export async function entitlementExpirations(context: JobContext): Promise<JobSu
       notificationCount += 1;
     }
 
-    await tx.downloadGrant.deleteMany({
-      where: { expiresAt: { lte: context.now } },
-    });
   });
 
   return {
     expiredSubscriptions: subscriptions.length,
     expiredLicenses: licenses.length,
     trialReminders: endingTrials.length,
-    deletedDownloadGrants: expiredGrants,
     inactiveDevicesForReview: inactiveDevices,
     emailQueued: 0,
     notificationsQueued: notificationCount,

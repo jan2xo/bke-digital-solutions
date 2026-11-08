@@ -1,6 +1,8 @@
 import "server-only";
 
-import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
+import { CLOUDFLARE_EMAIL_SEND_RESOURCE, type CloudflareEmailSend } from "@/platform/email/cloudflare-provider";
+import { parseEmailSender } from "@/platform/email/sender";
+import { operationResource, currentOperationDatabaseUrl } from "@/platform/host/operation-scope";
 import { Redis as UpstashRedis } from "@upstash/redis";
 import { Pool } from "pg";
 import { createClient } from "redis";
@@ -24,7 +26,7 @@ function optional(name: string): string | undefined {
 }
 
 function required(name: string): string {
-  const value = optional(name);
+  const value = (name === "DATABASE_URL" ? currentOperationDatabaseUrl() : undefined) ?? optional(name);
   if (!value) throw new Error(`Missing web host health environment: ${name}`);
   return value;
 }
@@ -173,37 +175,71 @@ async function checkPostgreSql(): Promise<void> {
   }
 }
 
+function valkeyTransport(
+  upstashUrl: string | undefined,
+  upstashToken: string | undefined,
+  redisUrl: string | undefined,
+): "upstash" | "redis" | "unconfigured" {
+  if (upstashUrl && upstashToken) return "upstash";
+  if (!upstashUrl && !upstashToken && redisUrl) return "redis";
+  return "unconfigured";
+}
+
+type ValkeyFailureReason =
+  | "configuration_missing"
+  | "authentication_rejected"
+  | "timeout"
+  | "sdk_or_transport_error"
+  | "unavailable";
+
+function valkeyFailureReason(
+  error: unknown,
+  transport: "upstash" | "redis" | "unconfigured",
+): ValkeyFailureReason {
+  if (transport === "unconfigured") return "configuration_missing";
+  const name =
+    error && typeof error === "object" && "name" in error && typeof error.name === "string"
+      ? error.name
+      : "";
+  const message = error instanceof Error ? error.message : "";
+  if (/\b(?:AUTH|NOAUTH|WRONGPASS)\b/i.test(message)) return "authentication_rejected";
+  if (name === "TimeoutError" || name === "AbortError") return "timeout";
+  if (name === "UpstashError" || name === "RedisError" || name === "TypeError") {
+    return "sdk_or_transport_error";
+  }
+  return "unavailable";
+}
+
 async function checkValkey(): Promise<void> {
   const upstashUrl = optional("UPSTASH_REDIS_REST_URL");
   const upstashToken = optional("UPSTASH_REDIS_REST_TOKEN");
-  if (Boolean(upstashUrl) !== Boolean(upstashToken)) {
-    throw new Error("VALKEY_NOT_CONFIGURED");
-  }
-  if (upstashUrl && upstashToken) {
-    await new UpstashRedis({ url: upstashUrl, token: upstashToken }).ping();
-    return;
-  }
   const redisUrl = optional("REDIS_URL");
-  if (!redisUrl) throw new Error("VALKEY_NOT_CONFIGURED");
-  const client = createClient({ url: redisUrl, socket: { connectTimeout: 2_500 } });
+  const transport = valkeyTransport(upstashUrl, upstashToken, redisUrl);
   try {
-    await client.connect();
-    await client.ping();
-  } finally {
-    if (client.isOpen) await client.quit();
+    if (Boolean(upstashUrl) !== Boolean(upstashToken)) {
+      throw new Error("VALKEY_NOT_CONFIGURED");
+    }
+    if (upstashUrl && upstashToken) {
+      await new UpstashRedis({ url: upstashUrl, token: upstashToken }).ping();
+      return;
+    }
+    if (!redisUrl) throw new Error("VALKEY_NOT_CONFIGURED");
+    const client = createClient({ url: redisUrl, socket: { connectTimeout: 2_500 } });
+    try {
+      await client.connect();
+      await client.ping();
+    } finally {
+      if (client.isOpen) await client.quit();
+    }
+  } catch (error) {
+    console.warn(JSON.stringify({
+      event: "valkey_probe_failed",
+      dependency: "valkey",
+      transport,
+      reason: valkeyFailureReason(error, transport),
+    }));
+    throw error;
   }
-}
-
-async function checkObjectStorage(): Promise<void> {
-  const accessKeyId = required("S3_ACCESS_KEY_ID");
-  const secretAccessKey = required("S3_SECRET_ACCESS_KEY");
-  const client = new S3Client({
-    region: optional("S3_REGION") ?? "auto",
-    endpoint: optional("S3_ENDPOINT"),
-    forcePathStyle: boolean("S3_FORCE_PATH_STYLE", true),
-    credentials: { accessKeyId, secretAccessKey },
-  });
-  await client.send(new HeadBucketCommand({ Bucket: required("S3_BUCKET") }));
 }
 
 async function checkConfiguredProviders(): Promise<void> {
@@ -212,10 +248,18 @@ async function checkConfiguredProviders(): Promise<void> {
   if (paymentProvider !== "mock" && paymentProvider !== "paymongo") {
     throw new Error("PROVIDER_SELECTION_INVALID");
   }
-  if (emailProvider !== "log" && emailProvider !== "resend") {
+  if (emailProvider !== "log" && emailProvider !== "resend" && emailProvider !== "cloudflare") {
     throw new Error("PROVIDER_SELECTION_INVALID");
   }
-  if (paymentProvider === "mock" && emailProvider === "log") return;
+  if (emailProvider === "resend" && process.env.BKE_RUNTIME === "workers" &&
+      process.env.DEPLOYMENT_ENV === "production") throw new Error("PROVIDER_SELECTION_INVALID");
+  if (emailProvider === "cloudflare") {
+    if (!parseEmailSender(process.env.EMAIL_FROM) || process.env.BKE_RUNTIME !== "workers" ||
+        !operationResource<CloudflareEmailSend | undefined>(CLOUDFLARE_EMAIL_SEND_RESOURCE, () => undefined)) {
+      throw new Error("CLOUDFLARE_EMAIL_NOT_CONFIGURED");
+    }
+  }
+  if (paymentProvider === "mock" && (emailProvider === "log" || emailProvider === "cloudflare")) return;
 
   const pool = new Pool({ connectionString: required("DATABASE_URL"), max: 1 });
   try {
@@ -249,7 +293,6 @@ export const readiness = createCoreReadinessChecker({
   dependencies: {
     postgresql: checkPostgreSql,
     valkey: checkValkey,
-    objectStorage: checkObjectStorage,
     providers: checkConfiguredProviders,
   },
   events,

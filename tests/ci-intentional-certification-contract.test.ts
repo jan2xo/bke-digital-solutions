@@ -8,8 +8,9 @@ const legacyDir = ".github/legacy-workflows/2026-10-02";
 const expectedActive = [
   "certify.yml",
   "ci.yml",
-  "native-bke-account-handoff.yml",
+  "live-paymongo-cutover.yml",
   "stage.yml",
+  "native-bke-account-handoff.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-catalog.yml",

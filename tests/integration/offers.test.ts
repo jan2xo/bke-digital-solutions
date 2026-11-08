@@ -35,7 +35,7 @@ async function confirmPayment(orderId: string) {
   expect(await processPaymentWebhook(raw, new Headers({ "x-mock-signature": signature }))).toEqual({ duplicate: true });
 }
 
-describe.sequential("discount offers and immutable pricing", () => {
+describe("discount offers and immutable pricing", { concurrent: false }, () => {
   beforeAll(async () => {
     const admin = await db.user.create({ data: { email: `offer-admin-${suffix}@bke.test`, name: "Offer Admin", role: "ADMIN", emailVerified: new Date() } });
     adminId = admin.id;

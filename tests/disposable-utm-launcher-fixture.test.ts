@@ -39,7 +39,8 @@ describe("disposable UTM Launcher fixture", () => {
     expect(standaloneSection).toContain('architecture: "x64"');
     expect(standaloneSection).not.toContain('architecture: "universal"');
     expect(fixture).toContain("verifyGitHubStandaloneReleaseContract");
-    expect(fixture).toContain('"GITHUB_RELEASE_CONTRACT"');
+    expect(fixture).not.toContain("db.supplyChainEvidence");
+    expect(fixture).not.toContain("db.supplyChainVerificationEvidence");
     expect(fixture).toContain("releaseContractVerified: true");
     expect(fixture).toContain('"Entitlement"');
   });
@@ -63,11 +64,12 @@ describe("disposable UTM Launcher fixture", () => {
     expect(pluginSection).not.toContain("supplyChainEvidence");
   });
 
-  it("creates a verified CUSTOMER with a generated password", () => {
+  it("creates a verified Google-bound CUSTOMER without a password", () => {
     expect(fixture).toContain('role: "CUSTOMER"');
     expect(fixture).toContain("emailVerified: now");
-    expect(fixture).toContain("createArgon2PasswordHasher");
-    expect(fixture).toContain("randomBytes(18)");
+    expect(fixture).toContain("db.googleIdentity.upsert");
+    expect(fixture).not.toContain("passwordCredential");
+    expect(fixture).toContain('authenticationProvider: "GOOGLE_OIDC"');
     expect(fixture).toContain("UTM_FIXTURE_CUSTOMER_ACCOUNT_SELECTION_NOT_DETERMINISTIC");
   });
 

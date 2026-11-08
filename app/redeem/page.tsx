@@ -9,7 +9,7 @@ export default async function RedeemClaimCodePage() {
   const session = await currentIdentitySession();
   if (!session) redirect("/login?returnTo=%2Fredeem");
   const principal = session.principal;
-  if (!principal.emailVerified) redirect("/verify-email");
+  if (!principal.emailVerified) redirect("/login?error=CONTACT_EMAIL_NOT_AUTHORITATIVE");
   await requireLegalClearance(principal.id, "/redeem");
 
   const accounts = await listClaimAuthorizedAccounts(principal.id);

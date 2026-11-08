@@ -1,4 +1,5 @@
 import "server-only";
+import { currentOperationDatabaseUrl, operationResource } from "@/platform/host/operation-scope";
 import type { ComposedApplication } from "../../contracts/capability";
 import { createAccountsModule } from "../../modules/accounts/module";
 import { createCatalogModule } from "../../modules/catalog/module";
@@ -11,7 +12,10 @@ import { notificationsModule } from "../../modules/notifications/module";
 import { createPaymentsModule } from "../../modules/payments/module";
 import { composeCapabilities } from "../../platform/composition/composer";
 import { createWebPaymentsAdapter } from "./payments/provider";
+import { createHostLegalReacceptanceStatusRepository } from "./legal/reacceptance-repository";
+import { createHostLegalAcceptanceRepository, createHostLegalCheckoutRequirementsRepository } from "./legal/checkout-repositories";
 import { createCommerceClaimUnitIssuer } from "./entitlements/commerce-claim-unit-issuer";
+import { createHostCatalogLookupRepository } from "./catalog/lookup-repository";
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -20,17 +24,21 @@ function required(name: string): string {
 }
 
 async function composeWebApplication(): Promise<ComposedApplication> {
-  const connectionString = required("DATABASE_URL");
+  const connectionString = currentOperationDatabaseUrl() ?? required("DATABASE_URL");
   const sessionSecret = required("SESSION_SECRET");
   const licensePepper = required("LICENSE_PEPPER");
-  const mfaEncryptionKey = process.env.MFA_ENCRYPTION_KEY?.trim() || undefined;
   const payments = createWebPaymentsAdapter();
 
   return composeCapabilities([
-    createIdentityModule({ connectionString, sessionSecret, mfaEncryptionKey }),
+    createIdentityModule({ connectionString, sessionSecret }),
     createAccountsModule({ connectionString }),
-    createLegalModule({ connectionString }),
-    createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema" }),
+    createLegalModule({
+      connectionString,
+      reacceptanceStatusRepository: createHostLegalReacceptanceStatusRepository(),
+      checkoutRequirementsRepository: createHostLegalCheckoutRequirementsRepository(),
+      acceptanceRepository: createHostLegalAcceptanceRepository(),
+    }),
+    createCatalogModule({ connectionString, licensingVersionFactsStorage: "legacy-product-schema", lookupRepository: createHostCatalogLookupRepository() }),
     createCommerceModule({ connectionString, claimUnits: createCommerceClaimUnitIssuer() }),
     createPaymentsModule({
       connectionString,
@@ -48,6 +56,10 @@ async function composeWebApplication(): Promise<ComposedApplication> {
 const globalRuntime = globalThis as unknown as { bkeV2WebApplication?: Promise<ComposedApplication> };
 
 export function getV2WebApplication(): Promise<ComposedApplication> {
+  if (currentOperationDatabaseUrl()) {
+    return operationResource("composed-application", composeWebApplication);
+  }
+  if (process.env.BKE_RUNTIME === "workers") throw new Error("WORKER_OPERATION_SCOPE_REQUIRED");
   if (!globalRuntime.bkeV2WebApplication) {
     globalRuntime.bkeV2WebApplication = composeWebApplication().catch((error) => {
       delete globalRuntime.bkeV2WebApplication;

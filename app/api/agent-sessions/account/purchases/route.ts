@@ -4,7 +4,7 @@ import {
   rejectBrowserOriginForAgent,
   requireAgentAccountSessionProtocol,
 } from "@/apps/web/agent-sessions/contract";
-import { authenticateNativeAgentRequest } from "@/apps/web/agent-sessions/native-mfa";
+import { authenticateNativeAgentRequest } from "@/apps/web/agent-sessions/native-session";
 import { getAgentAccountPurchasesOverview } from "@/apps/web/accounts/agent-account-purchases-overview";
 import { apiError } from "@/apps/web/http/api-error";
 import { clientIp } from "@/apps/web/http/request";

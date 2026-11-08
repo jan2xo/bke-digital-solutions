@@ -7,6 +7,7 @@ export type EmailFailureCategory =
   | "PROVIDER_TIMEOUT"
   | "PROVIDER_UNAVAILABLE"
   | "PROVIDER_REJECTED"
+  | "DELIVERY_UNCONFIRMED"
   | "UNKNOWN_PROVIDER_ERROR";
 
 export type SafeEmailFailure = Readonly<{
@@ -16,13 +17,37 @@ export type SafeEmailFailure = Readonly<{
   requestId?: string;
 }>;
 
+export type EmailDeliveryPolicy = Readonly<{
+  acceptance: "REJECTED" | "UNKNOWN";
+  retry: "RETRY" | "STOP";
+  fallbackEligible: boolean;
+  preCall: boolean;
+}>;
+
 export class EmailDeliveryError extends Error {
   readonly safe: SafeEmailFailure;
+  readonly policy: EmailDeliveryPolicy;
 
-  constructor(safe: SafeEmailFailure) {
+  constructor(safe: SafeEmailFailure, policy?: Partial<EmailDeliveryPolicy> & { preCall?: boolean }) {
     super(safe.category);
     this.name = "EmailDeliveryError";
-    this.safe = safe;
+    this.safe = Object.freeze({ ...safe });
+    const ambiguous = ["DELIVERY_UNCONFIRMED", "PROVIDER_TIMEOUT",
+      "PROVIDER_UNAVAILABLE", "UNKNOWN_PROVIDER_ERROR"].includes(safe.category);
+    const provedPreCall = policy?.preCall === true && policy.acceptance === "REJECTED";
+    const unknown = safe.category === "DELIVERY_UNCONFIRMED" ||
+      policy?.acceptance === "UNKNOWN" || (ambiguous && !provedPreCall);
+    const selected: EmailDeliveryPolicy = unknown
+      ? { acceptance: "UNKNOWN", retry: "STOP", fallbackEligible: false, preCall: false }
+      : {
+          acceptance: "REJECTED",
+          retry: policy?.retry ?? "RETRY",
+          preCall: provedPreCall,
+          fallbackEligible: !provedPreCall && policy?.fallbackEligible === true &&
+            safe.provider === "cloudflare" &&
+            ["RATE_LIMITED", "QUOTA_EXCEEDED"].includes(safe.category),
+        };
+    this.policy = Object.freeze(selected);
   }
 }
 

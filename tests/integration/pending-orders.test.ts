@@ -10,7 +10,7 @@ let accountId = "";
 let purchasePlanId = "";
 let orderId = "";
 
-describe.sequential("pending-order recovery", () => {
+describe("pending-order recovery", { concurrent: false }, () => {
   beforeAll(async () => {
     const suffix = Date.now().toString(36);
     const user = await db.user.create({ data: { email: `pending-${suffix}@bke.test`, emailVerified: new Date(), ownedAccounts: { create: { type: "INDIVIDUAL", displayName: "Pending Customer", billingEmail: `pending-${suffix}@bke.test` } } }, include: { ownedAccounts: true } });

@@ -262,6 +262,7 @@ export type UserWhereInput = {
   legalHoldAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   legalHoldReason?: Prisma.StringNullableFilter<"User"> | string | null
   emailHash?: Prisma.StringNullableFilter<"User"> | string | null
+  googleIdentity?: Prisma.XOR<Prisma.GoogleIdentityNullableScalarRelationFilter, Prisma.GoogleIdentityWhereInput> | null
   credential?: Prisma.XOR<Prisma.PasswordCredentialNullableScalarRelationFilter, Prisma.PasswordCredentialWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   ownedAccounts?: Prisma.CustomerAccountListRelationFilter
@@ -275,13 +276,11 @@ export type UserWhereInput = {
   mfaChallenges?: Prisma.MfaChallengeListRelationFilter
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationListRelationFilter
   securityEvents?: Prisma.SecurityEventListRelationFilter
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionListRelationFilter
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationListRelationFilter
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationListRelationFilter
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialListRelationFilter
   legalVersionsAuthored?: Prisma.LegalDocumentVersionListRelationFilter
   legalAcceptances?: Prisma.LegalAcceptanceListRelationFilter
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobListRelationFilter
   refundOperationsRequested?: Prisma.RefundOperationListRelationFilter
   reconciliationsRun?: Prisma.PaymentReconciliationListRelationFilter
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationListRelationFilter
@@ -294,9 +293,6 @@ export type UserWhereInput = {
   privacyRequests?: Prisma.PrivacyRequestListRelationFilter
   privacyRequestsReviewed?: Prisma.PrivacyRequestListRelationFilter
   privacyRequestEvents?: Prisma.PrivacyRequestEventListRelationFilter
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalListRelationFilter
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalListRelationFilter
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalListRelationFilter
   supportTicketsCreated?: Prisma.SupportTicketListRelationFilter
   supportTicketsAssigned?: Prisma.SupportTicketListRelationFilter
   supportMessages?: Prisma.SupportTicketMessageListRelationFilter
@@ -321,6 +317,7 @@ export type UserOrderByWithRelationInput = {
   legalHoldAt?: Prisma.SortOrderInput | Prisma.SortOrder
   legalHoldReason?: Prisma.SortOrderInput | Prisma.SortOrder
   emailHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleIdentity?: Prisma.GoogleIdentityOrderByWithRelationInput
   credential?: Prisma.PasswordCredentialOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   ownedAccounts?: Prisma.CustomerAccountOrderByRelationAggregateInput
@@ -334,13 +331,11 @@ export type UserOrderByWithRelationInput = {
   mfaChallenges?: Prisma.MfaChallengeOrderByRelationAggregateInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationOrderByRelationAggregateInput
   securityEvents?: Prisma.SecurityEventOrderByRelationAggregateInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionOrderByRelationAggregateInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationOrderByRelationAggregateInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationOrderByRelationAggregateInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialOrderByRelationAggregateInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionOrderByRelationAggregateInput
   legalAcceptances?: Prisma.LegalAcceptanceOrderByRelationAggregateInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobOrderByRelationAggregateInput
   refundOperationsRequested?: Prisma.RefundOperationOrderByRelationAggregateInput
   reconciliationsRun?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationOrderByRelationAggregateInput
@@ -353,9 +348,6 @@ export type UserOrderByWithRelationInput = {
   privacyRequests?: Prisma.PrivacyRequestOrderByRelationAggregateInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestOrderByRelationAggregateInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventOrderByRelationAggregateInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalOrderByRelationAggregateInput
   supportTicketsCreated?: Prisma.SupportTicketOrderByRelationAggregateInput
   supportTicketsAssigned?: Prisma.SupportTicketOrderByRelationAggregateInput
   supportMessages?: Prisma.SupportTicketMessageOrderByRelationAggregateInput
@@ -383,6 +375,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   legalHoldAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   legalHoldReason?: Prisma.StringNullableFilter<"User"> | string | null
   emailHash?: Prisma.StringNullableFilter<"User"> | string | null
+  googleIdentity?: Prisma.XOR<Prisma.GoogleIdentityNullableScalarRelationFilter, Prisma.GoogleIdentityWhereInput> | null
   credential?: Prisma.XOR<Prisma.PasswordCredentialNullableScalarRelationFilter, Prisma.PasswordCredentialWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   ownedAccounts?: Prisma.CustomerAccountListRelationFilter
@@ -396,13 +389,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   mfaChallenges?: Prisma.MfaChallengeListRelationFilter
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationListRelationFilter
   securityEvents?: Prisma.SecurityEventListRelationFilter
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionListRelationFilter
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationListRelationFilter
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationListRelationFilter
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialListRelationFilter
   legalVersionsAuthored?: Prisma.LegalDocumentVersionListRelationFilter
   legalAcceptances?: Prisma.LegalAcceptanceListRelationFilter
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobListRelationFilter
   refundOperationsRequested?: Prisma.RefundOperationListRelationFilter
   reconciliationsRun?: Prisma.PaymentReconciliationListRelationFilter
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationListRelationFilter
@@ -415,9 +406,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   privacyRequests?: Prisma.PrivacyRequestListRelationFilter
   privacyRequestsReviewed?: Prisma.PrivacyRequestListRelationFilter
   privacyRequestEvents?: Prisma.PrivacyRequestEventListRelationFilter
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalListRelationFilter
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalListRelationFilter
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalListRelationFilter
   supportTicketsCreated?: Prisma.SupportTicketListRelationFilter
   supportTicketsAssigned?: Prisma.SupportTicketListRelationFilter
   supportMessages?: Prisma.SupportTicketMessageListRelationFilter
@@ -484,6 +472,7 @@ export type UserCreateInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -497,13 +486,11 @@ export type UserCreateInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -516,9 +503,6 @@ export type UserCreateInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -543,6 +527,7 @@ export type UserUncheckedCreateInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -556,13 +541,11 @@ export type UserUncheckedCreateInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -575,9 +558,6 @@ export type UserUncheckedCreateInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -602,6 +582,7 @@ export type UserUpdateInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -615,13 +596,11 @@ export type UserUpdateInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -634,9 +613,6 @@ export type UserUpdateInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -661,6 +637,7 @@ export type UserUncheckedUpdateInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -674,13 +651,11 @@ export type UserUncheckedUpdateInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -693,9 +668,6 @@ export type UserUncheckedUpdateInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -844,6 +816,20 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type EnumCustomerLifecycleStateFieldUpdateOperationsInput = {
   set?: $Enums.CustomerLifecycleState
+}
+
+export type UserCreateNestedOneWithoutGoogleIdentityInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoogleIdentityInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGoogleIdentityNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoogleIdentityInput
+  upsert?: Prisma.UserUpsertWithoutGoogleIdentityInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGoogleIdentityInput, Prisma.UserUpdateWithoutGoogleIdentityInput>, Prisma.UserUncheckedUpdateWithoutGoogleIdentityInput>
 }
 
 export type UserCreateNestedOneWithoutCredentialInput = {
@@ -1048,82 +1034,6 @@ export type UserUpdateOneRequiredWithoutMembershipsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutMembershipsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMembershipsInput, Prisma.UserUpdateWithoutMembershipsInput>, Prisma.UserUncheckedUpdateWithoutMembershipsInput>
-}
-
-export type UserCreateNestedOneWithoutArtifactUploadSessionsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutArtifactUploadSessionsInput, Prisma.UserUncheckedCreateWithoutArtifactUploadSessionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArtifactUploadSessionsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutArtifactUploadSessionsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutArtifactUploadSessionsInput, Prisma.UserUncheckedCreateWithoutArtifactUploadSessionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArtifactUploadSessionsInput
-  upsert?: Prisma.UserUpsertWithoutArtifactUploadSessionsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutArtifactUploadSessionsInput, Prisma.UserUpdateWithoutArtifactUploadSessionsInput>, Prisma.UserUncheckedUpdateWithoutArtifactUploadSessionsInput>
-}
-
-export type UserCreateNestedOneWithoutReleaseApprovalsCreatedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsCreatedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsCreatedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReleaseApprovalsCreatedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedOneWithoutReleaseApprovalsReviewedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsReviewedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsReviewedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReleaseApprovalsReviewedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedOneWithoutReleaseApprovalsApprovedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsApprovedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsApprovedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReleaseApprovalsApprovedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutReleaseApprovalsCreatedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsCreatedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsCreatedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReleaseApprovalsCreatedInput
-  upsert?: Prisma.UserUpsertWithoutReleaseApprovalsCreatedInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReleaseApprovalsCreatedInput, Prisma.UserUpdateWithoutReleaseApprovalsCreatedInput>, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput>
-}
-
-export type UserUpdateOneWithoutReleaseApprovalsReviewedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsReviewedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsReviewedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReleaseApprovalsReviewedInput
-  upsert?: Prisma.UserUpsertWithoutReleaseApprovalsReviewedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReleaseApprovalsReviewedInput, Prisma.UserUpdateWithoutReleaseApprovalsReviewedInput>, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput>
-}
-
-export type UserUpdateOneWithoutReleaseApprovalsApprovedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsApprovedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsApprovedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReleaseApprovalsApprovedInput
-  upsert?: Prisma.UserUpsertWithoutReleaseApprovalsApprovedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReleaseApprovalsApprovedInput, Prisma.UserUpdateWithoutReleaseApprovalsApprovedInput>, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput>
-}
-
-export type UserCreateNestedOneWithoutStorageCleanupJobsCreatedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutStorageCleanupJobsCreatedInput, Prisma.UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStorageCleanupJobsCreatedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutStorageCleanupJobsCreatedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutStorageCleanupJobsCreatedInput, Prisma.UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStorageCleanupJobsCreatedInput
-  upsert?: Prisma.UserUpsertWithoutStorageCleanupJobsCreatedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStorageCleanupJobsCreatedInput, Prisma.UserUpdateWithoutStorageCleanupJobsCreatedInput>, Prisma.UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput>
 }
 
 export type UserCreateNestedOneWithoutWebhookEventsAcknowledgedInput = {
@@ -1458,6 +1368,238 @@ export type UserUpdateOneRequiredWithoutProviderCredentialsCreatedNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProviderCredentialsCreatedInput, Prisma.UserUpdateWithoutProviderCredentialsCreatedInput>, Prisma.UserUncheckedUpdateWithoutProviderCredentialsCreatedInput>
 }
 
+export type UserCreateWithoutGoogleIdentityInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
+  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
+  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
+  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
+  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
+}
+
+export type UserUncheckedCreateWithoutGoogleIdentityInput = {
+  id?: string
+  email: string
+  name?: string | null
+  emailVerified?: Date | string | null
+  role?: $Enums.GlobalRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  suspendedAt?: Date | string | null
+  lifecycleState?: $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Date | string | null
+  pseudonymizedAt?: Date | string | null
+  retentionExpiresAt?: Date | string | null
+  legalHoldAt?: Date | string | null
+  legalHoldReason?: string | null
+  emailHash?: string | null
+  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
+  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
+  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
+  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
+  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
+  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
+}
+
+export type UserCreateOrConnectWithoutGoogleIdentityInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+}
+
+export type UserUpsertWithoutGoogleIdentityInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGoogleIdentityInput, Prisma.UserUncheckedUpdateWithoutGoogleIdentityInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoogleIdentityInput, Prisma.UserUncheckedCreateWithoutGoogleIdentityInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGoogleIdentityInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGoogleIdentityInput, Prisma.UserUncheckedUpdateWithoutGoogleIdentityInput>
+}
+
+export type UserUpdateWithoutGoogleIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
+  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
+  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
+  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
+  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGoogleIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
+  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
+  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
+  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
+  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
+  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
+  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
+  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
+  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
+  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
+  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
+  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
+  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
+  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
+  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
+}
+
 export type UserCreateWithoutCredentialInput = {
   id?: string
   email: string
@@ -1474,6 +1616,7 @@ export type UserCreateWithoutCredentialInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -1486,13 +1629,11 @@ export type UserCreateWithoutCredentialInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -1505,9 +1646,6 @@ export type UserCreateWithoutCredentialInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -1532,6 +1670,7 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1544,13 +1683,11 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -1563,9 +1700,6 @@ export type UserUncheckedCreateWithoutCredentialInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -1606,6 +1740,7 @@ export type UserUpdateWithoutCredentialInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
@@ -1618,13 +1753,11 @@ export type UserUpdateWithoutCredentialInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -1637,9 +1770,6 @@ export type UserUpdateWithoutCredentialInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -1664,6 +1794,7 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1676,13 +1807,11 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -1695,9 +1824,6 @@ export type UserUncheckedUpdateWithoutCredentialInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -1722,6 +1848,7 @@ export type UserCreateWithoutSessionsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -1734,13 +1861,11 @@ export type UserCreateWithoutSessionsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -1753,9 +1878,6 @@ export type UserCreateWithoutSessionsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -1780,6 +1902,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1792,13 +1915,11 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -1811,9 +1932,6 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -1854,6 +1972,7 @@ export type UserUpdateWithoutSessionsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
@@ -1866,13 +1985,11 @@ export type UserUpdateWithoutSessionsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -1885,9 +2002,6 @@ export type UserUpdateWithoutSessionsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -1912,6 +2026,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1924,13 +2039,11 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -1943,9 +2056,6 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -1970,6 +2080,7 @@ export type UserCreateWithoutAdministratorMfaInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -1982,13 +2093,11 @@ export type UserCreateWithoutAdministratorMfaInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -2001,9 +2110,6 @@ export type UserCreateWithoutAdministratorMfaInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -2028,6 +2134,7 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2040,13 +2147,11 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -2059,9 +2164,6 @@ export type UserUncheckedCreateWithoutAdministratorMfaInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -2102,6 +2204,7 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2114,13 +2217,11 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -2133,9 +2234,6 @@ export type UserUpdateWithoutAdministratorMfaInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -2160,6 +2258,7 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2172,13 +2271,11 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -2191,9 +2288,6 @@ export type UserUncheckedUpdateWithoutAdministratorMfaInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -2218,6 +2312,7 @@ export type UserCreateWithoutRecoveryCodesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2230,13 +2325,11 @@ export type UserCreateWithoutRecoveryCodesInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -2249,9 +2342,6 @@ export type UserCreateWithoutRecoveryCodesInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -2276,6 +2366,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2288,13 +2379,11 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -2307,9 +2396,6 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -2350,6 +2436,7 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2362,13 +2449,11 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -2381,9 +2466,6 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -2408,6 +2490,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2420,13 +2503,11 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -2439,9 +2520,6 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -2466,6 +2544,7 @@ export type UserCreateWithoutMfaChallengesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2478,13 +2557,11 @@ export type UserCreateWithoutMfaChallengesInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -2497,9 +2574,6 @@ export type UserCreateWithoutMfaChallengesInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -2524,6 +2598,7 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2536,13 +2611,11 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -2555,9 +2628,6 @@ export type UserUncheckedCreateWithoutMfaChallengesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -2598,6 +2668,7 @@ export type UserUpdateWithoutMfaChallengesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2610,13 +2681,11 @@ export type UserUpdateWithoutMfaChallengesInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -2629,9 +2698,6 @@ export type UserUpdateWithoutMfaChallengesInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -2656,6 +2722,7 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2668,13 +2735,11 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -2687,9 +2752,6 @@ export type UserUncheckedUpdateWithoutMfaChallengesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -2714,6 +2776,7 @@ export type UserCreateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2726,13 +2789,11 @@ export type UserCreateWithoutEmergencyMfaAuthorizationsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -2745,9 +2806,6 @@ export type UserCreateWithoutEmergencyMfaAuthorizationsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -2772,6 +2830,7 @@ export type UserUncheckedCreateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -2784,13 +2843,11 @@ export type UserUncheckedCreateWithoutEmergencyMfaAuthorizationsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -2803,9 +2860,6 @@ export type UserUncheckedCreateWithoutEmergencyMfaAuthorizationsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -2846,6 +2900,7 @@ export type UserUpdateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -2858,13 +2913,11 @@ export type UserUpdateWithoutEmergencyMfaAuthorizationsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -2877,9 +2930,6 @@ export type UserUpdateWithoutEmergencyMfaAuthorizationsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -2904,6 +2954,7 @@ export type UserUncheckedUpdateWithoutEmergencyMfaAuthorizationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2916,13 +2967,11 @@ export type UserUncheckedUpdateWithoutEmergencyMfaAuthorizationsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -2935,9 +2984,6 @@ export type UserUncheckedUpdateWithoutEmergencyMfaAuthorizationsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -2962,6 +3008,7 @@ export type UserCreateWithoutSecurityEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -2974,13 +3021,11 @@ export type UserCreateWithoutSecurityEventsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -2993,9 +3038,6 @@ export type UserCreateWithoutSecurityEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -3020,6 +3062,7 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -3032,13 +3075,11 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -3051,9 +3092,6 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -3094,6 +3132,7 @@ export type UserUpdateWithoutSecurityEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -3106,13 +3145,11 @@ export type UserUpdateWithoutSecurityEventsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -3125,9 +3162,6 @@ export type UserUpdateWithoutSecurityEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -3152,6 +3186,7 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3164,13 +3199,11 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -3183,9 +3216,6 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -3210,6 +3240,7 @@ export type UserCreateWithoutOwnedAccountsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -3222,13 +3253,11 @@ export type UserCreateWithoutOwnedAccountsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -3241,9 +3270,6 @@ export type UserCreateWithoutOwnedAccountsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -3268,6 +3294,7 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3280,13 +3307,11 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -3299,9 +3324,6 @@ export type UserUncheckedCreateWithoutOwnedAccountsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -3342,6 +3364,7 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
@@ -3354,13 +3377,11 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -3373,9 +3394,6 @@ export type UserUpdateWithoutOwnedAccountsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -3400,6 +3418,7 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3412,13 +3431,11 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -3431,9 +3448,6 @@ export type UserUncheckedUpdateWithoutOwnedAccountsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -3458,6 +3472,7 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -3471,12 +3486,10 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -3489,9 +3502,6 @@ export type UserCreateWithoutLegalVersionsAuthoredInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -3516,6 +3526,7 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -3529,12 +3540,10 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -3547,9 +3556,6 @@ export type UserUncheckedCreateWithoutLegalVersionsAuthoredInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -3590,6 +3596,7 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -3603,12 +3610,10 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -3621,9 +3626,6 @@ export type UserUpdateWithoutLegalVersionsAuthoredInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -3648,6 +3650,7 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3661,12 +3664,10 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -3679,9 +3680,6 @@ export type UserUncheckedUpdateWithoutLegalVersionsAuthoredInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -3706,6 +3704,7 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -3719,12 +3718,10 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -3737,9 +3734,6 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -3764,6 +3758,7 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -3777,12 +3772,10 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -3795,9 +3788,6 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -3838,6 +3828,7 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -3851,12 +3842,10 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -3869,9 +3858,6 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -3896,6 +3882,7 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3909,12 +3896,10 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -3927,9 +3912,6 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -3954,6 +3936,7 @@ export type UserCreateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -3967,13 +3950,11 @@ export type UserCreateWithoutPrivacyRequestsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -3985,9 +3966,6 @@ export type UserCreateWithoutPrivacyRequestsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -4012,6 +3990,7 @@ export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4025,13 +4004,11 @@ export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -4043,9 +4020,6 @@ export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -4075,6 +4049,7 @@ export type UserCreateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4088,13 +4063,11 @@ export type UserCreateWithoutPrivacyRequestsReviewedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -4106,9 +4079,6 @@ export type UserCreateWithoutPrivacyRequestsReviewedInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -4133,6 +4103,7 @@ export type UserUncheckedCreateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4146,13 +4117,11 @@ export type UserUncheckedCreateWithoutPrivacyRequestsReviewedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -4164,9 +4133,6 @@ export type UserUncheckedCreateWithoutPrivacyRequestsReviewedInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -4207,6 +4173,7 @@ export type UserUpdateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4220,13 +4187,11 @@ export type UserUpdateWithoutPrivacyRequestsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -4238,9 +4203,6 @@ export type UserUpdateWithoutPrivacyRequestsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -4265,6 +4227,7 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4278,13 +4241,11 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -4296,9 +4257,6 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -4334,6 +4292,7 @@ export type UserUpdateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4347,13 +4306,11 @@ export type UserUpdateWithoutPrivacyRequestsReviewedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -4365,9 +4322,6 @@ export type UserUpdateWithoutPrivacyRequestsReviewedInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -4392,6 +4346,7 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4405,13 +4360,11 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -4423,9 +4376,6 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsReviewedInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -4450,6 +4400,7 @@ export type UserCreateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4463,13 +4414,11 @@ export type UserCreateWithoutPrivacyRequestEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -4481,9 +4430,6 @@ export type UserCreateWithoutPrivacyRequestEventsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -4508,6 +4454,7 @@ export type UserUncheckedCreateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4521,13 +4468,11 @@ export type UserUncheckedCreateWithoutPrivacyRequestEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -4539,9 +4484,6 @@ export type UserUncheckedCreateWithoutPrivacyRequestEventsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -4582,6 +4524,7 @@ export type UserUpdateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4595,13 +4538,11 @@ export type UserUpdateWithoutPrivacyRequestEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -4613,9 +4554,6 @@ export type UserUpdateWithoutPrivacyRequestEventsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -4640,6 +4578,7 @@ export type UserUncheckedUpdateWithoutPrivacyRequestEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4653,13 +4592,11 @@ export type UserUncheckedUpdateWithoutPrivacyRequestEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -4671,9 +4608,6 @@ export type UserUncheckedUpdateWithoutPrivacyRequestEventsInput = {
   complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -4698,6 +4632,7 @@ export type UserCreateWithoutMembershipsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -4710,13 +4645,11 @@ export type UserCreateWithoutMembershipsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -4729,9 +4662,6 @@ export type UserCreateWithoutMembershipsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -4756,6 +4686,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -4768,13 +4699,11 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -4787,9 +4716,6 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -4830,6 +4756,7 @@ export type UserUpdateWithoutMembershipsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -4842,13 +4769,11 @@ export type UserUpdateWithoutMembershipsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -4861,9 +4786,6 @@ export type UserUpdateWithoutMembershipsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -4888,6 +4810,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4900,1248 +4823,6 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserCreateWithoutArtifactUploadSessionsInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserUncheckedCreateWithoutArtifactUploadSessionsInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserCreateOrConnectWithoutArtifactUploadSessionsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutArtifactUploadSessionsInput, Prisma.UserUncheckedCreateWithoutArtifactUploadSessionsInput>
-}
-
-export type UserUpsertWithoutArtifactUploadSessionsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutArtifactUploadSessionsInput, Prisma.UserUncheckedUpdateWithoutArtifactUploadSessionsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutArtifactUploadSessionsInput, Prisma.UserUncheckedCreateWithoutArtifactUploadSessionsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutArtifactUploadSessionsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutArtifactUploadSessionsInput, Prisma.UserUncheckedUpdateWithoutArtifactUploadSessionsInput>
-}
-
-export type UserUpdateWithoutArtifactUploadSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUncheckedUpdateWithoutArtifactUploadSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserCreateWithoutReleaseApprovalsCreatedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserUncheckedCreateWithoutReleaseApprovalsCreatedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserCreateOrConnectWithoutReleaseApprovalsCreatedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsCreatedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsCreatedInput>
-}
-
-export type UserCreateWithoutReleaseApprovalsReviewedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserUncheckedCreateWithoutReleaseApprovalsReviewedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserCreateOrConnectWithoutReleaseApprovalsReviewedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsReviewedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsReviewedInput>
-}
-
-export type UserCreateWithoutReleaseApprovalsApprovedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserUncheckedCreateWithoutReleaseApprovalsApprovedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserCreateOrConnectWithoutReleaseApprovalsApprovedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsApprovedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsApprovedInput>
-}
-
-export type UserUpsertWithoutReleaseApprovalsCreatedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReleaseApprovalsCreatedInput, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsCreatedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsCreatedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutReleaseApprovalsCreatedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReleaseApprovalsCreatedInput, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput>
-}
-
-export type UserUpdateWithoutReleaseApprovalsCreatedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUncheckedUpdateWithoutReleaseApprovalsCreatedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUpsertWithoutReleaseApprovalsReviewedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReleaseApprovalsReviewedInput, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsReviewedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsReviewedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutReleaseApprovalsReviewedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReleaseApprovalsReviewedInput, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput>
-}
-
-export type UserUpdateWithoutReleaseApprovalsReviewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUncheckedUpdateWithoutReleaseApprovalsReviewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUpsertWithoutReleaseApprovalsApprovedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReleaseApprovalsApprovedInput, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReleaseApprovalsApprovedInput, Prisma.UserUncheckedCreateWithoutReleaseApprovalsApprovedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutReleaseApprovalsApprovedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReleaseApprovalsApprovedInput, Prisma.UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput>
-}
-
-export type UserUpdateWithoutReleaseApprovalsApprovedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUncheckedUpdateWithoutReleaseApprovalsApprovedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserCreateWithoutStorageCleanupJobsCreatedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput = {
-  id?: string
-  email: string
-  name?: string | null
-  emailVerified?: Date | string | null
-  role?: $Enums.GlobalRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  suspendedAt?: Date | string | null
-  lifecycleState?: $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Date | string | null
-  pseudonymizedAt?: Date | string | null
-  retentionExpiresAt?: Date | string | null
-  legalHoldAt?: Date | string | null
-  legalHoldReason?: string | null
-  emailHash?: string | null
-  credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
-  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
-  assignments?: Prisma.LicenseAssignmentUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  siteContentEdits?: Prisma.SiteContentUncheckedCreateNestedManyWithoutEditorInput
-  createdOffers?: Prisma.DiscountOfferUncheckedCreateNestedManyWithoutCreatedByInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedCreateNestedOneWithoutUserInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
-  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
-  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  backupOperationsRequested?: Prisma.BackupOperationUncheckedCreateNestedManyWithoutRequestedByInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUncheckedCreateNestedManyWithoutResolvedByInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUncheckedCreateNestedManyWithoutRecorderInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
-  supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
-  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
-  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
-  supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
-  notificationReceipts?: Prisma.NotificationReceiptUncheckedCreateNestedManyWithoutUserInput
-  principalNotifications?: Prisma.NotificationMessageUncheckedCreateNestedManyWithoutAudiencePrincipalInput
-}
-
-export type UserCreateOrConnectWithoutStorageCleanupJobsCreatedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutStorageCleanupJobsCreatedInput, Prisma.UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput>
-}
-
-export type UserUpsertWithoutStorageCleanupJobsCreatedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutStorageCleanupJobsCreatedInput, Prisma.UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutStorageCleanupJobsCreatedInput, Prisma.UserUncheckedCreateWithoutStorageCleanupJobsCreatedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutStorageCleanupJobsCreatedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutStorageCleanupJobsCreatedInput, Prisma.UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput>
-}
-
-export type UserUpdateWithoutStorageCleanupJobsCreatedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
-  providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
-  providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
-  legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
-  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
-  reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
-  reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
-  webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
-  scheduledRunsAcknowledged?: Prisma.ScheduledJobRunUpdateManyWithoutAcknowledgedByNestedInput
-  backupOperationsRequested?: Prisma.BackupOperationUpdateManyWithoutRequestedByNestedInput
-  observabilityAlertsAcknowledged?: Prisma.ObservabilityAlertUpdateManyWithoutAcknowledgedByNestedInput
-  observabilityAlertsResolved?: Prisma.ObservabilityAlertUpdateManyWithoutResolvedByNestedInput
-  complianceEvidenceRecorded?: Prisma.ComplianceEvidenceUpdateManyWithoutRecorderNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
-  privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
-  supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
-  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
-  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
-  supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
-  notificationReceipts?: Prisma.NotificationReceiptUpdateManyWithoutUserNestedInput
-  principalNotifications?: Prisma.NotificationMessageUpdateManyWithoutAudiencePrincipalNestedInput
-}
-
-export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  role?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  lifecycleState?: Prisma.EnumCustomerLifecycleStateFieldUpdateOperationsInput | $Enums.CustomerLifecycleState
-  privacyRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pseudonymizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retentionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
-  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-  assignments?: Prisma.LicenseAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  siteContentEdits?: Prisma.SiteContentUncheckedUpdateManyWithoutEditorNestedInput
-  createdOffers?: Prisma.DiscountOfferUncheckedUpdateManyWithoutCreatedByNestedInput
-  administratorMfa?: Prisma.AdministratorMfaMethodUncheckedUpdateOneWithoutUserNestedInput
-  recoveryCodes?: Prisma.AdministratorRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
-  mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
-  emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
-  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6159,9 +4840,6 @@ export type UserUncheckedUpdateWithoutStorageCleanupJobsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -6186,6 +4864,7 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6199,13 +4878,11 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -6217,9 +4894,6 @@ export type UserCreateWithoutWebhookEventsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -6244,6 +4918,7 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6257,13 +4932,11 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -6275,9 +4948,6 @@ export type UserUncheckedCreateWithoutWebhookEventsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -6318,6 +4988,7 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6331,13 +5002,11 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -6349,9 +5018,6 @@ export type UserUpdateWithoutWebhookEventsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -6376,6 +5042,7 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6389,13 +5056,11 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -6407,9 +5072,6 @@ export type UserUncheckedUpdateWithoutWebhookEventsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -6434,6 +5096,7 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6447,13 +5110,11 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
@@ -6465,9 +5126,6 @@ export type UserCreateWithoutRefundOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -6492,6 +5150,7 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6505,13 +5164,11 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
@@ -6523,9 +5180,6 @@ export type UserUncheckedCreateWithoutRefundOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -6566,6 +5220,7 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6579,13 +5234,11 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
@@ -6597,9 +5250,6 @@ export type UserUpdateWithoutRefundOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -6624,6 +5274,7 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6637,13 +5288,11 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
@@ -6655,9 +5304,6 @@ export type UserUncheckedUpdateWithoutRefundOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -6682,6 +5328,7 @@ export type UserCreateWithoutReconciliationsRunInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6695,13 +5342,11 @@ export type UserCreateWithoutReconciliationsRunInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
@@ -6713,9 +5358,6 @@ export type UserCreateWithoutReconciliationsRunInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -6740,6 +5382,7 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6753,13 +5396,11 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
@@ -6771,9 +5412,6 @@ export type UserUncheckedCreateWithoutReconciliationsRunInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -6803,6 +5441,7 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -6816,13 +5455,11 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventCreateNestedManyWithoutResolvedByInput
@@ -6834,9 +5471,6 @@ export type UserCreateWithoutReconciliationsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -6861,6 +5495,7 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -6874,13 +5509,11 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedCreateNestedManyWithoutResolvedByInput
@@ -6892,9 +5525,6 @@ export type UserUncheckedCreateWithoutReconciliationsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -6935,6 +5565,7 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -6948,13 +5579,11 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
@@ -6966,9 +5595,6 @@ export type UserUpdateWithoutReconciliationsRunInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -6993,6 +5619,7 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7006,13 +5633,11 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
@@ -7024,9 +5649,6 @@ export type UserUncheckedUpdateWithoutReconciliationsRunInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -7062,6 +5684,7 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7075,13 +5698,11 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUpdateManyWithoutResolvedByNestedInput
@@ -7093,9 +5714,6 @@ export type UserUpdateWithoutReconciliationsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -7120,6 +5738,7 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7133,13 +5752,11 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   webhookEventsAcknowledged?: Prisma.WebhookEventUncheckedUpdateManyWithoutResolvedByNestedInput
@@ -7151,9 +5768,6 @@ export type UserUncheckedUpdateWithoutReconciliationsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -7178,6 +5792,7 @@ export type UserCreateWithoutCreatedOffersInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7190,13 +5805,11 @@ export type UserCreateWithoutCreatedOffersInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -7209,9 +5822,6 @@ export type UserCreateWithoutCreatedOffersInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -7236,6 +5846,7 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7248,13 +5859,11 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -7267,9 +5876,6 @@ export type UserUncheckedCreateWithoutCreatedOffersInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -7310,6 +5916,7 @@ export type UserUpdateWithoutCreatedOffersInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7322,13 +5929,11 @@ export type UserUpdateWithoutCreatedOffersInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -7341,9 +5946,6 @@ export type UserUpdateWithoutCreatedOffersInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -7368,6 +5970,7 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7380,13 +5983,11 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -7399,9 +6000,6 @@ export type UserUncheckedUpdateWithoutCreatedOffersInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -7426,6 +6024,7 @@ export type UserCreateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7439,13 +6038,11 @@ export type UserCreateWithoutSupportTicketsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -7458,9 +6055,6 @@ export type UserCreateWithoutSupportTicketsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
   supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
@@ -7484,6 +6078,7 @@ export type UserUncheckedCreateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7497,13 +6092,11 @@ export type UserUncheckedCreateWithoutSupportTicketsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -7516,9 +6109,6 @@ export type UserUncheckedCreateWithoutSupportTicketsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
   supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
@@ -7547,6 +6137,7 @@ export type UserCreateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7560,13 +6151,11 @@ export type UserCreateWithoutSupportTicketsAssignedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -7579,9 +6168,6 @@ export type UserCreateWithoutSupportTicketsAssignedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
   supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
@@ -7605,6 +6191,7 @@ export type UserUncheckedCreateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7618,13 +6205,11 @@ export type UserUncheckedCreateWithoutSupportTicketsAssignedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -7637,9 +6222,6 @@ export type UserUncheckedCreateWithoutSupportTicketsAssignedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
   supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
@@ -7679,6 +6261,7 @@ export type UserUpdateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7692,13 +6275,11 @@ export type UserUpdateWithoutSupportTicketsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -7711,9 +6292,6 @@ export type UserUpdateWithoutSupportTicketsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
   supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
@@ -7737,6 +6315,7 @@ export type UserUncheckedUpdateWithoutSupportTicketsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7750,13 +6329,11 @@ export type UserUncheckedUpdateWithoutSupportTicketsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -7769,9 +6346,6 @@ export type UserUncheckedUpdateWithoutSupportTicketsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
   supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
@@ -7806,6 +6380,7 @@ export type UserUpdateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -7819,13 +6394,11 @@ export type UserUpdateWithoutSupportTicketsAssignedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -7838,9 +6411,6 @@ export type UserUpdateWithoutSupportTicketsAssignedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
   supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
@@ -7864,6 +6434,7 @@ export type UserUncheckedUpdateWithoutSupportTicketsAssignedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7877,13 +6448,11 @@ export type UserUncheckedUpdateWithoutSupportTicketsAssignedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -7896,9 +6465,6 @@ export type UserUncheckedUpdateWithoutSupportTicketsAssignedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
   supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
@@ -7922,6 +6488,7 @@ export type UserCreateWithoutSupportMessagesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -7935,13 +6502,11 @@ export type UserCreateWithoutSupportMessagesInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -7954,9 +6519,6 @@ export type UserCreateWithoutSupportMessagesInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportEvents?: Prisma.SupportTicketEventCreateNestedManyWithoutActorInput
@@ -7980,6 +6542,7 @@ export type UserUncheckedCreateWithoutSupportMessagesInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -7993,13 +6556,11 @@ export type UserUncheckedCreateWithoutSupportMessagesInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -8012,9 +6573,6 @@ export type UserUncheckedCreateWithoutSupportMessagesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportEvents?: Prisma.SupportTicketEventUncheckedCreateNestedManyWithoutActorInput
@@ -8054,6 +6612,7 @@ export type UserUpdateWithoutSupportMessagesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8067,13 +6626,11 @@ export type UserUpdateWithoutSupportMessagesInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -8086,9 +6643,6 @@ export type UserUpdateWithoutSupportMessagesInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportEvents?: Prisma.SupportTicketEventUpdateManyWithoutActorNestedInput
@@ -8112,6 +6666,7 @@ export type UserUncheckedUpdateWithoutSupportMessagesInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8125,13 +6680,11 @@ export type UserUncheckedUpdateWithoutSupportMessagesInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -8144,9 +6697,6 @@ export type UserUncheckedUpdateWithoutSupportMessagesInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportEvents?: Prisma.SupportTicketEventUncheckedUpdateManyWithoutActorNestedInput
@@ -8170,6 +6720,7 @@ export type UserCreateWithoutSupportEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8183,13 +6734,11 @@ export type UserCreateWithoutSupportEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -8202,9 +6751,6 @@ export type UserCreateWithoutSupportEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -8228,6 +6774,7 @@ export type UserUncheckedCreateWithoutSupportEventsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8241,13 +6788,11 @@ export type UserUncheckedCreateWithoutSupportEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -8260,9 +6805,6 @@ export type UserUncheckedCreateWithoutSupportEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -8302,6 +6844,7 @@ export type UserUpdateWithoutSupportEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8315,13 +6858,11 @@ export type UserUpdateWithoutSupportEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -8334,9 +6875,6 @@ export type UserUpdateWithoutSupportEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -8360,6 +6898,7 @@ export type UserUncheckedUpdateWithoutSupportEventsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8373,13 +6912,11 @@ export type UserUncheckedUpdateWithoutSupportEventsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -8392,9 +6929,6 @@ export type UserUncheckedUpdateWithoutSupportEventsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -8418,6 +6952,7 @@ export type UserCreateWithoutAssignmentsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8430,13 +6965,11 @@ export type UserCreateWithoutAssignmentsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -8449,9 +6982,6 @@ export type UserCreateWithoutAssignmentsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -8476,6 +7006,7 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8488,13 +7019,11 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -8507,9 +7036,6 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -8550,6 +7076,7 @@ export type UserUpdateWithoutAssignmentsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8562,13 +7089,11 @@ export type UserUpdateWithoutAssignmentsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -8581,9 +7106,6 @@ export type UserUpdateWithoutAssignmentsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -8608,6 +7130,7 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8620,13 +7143,11 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -8639,9 +7160,6 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -8666,6 +7184,7 @@ export type UserCreateWithoutAuditLogsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8678,13 +7197,11 @@ export type UserCreateWithoutAuditLogsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -8697,9 +7214,6 @@ export type UserCreateWithoutAuditLogsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -8724,6 +7238,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8736,13 +7251,11 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -8755,9 +7268,6 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -8798,6 +7308,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -8810,13 +7321,11 @@ export type UserUpdateWithoutAuditLogsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -8829,9 +7338,6 @@ export type UserUpdateWithoutAuditLogsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -8856,6 +7362,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8868,13 +7375,11 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -8887,9 +7392,6 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -8914,6 +7416,7 @@ export type UserCreateWithoutSiteContentEditsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -8926,13 +7429,11 @@ export type UserCreateWithoutSiteContentEditsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -8945,9 +7446,6 @@ export type UserCreateWithoutSiteContentEditsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -8972,6 +7470,7 @@ export type UserUncheckedCreateWithoutSiteContentEditsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -8984,13 +7483,11 @@ export type UserUncheckedCreateWithoutSiteContentEditsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -9003,9 +7500,6 @@ export type UserUncheckedCreateWithoutSiteContentEditsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -9046,6 +7540,7 @@ export type UserUpdateWithoutSiteContentEditsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9058,13 +7553,11 @@ export type UserUpdateWithoutSiteContentEditsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -9077,9 +7570,6 @@ export type UserUpdateWithoutSiteContentEditsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -9104,6 +7594,7 @@ export type UserUncheckedUpdateWithoutSiteContentEditsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9116,13 +7607,11 @@ export type UserUncheckedUpdateWithoutSiteContentEditsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -9135,9 +7624,6 @@ export type UserUncheckedUpdateWithoutSiteContentEditsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -9162,6 +7648,7 @@ export type UserCreateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9175,13 +7662,11 @@ export type UserCreateWithoutComplianceEvidenceRecordedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -9193,9 +7678,6 @@ export type UserCreateWithoutComplianceEvidenceRecordedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -9220,6 +7702,7 @@ export type UserUncheckedCreateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9233,13 +7716,11 @@ export type UserUncheckedCreateWithoutComplianceEvidenceRecordedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -9251,9 +7732,6 @@ export type UserUncheckedCreateWithoutComplianceEvidenceRecordedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -9294,6 +7772,7 @@ export type UserUpdateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9307,13 +7786,11 @@ export type UserUpdateWithoutComplianceEvidenceRecordedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -9325,9 +7802,6 @@ export type UserUpdateWithoutComplianceEvidenceRecordedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -9352,6 +7826,7 @@ export type UserUncheckedUpdateWithoutComplianceEvidenceRecordedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9365,13 +7840,11 @@ export type UserUncheckedUpdateWithoutComplianceEvidenceRecordedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -9383,9 +7856,6 @@ export type UserUncheckedUpdateWithoutComplianceEvidenceRecordedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -9410,6 +7880,7 @@ export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9423,13 +7894,11 @@ export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -9441,9 +7910,6 @@ export type UserCreateWithoutScheduledRunsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -9468,6 +7934,7 @@ export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9481,13 +7948,11 @@ export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -9499,9 +7964,6 @@ export type UserUncheckedCreateWithoutScheduledRunsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -9542,6 +8004,7 @@ export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9555,13 +8018,11 @@ export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -9573,9 +8034,6 @@ export type UserUpdateWithoutScheduledRunsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -9600,6 +8058,7 @@ export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9613,13 +8072,11 @@ export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -9631,9 +8088,6 @@ export type UserUncheckedUpdateWithoutScheduledRunsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -9658,6 +8112,7 @@ export type UserCreateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9671,13 +8126,11 @@ export type UserCreateWithoutBackupOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -9689,9 +8142,6 @@ export type UserCreateWithoutBackupOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -9716,6 +8166,7 @@ export type UserUncheckedCreateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9729,13 +8180,11 @@ export type UserUncheckedCreateWithoutBackupOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -9747,9 +8196,6 @@ export type UserUncheckedCreateWithoutBackupOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -9790,6 +8236,7 @@ export type UserUpdateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -9803,13 +8250,11 @@ export type UserUpdateWithoutBackupOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -9821,9 +8266,6 @@ export type UserUpdateWithoutBackupOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -9848,6 +8290,7 @@ export type UserUncheckedUpdateWithoutBackupOperationsRequestedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9861,13 +8304,11 @@ export type UserUncheckedUpdateWithoutBackupOperationsRequestedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -9879,9 +8320,6 @@ export type UserUncheckedUpdateWithoutBackupOperationsRequestedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -9906,6 +8344,7 @@ export type UserCreateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -9919,13 +8358,11 @@ export type UserCreateWithoutObservabilityAlertsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -9937,9 +8374,6 @@ export type UserCreateWithoutObservabilityAlertsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -9964,6 +8398,7 @@ export type UserUncheckedCreateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -9977,13 +8412,11 @@ export type UserUncheckedCreateWithoutObservabilityAlertsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -9995,9 +8428,6 @@ export type UserUncheckedCreateWithoutObservabilityAlertsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -10027,6 +8457,7 @@ export type UserCreateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10040,13 +8471,11 @@ export type UserCreateWithoutObservabilityAlertsResolvedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -10058,9 +8487,6 @@ export type UserCreateWithoutObservabilityAlertsResolvedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -10085,6 +8511,7 @@ export type UserUncheckedCreateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10098,13 +8525,11 @@ export type UserUncheckedCreateWithoutObservabilityAlertsResolvedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -10116,9 +8541,6 @@ export type UserUncheckedCreateWithoutObservabilityAlertsResolvedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -10159,6 +8581,7 @@ export type UserUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10172,13 +8595,11 @@ export type UserUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -10190,9 +8611,6 @@ export type UserUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -10217,6 +8635,7 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10230,13 +8649,11 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -10248,9 +8665,6 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsAcknowledgedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -10286,6 +8700,7 @@ export type UserUpdateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10299,13 +8714,11 @@ export type UserUpdateWithoutObservabilityAlertsResolvedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -10317,9 +8730,6 @@ export type UserUpdateWithoutObservabilityAlertsResolvedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -10344,6 +8754,7 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsResolvedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10357,13 +8768,11 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsResolvedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -10375,9 +8784,6 @@ export type UserUncheckedUpdateWithoutObservabilityAlertsResolvedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -10402,6 +8808,7 @@ export type UserCreateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10415,13 +8822,11 @@ export type UserCreateWithoutPrincipalNotificationsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -10434,9 +8839,6 @@ export type UserCreateWithoutPrincipalNotificationsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -10460,6 +8862,7 @@ export type UserUncheckedCreateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10473,13 +8876,11 @@ export type UserUncheckedCreateWithoutPrincipalNotificationsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -10492,9 +8893,6 @@ export type UserUncheckedCreateWithoutPrincipalNotificationsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -10534,6 +8932,7 @@ export type UserUpdateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10547,13 +8946,11 @@ export type UserUpdateWithoutPrincipalNotificationsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -10566,9 +8963,6 @@ export type UserUpdateWithoutPrincipalNotificationsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -10592,6 +8986,7 @@ export type UserUncheckedUpdateWithoutPrincipalNotificationsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10605,13 +9000,11 @@ export type UserUncheckedUpdateWithoutPrincipalNotificationsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -10624,9 +9017,6 @@ export type UserUncheckedUpdateWithoutPrincipalNotificationsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -10650,6 +9040,7 @@ export type UserCreateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10663,13 +9054,11 @@ export type UserCreateWithoutNotificationReceiptsInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -10682,9 +9071,6 @@ export type UserCreateWithoutNotificationReceiptsInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -10708,6 +9094,7 @@ export type UserUncheckedCreateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10721,13 +9108,11 @@ export type UserUncheckedCreateWithoutNotificationReceiptsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -10740,9 +9125,6 @@ export type UserUncheckedCreateWithoutNotificationReceiptsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -10782,6 +9164,7 @@ export type UserUpdateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -10795,13 +9178,11 @@ export type UserUpdateWithoutNotificationReceiptsInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -10814,9 +9195,6 @@ export type UserUpdateWithoutNotificationReceiptsInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -10840,6 +9218,7 @@ export type UserUncheckedUpdateWithoutNotificationReceiptsInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10853,13 +9232,11 @@ export type UserUncheckedUpdateWithoutNotificationReceiptsInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -10872,9 +9249,6 @@ export type UserUncheckedUpdateWithoutNotificationReceiptsInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -10898,6 +9272,7 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -10911,12 +9286,10 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -10929,9 +9302,6 @@ export type UserCreateWithoutProviderConfigurationsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -10956,6 +9326,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -10969,12 +9340,10 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -10987,9 +9356,6 @@ export type UserUncheckedCreateWithoutProviderConfigurationsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -11019,6 +9385,7 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -11032,12 +9399,10 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -11050,9 +9415,6 @@ export type UserCreateWithoutProviderConfigurationsUpdatedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -11077,6 +9439,7 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -11090,12 +9453,10 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedCreateNestedManyWithoutCreatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -11108,9 +9469,6 @@ export type UserUncheckedCreateWithoutProviderConfigurationsUpdatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -11151,6 +9509,7 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -11164,12 +9523,10 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -11182,9 +9539,6 @@ export type UserUpdateWithoutProviderConfigurationsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -11209,6 +9563,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11222,12 +9577,10 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -11240,9 +9593,6 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -11278,6 +9628,7 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -11291,12 +9642,10 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -11309,9 +9658,6 @@ export type UserUpdateWithoutProviderConfigurationsUpdatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -11336,6 +9682,7 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11349,12 +9696,10 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerCredentialsCreated?: Prisma.ExternalProviderCredentialUncheckedUpdateManyWithoutCreatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -11367,9 +9712,6 @@ export type UserUncheckedUpdateWithoutProviderConfigurationsUpdatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -11394,6 +9736,7 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountCreateNestedManyWithoutOwnerInput
@@ -11407,12 +9750,10 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationCreateNestedManyWithoutUpdatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationCreateNestedManyWithoutAcknowledgedByInput
@@ -11425,9 +9766,6 @@ export type UserCreateWithoutProviderCredentialsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorInput
@@ -11452,6 +9790,7 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Date | string | null
   legalHoldReason?: string | null
   emailHash?: string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedCreateNestedOneWithoutUserInput
   credential?: Prisma.PasswordCredentialUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -11465,12 +9804,10 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedCreateNestedManyWithoutUserInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutCreatedByInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedCreateNestedManyWithoutUpdatedByInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedCreateNestedManyWithoutAuthorInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedCreateNestedManyWithoutCreatedByAdminInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedCreateNestedManyWithoutRequestedByInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutRunByInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedCreateNestedManyWithoutAcknowledgedByInput
@@ -11483,9 +9820,6 @@ export type UserUncheckedCreateWithoutProviderCredentialsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutReviewedByInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedCreateNestedManyWithoutActorInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutCreatedByInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutReviewedByInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedCreateNestedManyWithoutApprovedByInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutCreatedByInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedToInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -11526,6 +9860,7 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUpdateManyWithoutOwnerNestedInput
@@ -11539,12 +9874,10 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUpdateManyWithoutUpdatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUpdateManyWithoutAcknowledgedByNestedInput
@@ -11557,9 +9890,6 @@ export type UserUpdateWithoutProviderCredentialsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorNestedInput
@@ -11584,6 +9914,7 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   legalHoldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   legalHoldReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleIdentity?: Prisma.GoogleIdentityUncheckedUpdateOneWithoutUserNestedInput
   credential?: Prisma.PasswordCredentialUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   ownedAccounts?: Prisma.CustomerAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11597,12 +9928,10 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   mfaChallenges?: Prisma.MfaChallengeUncheckedUpdateManyWithoutUserNestedInput
   emergencyMfaAuthorizations?: Prisma.EmergencyMfaEnrollmentAuthorizationUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
-  artifactUploadSessions?: Prisma.ArtifactUploadSessionUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsCreated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutCreatedByNestedInput
   providerConfigurationsUpdated?: Prisma.ExternalProviderConfigurationUncheckedUpdateManyWithoutUpdatedByNestedInput
   legalVersionsAuthored?: Prisma.LegalDocumentVersionUncheckedUpdateManyWithoutAuthorNestedInput
   legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
-  storageCleanupJobsCreated?: Prisma.StorageCleanupJobUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   refundOperationsRequested?: Prisma.RefundOperationUncheckedUpdateManyWithoutRequestedByNestedInput
   reconciliationsRun?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutRunByNestedInput
   reconciliationsAcknowledged?: Prisma.PaymentReconciliationUncheckedUpdateManyWithoutAcknowledgedByNestedInput
@@ -11615,9 +9944,6 @@ export type UserUncheckedUpdateWithoutProviderCredentialsCreatedInput = {
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
   privacyRequestsReviewed?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   privacyRequestEvents?: Prisma.PrivacyRequestEventUncheckedUpdateManyWithoutActorNestedInput
-  releaseApprovalsCreated?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutCreatedByNestedInput
-  releaseApprovalsReviewed?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutReviewedByNestedInput
-  releaseApprovalsApproved?: Prisma.ReleaseApprovalUncheckedUpdateManyWithoutApprovedByNestedInput
   supportTicketsCreated?: Prisma.SupportTicketUncheckedUpdateManyWithoutCreatedByNestedInput
   supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedToNestedInput
   supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -11643,13 +9969,11 @@ export type UserCountOutputType = {
   mfaChallenges: number
   emergencyMfaAuthorizations: number
   securityEvents: number
-  artifactUploadSessions: number
   providerConfigurationsCreated: number
   providerConfigurationsUpdated: number
   providerCredentialsCreated: number
   legalVersionsAuthored: number
   legalAcceptances: number
-  storageCleanupJobsCreated: number
   refundOperationsRequested: number
   reconciliationsRun: number
   reconciliationsAcknowledged: number
@@ -11662,9 +9986,6 @@ export type UserCountOutputType = {
   privacyRequests: number
   privacyRequestsReviewed: number
   privacyRequestEvents: number
-  releaseApprovalsCreated: number
-  releaseApprovalsReviewed: number
-  releaseApprovalsApproved: number
   supportTicketsCreated: number
   supportTicketsAssigned: number
   supportMessages: number
@@ -11685,13 +10006,11 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   mfaChallenges?: boolean | UserCountOutputTypeCountMfaChallengesArgs
   emergencyMfaAuthorizations?: boolean | UserCountOutputTypeCountEmergencyMfaAuthorizationsArgs
   securityEvents?: boolean | UserCountOutputTypeCountSecurityEventsArgs
-  artifactUploadSessions?: boolean | UserCountOutputTypeCountArtifactUploadSessionsArgs
   providerConfigurationsCreated?: boolean | UserCountOutputTypeCountProviderConfigurationsCreatedArgs
   providerConfigurationsUpdated?: boolean | UserCountOutputTypeCountProviderConfigurationsUpdatedArgs
   providerCredentialsCreated?: boolean | UserCountOutputTypeCountProviderCredentialsCreatedArgs
   legalVersionsAuthored?: boolean | UserCountOutputTypeCountLegalVersionsAuthoredArgs
   legalAcceptances?: boolean | UserCountOutputTypeCountLegalAcceptancesArgs
-  storageCleanupJobsCreated?: boolean | UserCountOutputTypeCountStorageCleanupJobsCreatedArgs
   refundOperationsRequested?: boolean | UserCountOutputTypeCountRefundOperationsRequestedArgs
   reconciliationsRun?: boolean | UserCountOutputTypeCountReconciliationsRunArgs
   reconciliationsAcknowledged?: boolean | UserCountOutputTypeCountReconciliationsAcknowledgedArgs
@@ -11704,9 +10023,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   privacyRequests?: boolean | UserCountOutputTypeCountPrivacyRequestsArgs
   privacyRequestsReviewed?: boolean | UserCountOutputTypeCountPrivacyRequestsReviewedArgs
   privacyRequestEvents?: boolean | UserCountOutputTypeCountPrivacyRequestEventsArgs
-  releaseApprovalsCreated?: boolean | UserCountOutputTypeCountReleaseApprovalsCreatedArgs
-  releaseApprovalsReviewed?: boolean | UserCountOutputTypeCountReleaseApprovalsReviewedArgs
-  releaseApprovalsApproved?: boolean | UserCountOutputTypeCountReleaseApprovalsApprovedArgs
   supportTicketsCreated?: boolean | UserCountOutputTypeCountSupportTicketsCreatedArgs
   supportTicketsAssigned?: boolean | UserCountOutputTypeCountSupportTicketsAssignedArgs
   supportMessages?: boolean | UserCountOutputTypeCountSupportMessagesArgs
@@ -11805,13 +10121,6 @@ export type UserCountOutputTypeCountSecurityEventsArgs<ExtArgs extends runtime.T
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountArtifactUploadSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ArtifactUploadSessionWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountProviderConfigurationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ExternalProviderConfigurationWhereInput
 }
@@ -11842,13 +10151,6 @@ export type UserCountOutputTypeCountLegalVersionsAuthoredArgs<ExtArgs extends ru
  */
 export type UserCountOutputTypeCountLegalAcceptancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LegalAcceptanceWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountStorageCleanupJobsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StorageCleanupJobWhereInput
 }
 
 /**
@@ -11938,27 +10240,6 @@ export type UserCountOutputTypeCountPrivacyRequestEventsArgs<ExtArgs extends run
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountReleaseApprovalsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReleaseApprovalWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountReleaseApprovalsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReleaseApprovalWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountReleaseApprovalsApprovedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReleaseApprovalWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountSupportTicketsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SupportTicketWhereInput
 }
@@ -12015,6 +10296,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   legalHoldAt?: boolean
   legalHoldReason?: boolean
   emailHash?: boolean
+  googleIdentity?: boolean | Prisma.User$googleIdentityArgs<ExtArgs>
   credential?: boolean | Prisma.User$credentialArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   ownedAccounts?: boolean | Prisma.User$ownedAccountsArgs<ExtArgs>
@@ -12028,13 +10310,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   mfaChallenges?: boolean | Prisma.User$mfaChallengesArgs<ExtArgs>
   emergencyMfaAuthorizations?: boolean | Prisma.User$emergencyMfaAuthorizationsArgs<ExtArgs>
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
-  artifactUploadSessions?: boolean | Prisma.User$artifactUploadSessionsArgs<ExtArgs>
   providerConfigurationsCreated?: boolean | Prisma.User$providerConfigurationsCreatedArgs<ExtArgs>
   providerConfigurationsUpdated?: boolean | Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs>
   providerCredentialsCreated?: boolean | Prisma.User$providerCredentialsCreatedArgs<ExtArgs>
   legalVersionsAuthored?: boolean | Prisma.User$legalVersionsAuthoredArgs<ExtArgs>
   legalAcceptances?: boolean | Prisma.User$legalAcceptancesArgs<ExtArgs>
-  storageCleanupJobsCreated?: boolean | Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs>
   refundOperationsRequested?: boolean | Prisma.User$refundOperationsRequestedArgs<ExtArgs>
   reconciliationsRun?: boolean | Prisma.User$reconciliationsRunArgs<ExtArgs>
   reconciliationsAcknowledged?: boolean | Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>
@@ -12047,9 +10327,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   privacyRequests?: boolean | Prisma.User$privacyRequestsArgs<ExtArgs>
   privacyRequestsReviewed?: boolean | Prisma.User$privacyRequestsReviewedArgs<ExtArgs>
   privacyRequestEvents?: boolean | Prisma.User$privacyRequestEventsArgs<ExtArgs>
-  releaseApprovalsCreated?: boolean | Prisma.User$releaseApprovalsCreatedArgs<ExtArgs>
-  releaseApprovalsReviewed?: boolean | Prisma.User$releaseApprovalsReviewedArgs<ExtArgs>
-  releaseApprovalsApproved?: boolean | Prisma.User$releaseApprovalsApprovedArgs<ExtArgs>
   supportTicketsCreated?: boolean | Prisma.User$supportTicketsCreatedArgs<ExtArgs>
   supportTicketsAssigned?: boolean | Prisma.User$supportTicketsAssignedArgs<ExtArgs>
   supportMessages?: boolean | Prisma.User$supportMessagesArgs<ExtArgs>
@@ -12115,6 +10392,7 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "emailVerified" | "role" | "createdAt" | "updatedAt" | "suspendedAt" | "lifecycleState" | "privacyRequestedAt" | "pseudonymizedAt" | "retentionExpiresAt" | "legalHoldAt" | "legalHoldReason" | "emailHash", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  googleIdentity?: boolean | Prisma.User$googleIdentityArgs<ExtArgs>
   credential?: boolean | Prisma.User$credentialArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   ownedAccounts?: boolean | Prisma.User$ownedAccountsArgs<ExtArgs>
@@ -12128,13 +10406,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   mfaChallenges?: boolean | Prisma.User$mfaChallengesArgs<ExtArgs>
   emergencyMfaAuthorizations?: boolean | Prisma.User$emergencyMfaAuthorizationsArgs<ExtArgs>
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
-  artifactUploadSessions?: boolean | Prisma.User$artifactUploadSessionsArgs<ExtArgs>
   providerConfigurationsCreated?: boolean | Prisma.User$providerConfigurationsCreatedArgs<ExtArgs>
   providerConfigurationsUpdated?: boolean | Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs>
   providerCredentialsCreated?: boolean | Prisma.User$providerCredentialsCreatedArgs<ExtArgs>
   legalVersionsAuthored?: boolean | Prisma.User$legalVersionsAuthoredArgs<ExtArgs>
   legalAcceptances?: boolean | Prisma.User$legalAcceptancesArgs<ExtArgs>
-  storageCleanupJobsCreated?: boolean | Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs>
   refundOperationsRequested?: boolean | Prisma.User$refundOperationsRequestedArgs<ExtArgs>
   reconciliationsRun?: boolean | Prisma.User$reconciliationsRunArgs<ExtArgs>
   reconciliationsAcknowledged?: boolean | Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>
@@ -12147,9 +10423,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   privacyRequests?: boolean | Prisma.User$privacyRequestsArgs<ExtArgs>
   privacyRequestsReviewed?: boolean | Prisma.User$privacyRequestsReviewedArgs<ExtArgs>
   privacyRequestEvents?: boolean | Prisma.User$privacyRequestEventsArgs<ExtArgs>
-  releaseApprovalsCreated?: boolean | Prisma.User$releaseApprovalsCreatedArgs<ExtArgs>
-  releaseApprovalsReviewed?: boolean | Prisma.User$releaseApprovalsReviewedArgs<ExtArgs>
-  releaseApprovalsApproved?: boolean | Prisma.User$releaseApprovalsApprovedArgs<ExtArgs>
   supportTicketsCreated?: boolean | Prisma.User$supportTicketsCreatedArgs<ExtArgs>
   supportTicketsAssigned?: boolean | Prisma.User$supportTicketsAssignedArgs<ExtArgs>
   supportMessages?: boolean | Prisma.User$supportMessagesArgs<ExtArgs>
@@ -12164,6 +10437,7 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    googleIdentity: Prisma.$GoogleIdentityPayload<ExtArgs> | null
     credential: Prisma.$PasswordCredentialPayload<ExtArgs> | null
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     ownedAccounts: Prisma.$CustomerAccountPayload<ExtArgs>[]
@@ -12177,13 +10451,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     mfaChallenges: Prisma.$MfaChallengePayload<ExtArgs>[]
     emergencyMfaAuthorizations: Prisma.$EmergencyMfaEnrollmentAuthorizationPayload<ExtArgs>[]
     securityEvents: Prisma.$SecurityEventPayload<ExtArgs>[]
-    artifactUploadSessions: Prisma.$ArtifactUploadSessionPayload<ExtArgs>[]
     providerConfigurationsCreated: Prisma.$ExternalProviderConfigurationPayload<ExtArgs>[]
     providerConfigurationsUpdated: Prisma.$ExternalProviderConfigurationPayload<ExtArgs>[]
     providerCredentialsCreated: Prisma.$ExternalProviderCredentialPayload<ExtArgs>[]
     legalVersionsAuthored: Prisma.$LegalDocumentVersionPayload<ExtArgs>[]
     legalAcceptances: Prisma.$LegalAcceptancePayload<ExtArgs>[]
-    storageCleanupJobsCreated: Prisma.$StorageCleanupJobPayload<ExtArgs>[]
     refundOperationsRequested: Prisma.$RefundOperationPayload<ExtArgs>[]
     reconciliationsRun: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
     reconciliationsAcknowledged: Prisma.$PaymentReconciliationPayload<ExtArgs>[]
@@ -12196,9 +10468,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     privacyRequests: Prisma.$PrivacyRequestPayload<ExtArgs>[]
     privacyRequestsReviewed: Prisma.$PrivacyRequestPayload<ExtArgs>[]
     privacyRequestEvents: Prisma.$PrivacyRequestEventPayload<ExtArgs>[]
-    releaseApprovalsCreated: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
-    releaseApprovalsReviewed: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
-    releaseApprovalsApproved: Prisma.$ReleaseApprovalPayload<ExtArgs>[]
     supportTicketsCreated: Prisma.$SupportTicketPayload<ExtArgs>[]
     supportTicketsAssigned: Prisma.$SupportTicketPayload<ExtArgs>[]
     supportMessages: Prisma.$SupportTicketMessagePayload<ExtArgs>[]
@@ -12616,6 +10885,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  googleIdentity<T extends Prisma.User$googleIdentityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$googleIdentityArgs<ExtArgs>>): Prisma.Prisma__GoogleIdentityClient<runtime.Types.Result.GetResult<Prisma.$GoogleIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   credential<T extends Prisma.User$credentialArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$credentialArgs<ExtArgs>>): Prisma.Prisma__PasswordCredentialClient<runtime.Types.Result.GetResult<Prisma.$PasswordCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownedAccounts<T extends Prisma.User$ownedAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12629,13 +10899,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   mfaChallenges<T extends Prisma.User$mfaChallengesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mfaChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MfaChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   emergencyMfaAuthorizations<T extends Prisma.User$emergencyMfaAuthorizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emergencyMfaAuthorizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmergencyMfaEnrollmentAuthorizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   securityEvents<T extends Prisma.User$securityEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$securityEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  artifactUploadSessions<T extends Prisma.User$artifactUploadSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$artifactUploadSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArtifactUploadSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   providerConfigurationsCreated<T extends Prisma.User$providerConfigurationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerConfigurationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalProviderConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   providerConfigurationsUpdated<T extends Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerConfigurationsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalProviderConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   providerCredentialsCreated<T extends Prisma.User$providerCredentialsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerCredentialsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalProviderCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   legalVersionsAuthored<T extends Prisma.User$legalVersionsAuthoredArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$legalVersionsAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LegalDocumentVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   legalAcceptances<T extends Prisma.User$legalAcceptancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$legalAcceptancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LegalAcceptancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  storageCleanupJobsCreated<T extends Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$storageCleanupJobsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageCleanupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refundOperationsRequested<T extends Prisma.User$refundOperationsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refundOperationsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reconciliationsRun<T extends Prisma.User$reconciliationsRunArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reconciliationsRunArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reconciliationsAcknowledged<T extends Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reconciliationsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12648,9 +10916,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   privacyRequests<T extends Prisma.User$privacyRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacyRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   privacyRequestsReviewed<T extends Prisma.User$privacyRequestsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacyRequestsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   privacyRequestEvents<T extends Prisma.User$privacyRequestEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacyRequestEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  releaseApprovalsCreated<T extends Prisma.User$releaseApprovalsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$releaseApprovalsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  releaseApprovalsReviewed<T extends Prisma.User$releaseApprovalsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$releaseApprovalsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  releaseApprovalsApproved<T extends Prisma.User$releaseApprovalsApprovedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$releaseApprovalsApprovedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReleaseApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportTicketsCreated<T extends Prisma.User$supportTicketsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportTicketsAssigned<T extends Prisma.User$supportTicketsAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportMessages<T extends Prisma.User$supportMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13094,6 +11359,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.googleIdentity
+ */
+export type User$googleIdentityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GoogleIdentity
+   */
+  select?: Prisma.GoogleIdentitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GoogleIdentity
+   */
+  omit?: Prisma.GoogleIdentityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GoogleIdentityInclude<ExtArgs> | null
+  where?: Prisma.GoogleIdentityWhereInput
+}
+
+/**
  * User.credential
  */
 export type User$credentialArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -13396,30 +11680,6 @@ export type User$securityEventsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * User.artifactUploadSessions
- */
-export type User$artifactUploadSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ArtifactUploadSession
-   */
-  select?: Prisma.ArtifactUploadSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ArtifactUploadSession
-   */
-  omit?: Prisma.ArtifactUploadSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ArtifactUploadSessionInclude<ExtArgs> | null
-  where?: Prisma.ArtifactUploadSessionWhereInput
-  orderBy?: Prisma.ArtifactUploadSessionOrderByWithRelationInput | Prisma.ArtifactUploadSessionOrderByWithRelationInput[]
-  cursor?: Prisma.ArtifactUploadSessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ArtifactUploadSessionScalarFieldEnum | Prisma.ArtifactUploadSessionScalarFieldEnum[]
-}
-
-/**
  * User.providerConfigurationsCreated
  */
 export type User$providerConfigurationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -13537,30 +11797,6 @@ export type User$legalAcceptancesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.LegalAcceptanceScalarFieldEnum | Prisma.LegalAcceptanceScalarFieldEnum[]
-}
-
-/**
- * User.storageCleanupJobsCreated
- */
-export type User$storageCleanupJobsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StorageCleanupJob
-   */
-  select?: Prisma.StorageCleanupJobSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StorageCleanupJob
-   */
-  omit?: Prisma.StorageCleanupJobOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StorageCleanupJobInclude<ExtArgs> | null
-  where?: Prisma.StorageCleanupJobWhereInput
-  orderBy?: Prisma.StorageCleanupJobOrderByWithRelationInput | Prisma.StorageCleanupJobOrderByWithRelationInput[]
-  cursor?: Prisma.StorageCleanupJobWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StorageCleanupJobScalarFieldEnum | Prisma.StorageCleanupJobScalarFieldEnum[]
 }
 
 /**
@@ -13849,78 +12085,6 @@ export type User$privacyRequestEventsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.PrivacyRequestEventScalarFieldEnum | Prisma.PrivacyRequestEventScalarFieldEnum[]
-}
-
-/**
- * User.releaseApprovalsCreated
- */
-export type User$releaseApprovalsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ReleaseApproval
-   */
-  select?: Prisma.ReleaseApprovalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ReleaseApproval
-   */
-  omit?: Prisma.ReleaseApprovalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReleaseApprovalInclude<ExtArgs> | null
-  where?: Prisma.ReleaseApprovalWhereInput
-  orderBy?: Prisma.ReleaseApprovalOrderByWithRelationInput | Prisma.ReleaseApprovalOrderByWithRelationInput[]
-  cursor?: Prisma.ReleaseApprovalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ReleaseApprovalScalarFieldEnum | Prisma.ReleaseApprovalScalarFieldEnum[]
-}
-
-/**
- * User.releaseApprovalsReviewed
- */
-export type User$releaseApprovalsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ReleaseApproval
-   */
-  select?: Prisma.ReleaseApprovalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ReleaseApproval
-   */
-  omit?: Prisma.ReleaseApprovalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReleaseApprovalInclude<ExtArgs> | null
-  where?: Prisma.ReleaseApprovalWhereInput
-  orderBy?: Prisma.ReleaseApprovalOrderByWithRelationInput | Prisma.ReleaseApprovalOrderByWithRelationInput[]
-  cursor?: Prisma.ReleaseApprovalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ReleaseApprovalScalarFieldEnum | Prisma.ReleaseApprovalScalarFieldEnum[]
-}
-
-/**
- * User.releaseApprovalsApproved
- */
-export type User$releaseApprovalsApprovedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ReleaseApproval
-   */
-  select?: Prisma.ReleaseApprovalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ReleaseApproval
-   */
-  omit?: Prisma.ReleaseApprovalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReleaseApprovalInclude<ExtArgs> | null
-  where?: Prisma.ReleaseApprovalWhereInput
-  orderBy?: Prisma.ReleaseApprovalOrderByWithRelationInput | Prisma.ReleaseApprovalOrderByWithRelationInput[]
-  cursor?: Prisma.ReleaseApprovalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ReleaseApprovalScalarFieldEnum | Prisma.ReleaseApprovalScalarFieldEnum[]
 }
 
 /**
