@@ -105,7 +105,7 @@ jobs:
               sourceSha = (process.env.DISPATCH_SHA ?? "").trim();
               requested = (process.env.DISPATCH_TARGETS ?? "").trim();
               const rawPr = (process.env.DISPATCH_PR_NUMBER ?? "").trim();
-              if (rawPr) {
+              if (rawPr && rawPr !== "0") {
                 prNumber = Number(rawPr);
                 if (!Number.isSafeInteger(prNumber) || prNumber <= 0) {
                   core.setFailed("PR number must be a positive integer."); return;
