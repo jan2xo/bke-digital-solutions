@@ -30,11 +30,18 @@ for (let invocation = 0; invocation < 2; invocation++) {
   assert.match(html, /href="\/products"[^>]*>Explore<\/a>/, "Public Explore link missing");
   assert.doesNotMatch(html, /<header\b[^>]*class="site-header"/, "Anonymous homepage must not show account navigation");
   assert.doesNotMatch(html, /<a\b[^>]*href="mailto:/, "Anonymous homepage exposes a Contact CTA");
-  assert.match(html, /href="\/legal\/privacy"/, "Required public Privacy link missing");
+  assert.match(html, /href="\/legal\/privacy-policy"/, "Required published Privacy link missing");
   assert.ok([...html.matchAll(/<img\b[^>]*>/g)].some((match) => match[0].includes(`src="${imageUrl}"`)),
     "Sonnet homepage must render a real GitHub-hosted catalog image");
 
 }
+// Assert the actual published routes return 200, not merely that the links exist.
+for (const legalPath of ["/legal/privacy-policy", "/legal/terms-of-service"]) {
+  const response = await fetch(origin + legalPath, { signal: AbortSignal.timeout(15000) });
+  assert.equal(response.status, 200, "Canonical published legal route unavailable: " + legalPath);
+  assert.match(response.headers.get("content-type") ?? "", /text\/html/);
+}
+
 const products = await fetch(origin + "/products", { signal: AbortSignal.timeout(15000) });
 assert.equal(products.status, 200);
 const productsHtml = await products.text();

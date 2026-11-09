@@ -33,6 +33,17 @@ describe("legal slug reconciliation", () => {
     expect(footer).not.toMatch(/href="\/legal\/(terms|privacy|eula|refund|cookies)"/);
   });
 
+  it("proves canonical legal links in real Workers and protected release smoke checks", () => {
+    const workers = readFileSync("scripts/workers-smoke.mjs", "utf8");
+    const release = readFileSync(".github/workflows/deploy-web-code-only.yml", "utf8");
+    for (const path of ["/legal/privacy-policy", "/legal/terms-of-service"]) {
+      expect(workers).toContain(path);
+      expect(release).toContain(path);
+    }
+    expect(workers).not.toContain('href="\\/legal\\/privacy"');
+    expect(release).not.toContain('"/legal/privacy"');
+  });
+
   it("uses the same canonical definitions in the disposable seed", () => {
     const seed = readFileSync("prisma/seed.ts", "utf8");
     expect(seed).toContain('import { LEGAL_DOCUMENT_DEFINITIONS, LEGAL_DOCUMENT_TYPES }');
