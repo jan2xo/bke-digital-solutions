@@ -98,8 +98,10 @@ try {
         await page.waitForURL(/\/login\?simulated=oidc$/);
         assert.equal(postedFlow?.flow, "unified",
           "Sonnet CTA must initiate unified server-owned OIDC");
-        assert.equal(await page.getByRole("button", { name: "Continue with Google" }).count(), 1,
-          "Login should expose the same Google entry without an account creation choice");
+        assert.equal(await page.locator("main").getByRole("button", { name: "Continue with Google" }).count(), 1,
+          "Login content must expose exactly one unified Google entry");
+        // On desktop the site header may offer the same entry as a convenience;
+        // it is not a distinct registration flow or account choice.
         assert.equal(await page.getByRole("link", { name: "Create an account" }).count(), 0);
       }
       assert.deepEqual(errors, [], `Browser runtime errors detected at ${width}px`);
