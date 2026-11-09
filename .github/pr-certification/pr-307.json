@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 307,
+  "intent": "Queue one opt-in, deduplicated purchase-confirmation email after verified PayMongo settlement and successful fulfillment, through existing durable outbox without activating live sends",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "host"
+  ],
+  "testFiles": [
+    "tests/purchase-confirmation-email.test.ts",
+    "tests/v3-notification-routing.test.ts",
+    "tests/webhook-owner-parity.test.ts"
+  ]
+}
