@@ -52,7 +52,13 @@ export function buildProductionConfig(source) {
   // Preserve all existing Cloudflare dashboard plain variables and secret names.
   // Wrangler --keep-vars preserves existing dashboard variables at publish time.
   // Do not add undocumented keep_vars to the source config schema.
+  // Public workers.dev and version URLs bypass zone WAF; reject an unsafe
+  // source manifest instead of silently repairing it only at publish time.
+  if (config.workers_dev !== false || config.preview_urls !== false) {
+    reject("Public Worker and preview URLs must be disabled in source");
+  }
   config.workers_dev = false;
+  config.preview_urls = false;
   config.hyperdrive[0] = { binding: "HYPERDRIVE_FRESH", id: target.hyperdriveId };
   // No routes key: existing custom domain remains controlled by Cloudflare.
   return config;

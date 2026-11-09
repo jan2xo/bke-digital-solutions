@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "bke-digital-solutions",
+  "workers_dev": false,
+  "preview_urls": false,
   "main": "workers/entry.ts",
   "minify": true,
   "compatibility_date": "2026-11-04",

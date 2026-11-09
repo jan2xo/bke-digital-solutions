@@ -33,6 +33,9 @@ describe("protected code-only Cloudflare release", () => {
     expect(config.name).toBe("bke-digital-solutions");
     expect(config.main).toBe("workers/entry.ts");
     expect(config.workers_dev).toBe(false);
+    expect(config.preview_urls).toBe(false);
+    expect(source.workers_dev).toBe(false);
+    expect(source.preview_urls).toBe(false);
     expect(config).not.toHaveProperty("keep_vars");
     expect(workflow).toContain("--keep-vars");
     expect(config.hyperdrive[0]).toEqual({
@@ -51,6 +54,10 @@ describe("protected code-only Cloudflare release", () => {
     for (const patch of [
       { routes: [{ pattern: "other.example.com", custom_domain: true }] },
       { env: { production: {} } },
+      { workers_dev: true },
+      { preview_urls: true },
+      { workers_dev: undefined },
+      { preview_urls: undefined },
       { triggers: { crons: ["* * * * *"] } },
       { send_email: [] },
       { hyperdrive: [{ binding: "HYPERDRIVE_FRESH", id: "incorrect" }] },

@@ -1,0 +1,22 @@
+{
+  "phase": "http_ratelimit",
+  "kind": "zone",
+  "rules": [
+    {
+      "ref": "bke-free-interactive-post-burst",
+      "description": "BKE interactive Google sign-in, web checkout and customer renewal POST bursts (one Free WAF rule; no native/webhook challenge)",
+      "action": "block",
+      "enabled": true,
+      "expression": "(http.host eq \"bkedigitalsolutions.com\" and http.request.method eq \"POST\" and (http.request.uri.path eq \"/api/auth/google/start\" or http.request.uri.path eq \"/api/checkout\" or (starts_with(http.request.uri.path, \"/api/subscriptions/\") and ends_with(http.request.uri.path, \"/renew\"))))",
+      "ratelimit": {
+        "characteristics": [
+          "cf.colo.id",
+          "ip.src"
+        ],
+        "period": 10,
+        "requests_per_period": 20,
+        "mitigation_timeout": 10
+      }
+    }
+  ]
+}
