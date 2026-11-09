@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 314,
+  "intent": "Restore customer-authorized subscription renewal by removing one noncanonical unused business address requirement; preserve published Legal version acceptance, Commerce payment authority and all production locks",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "legal",
+    "host"
+  ],
+  "testFiles": [
+    "tests/renewal-checkout-v2.test.ts",
+    "tests/integration/host-legal-checkout.test.ts",
+    "tests/legal.test.ts"
+  ]
+}
