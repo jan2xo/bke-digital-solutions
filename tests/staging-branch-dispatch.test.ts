@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(".github/workflows/stage.yml", "utf8");
+const source = readFileSync(".github/legacy-workflows/2026-11-09/stage.yml", "utf8");
 const marker = "      - name: Validate source and dispatch branch-owned Staging";
 const pos = source.indexOf(marker);
 if (pos < 0) throw new Error("Missing branch Staging dispatcher");
@@ -37,7 +37,7 @@ function harness(options: { sourceSha?: string; mainSha?: string; branchSha?: st
   summary.addRaw.mockReturnValue(summary);
   const core = { info: vi.fn(), summary };
   const context = { actor: options.actor ?? "jan2xo", repo: { owner: "jan2xo", repo: "bke-digital-solutions" } };
-  const process = { env: { EXPECTED_SOURCE: SHA, EXPECTED_WORKFLOW: MAIN, WORKFLOW_SHA: MAIN, WORKFLOW_REF: options.workflowRef ?? "jan2xo/bke-digital-solutions/.github/workflows/stage.yml@refs/heads/main" } };
+  const process = { env: { EXPECTED_SOURCE: SHA, EXPECTED_WORKFLOW: MAIN, WORKFLOW_SHA: MAIN, WORKFLOW_REF: options.workflowRef ?? "jan2xo/bke-digital-solutions/.github/legacy-workflows/2026-11-09/stage.yml@refs/heads/main" } };
   const execute = () => runScript(github, context, core, process) as Promise<void>;
   return { execute, getRef, get, createWorkflowDispatch };
 }
@@ -59,7 +59,7 @@ describe("owner-authorized exact-head branch Staging handoff", () => {
     ["stale branch head", { branchSha: "a".repeat(40) }],
     ["moved main workflow", { mainSha: "b".repeat(40) }],
     ["unapproved PR branch", { prBranch: "feature/untrusted" }],
-    ["untrusted workflow ref", { workflowRef: "jan2xo/bke-digital-solutions/.github/workflows/stage.yml@refs/heads/feature/untrusted" }],
+    ["untrusted workflow ref", { workflowRef: "jan2xo/bke-digital-solutions/.github/legacy-workflows/2026-11-09/stage.yml@refs/heads/feature/untrusted" }],
     ["different PR head", { sourceSha: "c".repeat(40) }],
   ] as const)("rejects %s without dispatch", async (_label, options) => {
     const h = harness(options);

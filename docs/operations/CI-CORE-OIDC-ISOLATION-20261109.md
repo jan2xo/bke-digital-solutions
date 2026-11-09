@@ -18,3 +18,10 @@ Required: validate YAML/workflow call permission graph; exact head Core CI at ca
 Not required: actual Staging deployment, production, PayMongo/provider, application/DB migrations or Agent/Launcher CI. Cross repo: none.
 External provenance: `ci.yml` remains named `CI` with the same `Required certification` job name for the existing protected live-paymongo verifier.
 Production: LOCKED. No force push or deployment.
+## PR-scoped CI authority and obsolete Staging retirement
+
+Owner correction: PR-authored tests and certification plans must not be artificially constrained by the immutable main workflow. The registered default-branch comment dispatcher remains a small trusted routing and aggregation layer; a PR can own `.github/pr-certification/pr-NNN.json`, additional tests and a declared `requiredTargets` graph. The dispatcher fails closed if required graph members are missing.
+
+PR #266 is already merged. Its old `stage.yml` only accepted PR #266 and can never perform authorized future work. The extracted `ci-staging.yml` retained the same historical branch lock; both are archived unchanged in `.github/legacy-workflows/2026-11-09/` and no longer active. No Staging deployment is claimed by this repair. Future protected Staging requires a separately reviewed workflow/intent.
+
+Active Core `ci.yml` stays unprivileged and retains external `CI` + `Required certification` provenance. Existing narrowly owned module workflows stay callable because they represent distinct behavioral proof, not automatic full-CI events. The PR #297 minimum complete plan is `pr core`. No production, commerce or payments changes.

@@ -121,7 +121,9 @@ describe("intent-driven certification foundation", () => {
     expect(workflow).not.toContain("  staging-deploy:");
     expect(workflow).not.toContain("id-token: write");
     // Explicit Staging is its own deployment-only workflow, never a reusable CI callee.
-    const staging = readFileSync(`${workflowsDir}/ci-staging.yml`, "utf8");
+    expect(existsSync(`${workflowsDir}/stage.yml`)).toBe(false);
+    expect(existsSync(`${workflowsDir}/ci-staging.yml`)).toBe(false);
+    const staging = readFileSync(".github/legacy-workflows/2026-11-09/ci-staging.yml", "utf8");
     expect(staging).toContain("workflow_dispatch:");
     expect(staging).not.toContain("workflow_call:");
     expect(staging).toContain("uses: ./.github/workflows/ci.yml");

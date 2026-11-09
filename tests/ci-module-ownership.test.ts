@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const workflowsDir = ".github/workflows";
 const legacyDir = ".github/legacy-workflows/2026-10-02";
+const retiredStagingDir = ".github/legacy-workflows/2026-11-09";
 const agentStorePath = `${workflowsDir}/v2-agent-store.yml`;
 
 const formerStoreOwners = [
@@ -110,7 +111,9 @@ describe("CI module ownership", () => {
     expect(workflow).not.toContain("  staging-deploy:");
     expect(workflow).not.toContain("id-token: write");
 
-    const staging = readFileSync(`${workflowsDir}/ci-staging.yml`, "utf8");
+    expect(() => readFileSync(`${workflowsDir}/stage.yml`, "utf8")).toThrow();
+    expect(() => readFileSync(`${workflowsDir}/ci-staging.yml`, "utf8")).toThrow();
+    const staging = readFileSync(`${retiredStagingDir}/ci-staging.yml`, "utf8");
     expect(staging).toContain("workflow_dispatch:");
     expect(staging).not.toContain("workflow_call:");
     expect(staging).not.toMatch(/^  (?:push|pull_request|issue_comment):/m);

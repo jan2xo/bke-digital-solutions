@@ -139,6 +139,15 @@ if (!globalCi.includes("workflow_dispatch:")) {
   fail("ci.yml must remain explicitly dispatchable");
 }
 
+const archivedStagingDir = ".github/legacy-workflows/2026-11-09";
+for (const name of ["stage.yml", "ci-staging.yml"]) {
+  if (workflowNames.includes(name)) fail(`retired PR #266 workflow remains active: ${name}`);
+  if (!existsSync(join(archivedStagingDir, name))) fail(`retired archive missing: ${name}`);
+}
+if (globalCi.includes("id-token: write") || globalCi.includes("staging-deploy:")) {
+  fail("Core CI must not request protected Staging credentials");
+}
+
 if (process.exitCode) {
   process.exit(process.exitCode);
 }
