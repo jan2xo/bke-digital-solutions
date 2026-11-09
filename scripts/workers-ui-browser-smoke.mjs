@@ -84,6 +84,25 @@ try {
         await page.getByRole("link", { name: "Explore", exact: true }).click();
         await page.waitForURL("**/products", { timeout: 15000 });
         await page.getByRole("heading", { name: "Software for work that matters." }).waitFor();
+        await page.goBack();
+        await page.getByRole("heading", { name: /One platform.*Every BKE.*solution/ }).waitFor();
+      }
+      if (width === 390 || width === 1440) {
+        let postedFlow;
+        await page.route("**/api/auth/google/start", async (route) => {
+          postedFlow = route.request().postDataJSON();
+          await route.fulfill({ status: 200, contentType: "application/json",
+            body: JSON.stringify({ authorizationUrl: new URL("/login?simulated=oidc", baseURL).toString() }) });
+        });
+        await page.getByRole("button", { name: "Continue with Google", exact: true }).click();
+        await page.waitForURL(/\/login\?simulated=oidc$/);
+        assert.equal(postedFlow?.flow, "unified",
+          "Sonnet CTA must initiate unified server-owned OIDC");
+        assert.equal(await page.locator("main").getByRole("button", { name: "Continue with Google" }).count(), 1,
+          "Login content must expose exactly one unified Google entry");
+        // On desktop the site header may offer the same entry as a convenience;
+        // it is not a distinct registration flow or account choice.
+        assert.equal(await page.getByRole("link", { name: "Create an account" }).count(), 0);
       }
       assert.deepEqual(errors, [], `Browser runtime errors detected at ${width}px`);
       console.log(`PASS: real workerd Chromium viewport ${width}px, mobile=${mobile}`);

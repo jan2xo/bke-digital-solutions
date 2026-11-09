@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("anonymous landing links to the public catalog and existing Google entry", async ({ page }) => {
+test("anonymous landing starts unified Google entry and exposes the public catalog", async ({ page }) => {
   await page.goto("/");
   const title = page.getByRole("heading", { name: "One platform. Every BKE solution." });
   await expect(title).toBeVisible();
@@ -9,9 +9,9 @@ test("anonymous landing links to the public catalog and existing Google entry", 
   await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Legal" }).getByRole("link", { name: "Privacy" })).toHaveAttribute("href", "/legal/privacy");
 
-  const google = page.getByRole("link", { name: "Continue with Google", exact: true });
+  const google = page.getByRole("button", { name: "Continue with Google", exact: true });
   const explore = page.getByRole("link", { name: "Explore", exact: true });
-  await expect(google).toHaveAttribute("href", "/login");
+  await expect(google).toBeEnabled();
   await expect(explore).toHaveAttribute("href", "/products");
 
   const scripts = page.getByRole("button", { name: /Scripts Workflows/ });
@@ -25,10 +25,17 @@ test("anonymous landing links to the public catalog and existing Google entry", 
   await page.goBack();
   await expect(page.getByRole("banner")).toHaveCount(0);
 
+  let startBody: unknown;
+  await page.route("**/api/auth/google/start", async (route) => {
+    startBody = route.request().postDataJSON();
+    await route.fulfill({ status: 200, contentType: "application/json",
+      body: JSON.stringify({ authorizationUrl: new URL("/login?simulated=oidc", page.url()).toString() }) });
+  });
   await google.click();
-  await expect(page).toHaveURL(/\/login$/);
-  await expect(page.getByRole("button", { name: "Sign in with Google" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Create an account" })).toHaveAttribute("href", "/register");
+  await expect(page).toHaveURL(/\/login\?simulated=oidc$/);
+  expect(startBody).toMatchObject({ flow: "unified" });
+  await expect(page.getByRole("button", { name: "Continue with Google" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Create an account" })).toHaveCount(0);
 });
 
 test("desktop descriptions reveal on hover or focus, including reduced motion", async ({ page }) => {

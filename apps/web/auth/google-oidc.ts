@@ -19,7 +19,7 @@ export const GOOGLE_LOGIN_CONTEXT_COOKIE =
     ? "__Host-bke_google_login"
     : "bke_google_login";
 
-export type GoogleLoginFlow = "login" | "register" | "reauthenticate";
+export type GoogleLoginFlow = "login" | "reauthenticate" | "unified";
 
 export interface GoogleLoginContext {
   readonly flow: GoogleLoginFlow;
@@ -30,7 +30,6 @@ export interface GoogleLoginContext {
   readonly nonce: string;
   readonly codeVerifier: string;
   readonly returnTo: string;
-  readonly legalVersionIds: readonly string[];
 }
 
 function requiredEnvironment(name: string): string {
@@ -98,7 +97,6 @@ export async function createGoogleAuthorizationRequest(input: {
   readonly sessionId?: string;
   readonly userId?: string;
   readonly subject?: string;
-  readonly legalVersionIds?: readonly string[];
   readonly returnTo?: string;
 }): Promise<{
   readonly authorizationUrl: string;
@@ -136,7 +134,6 @@ export async function createGoogleAuthorizationRequest(input: {
     nonce,
     codeVerifier,
     returnTo: safeLocalRedirect(input.returnTo),
-    legalVersionIds: input.flow === "register" ? [...(input.legalVersionIds ?? [])] : [],
   };
   const encryptedContext = await new EncryptJWT({ ...context })
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
@@ -158,12 +155,10 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
   const context = payload as unknown as GoogleLoginContext;
   if (
     !context ||
-    (context.flow !== "login" && context.flow !== "register" && context.flow !== "reauthenticate") ||
+    (context.flow !== "login" && context.flow !== "reauthenticate" && context.flow !== "unified") ||
     typeof context.state !== "string" ||
     typeof context.nonce !== "string" ||
     typeof context.codeVerifier !== "string" ||
-    !Array.isArray(context.legalVersionIds) ||
-    !context.legalVersionIds.every((id) => typeof id === "string") ||
     typeof context.returnTo !== "string" ||
     (context.flow === "reauthenticate" &&
       (typeof context.sessionId !== "string" || typeof context.userId !== "string" || typeof context.subject !== "string"))

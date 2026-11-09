@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { registrationLegalDocuments } from "@/apps/web/legal/service";
 import { assertSameOrigin, clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { createGoogleAuthorizationRequest, GOOGLE_LOGIN_CONTEXT_COOKIE } from "@/apps/web/auth/google-oidc";
@@ -12,11 +11,10 @@ const loginSchema = z.object({
   flow: z.literal("login"),
   returnTo: z.string().max(2048).optional(),
 }).strict();
-const registerSchema = z.object({
-  flow: z.literal("register"),
-  legalVersionIds: z.array(z.string().cuid()).length(2),
+const unifiedSchema = z.object({
+  flow: z.literal("unified"),
+  returnTo: z.string().max(2048).optional(),
 }).strict();
-
 const reauthenticateSchema = z.object({
   flow: z.literal("reauthenticate"),
   returnTo: z.string().max(2048).optional(),
@@ -32,22 +30,19 @@ export async function POST(request: Request) {
     const body: unknown = await request.json();
     let input:
       | { flow: "login"; returnTo?: string }
-      | { flow: "register"; legalVersionIds: string[] }
+      | { flow: "unified"; returnTo?: string }
       | { flow: "reauthenticate"; returnTo?: string; sessionId: string; userId: string; subject: string };
-    if (typeof body === "object" && body !== null && "flow" in body && body.flow === "register") {
-      input = registerSchema.parse(body);
-      const docs = await registrationLegalDocuments();
-      const required = docs.map((document) => document.currentPublishedVersionId);
-      if (required.length !== 2 || !input.legalVersionIds.every((id) => required.includes(id))) {
-        return NextResponse.json({ error: "LEGAL_ACCEPTANCE_REQUIRED" }, { status: 409 });
-      }
-    } else if (typeof body === "object" && body !== null && "flow" in body && body.flow === "reauthenticate") {
+    // Retired registration flow is deliberately rejected by strict schemas.
+    // Account creation now happens only after verified OIDC + current Legal consent.
+    if (typeof body === "object" && body !== null && "flow" in body && body.flow === "reauthenticate") {
       const parsed = reauthenticateSchema.parse(body);
       const current = await currentIdentitySession();
       if (!current) throw new Error("UNAUTHENTICATED");
       const bound = await db.googleIdentity.findUnique({ where: { userId: current.principal.id }, select: { subject: true } });
       if (!bound) throw new Error("UNAUTHENTICATED");
       input = { ...parsed, sessionId: current.session.id, userId: current.principal.id, subject: bound.subject };
+    } else if (typeof body === "object" && body !== null && "flow" in body && body.flow === "unified") {
+      input = unifiedSchema.parse(body);
     } else {
       input = loginSchema.parse(body);
     }

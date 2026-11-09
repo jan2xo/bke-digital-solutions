@@ -11,7 +11,7 @@ import {
 import { completeGoogleAuthorization, GOOGLE_LOGIN_CONTEXT_COOKIE } from "@/apps/web/auth/google-oidc";
 import { authoritativeGoogleContact } from "@/apps/web/auth/google-policy";
 import { pendingReacceptance } from "@/apps/web/legal/service";
-import { registerGoogleCustomer } from "@/apps/web/auth/google-registration";
+import { createPendingGoogleEnrollment, GOOGLE_ENROLLMENT_COOKIE, GOOGLE_ENROLLMENT_TTL_SECONDS } from "@/apps/web/auth/google-enrollment";
 import { securityEvent } from "@/apps/web/security/events";
 import { getWebHostEnvironment } from "@/apps/web/config/environment";
 import { safeLocalRedirect } from "@/apps/web/security/redirect";
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
     const authentication = application.get<IdentityGoogleAuthenticationCapability>(
       IDENTITY_GOOGLE_AUTHENTICATION_CAPABILITY_ID,
     );
-    let authenticated = await authentication.authenticate({ subject: verified.identity.subject });
+    const authenticated = await authentication.authenticate({ subject: verified.identity.subject });
 
     if (reauthentication) {
       const current = await currentIdentitySession();
@@ -61,13 +61,24 @@ export async function GET(request: Request) {
       return finishRedirect("/login?error=CONTACT_EMAIL_NOT_AUTHORITATIVE");
     }
     if (authenticated.status === "INVALID_CREDENTIALS") {
-      if (verified.context.flow !== "register") return finishRedirect("/login?error=GOOGLE_SIGN_IN_FAILED");
-      await registerGoogleCustomer({
-        subject: verified.identity.subject, email: verified.identity.email,
-        emailVerified: verified.identity.emailVerified, hostedDomain: verified.identity.hostedDomain,
-        name: verified.identity.name, legalVersionIds: verified.context.legalVersionIds, request,
-      });
-      authenticated = await authentication.authenticate({ subject: verified.identity.subject });
+      if (verified.context.flow === "unified") {
+        const pending = await createPendingGoogleEnrollment({
+          ...verified.identity,
+          returnTo: verified.context.returnTo,
+        });
+        const response = finishRedirect("/auth/consent");
+        response.cookies.set(GOOGLE_ENROLLMENT_COOKIE, pending, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: GOOGLE_ENROLLMENT_TTL_SECONDS,
+        });
+        return response;
+      }
+      // No alternate pre-OIDC provisioning path. All unknown verified subjects
+      // must pass the short-lived encrypted consent handoff.
+      return finishRedirect("/login?error=GOOGLE_SIGN_IN_FAILED");
     }
     if (authenticated.status !== "PRIMARY_AUTHENTICATED") {
       throw new Error(authenticated.status === "FAILED" ? authenticated.code : "UNAUTHENTICATED");
