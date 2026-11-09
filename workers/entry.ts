@@ -3,6 +3,7 @@ import handler from "../.open-next/worker.js";
 import { operationResource, withOperationResponse } from "../platform/host/operation-scope";
 import { CLOUDFLARE_EMAIL_SEND_RESOURCE, type CloudflareEmailSend } from "../platform/email/cloudflare-provider";
 import { parseEmailSender } from "../platform/email/sender";
+import { invokeEmailOutboxCron } from "./email-cron";
 
 export default {
   async fetch(request, env, ctx) {
@@ -42,5 +43,13 @@ export default {
       });
       return handler.fetch(request, env, context);
     }, (promise) => ctx.waitUntil(promise));
+  },
+  async scheduled(_controller, env) {
+    await invokeEmailOutboxCron({
+      enabled: Reflect.get(env, "EMAIL_OUTBOX_CRON_ENABLED"),
+      cronSecret: Reflect.get(env, "CRON_SECRET"),
+      appUrl: Reflect.get(env, "APP_URL"),
+      selfService: env.WORKER_SELF_REFERENCE,
+    });
   },
 } satisfies ExportedHandler<CloudflareEnv>;
