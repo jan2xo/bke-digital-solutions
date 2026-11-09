@@ -117,13 +117,14 @@ describe("protected release exact-head certification graph", () => {
     expect(workflow).not.toContain("npm run db:deploy");
   });
 
-  it.each([
+  const graphCases: [string, readonly string[]][] = [
     ["legacy web graph", ["pr", "core", "host"]],
     ["web + Accounts graph", ["pr", "core", "accounts", "host"]],
     ["web + Payments graph", ["pr", "core", "payments", "host"]],
     ["release Platform graph", ["pr", "core", "platform", "host"]],
     ["web + Notifications graph", ["pr", "core", "notifications", "host"]],
-  ])("accepts %s only with each declared exact-head job and log proof", async (_label, graph) => {
+  ];
+  it.each(graphCases)("accepts %s only with each declared exact-head job and log proof", async (_label, graph) => {
     const { outputs, gh } = await runGuard(graph);
     expect(outputs).toHaveBeenCalledWith("allowed", "true");
     expect(gh.rest.repos.getContent).toHaveBeenCalledWith({
