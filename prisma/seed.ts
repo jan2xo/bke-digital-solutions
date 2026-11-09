@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../platform/persistence/generated/prisma/client";
 import { createHash } from "node:crypto";
+import { LEGAL_DOCUMENT_DEFINITIONS, LEGAL_DOCUMENT_TYPES } from "../lib/legal/constants";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const catalog = [
@@ -10,17 +11,11 @@ const catalog = [
   { slug: "bke-institution-suite", name: "BKE Institution Suite", summary: "Flexible deployment for organizations and institutions.", description: "Organization licensing with authorized users, managed devices, and a central customer portal.", type: "HYBRID" as const, policy: { name: "Institution 25", maxSeats: 25, maxDevicesPerSeat: 2, validityDays: 365 }, price: { name: "Annual organization license", amountMinor: 1199900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "institution", name: "Institution", features: ["25 authorized users", "Managed devices", "Central license portal"], maxUsers: 25, maxDevicesPerUser: 2, updatePolicy: "ACTIVE_TERM" as const, perpetual: 1199900, monthly: 109900, annualDiscountBps: 900 } },
 ];
 const canonicalProductIds: Record<string, string> = { "bke-deskflow": "bke-deskflow", "bke-cloudops": "bke-cloudops", "bke-institution-suite": "bke-institution-suite" };
-const legalTemplates = [
-  ["TERMS_OF_SERVICE", "Terms of Service", "terms"],
-  ["PRIVACY_POLICY", "Privacy Policy", "privacy"],
-  ["SOFTWARE_LICENSE_AGREEMENT", "Software License Agreement (EULA)", "eula"],
-  ["SUBSCRIPTION_TERMS", "Subscription Terms", "subscription"],
-  ["REFUND_POLICY", "Refund Policy", "refund"],
-  ["ACCEPTABLE_USE_POLICY", "Acceptable Use Policy", "acceptable-use"],
-  ["COOKIE_POLICY", "Cookie Policy", "cookies"],
-  ["SUPPORT_POLICY", "Support Policy", "support"],
-  ["DATA_PROCESSING_ADDENDUM", "Data Processing Addendum", "dpa"],
-] as const;
+const legalTemplates = LEGAL_DOCUMENT_TYPES.map((documentType) => [
+  documentType,
+  LEGAL_DOCUMENT_DEFINITIONS[documentType].title,
+  LEGAL_DOCUMENT_DEFINITIONS[documentType].slug,
+] as const);
 
 async function main() {
   for (const item of catalog) {
