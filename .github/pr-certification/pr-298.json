@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "pr": 298,
+  "intent": "Prove PR-owned test discovery and exact-head comment-driven Core certification after OIDC isolation",
+  "requiredTargets": [
+    "pr",
+    "core"
+  ],
+  "testFiles": [
+    "tests/pr-comment-bootstrap.test.ts"
+  ]
+}
