@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 291,
+  "intent": "Protect BKE Worker host routing against alternate workers.dev/version URL WAF bypass; define one reviewed Free Website per-IP WAF rate-limit candidate for customer Google-start, checkout and renewal POSTs, excluding webhook/native/security clients; production WAF mutation remains locked",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host",
+    "identity",
+    "payments",
+    "licensing"
+  ],
+  "testFiles": [
+    "tests/cloudflare-edge-rate-limit-contract.test.ts",
+    "tests/cloudflare-web-code-deploy.test.ts"
+  ]
+}
