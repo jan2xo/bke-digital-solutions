@@ -8,6 +8,7 @@ const legacyDir = ".github/legacy-workflows/2026-10-02";
 const expectedActive = [
   "certify.yml",
   "ci.yml",
+  "deploy-web-code-only.yml",
   "live-paymongo-cutover.yml",
   "native-bke-account-handoff.yml",
   "v2-accounts.yml",
@@ -65,7 +66,8 @@ describe("intentional GitHub Actions architecture", () => {
     expect(certifyTriggers).toMatch(/^\s{2}issue_comment:/mu);
     expect(certifyTriggers).toMatch(/^\s{2}workflow_dispatch:/mu);
 
-    for (const name of expectedActive.filter((value) => value !== "certify.yml")) {
+    for (const name of expectedActive.filter((value) =>
+      value !== "certify.yml" && value !== "deploy-web-code-only.yml")) {
       const triggers = triggerSection(
         readFileSync(join(activeDir, name), "utf8"),
       );
@@ -74,6 +76,18 @@ describe("intentional GitHub Actions architecture", () => {
         name,
       ).toBe(true);
     }
+  });
+
+  it("isolates protected web deployment from PR/push and heavy certification triggers", () => {
+    const release = readFileSync(join(activeDir, "deploy-web-code-only.yml"), "utf8");
+    const triggers = triggerSection(release);
+    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
+    expect(triggers).not.toMatch(/^\s{2}(?:workflow_dispatch|workflow_call|pull_request|push):/mu);
+    expect(release).toContain("context.actor !== owner");
+    expect(release).toContain("pr.merge_commit_sha !== source");
+    expect(release).toContain("candidate.data.tree.sha !== merged.data.tree.sha");
+    expect(release).toContain('name: Production');
+    expect(release).not.toContain("npm run db:deploy");
   });
 
   it("preserves the complete pre-overhaul workflow archive", () => {
