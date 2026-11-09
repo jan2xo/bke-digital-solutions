@@ -117,13 +117,13 @@ export function LandingExperience({
             <p className={styles.lede}>{content.heroDescription}</p>
             <div className={styles.actions}>
               {account ? (
-                <Link className={styles.googleButton} href={account === "ADMIN" ? "/admin" : "/dashboard"}>
+                <Link prefetch={false} className={styles.googleButton} href={account === "ADMIN" ? "/admin" : "/dashboard"}>
                   {account === "ADMIN" ? "Admin dashboard" : "My Software"}
                 </Link>
               ) : (
                 <GoogleAuthButton flow="unified" formClassName="" buttonClassName={styles.googleButton} icon={<GoogleMark />} />
               )}
-              <Link className={styles.exploreLink} href="/products">Explore</Link>
+              <Link prefetch={false} className={styles.exploreLink} href="/products">Explore</Link>
             </div>
           </div>
 
@@ -170,7 +170,7 @@ export function LandingExperience({
               <p className={styles.eyebrow}>Built for what you actually sell</p>
               <h2 id="storefront-features">Not everything digital<br /><em>needs the same machinery.</em></h2>
             </div>
-            <Link href="/products" className={styles.smallLink}>Explore the catalog <span aria-hidden="true">↗</span></Link>
+            <Link prefetch={false} href="/products" className={styles.smallLink}>Explore the catalog <span aria-hidden="true">↗</span></Link>
           </div>
           <div className={styles.cards}>
             {lanes.map((lane) => (
@@ -191,12 +191,12 @@ export function LandingExperience({
               <p className={styles.eyebrow}>{content.solutionsEyebrow}</p>
               <h2 id="storefront-products">{content.solutionsHeading}<br /><em>{content.solutionsAccent}</em></h2>
             </div>
-            <Link className={styles.smallLink} href="/products">{content.solutionsLinkLabel} <span aria-hidden="true">↗</span></Link>
+            <Link prefetch={false} className={styles.smallLink} href="/products">{content.solutionsLinkLabel} <span aria-hidden="true">↗</span></Link>
           </div>
           {products.length > 0 ? (
             <div className={styles.catalogGrid}>
               {products.map((product) => (
-                <Link href={`/products/${product.slug}`} key={product.id} className={styles.productCard}>
+                <Link prefetch={false} href={`/products/${product.slug}`} key={product.id} className={styles.productCard}>
                   {/* Product images already use the allowlisted GitHub release source in the catalog. */}
                   {product.imageUrl && <img className={styles.productImage} src={product.imageUrl} alt="" loading="lazy" />}
                   <div>

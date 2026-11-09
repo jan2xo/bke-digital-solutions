@@ -42,7 +42,7 @@ export default async function ProductsPage() {
           <p className="products-card-summary">{product.summary}</p>
           <p className="products-card-options">{product.editions.length} edition(s) · {plans.length} purchase option(s)</p>
           {starting !== undefined && <p className="products-card-price">From {money(starting)}</p>}
-          <Link className="button products-card-action" href={`/products/${product.slug}`}>Choose edition and plan</Link>
+          <Link prefetch={false} className="button products-card-action" href={`/products/${product.slug}`}>Choose edition and plan</Link>
         </article>;
       })}</div>
     ) : (
@@ -50,7 +50,7 @@ export default async function ProductsPage() {
         <p className="eyebrow eyebrow-yellow">CATALOG UPDATE</p>
         <h2>No products are available right now.</h2>
         <p>Please check back later.</p>
-        <Link className="text-link" href="/">Back to home <span>→</span></Link>
+        <Link prefetch={false} className="text-link" href="/">Back to home <span>→</span></Link>
       </div>
     )}
   </section>;

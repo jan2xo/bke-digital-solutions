@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 313,
+  "intent": "Serve public webmanifest through OpenNext Cloudflare Static Assets, suppress speculative Next.js RSC requests from public and account-facing navigation while preserving click-through navigation",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/cloudflare-public-request-budget.test.ts",
+    "tests/public-navigation-reconciliation.test.ts",
+    "tests/public-site-content.test.ts",
+    "tests/cloudflare-web-code-deploy.test.ts"
+  ]
+}

@@ -55,6 +55,13 @@ try {
   // target; OpenNext then adapts that output without rebuilding it.
   run(process.execPath, ["node_modules/next/dist/bin/next", "build", "--webpack"], { BKE_WORKERS_BUILD: "1" });
   run(process.execPath, ["node_modules/@opennextjs/cloudflare/dist/cli/index.js", "build", "--skipNextBuild"], { BKE_WORKERS_BUILD: "1" });
+  // A public manifest must be delivered by Workers Static Assets, not by
+  // invoking the Next.js Worker on every browser manifest request.
+  assert.deepEqual(
+    await readFile(".open-next/assets/manifest.webmanifest"),
+    await readFile("public/manifest.webmanifest"),
+    "OpenNext did not package the public manifest as an identical static asset",
+  );
 } finally {
   // Restore through the real canonical generator, never by patching output.
   try {

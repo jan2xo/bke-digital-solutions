@@ -6,7 +6,7 @@ const read = (path: string) => readFileSync(path, "utf8");
 describe("public navigation reconciliation", () => {
   it("keeps How it works on the licensing explainer without a redundant Licensing menu item", () => {
     const header = read("components/header.tsx");
-    expect(header).toContain('<Link href="/licensing">How it works</Link>');
+    expect(header).toContain('<Link prefetch={false} href="/licensing">How it works</Link>');
     expect(header).not.toContain('href="/licensing">Licensing</Link>');
   });
 
