@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "pr": 300,
+  "intent": "Install the exact immutable canonical bke.md engineering standard into Digital Solutions root",
+  "requiredTargets": [
+    "pr"
+  ],
+  "testFiles": [
+    "tests/bke-root-standard.test.ts"
+  ]
+}
