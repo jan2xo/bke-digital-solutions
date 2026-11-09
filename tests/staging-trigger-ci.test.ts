@@ -38,8 +38,14 @@ describe("intentional exact-head disposable staging", () => {
   it("retains protected disposable Staging, explicit no-real-payments and browser negatives", () => {
     expect(workflow).not.toContain("      name: Staging");
     expect(workflow).toContain("Dispatch exact-head branch-owned Staging");
-    expect(workflow).toContain('workflow_id: "ci.yml", ref: authorizedBranch');
-    expect(workflow).toContain('deploy_staging: "true"');
+    expect(workflow).toContain('workflow_id: "ci-staging.yml", ref: authorizedBranch');
+    expect(workflow).not.toContain('deploy_staging: "true"');
+    const staging = readFileSync(".github/workflows/ci-staging.yml", "utf8");
+    expect(staging).toContain('environment:\n      name: Staging');
+    expect(staging).toContain('id-token: write');
+    expect(staging).toContain('if: ${{ needs.core.result == \'success\' }}');
+    expect(staging).not.toContain("issue_comment:");
+    expect(staging).not.toContain("pull_request:");
     expect(workflow).toContain("PAYMENT_PROVIDER: mock");
     expect(workflow).toContain("EMAIL_PROVIDER: log");
     expect(workflow).not.toContain("Infisical/secrets-action@");
