@@ -1,5 +1,5 @@
 name: Intent Certification
-run-name: PR #${{ github.event.issue.number || inputs.pr_number || 'manual' }} - Intent Certification
+run-name: "PR #${{ github.event.issue.number || inputs.pr_number || 'manual' }} - Intent Certification"
 
 on:
   issue_comment:
@@ -187,7 +187,7 @@ jobs:
               .write();
 
   pr:
-    name: PR #${{ needs.plan.outputs.pr_number }} - scoped branch certification
+    name: "PR #${{ needs.plan.outputs.pr_number }} - scoped branch certification"
     needs: plan
     if: contains(fromJSON(needs.plan.outputs.targets_json), 'pr')
     runs-on: ubuntu-latest
@@ -210,7 +210,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Execute branch-authored PR #${{ needs.plan.outputs.pr_number }} certification
+      - name: "Execute branch-authored PR #${{ needs.plan.outputs.pr_number }} certification"
         run: node scripts/ci/pr-certification.mjs
 
   core:
