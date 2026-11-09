@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 311,
+  "intent": "Source-only fail-closed Cloudflare scheduled email-outbox bridge that reuses the CRON_SECRET-protected same-Worker service route; future production Cron and email activation remain separately locked",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/cloudflare-email-cron.test.ts",
+    "tests/purchase-confirmation-email.test.ts",
+    "tests/email-outbox-uncertainty.test.ts",
+    "tests/workers-operation-scope.test.ts"
+  ]
+}
