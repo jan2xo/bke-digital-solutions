@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 312,
+  "intent": "Align transactional email-outbox cadence/health with owner-approved Cloudflare 30-minute Cron while keeping BKE native/in-app notifications immediate; production activation remains gated",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/email-outbox-30min-health.test.ts",
+    "tests/cloudflare-email-cron.test.ts"
+  ]
+}
