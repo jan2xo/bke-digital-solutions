@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 315,
+  "intent": "Branded HTML BKE purchase-confirmation email from PAID/FINAL fulfillment snapshots, safe HTML/text transport through Cloudflare and bounded Resend fallback; no live sends",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "payments",
+    "host"
+  ],
+  "testFiles": [
+    "tests/purchase-confirmation-email.test.ts",
+    "tests/cloudflare-email-provider.test.ts",
+    "tests/email-sender.test.ts"
+  ]
+}
