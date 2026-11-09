@@ -76,12 +76,42 @@ jobs:
             if (candidate.data.tree.sha !== merged.data.tree.sha) {
               throw new Error("WEB_RELEASE_CERTIFIED_TREE_MISMATCH");
             }
+            // Every required module comes from the immutable certified PR head.
+            // Do not accept a subset or a hard-coded graph from an unrelated PR.
+            const manifestFile = ".github/pr-certification/pr-" + pr.number + ".json";
+            const manifestResponse = await github.rest.repos.getContent({
+              owner, repo, path: manifestFile, ref: pr.head.sha,
+            });
+            const file = manifestResponse.data;
+            if (Array.isArray(file) || file.type !== "file" || file.encoding !== "base64") {
+              throw new Error("WEB_RELEASE_INVALID_CERTIFICATION_PLAN");
+            }
+            const plan = JSON.parse(Buffer.from(file.content, "base64").toString("utf8"));
+            const allowedTargets = new Set([
+              "pr", "core", "host", "accounts", "agent-store", "catalog",
+              "commerce", "composition", "echo", "entitlements", "identity",
+              "legal", "licensing", "notifications", "payments", "platform",
+              "prisma-isolation", "standalone", "native-account",
+            ]);
+            const targets = plan.requiredTargets;
+            if (plan.schemaVersion !== 1 || plan.pr !== pr.number ||
+                !Array.isArray(targets) || targets.length < 3 ||
+                new Set(targets).size !== targets.length ||
+                !targets.every((target) => allowedTargets.has(target)) ||
+                !["pr", "core", "host"].every((target) => targets.includes(target))) {
+              throw new Error("WEB_RELEASE_INVALID_CERTIFICATION_PLAN");
+            }
+            const jobForTarget = (target) => {
+              if (target === "pr") return "PR #" + pr.number + " - scoped branch certification";
+              if (target === "core") return "core / Required certification";
+              if (target === "host") return "host / host-v1-free";
+              if (target === "native-account") return "native-account / certify";
+              return target + " / " + target;
+            };
             const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun,
               { owner, repo, run_id: runId, per_page: 100 });
-            for (const name of [
-              "PR #" + pr.number + " - scoped branch certification",
-              "core / Required certification", "host / host-v1-free", "Required certification",
-            ]) {
+            const expectedJobs = [...targets.map(jobForTarget), "Required certification"];
+            for (const name of expectedJobs) {
               if (!jobs.some((job) => job.name === name && job.conclusion === "success")) {
                 throw new Error("WEB_RELEASE_REQUIRED_PROOF_MISSING: " + name);
               }
@@ -94,8 +124,21 @@ jobs:
                   accept: "application/vnd.github+json" }, redirect: "follow",
                 signal: AbortSignal.timeout(15000) },
             );
-            if (!logs.ok || !(await logs.text()).includes(
-              "Required certification PASS for " + pr.head.sha + ": pr, core, host")) {
+            if (!logs.ok) throw new Error("WEB_RELEASE_AGGREGATE_NOT_EXACT_CANDIDATE");
+            const prefix = "Required certification PASS for " + pr.head.sha + ": ";
+            const matchesExactHeadAndRequiredGraph = (await logs.text())
+              .split(/\r?\n/)
+              .some((line) => {
+                const matchAt = line.indexOf(prefix);
+                if (matchAt < 0) return false;
+                const certified = line.slice(matchAt + prefix.length).trim()
+                  .split(",").map((token) => token.trim()).filter(Boolean);
+                return certified.length >= targets.length &&
+                  new Set(certified).size === certified.length &&
+                  certified.every((target) => allowedTargets.has(target)) &&
+                  targets.every((target) => certified.includes(target));
+              });
+            if (!matchesExactHeadAndRequiredGraph) {
               throw new Error("WEB_RELEASE_AGGREGATE_NOT_EXACT_CANDIDATE");
             }
             core.setOutput("allowed", "true");
