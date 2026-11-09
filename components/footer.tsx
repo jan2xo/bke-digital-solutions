@@ -34,7 +34,7 @@ export async function Footer() {
         <nav aria-label="Legal" className="flex flex-wrap gap-5">
           {legalFooterItems.map(({ type, label }) => {
             const slug = slugsByType.get(type);
-            return slug ? <Link href={`/legal/${slug}`} key={type}>{label}</Link> : null;
+            return slug ? <Link prefetch={false} href={`/legal/${slug}`} key={type}>{label}</Link> : null;
           })}
         </nav>
       </div>
