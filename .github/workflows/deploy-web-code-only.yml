@@ -127,7 +127,7 @@ jobs:
             if (!logs.ok) throw new Error("WEB_RELEASE_AGGREGATE_NOT_EXACT_CANDIDATE");
             const prefix = "Required certification PASS for " + pr.head.sha + ": ";
             const matchesExactHeadAndRequiredGraph = (await logs.text())
-              .split(/\\r?\\n/)
+              .split(/\r?\n/)
               .some((line) => {
                 const matchAt = line.indexOf(prefix);
                 if (matchAt < 0) return false;
