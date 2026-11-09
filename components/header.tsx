@@ -3,6 +3,7 @@ import { currentUser } from "@/apps/web/auth/session";
 import { LogoutButton } from "@/components/logout-button";
 import { getSiteContent } from "@/apps/web/site-content";
 import { MobileNavigation } from "@/components/mobile-navigation";
+import { OutsideHomepage } from "@/components/outside-homepage";
 
 export async function Header() {
   const user = await currentUser();
@@ -28,7 +29,7 @@ export async function Header() {
     </>
   );
 
-  return (
+  const header = (
     <header className="site-header">
       <div className="shell site-header-inner">
         <Link href="/" className="brand-lockup"><span className="brand-mark" aria-hidden="true">BKE</span><span>{content.siteName}</span></Link>
@@ -43,4 +44,6 @@ export async function Header() {
       </div>
     </header>
   );
+
+  return user ? header : <OutsideHomepage>{header}</OutsideHomepage>;
 }
