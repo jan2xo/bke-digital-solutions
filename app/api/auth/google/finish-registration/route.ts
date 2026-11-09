@@ -73,10 +73,9 @@ export async function POST(request: Request) {
     response.headers.set("cache-control", "no-store");
     return response;
   } catch (error) {
-    // Never expose an unknown Google subject or contact-identity conflict in public responses.
-    const result = apiError(error);
-    if (result.status === 409 && (await (async () => error instanceof Error && error.message === "LEGAL_ACCEPTANCE_REQUIRED")())) {
-      return result;
+    // Identity conflicts are deliberately not disclosed through the public API.
+    if (error instanceof Error && error.message === "LEGAL_ACCEPTANCE_REQUIRED") {
+      return apiError(error);
     }
     return NextResponse.json({ error: "GOOGLE_ENROLLMENT_FAILED" }, { status: 403 });
   }

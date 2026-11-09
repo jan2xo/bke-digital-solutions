@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   complete: vi.fn(), authenticate: vi.fn(), current: vi.fn(), issue: vi.fn(), fresh: vi.fn(),
-  register: vi.fn(), update: vi.fn(), legal: vi.fn(), event: vi.fn(),
+  register: vi.fn(), enrollment: vi.fn(), update: vi.fn(), legal: vi.fn(), event: vi.fn(),
 }));
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => ({ value: "encrypted-test-context" }) }) }));
 vi.mock("../apps/web/config/environment", () => ({ getWebHostEnvironment: () => ({ appUrl: "https://staging.example.test" }) }));
@@ -9,6 +9,7 @@ vi.mock("../apps/web/auth/google-oidc", () => ({ completeGoogleAuthorization: mo
 vi.mock("../apps/web/auth/runtime", () => ({ getIdentityWebApplication: async () => ({ get: () => ({ authenticate: mocks.authenticate }) }) }));
 vi.mock("../apps/web/auth/session", () => ({ currentIdentitySession: mocks.current, issueGoogleIdentitySession: mocks.issue, recordGoogleSessionFreshness: mocks.fresh }));
 vi.mock("../apps/web/auth/google-registration", () => ({ registerGoogleCustomer: mocks.register }));
+vi.mock("../apps/web/auth/google-enrollment", () => ({ createPendingGoogleEnrollment: mocks.enrollment, GOOGLE_ENROLLMENT_COOKIE: "bke_google_enrollment", GOOGLE_ENROLLMENT_TTL_SECONDS: 600 }));
 vi.mock("../apps/web/legal/service", () => ({ pendingReacceptance: mocks.legal }));
 vi.mock("../apps/web/security/events", () => ({ securityEvent: mocks.event }));
 vi.mock("../platform/host/db", () => ({ db: {
@@ -31,6 +32,7 @@ beforeEach(() => {
   mocks.issue.mockResolvedValue({ id: "issued-session" });
   mocks.legal.mockResolvedValue([]);
   mocks.fresh.mockResolvedValue(undefined);
+  mocks.enrollment.mockResolvedValue("encrypted-pending-enrollment");
 });
 const callback = () => GET(new Request("https://staging.example.test/api/auth/google/callback?code=test"));
 describe("Google callback consumer policy", () => {
@@ -38,6 +40,35 @@ describe("Google callback consumer policy", () => {
     const response = await callback();
     expect(response.headers.get("location")).toBe("https://staging.example.test/dashboard");
     expect(mocks.issue).toHaveBeenCalledWith(expect.objectContaining({ userId: "user-a", subject: "google-subject", authenticatedAt: null }));
+    expect(mocks.register).not.toHaveBeenCalled();
+  });
+  it("starts one Google flow for returning accounts without creating a new account", async () => {
+    verified.context.flow = "unified";
+    const response = await callback();
+    expect(response.headers.get("location")).toBe("https://staging.example.test/dashboard");
+    expect(mocks.enrollment).not.toHaveBeenCalled();
+    expect(mocks.register).not.toHaveBeenCalled();
+    expect(mocks.issue).toHaveBeenCalledOnce();
+  });
+  it("requires post-Google legal consent before creating an unknown customer", async () => {
+    verified.context.flow = "unified";
+    mocks.authenticate.mockResolvedValue({ status: "INVALID_CREDENTIALS" });
+    const response = await callback();
+    expect(response.headers.get("location")).toBe("https://staging.example.test/auth/consent");
+    expect(response.cookies.get("bke_google_enrollment")?.value).toBe("encrypted-pending-enrollment");
+    expect(mocks.enrollment).toHaveBeenCalledWith(expect.objectContaining({
+      subject: "google-subject", email: "customer@gmail.com", returnTo: "/dashboard",
+    }));
+    expect(mocks.register).not.toHaveBeenCalled();
+    expect(mocks.issue).not.toHaveBeenCalled();
+  });
+  it("does not stage enrollment for a Google subject with non-authoritative email", async () => {
+    verified.context.flow = "unified";
+    verified.identity.email = "unverified@external.test";
+    mocks.authenticate.mockResolvedValue({ status: "INVALID_CREDENTIALS" });
+    const response = await callback();
+    expect(response.headers.get("location")).toContain("CONTACT_EMAIL_NOT_AUTHORITATIVE");
+    expect(mocks.enrollment).not.toHaveBeenCalled();
     expect(mocks.register).not.toHaveBeenCalled();
   });
   it("creates a Google customer then requires any pending legal acceptance", async () => {
