@@ -46,7 +46,7 @@ function fail(code: string, status: number): never {
   throw new RenewalCheckoutHttpError(code, status);
 }
 
-function requiredHostFact(name: "APP_URL" | "SUPPORT_EMAIL" | "BUSINESS_ADDRESS"): string {
+function requiredHostFact(name: "APP_URL" | "SUPPORT_EMAIL"): string {
   const value = process.env[name]?.trim();
   if (!value) fail("CHECKOUT_HOST_CONFIGURATION_UNAVAILABLE", 503);
   return value;
@@ -192,7 +192,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         company_name: "BKE Digital Solutions",
         support_email: requiredHostFact("SUPPORT_EMAIL"),
         website: requiredHostFact("APP_URL"),
-        business_address: requiredHostFact("BUSINESS_ADDRESS"),
       },
     });
     if (requirementsResult.status === "REJECTED") fail(requirementsResult.code, 409);
