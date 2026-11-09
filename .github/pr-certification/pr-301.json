@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 301,
+  "intent": "Prove owner-comment authorized code-only Cloudflare release preserves all existing bindings, production Neon target and exact-head rollback",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/cloudflare-web-code-deploy.test.ts"
+  ]
+}

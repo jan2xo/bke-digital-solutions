@@ -134,7 +134,7 @@ export async function inspectLive() {
   if (!domains.some((d) => d.hostname === target.domain && d.service === target.worker &&
       d.environment === "production")) reject("Production custom domain not attached to target Worker");
   if (!scriptSettings?.observability?.enabled || !scriptSettings?.observability?.logs?.enabled ||
-      scriptSettings?.observability?.redact_query_string) reject("Query-string redaction missing");
+      scriptSettings?.observability?.redact_query_string !== true) reject("Query-string redaction missing");
   const latest = deployments.deployments?.[0];
   if (!latest?.versions || latest.versions.length !== 1 ||
       latest.versions[0].percentage !== 100 ||
