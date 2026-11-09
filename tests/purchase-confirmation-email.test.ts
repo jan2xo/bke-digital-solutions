@@ -136,7 +136,7 @@ describe("opt-in verified purchase confirmation", () => {
     expect(html).toContain("Payment confirmed");
     expect(html).toContain("BKE-2026-001");
     expect(html).toContain("INV-2026-001");
-    expect(html).toContain("9 November 2026");
+    expect(html).toContain("November 9, 2026");
     expect(html).toContain("Render Dock");
     expect(html).toContain("Professional · Monthly");
     expect(html).toContain("Quantity: 1");
