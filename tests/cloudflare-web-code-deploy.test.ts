@@ -63,17 +63,20 @@ describe("protected code-only Cloudflare release", () => {
   it("requires production account, domain, TLS-backed Neon and no Hyperdrive cache", () => {
     expect(assertHyperdrive({
       id: target.hyperdriveId, name: target.hyperdriveName,
-      origin: {database: target.database, host: "prod.c-3.ap-southeast-1.aws.neon.tech", scheme: "postgres"},
+      origin: {database: target.database, host: target.neonHost,
+        user: target.databaseUser, port: 5432, scheme: "postgres"},
       caching: {disabled: true},
     })).toBe(true);
     for (const changed of [
       { id: "00000000000000000000000000000000" },
       { name: "bke-digital-solutions-staging-fresh" },
-      { origin: {database: "bke_staging", host: "bad.example", scheme: "postgres"} },
+      { origin: {database: "bke_staging", host: "bad.example",
+        user: "bke_staging_owner", port: 5432, scheme: "postgres"} },
       { caching: {disabled: false} },
     ]) {
       const base = { id: target.hyperdriveId, name: target.hyperdriveName,
-        origin: {database: target.database, host: "prod.neon.tech", scheme: "postgres"},
+        origin: {database: target.database, host: target.neonHost,
+          user: target.databaseUser, port: 5432, scheme: "postgres"},
         caching: {disabled: true} };
       expect(() => assertHyperdrive({ ...base, ...changed })).toThrow();
     }

@@ -13,12 +13,13 @@ export interface ReleaseWranglerConfig {
 export type ReleaseBinding = { name: string; type: string; [key: string]: unknown };
 export type HyperdriveInfo = {
   id: string; name: string;
-  origin: { database: string; host: string; scheme: string };
+  origin: { database: string; host: string; user: string; port: number; scheme: string };
   caching: { disabled: boolean };
 };
 export declare const target: Readonly<{
   accountId: string; worker: string; domain: string; appUrl: string;
   deploymentId: string; hyperdriveId: string; hyperdriveName: string; database: string;
+  databaseUser: string; neonHost: string;
 }>;
 export declare const generatedConfig: string;
 export declare const snapshotFile: string;

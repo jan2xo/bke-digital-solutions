@@ -12,6 +12,8 @@ export const target = Object.freeze({
   hyperdriveId: "ea1691c683e64bd0b9acc3489ab7759c",
   hyperdriveName: "bke-digital-solutions-production",
   database: "bke_production",
+  databaseUser: "bke_production_owner",
+  neonHost: "ep-raspy-bread-azsc0112.c-3.ap-southeast-1.aws.neon.tech",
 });
 export const generatedConfig = ".wrangler-web-production.json";
 export const snapshotFile = ".wrangler-web-production-snapshot.json";
@@ -95,7 +97,9 @@ export function assertHyperdrive(drive) {
   requireMatch(drive.id, target.hyperdriveId, "Hyperdrive ID");
   requireMatch(drive.name, target.hyperdriveName, "Hyperdrive name");
   requireMatch(drive.origin?.database, target.database, "Neon database");
-  if (!String(drive.origin?.host ?? "").endsWith(".neon.tech")) reject("Hyperdrive origin must be Neon");
+  requireMatch(drive.origin?.user, target.databaseUser, "Neon database role");
+  requireMatch(drive.origin?.host, target.neonHost, "Neon production compute");
+  requireMatch(Number(drive.origin?.port), 5432, "Neon port");
   if (drive.caching?.disabled !== true) reject("Hyperdrive query caching must remain disabled");
   if (!["postgres", "postgresql"].includes(String(drive.origin?.scheme))) reject("Hyperdrive origin protocol mismatch");
   return true;
