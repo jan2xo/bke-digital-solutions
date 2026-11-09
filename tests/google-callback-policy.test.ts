@@ -71,14 +71,14 @@ describe("Google callback consumer policy", () => {
     expect(mocks.enrollment).not.toHaveBeenCalled();
     expect(mocks.register).not.toHaveBeenCalled();
   });
-  it("creates a Google customer then requires any pending legal acceptance", async () => {
+  it("rejects a retired register context without creating an account", async () => {
     verified.context.flow = "register";
-    mocks.authenticate.mockResolvedValueOnce({ status: "INVALID_CREDENTIALS" });
-    mocks.legal.mockResolvedValue([{ id: "terms-current" }]);
+    mocks.authenticate.mockResolvedValue({ status: "INVALID_CREDENTIALS" });
     const response = await callback();
-    expect(mocks.register).toHaveBeenCalledWith(expect.objectContaining({ subject: "google-subject", emailVerified: true }));
-    expect(response.headers.get("location")).toContain("/legal/accept?");
-    expect(response.headers.get("location")).not.toContain("verify-email");
+    expect(response.headers.get("location")).toContain("GOOGLE_SIGN_IN_FAILED");
+    expect(mocks.register).not.toHaveBeenCalled();
+    expect(mocks.enrollment).not.toHaveBeenCalled();
+    expect(mocks.issue).not.toHaveBeenCalled();
   });
   it("uses the bound administrator role without creating an MFA challenge or granting a new role", async () => {
     mocks.authenticate.mockResolvedValue({ status: "PRIMARY_AUTHENTICATED", route: "MFA_CHALLENGE", principal: { id: "user-a", role: "ADMIN" } });

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "pr": 296,
+  "intent": "Certify unified Google OIDC existing/new-customer entry, post-verification Legal consent and immutable session binding in disposable web and native host paths",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "accounts",
+    "identity",
+    "legal",
+    "native-account",
+    "host"
+  ],
+  "testFiles": [
+    "tests/google-callback-policy.test.ts",
+    "tests/google-enrollment-crypto.test.ts",
+    "tests/google-unified-enrollment.test.ts",
+    "tests/public-site-content.test.ts",
+    "tests/google-oidc.test.ts",
+    "tests/google-browser-fixture-policy.test.ts"
+  ]
+}

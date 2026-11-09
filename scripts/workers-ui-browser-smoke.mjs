@@ -85,6 +85,21 @@ try {
         await page.waitForURL("**/products", { timeout: 15000 });
         await page.getByRole("heading", { name: "Software for work that matters." }).waitFor();
       }
+      if (width === 390 || width === 1440) {
+        let postedFlow;
+        await page.route("**/api/auth/google/start", async (route) => {
+          postedFlow = route.request().postDataJSON();
+          await route.fulfill({ status: 200, contentType: "application/json",
+            body: JSON.stringify({ authorizationUrl: new URL("/login?simulated=oidc", baseURL).toString() }) });
+        });
+        await page.getByRole("button", { name: "Continue with Google", exact: true }).click();
+        await page.waitForURL("**/login?simulated=oidc");
+        assert.equal(postedFlow?.flow, "unified",
+          "Sonnet CTA must initiate unified server-owned OIDC");
+        assert.equal(await page.getByRole("button", { name: "Continue with Google" }).count(), 1,
+          "Login should expose the same Google entry without an account creation choice");
+        assert.equal(await page.getByRole("link", { name: "Create an account" }).count(), 0);
+      }
       assert.deepEqual(errors, [], `Browser runtime errors detected at ${width}px`);
       console.log(`PASS: real workerd Chromium viewport ${width}px, mobile=${mobile}`);
     } finally {
