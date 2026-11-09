@@ -16,6 +16,8 @@ import { SubscriptionRenewButton } from "@/components/subscription-renew-button"
 import { getV2WebApplication } from "@/apps/web/runtime";
 import { roleHasClaimAccountCapability } from "@/apps/web/accounts/claim-code-authorization";
 import { GiftClaimCodes } from "@/components/gift-claim-codes";
+import { AccountNotificationHighlights } from "@/components/account-notification-highlights";
+import { listNotificationsForUser } from "@/apps/web/notifications/center";
 
 export default async function AccountPage({ params }: { params: Promise<{ accountId: string }> }) {
   const user = await requireUser().catch(() => redirect("/login"));
@@ -70,7 +72,9 @@ export default async function AccountPage({ params }: { params: Promise<{ accoun
        LIMIT 100
     ` : Promise.resolve([]),
   ]);
-  return <section className="shell py-14"><p className="font-bold text-sky-300">{account.type} · {account.effectiveRole}</p><h1 className="mt-2 text-4xl font-black">{account.displayName}</h1>{account.lifecycleState !== "ACTIVE" && <p className="mt-3 rounded border border-amber-400 bg-amber-50 p-3 font-bold text-amber-900">This account is {account.lifecycleState.toLowerCase()}. New purchases, renewals, key reveal, trials, activations, and BKE-managed installs are disabled.</p>}<div className="mt-10 grid gap-8">
+  // Account visibility was verified above; notifications are filtered again by account before display.
+  const recentNotifications = await listNotificationsForUser({ userId: user.id, role: user.role, limit: 100 });
+  return <section className="shell py-14"><p className="font-bold text-sky-300">{account.type} · {account.effectiveRole}</p><h1 className="mt-2 text-4xl font-black">{account.displayName}</h1>{account.lifecycleState !== "ACTIVE" && <p className="mt-3 rounded border border-amber-400 bg-amber-50 p-3 font-bold text-amber-900">This account is {account.lifecycleState.toLowerCase()}. New purchases, renewals, key reveal, trials, activations, and BKE-managed installs are disabled.</p>}<AccountNotificationHighlights accountId={accountId} items={recentNotifications}/><div className="mt-10 grid gap-8">
     <section><h2 className="mb-4 text-2xl font-black">Products and licenses</h2><div className="grid gap-5 md:grid-cols-2">{licenses.length ? licenses.map((license) => {
       const productName = `${license.product.name}${license.edition ? ` — ${license.edition.name} (${license.purchasePlan ? purchasePlanLabel(license.purchasePlan.type) : "Legacy"})` : ""}`;
       return <CustomerLicenseCard key={license.id} license={{ id: license.id, productName, status: license.status, lastFour: license.keyLastFour, expiresAt: license.expiresAt?.toISOString() ?? null, maxDevices: license.maxSeats * license.maxDevicesPerSeat, activations: license.activations.map((activation) => ({ id: activation.id, label: activation.label, active: activation.active })), manageSeatsHref: canAssignLicenses && account.lifecycleState === "ACTIVE" ? `/dashboard/accounts/${accountId}/licenses/${license.id}/seats` : null }}/>;

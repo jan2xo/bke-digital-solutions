@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { WebNotificationItem } from "@/apps/web/notifications/center";
 import {
   dismissNotificationAction,
@@ -7,9 +8,11 @@ import {
 export function NotificationInbox({
   items,
   emptyMessage = "No notifications right now.",
+  allowAccountNavigation = false,
 }: {
   items: readonly WebNotificationItem[];
   emptyMessage?: string;
+  allowAccountNavigation?: boolean;
 }) {
   if (!items.length) {
     return <div className="card p-6 text-sm text-slate-400">{emptyMessage}</div>;
@@ -40,6 +43,11 @@ export function NotificationInbox({
           </span>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
+          {allowAccountNavigation && item.accountId && item.audienceKind === "ACCOUNT" && (
+            <Link className="button" href={`/dashboard/accounts/${encodeURIComponent(item.accountId)}`}>
+              Open account
+            </Link>
+          )}
           {item.state === "UNREAD" && (
             <form action={markNotificationReadAction}>
               <input type="hidden" name="notificationId" value={item.id}/>
