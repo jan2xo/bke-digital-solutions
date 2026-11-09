@@ -4,6 +4,7 @@ import {
   purchaseConfirmationEmailEnabled,
   queueVerifiedPurchaseConfirmation,
   renderPurchaseConfirmationEmail,
+  renderPurchaseConfirmationEmailHtml,
   PURCHASE_CONFIRMATION_TYPE,
 } from "@/apps/web/email/purchase-confirmation";
 
@@ -12,10 +13,10 @@ afterEach(() => vi.unstubAllEnvs());
 function paidOrder() {
   return {
     id: "order-1", number: "BKE-2026-001", status: "PAID",
-    currency: "PHP", totalMinor: 100, renewalSubscriptionId: null as string | null,
+    currency: "PHP", totalMinor: 100, paidAt: new Date("2026-11-09T13:35:21Z"), renewalSubscriptionId: null as string | null,
     account: { billingEmail: "buyer@example.invalid" },
-    invoice: { id: "invoice_123", number: "INV-2026-001", status: "FINAL", currency: "PHP", totalMinor: 100 },
-    items: [{ productName: "Render Dock", editionName: "Professional", planName: "Monthly", quantity: 1 }],
+    invoice: { id: "invoice_123", number: "INV-2026-001", status: "FINAL", currency: "PHP", subtotalMinor: 100, taxMinor: 0, totalMinor: 100 },
+    items: [{ productName: "Render Dock", editionName: "Professional", planName: "Monthly", quantity: 1, totalMinor: 100 }],
   };
 }
 type Order = ReturnType<typeof paidOrder>;
@@ -33,7 +34,8 @@ function requestAt(mock: ReturnType<typeof fixture>["createMany"], index = 0) {
 const payload = {
   orderId: "order-1", orderNumber: "BKE-2026-001", invoiceId: "invoice_123",
   invoiceNumber: "INV-2026-001", currency: "PHP", totalMinor: 100,
-  kind: "SELF", items: [{ productName: "Render Dock", editionName: "Professional", planName: "Monthly", quantity: 1 }],
+  subtotalMinor: 100, taxMinor: 0, paidAt: "2026-11-09T13:35:21.000Z",
+  kind: "SELF", items: [{ productName: "Render Dock", editionName: "Professional", planName: "Monthly", quantity: 1, amountMinor: 100 }],
 };
 
 describe("opt-in verified purchase confirmation", () => {
@@ -123,6 +125,89 @@ describe("opt-in verified purchase confirmation", () => {
     expect(text).not.toMatch(/keyCiphertext|licenseKey|claimCode/);
     expect(() => renderPurchaseConfirmationEmail(payload, "http://attacker.example.invalid")).toThrow("PURCHASE_EMAIL_APP_URL_INVALID");
     expect(() => renderPurchaseConfirmationEmail(payload, "https://user:secret@bke.example.invalid")).toThrow("PURCHASE_EMAIL_APP_URL_INVALID");
+  });
+
+  it("builds an Adobe-style BKE-only responsive order summary from canonical paid invoice facts", () => {
+    const html = renderPurchaseConfirmationEmailHtml(payload, "https://bke.example.invalid");
+    expect(html).toContain('<html lang="en">');
+    expect(html).toContain('role="presentation"');
+    expect(html).toContain("BKE");
+    expect(html).toContain("Order details");
+    expect(html).toContain("Payment confirmed");
+    expect(html).toContain("BKE-2026-001");
+    expect(html).toContain("INV-2026-001");
+    expect(html).toContain("November 9, 2026");
+    expect(html).toContain("Render Dock");
+    expect(html).toContain("Professional · Monthly");
+    expect(html).toContain("Quantity: 1");
+    expect(html).toContain("TOTAL PAID");
+    expect(html).toContain("₱1.00");
+    expect(html).toContain("Tax (as invoiced)");
+    expect(html).toContain("₱0.00");
+    expect(html).toContain("https://bke.example.invalid/dashboard/invoices/invoice_123");
+    expect(html).toContain("https://bke.example.invalid/bke");
+    expect(html).toContain("not a BIR-certified tax invoice");
+    expect(html).not.toMatch(/adobe\.com|Adobe Creative Cloud|licenseKey|keyCiphertext|claimCode/);
+  });
+
+  it("escapes every user-supplied product and reference value; never trusts an injected invoice URL", () => {
+    const html = renderPurchaseConfirmationEmailHtml({
+      ...payload,
+      orderNumber: 'BKE"><script>alert(1)</script>',
+      items: [{ ...payload.items[0], productName: '<img src=x onerror=alert(1)>' }],
+    }, "https://bke.example.invalid");
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain('BKE"><script>');
+    expect(html).toContain("&lt;script&gt;");
+    expect(html).toContain("&lt;img");
+    expect(html).toContain("https://bke.example.invalid/dashboard/invoices/invoice_123");
+    expect(() => renderPurchaseConfirmationEmailHtml(payload, "https://user:secret@evil.example"))
+      .toThrow("PURCHASE_EMAIL_APP_URL_INVALID");
+  });
+
+  it("omits contradictory or absent tax breakdown and preserves old queued payload compatibility", () => {
+    const inconsistent = renderPurchaseConfirmationEmailHtml({
+      ...payload, subtotalMinor: 999, taxMinor: 12,
+    }, "https://bke.example.invalid");
+    expect(inconsistent).not.toContain(">Subtotal<");
+    expect(inconsistent).not.toContain("Tax (as invoiced)");
+    expect(inconsistent).toContain("TOTAL PAID");
+    const legacy = {
+      orderId: payload.orderId, orderNumber: payload.orderNumber, invoiceId: payload.invoiceId,
+      invoiceNumber: payload.invoiceNumber, currency: payload.currency, totalMinor: payload.totalMinor,
+      kind: payload.kind, items: [{ productName: "Legacy purchase", editionName: null, planName: null, quantity: 1 }],
+    };
+    const html = renderPurchaseConfirmationEmailHtml(legacy, "https://bke.example.invalid");
+    expect(html).toContain("Legacy purchase");
+    expect(html).toContain("See invoice");
+    expect(html).not.toContain("Tax (as invoiced)");
+  });
+
+  it("preserves gift privacy and explicitly refuses automatic renewal claims", () => {
+    const gift = renderPurchaseConfirmationEmailHtml({ ...payload, kind: "GIFT" }, "https://bke.example.invalid");
+    const renewal = renderPurchaseConfirmationEmailHtml({ ...payload, kind: "RENEWAL" }, "https://bke.example.invalid");
+    expect(gift).toContain("Claim Code");
+    expect(gift).toContain("only inside your authenticated BKE account");
+    expect(renewal).toContain("Future renewal payments are not automatic");
+    expect(gift).not.toMatch(/keyCiphertext|licenseKey/);
+  });
+
+  it("persists only final invoice-verified paid dates, tax and line prices after settlement", async () => {
+    const { tx, createMany } = fixture();
+    expect(await queueVerifiedPurchaseConfirmation(tx, {
+      orderId: "order-1", fulfillmentMode: "ACCOUNT_ENTITLEMENT", enabled: true,
+    })).toBe("QUEUED");
+    expect(requestAt(createMany).data[0].payload).toMatchObject({
+      paidAt: "2026-11-09T13:35:21.000Z",
+      subtotalMinor: 100,
+      taxMinor: 0,
+      items: [{ productName: "Render Dock", amountMinor: 100 }],
+    });
+    const worker = readFileSync("workers/entry.ts", "utf8");
+    const host = readFileSync("apps/web/email.ts", "utf8");
+    expect(worker).toContain("message.html ??");
+    expect(host).toContain("renderPurchaseConfirmationEmailHtml");
   });
 
   it("proves webhook queue only after fulfillment and dispatch only from the gated outbox", () => {

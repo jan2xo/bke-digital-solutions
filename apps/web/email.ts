@@ -19,7 +19,7 @@ import {
 import { operationResource } from "@/platform/host/operation-scope";
 import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { resolveResendConfiguration } from "@/apps/web/providers/capability";
-import { purchaseConfirmationEmailEnabled, PURCHASE_CONFIRMATION_TYPE, renderPurchaseConfirmationEmail } from "@/apps/web/email/purchase-confirmation";
+import { purchaseConfirmationEmailEnabled, PURCHASE_CONFIRMATION_TYPE, renderPurchaseConfirmationEmail, renderPurchaseConfirmationEmailHtml } from "@/apps/web/email/purchase-confirmation";
 
 function parseNodeEnv(value: string | undefined): "development" | "test" | "production" {
   const parsed = value ?? "development";
@@ -175,6 +175,9 @@ export function createPostgresEmailOutboxStore(getPool: typeof getPostgresPool =
         to: row.recipient,
         subject: row.subject,
         text: render(row.type, row.payload),
+        ...(row.type === PURCHASE_CONFIRMATION_TYPE
+          ? { html: renderPurchaseConfirmationEmailHtml(row.payload, process.env.APP_URL) }
+          : {}),
         idempotencyKey: row.id,
       }),
     }));

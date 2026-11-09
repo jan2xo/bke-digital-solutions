@@ -32,6 +32,22 @@ function createFakeResendProvider(
 }
 
 describe("Cloudflare primary email transport", () => {
+  it("passes optional HTML to Resend while retaining the identical plain-text alternative and idempotency", async () => {
+    const send = vi.fn(async () => ({ data: { id: "resend-rendered" } }));
+    const provider = createFakeResendProvider(send);
+    await provider.send({ ...message, html: "<table><tr><td>Receipt</td></tr></table>" });
+    expect(send).toHaveBeenCalledWith(
+      {
+        from: "BKE <support@example.com>",
+        to: message.to,
+        subject: message.subject,
+        text: message.text,
+        html: "<table><tr><td>Receipt</td></tr></table>",
+      },
+      { idempotencyKey: "outbox-row-17" },
+    );
+  });
+
   it("accepts a valid Cloudflare result without invoking Resend", async () => {
     const primary = vi.fn(async () => ({ messageId: "cf-message-1" }));
     const fallback: EmailProvider = { send: vi.fn(async () => undefined) };
