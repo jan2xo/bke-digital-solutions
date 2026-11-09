@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
-const workflow = readFileSync(".github/workflows/stage.yml", "utf8");
+const workflow = readFileSync(".github/legacy-workflows/2026-11-09/stage.yml", "utf8");
 const core = readFileSync(".github/workflows/ci.yml", "utf8");
 
-describe("intentional exact-head disposable staging", () => {
+describe("archived PR #266 Staging contract, no active trigger", () => {
+  it("keeps obsolete Staging workflows out of active Actions", () => {
+    expect(() => readFileSync(".github/workflows/stage.yml", "utf8")).toThrow();
+    expect(() => readFileSync(".github/workflows/ci-staging.yml", "utf8")).toThrow();
+  });
   it("registers owner-authorized issue-comment and precise-SHA entry points, not push/PR heavy triggers", () => {
     expect(workflow).toContain("issue_comment:");
     expect(workflow).toContain("workflow_dispatch:");
@@ -40,6 +44,12 @@ describe("intentional exact-head disposable staging", () => {
     expect(workflow).toContain("Dispatch exact-head branch-owned Staging");
     expect(workflow).toContain('workflow_id: "ci.yml", ref: authorizedBranch');
     expect(workflow).toContain('deploy_staging: "true"');
+    const staging = readFileSync(".github/legacy-workflows/2026-11-09/ci-staging.yml", "utf8");
+    expect(staging).toContain('environment:\n      name: Staging');
+    expect(staging).toContain('id-token: write');
+    expect(staging).toContain('if: ${{ needs.core.result == \'success\' }}');
+    expect(staging).not.toContain("issue_comment:");
+    expect(staging).not.toContain("pull_request:");
     expect(workflow).toContain("PAYMENT_PROVIDER: mock");
     expect(workflow).toContain("EMAIL_PROVIDER: log");
     expect(workflow).not.toContain("Infisical/secrets-action@");

@@ -114,16 +114,22 @@ describe("intent-driven certification foundation", () => {
       "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(workflow).toContain(
-      "group: ${{ inputs.deploy_staging && format('digital-solutions-staging-{0}', inputs.source_sha) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}",
-    );
-    expect(workflow).toContain("cancel-in-progress: ${{ !inputs.deploy_staging }}");
+    expect(workflow).toContain("group: digital-solutions-core-${{ inputs.source_sha || github.ref }}");
+    expect(workflow).toContain("cancel-in-progress: true");
     expect(workflow).toContain("default: false");
-    expect(workflow).toContain(
-      "if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_staging == true && needs.required-certification.result == 'success' }}",
-    );
-    const stagingJob = workflow.split("  staging-deploy:\n")[1]?.split("\n  required-certification:")[0];
-    expect(stagingJob).toContain("cancel-in-progress: false");
+    expect(workflow).toContain("required-certification:");
+    expect(workflow).not.toContain("  staging-deploy:");
+    expect(workflow).not.toContain("id-token: write");
+    // Explicit Staging is its own deployment-only workflow, never a reusable CI callee.
+    expect(existsSync(`${workflowsDir}/stage.yml`)).toBe(false);
+    expect(existsSync(`${workflowsDir}/ci-staging.yml`)).toBe(false);
+    const staging = readFileSync(".github/legacy-workflows/2026-11-09/ci-staging.yml", "utf8");
+    expect(staging).toContain("workflow_dispatch:");
+    expect(staging).not.toContain("workflow_call:");
+    expect(staging).toContain("uses: ./.github/workflows/ci.yml");
+    expect(staging).toContain("if: ${{ needs.core.result == 'success' }}");
+    expect(staging).toContain("environment:\n      name: Staging");
+    expect(staging).toContain("id-token: write");
     expect(workflow).not.toContain("github.event.pull_request");
     expect(workflow).not.toContain("push:");
   });
@@ -166,7 +172,7 @@ describe("intent-driven certification foundation", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 
     expect(workflow).toContain('tokens.includes("full")');
-    expect(workflow).toContain("targets = allowedTargets");
+    expect(workflow).toContain("targets = allowedTargets.filter");
     expect(workflow).not.toContain("pull_request:");
     expect(workflow).toContain("cancel-in-progress: true");
     expect(workflow).toContain(
