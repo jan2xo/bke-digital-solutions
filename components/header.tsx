@@ -4,6 +4,7 @@ import { LogoutButton } from "@/components/logout-button";
 import { getSiteContent } from "@/apps/web/site-content";
 import { MobileNavigation } from "@/components/mobile-navigation";
 import { OutsideHomepage } from "@/components/outside-homepage";
+import { GoogleAuthButton } from "@/components/google-auth-button";
 
 export async function Header() {
   const user = await currentUser();
@@ -15,10 +16,7 @@ export async function Header() {
       <LogoutButton />
     </>
   ) : (
-    <>
-      <Link href="/login">Sign in</Link>
-      <Link className="button button-yellow" href="/register">Get started</Link>
-    </>
+    <GoogleAuthButton flow="unified" formClassName="" buttonClassName="button button-yellow" />
   );
   const publicLinks = (
     <>
