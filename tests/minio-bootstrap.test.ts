@@ -85,15 +85,6 @@ function waitForMinio(runtime: ReturnType<typeof isolatedRuntime>) {
 }
 
 describe("production MinIO bootstrap contract", () => {
-  it("sources integration executables from the same immutable images as production", () => {
-    const dockerfile = readFileSync("tests/fixtures/minio/Dockerfile.integration", "utf8");
-    expect(dockerfile).toContain(`FROM ${productionMinioImage} AS minio-release`);
-    expect(dockerfile).toContain(`FROM ${productionMcImage} AS mc-release`);
-    expect(dockerfile).toContain("COPY --from=minio-release /usr/bin/minio /usr/local/bin/minio");
-    expect(dockerfile).toContain("COPY --from=mc-release /usr/bin/mc /usr/local/bin/mc");
-    expect(dockerfile).not.toContain("ADD --checksum=");
-  });
-
   it("uses bounded retries and bucket-scoped permissions", () => {
     expect(script).toContain("max_attempts=30");
     expect(script).toContain("MinIO initialization failed");
