@@ -80,6 +80,13 @@ assert.match(authenticatedHtml, /<header\b[^>]*class="site-header"/,
 assert.match(authenticatedHtml, /My Software/,
   "Verified customer must receive My Software CTA");
 console.log("PASS: anonymous Sonnet storefront and verified-session navigation in real workerd");
+// Browser behavior must be proven against the running disposable application,
+// not a separate generated mockup. Core is explicitly invoked by the PR plan.
+if (process.env.GITHUB_ACTIONS === "true") {
+  const { execFileSync } = await import("node:child_process");
+  execFileSync(process.execPath, ["scripts/workers-ui-browser-smoke.mjs"], { stdio: "inherit" });
+}
+
 for (let invocation = 0; invocation < 2; invocation++) {
   await Promise.all(sessions.map(async (session, index) => {
     const response = await fetch(origin + "/dashboard", {
