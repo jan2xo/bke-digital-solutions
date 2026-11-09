@@ -1,4 +1,5 @@
 name: Intent Certification
+run-name: PR #${{ github.event.issue.number || inputs.pr_number || 'manual' }} - Intent Certification
 
 on:
   issue_comment:
@@ -13,6 +14,10 @@ on:
         description: Space/comma-separated certification targets, or full
         required: true
         type: string
+      pr_number:
+        description: Optional exact PR number for dispatch-based PR certification
+        required: false
+        type: number
 
 permissions:
   contents: read
@@ -33,6 +38,7 @@ jobs:
     outputs:
       source_sha: ${{ steps.plan.outputs.source_sha }}
       targets_json: ${{ steps.plan.outputs.targets_json }}
+      pr_number: ${{ steps.plan.outputs.pr_number }}
     steps:
       - id: plan
         name: Resolve exact head and targets
@@ -40,10 +46,12 @@ jobs:
         env:
           DISPATCH_SHA: ${{ inputs.source_sha }}
           DISPATCH_TARGETS: ${{ inputs.targets }}
+          DISPATCH_PR_NUMBER: ${{ inputs.pr_number }}
         with:
           script: |
             const allowedTargets = [
               "core",
+              "pr",
               "accounts",
               "agent-store",
               "catalog",
@@ -65,6 +73,8 @@ jobs:
 
             let sourceSha;
             let requested;
+            let prNumber;
+            let activePr;
 
             if (context.eventName === "issue_comment") {
               const association = context.payload.comment?.author_association ?? "NONE";
@@ -85,6 +95,8 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: issue.number,
               });
+              activePr = response.data;
+              prNumber = issue.number;
               sourceSha = response.data.head.sha;
               requested = (context.payload.comment?.body ?? "")
                 .replace(/^(?:\/certify|BKE CERTIFY)\s+/i, "")
@@ -92,6 +104,20 @@ jobs:
             } else {
               sourceSha = (process.env.DISPATCH_SHA ?? "").trim();
               requested = (process.env.DISPATCH_TARGETS ?? "").trim();
+              const rawPr = (process.env.DISPATCH_PR_NUMBER ?? "").trim();
+              if (rawPr) {
+                prNumber = Number(rawPr);
+                if (!Number.isSafeInteger(prNumber) || prNumber <= 0) {
+                  core.setFailed("PR number must be a positive integer."); return;
+                }
+                const response = await github.rest.pulls.get({
+                  owner: context.repo.owner, repo: context.repo.repo, pull_number: prNumber,
+                });
+                activePr = response.data;
+                if (activePr.head.sha !== sourceSha) {
+                  core.setFailed("Dispatched SHA is not the exact current PR head."); return;
+                }
+              }
             }
 
             if (!/^[0-9a-f]{40}$/i.test(sourceSha ?? "")) {
@@ -114,7 +140,7 @@ jobs:
 
             let targets;
             if (tokens.includes("full") || tokens.includes("all")) {
-              targets = allowedTargets;
+              targets = allowedTargets.filter((target) => target !== "pr");
             } else {
               const unknown = tokens.filter((target) => !allowedTargets.includes(target));
               if (unknown.length > 0) {
@@ -126,13 +152,66 @@ jobs:
               targets = tokens;
             }
 
+            // PR-specific proof is read from the candidate exact head, never from
+            // a hard-coded main-only test recipe. It has no secrets or write token.
+            if (targets.includes("pr")) {
+              if (!prNumber || !activePr || activePr.state !== "open" ||
+                  activePr.head.repo?.full_name !== context.repo.owner + "/" + context.repo.repo) {
+                core.setFailed("PR-specific certification requires an open local PR."); return;
+              }
+              const manifestFile = ".github/pr-certification/pr-" + prNumber + ".json";
+              const response = await github.rest.repos.getContent({
+                owner: context.repo.owner, repo: context.repo.repo,
+                path: manifestFile, ref: sourceSha,
+              });
+              if (Array.isArray(response.data) || response.data.type !== "file" ||
+                  response.data.encoding !== "base64") {
+                core.setFailed("PR certification manifest is not a file."); return;
+              }
+              const plan = JSON.parse(Buffer.from(response.data.content, "base64").toString("utf8"));
+              const required = plan.requiredTargets;
+              if (plan.schemaVersion !== 1 || plan.pr !== prNumber || !Array.isArray(required) ||
+                  !required.includes("pr") || !required.every((target) =>
+                    allowedTargets.includes(target) && targets.includes(target))) {
+                core.setFailed("PR certification targets do not satisfy the exact-head declared graph."); return;
+              }
+            }
+
             core.setOutput("source_sha", sourceSha);
             core.setOutput("targets_json", JSON.stringify(targets));
+            core.setOutput("pr_number", String(prNumber ?? ""));
             await core.summary
               .addHeading("BKE certification plan")
               .addRaw(`Exact source SHA: \`${sourceSha}\`\n\n`)
               .addRaw(`Targets: \`${targets.join(", ")}\`\n`)
               .write();
+
+  pr:
+    name: PR #${{ needs.plan.outputs.pr_number }} - scoped branch certification
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.targets_json), 'pr')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      PR_NUMBER: ${{ needs.plan.outputs.pr_number }}
+      SOURCE_SHA: ${{ needs.plan.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.source_sha }}
+          persist-credentials: false
+      - name: Verify exact PR candidate
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Execute branch-authored PR #${{ needs.plan.outputs.pr_number }} certification
+        run: node scripts/ci/pr-certification.mjs
 
   core:
     needs: plan
@@ -265,6 +344,7 @@ jobs:
     if: always() && needs.plan.result == 'success'
     needs:
       - plan
+      - pr
       - core
       - accounts
       - agent-store
