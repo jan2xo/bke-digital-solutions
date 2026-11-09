@@ -20,9 +20,9 @@ export default {
             from: sender.name ? { email: sender.email, name: sender.name } : sender.email,
             subject: message.subject,
             text: message.text,
-            html: "<p>" + message.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+            html: message.html ?? ("<p>" + message.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
               .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;")
-              .replace(/\n/g, "<br>") + "</p>",
+              .replace(/\n/g, "<br>") + "</p>"),
           });
           // The caller awaits a bounded deadline. Do not add the raw, possibly
           // never-settling RPC to response-scope cleanup/background tracking.

@@ -9,7 +9,7 @@ export type ResendEmailConfiguration = Readonly<{
 }>;
 type ResendClientLike = Readonly<{ emails: Readonly<{
   send(
-    message: Readonly<{ from: string; to: string; subject: string; text: string }>,
+    message: Readonly<{ from: string; to: string; subject: string; text: string; html?: string }>,
     options?: Readonly<{ idempotencyKey: string }>,
   ): Promise<Readonly<{ data?: unknown; error?: unknown }>>;
 }> }>;
@@ -51,6 +51,7 @@ export function createResendEmailProvider(options: Readonly<{
         result = await withEmailSendDeadline(() => client.emails.send({
           from: `${configuration.senderName} <${configuration.senderEmail}>`,
           to: message.to, subject: message.subject, text: message.text,
+          ...(message.html ? { html: message.html } : {}),
         }, message.idempotencyKey ? { idempotencyKey: message.idempotencyKey } : undefined), "resend", timeoutMs);
       } catch {
         throw unconfirmed();
