@@ -152,29 +152,38 @@ jobs:
               targets = tokens;
             }
 
-            // PR-specific proof is read from the candidate exact head, never from
-            // a hard-coded main-only test recipe. It has no secrets or write token.
-            if (targets.includes("pr")) {
-              if (!prNumber || !activePr || activePr.state !== "open" ||
-                  activePr.head.repo?.full_name !== context.repo.owner + "/" + context.repo.repo) {
-                core.setFailed("PR-specific certification requires an open local PR."); return;
-              }
+            // The PR manifest is the certification-plan authority whenever present.
+            // It must be read from the immutable PR head, not the default branch.
+            if (prNumber && activePr && activePr.state === "open" &&
+                activePr.head.repo?.full_name === context.repo.owner + "/" + context.repo.repo) {
               const manifestFile = ".github/pr-certification/pr-" + prNumber + ".json";
-              const response = await github.rest.repos.getContent({
-                owner: context.repo.owner, repo: context.repo.repo,
-                path: manifestFile, ref: sourceSha,
-              });
-              if (Array.isArray(response.data) || response.data.type !== "file" ||
-                  response.data.encoding !== "base64") {
-                core.setFailed("PR certification manifest is not a file."); return;
+              let response;
+              try {
+                response = await github.rest.repos.getContent({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  path: manifestFile, ref: sourceSha,
+                });
+              } catch (error) {
+                if (error.status !== 404) throw error;
               }
-              const plan = JSON.parse(Buffer.from(response.data.content, "base64").toString("utf8"));
-              const required = plan.requiredTargets;
-              if (plan.schemaVersion !== 1 || plan.pr !== prNumber || !Array.isArray(required) ||
-                  !required.includes("pr") || !required.every((target) =>
-                    allowedTargets.includes(target) && targets.includes(target))) {
-                core.setFailed("PR certification targets do not satisfy the exact-head declared graph."); return;
+              if (response) {
+                if (Array.isArray(response.data) || response.data.type !== "file" ||
+                    response.data.encoding !== "base64") {
+                  core.setFailed("PR certification manifest is not a file."); return;
+                }
+                const plan = JSON.parse(Buffer.from(response.data.content, "base64").toString("utf8"));
+                const required = plan.requiredTargets;
+                if (tokens.includes("full") || tokens.includes("all")) targets = [...targets, "pr"];
+                if (plan.schemaVersion !== 1 || plan.pr !== prNumber || !Array.isArray(required) ||
+                    !required.includes("pr") || new Set(required).size !== required.length ||
+                    !required.every((target) => allowedTargets.includes(target) && targets.includes(target))) {
+                  core.setFailed("PR #"+prNumber+" requires its declared exact-head graph, not a partial proof."); return;
+                }
+              } else if (targets.includes("pr")) {
+                core.setFailed("PR #"+prNumber+" is missing its branch-owned certification manifest."); return;
               }
+            } else if (targets.includes("pr")) {
+              core.setFailed("PR-specific certification requires an open same-repository PR."); return;
             }
 
             core.setOutput("source_sha", sourceSha);

@@ -172,7 +172,7 @@ describe("intent-driven certification foundation", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 
     expect(workflow).toContain('tokens.includes("full")');
-    expect(workflow).toContain("targets = allowedTargets");
+    expect(workflow).toContain("targets = allowedTargets.filter");
     expect(workflow).not.toContain("pull_request:");
     expect(workflow).toContain("cancel-in-progress: true");
     expect(workflow).toContain(
