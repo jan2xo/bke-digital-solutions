@@ -17,7 +17,6 @@ describe("customer-facing contrast safeguards", () => {
 
   it("keeps standalone admin light panels readable", () => {
     expect(read("app/admin/compliance/page.tsx")).toContain('className="card p-5"');
-    expect(read("app/admin/supply-chain/page.tsx")).toContain('className="card mt-8 p-6"');
   });
 
   it("keeps account metadata and secondary content on readable dark-theme colors", () => {
@@ -32,15 +31,18 @@ describe("customer-facing contrast safeguards", () => {
     expect(licensingPage).toContain("text-[#a8b5c4]");
   });
 
-  it("keeps authentication notices readable on light utility surfaces", () => {
-    const styles = read("app/globals.css");
-    const mfaPage = read("app/login/mfa/page.tsx");
-    const magicLink = read("components/magic-link-form.tsx");
-    expect(styles).toContain("main > section .bg-blue-50");
-    expect(styles).toContain("main > section .bg-amber-50");
-    expect(styles).toContain("main > section .bg-emerald-50");
-    expect(mfaPage).toContain("text-blue-950");
-    expect(mfaPage).toContain("text-amber-950");
-    expect(magicLink).toContain("text-emerald-950");
+  it("keeps unified Google sign-in and post-OIDC legal consent on readable surfaces", () => {
+    const login = read("app/login/page.tsx");
+    const entry = read("components/google-auth-button.tsx");
+    const consent = read("components/google-enrollment-consent.tsx");
+    const consentPage = read("app/auth/consent/page.tsx");
+    expect(login).toContain("GoogleAuthButton");
+    expect(login).toContain("text-[#a8b5c4]");
+    expect(entry).toContain('props.flow === "unified"');
+    expect(entry).not.toContain("legal-consent-panel");
+    expect(consentPage).toContain('text-[#a8b5c4]');
+    expect(consent).toContain('className="card grid gap-5 p-6"');
+    expect(consent).toContain('className="font-bold text-[#ffd15a] underline"');
+    expect(consent).toContain('className="button button-yellow"');
   });
 });

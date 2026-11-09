@@ -37,7 +37,9 @@ describe("V2 Privacy + Catalog released-package adoption", () => {
     expect(adapter).toContain("@bke/catalog/logic/product-deletion-policy");
     expect(adapter).toContain("planCatalogProductDeletionRequest");
     expect(adapter).toContain("planCatalogProductDeletionFinalization");
-    expect(adapter).toContain("@/apps/web/storage/cleanup");
+    expect(adapter).not.toContain("@/apps/web/storage/cleanup");
+    expect(adapter).toContain("storageObjects: 0");
+    expect(adapter).toContain("licenseAssignment.count");
     expect(adapter).toContain("@/platform/host/security/redaction");
     expect(adapter).not.toContain("@/lib/redaction");
   });

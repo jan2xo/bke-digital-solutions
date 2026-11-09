@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   query: vi.fn(),
-  storage: vi.fn(),
   connect: vi.fn(),
   ping: vi.fn(),
   quit: vi.fn(),
@@ -12,7 +11,6 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/platform/host/db", () => ({ db: { $queryRaw: mocks.query } }));
 vi.mock("@/platform/host/env", () => ({ env: { PAYMENT_PROVIDER: "paymongo", EMAIL_PROVIDER: "resend", REDIS_URL: "redis://valkey:6379" } }));
-vi.mock("@/lib/storage", () => ({ checkStorageReadiness: mocks.storage }));
 vi.mock("@/lib/provider-config/service", () => ({ resolvePayMongoConfiguration: mocks.paymongo, resolveResendConfiguration: mocks.resend }));
 vi.mock("@/lib/logger", () => ({ operationalLog: vi.fn() }));
 vi.mock("redis", () => ({ createClient: () => ({ connect: mocks.connect, ping: mocks.ping, quit: mocks.quit, get isOpen() { return true; } }) }));
@@ -22,7 +20,6 @@ describe("runtime readiness", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.query.mockResolvedValue([{ value: 1 }]);
-    mocks.storage.mockResolvedValue(undefined);
     mocks.connect.mockResolvedValue(undefined);
     mocks.ping.mockResolvedValue("PONG");
     mocks.quit.mockResolvedValue(undefined);
@@ -32,13 +29,12 @@ describe("runtime readiness", () => {
 
   it("is ready only when infrastructure and selected provider configuration resolve", async () => {
     const { readiness } = await import("@/lib/health");
-    await expect(readiness()).resolves.toEqual({ ready: true, checks: { postgresql: "up", valkey: "up", objectStorage: "up", providers: "up" } });
+    await expect(readiness()).resolves.toEqual({ ready: true, checks: { postgresql: "up", valkey: "up", providers: "up" } });
   });
 
   it.each([
     ["database", () => mocks.query.mockRejectedValue(new Error("down")), "postgresql"],
     ["Valkey", () => mocks.ping.mockRejectedValue(new Error("down")), "valkey"],
-    ["storage", () => mocks.storage.mockRejectedValue(new Error("down")), "objectStorage"],
     ["provider configuration", () => mocks.paymongo.mockRejectedValue(new Error("unavailable")), "providers"],
   ])("fails closed when %s is unavailable", async (_label, fail, dependency) => {
     fail();

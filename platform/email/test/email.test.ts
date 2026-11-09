@@ -37,7 +37,7 @@ function storeFor(rows: readonly EmailOutboxRecord[]): EmailOutboxStore {
 }
 
 describe("V2 platform email", () => {
-  it("dispatches with V1 defaults, claim recovery, and outbox-id idempotency", async () => {
+  it("dispatches with claim recovery visibility and outbox-id idempotency", async () => {
     const row = outboxRecord();
     const store = storeFor([row]);
     const send = vi.fn(async () => undefined);
@@ -74,6 +74,7 @@ describe("V2 platform email", () => {
     expect(result).toEqual({
       selected: 1,
       recovered: 2,
+      reviewRequired: 2,
       sent: 1,
       failed: 0,
       terminal: 0,

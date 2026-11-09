@@ -69,6 +69,8 @@ describe("payment webhook owner-adoption parity", () => {
     expect(processorSource).toContain('issueCommercialLease');
     expect(processorSource).not.toContain('dispatchEmailOutbox');
     expect(processorSource).not.toContain('queueCommerceEmail');
+    expect(processorSource).toContain('queueVerifiedPurchaseConfirmation');
+    expect(processorSource).not.toContain('emailProvider.send');
     expect(processorSource).toContain("persistNotification");
     expect(processorSource).toContain('event: "PAYMENT_RECEIVED"');
     expect(notificationCenterSource).toContain("NOTIFICATIONS_INTENT_CAPABILITY_ID");

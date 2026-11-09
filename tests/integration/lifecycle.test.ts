@@ -7,7 +7,7 @@ import { PrismaClient } from "../../platform/host/generated/prisma/client";
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 let userId="",accountId="",purchasePlanId="",orderId="",checkoutId="",licenseKey="",licenseId="",subscriptionId="";let paidRaw=Buffer.alloc(0);
 
-describe.sequential("database-backed mock commerce lifecycle",()=>{
+describe("database-backed mock commerce lifecycle", { concurrent: false },()=>{
   beforeAll(async()=>{
     const plan=await db.purchasePlan.findFirstOrThrow({where:{edition:{product:{slug:"bke-cloudops"}},type:"ANNUAL",active:true}});purchasePlanId=plan.id;
     const cloudOps=await db.product.findUniqueOrThrow({where:{slug:"bke-cloudops"}});

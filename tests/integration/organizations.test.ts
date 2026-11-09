@@ -50,7 +50,7 @@ async function ensureFixtures() {
   return fixturesReady;
 }
 
-describe.sequential("organization integration controls", () => {
+describe("organization integration controls", { concurrent: false }, () => {
   afterAll(async () => { await db.$disconnect(); });
 
   it("accepts an invitation only once under concurrent replay and audits one membership", async () => {

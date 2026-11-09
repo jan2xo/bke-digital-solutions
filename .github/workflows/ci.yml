@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       skip_containers:
-        description: Skip Docker-only deployment image builds for Workers staging certification
+        description: Skip Docker-only image builds when the trusted Staging caller requests Workers proof
         required: false
         type: boolean
         default: false
@@ -17,22 +17,12 @@ on:
         description: Exact commit SHA to certify
         required: true
         type: string
-      deploy_staging:
-        description: Branch-owned Staging CI only; no deploy job on main
-        required: false
-        default: false
-        type: boolean
-      initialize_staging_legal:
-        description: Optional reviewed Staging test notices on authorized branch
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
 
 concurrency:
-  group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}
+  group: digital-solutions-core-${{ inputs.source_sha || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -86,7 +76,16 @@ jobs:
       - name: Generate Prisma client
         run: npm run db:generate
       - name: Require generated Prisma to be committed
+        id: generated_prisma_diff
         run: git diff --exit-code -- platform/persistence/generated/prisma
+      - name: Capture generated Prisma for review
+        if: ${{ failure() && steps.generated_prisma_diff.outcome == 'failure' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: prisma-generated-${{ env.SOURCE_SHA }}
+          path: platform/persistence/generated/prisma/
+          if-no-files-found: error
+          retention-days: 3
       - name: Validate Prisma schema
         run: npx prisma validate
       - name: Apply database migrations
@@ -95,6 +94,10 @@ jobs:
         run: npm run db:status
       - name: Run post-migration smoke
         run: npm run db:smoke
+      - name: Verify Staging legal initialization against disposable PostgreSQL
+        env:
+          RUN_STAGING_LEGAL_BOOTSTRAP_TESTS: 'true'
+        run: npm test -- tests/integration/staging-legal-bootstrap.test.ts
       - name: Seed disposable test database
         run: npm run db:seed
       - name: Generate disposable test signing keys
@@ -151,6 +154,8 @@ jobs:
           node --check scripts/v3-disposable-env.mjs
           node --check scripts/v3-disposable-compose.mjs
           node --check scripts/v3-disposable-doctor.mjs
+      - name: Certify live PayMongo configuration segregation and fail-closed contracts
+        run: node --test scripts/prepare-live-paymongo.test.mjs
       - name: Build application
         run: npm run build
       - name: Repository diff hygiene
@@ -212,6 +217,120 @@ jobs:
       - name: Build application runner container
         run: docker build --target runner -t bke-digital-solutions:ci .
 
+  workers-application:
+    name: Workers application receiving proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: bke
+          POSTGRES_PASSWORD: bke
+          POSTGRES_DB: bke_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U bke -d bke_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: test
+      DEPLOYMENT_ENV: test
+      APP_URL: https://workers-ci.example.invalid
+      DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
+      SESSION_SECRET: ci-session-secret-with-at-least-32-chars
+      LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
+      LICENSE_SIGNING_KEY_ID: ci-license-signing-key
+      CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+      EMAIL_FROM: build@example.invalid
+      S3_BUCKET: ci-private
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: log
+      WRANGLER_SEND_METRICS: 'false'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify source and workflow provenance
+        env:
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run db:generate
+      - name: Require unchanged generated Prisma client
+        run: git diff --exit-code -- platform/persistence/generated/prisma
+      - run: npm run db:deploy
+      - run: npm run db:seed
+      - name: Create disposable signing keys
+        run: |
+          npm run licensing:keys .certification-secrets
+          {
+            echo 'LICENSE_SIGNING_PRIVATE_KEY<<BKE_PRIVATE_KEY'
+            cat .certification-secrets/license-signing-private.pem
+            echo 'BKE_PRIVATE_KEY'
+            echo 'LICENSE_SIGNING_PUBLIC_KEY<<BKE_PUBLIC_KEY'
+            cat .certification-secrets/license-signing-public.pem
+            echo 'BKE_PUBLIC_KEY'
+          } >> "$GITHUB_ENV"
+      - name: Write disposable workerd configuration
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from "node:fs";
+          const names = [
+            "DEPLOYMENT_ENV", "APP_URL", "SESSION_SECRET",
+            "LICENSE_PEPPER", "CRON_SECRET", "EMAIL_FROM",
+            "PAYMENT_PROVIDER", "EMAIL_PROVIDER",
+            "LICENSE_SIGNING_PRIVATE_KEY", "LICENSE_SIGNING_PUBLIC_KEY", "LICENSE_SIGNING_KEY_ID",
+          ];
+          const values = { NODE_ENV: "production",
+            ...Object.fromEntries(names.map(name => [name, process.env[name]])) };
+          writeFileSync(".dev.vars", Object.entries(values)
+            .map(([key, value]) => key + "=" + JSON.stringify(value)).join("\n") + "\n",
+            { mode: 0o600 });
+          NODE
+      - run: npm run workers:types
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Enforce production high and critical advisory policy
+        run: npm audit --omit=dev --audit-level=high
+      - name: Build actual Workers application
+        run: npm run workers:build
+      - run: npm run workers:typecheck
+      - name: Test public Staging smoke contract
+        run: node --test scripts/staging-smoke.test.mjs
+      - name: Certify guarded live PayMongo configuration without secret access or deployment
+        run: node --test scripts/prepare-live-paymongo.test.mjs
+      - name: Verify bundle measurement boundary
+        run: node --test scripts/check-worker-bundle.test.mjs
+      - name: Produce actual Worker upload without deployment
+        run: npx --no-install wrangler deploy --dry-run --outfile .workers-build/worker.bundle --metafile .workers-build/wrangler-meta.json
+      - name: Require Worker upload to fit the platform size limit
+        run: node scripts/check-worker-bundle.mjs .workers-build/worker.bundle
+      - name: Measure local startup without deployment
+        run: npx --no-install wrangler check startup --worker .workers-build/worker.bundle --outfile .workers-build/startup.cpuprofile
+      - name: Produce disposable application sessions
+        run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/workers-fixture.ts
+      - name: Exercise application in workerd
+        run: |
+          env -u DATABASE_URL -u DIRECT_DATABASE_URL -u S3_BUCKET -u S3_ENDPOINT -u S3_PUBLIC_UPLOAD_ENDPOINT -u S3_ACCESS_KEY_ID -u S3_SECRET_ACCESS_KEY -u S3_REGION -u S3_FORCE_PATH_STYLE npm run workers:preview -- --port 8787 > /tmp/bke-workerd.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true; sleep 1' EXIT
+          npm run workers:smoke
+      - name: Require generated lockfile to be committed
+        run: git diff --exit-code -- package.json package-lock.json
+      - name: Preserve workerd failure evidence
+        if: failure()
+        run: |
+          if test -f /tmp/bke-workerd.log; then tail -n 120 /tmp/bke-workerd.log; fi
+
+
   required-certification:
     name: Required certification
     if: ${{ always() }}
@@ -220,6 +339,7 @@ jobs:
       - code-quality-build
       - security
       - deployment-containers
+      - workers-application
     runs-on: ubuntu-latest
     steps:
       - name: Require every core CI module
@@ -229,11 +349,13 @@ jobs:
           SECURITY: ${{ needs.security.result }}
           DEPLOYMENT_CONTAINERS: ${{ needs.deployment-containers.result }}
           SKIP_CONTAINERS: ${{ inputs.skip_containers }}
+          WORKERS_APPLICATION: ${{ needs.workers-application.result }}
         run: |
-          for value in "$DATABASE_TESTS" "$CODE_QUALITY_BUILD" "$SECURITY"; do
+          for value in "$DATABASE_TESTS" "$CODE_QUALITY_BUILD" "$SECURITY" "$WORKERS_APPLICATION"; do
             test "$value" = "success" || { echo "Required core CI module did not pass: $value"; exit 1; }
           done
           if [ "$SKIP_CONTAINERS" != "true" ]; then
             test "$DEPLOYMENT_CONTAINERS" = "success" || { echo "Required container certification did not pass: $DEPLOYMENT_CONTAINERS"; exit 1; }
           fi
           echo "Required Digital Solutions certification: PASS"
+

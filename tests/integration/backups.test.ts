@@ -8,7 +8,7 @@ const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 const ids: string[] = [];
 
-describe.sequential("backup operation durability", () => {
+describe("backup operation durability", { concurrent: false }, () => {
   afterAll(async () => {
     await db.auditLog.deleteMany({ where: { targetId: { in: ids } } });
     await db.backupOperation.deleteMany({ where: { backupId: { in: ids } } });

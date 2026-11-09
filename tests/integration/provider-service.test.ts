@@ -19,7 +19,7 @@ vi.mock("@/platform/host/env", () => ({ env: {
   SUPPORT_EMAIL: "support@jl-bke.com",
 } }));
 
-describe.sequential("database provider configuration service", () => {
+describe("database provider configuration service", { concurrent: false }, () => {
   let actorId = "";
   let db: typeof import("@/platform/host/db")["db"];
   let service: typeof import("@/lib/provider-config/service");

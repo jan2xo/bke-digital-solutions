@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pr": 297,
+  "intent": "Repair PR-scoped, least-privilege certification and retire the completed PR #266 Staging workflow",
+  "requiredTargets": [
+    "pr",
+    "core"
+  ],
+  "testFiles": [
+    "tests/pr-scoped-certification.test.ts",
+    "tests/ci-intent-driven-certification.test.ts",
+    "tests/ci-intent-driven-pr-guard.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts",
+    "tests/ci-module-ownership.test.ts",
+    "tests/staging-branch-dispatch.test.ts",
+    "tests/staging-trigger-ci.test.ts"
+  ]
+}

@@ -6,7 +6,7 @@ import { PrismaClient } from "../../platform/host/generated/prisma/client";
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
-describe.sequential("provider credential persistence constraints", () => {
+describe("provider credential persistence constraints", { concurrent: false }, () => {
   let actorId = "";
   let configurationId = "";
   afterAll(async () => {

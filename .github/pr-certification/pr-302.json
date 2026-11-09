@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 302,
+  "intent": "Reconcile public LegalDocument navigation with immutable Neon canonical slugs without DB mutation, and prove built Digital Solutions web host",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/legal-slug-reconciliation.test.ts"
+  ]
+}

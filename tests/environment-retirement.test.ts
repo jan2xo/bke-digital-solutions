@@ -2,14 +2,11 @@ import { describe, expect, it } from "vitest";
 import { readFile } from "node:fs/promises";
 
 const runtimeConsumers = [
-  "app/api/auth/magic/consume/route.ts",
-  "app/api/auth/verify/route.ts",
   "app/api/cron/email-outbox/route.ts",
   "app/api/cron/expirations/route.ts",
   "app/api/cron/renewals/route.ts",
   "app/api/cron/scheduler/route.ts",
   "apps/web/legal/render.ts",
-  "apps/web/storage/object-storage.ts",
 ];
 
 describe("legacy environment adapter retirement", () => {

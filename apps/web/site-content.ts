@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { auditInTransaction } from "@/apps/web/audit";
+import { getLegalPresentationEnvironment } from "@/apps/web/config/environment";
 import { getPostgresPool } from "@/apps/web/persistence/postgres";
 
 export const SITE_CONTENT_GROUPS = {
@@ -70,7 +71,10 @@ export async function getSiteContent(): Promise<SiteContentValues> {
       WHERE "key" = ANY($1::text[])`,
     [SITE_CONTENT_KEYS],
   );
-  const defaults = DEFAULT_SITE_CONTENT as Record<SiteContentKey, string>;
+  const defaults = {
+    ...DEFAULT_SITE_CONTENT,
+    supportEmail: getLegalPresentationEnvironment().supportEmail,
+  } as Record<SiteContentKey, string>;
   return SITE_CONTENT_KEYS.reduce(
     (values, key) => ({ ...values, [key]: result.rows.find((row) => row.key === key)?.value ?? defaults[key] }),
     {} as SiteContentValues,
@@ -78,11 +82,12 @@ export async function getSiteContent(): Promise<SiteContentValues> {
 }
 
 export async function saveSiteContent(actorId: string, values: Partial<SiteContentValues>) {
-  const parsed = valuesSchema.parse({ ...DEFAULT_SITE_CONTENT, ...values });
+  const parsed = valuesSchema.partial().strict().parse(values);
+  const entries = Object.entries(parsed).filter((entry): entry is [SiteContentKey, string] => typeof entry[1] === "string");
   const transaction = await getPostgresPool().connect();
   try {
     await transaction.query("BEGIN");
-    for (const [key, value] of Object.entries(parsed)) {
+    for (const [key, value] of entries) {
       await transaction.query(
         `INSERT INTO "SiteContent"
            ("id", "key", "group", "value", "updatedBy", "createdAt", "updatedAt")
@@ -99,7 +104,7 @@ export async function saveSiteContent(actorId: string, values: Partial<SiteConte
       actorId,
       action: "SITE_CONTENT_UPDATED",
       targetType: "SiteContent",
-      metadata: { keys: Object.keys(parsed) },
+      metadata: { keys: entries.map(([key]) => key) },
     });
     await transaction.query("COMMIT");
   } catch (error) {

@@ -53,7 +53,7 @@ export async function requestBackupOperation(input: { backupId: string; type: Ex
   if (!backup) throw new Error("BACKUP_NOT_FOUND");
   if (input.type === "RESTORE_ISOLATED") {
     if (!validateRestoreConfirmation(backup.id, input.confirmation ?? "")) throw new Error("INVALID_RESTORE_CONFIRMATION");
-    if (env.BACKUP_RESTORE_ACK !== "ISOLATED_TARGET_ONLY" || !env.BACKUP_RESTORE_DATABASE_URL || !env.BACKUP_RESTORE_S3_BUCKET) throw new Error("ISOLATED_RESTORE_NOT_CONFIGURED");
+    if (env.BACKUP_RESTORE_ACK !== "ISOLATED_TARGET_ONLY" || !env.BACKUP_RESTORE_DATABASE_URL) throw new Error("ISOLATED_RESTORE_NOT_CONFIGURED");
   }
   const operation = await db.backupOperation.create({ data: {
     backupId: backup.id,

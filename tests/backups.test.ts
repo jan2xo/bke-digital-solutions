@@ -18,10 +18,13 @@ describe("backup integrity", () => {
     const manifest = backupManifestSchema.parse({ formatVersion: 1, backupId: "b1", deploymentId: "test", createdAt: new Date().toISOString(), retentionTier: "DAILY", database: artifact, objects: [], missingSourceObjects: [], migrations: ["m1"], tableCounts: { users: 1 }, runtime: { nodeVersion: "v22", paymentProvider: "mock", emailProvider: "log", providerConfigSource: "environment", sourceBucket: "source" } });
     const checksum = sha256(canonicalJson(manifest));
     expect(verifyManifest(manifest, checksum).checksumMatches).toBe(true);
+    const { sourceBucket: _legacySourceBucket, ...runtime } = manifest.runtime;
+    const databaseOnly = { ...manifest, runtime };
+    expect(backupManifestSchema.parse(databaseOnly).objects).toEqual([]);
     expect(verifyManifest({ ...manifest, deploymentId: "tampered" }, checksum).checksumMatches).toBe(false);
   });
 
-  it("detects referenced objects missing from storage", () => {
+  it("preserves backwards-compatible missing-object detection for historical backup manifests", () => {
     expect(missingObjects(["installer/a", "images/b", "installer/a"], ["installer/a", "orphan/c"])).toEqual(["images/b"]);
   });
 });

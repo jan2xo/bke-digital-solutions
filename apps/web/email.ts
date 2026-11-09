@@ -2,6 +2,11 @@ import "server-only";
 
 import {
   createLoggingEmailProvider,
+  createCloudflareEmailProvider,
+  CLOUDFLARE_EMAIL_SEND_RESOURCE,
+  EmailDeliveryError,
+  parseEmailSender,
+  type CloudflareEmailSend,
   createResendEmailProvider,
   dispatchEmailOutbox as dispatchPlatformEmailOutbox,
   type EmailMessage,
@@ -11,9 +16,10 @@ import {
   type EmailOutboxStore,
   type EmailProvider,
 } from "@/platform/email";
-import { getWebHostEnvironment } from "@/apps/web/config/environment";
+import { operationResource } from "@/platform/host/operation-scope";
 import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { resolveResendConfiguration } from "@/apps/web/providers/capability";
+import { purchaseConfirmationEmailEnabled, PURCHASE_CONFIRMATION_TYPE, renderPurchaseConfirmationEmail, renderPurchaseConfirmationEmailHtml } from "@/apps/web/email/purchase-confirmation";
 
 function parseNodeEnv(value: string | undefined): "development" | "test" | "production" {
   const parsed = value ?? "development";
@@ -23,9 +29,9 @@ function parseNodeEnv(value: string | undefined): "development" | "test" | "prod
   return parsed;
 }
 
-function parseEmailProvider(value: string | undefined): "log" | "resend" {
+function parseEmailProvider(value: string | undefined): "log" | "resend" | "cloudflare" {
   const parsed = value ?? "log";
-  if (parsed !== "log" && parsed !== "resend") {
+  if (parsed !== "log" && parsed !== "resend" && parsed !== "cloudflare") {
     throw new Error("Invalid web host environment: EMAIL_PROVIDER");
   }
   return parsed;
@@ -39,26 +45,62 @@ function parseDeploymentEnvironment(value: string | undefined): "development" | 
   return parsed;
 }
 
-const hostEnvironment = getWebHostEnvironment();
-const nodeEnv = parseNodeEnv(process.env.NODE_ENV);
-const emailProviderMode = parseEmailProvider(process.env.EMAIL_PROVIDER);
-const deploymentEnvironment = parseDeploymentEnvironment(process.env.DEPLOYMENT_ENV);
-if (deploymentEnvironment === "production" && emailProviderMode === "log") {
-  throw new Error("Invalid web host environment: log email transport is forbidden in production");
-}
-
 const loggingProvider = createLoggingEmailProvider();
 const resendProvider = createResendEmailProvider({ resolveConfiguration: resolveResendConfiguration });
 
-const runtimeEmailProvider: EmailProvider = Object.freeze({
-  async send(message: EmailMessage) {
-    const disabled =
-      process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true" ||
-      (nodeEnv === "test" && !process.env.RESEND_SANDBOX_TO);
-    const useLog = emailProviderMode !== "resend" && !process.env.RESEND_SANDBOX_TO;
-    if (disabled || useLog) return loggingProvider.send(message);
-    return resendProvider.send(message);
-  },
+function runtimeProvider(): EmailProvider {
+  const nodeEnv = parseNodeEnv(process.env.NODE_ENV);
+  const mode = parseEmailProvider(process.env.EMAIL_PROVIDER);
+  const deployment = parseDeploymentEnvironment(process.env.DEPLOYMENT_ENV);
+  if (deployment === "production" && process.env.BKE_RUNTIME === "workers" && mode === "resend") {
+    throw new Error("Workers production requires Cloudflare primary email; Resend is fallback only");
+  }
+  if (deployment === "production" &&
+      (mode === "log" || process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true")) {
+    throw new Error("Production business email must have an enabled external transport");
+  }
+  const sandboxTo = process.env.RESEND_SANDBOX_TO?.trim();
+  if (process.env.BKE_DISABLE_EXTERNAL_EMAIL === "true" || (nodeEnv === "test" && !sandboxTo)) {
+    return loggingProvider;
+  }
+  if (mode === "log" && !sandboxTo) return loggingProvider;
+  const selected = mode === "cloudflare"
+    ? createCloudflareEmailProvider({
+        sendPrimary: process.env.BKE_RUNTIME === "workers"
+          ? operationResource<CloudflareEmailSend | undefined>(CLOUDFLARE_EMAIL_SEND_RESOURCE, () => undefined)
+          : undefined,
+        resendFallback: createResendEmailProvider({
+          async resolveConfiguration() {
+            const sender = parseEmailSender(process.env.EMAIL_FROM);
+            const configuration = await resolveResendConfiguration();
+            if (!sender || sender.email.toLowerCase() !== configuration.senderEmail.toLowerCase()) {
+              throw new EmailDeliveryError(
+                { provider: "resend", category: "SENDER_REJECTED" },
+                { acceptance: "REJECTED", retry: "STOP", fallbackEligible: false, preCall: true },
+              );
+            }
+            return configuration;
+          },
+        }),
+      })
+    : resendProvider;
+  if (!sandboxTo) return selected;
+  return Object.freeze({
+    async send(message: EmailMessage) {
+      if (message.to.toLowerCase() !== sandboxTo.toLowerCase()) {
+        throw new EmailDeliveryError(
+          { provider: "sandbox", category: "INVALID_RECIPIENT" },
+          { acceptance: "REJECTED", retry: "STOP", fallbackEligible: false, preCall: true },
+        );
+      }
+      return selected.send(message);
+    },
+  });
+}
+
+// Transport selection is lazy: queue-only imports never validate email settings.
+export const emailProvider: EmailProvider = Object.freeze({
+  async send(message: EmailMessage) { return runtimeProvider().send(message); },
 });
 
 const DURABLE_EMAIL_TYPES = Object.freeze([
@@ -71,10 +113,12 @@ const DURABLE_EMAIL_TYPES = Object.freeze([
 function render(type: string, payload: Record<string, unknown>) {
   const invoice = String(payload.invoiceNumber ?? "");
   switch (type) {
+    case PURCHASE_CONFIRMATION_TYPE:
+      return renderPurchaseConfirmationEmail(payload, process.env.APP_URL);
     case "INVOICE_ISSUED":
       return `Commercial invoice ${invoice} is available in your customer portal.`;
     case "SECURITY_SESSIONS_REVOKED":
-      return "Administrator session access was revoked. If this was not you, reset your password and review the security dashboard.";
+      return "Administrator session access was revoked. If this was not you, secure your Google account and review the security dashboard.";
     case "SECURITY_NEW_SESSION":
       return "A new administrator session was created. Review the security dashboard if this was not you.";
     case "SECURITY_ACCOUNT_CHANGED":
@@ -94,11 +138,14 @@ type DispatchRow = Readonly<{
   payload: Record<string, unknown>;
 }>;
 
-const emailOutboxStore: EmailOutboxStore = Object.freeze({
+export function createPostgresEmailOutboxStore(getPool: typeof getPostgresPool = getPostgresPool): EmailOutboxStore {
+  return Object.freeze({
   async recoverExpiredClaims(now: Date) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
-          SET "status" = 'FAILED', "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
+          SET "status" = 'PERMANENTLY_FAILED', "lastError" = 'DELIVERY_UNCONFIRMED',
+              "attempts" = "attempts" + 1,
+              "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
         WHERE "status" = 'PROCESSING' AND "claimExpiresAt" < $1`,
       [now],
     );
@@ -108,7 +155,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   async listDispatchable(
     { limit, maxAttempts }: Readonly<{ limit: number; maxAttempts: number }>,
   ): Promise<readonly EmailOutboxRecord[]> {
-    const result = await getPostgresPool().query<DispatchRow>(
+    const result = await getPool().query<DispatchRow>(
       `SELECT "id", "status"::text AS "status", "attempts", "recipient", "subject", "type", "payload"
          FROM "EmailOutbox"
         WHERE "status" IN ('PENDING', 'FAILED')
@@ -116,7 +163,9 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
           AND "type" = ANY($3::text[])
         ORDER BY "createdAt" ASC
         LIMIT $2`,
-      [maxAttempts, limit, DURABLE_EMAIL_TYPES],
+      [maxAttempts, limit, purchaseConfirmationEmailEnabled()
+        ? [...DURABLE_EMAIL_TYPES, PURCHASE_CONFIRMATION_TYPE]
+        : DURABLE_EMAIL_TYPES],
     );
     return result.rows.map((row) => Object.freeze({
       id: row.id,
@@ -126,13 +175,16 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
         to: row.recipient,
         subject: row.subject,
         text: render(row.type, row.payload),
+        ...(row.type === PURCHASE_CONFIRMATION_TYPE
+          ? { html: renderPurchaseConfirmationEmailHtml(row.payload, process.env.APP_URL) }
+          : {}),
         idempotencyKey: row.id,
       }),
     }));
   },
 
   async claim(input: Parameters<EmailOutboxStore["claim"]>[0]) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'PROCESSING', "claimedBy" = $4, "claimedAt" = $5, "claimExpiresAt" = $6
         WHERE "id" = $1 AND "status"::text = $2 AND "attempts" = $3`,
@@ -142,7 +194,7 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   },
 
   async markSent(input: Parameters<EmailOutboxStore["markSent"]>[0]) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
           SET "status" = 'SENT', "sentAt" = $3, "attempts" = $4, "lastError" = NULL,
               "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
@@ -153,9 +205,9 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
   },
 
   async markFailed(input: Parameters<EmailOutboxStore["markFailed"]>[0]) {
-    const result = await getPostgresPool().query(
+    const result = await getPool().query(
       `UPDATE "EmailOutbox"
-          SET "status" = $3::"EmailOutboxStatus", "attempts" = $4, "lastError" = $5,
+          SET "status" = $3, "attempts" = $4, "lastError" = $5,
               "claimedBy" = NULL, "claimedAt" = NULL, "claimExpiresAt" = NULL
         WHERE "id" = $1 AND "status" = 'PROCESSING' AND "claimedBy" = $2`,
       [input.id, input.workerId, input.status, input.attempts, input.failureCode],
@@ -163,52 +215,9 @@ const emailOutboxStore: EmailOutboxStore = Object.freeze({
     return (result.rowCount ?? 0) > 0;
   },
 });
-
-function tokenUrl(path: string, token: string) {
-  const url = new URL(path, hostEnvironment.appUrl);
-  url.searchParams.set("token", token);
-  return url;
 }
 
-export async function sendVerificationEmail(email: string, token: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Verify your BKE Digital Solutions account",
-    text: `Verify your account using this one-time link: ${tokenUrl("/api/auth/verify", token)}`,
-  });
-}
-
-export async function sendMagicLink(email: string, token: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Your BKE Digital Solutions sign-in link",
-    text: `Sign in using this one-time link (expires in 15 minutes): ${tokenUrl("/api/auth/magic/consume", token)}`,
-  });
-}
-
-export async function sendPasswordReset(email: string, token: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Reset your BKE Digital Solutions password",
-    text: `Reset your password using this one-time link (expires in 30 minutes): ${tokenUrl("/reset-password", token)}`,
-  });
-}
-
-export async function sendNativeVerificationCode(email: string, code: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: "Verify your BKE account",
-    text: `Your BKE account verification code is ${code}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid.`,
-  });
-}
-
-export async function sendIdentityLoginCode(email: string, code: string, reference: string) {
-  await runtimeEmailProvider.send({
-    to: email,
-    subject: `Your BKE verification code [${reference}]`,
-    text: `Your BKE verification code is ${code}. Verification reference: ${reference}. It expires in 10 minutes and can be used only once. Only the newest requested code remains valid. If you did not request this code, do not share it and review your account security.`,
-  });
-}
+const emailOutboxStore = createPostgresEmailOutboxStore();
 
 export async function dispatchEmailOutbox(
   limit = 20,
@@ -222,7 +231,7 @@ export async function dispatchEmailOutbox(
     log: (event, result) => console.info(event, result),
   };
   return dispatchPlatformEmailOutbox(
-    { store: emailOutboxStore, provider: runtimeEmailProvider },
+    { store: emailOutboxStore, provider: runtimeProvider() },
     platformOptions,
   );
 }

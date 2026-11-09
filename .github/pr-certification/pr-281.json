@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 281,
+  "intent": "Certify the approved Sonnet storefront with real product/catalog/session receiving, responsive and accessible UI source contracts",
+  "requiredTargets": [
+    "pr",
+    "core"
+  ],
+  "testFiles": [
+    "tests/public-site-content.test.ts",
+    "tests/public-navigation-reconciliation.test.ts"
+  ]
+}

@@ -12,13 +12,12 @@ describe("V2 platform health", () => {
     expect(liveness()).toEqual({ status: "alive" });
   });
 
-  it("preserves the four V1 readiness dependency names and reports ready only when all are up", async () => {
+  it("preserves the three V3 business-readiness dependencies and reports ready only when all are up", async () => {
     const postgresql = vi.fn(async () => 1);
     const valkey = vi.fn(async () => "PONG");
-    const objectStorage = vi.fn(async () => true);
     const providers = vi.fn(async () => undefined);
     const readiness = createCoreReadinessChecker({
-      dependencies: { postgresql, valkey, objectStorage, providers },
+      dependencies: { postgresql, valkey, providers },
     });
 
     await expect(readiness()).resolves.toEqual({
@@ -26,13 +25,11 @@ describe("V2 platform health", () => {
       checks: {
         postgresql: "up",
         valkey: "up",
-        objectStorage: "up",
         providers: "up",
       },
     });
     expect(postgresql).toHaveBeenCalledOnce();
     expect(valkey).toHaveBeenCalledOnce();
-    expect(objectStorage).toHaveBeenCalledOnce();
     expect(providers).toHaveBeenCalledOnce();
   });
 
@@ -44,7 +41,6 @@ describe("V2 platform health", () => {
         valkey: async () => {
           throw new Error("sensitive-internal-provider-detail");
         },
-        objectStorage: async () => true,
         providers: async () => undefined,
       },
       events: { emit: (event) => void events.push(event) },
@@ -55,7 +51,6 @@ describe("V2 platform health", () => {
       checks: {
         postgresql: "up",
         valkey: "down",
-        objectStorage: "up",
         providers: "up",
       },
     });

@@ -38,6 +38,8 @@ export type MfaChallengeMinAggregateOutputType = {
   id: string | null
   userId: string | null
   purpose: $Enums.MfaChallengePurpose | null
+  primaryAuthenticationMethod: $Enums.MfaChallengeAuthenticationMethod | null
+  sessionId: string | null
   tokenHash: string | null
   codeHash: string | null
   expiresAt: Date | null
@@ -50,6 +52,8 @@ export type MfaChallengeMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   purpose: $Enums.MfaChallengePurpose | null
+  primaryAuthenticationMethod: $Enums.MfaChallengeAuthenticationMethod | null
+  sessionId: string | null
   tokenHash: string | null
   codeHash: string | null
   expiresAt: Date | null
@@ -62,6 +66,8 @@ export type MfaChallengeCountAggregateOutputType = {
   id: number
   userId: number
   purpose: number
+  primaryAuthenticationMethod: number
+  sessionId: number
   tokenHash: number
   codeHash: number
   expiresAt: number
@@ -84,6 +90,8 @@ export type MfaChallengeMinAggregateInputType = {
   id?: true
   userId?: true
   purpose?: true
+  primaryAuthenticationMethod?: true
+  sessionId?: true
   tokenHash?: true
   codeHash?: true
   expiresAt?: true
@@ -96,6 +104,8 @@ export type MfaChallengeMaxAggregateInputType = {
   id?: true
   userId?: true
   purpose?: true
+  primaryAuthenticationMethod?: true
+  sessionId?: true
   tokenHash?: true
   codeHash?: true
   expiresAt?: true
@@ -108,6 +118,8 @@ export type MfaChallengeCountAggregateInputType = {
   id?: true
   userId?: true
   purpose?: true
+  primaryAuthenticationMethod?: true
+  sessionId?: true
   tokenHash?: true
   codeHash?: true
   expiresAt?: true
@@ -207,6 +219,8 @@ export type MfaChallengeGroupByOutputType = {
   id: string
   userId: string
   purpose: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod: $Enums.MfaChallengeAuthenticationMethod
+  sessionId: string | null
   tokenHash: string
   codeHash: string | null
   expiresAt: Date
@@ -242,6 +256,8 @@ export type MfaChallengeWhereInput = {
   id?: Prisma.StringFilter<"MfaChallenge"> | string
   userId?: Prisma.StringFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFilter<"MfaChallenge"> | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   tokenHash?: Prisma.StringFilter<"MfaChallenge"> | string
   codeHash?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
@@ -249,12 +265,15 @@ export type MfaChallengeWhereInput = {
   attemptCount?: Prisma.IntFilter<"MfaChallenge"> | number
   createdAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
 }
 
 export type MfaChallengeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  primaryAuthenticationMethod?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   codeHash?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -262,6 +281,7 @@ export type MfaChallengeOrderByWithRelationInput = {
   attemptCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  session?: Prisma.SessionOrderByWithRelationInput
 }
 
 export type MfaChallengeWhereUniqueInput = Prisma.AtLeast<{
@@ -272,18 +292,23 @@ export type MfaChallengeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MfaChallengeWhereInput | Prisma.MfaChallengeWhereInput[]
   userId?: Prisma.StringFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFilter<"MfaChallenge"> | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   codeHash?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
   consumedAt?: Prisma.DateTimeNullableFilter<"MfaChallenge"> | Date | string | null
   attemptCount?: Prisma.IntFilter<"MfaChallenge"> | number
   createdAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
 }, "id" | "tokenHash">
 
 export type MfaChallengeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  primaryAuthenticationMethod?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   codeHash?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -304,6 +329,8 @@ export type MfaChallengeScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"MfaChallenge"> | string
   userId?: Prisma.StringWithAggregatesFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeWithAggregatesFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodWithAggregatesFilter<"MfaChallenge"> | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.StringNullableWithAggregatesFilter<"MfaChallenge"> | string | null
   tokenHash?: Prisma.StringWithAggregatesFilter<"MfaChallenge"> | string
   codeHash?: Prisma.StringNullableWithAggregatesFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"MfaChallenge"> | Date | string
@@ -315,6 +342,7 @@ export type MfaChallengeScalarWhereWithAggregatesInput = {
 export type MfaChallengeCreateInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
   tokenHash: string
   codeHash?: string | null
   expiresAt: Date | string
@@ -322,12 +350,15 @@ export type MfaChallengeCreateInput = {
   attemptCount?: number
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMfaChallengesInput
+  session?: Prisma.SessionCreateNestedOneWithoutMfaChallengesInput
 }
 
 export type MfaChallengeUncheckedCreateInput = {
   id?: string
   userId: string
   purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: string | null
   tokenHash: string
   codeHash?: string | null
   expiresAt: Date | string
@@ -339,6 +370,7 @@ export type MfaChallengeUncheckedCreateInput = {
 export type MfaChallengeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -346,12 +378,15 @@ export type MfaChallengeUpdateInput = {
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMfaChallengesNestedInput
+  session?: Prisma.SessionUpdateOneWithoutMfaChallengesNestedInput
 }
 
 export type MfaChallengeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -364,6 +399,8 @@ export type MfaChallengeCreateManyInput = {
   id?: string
   userId: string
   purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: string | null
   tokenHash: string
   codeHash?: string | null
   expiresAt: Date | string
@@ -375,6 +412,7 @@ export type MfaChallengeCreateManyInput = {
 export type MfaChallengeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,6 +425,8 @@ export type MfaChallengeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -409,6 +449,8 @@ export type MfaChallengeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  primaryAuthenticationMethod?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -425,6 +467,8 @@ export type MfaChallengeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  primaryAuthenticationMethod?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -437,6 +481,8 @@ export type MfaChallengeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  primaryAuthenticationMethod?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -491,24 +537,74 @@ export type MfaChallengeUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.MfaChallengeScalarWhereInput | Prisma.MfaChallengeScalarWhereInput[]
 }
 
+export type MfaChallengeCreateNestedManyWithoutSessionInput = {
+  create?: Prisma.XOR<Prisma.MfaChallengeCreateWithoutSessionInput, Prisma.MfaChallengeUncheckedCreateWithoutSessionInput> | Prisma.MfaChallengeCreateWithoutSessionInput[] | Prisma.MfaChallengeUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.MfaChallengeCreateOrConnectWithoutSessionInput | Prisma.MfaChallengeCreateOrConnectWithoutSessionInput[]
+  createMany?: Prisma.MfaChallengeCreateManySessionInputEnvelope
+  connect?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+}
+
+export type MfaChallengeUncheckedCreateNestedManyWithoutSessionInput = {
+  create?: Prisma.XOR<Prisma.MfaChallengeCreateWithoutSessionInput, Prisma.MfaChallengeUncheckedCreateWithoutSessionInput> | Prisma.MfaChallengeCreateWithoutSessionInput[] | Prisma.MfaChallengeUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.MfaChallengeCreateOrConnectWithoutSessionInput | Prisma.MfaChallengeCreateOrConnectWithoutSessionInput[]
+  createMany?: Prisma.MfaChallengeCreateManySessionInputEnvelope
+  connect?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+}
+
+export type MfaChallengeUpdateManyWithoutSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.MfaChallengeCreateWithoutSessionInput, Prisma.MfaChallengeUncheckedCreateWithoutSessionInput> | Prisma.MfaChallengeCreateWithoutSessionInput[] | Prisma.MfaChallengeUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.MfaChallengeCreateOrConnectWithoutSessionInput | Prisma.MfaChallengeCreateOrConnectWithoutSessionInput[]
+  upsert?: Prisma.MfaChallengeUpsertWithWhereUniqueWithoutSessionInput | Prisma.MfaChallengeUpsertWithWhereUniqueWithoutSessionInput[]
+  createMany?: Prisma.MfaChallengeCreateManySessionInputEnvelope
+  set?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  disconnect?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  delete?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  connect?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  update?: Prisma.MfaChallengeUpdateWithWhereUniqueWithoutSessionInput | Prisma.MfaChallengeUpdateWithWhereUniqueWithoutSessionInput[]
+  updateMany?: Prisma.MfaChallengeUpdateManyWithWhereWithoutSessionInput | Prisma.MfaChallengeUpdateManyWithWhereWithoutSessionInput[]
+  deleteMany?: Prisma.MfaChallengeScalarWhereInput | Prisma.MfaChallengeScalarWhereInput[]
+}
+
+export type MfaChallengeUncheckedUpdateManyWithoutSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.MfaChallengeCreateWithoutSessionInput, Prisma.MfaChallengeUncheckedCreateWithoutSessionInput> | Prisma.MfaChallengeCreateWithoutSessionInput[] | Prisma.MfaChallengeUncheckedCreateWithoutSessionInput[]
+  connectOrCreate?: Prisma.MfaChallengeCreateOrConnectWithoutSessionInput | Prisma.MfaChallengeCreateOrConnectWithoutSessionInput[]
+  upsert?: Prisma.MfaChallengeUpsertWithWhereUniqueWithoutSessionInput | Prisma.MfaChallengeUpsertWithWhereUniqueWithoutSessionInput[]
+  createMany?: Prisma.MfaChallengeCreateManySessionInputEnvelope
+  set?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  disconnect?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  delete?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  connect?: Prisma.MfaChallengeWhereUniqueInput | Prisma.MfaChallengeWhereUniqueInput[]
+  update?: Prisma.MfaChallengeUpdateWithWhereUniqueWithoutSessionInput | Prisma.MfaChallengeUpdateWithWhereUniqueWithoutSessionInput[]
+  updateMany?: Prisma.MfaChallengeUpdateManyWithWhereWithoutSessionInput | Prisma.MfaChallengeUpdateManyWithWhereWithoutSessionInput[]
+  deleteMany?: Prisma.MfaChallengeScalarWhereInput | Prisma.MfaChallengeScalarWhereInput[]
+}
+
 export type EnumMfaChallengePurposeFieldUpdateOperationsInput = {
   set?: $Enums.MfaChallengePurpose
+}
+
+export type EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput = {
+  set?: $Enums.MfaChallengeAuthenticationMethod
 }
 
 export type MfaChallengeCreateWithoutUserInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
   tokenHash: string
   codeHash?: string | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   attemptCount?: number
   createdAt?: Date | string
+  session?: Prisma.SessionCreateNestedOneWithoutMfaChallengesInput
 }
 
 export type MfaChallengeUncheckedCreateWithoutUserInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: string | null
   tokenHash: string
   codeHash?: string | null
   expiresAt: Date | string
@@ -550,6 +646,8 @@ export type MfaChallengeScalarWhereInput = {
   id?: Prisma.StringFilter<"MfaChallenge"> | string
   userId?: Prisma.StringFilter<"MfaChallenge"> | string
   purpose?: Prisma.EnumMfaChallengePurposeFilter<"MfaChallenge"> | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFilter<"MfaChallenge"> | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   tokenHash?: Prisma.StringFilter<"MfaChallenge"> | string
   codeHash?: Prisma.StringNullableFilter<"MfaChallenge"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
@@ -558,9 +656,63 @@ export type MfaChallengeScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"MfaChallenge"> | Date | string
 }
 
+export type MfaChallengeCreateWithoutSessionInput = {
+  id?: string
+  purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  tokenHash: string
+  codeHash?: string | null
+  expiresAt: Date | string
+  consumedAt?: Date | string | null
+  attemptCount?: number
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutMfaChallengesInput
+}
+
+export type MfaChallengeUncheckedCreateWithoutSessionInput = {
+  id?: string
+  userId: string
+  purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  tokenHash: string
+  codeHash?: string | null
+  expiresAt: Date | string
+  consumedAt?: Date | string | null
+  attemptCount?: number
+  createdAt?: Date | string
+}
+
+export type MfaChallengeCreateOrConnectWithoutSessionInput = {
+  where: Prisma.MfaChallengeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MfaChallengeCreateWithoutSessionInput, Prisma.MfaChallengeUncheckedCreateWithoutSessionInput>
+}
+
+export type MfaChallengeCreateManySessionInputEnvelope = {
+  data: Prisma.MfaChallengeCreateManySessionInput | Prisma.MfaChallengeCreateManySessionInput[]
+  skipDuplicates?: boolean
+}
+
+export type MfaChallengeUpsertWithWhereUniqueWithoutSessionInput = {
+  where: Prisma.MfaChallengeWhereUniqueInput
+  update: Prisma.XOR<Prisma.MfaChallengeUpdateWithoutSessionInput, Prisma.MfaChallengeUncheckedUpdateWithoutSessionInput>
+  create: Prisma.XOR<Prisma.MfaChallengeCreateWithoutSessionInput, Prisma.MfaChallengeUncheckedCreateWithoutSessionInput>
+}
+
+export type MfaChallengeUpdateWithWhereUniqueWithoutSessionInput = {
+  where: Prisma.MfaChallengeWhereUniqueInput
+  data: Prisma.XOR<Prisma.MfaChallengeUpdateWithoutSessionInput, Prisma.MfaChallengeUncheckedUpdateWithoutSessionInput>
+}
+
+export type MfaChallengeUpdateManyWithWhereWithoutSessionInput = {
+  where: Prisma.MfaChallengeScalarWhereInput
+  data: Prisma.XOR<Prisma.MfaChallengeUpdateManyMutationInput, Prisma.MfaChallengeUncheckedUpdateManyWithoutSessionInput>
+}
+
 export type MfaChallengeCreateManyUserInput = {
   id?: string
   purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: string | null
   tokenHash: string
   codeHash?: string | null
   expiresAt: Date | string
@@ -572,17 +724,21 @@ export type MfaChallengeCreateManyUserInput = {
 export type MfaChallengeUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  session?: Prisma.SessionUpdateOneWithoutMfaChallengesNestedInput
 }
 
 export type MfaChallengeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -594,6 +750,60 @@ export type MfaChallengeUncheckedUpdateWithoutUserInput = {
 export type MfaChallengeUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MfaChallengeCreateManySessionInput = {
+  id?: string
+  userId: string
+  purpose?: $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: $Enums.MfaChallengeAuthenticationMethod
+  tokenHash: string
+  codeHash?: string | null
+  expiresAt: Date | string
+  consumedAt?: Date | string | null
+  attemptCount?: number
+  createdAt?: Date | string
+}
+
+export type MfaChallengeUpdateWithoutSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMfaChallengesNestedInput
+}
+
+export type MfaChallengeUncheckedUpdateWithoutSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attemptCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MfaChallengeUncheckedUpdateManyWithoutSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  purpose?: Prisma.EnumMfaChallengePurposeFieldUpdateOperationsInput | $Enums.MfaChallengePurpose
+  primaryAuthenticationMethod?: Prisma.EnumMfaChallengeAuthenticationMethodFieldUpdateOperationsInput | $Enums.MfaChallengeAuthenticationMethod
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   codeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -608,6 +818,8 @@ export type MfaChallengeSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   userId?: boolean
   purpose?: boolean
+  primaryAuthenticationMethod?: boolean
+  sessionId?: boolean
   tokenHash?: boolean
   codeHash?: boolean
   expiresAt?: boolean
@@ -615,12 +827,15 @@ export type MfaChallengeSelect<ExtArgs extends runtime.Types.Extensions.Internal
   attemptCount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.MfaChallenge$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["mfaChallenge"]>
 
 export type MfaChallengeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   purpose?: boolean
+  primaryAuthenticationMethod?: boolean
+  sessionId?: boolean
   tokenHash?: boolean
   codeHash?: boolean
   expiresAt?: boolean
@@ -628,12 +843,15 @@ export type MfaChallengeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   attemptCount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.MfaChallenge$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["mfaChallenge"]>
 
 export type MfaChallengeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   purpose?: boolean
+  primaryAuthenticationMethod?: boolean
+  sessionId?: boolean
   tokenHash?: boolean
   codeHash?: boolean
   expiresAt?: boolean
@@ -641,12 +859,15 @@ export type MfaChallengeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   attemptCount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.MfaChallenge$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["mfaChallenge"]>
 
 export type MfaChallengeSelectScalar = {
   id?: boolean
   userId?: boolean
   purpose?: boolean
+  primaryAuthenticationMethod?: boolean
+  sessionId?: boolean
   tokenHash?: boolean
   codeHash?: boolean
   expiresAt?: boolean
@@ -655,26 +876,32 @@ export type MfaChallengeSelectScalar = {
   createdAt?: boolean
 }
 
-export type MfaChallengeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "purpose" | "tokenHash" | "codeHash" | "expiresAt" | "consumedAt" | "attemptCount" | "createdAt", ExtArgs["result"]["mfaChallenge"]>
+export type MfaChallengeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "purpose" | "primaryAuthenticationMethod" | "sessionId" | "tokenHash" | "codeHash" | "expiresAt" | "consumedAt" | "attemptCount" | "createdAt", ExtArgs["result"]["mfaChallenge"]>
 export type MfaChallengeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.MfaChallenge$sessionArgs<ExtArgs>
 }
 export type MfaChallengeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.MfaChallenge$sessionArgs<ExtArgs>
 }
 export type MfaChallengeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.MfaChallenge$sessionArgs<ExtArgs>
 }
 
 export type $MfaChallengePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MfaChallenge"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    session: Prisma.$SessionPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
     purpose: $Enums.MfaChallengePurpose
+    primaryAuthenticationMethod: $Enums.MfaChallengeAuthenticationMethod
+    sessionId: string | null
     tokenHash: string
     codeHash: string | null
     expiresAt: Date
@@ -1076,6 +1303,7 @@ readonly fields: MfaChallengeFieldRefs;
 export interface Prisma__MfaChallengeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  session<T extends Prisma.MfaChallenge$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MfaChallenge$sessionArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1108,6 +1336,8 @@ export interface MfaChallengeFieldRefs {
   readonly id: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly userId: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly purpose: Prisma.FieldRef<"MfaChallenge", 'MfaChallengePurpose'>
+  readonly primaryAuthenticationMethod: Prisma.FieldRef<"MfaChallenge", 'MfaChallengeAuthenticationMethod'>
+  readonly sessionId: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly tokenHash: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly codeHash: Prisma.FieldRef<"MfaChallenge", 'String'>
   readonly expiresAt: Prisma.FieldRef<"MfaChallenge", 'DateTime'>
@@ -1512,6 +1742,25 @@ export type MfaChallengeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many MfaChallenges to delete.
    */
   limit?: number
+}
+
+/**
+ * MfaChallenge.session
+ */
+export type MfaChallenge$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Session
+   */
+  select?: Prisma.SessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Session
+   */
+  omit?: Prisma.SessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
 }
 
 /**

@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
   getRuntimeEnvironment: vi.fn(),
 }));
 
-vi.mock("@/apps/web/agent-sessions/native-mfa", () => ({
+vi.mock("@/apps/web/agent-sessions/native-session", () => ({
   authenticateNativeAgentRequest:
     mocks.authenticateNativeAgentRequest,
 }));

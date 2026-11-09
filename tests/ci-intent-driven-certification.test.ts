@@ -23,6 +23,16 @@ const callableWorkflows = [
 ] as const;
 
 const explicitConcurrencyGroups = new Map<string, string>([
+  ["v2-composition.yml", "group: composition-${{ inputs.source_sha }}"],
+  ["v2-host-v1-free.yml", "group: host-v1-free-${{ inputs.source_sha }}"],
+  ["v2-prisma-isolation.yml", "group: prisma-isolation-${{ inputs.source_sha }}"],
+  ["v2-catalog.yml", "group: catalog-${{ inputs.source_sha }}"],
+  ["v2-commerce.yml", "group: commerce-${{ inputs.source_sha }}"],
+  ["v2-payments.yml", "group: payments-${{ inputs.source_sha }}"],
+  ["v2-licensing.yml", "group: licensing-${{ inputs.source_sha }}"],
+  ["v2-entitlements.yml", "group: entitlements-${{ inputs.source_sha }}"],
+  ["v2-notifications.yml", "group: notifications-${{ inputs.source_sha }}"],
+  ["v2-standalone.yml", "group: standalone-${{ inputs.source_sha }}"],
   [
     "native-bke-account-handoff.yml",
     "group: native-bke-account-${{ inputs.source_sha }}",
@@ -39,16 +49,15 @@ const explicitConcurrencyGroups = new Map<string, string>([
     "v2-legal.yml",
     "group: legal-${{ inputs.source_sha }}",
   ],
-  ["v2-catalog.yml", "group: catalog-${{ inputs.source_sha }}"],
-  ["v2-commerce.yml", "group: commerce-${{ inputs.source_sha }}"],
-  ["v2-payments.yml", "group: payments-${{ inputs.source_sha }}"],
-  ["v2-licensing.yml", "group: licensing-${{ inputs.source_sha }}"],
-  ["v2-entitlements.yml", "group: entitlements-${{ inputs.source_sha }}"],
-  ["v2-notifications.yml", "group: notifications-${{ inputs.source_sha }}"],
-  ["v2-standalone.yml", "group: standalone-${{ inputs.source_sha }}"],
 ]);
 
 describe("intent-driven certification foundation", () => {
+  it("isolates the composed host and Prisma workflows while deduplicating the same source", () => {
+    const groups = ["v2-composition.yml", "v2-host-v1-free.yml", "v2-prisma-isolation.yml"]
+      .map((name) => readFileSync(`${workflowsDir}/${name}`, "utf8").match(/^  group: (.+)$/m)?.[1]);
+    expect(groups.every((group) => group?.includes("inputs.source_sha"))).toBe(true);
+    expect(new Set(groups).size).toBe(groups.length);
+  });
   it("accepts explicit certification intent instead of guessing ownership", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 
@@ -80,43 +89,51 @@ describe("intent-driven certification foundation", () => {
     },
   );
 
+  it("keeps sibling composition, host and Prisma runs isolated under a shared caller", () => {
+    const groups = ["v2-composition.yml", "v2-host-v1-free.yml", "v2-prisma-isolation.yml"]
+      .map((name) => {
+        const workflow = readFileSync(`${workflowsDir}/${name}`, "utf8");
+        expect(workflow).toContain("cancel-in-progress: true");
+        const group = workflow.match(/^  group: (.+)$/m)?.[1];
+        expect(group).toContain("inputs.source_sha");
+        expect(group).not.toContain("github.workflow");
+        return group;
+      });
+    expect(new Set(groups).size).toBe(3);
+  });
+
   it("makes global CI callable against an explicit exact SHA", () => {
     const workflow = readFileSync(`${workflowsDir}/ci.yml`, "utf8");
 
     expect(workflow).toContain("workflow_call:");
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("source_sha:");
+    expect(workflow).toContain("skip_containers:");
+    expect(workflow).toContain("if: ${{ !inputs.skip_containers }}");
     expect(workflow).toContain(
       "SOURCE_SHA: ${{ inputs.source_sha || github.sha }}",
     );
     expect(workflow).toContain("ref: ${{ env.SOURCE_SHA }}");
-    expect(workflow).toContain(
-      "group: digital-solutions-ci-${{ inputs.source_sha || github.ref }}",
-    );
+    expect(workflow).toContain("group: digital-solutions-core-${{ inputs.source_sha || github.ref }}");
+    expect(workflow).toContain("cancel-in-progress: true");
+    expect(workflow).toContain("default: false");
+    expect(workflow).toContain("required-certification:");
+    expect(workflow).not.toContain("  staging-deploy:");
+    expect(workflow).not.toContain("id-token: write");
+    // Explicit Staging is its own deployment-only workflow, never a reusable CI callee.
+    expect(existsSync(`${workflowsDir}/stage.yml`)).toBe(false);
+    expect(existsSync(`${workflowsDir}/ci-staging.yml`)).toBe(false);
+    const staging = readFileSync(".github/legacy-workflows/2026-11-09/ci-staging.yml", "utf8");
+    expect(staging).toContain("workflow_dispatch:");
+    expect(staging).not.toContain("workflow_call:");
+    expect(staging).toContain("uses: ./.github/workflows/ci.yml");
+    expect(staging).toContain("if: ${{ needs.core.result == 'success' }}");
+    expect(staging).toContain("environment:\n      name: Staging");
+    expect(staging).toContain("id-token: write");
     expect(workflow).not.toContain("github.event.pull_request");
+    expect(workflow).not.toContain("push:");
   });
 
-  it("isolates Platform proof from caller-named reusable workflow cancellation", () => {
-    const platform = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
-    expect(platform).toContain("group: platform-${{ inputs.source_sha }}");
-    expect(platform).toContain("cancel-in-progress: false");
-    expect(platform).not.toContain("group: ${{ github.workflow }}");
-    expect(platform).toContain("Verify Platform and staging workflow contracts");
-    const stage = readFileSync(`${workflowsDir}/stage.yml`, "utf8");
-    expect(stage).toContain("needs: [plan, platform]");
-  });
-  it("preserves all staging module proof without caller-name cancellation", () => {
-    const names = ["platform", "catalog", "commerce", "payments", "licensing", "entitlements", "notifications", "standalone"];
-    const actual = names.map((name) => {
-      const source = readFileSync(`${workflowsDir}/v2-${name}.yml`, "utf8");
-      const expected = `group: ${name}-\${{ inputs.source_sha }}`;
-      expect(source, name).toContain(expected);
-      expect(source, name).toContain("cancel-in-progress: false");
-      expect(source, name).not.toContain("group: \${{ github.workflow }}");
-      return expected;
-    });
-    expect(new Set(actual).size).toBe(names.length);
-  });
   it("consolidates platform seam certification into one restore/typecheck owner", () => {
     const workflow = readFileSync(`${workflowsDir}/v2-platform.yml`, "utf8");
 
@@ -155,7 +172,7 @@ describe("intent-driven certification foundation", () => {
     const workflow = readFileSync(`${workflowsDir}/certify.yml`, "utf8");
 
     expect(workflow).toContain('tokens.includes("full")');
-    expect(workflow).toContain("targets = allowedTargets");
+    expect(workflow).toContain("targets = allowedTargets.filter");
     expect(workflow).not.toContain("pull_request:");
     expect(workflow).toContain("cancel-in-progress: true");
     expect(workflow).toContain(

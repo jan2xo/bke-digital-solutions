@@ -1,10 +1,11 @@
 import { randomUUID } from "node:crypto";
 import type { EmailOutboxStore, EmailProvider } from "./contracts";
-import { safeEmailFailureCode } from "./failures";
+import { EmailDeliveryError, safeEmailFailureCode } from "./failures";
 
 export type EmailOutboxDispatchResult = Readonly<{
   selected: number;
   recovered: number;
+  reviewRequired: number;
   sent: number;
   failed: number;
   terminal: number;
@@ -34,10 +35,10 @@ export async function dispatchEmailOutbox(
   const failureCode = options.failureCode ?? safeEmailFailureCode;
 
   const claimedAt = clock();
-  const claimExpiresAt = new Date(claimedAt.getTime() + claimTtlMs);
   const recovered = await dependencies.store.recoverExpiredClaims(claimedAt);
   const rows = await dependencies.store.listDispatchable({ limit, maxAttempts });
 
+  let reviewRequired = recovered;
   let sent = 0;
   let failed = 0;
   let terminal = 0;
@@ -49,13 +50,14 @@ export async function dispatchEmailOutbox(
       continue;
     }
 
+    const rowClaimedAt = clock();
     const claimed = await dependencies.store.claim({
       id: row.id,
       expectedStatus: row.status,
       expectedAttempts: row.attempts,
       workerId,
-      claimedAt,
-      claimExpiresAt,
+      claimedAt: rowClaimedAt,
+      claimExpiresAt: new Date(rowClaimedAt.getTime() + claimTtlMs),
     });
 
     if (!claimed) {
@@ -63,12 +65,14 @@ export async function dispatchEmailOutbox(
       continue;
     }
 
+    let providerAccepted = false;
     try {
       await dependencies.provider.send({
         ...row.message,
         idempotencyKey: row.message.idempotencyKey ?? row.id,
       });
 
+      providerAccepted = true;
       const completed = await dependencies.store.markSent({
         id: row.id,
         workerId,
@@ -80,18 +84,24 @@ export async function dispatchEmailOutbox(
       else skipped++;
     } catch (error) {
       const attempts = row.attempts + 1;
-      const permanentlyFailed = attempts >= maxAttempts;
+      // A send may have succeeded before acknowledgement persistence failed.
+      // Unknown transport outcomes and accepted-but-unrecorded sends stop here.
+      const unconfirmed = providerAccepted || !(error instanceof EmailDeliveryError) ||
+        error.policy.acceptance === "UNKNOWN";
+      const stop = error instanceof EmailDeliveryError && error.policy.retry === "STOP";
+      const permanentlyFailed = unconfirmed || stop || attempts >= maxAttempts;
       const completed = await dependencies.store.markFailed({
         id: row.id,
         workerId,
         status: permanentlyFailed ? "PERMANENTLY_FAILED" : "FAILED",
         attempts,
-        failureCode: failureCode(error),
+        failureCode: unconfirmed ? "DELIVERY_UNCONFIRMED" : failureCode(error),
       });
 
       if (completed) {
         failed++;
         if (permanentlyFailed) terminal++;
+        if (unconfirmed) reviewRequired++;
       } else {
         skipped++;
       }
@@ -101,6 +111,7 @@ export async function dispatchEmailOutbox(
   const result = Object.freeze({
     selected: rows.length,
     recovered,
+    reviewRequired,
     sent,
     failed,
     terminal,

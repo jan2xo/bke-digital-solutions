@@ -2,7 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../platform/persistence/generated/prisma/client";
 import { createHash } from "node:crypto";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { LEGAL_DOCUMENT_DEFINITIONS, LEGAL_DOCUMENT_TYPES } from "../lib/legal/constants";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const catalog = [
@@ -11,17 +11,11 @@ const catalog = [
   { slug: "bke-institution-suite", name: "BKE Institution Suite", summary: "Flexible deployment for organizations and institutions.", description: "Organization licensing with authorized users, managed devices, and a central customer portal.", type: "HYBRID" as const, policy: { name: "Institution 25", maxSeats: 25, maxDevicesPerSeat: 2, validityDays: 365 }, price: { name: "Annual organization license", amountMinor: 1199900, billingType: "SUBSCRIPTION" as const, intervalUnit: "YEAR" as const, intervalCount: 1 }, edition: { slug: "institution", name: "Institution", features: ["25 authorized users", "Managed devices", "Central license portal"], maxUsers: 25, maxDevicesPerUser: 2, updatePolicy: "ACTIVE_TERM" as const, perpetual: 1199900, monthly: 109900, annualDiscountBps: 900 } },
 ];
 const canonicalProductIds: Record<string, string> = { "bke-deskflow": "bke-deskflow", "bke-cloudops": "bke-cloudops", "bke-institution-suite": "bke-institution-suite" };
-const legalTemplates = [
-  ["TERMS_OF_SERVICE", "Terms of Service", "terms"],
-  ["PRIVACY_POLICY", "Privacy Policy", "privacy"],
-  ["SOFTWARE_LICENSE_AGREEMENT", "Software License Agreement (EULA)", "eula"],
-  ["SUBSCRIPTION_TERMS", "Subscription Terms", "subscription"],
-  ["REFUND_POLICY", "Refund Policy", "refund"],
-  ["ACCEPTABLE_USE_POLICY", "Acceptable Use Policy", "acceptable-use"],
-  ["COOKIE_POLICY", "Cookie Policy", "cookies"],
-  ["SUPPORT_POLICY", "Support Policy", "support"],
-  ["DATA_PROCESSING_ADDENDUM", "Data Processing Addendum", "dpa"],
-] as const;
+const legalTemplates = LEGAL_DOCUMENT_TYPES.map((documentType) => [
+  documentType,
+  LEGAL_DOCUMENT_DEFINITIONS[documentType].title,
+  LEGAL_DOCUMENT_DEFINITIONS[documentType].slug,
+] as const);
 
 async function main() {
   for (const item of catalog) {
@@ -74,15 +68,10 @@ async function main() {
     }
 
     if (item.slug === "bke-cloudops") {
-      const version = await db.productVersion.upsert({
+      await db.productVersion.upsert({
         where: { productId_version: { productId: product.id, version: "1.0.0" } },
         update: { active: true, isLatest: true },
         create: { productId: product.id, version: "1.0.0", releaseNotes: "Initial stable release.", operatingSystem: "Any", architecture: "universal", active: true, isLatest: true, publishedAt: new Date() },
-      });
-      await db.productArtifact.upsert({
-        where: { objectKey: "installers/bke-installer.bin" },
-        update: { active: true, versionId: version.id },
-        create: { productId: product.id, versionId: version.id, name: "BKE CloudOps Installer.bin", objectKey: "installers/bke-installer.bin", sha256: "523b125a5fba47594385b3d41c1bc474c58d9e0161ce5e731be7db8c5da95fd5", sizeBytes: 37, contentType: "application/octet-stream" },
       });
     }
   }
@@ -103,11 +92,6 @@ async function main() {
   ] as const;
   for (const [key, title, category, status, description] of compliance) {
     await db.complianceRequirement.upsert({ where: { key }, update: { title, category, status, description }, create: { key, title, category, status, description } });
-  }
-  if (process.env.LOCAL_PRODUCTION_SIMULATION === "true") {
-    const body = Buffer.from("BKE Digital Solutions test installer\n");
-    const storage = new S3Client({ region: process.env.S3_REGION ?? "auto", endpoint: process.env.S3_ENDPOINT, forcePathStyle: process.env.S3_FORCE_PATH_STYLE !== "false", credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID!, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY! } });
-    await storage.send(new PutObjectCommand({ Bucket: process.env.S3_BUCKET!, Key: "installers/bke-installer.bin", Body: body, ContentType: "application/octet-stream" }));
   }
   console.info(`Seeded ${catalog.length} BKE Digital Solutions products and editions.`);
 }
