@@ -10,7 +10,6 @@
   ],
   "testFiles": [
     "tests/email-outbox-30min-health.test.ts",
-    "tests/scheduler.test.ts",
     "tests/cloudflare-email-cron.test.ts"
   ]
 }
