@@ -16,10 +16,12 @@ function allLinkPrefetchValues(path: string) {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
       if (node.tagName.getText(source) === "Link") {
         const attrs = node.attributes.properties.filter(
-          (attr): attr is ts.JsxAttribute => ts.isJsxAttribute(attr) && attr.name.text === "prefetch",
+          (attr): attr is ts.JsxAttribute => ts.isJsxAttribute(attr) &&
+            attr.name.getText(source) === "prefetch",
         );
-        values.push(attrs.length === 1 && ts.isJsxExpression(attrs[0].initializer) &&
-          attrs[0].initializer.expression?.kind === ts.SyntaxKind.FalseKeyword);
+        const initializer = attrs.length === 1 ? attrs[0].initializer : undefined;
+        values.push(initializer !== undefined && ts.isJsxExpression(initializer) &&
+          initializer.expression?.kind === ts.SyntaxKind.FalseKeyword);
       }
     }
     ts.forEachChild(node, visit);
