@@ -5,17 +5,20 @@ const read = (path: string) => readFile(new URL(`../${path}`, import.meta.url), 
 
 describe("public site content integration", () => {
   it("uses authoritative content for public homepage and shell copy", async () => {
-    const [page, header, footer, layout] = await Promise.all([
+    const [page, header, footer, layout, landing] = await Promise.all([
       read("app/page.tsx"),
       read("components/header.tsx"),
       read("components/footer.tsx"),
       read("app/layout.tsx"),
+      read("app/landing-experience.tsx"),
     ]);
 
     expect(page).toContain('import { getSiteContent } from "@/apps/web/site-content"');
     expect(page).toContain("content.siteName");
-    expect(page).toContain("content.heroHeadline");
-    expect(page).toContain("content.heroPrimaryHref");
+    expect(page).toContain("content.heroDescription");
+    expect(page).not.toMatch(/content\.hero(?:Headline|Primary|Secondary)/);
+    expect(landing).toContain('href="/login"><GoogleMark /> Continue with Google');
+    expect(landing).toContain('href="/products">Explore</Link>');
     expect(header).toContain('import { getSiteContent } from "@/apps/web/site-content"');
     expect(header).toContain("{content.siteName}");
     expect(header).toContain('href="/bke"');
