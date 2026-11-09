@@ -84,6 +84,8 @@ try {
         await page.getByRole("link", { name: "Explore", exact: true }).click();
         await page.waitForURL("**/products", { timeout: 15000 });
         await page.getByRole("heading", { name: "Software for work that matters." }).waitFor();
+        await page.goBack();
+        await page.getByRole("heading", { name: /One platform.*Every BKE.*solution/ }).waitFor();
       }
       if (width === 390 || width === 1440) {
         let postedFlow;
@@ -93,7 +95,7 @@ try {
             body: JSON.stringify({ authorizationUrl: new URL("/login?simulated=oidc", baseURL).toString() }) });
         });
         await page.getByRole("button", { name: "Continue with Google", exact: true }).click();
-        await page.waitForURL("**/login?simulated=oidc");
+        await page.waitForURL(/\/login\?simulated=oidc$/);
         assert.equal(postedFlow?.flow, "unified",
           "Sonnet CTA must initiate unified server-owned OIDC");
         assert.equal(await page.getByRole("button", { name: "Continue with Google" }).count(), 1,
