@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 305,
+  "intent": "Bring the customer account identity eyebrow and product/trial headings into the existing BKE yellow/white visual hierarchy without changing purchases, licensing, roles, or notifications",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/customer-account-yellow-hierarchy.test.ts"
+  ]
+}
