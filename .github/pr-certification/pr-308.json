@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 308,
+  "intent": "Repair protected web release exact-head proof verification to honor all PR-declared required certification targets without relaxing owner/merged-main/production safety gates",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/web-release-declared-proof.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}
