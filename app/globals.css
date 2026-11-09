@@ -9,6 +9,37 @@ body { margin: 0; color: var(--text); background: var(--background); font-family
 a { color: inherit; text-decoration: none; }
 .shell { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
 .eyebrow { color:#8790ae; font-size:.76rem; font-weight:800; letter-spacing:.24em; text-transform:uppercase; }.eyebrow-yellow { color:var(--yellow); }
+
+/* Authenticated customer account: restrained BKE yellow hierarchy. */
+.account-role-eyebrow {
+  color: var(--yellow);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+.account-section-heading {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  color: var(--text);
+  line-height: 1.25;
+}
+.account-section-heading::before {
+  content: "";
+  display: inline-block;
+  flex: 0 0 3px;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--yellow);
+}
+.account-trials-empty {
+  color: var(--text-muted);
+  font-size: .875rem;
+  line-height: 1.5;
+}
+
 .site-header { position: relative; z-index: 30; border-bottom: 1px solid #252938; background: rgb(10 12 19 / .94); color: #9ba2b9; backdrop-filter: blur(18px); }
 .site-header-inner { display:flex; min-height:5rem; align-items:center; justify-content:space-between; gap:1.5rem; }
 .brand-lockup { display:inline-flex; align-items:center; gap:.75rem; color:#f1f2f7; font-size:1.25rem; letter-spacing:-.04em; font-weight:900; }.brand-mark { display:grid; place-items:center; width:2.5rem; height:2.5rem; border-radius:.75rem; background:#092f47; color:#fff; font-size:.82rem; transition:transform .22s,background .22s; }.brand-lockup:hover { color:var(--yellow); }.brand-lockup:hover .brand-mark { transform:translateY(-2px) rotate(-3deg); background:#123f5d; }
