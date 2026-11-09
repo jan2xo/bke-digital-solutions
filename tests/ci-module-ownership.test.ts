@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const workflowsDir = ".github/workflows";
 const legacyDir = ".github/legacy-workflows/2026-10-02";
+const retiredStagingDir = ".github/legacy-workflows/2026-11-09";
 const agentStorePath = `${workflowsDir}/v2-agent-store.yml`;
 
 const formerStoreOwners = [
@@ -104,14 +105,22 @@ describe("CI module ownership", () => {
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).not.toContain("pull_request:");
     expect(workflow).toContain("Required certification");
-    expect(workflow).toContain(
-      "group: ${{ inputs.deploy_staging && format('digital-solutions-staging-{0}', inputs.source_sha) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}",
-    );
-    expect(workflow).toContain("cancel-in-progress: ${{ !inputs.deploy_staging }}");
+    expect(workflow).toContain("group: digital-solutions-core-${{ inputs.source_sha || github.ref }}");
+    expect(workflow).toContain("cancel-in-progress: true");
     expect(workflow).toContain("default: false");
-    const stagingJob = workflow.split("  staging-deploy:\n")[1]?.split("\n  required-certification:")[0];
-    expect(stagingJob).toContain("cancel-in-progress: false");
-    expect(stagingJob).toContain("inputs.deploy_staging == true");
-    expect(stagingJob).toContain("needs.required-certification.result == 'success'");
+    expect(workflow).not.toContain("  staging-deploy:");
+    expect(workflow).not.toContain("id-token: write");
+
+    expect(() => readFileSync(`${workflowsDir}/stage.yml`, "utf8")).toThrow();
+    expect(() => readFileSync(`${workflowsDir}/ci-staging.yml`, "utf8")).toThrow();
+    const staging = readFileSync(`${retiredStagingDir}/ci-staging.yml`, "utf8");
+    expect(staging).toContain("workflow_dispatch:");
+    expect(staging).not.toContain("workflow_call:");
+    expect(staging).not.toMatch(/^  (?:push|pull_request|issue_comment):/m);
+    expect(staging).toContain("uses: ./.github/workflows/ci.yml");
+    expect(staging).toContain("needs.core.result == 'success'");
+    expect(staging).toContain("environment:\n      name: Staging");
+    expect(staging).toContain("id-token: write");
+    expect(staging).toContain("cancel-in-progress: false");
   });
 });
