@@ -19,6 +19,7 @@ import {
 import { operationResource } from "@/platform/host/operation-scope";
 import { getPostgresPool } from "@/apps/web/persistence/postgres";
 import { resolveResendConfiguration } from "@/apps/web/providers/capability";
+import { purchaseConfirmationEmailEnabled, PURCHASE_CONFIRMATION_TYPE, renderPurchaseConfirmationEmail } from "@/apps/web/email/purchase-confirmation";
 
 function parseNodeEnv(value: string | undefined): "development" | "test" | "production" {
   const parsed = value ?? "development";
@@ -112,6 +113,8 @@ const DURABLE_EMAIL_TYPES = Object.freeze([
 function render(type: string, payload: Record<string, unknown>) {
   const invoice = String(payload.invoiceNumber ?? "");
   switch (type) {
+    case PURCHASE_CONFIRMATION_TYPE:
+      return renderPurchaseConfirmationEmail(payload, process.env.APP_URL);
     case "INVOICE_ISSUED":
       return `Commercial invoice ${invoice} is available in your customer portal.`;
     case "SECURITY_SESSIONS_REVOKED":
@@ -160,7 +163,9 @@ export function createPostgresEmailOutboxStore(getPool: typeof getPostgresPool =
           AND "type" = ANY($3::text[])
         ORDER BY "createdAt" ASC
         LIMIT $2`,
-      [maxAttempts, limit, DURABLE_EMAIL_TYPES],
+      [maxAttempts, limit, purchaseConfirmationEmailEnabled()
+        ? [...DURABLE_EMAIL_TYPES, PURCHASE_CONFIRMATION_TYPE]
+        : DURABLE_EMAIL_TYPES],
     );
     return result.rows.map((row) => Object.freeze({
       id: row.id,

@@ -15,7 +15,7 @@ Resend configuration remains in the existing encrypted provider store or its app
 
 ## Durable delivery and uncertainty
 
-The existing durable outbox dispatches only INVOICE_ISSUED, SECURITY_SESSIONS_REVOKED, SECURITY_NEW_SESSION and SECURITY_ACCOUNT_CHANGED. Other commerce/lifecycle events remain authenticated account notifications derived from canonical domain state. No new queue, service or database is introduced.
+The existing durable outbox dispatches INVOICE_ISSUED, SECURITY_SESSIONS_REVOKED, SECURITY_NEW_SESSION and SECURITY_ACCOUNT_CHANGED. A new PURCHASE_CONFIRMED message is explicitly opt-in through PURCHASE_CONFIRMATION_EMAIL_ENABLED=true (generation-independent, default OFF), gating both enqueue and dispatch. Legacy PAYMENT_RECEIPT and other commerce/lifecycle emails remain retired; authenticated in-app account Notifications remain canonical. The purchase email is plain text, with authenticated invoice/BKE links, canonical billing account recipient, and no raw license key or Claim Code. Do not activate live delivery without separate authorization and Cloudflare sender/domain/binding readiness. No new queue, service or database is introduced.
 
 A provider message ID acknowledges acceptance; it does not prove inbox delivery. The stored SENT state means BKE recorded that acknowledgement. Both send paths have bounded waiting, at most15seconds per attempt. A timeout, malformed result, unknown response, Resend409/idempotency conflict or other uncertain acceptance stops automatic work. Raw provider messages, credentials, recipients and tokens are not written to failure codes.
 

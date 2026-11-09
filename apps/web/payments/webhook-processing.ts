@@ -13,6 +13,7 @@ import { decryptLicenseKey, sha256 } from "@/platform/host/security/crypto";
 import { paymentProvider } from "@/apps/web/payments/compatibility-provider";
 import { ingestPaymentWebhook } from "@/apps/web/payments/webhook-ingestion";
 import { reactToPaidSettlement } from "@/apps/web/payments/settlement-transaction";
+import { queueVerifiedPurchaseConfirmation } from "@/apps/web/email/purchase-confirmation";
 import { persistNotification } from "@/apps/web/notifications/center";
 import { revokeOrderEntitlements } from "@/apps/web/entitlements/refund-revocation";
 
@@ -284,6 +285,15 @@ async function processPaidEvent(
           fulfillmentMode: settlement.fulfillmentMode,
         },
       },
+    });
+  }
+
+  // Only the new settled order may queue once, after verified fulfillment.
+  // This transaction never sends to an external email provider.
+  if (settlement.paymentSettlementDisposition === "CREATED") {
+    await queueVerifiedPurchaseConfirmation(tx, {
+      orderId: order.id,
+      fulfillmentMode: settlement.fulfillmentMode,
     });
   }
 
