@@ -6,9 +6,11 @@ import { LandingExperience } from "@/app/landing-experience";
 import { db } from "@/platform/host/db";
 import { getSiteContent } from "@/apps/web/site-content";
 import { getV2WebApplication } from "@/apps/web/runtime";
+import { currentUser } from "@/apps/web/auth/session";
+import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
 
 export default async function Home() {
-  const [content, products, application] = await Promise.all([
+  const [content, products, application, user] = await Promise.all([
     getSiteContent(),
     db.product.findMany({
       where: { active: true, archivedAt: null },
@@ -23,6 +25,7 @@ export default async function Home() {
       take: 3,
     }),
     getV2WebApplication(),
+    currentUser(),
   ]);
 
   const pricing = application.get<CommercePurchasePlanPricingCapability>(
@@ -44,18 +47,21 @@ export default async function Home() {
       name: product.name,
       summary: product.summary,
       type: product.type,
+      imageUrl: resolveProductImageUrl(product.imageKey),
       priceLabel: starting === undefined ? "Explore solution" : `From ${money(starting)}`,
     };
   });
 
-  const authoritativeHomepageContent = {
-    ...content,
+  const account = user ? (user.role === "ADMIN" ? "ADMIN" : "CUSTOMER") : null;
+  return <LandingExperience content={{
+    heroEyebrow: content.heroEyebrow,
+    heroDescription: content.heroDescription,
     siteName: content.siteName,
-    heroHeadline: content.heroHeadline,
-    heroPrimaryHref: content.heroPrimaryHref,
-  };
-
-  return <LandingExperience content={authoritativeHomepageContent} products={cards} />;
+    solutionsEyebrow: content.solutionsEyebrow,
+    solutionsHeading: content.solutionsHeading,
+    solutionsAccent: content.solutionsAccent,
+    solutionsLinkLabel: content.solutionsLinkLabel,
+  }} products={cards} account={account} />;
 }
 
 function money(minor: number) {

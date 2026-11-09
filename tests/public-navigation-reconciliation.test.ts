@@ -10,9 +10,9 @@ describe("public navigation reconciliation", () => {
     expect(header).not.toContain('href="/licensing">Licensing</Link>');
   });
 
-  it("keeps numbering only on the marketplace process sequence", () => {
+  it("keeps decorative numbering out of the approved landing", () => {
     const landing = read("app/landing-experience.tsx");
-    expect(landing).toContain('<span><b>01</b> Discover</span><span><b>02</b> License</span><span><b>03</b> Deliver</span>');
+    expect(landing).not.toMatch(/<(?:b|span)>0[1-3]<\/(?:b|span)>/);
     expect(landing).not.toContain('className="lane-code"');
     expect(landing).not.toContain('className="solution-number"');
   });

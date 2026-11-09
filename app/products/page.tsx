@@ -21,29 +21,38 @@ export default async function ProductsPage() {
     COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
   );
 
-  return <section className="shell py-16 motion-fade-up">
+  return <section className="shell products-page motion-fade-up">
     <p className="font-bold text-[#ffe08a]">Product catalog</p>
-    <h1 className="mt-2 text-5xl font-black">Software for work that matters.</h1>
-    <div className="mt-12 grid gap-6 md:grid-cols-2 motion-stagger">{products.map((product) => {
-      const plans = product.editions.flatMap((edition) => edition.purchasePlans);
-      const starting = plans
-        .map((plan) => {
-          const result = pricing.resolve(plan);
-          if (result.status === "FAILED") throw new Error(result.code);
-          return result.pricing.amountMinor;
-        })
-        .sort((a, b) => a - b)[0];
-      const imageUrl = resolveProductImageUrl(product.imageKey);
-      return <article className="card p-8" key={product.id}>
-        {imageUrl && <img className="mb-5 max-h-48 w-full rounded-xl object-contain" src={imageUrl} alt="" />}
-        <p className="text-xs font-bold tracking-widest text-[#ffe08a]">{product.type}</p>
-        <h2 className="mt-3 text-3xl font-black">{product.name}</h2>
-        <p className="mt-3 text-[#a8b5c4]">{product.summary}</p>
-        <p className="mt-6 font-semibold">{product.editions.length} edition(s) · {plans.length} purchase option(s)</p>
-        {starting !== undefined && <p className="mt-2 text-xl font-black">From {money(starting)}</p>}
-        <Link className="button mt-8" href={`/products/${product.slug}`}>Choose edition and plan</Link>
-      </article>;
-    })}</div>
+    <h1 className="products-page-title">Software for work that matters.</h1>
+    {products.length > 0 ? (
+      <div className="products-grid motion-stagger">{products.map((product) => {
+        const plans = product.editions.flatMap((edition) => edition.purchasePlans);
+        const starting = plans
+          .map((plan) => {
+            const result = pricing.resolve(plan);
+            if (result.status === "FAILED") throw new Error(result.code);
+            return result.pricing.amountMinor;
+          })
+          .sort((a, b) => a - b)[0];
+        const imageUrl = resolveProductImageUrl(product.imageKey);
+      return <article className="card products-card" key={product.id}>
+          {imageUrl && <img className="mb-5 max-h-48 w-full rounded-xl object-contain" src={imageUrl} alt="" />}
+          <p className="text-xs font-bold tracking-widest text-[#ffe08a]">{product.type}</p>
+          <h2>{product.name}</h2>
+          <p className="products-card-summary">{product.summary}</p>
+          <p className="products-card-options">{product.editions.length} edition(s) · {plans.length} purchase option(s)</p>
+          {starting !== undefined && <p className="products-card-price">From {money(starting)}</p>}
+          <Link className="button products-card-action" href={`/products/${product.slug}`}>Choose edition and plan</Link>
+        </article>;
+      })}</div>
+    ) : (
+      <div className="empty-products-state products-empty-state">
+        <p className="eyebrow eyebrow-yellow">CATALOG UPDATE</p>
+        <h2>No products are available right now.</h2>
+        <p>Please check back later.</p>
+        <Link className="text-link" href="/">Back to home <span>→</span></Link>
+      </div>
+    )}
   </section>;
 }
 
