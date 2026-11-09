@@ -55,6 +55,8 @@ describe("V3 notification routing", () => {
     }
     expect(paymentWebhook).not.toContain("queueCommerceEmail");
     expect(paymentWebhook).not.toContain("dispatchEmailOutbox");
+    expect(paymentWebhook).toContain("queueVerifiedPurchaseConfirmation");
+    expect(paymentWebhook).not.toContain("emailProvider.send");
   });
 
   it("retires stale commerce email rows and keeps the durable email allowlist narrow", () => {

@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { db } from "@/platform/host/db";
 import { dispatchEmailOutbox } from "@/apps/web/email";
+import { purchaseConfirmationEmailEnabled, PURCHASE_CONFIRMATION_TYPE } from "@/apps/web/email/purchase-confirmation";
 import { retryStoredWebhook } from "@/apps/web/payments/webhook-processing";
 import { persistNotification } from "@/apps/web/notifications/center";
 import { issueCommercialLease } from "@/apps/web/licensing/commercial-lease";
@@ -37,6 +38,7 @@ export async function emailLifecycle(context: JobContext): Promise<JobSummary> {
       type: {
         in: [
           "INVOICE_ISSUED",
+          ...(purchaseConfirmationEmailEnabled() ? [PURCHASE_CONFIRMATION_TYPE] : []),
           "SECURITY_SESSIONS_REVOKED",
           "SECURITY_NEW_SESSION",
           "SECURITY_ACCOUNT_CHANGED",
