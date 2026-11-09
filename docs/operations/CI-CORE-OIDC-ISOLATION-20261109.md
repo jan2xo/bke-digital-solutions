@@ -1,21 +1,20 @@
-# Intentional CI: isolate OIDC staging from core certification
+# Protected Staging OIDC isolation from Core CI
 
 ## BKE CERTIFICATION PLAN
 
-Intent: Remove GitHub Actions startup_failure caused by a reusable core CI workflow requesting an OIDC scope the certification caller explicitly cannot grant.
+Intent: Fix GitHub Actions `startup_failure` caused by calling a reusable workflow whose guarded Staging deployment demands a greater OIDC permission than the unprivileged caller permits.
 
-Root cause: `.github/workflows/certify.yml` and `.github/workflows/stage.yml` call `ci.yml` from an unprivileged top-level workflow. `ci.yml` contains a guarded `staging-deploy` job with `permissions.id-token: write`. GitHub validates the full called workflow and rejects the caller even though deploy is not selected.
+Evidence: workflow run 42544648297, `certify.yml` line 137, nested `staging-deploy` job `id-token: write` denied by caller (`id-token: none`). The same validation blocked `stage.yml`'s core call even when no deployment was authorized.
 
-Baseline main: `b7060f8b0eae50b6c4bdb093449d0d13d76f4857` (reconfirm before merge).
-Evidence: run 42544648297 (`Invalid workflow file`, certify.yml L137, staging-deploy id-token write vs caller id-token none).
+Baseline main: `b7060f8b0eae50b6c4bdb093449d0d13d76f4857`.
 
-Implementation:
-- Extract the existing core testing jobs and exact-head required-certification aggregator to a reusable `ci-core.yml` that never asks for OIDC.
-- Make `certify.yml` and disposable `stage.yml` call this unprivileged `ci-core.yml` instead.
-- Preserve `ci.yml` as independently-dispatched entry point that calls `ci-core.yml` for proof, retains its protected `staging-deploy` step under explicit `workflow_dispatch` and `Staging` environment, and exposes a final `Required certification` job for existing external CI-run provenance consumers.
-- Preserve exact-SHA, workflow identity, guard, environment, Infisical, and live payment protection; do not grant id-token to ordinary certification callers.
+### Implemented architecture
+- `.github/workflows/ci.yml`: canonical reusable unprivileged Core certification. Original database/runtime, quality/build, security, containers, Workers proof and `Required certification` aggregator preserved. Exposes `workflow_call` and optional direct `workflow_dispatch`. **Contains no id-token permission or Staging job.**
+- `.github/workflows/ci-staging.yml`: protected **explicit dispatch only** staging orchestration. Calls unchanged Core as a gate; then holds exactly one protected `Staging` deployment job with `id-token: write`, Infisical OIDC, exact source/workflow provenance, no auto-trigger, owner-designated workflow/branch identity, and existing protected Staging safeguards. No direct code/application changes.
+- `.github/workflows/stage.yml`: caller still uses unprivileged `ci.yml` for proof; its separately privileged Staging handoff dispatches `ci-staging.yml` rather than attempting to escalate Core. Its owner-authorization/PR-266 guard is preserved unchanged.
 
-Required proof: Validate workflow YAML and permissions; independent exact-head `ci.yml` dispatch of the candidate branch with `deploy_staging=false`, verify core Required certification + no Staging job; verify `certify.yml` callable once this workflow change is on trusted main; check Staging dispatch provenance and live-paymongo CI verifier compatibility. No deployment, secret access or provider activity. Minimum complete graph: CI workflow proof + core. Does not require Payments, Commerce, Identity, installer, release.
-
-Not required: staging deployment itself, protected live PayMongo workflows, application source / DB changes, cross-repo suites.
-Production: LOCKED. No force push. Draft until exact-head evidence.
+### Certification graph
+Required: validate YAML/workflow call permission graph; exact head Core CI at candidate branch (manual `ci.yml` dispatch with `source_sha`, no staging); ensure all Core jobs and `Required certification` succeed; prove `certify.yml` + `stage.yml` can evaluate without nested OIDC error after the trusted fix lands; verify guarded Staging workflow is dispatch-only, exact SHA and Infisical OIDC scope remains exclusive to its protected job.
+Not required: actual Staging deployment, production, PayMongo/provider, application/DB migrations or Agent/Launcher CI. Cross repo: none.
+External provenance: `ci.yml` remains named `CI` with the same `Required certification` job name for the existing protected live-paymongo verifier.
+Production: LOCKED. No force push or deployment.
