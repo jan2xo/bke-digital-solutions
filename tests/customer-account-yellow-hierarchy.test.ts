@@ -14,7 +14,7 @@ describe("Customer account yellow/white hierarchy", () => {
   });
 
   it("marks Products and licenses and Product trials, while keeping order and subscription panels neutral", () => {
-    expect(account).toContain('<h2 className="account-section-heading mb-4 text-2xl font-black">Products and licenses</h2>');
+    expect(account).toContain('<h2 className="account-section-heading text-2xl font-black">My Software</h2>');
     expect(account).toContain('<h2 className="account-section-heading mb-3 text-2xl font-black">Product trials</h2>');
     expect(account).toContain('<Panel title="Order history">');
     expect(account).toContain('<Panel title="Subscriptions">');
@@ -25,7 +25,8 @@ describe("Customer account yellow/white hierarchy", () => {
     expect(account).toContain('<p className="account-trials-empty">No active trials.</p>');
     expect(account).toContain('trial.license.status');
     expect(account).toContain('trial.graceEndsAt.toLocaleString()');
-    expect(license).toContain('Reveal license key');
+    expect(license).not.toContain("Reveal license key");
+    expect(license).not.toContain("/api/licenses/");
     expect(account).toContain('AccountNotificationHighlights accountId={accountId}');
   });
 });

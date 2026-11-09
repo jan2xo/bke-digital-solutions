@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 306,
+  "intent": "Consolidate visible customer web licenses and subscription renewals into account-bound keyless My Software cards, retain trial/gift rights and server authorization boundaries",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "accounts",
+    "host"
+  ],
+  "testFiles": [
+    "tests/customer-my-software.test.ts",
+    "tests/customer-account-yellow-hierarchy.test.ts"
+  ]
+}
