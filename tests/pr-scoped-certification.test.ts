@@ -14,9 +14,9 @@ describe("PR-owned intentional certification", () => {
     expect(plan.testFiles).toContain("tests/pr-scoped-certification.test.ts");
   });
   it("rejects attempts to run files outside the tests boundary or missing tests", () => {
-    for (const file of ["../.env.production", "scripts/payments.mjs", "tests/../unsafe.test.ts", "tests/missing.test.ts"]) {
+    for (const file of ["../outside.test.ts", "scripts/payments.mjs", "tests/../unsafe.test.ts", "tests/missing.test.ts"]) {
       expect(() => validatePrPlan({ ...example, testFiles: [file] }, 297,
-        x => x !== "tests/missing.test.ts")).toThrow("PR_CERTIFICATION_INVALID_TESTS");
+        (x: string) => x !== "tests/missing.test.ts")).toThrow("PR_CERTIFICATION_INVALID_TESTS");
     }
   });
   it("rejects the wrong PR, duplicate targets, or an undeclared graph", () => {
