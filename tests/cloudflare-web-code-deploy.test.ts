@@ -33,7 +33,8 @@ describe("protected code-only Cloudflare release", () => {
     expect(config.name).toBe("bke-digital-solutions");
     expect(config.main).toBe("workers/entry.ts");
     expect(config.workers_dev).toBe(false);
-    expect(config.keep_vars).toBe(true);
+    expect(config).not.toHaveProperty("keep_vars");
+    expect(workflow).toContain("--keep-vars");
     expect(config.hyperdrive[0]).toEqual({
       binding: "HYPERDRIVE_FRESH", id: target.hyperdriveId,
     });

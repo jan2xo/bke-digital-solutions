@@ -45,7 +45,8 @@ export function buildProductionConfig(source) {
     reject("Source variables must not override protected dashboard configuration");
   }
   // Preserve all existing Cloudflare dashboard plain variables and secret names.
-  config.keep_vars = true;
+  // Wrangler --keep-vars preserves existing dashboard variables at publish time.
+  // Do not add undocumented keep_vars to the source config schema.
   config.workers_dev = false;
   config.hyperdrive[0] = { binding: "HYPERDRIVE_FRESH", id: target.hyperdriveId };
   // No routes key: existing custom domain remains controlled by Cloudflare.
