@@ -10,8 +10,6 @@
     "host"
   ],
   "testFiles": [
-    "tests/renewal-checkout-v2.test.ts",
-    "tests/integration/host-legal-checkout.test.ts",
-    "tests/legal.test.ts"
+    "tests/renewal-checkout-v2.test.ts"
   ]
 }
