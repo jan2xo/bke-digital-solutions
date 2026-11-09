@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { setTimeout } from "node:timers/promises";
 
 const origin = "http://127.0.0.1:8787";
+const imageUrl = "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/e60c5762ff40d2e2afdcf52dc2cc06ff2d1aa905/public/bke-icon.png";
 let ready = false;
 for (let attempt = 0; attempt < 90; attempt++) {
   try {
@@ -21,11 +22,22 @@ for (let invocation = 0; invocation < 2; invocation++) {
   assert.ok(imgSrc, "Content Security Policy must define img-src");
   const imgSources = imgSrc.split(/\s+/).slice(1);
   assert.ok(imgSources.includes("https:") || imgSources.includes("https://raw.githubusercontent.com"), "CSP must authorize GitHub image delivery");
+  // Exercise the real Next.js application rendered in disposable workerd, not
+  // a static HTML prototype. Auth and checkout implementations are unchanged.
+  assert.match(html, /One platform\./, "Sonnet hero headline not rendered");
+  assert.match(html, /Every BKE/, "Sonnet hero second line missing");
+  assert.match(html, /Continue with Google/, "Anonymous Google entry missing");
+  assert.match(html, /href="\/products"[^>]*>Explore<\/a>/, "Public Explore link missing");
+  assert.doesNotMatch(html, /<header\b[^>]*class="site-header"/, "Anonymous homepage must not show account navigation");
+  assert.doesNotMatch(html, /<a\b[^>]*href="mailto:/, "Anonymous homepage exposes a Contact CTA");
+  assert.match(html, /href="\/legal\/privacy"/, "Required public Privacy link missing");
+  assert.ok([...html.matchAll(/<img\b[^>]*>/g)].some((match) => match[0].includes(`src="${imageUrl}"`)),
+    "Sonnet homepage must render a real GitHub-hosted catalog image");
+
 }
 const products = await fetch(origin + "/products", { signal: AbortSignal.timeout(15000) });
 assert.equal(products.status, 200);
 const productsHtml = await products.text();
-const imageUrl = "https://raw.githubusercontent.com/jan2xo/bke-digital-solutions/e60c5762ff40d2e2afdcf52dc2cc06ff2d1aa905/public/bke-icon.png";
 const imageTags = [...productsHtml.matchAll(/<img\b[^>]*>/g)].map(match => match[0]);
 assert.ok(imageTags.some(tag => tag.includes(`src="${imageUrl}"`)), "Catalog must render the validated GitHub image in an img src");
 
@@ -57,6 +69,24 @@ const { readFile } = await import("node:fs/promises");
 const { promisify } = await import("node:util");
 const { execFile } = await import("node:child_process");
 const sessions = JSON.parse(await readFile(".certification-secrets/workers-sessions.json", "utf8"));
+const authenticatedHome = await fetch(origin + "/", {
+  headers: { cookie: "__Host-bke_session=" + sessions[0].token },
+  signal: AbortSignal.timeout(15000),
+});
+assert.equal(authenticatedHome.status, 200, "Authenticated Sonnet homepage failed");
+const authenticatedHtml = await authenticatedHome.text();
+assert.match(authenticatedHtml, /<header\b[^>]*class="site-header"/,
+  "Verified server session must show account navigation");
+assert.match(authenticatedHtml, /My Software/,
+  "Verified customer must receive My Software CTA");
+console.log("PASS: anonymous Sonnet storefront and verified-session navigation in real workerd");
+// Browser behavior must be proven against the running disposable application,
+// not a separate generated mockup. Core is explicitly invoked by the PR plan.
+if (process.env.GITHUB_ACTIONS === "true") {
+  const { execFileSync } = await import("node:child_process");
+  execFileSync(process.execPath, ["scripts/workers-ui-browser-smoke.mjs"], { stdio: "inherit" });
+}
+
 for (let invocation = 0; invocation < 2; invocation++) {
   await Promise.all(sessions.map(async (session, index) => {
     const response = await fetch(origin + "/dashboard", {

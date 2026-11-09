@@ -17,23 +17,13 @@ on:
         description: Exact commit SHA to certify
         required: true
         type: string
-      deploy_staging:
-        description: Deploy this exact certified source to isolated Staging
-        required: false
-        default: false
-        type: boolean
-      initialize_staging_legal:
-        description: Initialize the two reviewed Staging test notices after deployment
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ inputs.deploy_staging && format('digital-solutions-staging-{0}', inputs.source_sha) || format('digital-solutions-ci-{0}', inputs.source_sha || github.ref) }}
-  cancel-in-progress: ${{ !inputs.deploy_staging }}
+  group: digital-solutions-core-${{ inputs.source_sha || github.ref }}
+  cancel-in-progress: true
 
 env:
   SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
@@ -341,175 +331,6 @@ jobs:
           if test -f /tmp/bke-workerd.log; then tail -n 120 /tmp/bke-workerd.log; fi
 
 
-  staging-deploy:
-    name: Protected isolated Staging deployment
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_staging == true && needs.required-certification.result == 'success' }}
-    needs:
-      - required-certification
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    environment:
-      name: Staging
-    env:
-      # CI fixture defaults must not become partial Staging storage configuration.
-      S3_BUCKET: ""
-    permissions:
-      contents: read
-      id-token: write
-    concurrency:
-      group: bke-digital-solutions-staging-deploy
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_SHA }}
-          persist-credentials: false
-      - name: Require exact source and workflow provenance
-        env:
-          WORKFLOW_SHA: ${{ github.workflow_sha }}
-          WORKFLOW_REF: ${{ github.workflow_ref }}
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
-          test "$WORKFLOW_SHA" = "$SOURCE_SHA"
-          test "$WORKFLOW_REF" = "jan2xo/bke-digital-solutions/.github/workflows/ci.yml@refs/heads/feat/workers-free-compatibility-proof"
-          printf 'source=%s\nworkflow=%s\nworkflow_ref=%s\n' "$SOURCE_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies without protected configuration
-        run: npm ci
-      - name: Build candidate with disposable CI signing material
-        env:
-          NODE_ENV: test
-          DEPLOYMENT_ENV: test
-          APP_URL: https://workers-ci.example.invalid
-          DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
-          SESSION_SECRET: ci-session-secret-with-at-least-32-chars
-          LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
-          LICENSE_SIGNING_KEY_ID: ci-license-signing-key
-          CRON_SECRET: ci-cron-secret-with-at-least-32-chars
-          EMAIL_FROM: build@example.invalid
-          S3_BUCKET: ci-private
-          PAYMENT_PROVIDER: mock
-          EMAIL_PROVIDER: log
-          WRANGLER_SEND_METRICS: 'false'
-          NEXT_TELEMETRY_DISABLED: '1'
-        run: |
-          set -euo pipefail
-          npm run db:generate
-          git diff --exit-code -- platform/persistence/generated/prisma
-          npm run licensing:keys .certification-secrets
-          node --input-type=module <<'NODE'
-          import { readFileSync } from "node:fs";
-          import { spawnSync } from "node:child_process";
-          const env = {
-            ...process.env,
-            LICENSE_SIGNING_PRIVATE_KEY: readFileSync(".certification-secrets/license-signing-private.pem", "utf8"),
-            LICENSE_SIGNING_PUBLIC_KEY: readFileSync(".certification-secrets/license-signing-public.pem", "utf8"),
-          };
-          const result = spawnSync("npm", ["run", "workers:build"], { stdio: "inherit", env });
-          if (result.error) throw result.error;
-          if (result.status !== 0) process.exit(result.status ?? 1);
-          NODE
-          git diff --exit-code -- package.json package-lock.json platform/persistence/generated/prisma
-          rm -rf .certification-secrets .dev.vars
-      - name: Fetch approved Staging configuration through Infisical OIDC
-        uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
-        with:
-          method: oidc
-          identity-id: ${{ vars.INFISICAL_STAGING_IDENTITY_ID }}
-          domain: https://app.infisical.com
-          project-id: f029af60-06f3-428c-b305-c70f8bcf7850
-          env-slug: staging
-          secret-path: /
-          include-imports: 'false'
-          recursive: 'false'
-      - name: Pin owner-authorized apex as the only canonical website origin
-        run: printf '%s\n' 'APP_URL=https://bkedigitalsolutions.com' >> "$GITHUB_ENV"
-      - name: Probe existing live PayMongo secret and QR Ph capability read-only from Staging OIDC
-        # Uses the protected Staging identity. Does not deploy this credential,
-        # create a Checkout Session, charge anyone, or write to Neon.
-        run: node scripts/probe-staging-paymongo.mjs
-      - name: Validate protected Staging runtime configuration
-        env:
-          NODE_ENV: production
-        run: npm run config:validate
-      - name: Verify protected Upstash Redis REST reachability
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-        run: node scripts/deploy-staging.mjs verify-redis
-      - name: Verify Neon and cache-disabled Hyperdrive metadata
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: node scripts/deploy-staging.mjs verify
-      - name: Prepare isolated Worker configuration and runtime secret allowlist
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-        run: node scripts/deploy-staging.mjs prepare
-      - name: Apply reviewed migrations to fresh Staging only
-        env:
-          NODE_ENV: production
-        run: npm run db:deploy
-      - name: Deploy certified Worker with allowlisted runtime secrets
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
-          WRANGLER_SEND_METRICS: 'false'
-        run: npx --no-install wrangler deploy --config .wrangler-staging.json --secrets-file .wrangler-staging-secrets.json
-      - name: Verify deployed Staging query-string redaction
-        env:
-          CLOUDFLARE_ACCOUNT_ID: 384c6c13373eb94a2925e0d865139970
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: node scripts/deploy-staging.mjs verify-observability
-      - name: Initialize reviewed Staging legal test notices
-        if: ${{ inputs.initialize_staging_legal == true }}
-        env:
-          NODE_ENV: production
-          STAGING_NEON_HOST: ${{ vars.STAGING_NEON_HOST }}
-          INITIALIZE_STAGING_LEGAL_ACK: I_APPROVE_THE_REVIEWED_STAGING_TEST_NOTICES
-          SOURCE_SHA: ${{ env.SOURCE_SHA }}
-          GITHUB_ACTOR: ${{ github.actor }}
-        run: NODE_OPTIONS=--conditions=react-server node node_modules/tsx/dist/cli.mjs scripts/initialize-staging-legal.ts
-      - name: Verify public Staging pages and dependency readiness
-        run: node scripts/staging-smoke.mjs
-      - name: Browser-check unauthenticated deployed Staging and admin access denial
-        run: |
-          npx --no-install playwright install chromium
-          node --input-type=module <<'NODE'
-          import assert from "node:assert/strict";
-          import { chromium } from "@playwright/test";
-          const origin = "https://bkedigitalsolutions.com";
-          const browser = await chromium.launch({ headless: true });
-          try {
-            const context = await browser.newContext({ ignoreHTTPSErrors: false });
-            const page = await context.newPage();
-            const response = await page.goto(origin + "/admin/products", { waitUntil: "domcontentloaded", timeout: 30000 });
-            assert.ok(response, "Admin navigation returned no response");
-            assert.equal(new URL(page.url()).pathname, "/login", "Unauthenticated admin browser was not redirected to login");
-            assert.match(await page.locator("body").innerText(), /google/i, "Google sign-in not available");
-            const denied = await context.request.get(origin + "/api/admin/products", { maxRedirects: 0, timeout: 15000 });
-            assert.ok([401, 403].includes(denied.status()), "Unauthenticated admin API unexpectedly allowed: " + denied.status());
-            console.log("PASS: deployed browser redirects unauthenticated admin; admin API denies unauthorized access");
-          } finally { await browser.close(); }
-          NODE
-      - name: Record human Google administrator acceptance boundary
-        run: |
-          {
-            echo "## Staging acceptance boundary"
-            echo "Exact deployed source SHA: $SOURCE_SHA"
-            echo "Automated: public pages, dependency readiness and unauthenticated admin browser denial."
-            echo "Unverified: real Google OAuth and human-authenticated admin actions."
-          } >> "$GITHUB_STEP_SUMMARY"
-      - name: Remove temporary protected deployment files
-        if: always()
-        run: node scripts/deploy-staging.mjs cleanup
-
   required-certification:
     name: Required certification
     if: ${{ always() }}
@@ -537,3 +358,4 @@ jobs:
             test "$DEPLOYMENT_CONTAINERS" = "success" || { echo "Required container certification did not pass: $DEPLOYMENT_CONTAINERS"; exit 1; }
           fi
           echo "Required Digital Solutions certification: PASS"
+

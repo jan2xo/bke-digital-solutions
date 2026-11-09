@@ -286,3 +286,21 @@ Build platforms, not features.
 Every implementation should make the next BKE product easier to build, integrate, deploy, license, and maintain.
 
 Every phase must end in a deployable, documented, testable, production-progressing state. No phase may introduce unfinished architecture that blocks subsequent phases. Documentation, roadmap, architecture, developer journal, implementation status, and handoff documents must be updated before a phase is considered complete.
+
+
+---
+
+# Intent-Driven PR-Owned GitHub Certification
+
+This repository uses a **stable trusted comment-triggered entrypoint** and **editable PR-owned certification plans**.
+
+- The registered `.github/workflows/certify.yml` dispatcher must be available on the default branch so GitHub can receive `/certify ...` PR comments. Its presence on `main` does **not** make `main` the only place where tests may be authored.
+- Each PR may add its own tests and `.github/pr-certification/pr-NNN.json` file on its branch. That file declares its exact `requiredTargets` and specific test files. PR numbers identify one-off test ownership, e.g. `PR #297`; stable shared module workflow names must remain behavior-oriented.
+- The trusted dispatcher resolves the **exact current PR head SHA**, reads the PR's manifest from that SHA, verifies its declared proof graph, and runs only explicitly selected modules. It rejects incomplete graphs, conflicting PR numbers, stale heads and unauthorized certification triggers.
+- The PR-owned test executor is **unprivileged**: no secret-bearing environment, no OIDC token, no write authorization, and no persisted checkout credential. A PR must never gain production or Staging authority by editing its test plan.
+- Each active workflow has a single behavioral certification responsibility. Heavy CI must not start merely from opening, synchronizing or pushing a PR. `required-certification` aggregates only required exact-head proof; it is not an indiscriminate launcher.
+- A temporary PR-owned workflow or test recipe is **retired to an inert legacy archive** after its intent is merged or its proof is incorporated into a durable shared module. Archive the original source, remove it from active Actions, and adjust contract tests to reflect ownership. Never retire a workflow that is still referenced as an active certification owner.
+- Privileged Staging, live checkout, production databases, signing and releases remain separate explicit operations with their own trusted authorization, locked environment, immutable source and purpose-bound permissions.
+- Before a SHA-locked merge, require a current-head PASS for every declared certification target. If CI bootstrap is blocked, preserve a PR checkpoint and identify the exact blocker; never substitute stale CI results for exact-head proof.
+
+See `.github/workflows/README.md` and `docs/operations/CI-CORE-OIDC-ISOLATION-20261109.md` for implementation ownership and the CI startup failure record.
