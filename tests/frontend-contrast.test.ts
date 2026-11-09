@@ -31,8 +31,18 @@ describe("customer-facing contrast safeguards", () => {
     expect(licensingPage).toContain("text-[#a8b5c4]");
   });
 
-  it("keeps Google sign-in and required legal consent on shared readable surfaces", () => {
-    expect(read("components/google-auth-button.tsx")).toContain("legal-consent-panel");
-    expect(read("app/login/page.tsx")).toContain("GoogleAuthButton");
+  it("keeps unified Google sign-in and post-OIDC legal consent on readable surfaces", () => {
+    const login = read("app/login/page.tsx");
+    const entry = read("components/google-auth-button.tsx");
+    const consent = read("components/google-enrollment-consent.tsx");
+    const consentPage = read("app/auth/consent/page.tsx");
+    expect(login).toContain("GoogleAuthButton");
+    expect(login).toContain("text-[#a8b5c4]");
+    expect(entry).toContain('props.flow === "unified"');
+    expect(entry).not.toContain("legal-consent-panel");
+    expect(consentPage).toContain('text-[#a8b5c4]');
+    expect(consent).toContain('className="card grid gap-5 p-6"');
+    expect(consent).toContain('className="font-bold text-[#ffd15a] underline"');
+    expect(consent).toContain('className="button button-yellow"');
   });
 });
