@@ -13,15 +13,15 @@ export const LEGAL_DOCUMENT_TYPES = [
 export type LegalDocumentType = typeof LEGAL_DOCUMENT_TYPES[number];
 
 export const LEGAL_DOCUMENT_DEFINITIONS: Record<LegalDocumentType, { title: string; slug: string }> = {
-  TERMS_OF_SERVICE: { title: "Terms of Service", slug: "terms" },
-  PRIVACY_POLICY: { title: "Privacy Policy", slug: "privacy" },
-  SOFTWARE_LICENSE_AGREEMENT: { title: "Software License Agreement (EULA)", slug: "eula" },
-  SUBSCRIPTION_TERMS: { title: "Subscription Terms", slug: "subscription" },
-  REFUND_POLICY: { title: "Refund Policy", slug: "refund" },
-  ACCEPTABLE_USE_POLICY: { title: "Acceptable Use Policy", slug: "acceptable-use" },
-  COOKIE_POLICY: { title: "Cookie Policy", slug: "cookies" },
-  SUPPORT_POLICY: { title: "Support Policy", slug: "support" },
-  DATA_PROCESSING_ADDENDUM: { title: "Data Processing Addendum", slug: "dpa" },
+  TERMS_OF_SERVICE: { title: "Terms of Service", slug: "terms-of-service" },
+  PRIVACY_POLICY: { title: "Privacy Policy", slug: "privacy-policy" },
+  SOFTWARE_LICENSE_AGREEMENT: { title: "Software License Agreement (EULA)", slug: "software-license-agreement" },
+  SUBSCRIPTION_TERMS: { title: "Subscription Terms", slug: "subscription-terms" },
+  REFUND_POLICY: { title: "Refund Policy", slug: "refund-policy" },
+  ACCEPTABLE_USE_POLICY: { title: "Acceptable Use Policy", slug: "acceptable-use-policy" },
+  COOKIE_POLICY: { title: "Cookie Policy", slug: "cookie-policy" },
+  SUPPORT_POLICY: { title: "Support Policy", slug: "support-policy" },
+  DATA_PROCESSING_ADDENDUM: { title: "Data Processing Addendum", slug: "data-processing-addendum" },
 };
 
 export const REGISTRATION_LEGAL_TYPES: LegalDocumentType[] = ["TERMS_OF_SERVICE", "PRIVACY_POLICY"];
