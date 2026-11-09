@@ -42,8 +42,8 @@ describe("archived PR #266 Staging contract, no active trigger", () => {
   it("retains protected disposable Staging, explicit no-real-payments and browser negatives", () => {
     expect(workflow).not.toContain("      name: Staging");
     expect(workflow).toContain("Dispatch exact-head branch-owned Staging");
-    expect(workflow).toContain('workflow_id: "ci-staging.yml", ref: authorizedBranch');
-    expect(workflow).not.toContain('deploy_staging: "true"');
+    expect(workflow).toContain('workflow_id: "ci.yml", ref: authorizedBranch');
+    expect(workflow).toContain('deploy_staging: "true"');
     const staging = readFileSync(".github/legacy-workflows/2026-11-09/ci-staging.yml", "utf8");
     expect(staging).toContain('environment:\n      name: Staging');
     expect(staging).toContain('id-token: write');

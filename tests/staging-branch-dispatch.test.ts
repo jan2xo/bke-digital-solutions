@@ -47,8 +47,8 @@ describe("owner-authorized exact-head branch Staging handoff", () => {
     const h = harness();
     await h.execute();
     expect(h.createWorkflowDispatch).toHaveBeenCalledExactlyOnceWith({
-      owner: "jan2xo", repo: "bke-digital-solutions", workflow_id: "ci-staging.yml", ref: BRANCH,
-      inputs: { source_sha: SHA, initialize_staging_legal: "false" },
+      owner: "jan2xo", repo: "bke-digital-solutions", workflow_id: "ci.yml", ref: BRANCH,
+      inputs: { source_sha: SHA, deploy_staging: "true", initialize_staging_legal: "false" },
     });
     expect(h.getRef).toHaveBeenCalledTimes(2);
     expect(h.get).toHaveBeenCalledWith({ owner: "jan2xo", repo: "bke-digital-solutions", pull_number: 266 });

@@ -439,7 +439,7 @@ jobs:
               throw new Error("Staging dispatch denied: candidate branch, PR head or trusted main changed.");
             }
             await github.rest.actions.createWorkflowDispatch({
-              owner, repo, workflow_id: "ci-staging.yml", ref: authorizedBranch,
+              owner, repo, workflow_id: "ci.yml", ref: authorizedBranch,
               inputs: {
                 source_sha: sourceSha,
                 deploy_staging: "true",
@@ -449,5 +449,5 @@ jobs:
             core.info("Branch-owned Staging CI dispatched for exact source " + sourceSha);
             await core.summary.addHeading("BKE protected branch-owned Staging")
               .addRaw("Certified candidate: `" + sourceSha + "`\n\n")
-              .addRaw("Dispatched protected `ci-staging.yml` at `" + authorizedBranch + "`. This job proves dispatch only; the branch CI run must independently PASS deployment and live smoke.")
+              .addRaw("Dispatched `ci.yml` at `" + authorizedBranch + "`. This job proves dispatch only; the branch CI run must independently PASS deployment and live smoke.")
               .write();
