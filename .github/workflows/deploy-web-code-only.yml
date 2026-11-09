@@ -1,0 +1,229 @@
+name: "Protected Web Code-Only Deployment"
+run-name: "BKE Web Release — ${{ github.event.issue.number || 'no-release' }}"
+
+# PR and push events MUST NOT deploy or build. A merged release PR plus a
+# strictly owner-authored exact-main command is the only deployment entry.
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bke-digital-solutions-production-web-code-release
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    name: "Validate explicit merged-PR release authority"
+    if: ${{ github.event.issue.pull_request && github.event.comment.user.login == github.repository_owner && startsWith(github.event.comment.body, '/deploy-web ') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    outputs:
+      allowed: ${{ steps.guard.outputs.allowed }}
+      mode: ${{ steps.guard.outputs.mode }}
+      source_sha: ${{ steps.guard.outputs.source_sha }}
+      certification_run: ${{ steps.guard.outputs.certification_run }}
+    steps:
+      - id: guard
+        uses: actions/github-script@v7
+        env:
+          COMMENT: ${{ github.event.comment.body }}
+          GITHUB_AUTH_TOKEN: ${{ github.token }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const words = (process.env.COMMENT || "").trim().split(/\s+/);
+            if (words.length !== 5 || words[0] !== "/deploy-web" ||
+                !["verify","deploy"].includes(words[1]) ||
+                !/^[a-f0-9]{40}$/.test(words[2]) ||
+                !/^[1-9][0-9]{5,18}$/.test(words[3]) ||
+                words[4] !== (words[1] === "deploy" ? "CODE_ONLY_PRODUCTION_RELEASE" : "READ_ONLY")) {
+              throw new Error("WEB_RELEASE_COMMAND_INVALID");
+            }
+            const [mode, source, runId] = [words[1], words[2], Number(words[3])];
+            if (context.ref !== "refs/heads/main" || context.sha !== source ||
+                context.actor !== owner || context.payload.comment.user.login !== owner) {
+              throw new Error("WEB_RELEASE_NOT_OWNER_CURRENT_MAIN");
+            }
+            const [branch, fetchedPr, certified] = await Promise.all([
+              github.rest.repos.getBranch({ owner, repo, branch: "main" }),
+              github.rest.pulls.get({ owner, repo, pull_number: context.issue.number }),
+              github.rest.actions.getWorkflowRun({ owner, repo, run_id: runId }),
+            ]);
+            const pr = fetchedPr.data;
+            const run = certified.data;
+            if (branch.data.commit.sha !== source || !pr.merged ||
+                pr.merge_commit_sha !== source || pr.base.ref !== "main" ||
+                pr.head.repo.full_name !== owner + "/" + repo ||
+                run.event !== "issue_comment" || run.conclusion !== "success" ||
+                run.name !== "PR #" + pr.number + " - Intent Certification" ||
+                !pr.merged_at || run.created_at >= pr.merged_at) {
+              throw new Error("WEB_RELEASE_UNCERTIFIED_OR_STALE_SOURCE");
+            }
+            // Squash merge changes commit SHA, not the exact source tree.
+            // The certified PR candidate tree must equal the current main tree.
+            const [candidate, merged] = await Promise.all([
+              github.rest.git.getCommit({ owner, repo, commit_sha: pr.head.sha }),
+              github.rest.git.getCommit({ owner, repo, commit_sha: source }),
+            ]);
+            if (candidate.data.tree.sha !== merged.data.tree.sha) {
+              throw new Error("WEB_RELEASE_CERTIFIED_TREE_MISMATCH");
+            }
+            const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun,
+              { owner, repo, run_id: runId, per_page: 100 });
+            for (const name of [
+              "PR #" + pr.number + " - scoped branch certification",
+              "core / Required certification", "host / host-v1-free", "Required certification",
+            ]) {
+              if (!jobs.some((job) => job.name === name && job.conclusion === "success")) {
+                throw new Error("WEB_RELEASE_REQUIRED_PROOF_MISSING: " + name);
+              }
+            }
+            const aggregate = jobs.find((job) =>
+              job.name === "Required certification" && job.conclusion === "success");
+            const logs = await fetch(
+              "https://api.github.com/repos/" + owner + "/" + repo + "/actions/jobs/" + aggregate.id + "/logs",
+              { headers: { authorization: "Bearer " + process.env.GITHUB_AUTH_TOKEN,
+                  accept: "application/vnd.github+json" }, redirect: "follow",
+                signal: AbortSignal.timeout(15000) },
+            );
+            if (!logs.ok || !(await logs.text()).includes(
+              "Required certification PASS for " + pr.head.sha + ": pr, core, host")) {
+              throw new Error("WEB_RELEASE_AGGREGATE_NOT_EXACT_CANDIDATE");
+            }
+            core.setOutput("allowed", "true");
+            core.setOutput("mode", mode);
+            core.setOutput("source_sha", source);
+            core.setOutput("certification_run", String(runId));
+            core.info("PASS: owner-authorized release, verified exact main/tree and PR proof.");
+
+  web-code-release:
+    name: "Production — verified Worker code only"
+    needs: authorize
+    if: ${{ needs.authorize.result == 'success' && needs.authorize.outputs.allowed == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    environment:
+      name: Production
+    permissions:
+      contents: read
+    env:
+      SOURCE_SHA: ${{ needs.authorize.outputs.source_sha }}
+      RELEASE_MODE: ${{ needs.authorize.outputs.mode }}
+      CLOUDFLARE_ACCOUNT_ID: "384c6c13373eb94a2925e0d865139970"
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.authorize.outputs.source_sha }}
+          persist-credentials: false
+      - name: Verify immutable current main checkout
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned build dependencies
+        run: npm ci
+      - name: Prepare code-only config, no secrets or DB changes
+        run: node scripts/deploy-web-code-only.mjs prepare
+      - name: Read-only verify live protected Worker resources and snapshot rollback version
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/deploy-web-code-only.mjs snapshot
+      - name: Build exact source using disposable build-only credentials
+        if: ${{ env.RELEASE_MODE == 'deploy' }}
+        env:
+          NODE_ENV: test
+          DEPLOYMENT_ENV: test
+          APP_URL: https://workers-ci.example.invalid
+          DATABASE_URL: postgresql://bke:bke@127.0.0.1:5432/bke_test
+          SESSION_SECRET: ci-session-secret-with-at-least-32-chars
+          LICENSE_PEPPER: ci-license-pepper-with-at-least-32-chars
+          LICENSE_SIGNING_KEY_ID: ci-license-signing-key
+          CRON_SECRET: ci-cron-secret-with-at-least-32-chars
+          EMAIL_FROM: build@example.invalid
+          S3_BUCKET: ci-private
+          PAYMENT_PROVIDER: mock
+          EMAIL_PROVIDER: log
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: |
+          set -euo pipefail
+          npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma
+          npm run licensing:keys .certification-secrets
+          node --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs";
+          import { spawnSync } from "node:child_process";
+          const env = {
+            ...process.env,
+            LICENSE_SIGNING_PRIVATE_KEY: readFileSync(".certification-secrets/license-signing-private.pem", "utf8"),
+            LICENSE_SIGNING_PUBLIC_KEY: readFileSync(".certification-secrets/license-signing-public.pem", "utf8"),
+          };
+          const result = spawnSync("npm", ["run", "workers:build"], { stdio: "inherit", env });
+          if (result.error) throw result.error;
+          if (result.status !== 0) process.exit(result.status ?? 1);
+          NODE
+          git diff --exit-code -- package.json package-lock.json platform/persistence/generated/prisma
+          rm -rf .certification-secrets .dev.vars
+      - name: Publish ONLY new Worker code to existing production service
+        id: publish
+        if: ${{ env.RELEASE_MODE == 'deploy' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --no-install wrangler deploy --config .wrangler-web-production.json --keep-vars
+      - name: Verify public HTTPS, existing runtime readiness and new Google entry
+        if: ${{ env.RELEASE_MODE == 'deploy' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict";
+          const origin = "https://bkedigitalsolutions.com";
+          for (const path of ["/api/health/live", "/api/health/ready", "/", "/login", "/legal/privacy"]) {
+            const response = await fetch(origin + path, {
+              redirect: "manual", cache: "no-store", signal: AbortSignal.timeout(20000),
+            });
+            assert.equal(response.status, 200, "Code-only release health failed at " + path);
+            if (path === "/") {
+              const html = await response.text();
+              assert.match(html, /One platform\./, "Sonnet landing not active after deployment");
+              assert.match(html, /Continue with Google/, "Unified Google entry not active");
+            }
+            console.log("PASS: public read-only release receiving " + path);
+          }
+          NODE
+      - name: Confirm all original Cloudflare bindings were preserved
+        if: ${{ env.RELEASE_MODE == 'deploy' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/deploy-web-code-only.mjs verify
+      - name: Restore saved Worker version after failed post-deploy proof
+        if: ${{ failure() && steps.publish.outcome == 'success' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          OLD_VERSION="$(node scripts/deploy-web-code-only.mjs previous-version)"
+          npx --no-install wrangler rollback "$OLD_VERSION" --name bke-digital-solutions --config .wrangler-web-production.json --message "Automatic source-locked web code-only release rollback"
+      - name: Record bounded deployment evidence
+        if: ${{ success() }}
+        run: |
+          {
+            echo "## Protected BKE web code-only release"
+            echo "Source: $SOURCE_SHA"
+            echo "Mode: $RELEASE_MODE"
+            echo "PR proof run: ${{ needs.authorize.outputs.certification_run }}"
+            echo "Target: existing bke-digital-solutions Worker / bkedigitalsolutions.com"
+            echo "No database migrations, DNS, provider activity or secret value changes requested."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Erase ephemeral non-secret release metadata
+        if: always()
+        run: |
+          node scripts/deploy-web-code-only.mjs cleanup
+          rm -rf .certification-secrets

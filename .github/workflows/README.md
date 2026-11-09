@@ -11,3 +11,7 @@ Only reusable certification owners and trusted entrypoints live here.
 **Protected Production operations:** `live-paymongo-cutover.yml` is retained, independently dispatched and protected. PR branch tests never inherit its OIDC, secrets, write permissions or production approvals.
 
 **Retired:** PR #266's hard-coded `stage.yml` and its experimental `ci-staging.yml` were archived under `.github/legacy-workflows/2026-11-09/` because PR #266 has merged. They are inert and cannot run. New Staging deployment needs a separate security-reviewed privileged intent. Older archives remain under `.github/legacy-workflows/2026-10-02/`.
+
+## Protected website release (after exact-head approval)
+
+`deploy-web-code-only.yml` is a trusted default-branch **comment-only** route, not a CI owner or an automatic PR/push trigger. It accepts an explicit owner `/deploy-web verify` or `/deploy-web deploy` command on the **merged deployment ledger PR** only after validating current `main`, the immutable source tree and the required exact-head `pr core host` aggregate. The Production GitHub environment gates Cloudflare access. Only the existing Worker code may be updated; secrets, the current domain, production Neon, signing and provider configuration must not be mutated. This release route does **not** replace any behavior-owned certification workflow. See `docs/operations/CLOUDFLARE-WEB-CODE-RELEASE-20261109.md`.
