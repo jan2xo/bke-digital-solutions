@@ -22,7 +22,7 @@ export default async function CustomerNotificationsPage() {
       Payments, invoices, licensing, trials, renewals, and account notices appear here.
     </p>
     <div className="mt-8">
-      <NotificationInbox items={items}/>
+      <NotificationInbox items={items} allowAccountNavigation/>
     </div>
   </section>;
 }

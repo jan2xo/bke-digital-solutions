@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 304,
+  "intent": "Make existing verified settlement and entitlement notifications visible and actionable in the customer account dashboard without new email, payment, or licensing authority",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "notifications",
+    "host"
+  ],
+  "testFiles": [
+    "tests/customer-notification-visibility.test.ts"
+  ]
+}
