@@ -19,7 +19,7 @@ export const GOOGLE_LOGIN_CONTEXT_COOKIE =
     ? "__Host-bke_google_login"
     : "bke_google_login";
 
-export type GoogleLoginFlow = "login" | "register" | "reauthenticate";
+export type GoogleLoginFlow = "login" | "register" | "reauthenticate" | "unified";
 
 export interface GoogleLoginContext {
   readonly flow: GoogleLoginFlow;
@@ -158,7 +158,7 @@ export async function completeGoogleAuthorization(requestUrl: string, encryptedC
   const context = payload as unknown as GoogleLoginContext;
   if (
     !context ||
-    (context.flow !== "login" && context.flow !== "register" && context.flow !== "reauthenticate") ||
+    (context.flow !== "login" && context.flow !== "register" && context.flow !== "reauthenticate" && context.flow !== "unified") ||
     typeof context.state !== "string" ||
     typeof context.nonce !== "string" ||
     typeof context.codeVerifier !== "string" ||

@@ -17,7 +17,7 @@ describe("public site content integration", () => {
     expect(page).toContain("content.siteName");
     expect(page).toContain("content.heroDescription");
     expect(page).not.toMatch(/content\.hero(?:Headline|Primary|Secondary)/);
-    expect(landing).toContain('href="/login"><GoogleMark /> Continue with Google');
+    expect(landing).toContain('<GoogleAuthButton flow="unified"');
     expect(landing).toContain('href="/products">Explore</Link>');
     expect(header).toContain('import { getSiteContent } from "@/apps/web/site-content"');
     expect(header).toContain("{content.siteName}");

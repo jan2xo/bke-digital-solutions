@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type PointerEvent } from "react";
 import styles from "./landing-experience.module.css";
+import { GoogleAuthButton } from "@/components/google-auth-button";
 
 type ProductCard = {
   id: string;
@@ -120,7 +121,7 @@ export function LandingExperience({
                   {account === "ADMIN" ? "Admin dashboard" : "My Software"}
                 </Link>
               ) : (
-                <Link className={styles.googleButton} href="/login"><GoogleMark /> Continue with Google</Link>
+                <GoogleAuthButton flow="unified" formClassName="" buttonClassName={styles.googleButton} icon={<GoogleMark />} />
               )}
               <Link className={styles.exploreLink} href="/products">Explore</Link>
             </div>

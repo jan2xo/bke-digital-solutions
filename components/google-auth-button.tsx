@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 
 type LegalDocument = {
   readonly title: string;
@@ -9,7 +9,10 @@ type LegalDocument = {
 };
 
 export function GoogleAuthButton(props: {
-  readonly flow: "login" | "register";
+  readonly flow: "login" | "register" | "unified";
+  readonly icon?: ReactNode;
+  readonly formClassName?: string;
+  readonly buttonClassName?: string;
   readonly returnTo?: string;
   readonly legalDocuments?: readonly LegalDocument[];
 }) {
@@ -24,7 +27,7 @@ export function GoogleAuthButton(props: {
       const form = new FormData(event.currentTarget);
       const body = props.flow === "register"
         ? { flow: "register", legalVersionIds: form.getAll("legalVersionIds") }
-        : { flow: "login", returnTo: props.returnTo };
+        : { flow: props.flow, returnTo: props.returnTo };
       const response = await fetch("/api/auth/google/start", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -50,7 +53,7 @@ export function GoogleAuthButton(props: {
   }
 
   return (
-    <form method="post" onSubmit={submit} className="grid gap-5">
+    <form method="post" onSubmit={submit} className={props.formClassName ?? "grid gap-5"}>
       {props.flow === "register" && (
         <fieldset className="legal-consent-panel grid gap-3">
           <legend className="px-2 font-bold">Review and accept before continuing</legend>
@@ -71,8 +74,9 @@ export function GoogleAuthButton(props: {
         </fieldset>
       )}
       {error && <p role="alert" className="text-sm font-semibold text-red-700">{error}</p>}
-      <button className="button primary" type="submit" disabled={busy}>
-        {busy ? "Connecting to Google…" : props.flow === "register" ? "Continue with Google" : "Sign in with Google"}
+      <button className={props.buttonClassName ?? "button primary"} type="submit" disabled={busy}>
+        {props.icon}
+        {busy ? "Connecting to Google…" : props.flow === "register" || props.flow === "unified" ? "Continue with Google" : "Sign in with Google"}
       </button>
     </form>
   );

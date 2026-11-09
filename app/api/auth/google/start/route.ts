@@ -12,6 +12,10 @@ const loginSchema = z.object({
   flow: z.literal("login"),
   returnTo: z.string().max(2048).optional(),
 }).strict();
+const unifiedSchema = z.object({
+  flow: z.literal("unified"),
+  returnTo: z.string().max(2048).optional(),
+}).strict();
 const registerSchema = z.object({
   flow: z.literal("register"),
   legalVersionIds: z.array(z.string().cuid()).length(2),
@@ -32,6 +36,7 @@ export async function POST(request: Request) {
     const body: unknown = await request.json();
     let input:
       | { flow: "login"; returnTo?: string }
+      | { flow: "unified"; returnTo?: string }
       | { flow: "register"; legalVersionIds: string[] }
       | { flow: "reauthenticate"; returnTo?: string; sessionId: string; userId: string; subject: string };
     if (typeof body === "object" && body !== null && "flow" in body && body.flow === "register") {
@@ -48,6 +53,8 @@ export async function POST(request: Request) {
       const bound = await db.googleIdentity.findUnique({ where: { userId: current.principal.id }, select: { subject: true } });
       if (!bound) throw new Error("UNAUTHENTICATED");
       input = { ...parsed, sessionId: current.session.id, userId: current.principal.id, subject: bound.subject };
+    } else if (typeof body === "object" && body !== null && "flow" in body && body.flow === "unified") {
+      input = unifiedSchema.parse(body);
     } else {
       input = loginSchema.parse(body);
     }
