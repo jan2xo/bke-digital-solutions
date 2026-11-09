@@ -34,6 +34,9 @@ export function buildProductionConfig(source) {
   }
   if (!Array.isArray(config.hyperdrive) || config.hyperdrive.length !== 1 ||
       config.hyperdrive[0].binding !== "HYPERDRIVE_FRESH") reject("Unexpected Hyperdrive binding");
+  const declaredDriveId = config.hyperdrive[0].id;
+  if (declaredDriveId !== "00000000000000000000000000000000" &&
+      declaredDriveId !== target.hyperdriveId) reject("Unexpected source Hyperdrive target");
   if (!Array.isArray(config.services) || config.services.length !== 1 ||
       config.services[0].binding !== "WORKER_SELF_REFERENCE" ||
       config.services[0].service !== target.worker) reject("Self-service binding changed");
