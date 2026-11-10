@@ -35,7 +35,7 @@ describe("protected PayMongo TEST-only probe", () => {
       environment: valid,
       fetchImpl: async (url, options) => {
         calls++;
-        expect(url).toBe("https://api.paymongo.com/v1/payment_methods");
+        expect(url).toBe("https://api.paymongo.com/v1/webhooks");
         expect(options.method).toBe("GET");
         return json({ data: [] });
       },
