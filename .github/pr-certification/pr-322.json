@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 322,
+  "intent": "Switch disposable backup S3 integration fixture from deleted MinIO Docker image to maintained pinned SeaweedFS without changing application runtime contracts",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/ci-intentional-certification-contract.test.ts",
+    "tests/pr-scoped-certification.test.ts"
+  ]
+}
