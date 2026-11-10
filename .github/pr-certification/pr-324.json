@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pr": 324,
+  "intent": "Recover buyer invoice email outbox entries only from verified, processed payment.paid settlement facts and FINAL invoices; preserve webhook payment authority, distinct gift semantics and cron retry fail-closed behavior",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "commerce",
+    "notifications",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/verified-invoice-email-cron-recovery.test.ts",
+    "tests/purchase-confirmation-email.test.ts",
+    "tests/webhook-owner-parity.test.ts",
+    "tests/cloudflare-email-cron.test.ts"
+  ]
+}
