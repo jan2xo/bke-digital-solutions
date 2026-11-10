@@ -94,14 +94,33 @@ if (process.env.GITHUB_ACTIONS === "true") {
   execFileSync(process.execPath, ["scripts/workers-ui-browser-smoke.mjs"], { stdio: "inherit" });
 }
 
+// Keep concurrent principal isolation proof. Bounded retries apply solely to
+// disposable workerd transport socket closures after the Chromium UI pass;
+// never retry an HTTP 4xx/5xx or a missing/other principal assertion.
+async function readDashboardWithSocketRetry(session) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch(origin + "/dashboard", {
+        headers: { cookie: "__Host-bke_session=" + session.token },
+        redirect: "manual", signal: AbortSignal.timeout(15000),
+      });
+      return { status: response.status, html: await response.text() };
+    } catch (error) {
+      const code = error?.cause?.code;
+      if (attempt === 3 || (code !== "UND_ERR_SOCKET" && code !== "ECONNRESET")) {
+        throw error;
+      }
+      console.warn("WARN: disposable workerd dashboard socket closed; bounded transport retry");
+      await new Promise((resolve) => setTimeout(resolve, attempt * 250));
+    }
+  }
+  throw new Error("WORKER_DASHBOARD_RETRY_EXHAUSTED");
+}
+
 for (let invocation = 0; invocation < 2; invocation++) {
   await Promise.all(sessions.map(async (session, index) => {
-    const response = await fetch(origin + "/dashboard", {
-      headers: { cookie: "__Host-bke_session=" + session.token },
-      redirect: "manual", signal: AbortSignal.timeout(15000),
-    });
-    const html = await response.text();
-    assert.equal(response.status, 200, "Authenticated dashboard failed");
+    const { status, html } = await readDashboardWithSocketRetry(session);
+    assert.equal(status, 200, "Authenticated dashboard failed");
     assert.ok(html.includes(session.name), "Own principal missing");
     assert.ok(!html.includes(sessions[1 - index].name), "Cross-account data exposure");
   }));
