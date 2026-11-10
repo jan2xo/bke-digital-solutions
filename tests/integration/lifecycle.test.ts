@@ -59,7 +59,7 @@ describe("database-backed mock commerce lifecycle", { concurrent: false },()=>{
     expect(await db.payment.count({ where: { orderId } })).toBe(before.payments);
     expect(await db.invoice.count({ where: { orderId } })).toBe(before.invoices);
     expect(await db.license.count({ where: { orderId } })).toBe(before.licenses);
-    expect(await db.emailOutbox.count({ where: { deduplicationKey: `purchase-confirmed:${orderId}` })).toBe(before.emails);
+    expect(await db.emailOutbox.count({ where: { deduplicationKey: `purchase-confirmed:${orderId}` } })).toBe(before.emails);
   });
   it("rejects a signed but mismatched direct payment and preserves the canonical settlement", async () => {
     const order = await db.order.findUniqueOrThrow({ where: { id: orderId } });
