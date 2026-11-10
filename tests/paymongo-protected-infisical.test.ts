@@ -43,7 +43,7 @@ function stubProvider(overrides: Partial<typeof credentials> = {}) {
       const value = { ...credentials, ...overrides }[name as keyof typeof credentials];
       return json({ secret: { secretValue: value } }, value ? 200 : 404);
     }
-    if (parsed.pathname === "/v1/payment_methods") {
+    if (parsed.pathname === "/v1/webhooks") {
       expect(init.method).toBe("GET");
       expect(init.headers?.authorization).toBe(
         "Basic " + Buffer.from(credentials.PAYMONGO_TEST_MODE_SECRET_KEY + ":").toString("base64"),
