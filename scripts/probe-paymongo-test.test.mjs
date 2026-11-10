@@ -7,7 +7,7 @@ const valid = Object.freeze({
   PAYMENT_PROVIDER: "paymongo",
   PAYMONGO_LIVEMODE: "false",
   PAYMONGO_TEST_MODE_SECRET_KEY: "sk_test_" + "a".repeat(28),
-  PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "whsec_" + "b".repeat(32),
+  PAYMONGO_TEST_MODE_WEBHOOK_KEY: "whsec_" + "b".repeat(32),
 });
 const response = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { "content-type": "application/json" },
@@ -17,7 +17,7 @@ describe("protected PayMongo TEST credentials", () => {
   it("accepts only separate TEST mode credentials", () => {
     assert.deepEqual(assertTestModeCredentials(valid), {
       key: valid.PAYMONGO_TEST_MODE_SECRET_KEY,
-      webhookSecret: valid.PAYMONGO_TEST_MODE_WEBHOOK_SECRET,
+      webhookSecret: valid.PAYMONGO_TEST_MODE_WEBHOOK_KEY,
     });
   });
   it("fails closed before network for production, live keys, missing signature secret or DB access", async () => {
@@ -28,8 +28,8 @@ describe("protected PayMongo TEST credentials", () => {
       { PAYMENT_PROVIDER: "mock" },
       { PAYMONGO_TEST_MODE_SECRET_KEY: "sk_live_" + "x".repeat(28) },
       { PAYMONGO_TEST_MODE_SECRET_KEY: "pk_test_" + "x".repeat(28) },
-      { PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "" },
-      { PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "short" },
+      { PAYMONGO_TEST_MODE_WEBHOOK_KEY: "" },
+      { PAYMONGO_TEST_MODE_WEBHOOK_KEY: "short" },
       { DATABASE_URL: "postgres://owner:pass@prod.neon.tech/bke_production" },
       { DIRECT_DATABASE_URL: "postgres://owner:pass@prod.neon.tech/bke_production" },
     ];
