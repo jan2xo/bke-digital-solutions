@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 320,
+  "intent": "Restore malformed main certification workflow accounts job after registering backup owner, prove full registered graph and CI policy",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}
