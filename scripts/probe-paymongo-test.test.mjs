@@ -66,7 +66,7 @@ describe("protected PayMongo TEST provider probe", () => {
       environment: valid,
       fetchImpl: async (url, options) => {
         count++;
-        assert.equal(url, "https://api.paymongo.com/v1/payment_methods");
+        assert.equal(url, "https://api.paymongo.com/v1/webhooks");
         assert.equal(options.method, "GET");
         assert.equal(options.headers.authorization, "Basic " + Buffer.from(valid.PAYMONGO_TEST_MODE_SECRET_KEY + ":").toString("base64"));
         assert.ok(!options.body);
