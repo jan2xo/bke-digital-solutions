@@ -109,11 +109,11 @@ describe("intentional GitHub Actions architecture", () => {
   it("keeps the PayMongo TEST probe owner-only, protected and outside production authority", () => {
     const source = readFileSync(join(activeDir, "probe-paymongo-test.yml"), "utf8");
     const triggers = triggerSection(source);
-    expect(triggers).toMatch(/^\\s{2}issue_comment:/mu);
-    expect(triggers).toMatch(/^\\s{2}workflow_dispatch:/mu);
+    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
+    expect(triggers).toMatch(/^\s{2}workflow_dispatch:/mu);
     expect(source).toContain("github.event.issue.number == 316");
     expect(source).toContain("context.actor !== owner");
-    expect(source).toContain('github.event.comment.body == \'/probe-paymongo-test\'');
+    expect(source).toContain("github.event.comment.body == '/probe-paymongo-test'");
     expect(source).toContain("context.sha !== sha");
     expect(source).toContain("environment: Payments-Test");
     expect(source).toContain("INFISICAL_TEST_IDENTITY_ID");
