@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 319,
+  "intent": "Register the new backups workflow_call and its exact-head required-certification target in the default-branch CI dispatcher, needed to certify PR 318 without PR-driven heavy suites",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/backups.test.ts"
+  ]
+}
