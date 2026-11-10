@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 328,
+  "intent": "Acknowledge only independently verified already-settled PayMongo raw payment.paid companion events; fail closed on missing/mismatched settlement, refund and cross-mode events; no secondary entitlement/email/invoice/payment",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "host"
+  ],
+  "testFiles": [
+    "tests/paymongo-companion-paid-events.test.ts"
+  ]
+}
