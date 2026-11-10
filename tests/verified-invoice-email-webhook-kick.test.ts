@@ -19,7 +19,7 @@ vi.mock("@/apps/web/http/request", () => ({
 }));
 vi.mock("@/apps/web/http/rate-limit", () => ({ rateLimit: mocks.rateLimit }));
 vi.mock("@/apps/web/payments/webhook-processing", () => ({
-  processPaymentWebhook: mocks.process,
+  processPaymentWebhookWithOutcome: mocks.process,
 }));
 vi.mock("@/apps/web/email/purchase-confirmation", () => ({
   purchaseConfirmationEmailEnabled: mocks.enabled,
@@ -37,7 +37,7 @@ beforeEach(() => {
   mocks.enabled.mockReturnValue(true);
   mocks.readBody.mockResolvedValue(Buffer.from("{}"));
   mocks.rateLimit.mockResolvedValue({ allowed: true });
-  mocks.process.mockResolvedValue({ processed: true, paid: true });
+  mocks.process.mockResolvedValue({ result: { processed: true }, verifiedPaid: true });
   mocks.dispatch.mockResolvedValue({ selected: 1, sent: 1 });
 });
 
@@ -47,7 +47,7 @@ describe("verified-paid webhook post-response invoice outbox kick", () => {
     mocks.after.mockImplementation((callback: () => Promise<unknown>) => { scheduled.push(callback); });
     const response = await POST(request());
     expect(response.status).toBe(200);
-    expect(await response.json()).toMatchObject({ processed: true, paid: true });
+    expect(await response.json()).toEqual({ processed: true });
     expect(mocks.after).toHaveBeenCalledOnce();
     expect(mocks.dispatch).not.toHaveBeenCalled();
     await scheduled[0]();
@@ -57,8 +57,9 @@ describe("verified-paid webhook post-response invoice outbox kick", () => {
 
   it("does not wake mail for duplicate, unsupported, refunded or failed payment events", async () => {
     for (const event of [
-      { duplicate: true }, { ignored: true },
-      { processed: true, paid: false },
+      { result: { duplicate: true }, verifiedPaid: false },
+      { result: { ignored: true }, verifiedPaid: false },
+      { result: { processed: true }, verifiedPaid: false },
     ]) {
       mocks.process.mockResolvedValueOnce(event);
       expect((await POST(request())).status).toBe(200);
