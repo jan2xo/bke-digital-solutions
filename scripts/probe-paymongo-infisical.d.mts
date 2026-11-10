@@ -22,7 +22,7 @@ export interface ReadTestEnvironment {
   PAYMENT_PROVIDER: "paymongo";
   PAYMONGO_LIVEMODE: "false";
   PAYMONGO_TEST_MODE_SECRET_KEY: string;
-  PAYMONGO_TEST_MODE_WEBHOOK_SECRET: string;
+  PAYMONGO_TEST_MODE_WEBHOOK_KEY: string;
 }
 export interface ProtectedProbeResult {
   status: "PASS";

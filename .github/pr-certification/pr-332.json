@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 332,
+  "intent": "Match the owner's exact PayMongo TEST webhook credential name (WEBHOOK_KEY not WEBHOOK_SECRET), prove fail-closed secret lookup, preserve protected Infisical OIDC without production payment activity",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/paymongo-protected-infisical.test.ts",
+    "tests/paymongo-protected-probe.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}

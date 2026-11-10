@@ -6,7 +6,7 @@ const valid = {
   PAYMENT_PROVIDER: "paymongo",
   PAYMONGO_LIVEMODE: "false",
   PAYMONGO_TEST_MODE_SECRET_KEY: "sk_test_" + "a".repeat(28),
-  PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "whsec_" + "b".repeat(32),
+  PAYMONGO_TEST_MODE_WEBHOOK_KEY: "whsec_" + "b".repeat(32),
 };
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
 
@@ -18,7 +18,7 @@ describe("protected PayMongo TEST-only probe", () => {
     ["production environment", { DEPLOYMENT_ENV: "production" }],
     ["live mode", { PAYMONGO_LIVEMODE: "true" }],
     ["live key", { PAYMONGO_TEST_MODE_SECRET_KEY: "sk_live_" + "x".repeat(28) }],
-    ["missing webhook secret", { PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "" }],
+    ["missing webhook secret", { PAYMONGO_TEST_MODE_WEBHOOK_KEY: "" }],
     ["production database connection", { DATABASE_URL: "postgres://example@prod.neon.tech/customer" }],
   ])("rejects %s before any provider network call", async (_name, changes) => {
     let calls = 0;

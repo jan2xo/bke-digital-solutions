@@ -11,7 +11,7 @@ const env = Object.freeze({
 });
 const credentials = Object.freeze({
   PAYMONGO_TEST_MODE_SECRET_KEY: "sk_test_" + "t".repeat(32),
-  PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "whsec_" + "w".repeat(32),
+  PAYMONGO_TEST_MODE_WEBHOOK_KEY: "whsec_" + "w".repeat(32),
 });
 
 const json = (value: unknown, status = 200) =>
@@ -61,7 +61,7 @@ describe("existing protected Infisical OIDC connection with named TEST secrets",
     const result = await readNamedTestCredentials({ environment: env, fetchImpl: stub.fetchImpl });
     expect(stub.names).toEqual([
       "PAYMONGO_TEST_MODE_SECRET_KEY",
-      "PAYMONGO_TEST_MODE_WEBHOOK_SECRET",
+      "PAYMONGO_TEST_MODE_WEBHOOK_KEY",
     ]);
     expect(result).toEqual({
       DEPLOYMENT_ENV: "test", PAYMENT_PROVIDER: "paymongo", PAYMONGO_LIVEMODE: "false",
@@ -94,10 +94,17 @@ describe("existing protected Infisical OIDC connection with named TEST secrets",
   });
 
   it("rejects missing named webhook secret and never falls back to production webhook key", async () => {
-    const stub = stubProvider({ PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "" });
+    const stub = stubProvider({ PAYMONGO_TEST_MODE_WEBHOOK_KEY: "" });
     await expect(readNamedTestCredentials({ environment: env, fetchImpl: stub.fetchImpl }))
-      .rejects.toThrow(/^PAYMONGO_TEST_INFISICAL_NAMED_SECRET_/);
-    expect(stub.names).toEqual(["PAYMONGO_TEST_MODE_SECRET_KEY", "PAYMONGO_TEST_MODE_WEBHOOK_SECRET"]);
+      .rejects.toThrow("PAYMONGO_TEST_INFISICAL_WEBHOOK_KEY_HTTP_404");
+    expect(stub.names).toEqual(["PAYMONGO_TEST_MODE_SECRET_KEY", "PAYMONGO_TEST_MODE_WEBHOOK_KEY"]);
+  });
+
+  it("reports a missing TEST API key distinctly without requesting webhook aliases", async () => {
+    const stub = stubProvider({ PAYMONGO_TEST_MODE_SECRET_KEY: "" });
+    await expect(readNamedTestCredentials({ environment: env, fetchImpl: stub.fetchImpl }))
+      .rejects.toThrow("PAYMONGO_TEST_INFISICAL_SECRET_KEY_HTTP_404");
+    expect(stub.names).toEqual(["PAYMONGO_TEST_MODE_SECRET_KEY"]);
   });
 
   it("rejects a mislabeled LIVE secret key before contacting PayMongo", async () => {

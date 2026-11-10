@@ -126,7 +126,7 @@ describe("intentional GitHub Actions architecture", () => {
     const reader = readFileSync("scripts/probe-paymongo-infisical.mjs", "utf8");
     expect(reader).toContain('"/api/v4/secrets/"');
     expect(reader).toContain('"PAYMONGO_TEST_MODE_SECRET_KEY"');
-    expect(reader).toContain('"PAYMONGO_TEST_MODE_WEBHOOK_SECRET"');
+    expect(reader).toContain('"PAYMONGO_TEST_MODE_WEBHOOK_KEY"');
     expect(reader).not.toContain('"PAYMONGO_SECRET_KEY"');
     expect(reader).not.toContain('"PAYMONGO_WEBHOOK_SECRET"');
     expect(reader).toContain('PAYMONGO_LIVEMODE: "false"');
