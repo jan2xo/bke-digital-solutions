@@ -70,7 +70,9 @@ describe("restored semi-annual pricing authority", () => {
     expect(() => editionPlanInputSchema.parse({ ...body,
       plans: { ...plans, semiAnnual: { ...plans.semiAnnual, amountMinor: 1 } },
     })).toThrow();
-    const upsert = vi.fn(async (input: { type: string }) => ({ id: input.type === "MONTHLY" ? "monthly-id" : input.type }));
+    const upsert = vi.fn(async (input: { where: { editionId_type: { type: string } }; create: Record<string, unknown> }) => ({
+      id: input.where.editionId_type.type === "MONTHLY" ? "monthly-id" : input.where.editionId_type.type,
+    }));
     await synchronizeEditionPlansWithCommerce({
       purchasePlan: { upsert },
     } as never, "edition-1", plans);
