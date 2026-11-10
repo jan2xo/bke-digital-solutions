@@ -154,6 +154,7 @@ enum IntervalUnit {
 enum PurchasePlanType {
   PERPETUAL
   MONTHLY
+  SEMI_ANNUAL
   ANNUAL
 }
 
@@ -825,6 +826,7 @@ model PurchasePlan {
   currency            String           @default("PHP")
   amountMinor         Int?
   annualDiscountBps   Int?
+  semiAnnualDiscountBps Int?
   renewalBehavior     RenewalBehavior  @default(NONE)
   active              Boolean          @default(true)
   monthlySourcePlanId String?
