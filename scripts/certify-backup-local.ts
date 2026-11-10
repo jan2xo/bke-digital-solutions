@@ -38,9 +38,9 @@ process.env.BACKUP_ENCRYPTION_KEY = randomBytes(32).toString("base64");
 
 const client = new S3Client({
   region: process.env.S3_REGION ?? "auto",
-  endpoint: process.env.S3_ENDPOINT,
+  endpoint: process.env.S3_ENDPOINT!,
   forcePathStyle: true,
-  credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY },
+  credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID!, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY! },
 });
 async function createBucket(bucket: string) {
   try { await client.send(new CreateBucketCommand({ Bucket: bucket })); } catch (error) {
@@ -48,7 +48,7 @@ async function createBucket(bucket: string) {
     if (!code.includes("BucketAlready")) throw error;
   }
 }
-for (const bucket of [process.env.S3_BUCKET, process.env.BACKUP_BUCKET, process.env.BACKUP_RESTORE_S3_BUCKET])
+for (const bucket of [process.env.S3_BUCKET!, process.env.BACKUP_BUCKET!, process.env.BACKUP_RESTORE_S3_BUCKET!])
   await createBucket(bucket);
 
 const sourceObjects = new Map([
@@ -57,7 +57,7 @@ const sourceObjects = new Map([
   ["installers/ci-artifact.bin", Buffer.from("BKE synthetic private installer fixture")],
 ]);
 for (const [key, bytes] of sourceObjects) await client.send(new PutObjectCommand({
-  Bucket: process.env.S3_BUCKET, Key: key, Body: bytes,
+  Bucket: process.env.S3_BUCKET!, Key: key, Body: bytes,
 }));
 
 const sourceDB = new Client({ connectionString: process.env.DATABASE_URL });
