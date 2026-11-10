@@ -25,7 +25,7 @@ export const editionPlanInputSchema = z.object({
   plans: z.object({
     perpetual: z.object({ enabled: z.boolean(), amountMinor: z.number().optional() }),
     monthly: z.object({ enabled: z.boolean(), amountMinor: z.number().optional() }),
-    semiAnnual: z.object({ enabled: z.boolean(), discountBps: z.number().optional() }).optional(),
+    semiAnnual: z.object({ enabled: z.boolean(), discountBps: z.number().optional() }).strict().optional(),
     annual: z.object({ enabled: z.boolean(), discountBps: z.number().optional() }),
   }).strict(),
 }).strict();
