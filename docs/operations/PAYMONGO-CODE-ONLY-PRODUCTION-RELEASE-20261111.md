@@ -24,6 +24,10 @@ This source-only release transports the already-merged commercial fix. To meet t
 - Explicit dispatch only; no heavy CI from PR push. `required-certification` aggregates this exact candidate SHA and declared graph.
 - Merge only after all required proof is PASS, SHA-locked merge, verify new `main` tree equals certified candidate tree.
 
+## Required certification harness repair discovered during this release
+
+Initial release candidate CI `#42855977186` passed Payments/Host/Platform, application build and full disposable DB runtime tests, but exposed a **preexisting testing harness bug** in `scripts/workers-smoke.mjs`: the script imports `setTimeout` from `node:timers/promises` yet wrapped that promise-based function in callback-style `new Promise(resolve => setTimeout(resolve, delay))`. A transient disposable socket closure caused `ERR_INVALID_ARG_TYPE` before the bounded retry could run. Fix only the smoke script to `await setTimeout(attempt * 250)`, preserving concurrent two-principal isolation checks and all HTTP/content failure conditions. Add a scoped regression test. This changes no production application behavior. **All previous CI proof is stale for the new release candidate head**; rerun the same complete declared graph.
+
 ## Authorized deployment
 
 Owner explicitly instructed **GO DEPLOY** in conversation, limited to existing production Worker code only. Use existing `.github/workflows/deploy-web-code-only.yml`, owner-authored `/deploy-web deploy <exact merged main SHA> <this release PR's successful exact-head certification run ID> CODE_ONLY_PRODUCTION_RELEASE` on **this merged release PR**. Production environment review is a required human gate and must not be bypassed.
