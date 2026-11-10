@@ -20,6 +20,17 @@ describe("protected PayMongo TEST credentials", () => {
       webhookSecret: valid.PAYMONGO_TEST_MODE_WEBHOOK_KEY,
     });
   });
+  it("rejects the retired WEBHOOK_SECRET alias rather than falling back", () => {
+    assert.throws(
+      () => assertTestModeCredentials({
+        ...valid,
+        PAYMONGO_TEST_MODE_WEBHOOK_KEY: undefined,
+        PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "whsec_" + "x".repeat(32),
+      }),
+      { message: "PAYMONGO_TEST_WEBHOOK_SECRET_INVALID" },
+    );
+  });
+
   it("fails closed before network for production, live keys, missing signature secret or DB access", async () => {
     const bad = [
       { DEPLOYMENT_ENV: "production" },
