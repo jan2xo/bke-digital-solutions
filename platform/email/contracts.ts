@@ -26,7 +26,7 @@ export type EmailOutboxRecord = Readonly<{
 
 export interface EmailOutboxStore {
   recoverExpiredClaims(now: Date): Promise<number>;
-  listDispatchable(input: Readonly<{ limit: number; maxAttempts: number }>): Promise<readonly EmailOutboxRecord[]>;
+  listDispatchable(input: Readonly<{ limit: number; maxAttempts: number; deduplicationKey?: string }>): Promise<readonly EmailOutboxRecord[]>;
   claim(input: Readonly<{
     id: string;
     expectedStatus: EmailOutboxStatus;

@@ -18,6 +18,7 @@ export type EmailOutboxDispatchOptions = Readonly<{
   workerId?: string;
   claimTtlMs?: number;
   maxAttempts?: number;
+  deduplicationKey?: string;
   now?: () => Date;
   failureCode?: (error: unknown) => string;
   log?: (event: string, result: EmailOutboxDispatchResult) => void;
@@ -36,7 +37,10 @@ export async function dispatchEmailOutbox(
 
   const claimedAt = clock();
   const recovered = await dependencies.store.recoverExpiredClaims(claimedAt);
-  const rows = await dependencies.store.listDispatchable({ limit, maxAttempts });
+  const rows = await dependencies.store.listDispatchable({
+    limit, maxAttempts,
+    ...(options.deduplicationKey !== undefined ? { deduplicationKey: options.deduplicationKey } : {}),
+  });
 
   let reviewRequired = recovered;
   let sent = 0;

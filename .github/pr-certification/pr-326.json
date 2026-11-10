@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pr": 0,
+  "pr": 326,
   "intent": "Deliver only the just-settled verified paid order's purchase-confirmed invoice email immediately after webhook ACK; retain durable outbox and cron recovery without starving the new invoice under backlog",
   "requiredTargets": [
     "pr",
@@ -15,6 +15,7 @@
     "tests/verified-invoice-email-webhook-kick.test.ts",
     "tests/purchase-confirmation-email.test.ts",
     "platform/email/test/email.test.ts",
-    "tests/verified-invoice-email-cron-recovery.test.ts"
+    "tests/verified-invoice-email-cron-recovery.test.ts",
+    "tests/verified-invoice-email-targeted-dispatch.test.ts"
   ]
 }

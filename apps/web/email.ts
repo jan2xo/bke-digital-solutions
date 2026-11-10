@@ -153,7 +153,7 @@ export function createPostgresEmailOutboxStore(getPool: typeof getPostgresPool =
   },
 
   async listDispatchable(
-    { limit, maxAttempts }: Readonly<{ limit: number; maxAttempts: number }>,
+    { limit, maxAttempts, deduplicationKey }: Readonly<{ limit: number; maxAttempts: number; deduplicationKey?: string }>,
   ): Promise<readonly EmailOutboxRecord[]> {
     const result = await getPool().query<DispatchRow>(
       `SELECT "id", "status"::text AS "status", "attempts", "recipient", "subject", "type", "payload"
@@ -161,11 +161,13 @@ export function createPostgresEmailOutboxStore(getPool: typeof getPostgresPool =
         WHERE "status" IN ('PENDING', 'FAILED')
           AND "attempts" < $1
           AND "type" = ANY($3::text[])
+          AND ($4::text IS NULL OR ("type" = $5 AND "deduplicationKey" = $4))
         ORDER BY "createdAt" ASC
         LIMIT $2`,
       [maxAttempts, limit, purchaseConfirmationEmailEnabled()
         ? [...DURABLE_EMAIL_TYPES, PURCHASE_CONFIRMATION_TYPE]
-        : DURABLE_EMAIL_TYPES],
+        : DURABLE_EMAIL_TYPES,
+        deduplicationKey ?? null, PURCHASE_CONFIRMATION_TYPE],
     );
     return result.rows.map((row) => Object.freeze({
       id: row.id,
@@ -221,17 +223,25 @@ const emailOutboxStore = createPostgresEmailOutboxStore();
 
 export async function dispatchEmailOutbox(
   limit = 20,
-  options: Readonly<{ workerId?: string; claimTtlMs?: number }> = {},
+  options: Readonly<{ workerId?: string; claimTtlMs?: number; deduplicationKey?: string }> = {},
 ) {
   const platformOptions: EmailOutboxDispatchOptions = {
     limit,
     maxAttempts: 5,
     ...(options.workerId !== undefined ? { workerId: options.workerId } : {}),
     ...(options.claimTtlMs !== undefined ? { claimTtlMs: options.claimTtlMs } : {}),
+    ...(options.deduplicationKey !== undefined ? { deduplicationKey: options.deduplicationKey } : {}),
     log: (event, result) => console.info(event, result),
   };
   return dispatchPlatformEmailOutbox(
     { store: emailOutboxStore, provider: runtimeProvider() },
     platformOptions,
   );
+}
+
+/** Only the verified post-commit webhook path may target this order-scoped row. */
+export async function dispatchVerifiedPurchaseConfirmation(orderId: string) {
+  if (!purchaseConfirmationEmailEnabled()) return;
+  if (!/^[\w-]{1,160}$/.test(orderId)) throw new Error("PURCHASE_CONFIRMATION_ORDER_INVALID");
+  return dispatchEmailOutbox(1, { deduplicationKey: `purchase-confirmed:${orderId}` });
 }
