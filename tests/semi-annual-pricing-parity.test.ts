@@ -123,4 +123,23 @@ describe("restored semi-annual pricing authority", () => {
     expect(t).toContain("BETWEEN 0 AND 1000");
     expect(e + t).not.toMatch(/UPDATE\s+"(?:Order|Invoice|OrderItem|Payment)"/i);
   });
+
+  it("restores the legacy PostgreSQL plan check for SEMI_ANNUAL without weakening existing plan contracts", () => {
+    const sql = readFileSync(
+      "prisma/migrations/20261110120200_semi_annual_purchase_plan_terms_check/migration.sql",
+      "utf8",
+    );
+    expect(sql).toContain('DROP CONSTRAINT "PurchasePlan_terms_check"');
+    expect(sql).toContain('ADD CONSTRAINT "PurchasePlan_terms_check"');
+    for (const type of ["PERPETUAL", "MONTHLY", "ANNUAL", "SEMI_ANNUAL"]) {
+      expect(sql).toContain(`"type" = '${type}'`);
+    }
+    expect(sql).toContain('"amountMinor" IS NULL');
+    expect(sql).toContain('"annualDiscountBps" IS NULL');
+    expect(sql).toContain('"semiAnnualDiscountBps" BETWEEN 0 AND 1000');
+    expect(sql).toContain('"active" = FALSE AND "semiAnnualDiscountBps" IS NULL');
+    expect(sql).toContain('"monthlySourcePlanId" IS NOT NULL');
+    expect(sql).toContain('"renewalBehavior" = \'CUSTOMER_AUTHORIZED\'');
+    expect(sql).not.toMatch(/(?:UPDATE|DELETE|INSERT)\s+["']?(?:Order|Invoice|OrderItem|Payment|License)/i);
+  });
 });
