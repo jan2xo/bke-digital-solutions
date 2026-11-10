@@ -10,6 +10,23 @@ describe("public navigation reconciliation", () => {
     expect(header).not.toContain('href="/licensing">Licensing</Link>');
   });
 
+  it("removes the redundant Pricing menu item without changing commerce pricing", () => {
+    const header = read("components/header.tsx");
+    expect(header).not.toContain('href="/products#pricing">Pricing</Link>');
+    expect(header).toContain('<Link prefetch={false} href="/products">Products</Link>');
+  });
+
+  it("keeps one Explore arrow CTA on the product catalog route without changing authentication controls", () => {
+    const landing = read("app/landing-experience.tsx");
+    const styles = read("app/landing-experience.module.css");
+    expect(landing).toContain('className={styles.exploreLink} href="/products">Explore <span className={styles.exploreArrow} aria-hidden="true">→</span>');
+    expect(landing).not.toContain("Explore Catalog");
+    expect(landing).toContain('account === "ADMIN" ? "Admin dashboard" : "My Software"');
+    expect(landing).toContain('<GoogleAuthButton flow="unified"');
+    expect(styles).toContain(".exploreLink {");
+    expect(styles).toContain(".exploreArrow {");
+  });
+
   it("keeps decorative numbering out of the approved landing", () => {
     const landing = read("app/landing-experience.tsx");
     expect(landing).not.toMatch(/<(?:b|span)>0[1-3]<\/(?:b|span)>/);

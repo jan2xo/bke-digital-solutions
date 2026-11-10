@@ -27,7 +27,7 @@ for (let invocation = 0; invocation < 2; invocation++) {
   assert.match(html, /One platform\./, "Sonnet hero headline not rendered");
   assert.match(html, /Every BKE/, "Sonnet hero second line missing");
   assert.match(html, /Continue with Google/, "Anonymous Google entry missing");
-  assert.match(html, /href="\/products"[^>]*>Explore<\/a>/, "Public Explore link missing");
+  assert.match(html, /href="\/products"[^>]*>Explore\s*<span[^>]*aria-hidden="true"[^>]*>→<\/span><\/a>/, "Public Explore arrow CTA missing");
   assert.doesNotMatch(html, /<header\b[^>]*class="site-header"/, "Anonymous homepage must not show account navigation");
   assert.doesNotMatch(html, /<a\b[^>]*href="mailto:/, "Anonymous homepage exposes a Contact CTA");
   assert.match(html, /href="\/legal\/privacy-policy"/, "Required published Privacy link missing");

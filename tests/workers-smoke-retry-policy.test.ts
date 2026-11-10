@@ -11,6 +11,14 @@ describe("disposable workerd concurrent dashboard transport retry", () => {
     expect(source).toContain("attempt === 3");
   });
 
+  it("requires the rendered public Explore arrow CTA without changing the accessible link name", () => {
+    const source = readFileSync("scripts/workers-smoke.mjs", "utf8");
+    const browser = readFileSync("scripts/workers-ui-browser-smoke.mjs", "utf8");
+    expect(source).toContain("Public Explore arrow CTA missing");
+    expect(source).toContain('aria-hidden="true"');
+    expect(browser).toContain('name: "Explore", exact: true');
+  });
+
   it("preserves the concurrent two-principal and logout fail-closed assertions", () => {
     const source = readFileSync("scripts/workers-smoke.mjs", "utf8");
     expect(source).toContain("Promise.all(sessions.map");

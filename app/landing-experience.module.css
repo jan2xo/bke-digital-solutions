@@ -123,13 +123,29 @@
 .exploreLink {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  justify-content: space-between;
+  gap: 22px;
+  min-height: 56px;
+  padding: 14px 24px;
+  border: 1px solid rgba(119, 139, 178, .3);
+  border-radius: var(--radius-md);
+  background: rgba(12, 16, 25, .65);
   color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-  text-underline-offset: .25em;
+  font-weight: 800;
+  font-size: 14.5px;
+  text-decoration: none;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
 }
-.exploreLink:hover, .exploreLink:focus-visible { text-decoration: underline; }
+.exploreLink:hover, .exploreLink:focus-visible {
+  border-color: rgba(169, 188, 225, .6);
+  background: rgba(25, 33, 49, .85);
+  transform: translateY(-2px);
+}
+.exploreArrow {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 400;
+}
 .stage {
   position: relative;
   height: 520px;

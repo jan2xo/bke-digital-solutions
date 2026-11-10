@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 335,
+  "intent": "Remove the shared public Pricing navigation link and replace homepage Explore with an outlined Explore arrow CTA while preserving /products and all authenticated and Google login behavior",
+  "requiredTargets": [
+    "pr",
+    "core"
+  ],
+  "testFiles": [
+    "tests/public-navigation-reconciliation.test.ts",
+    "tests/public-site-content.test.ts",
+    "tests/workers-smoke-retry-policy.test.ts"
+  ]
+}

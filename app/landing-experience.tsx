@@ -123,7 +123,7 @@ export function LandingExperience({
               ) : (
                 <GoogleAuthButton flow="unified" formClassName="" buttonClassName={styles.googleButton} icon={<GoogleMark />} />
               )}
-              <Link prefetch={false} className={styles.exploreLink} href="/products">Explore</Link>
+              <Link prefetch={false} className={styles.exploreLink} href="/products">Explore <span className={styles.exploreArrow} aria-hidden="true">→</span></Link>
             </div>
           </div>
 

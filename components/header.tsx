@@ -21,7 +21,6 @@ export async function Header() {
   const publicLinks = (
     <>
       <Link prefetch={false} href="/products">Products</Link>
-      <Link prefetch={false} href="/products#pricing">Pricing</Link>
       <Link prefetch={false} href="/licensing">How it works</Link>
       <Link prefetch={false} href="/bke">Download BKE</Link>
     </>
