@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pr": 324,
-  "intent": "Recover buyer invoice email outbox entries only from verified, processed payment.paid settlement facts and FINAL invoices; preserve webhook payment authority, distinct gift semantics and cron retry fail-closed behavior",
+  "intent": "Verified-paid provider webhook queues FINAL invoice email and wakes bounded post-response outbox delivery; 30-minute cron recovers missing verified invoice entries and definitely rejected sends without unverified payment settlement",
   "requiredTargets": [
     "pr",
     "core",
@@ -12,6 +12,7 @@
     "platform"
   ],
   "testFiles": [
+    "tests/verified-invoice-email-webhook-kick.test.ts",
     "tests/verified-invoice-email-cron-recovery.test.ts",
     "tests/purchase-confirmation-email.test.ts",
     "tests/webhook-owner-parity.test.ts",
