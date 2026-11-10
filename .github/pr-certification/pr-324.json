@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "pr": 324,
+  "intent": "Verified-paid provider webhook queues FINAL invoice email and wakes bounded post-response outbox delivery; 30-minute cron recovers missing verified invoice entries and definitely rejected sends without unverified payment settlement",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "commerce",
+    "notifications",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/verified-invoice-email-webhook-kick.test.ts",
+    "tests/verified-invoice-email-cron-recovery.test.ts",
+    "tests/purchase-confirmation-email.test.ts",
+    "tests/webhook-owner-parity.test.ts",
+    "tests/cloudflare-email-cron.test.ts"
+  ]
+}

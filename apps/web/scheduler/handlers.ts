@@ -3,6 +3,7 @@ import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { db } from "@/platform/host/db";
 import { dispatchEmailOutbox } from "@/apps/web/email";
 import { purchaseConfirmationEmailEnabled, PURCHASE_CONFIRMATION_TYPE } from "@/apps/web/email/purchase-confirmation";
+import { recoverVerifiedPaidInvoiceEmails } from "@/apps/web/email/purchase-confirmation-recovery";
 import { retryStoredWebhook } from "@/apps/web/payments/webhook-processing";
 import { persistNotification } from "@/apps/web/notifications/center";
 import { issueCommercialLease } from "@/apps/web/licensing/commercial-lease";
@@ -56,7 +57,10 @@ export async function emailLifecycle(context: JobContext): Promise<JobSummary> {
       ],
     },
   });
-  if (context.dryRun) return { pending, terminal, retired };
+  const invoiceRecovery = await recoverVerifiedPaidInvoiceEmails({ now: context.now, dryRun: context.dryRun });
+  if (context.dryRun) return {
+    pending, terminal, retired, invoiceRecoveryCandidates: invoiceRecovery.candidates,
+  };
 
   const retiredResult = await db.emailOutbox.updateMany({
     where: {
@@ -81,6 +85,11 @@ export async function emailLifecycle(context: JobContext): Promise<JobSummary> {
     ...result,
     terminalBefore: terminal,
     retired: retiredResult.count,
+    invoiceRecoveryCandidates: invoiceRecovery.candidates,
+    invoiceRecoveryQueued: invoiceRecovery.queued,
+    invoiceRecoveryAlreadyQueued: invoiceRecovery.alreadyQueued,
+    invoiceRecoveryInvalidRecipient: invoiceRecovery.invalidRecipient,
+    invoiceRecoveryNotEligible: invoiceRecovery.notEligible,
   };
 }
 
