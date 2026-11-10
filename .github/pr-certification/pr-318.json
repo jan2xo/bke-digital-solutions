@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pr": 318,
+  "intent": "Full PostgreSQL and private source object inventory AES-256-GCM backup with source reference checks and isolated empty DB + S3 roundtrip; explicitly separate production executor activation",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "backups",
+    "host",
+    "platform",
+    "licensing"
+  ],
+  "testFiles": [
+    "tests/backups.test.ts",
+    "tests/backup-recovery-safety.test.ts",
+    "tests/integration/backups.test.ts"
+  ]
+}
