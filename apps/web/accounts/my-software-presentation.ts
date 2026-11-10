@@ -2,7 +2,7 @@
  * Web presentation projection only. Entitlement and seat authority remain with
  * Digital Solutions server-side account/entitlement capabilities.
  */
-export type PlanType = "PERPETUAL" | "MONTHLY" | "ANNUAL" | null;
+export type PlanType = "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL" | null;
 
 export type MySoftwareLicense = Readonly<{
   id: string;
@@ -35,7 +35,7 @@ export type MySoftwareCard = MySoftwareLicense & Readonly<{
 }>;
 
 export function planTypeLabel(type: PlanType): string {
-  return type === "MONTHLY" ? "Monthly" : type === "ANNUAL" ? "Annual"
+  return type === "MONTHLY" ? "Monthly" : type === "SEMI_ANNUAL" ? "Semi-Annual" : type === "ANNUAL" ? "Annual"
     : type === "PERPETUAL" ? "Perpetual" : "Legacy plan";
 }
 

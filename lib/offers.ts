@@ -2,7 +2,7 @@ import "server-only";
 import { Prisma, type DiscountOffer } from "@/platform/host/generated/prisma/client";
 import { applyOfferDiscount, PRICING_VERSION } from "@/lib/pricing";
 
-export type OfferPlanContext = { id:string; type:"PERPETUAL"|"MONTHLY"|"ANNUAL"; editionId:string; productId:string; currency:string };
+export type OfferPlanContext = { id:string; type:"PERPETUAL"|"MONTHLY"|"SEMI_ANNUAL"|"ANNUAL"; editionId:string; productId:string; currency:string };
 
 export function normalizeOfferCode(value:string){return value.trim().toUpperCase()}
 
