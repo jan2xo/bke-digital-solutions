@@ -427,7 +427,7 @@ async function acknowledgeSettledCompanionPayment(
         JOIN "PaymentSettlementFact" sf
           ON sf."provider" = p."provider"
          AND sf."externalPaymentId" = p."externalId"
-         AND sf."commercialReference" = o."id"
+         AND sf."commercialReference" IN (o."id", o."number")
         JOIN "WebhookEvent" checkout
           ON checkout."provider" = sf."provider"
          AND checkout."externalEventId" = sf."eventId"
