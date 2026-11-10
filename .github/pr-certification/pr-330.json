@@ -10,6 +10,6 @@
     "platform"
   ],
   "testFiles": [
-    "tests/paymongo-protected-probe.test.mjs"
+    "tests/paymongo-protected-probe.test.ts"
   ]
 }
