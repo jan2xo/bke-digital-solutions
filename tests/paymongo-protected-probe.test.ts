@@ -1,4 +1,3 @@
-// @ts-nocheck -- Vitest exercises an isolated Node .mjs probe without enabling allowJs in the application.
 import { describe, expect, it } from "vitest";
 import { assertTestModeCredentials, probePayMongoTest } from "../scripts/probe-paymongo-test.mjs";
 
@@ -54,7 +53,7 @@ describe("protected PayMongo TEST-only probe", () => {
         calls++;
         if (calls === 1) return json({ data: [] });
         expect(url).toBe("https://api.paymongo.com/v1/checkout_sessions");
-        const body = JSON.parse(options.body);
+        const body = JSON.parse(options.body ?? "{}");
         expect(body.data.attributes.payment_method_types).toEqual(["qrph"]);
         expect(body.data.attributes.line_items[0].amount).toBe(10000);
         expect(body.data.attributes.send_email_receipt).toBe(false);
