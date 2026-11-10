@@ -7,6 +7,7 @@
     "core"
   ],
   "testFiles": [
-    "tests/public-navigation-reconciliation.test.ts"
+    "tests/public-navigation-reconciliation.test.ts",
+    "tests/public-site-content.test.ts"
   ]
 }
