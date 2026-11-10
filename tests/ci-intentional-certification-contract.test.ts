@@ -52,6 +52,20 @@ describe("intentional GitHub Actions architecture", () => {
     expect(active).not.toContain("pr-guard.yml");
   });
 
+  it("keeps named reusable certification jobs for every permitted owner", () => {
+    const source = readFileSync(join(activeDir, "certify.yml"), "utf8");
+    const owners = [
+      "pr", "core", "accounts", "agent-store", "backups", "catalog",
+      "commerce", "composition", "echo", "entitlements", "host",
+      "identity", "legal", "licensing", "notifications", "payments",
+      "platform", "prisma-isolation", "standalone", "native-account",
+      "required-certification",
+    ];
+    for (const owner of owners) {
+      expect(source, owner).toMatch(new RegExp("^  " + owner + ":$", "m"));
+    }
+  });
+
   it("has no automatic pull-request or ordinary push certification", () => {
     for (const name of expectedActive) {
       const source = readFileSync(join(activeDir, name), "utf8");
