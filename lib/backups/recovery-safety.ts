@@ -40,7 +40,7 @@ function database(url: string): { host: string; name: string } {
     throw new Error("RESTORE_DATABASE_URL_INVALID");
   }
   return {
-    host: parsed.host.toLowerCase(),
+    host: `${parsed.hostname.toLowerCase()}:${parsed.port || "5432"}`,
     name: decodeURIComponent(parsed.pathname.slice(1)).toLowerCase(),
   };
 }
