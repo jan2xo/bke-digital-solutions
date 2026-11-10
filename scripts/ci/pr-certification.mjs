@@ -4,7 +4,7 @@ import { resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ALLOWED_TARGETS = new Set([
-  "pr", "core", "accounts", "agent-store", "catalog", "commerce", "composition",
+  "pr", "core", "accounts", "agent-store", "backups", "catalog", "commerce", "composition",
   "echo", "entitlements", "host", "identity", "legal", "licensing", "notifications",
   "payments", "platform", "prisma-isolation", "standalone", "native-account",
 ]);

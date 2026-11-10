@@ -80,7 +80,9 @@ describe("V3 central licensing and GitHub distribution authority", () => {
     const backup = read("lib/backups/engine.ts");
     expect(backup).toContain("pg_dump");
     expect(backup).toContain("BACKUP_ENCRYPTION_KEY");
-    expect(backup).toContain("LEGACY_OBJECT_BACKUP_RESTORE_UNSUPPORTED");
+    expect(backup).toContain("BACKUP_LEGACY_DATABASE_ONLY");
+    expect(backup).toContain("SOURCE_OBJECTS_MISSING");
+    expect(backup).toContain("ListObjectsV2Command");
     expect(backup).not.toContain("db.productArtifact");
     expect(backup).not.toContain("sourceClient(");
   });
