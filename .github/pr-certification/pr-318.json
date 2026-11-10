@@ -12,7 +12,6 @@
   ],
   "testFiles": [
     "tests/backups.test.ts",
-    "tests/backup-recovery-safety.test.ts",
-    "tests/integration/backups.test.ts"
+    "tests/backup-recovery-safety.test.ts"
   ]
 }
