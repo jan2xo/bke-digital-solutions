@@ -11,6 +11,7 @@ const expectedActive = [
   "deploy-web-code-only.yml",
   "live-paymongo-cutover.yml",
   "native-bke-account-handoff.yml",
+  "probe-paymongo-test.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-backups.yml",
@@ -103,6 +104,26 @@ describe("intentional GitHub Actions architecture", () => {
     expect(release).toContain("candidate.data.tree.sha !== merged.data.tree.sha");
     expect(release).toContain('name: Production');
     expect(release).not.toContain("npm run db:deploy");
+  });
+
+  it("keeps the PayMongo TEST probe owner-only, protected and outside production authority", () => {
+    const source = readFileSync(join(activeDir, "probe-paymongo-test.yml"), "utf8");
+    const triggers = triggerSection(source);
+    expect(triggers).toMatch(/^\\s{2}issue_comment:/mu);
+    expect(triggers).toMatch(/^\\s{2}workflow_dispatch:/mu);
+    expect(source).toContain("github.event.issue.number == 316");
+    expect(source).toContain("context.actor !== owner");
+    expect(source).toContain('github.event.comment.body == \'/probe-paymongo-test\'');
+    expect(source).toContain("context.sha !== sha");
+    expect(source).toContain("environment: Payments-Test");
+    expect(source).toContain("INFISICAL_TEST_IDENTITY_ID");
+    expect(source).toContain("INFISICAL_TEST_PROJECT_ID");
+    expect(source).toContain("env-slug: test");
+    expect(source).toContain('id-token: write');
+    expect(source).toContain("node scripts/probe-paymongo-test.mjs --checkout");
+    expect(source).not.toContain("INFISICAL_PRODUCTION_IDENTITY_ID");
+    expect(source).not.toContain("env-slug: prod");
+    expect(source).not.toContain("deploy_live");
   });
 
   it("preserves the complete pre-overhaul workflow archive", () => {
