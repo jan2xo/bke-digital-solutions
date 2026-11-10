@@ -104,6 +104,9 @@ describe("restored semi-annual pricing authority", () => {
       expect(code).not.toContain("pricing.amountMinor * 6");
     }
     expect(legalReview).toContain('plan.type === "SEMI_ANNUAL" ? "MONTHLY" : plan.type');
+    const legalService = readFileSync("apps/web/legal/service.ts", "utf8");
+    expect(legalService).toContain('"PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL"');
+    expect(legalService).toContain('planType === "PERPETUAL" ? [] : SUBSCRIPTION_LEGAL_TYPES');
     expect(renewal).toContain("renewalSubscriptionId");
     expect(host).toContain("semiAnnualEnabled");
     expect(host).not.toContain('name="semiAnnualPrice"');
