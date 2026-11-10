@@ -701,7 +701,9 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
       // Payment remains settled; the PREPARED lease operation stays retryable.
     }
   }
-  return { processed: true as const };
+  // A verified paid event may wake the outbox *after* the response; no email is
+  // sent inside the settlement transaction or this payment owner.
+  return { processed: true as const, paid: event.type === "payment.paid" };
 }
 
 export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
