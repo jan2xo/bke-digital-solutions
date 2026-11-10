@@ -8,6 +8,19 @@ if (!process.env.S3_ACCESS_KEY_ID || !process.env.S3_SECRET_ACCESS_KEY || !proce
   throw new Error("BACKUP_CERTIFICATION_DISPOSABLE_STORAGE_NOT_CONFIGURED");
 }
 if (process.env.DEPLOYMENT_ENV === "production") throw new Error("BACKUP_CERTIFICATION_PRODUCTION_FORBIDDEN");
+// Never turn this executable fixture into a Neon or Cloudflare production mutation by
+// changing only DEPLOYMENT_ENV. Every data and object endpoint must be loopback.
+const loopback = (value: string): boolean => {
+  const u = new URL(value);
+  return u.hostname === "127.0.0.1" || u.hostname === "localhost";
+};
+if (!loopback(process.env.DATABASE_URL) ||
+    !loopback(process.env.BACKUP_RESTORE_DATABASE_URL) ||
+    !loopback(process.env.S3_ENDPOINT) ||
+    new URL(process.env.DATABASE_URL).pathname !== "/bke_test" ||
+    process.env.PAYMENT_PROVIDER !== "mock") {
+  throw new Error("BACKUP_CERTIFICATION_DISPOSABLE_TARGET_REQUIRED");
+}
 
 process.env.BACKUP_ENABLED = "true";
 process.env.BACKUP_S3_ENDPOINT = process.env.S3_ENDPOINT;

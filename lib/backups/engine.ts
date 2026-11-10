@@ -130,6 +130,7 @@ async function createArchive(operation: BackupOperation & { backup: NonNullable<
   const work = await mkdtemp(join(tmpdir(), "bke-backup-"));
   try {
     await chmod(work, 0o700);
+    const referencedBefore = await referencedPrivateObjectKeys();
     const dumpPath = join(work, "database.dump");
     await exec("pg_dump", ["--format=custom", "--compress=6", "--no-owner", "--no-acl", "--file", dumpPath], { env: pgEnvironment(env.DATABASE_URL), maxBuffer: 1024 * 1024 });
     checkBoundedSize((await stat(dumpPath)).size);
@@ -141,7 +142,7 @@ async function createArchive(operation: BackupOperation & { backup: NonNullable<
     await destination.send(new PutObjectCommand({ Bucket: env.BACKUP_BUCKET!, Key: databaseKey, Body: encryptedDatabase.encrypted, ContentType: "application/octet-stream" }));
 
     const initialKeys = await allObjectKeys(source.client, source.bucket);
-    const inventory = reconcileSourceObjects(initialKeys, await referencedPrivateObjectKeys());
+    const inventory = reconcileSourceObjects(initialKeys, referencedBefore);
     const backedObjects: BackupManifest["objects"] = [];
     const absent = inventory.missingKeys;
     for (const sourceKey of inventory.sourceKeys) {
@@ -162,6 +163,9 @@ async function createArchive(operation: BackupOperation & { backup: NonNullable<
     const finalKeys = await allObjectKeys(source.client, source.bucket);
     if (JSON.stringify(inventory.sourceKeys) !== JSON.stringify(finalKeys))
       throw new Error("BACKUP_SOURCE_INVENTORY_CHANGED");
+    if (JSON.stringify([...new Set(referencedBefore)].sort()) !==
+        JSON.stringify([...new Set(await referencedPrivateObjectKeys())].sort()))
+      throw new Error("BACKUP_SOURCE_REFERENCES_CHANGED");
     const migrations = await db.$queryRaw<Array<{ migration_name: string }>>`SELECT "migration_name" FROM "_prisma_migrations" WHERE "finished_at" IS NOT NULL AND "rolled_back_at" IS NULL ORDER BY "finished_at"`;
     const manifest: BackupManifest = {
       formatVersion: 1,
@@ -307,6 +311,11 @@ async function restoreIsolated(backupId: string) {
       const restoredKeys = await allObjectKeys(target.client, target.bucket);
       if (JSON.stringify(restoredKeys) !== JSON.stringify(manifest.objects.map((x) => x.sourceKey).sort()))
         throw new Error("RESTORED_OBJECT_INVENTORY_MISMATCH");
+      const referencedImages = await pg.query<{ imageKey: string }>(
+        'SELECT "imageKey" FROM "Product" WHERE "imageKey" IS NOT NULL',
+      );
+      if (referencedImages.rows.some((record) => !restoredKeys.includes(record.imageKey)))
+        throw new Error("RESTORED_REFERENCED_OBJECT_MISSING");
       return {
         backupId, isolated: true,
         targetFingerprint: sha256(targetDatabase.host + targetDatabase.pathname),
