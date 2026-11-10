@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "pr": 325,
+  "intent": "Restore independent 0–10% semi-annual pricing derived from canonical monthly price across Admin Products, web/Agent catalog, checkout, subscriptions, payment/invoice snapshots and additive migration; no historical repricing",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "commerce",
+    "catalog",
+    "payments",
+    "licensing",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/semi-annual-pricing-parity.test.ts",
+    "tests/edition-plans-adoption-parity.test.ts",
+    "tests/v3-agent-store-catalog-contract.test.ts",
+    "tests/renewal-checkout-v2.test.ts",
+    "tests/claim-code-gift-checkout.test.ts"
+  ]
+}
