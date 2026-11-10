@@ -22,17 +22,20 @@ export async function POST(request: Request) {
     // provider); the protected cron retries any missed or rejected deliveries.
     if ("processed" in result && result.processed &&
         "paid" in result && result.paid && purchaseConfirmationEmailEnabled()) {
-      after(async () => {
-        try {
-          // Bounded post-response work: do not hold 20 provider requests in one
-          // Worker invocation. The durable cron owns the remaining queue.
-          await dispatchEmailOutbox(3);
-        } catch {
-          // Payment has already settled. Email failures never undo fulfillment
-          // or turn the provider webhook response into a retryable failure.
-          console.warn("PURCHASE_CONFIRMATION_OUTBOX_KICK_FAILED");
-        }
-      });
+      try {
+        after(async () => {
+          try {
+            // Bounded post-response work. Cron owns the remaining queue.
+            await dispatchEmailOutbox(3);
+          } catch {
+            console.warn("PURCHASE_CONFIRMATION_OUTBOX_KICK_FAILED");
+          }
+        });
+      } catch {
+        // Unsupported background scheduling must not turn a confirmed payment
+        // into a false webhook failure: the durable cron will recover the mail.
+        console.warn("PURCHASE_CONFIRMATION_OUTBOX_KICK_UNAVAILABLE");
+      }
     }
 
     return NextResponse.json(result);
