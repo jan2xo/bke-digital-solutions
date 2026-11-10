@@ -12,6 +12,7 @@ import {
 import { decryptLicenseKey, sha256 } from "@/platform/host/security/crypto";
 import { paymentProvider } from "@/apps/web/payments/compatibility-provider";
 import { ingestPaymentWebhook } from "@/apps/web/payments/webhook-ingestion";
+import { matchesProvenSettledCompanion, type ProvenSettledPayment } from "@/apps/web/payments/companion-paid-event";
 import { reactToPaidSettlement } from "@/apps/web/payments/settlement-transaction";
 import { queueVerifiedPurchaseConfirmation } from "@/apps/web/email/purchase-confirmation";
 import { persistNotification } from "@/apps/web/notifications/center";
@@ -392,6 +393,88 @@ async function processPaidEvent(
   return { order, paymentId: payment.id, hostAttemptId: hostAttempt?.id };
 }
 
+type ExistingCompanionSettlement = ProvenSettledPayment & Readonly<{ checkoutId: string }>;
+
+/**
+ * PayMongo may emit a second signed raw payment.paid notification without the
+ * checkout session or order reference included in checkout_session.payment.paid.
+ * A raw payment notification is NEVER independent settlement authority.
+ *
+ * Acknowledge it only if the same provider payment has already been settled by
+ * the canonical checkout event, with identical financial terms and environment.
+ * Before canonical settlement (or on mismatch), preserve the existing
+ * fail-closed reconciliation behavior.
+ */
+async function acknowledgeSettledCompanionPayment(
+  event: PaymentsVerifiedProviderEventSnapshot,
+): Promise<boolean> {
+  if (
+    event.type !== "payment.paid" ||
+    event.rawType !== "payment.paid" ||
+    event.externalCheckoutId ||
+    event.reference ||
+    !event.externalPaymentId
+  ) return false;
+
+  return db.$transaction(async (tx) => {
+    const settlements = await tx.$queryRaw<ExistingCompanionSettlement[]>`
+      SELECT p."id" AS "paymentId", o."id" AS "orderId",
+             p."externalId" AS "externalPaymentId",
+             p."amountMinor" AS "amountMinor", p."currency" AS "currency",
+             sf."livemode" AS "livemode", sf."externalCheckoutId" AS "checkoutId"
+        FROM "Payment" p
+        JOIN "Order" o ON o."id" = p."orderId"
+        JOIN "PaymentSettlementFact" sf
+          ON sf."provider" = p."provider"
+         AND sf."externalPaymentId" = p."externalId"
+         AND sf."commercialReference" = o."id"
+        JOIN "WebhookEvent" checkout
+          ON checkout."provider" = sf."provider"
+         AND checkout."externalEventId" = sf."eventId"
+         AND checkout."rawEventType" = 'checkout_session.payment.paid'
+         AND checkout."status" = 'PROCESSED'
+         AND checkout."providerPaymentId" = p."externalId"
+         AND checkout."orderId" = o."id"
+       WHERE p."provider" = ${event.provider}
+         AND p."externalId" = ${event.externalPaymentId}
+         AND p."status" = 'PAID'
+         AND o."status" = 'PAID'
+         AND sf."amountMinor" = p."amountMinor"
+         AND sf."amountMinor" = o."totalMinor"
+         AND UPPER(sf."currency") = UPPER(p."currency")
+         AND UPPER(sf."currency") = UPPER(o."currency")
+         AND sf."livemode" = ${event.livemode}
+       LIMIT 1
+    `;
+    const settlement = settlements[0] ?? null;
+    if (!matchesProvenSettledCompanion(event, settlement)) return false;
+
+    await tx.webhookEvent.update({
+      where: {
+        provider_externalEventId: {
+          provider: event.provider,
+          externalEventId: event.eventId,
+        },
+      },
+      data: {
+        orderId: settlement.orderId,
+        paymentId: settlement.paymentId,
+        providerPaymentId: settlement.externalPaymentId,
+        providerCheckoutId: settlement.checkoutId,
+        status: "IGNORED",
+        error: null,
+        lastErrorCode: null,
+        mismatchCategory: null,
+        processedAt: new Date(),
+        lastAttemptAt: new Date(),
+        resolutionStatus: "ACKNOWLEDGED",
+        resolutionCode: "SETTLED_COMPANION_NOTIFICATION",
+      },
+    });
+    return true;
+  }, { isolationLevel: "Serializable" });
+}
+
 async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot) {
   if (event.livemode !== (process.env.PAYMONGO_LIVEMODE === "true")) {
     throw new PaymentLifecycleError("PAYMENT_MODE_MISMATCH");
@@ -411,6 +494,10 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
         resolutionStatus: "ACKNOWLEDGED",
       },
     });
+    return { ignored: true as const };
+  }
+
+  if (await acknowledgeSettledCompanionPayment(event)) {
     return { ignored: true as const };
   }
 
