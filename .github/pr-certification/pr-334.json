@@ -13,6 +13,7 @@
     "tests/paymongo-companion-paid-events.test.ts",
     "tests/webhook-owner-parity.test.ts",
     "tests/ci-intentional-certification-contract.test.ts",
-    "tests/payment.test.ts"
+    "tests/payment.test.ts",
+    "tests/workers-smoke-retry-policy.test.ts"
   ]
 }
