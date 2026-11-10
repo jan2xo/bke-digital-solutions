@@ -17,7 +17,7 @@ export function assertTestModeCredentials(environment = process.env) {
   }
 
   const key = environment.PAYMONGO_TEST_MODE_SECRET_KEY?.trim() ?? "";
-  const webhookSecret = environment.PAYMONGO_TEST_MODE_WEBHOOK_SECRET?.trim() ?? "";
+  const webhookSecret = environment.PAYMONGO_TEST_MODE_WEBHOOK_KEY?.trim() ?? "";
   if (!/^sk_test_[A-Za-z0-9_-]{12,}$/.test(key)) fail("PAYMONGO_TEST_KEY_MISSING_OR_NOT_TEST");
   if (webhookSecret.length < 16 || webhookSecret === key) fail("PAYMONGO_TEST_WEBHOOK_SECRET_INVALID");
   return { key, webhookSecret };
