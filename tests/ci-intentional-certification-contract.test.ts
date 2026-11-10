@@ -115,14 +115,21 @@ describe("intentional GitHub Actions architecture", () => {
     expect(source).toContain("context.actor !== owner");
     expect(source).toContain("github.event.comment.body == '/probe-paymongo-test'");
     expect(source).toContain("context.sha !== sha");
-    expect(source).toContain("environment: Payments-Test");
-    expect(source).toContain("INFISICAL_TEST_IDENTITY_ID");
-    expect(source).toContain("INFISICAL_TEST_PROJECT_ID");
-    expect(source).toContain("env-slug: test");
+    expect(source).toContain("name: Production");
+    expect(source).toContain("INFISICAL_PRODUCTION_IDENTITY_ID");
+    expect(source).toContain("INFISICAL_PRODUCTION_PROJECT_ID");
+    expect(source).toContain("node scripts/probe-paymongo-infisical.mjs --checkout");
     expect(source).toContain('id-token: write');
-    expect(source).toContain("node scripts/probe-paymongo-test.mjs --checkout");
-    expect(source).not.toContain("INFISICAL_PRODUCTION_IDENTITY_ID");
-    expect(source).not.toContain("env-slug: prod");
+    expect(source).toContain("node --test scripts/probe-paymongo-test.test.mjs");
+    expect(source).not.toContain("uses: Infisical/secrets-action@");
+    expect(source).not.toContain("PAYMONGO_SECRET_KEY:");
+    const reader = readFileSync("scripts/probe-paymongo-infisical.mjs", "utf8");
+    expect(reader).toContain('"/api/v4/secrets/"');
+    expect(reader).toContain('"PAYMONGO_TEST_MODE_SECRET_KEY"');
+    expect(reader).toContain('"PAYMONGO_TEST_MODE_WEBHOOK_SECRET"');
+    expect(reader).not.toContain('"PAYMONGO_SECRET_KEY"');
+    expect(reader).not.toContain('"PAYMONGO_WEBHOOK_SECRET"');
+    expect(reader).toContain('PAYMONGO_LIVEMODE: "false"');
     expect(source).not.toContain("deploy_live");
   });
 
