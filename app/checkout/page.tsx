@@ -93,7 +93,7 @@ export default async function CheckoutReview({
   const requirementsCapability = application.get<LegalCheckoutRequirementsCapability>(
     LEGAL_CHECKOUT_REQUIREMENTS_CAPABILITY_ID,
   );
-  const requirementsResult = await requirementsCapability.resolve({ planType: plan.type });
+  const requirementsResult = await requirementsCapability.resolve({ planType: plan.type === "SEMI_ANNUAL" ? "MONTHLY" : plan.type });
   if (requirementsResult.status === "FAILED" && requirementsResult.code === "LEGAL_DOCUMENTS_UNAVAILABLE") {
     // Never start a payment before the current license/refund agreements exist.
     return (
@@ -113,8 +113,8 @@ export default async function CheckoutReview({
 
   const authorizedAccounts = await listPurchaseAuthorizedAccounts(principal.id);
   const giftCheckoutEnabled = getRuntimeEnvironment().CLAIM_CODE_CHECKOUT_ENABLED;
-  const annual =
-    plan.type === "ANNUAL"
+  const derived =
+    (plan.type === "ANNUAL" || plan.type === "SEMI_ANNUAL")
       ? { savingsMinor: terms.savingsMinor, effectiveMonthlyMinor: terms.effectiveMonthlyMinor ?? 0 }
       : null;
 
@@ -127,7 +127,7 @@ export default async function CheckoutReview({
         <Row label="Purchase plan" value={purchasePlanLabel(plan.type)} />
         <Row
           label="Billing interval"
-          value={plan.type === "PERPETUAL" ? "One-time" : plan.type === "MONTHLY" ? "Monthly" : "Annual"}
+          value={plan.type === "PERPETUAL" ? "One-time" : plan.type === "MONTHLY" ? "Monthly" : plan.type === "SEMI_ANNUAL" ? "Every six months" : "Annual"}
         />
         <Row
           label="Renewal"
@@ -135,10 +135,10 @@ export default async function CheckoutReview({
         />
         <Row label="User limit" value={String(edition.maxUsers)} />
         <Row label="Device limit" value={`${edition.maxDevicesPerUser} per user`} />
-        {annual && (
+        {derived && (
           <>
-            <Row label="Annual savings" value={money(annual.savingsMinor)} />
-            <Row label="Effective monthly" value={money(annual.effectiveMonthlyMinor)} />
+            {derived.savingsMinor > 0 && <Row label="Term savings" value={money(derived.savingsMinor)} />}
+            <Row label="Effective monthly" value={money(derived.effectiveMonthlyMinor)} />
           </>
         )}
         <div className="border-t pt-4">
@@ -174,8 +174,8 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-function purchasePlanLabel(type: "PERPETUAL" | "MONTHLY" | "ANNUAL") {
-  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : "Annual";
+function purchasePlanLabel(type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL") {
+  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : type === "SEMI_ANNUAL" ? "Semi-Annual" : "Annual";
 }
 
 function money(minor: number) {

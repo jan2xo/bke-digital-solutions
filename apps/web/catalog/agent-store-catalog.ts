@@ -8,7 +8,7 @@ import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 
 export type AgentStorePlan = Readonly<{
   purchasePlanId: string;
-  type: "PERPETUAL" | "MONTHLY" | "ANNUAL";
+  type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL";
   currency: string;
   amountMinor: number;
   billingType: "ONE_TIME" | "SUBSCRIPTION";
@@ -45,8 +45,9 @@ export type AgentStoreProduct = Readonly<{
 const planRank = Object.freeze({
   PERPETUAL: 0,
   MONTHLY: 1,
-  ANNUAL: 2,
-} satisfies Record<"PERPETUAL" | "MONTHLY" | "ANNUAL", number>);
+  SEMI_ANNUAL: 2,
+  ANNUAL: 3,
+} satisfies Record<"PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL", number>);
 
 function stringFeatures(value: Prisma.JsonValue): readonly string[] {
   return Array.isArray(value)

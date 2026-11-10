@@ -223,7 +223,7 @@ export async function GET(request: Request) {
       LEGAL_CHECKOUT_REQUIREMENTS_CAPABILITY_ID,
     );
     const legalResult = await legal.resolve({
-      planType: plan.type,
+      planType: plan.type === "SEMI_ANNUAL" ? "MONTHLY" : plan.type,
     });
     if (legalResult.status === "FAILED") {
       return json({ status: "legal_unavailable" }, 503);

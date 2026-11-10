@@ -29,11 +29,13 @@ export type AggregatePurchasePlan = {
 export type PurchasePlanAvgAggregateOutputType = {
   amountMinor: number | null
   annualDiscountBps: number | null
+  semiAnnualDiscountBps: number | null
 }
 
 export type PurchasePlanSumAggregateOutputType = {
   amountMinor: number | null
   annualDiscountBps: number | null
+  semiAnnualDiscountBps: number | null
 }
 
 export type PurchasePlanMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type PurchasePlanMinAggregateOutputType = {
   currency: string | null
   amountMinor: number | null
   annualDiscountBps: number | null
+  semiAnnualDiscountBps: number | null
   renewalBehavior: $Enums.RenewalBehavior | null
   active: boolean | null
   monthlySourcePlanId: string | null
@@ -58,6 +61,7 @@ export type PurchasePlanMaxAggregateOutputType = {
   currency: string | null
   amountMinor: number | null
   annualDiscountBps: number | null
+  semiAnnualDiscountBps: number | null
   renewalBehavior: $Enums.RenewalBehavior | null
   active: boolean | null
   monthlySourcePlanId: string | null
@@ -73,6 +77,7 @@ export type PurchasePlanCountAggregateOutputType = {
   currency: number
   amountMinor: number
   annualDiscountBps: number
+  semiAnnualDiscountBps: number
   renewalBehavior: number
   active: number
   monthlySourcePlanId: number
@@ -86,11 +91,13 @@ export type PurchasePlanCountAggregateOutputType = {
 export type PurchasePlanAvgAggregateInputType = {
   amountMinor?: true
   annualDiscountBps?: true
+  semiAnnualDiscountBps?: true
 }
 
 export type PurchasePlanSumAggregateInputType = {
   amountMinor?: true
   annualDiscountBps?: true
+  semiAnnualDiscountBps?: true
 }
 
 export type PurchasePlanMinAggregateInputType = {
@@ -100,6 +107,7 @@ export type PurchasePlanMinAggregateInputType = {
   currency?: true
   amountMinor?: true
   annualDiscountBps?: true
+  semiAnnualDiscountBps?: true
   renewalBehavior?: true
   active?: true
   monthlySourcePlanId?: true
@@ -115,6 +123,7 @@ export type PurchasePlanMaxAggregateInputType = {
   currency?: true
   amountMinor?: true
   annualDiscountBps?: true
+  semiAnnualDiscountBps?: true
   renewalBehavior?: true
   active?: true
   monthlySourcePlanId?: true
@@ -130,6 +139,7 @@ export type PurchasePlanCountAggregateInputType = {
   currency?: true
   amountMinor?: true
   annualDiscountBps?: true
+  semiAnnualDiscountBps?: true
   renewalBehavior?: true
   active?: true
   monthlySourcePlanId?: true
@@ -232,6 +242,7 @@ export type PurchasePlanGroupByOutputType = {
   currency: string
   amountMinor: number | null
   annualDiscountBps: number | null
+  semiAnnualDiscountBps: number | null
   renewalBehavior: $Enums.RenewalBehavior
   active: boolean
   monthlySourcePlanId: string | null
@@ -270,6 +281,7 @@ export type PurchasePlanWhereInput = {
   currency?: Prisma.StringFilter<"PurchasePlan"> | string
   amountMinor?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
   annualDiscountBps?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
+  semiAnnualDiscountBps?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFilter<"PurchasePlan"> | $Enums.RenewalBehavior
   active?: Prisma.BoolFilter<"PurchasePlan"> | boolean
   monthlySourcePlanId?: Prisma.StringNullableFilter<"PurchasePlan"> | string | null
@@ -292,6 +304,7 @@ export type PurchasePlanOrderByWithRelationInput = {
   currency?: Prisma.SortOrder
   amountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrderInput | Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrderInput | Prisma.SortOrder
   renewalBehavior?: Prisma.SortOrder
   active?: Prisma.SortOrder
   monthlySourcePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -319,6 +332,7 @@ export type PurchasePlanWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"PurchasePlan"> | string
   amountMinor?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
   annualDiscountBps?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
+  semiAnnualDiscountBps?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFilter<"PurchasePlan"> | $Enums.RenewalBehavior
   active?: Prisma.BoolFilter<"PurchasePlan"> | boolean
   monthlySourcePlanId?: Prisma.StringNullableFilter<"PurchasePlan"> | string | null
@@ -340,6 +354,7 @@ export type PurchasePlanOrderByWithAggregationInput = {
   currency?: Prisma.SortOrder
   amountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrderInput | Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrderInput | Prisma.SortOrder
   renewalBehavior?: Prisma.SortOrder
   active?: Prisma.SortOrder
   monthlySourcePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -363,6 +378,7 @@ export type PurchasePlanScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"PurchasePlan"> | string
   amountMinor?: Prisma.IntNullableWithAggregatesFilter<"PurchasePlan"> | number | null
   annualDiscountBps?: Prisma.IntNullableWithAggregatesFilter<"PurchasePlan"> | number | null
+  semiAnnualDiscountBps?: Prisma.IntNullableWithAggregatesFilter<"PurchasePlan"> | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorWithAggregatesFilter<"PurchasePlan"> | $Enums.RenewalBehavior
   active?: Prisma.BoolWithAggregatesFilter<"PurchasePlan"> | boolean
   monthlySourcePlanId?: Prisma.StringNullableWithAggregatesFilter<"PurchasePlan"> | string | null
@@ -377,6 +393,7 @@ export type PurchasePlanCreateInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -397,6 +414,7 @@ export type PurchasePlanUncheckedCreateInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -415,6 +433,7 @@ export type PurchasePlanUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,6 +454,7 @@ export type PurchasePlanUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -454,6 +474,7 @@ export type PurchasePlanCreateManyInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -468,6 +489,7 @@ export type PurchasePlanUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,6 +503,7 @@ export type PurchasePlanUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -516,6 +539,7 @@ export type PurchasePlanCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   amountMinor?: Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrder
   renewalBehavior?: Prisma.SortOrder
   active?: Prisma.SortOrder
   monthlySourcePlanId?: Prisma.SortOrder
@@ -527,6 +551,7 @@ export type PurchasePlanCountOrderByAggregateInput = {
 export type PurchasePlanAvgOrderByAggregateInput = {
   amountMinor?: Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrder
 }
 
 export type PurchasePlanMaxOrderByAggregateInput = {
@@ -536,6 +561,7 @@ export type PurchasePlanMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   amountMinor?: Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrder
   renewalBehavior?: Prisma.SortOrder
   active?: Prisma.SortOrder
   monthlySourcePlanId?: Prisma.SortOrder
@@ -551,6 +577,7 @@ export type PurchasePlanMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   amountMinor?: Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrder
   renewalBehavior?: Prisma.SortOrder
   active?: Prisma.SortOrder
   monthlySourcePlanId?: Prisma.SortOrder
@@ -562,6 +589,7 @@ export type PurchasePlanMinOrderByAggregateInput = {
 export type PurchasePlanSumOrderByAggregateInput = {
   amountMinor?: Prisma.SortOrder
   annualDiscountBps?: Prisma.SortOrder
+  semiAnnualDiscountBps?: Prisma.SortOrder
 }
 
 export type PurchasePlanCreateNestedManyWithoutEditionInput = {
@@ -766,6 +794,7 @@ export type PurchasePlanCreateWithoutEditionInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -784,6 +813,7 @@ export type PurchasePlanUncheckedCreateWithoutEditionInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -832,6 +862,7 @@ export type PurchasePlanScalarWhereInput = {
   currency?: Prisma.StringFilter<"PurchasePlan"> | string
   amountMinor?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
   annualDiscountBps?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
+  semiAnnualDiscountBps?: Prisma.IntNullableFilter<"PurchasePlan"> | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFilter<"PurchasePlan"> | $Enums.RenewalBehavior
   active?: Prisma.BoolFilter<"PurchasePlan"> | boolean
   monthlySourcePlanId?: Prisma.StringNullableFilter<"PurchasePlan"> | string | null
@@ -846,6 +877,7 @@ export type PurchasePlanCreateWithoutAnnualPlansInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -865,6 +897,7 @@ export type PurchasePlanUncheckedCreateWithoutAnnualPlansInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -887,6 +920,7 @@ export type PurchasePlanCreateWithoutMonthlySourceInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -906,6 +940,7 @@ export type PurchasePlanUncheckedCreateWithoutMonthlySourceInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   legacyPriceId?: string | null
@@ -944,6 +979,7 @@ export type PurchasePlanUpdateWithoutAnnualPlansInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -963,6 +999,7 @@ export type PurchasePlanUncheckedUpdateWithoutAnnualPlansInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -996,6 +1033,7 @@ export type PurchasePlanCreateWithoutLegacyPriceInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -1015,6 +1053,7 @@ export type PurchasePlanUncheckedCreateWithoutLegacyPriceInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -1048,6 +1087,7 @@ export type PurchasePlanUpdateWithoutLegacyPriceInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1067,6 +1107,7 @@ export type PurchasePlanUncheckedUpdateWithoutLegacyPriceInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1084,6 +1125,7 @@ export type PurchasePlanCreateWithoutSubscriptionsInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -1103,6 +1145,7 @@ export type PurchasePlanUncheckedCreateWithoutSubscriptionsInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -1136,6 +1179,7 @@ export type PurchasePlanUpdateWithoutSubscriptionsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1155,6 +1199,7 @@ export type PurchasePlanUncheckedUpdateWithoutSubscriptionsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1172,6 +1217,7 @@ export type PurchasePlanCreateWithoutOffersInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -1191,6 +1237,7 @@ export type PurchasePlanUncheckedCreateWithoutOffersInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -1224,6 +1271,7 @@ export type PurchasePlanUpdateWithoutOffersInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1243,6 +1291,7 @@ export type PurchasePlanUncheckedUpdateWithoutOffersInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1260,6 +1309,7 @@ export type PurchasePlanCreateWithoutLicensesInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   createdAt?: Date | string
@@ -1279,6 +1329,7 @@ export type PurchasePlanUncheckedCreateWithoutLicensesInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -1312,6 +1363,7 @@ export type PurchasePlanUpdateWithoutLicensesInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1331,6 +1383,7 @@ export type PurchasePlanUncheckedUpdateWithoutLicensesInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1348,6 +1401,7 @@ export type PurchasePlanCreateManyEditionInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   monthlySourcePlanId?: string | null
@@ -1362,6 +1416,7 @@ export type PurchasePlanUpdateWithoutEditionInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1380,6 +1435,7 @@ export type PurchasePlanUncheckedUpdateWithoutEditionInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1398,6 +1454,7 @@ export type PurchasePlanUncheckedUpdateManyWithoutEditionInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   monthlySourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1413,6 +1470,7 @@ export type PurchasePlanCreateManyMonthlySourceInput = {
   currency?: string
   amountMinor?: number | null
   annualDiscountBps?: number | null
+  semiAnnualDiscountBps?: number | null
   renewalBehavior?: $Enums.RenewalBehavior
   active?: boolean
   legacyPriceId?: string | null
@@ -1426,6 +1484,7 @@ export type PurchasePlanUpdateWithoutMonthlySourceInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1445,6 +1504,7 @@ export type PurchasePlanUncheckedUpdateWithoutMonthlySourceInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   legacyPriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1463,6 +1523,7 @@ export type PurchasePlanUncheckedUpdateManyWithoutMonthlySourceInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   amountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   annualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  semiAnnualDiscountBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   renewalBehavior?: Prisma.EnumRenewalBehaviorFieldUpdateOperationsInput | $Enums.RenewalBehavior
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   legacyPriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1535,6 +1596,7 @@ export type PurchasePlanSelect<ExtArgs extends runtime.Types.Extensions.Internal
   currency?: boolean
   amountMinor?: boolean
   annualDiscountBps?: boolean
+  semiAnnualDiscountBps?: boolean
   renewalBehavior?: boolean
   active?: boolean
   monthlySourcePlanId?: boolean
@@ -1558,6 +1620,7 @@ export type PurchasePlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   currency?: boolean
   amountMinor?: boolean
   annualDiscountBps?: boolean
+  semiAnnualDiscountBps?: boolean
   renewalBehavior?: boolean
   active?: boolean
   monthlySourcePlanId?: boolean
@@ -1576,6 +1639,7 @@ export type PurchasePlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   currency?: boolean
   amountMinor?: boolean
   annualDiscountBps?: boolean
+  semiAnnualDiscountBps?: boolean
   renewalBehavior?: boolean
   active?: boolean
   monthlySourcePlanId?: boolean
@@ -1594,6 +1658,7 @@ export type PurchasePlanSelectScalar = {
   currency?: boolean
   amountMinor?: boolean
   annualDiscountBps?: boolean
+  semiAnnualDiscountBps?: boolean
   renewalBehavior?: boolean
   active?: boolean
   monthlySourcePlanId?: boolean
@@ -1602,7 +1667,7 @@ export type PurchasePlanSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PurchasePlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "editionId" | "type" | "currency" | "amountMinor" | "annualDiscountBps" | "renewalBehavior" | "active" | "monthlySourcePlanId" | "legacyPriceId" | "createdAt" | "updatedAt", ExtArgs["result"]["purchasePlan"]>
+export type PurchasePlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "editionId" | "type" | "currency" | "amountMinor" | "annualDiscountBps" | "semiAnnualDiscountBps" | "renewalBehavior" | "active" | "monthlySourcePlanId" | "legacyPriceId" | "createdAt" | "updatedAt", ExtArgs["result"]["purchasePlan"]>
 export type PurchasePlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
   monthlySource?: boolean | Prisma.PurchasePlan$monthlySourceArgs<ExtArgs>
@@ -1642,6 +1707,7 @@ export type $PurchasePlanPayload<ExtArgs extends runtime.Types.Extensions.Intern
     currency: string
     amountMinor: number | null
     annualDiscountBps: number | null
+    semiAnnualDiscountBps: number | null
     renewalBehavior: $Enums.RenewalBehavior
     active: boolean
     monthlySourcePlanId: string | null
@@ -2084,6 +2150,7 @@ export interface PurchasePlanFieldRefs {
   readonly currency: Prisma.FieldRef<"PurchasePlan", 'String'>
   readonly amountMinor: Prisma.FieldRef<"PurchasePlan", 'Int'>
   readonly annualDiscountBps: Prisma.FieldRef<"PurchasePlan", 'Int'>
+  readonly semiAnnualDiscountBps: Prisma.FieldRef<"PurchasePlan", 'Int'>
   readonly renewalBehavior: Prisma.FieldRef<"PurchasePlan", 'RenewalBehavior'>
   readonly active: Prisma.FieldRef<"PurchasePlan", 'Boolean'>
   readonly monthlySourcePlanId: Prisma.FieldRef<"PurchasePlan", 'String'>

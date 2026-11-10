@@ -72,7 +72,7 @@
     "@aws-sdk/s3-request-presigner": "^3.883.0",
     "@bke/accounts": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/accounts-v0.4.0/bke-accounts-0.4.0.tgz",
     "@bke/catalog": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/catalog-v0.6.0/bke-catalog-0.6.0.tgz",
-    "@bke/commerce": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.15.0/bke-commerce-0.15.0.tgz",
+    "@bke/commerce": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/commerce-v0.17.0/bke-commerce-0.17.0.tgz",
     "@bke/entitlements": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/entitlements-v0.2.1/bke-entitlements-0.2.1.tgz",
     "@bke/identity": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/identity-v0.5.0/bke-identity-0.5.0.tgz",
     "@bke/legal": "https://github.com/jan2xo/bke-libraries-typescript/releases/download/legal-v0.4.0/bke-legal-0.4.0.tgz",

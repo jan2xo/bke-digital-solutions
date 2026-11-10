@@ -1,3 +1,5 @@
+import { createCommercePurchasePlanPricingCapability } from "@bke/commerce/logic/purchase-plan-pricing";
+
 export const ANNUAL_DISCOUNT_MIN_BPS = 0;
 export const ANNUAL_DISCOUNT_MAX_BPS = 1_000;
 export const OFFER_DISCOUNT_MIN_BPS = 0;
@@ -54,15 +56,22 @@ export function applyOfferDiscount(catalogAmountMinor: number, discountBps: numb
 export type ResolvablePlan = {
   id: string;
   editionId?: string;
-  type: "PERPETUAL" | "MONTHLY" | "ANNUAL";
+  type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL";
   currency: string;
   amountMinor: number | null;
   annualDiscountBps: number | null;
+  semiAnnualDiscountBps?: number | null;
   renewalBehavior: "NONE" | "CUSTOMER_AUTHORIZED";
-  monthlySource?: { amountMinor: number | null; active: boolean; type?: "PERPETUAL" | "MONTHLY" | "ANNUAL"; editionId?: string } | null;
+  monthlySource?: { amountMinor: number | null; active: boolean; type?: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL"; editionId?: string } | null;
 };
 
 export function resolvePurchasePlan(plan: ResolvablePlan) {
+  if (plan.type === "SEMI_ANNUAL") {
+    // Legacy test checkout fixture uses the same package-owned six-month pricing authority.
+    const result = createCommercePurchasePlanPricingCapability().resolve(plan);
+    if (result.status !== "RESOLVED") throw new Error(result.code);
+    return { ...result.pricing, grossAnnualMinor: null, annualAmountMinor: null };
+  }
   if (plan.type === "ANNUAL") {
     if (!plan.monthlySource?.active || plan.monthlySource.amountMinor === null || plan.monthlySource.type !== "MONTHLY" || (plan.editionId && plan.monthlySource.editionId !== plan.editionId)) {
       throw new Error("ANNUAL_MONTHLY_PLAN_REQUIRED");
@@ -87,5 +96,5 @@ export function resolvePurchasePlan(plan: ResolvablePlan) {
 }
 
 export function purchasePlanLabel(type: ResolvablePlan["type"]) {
-  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : "Annual";
+  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : type === "SEMI_ANNUAL" ? "Semi-Annual" : "Annual";
 }

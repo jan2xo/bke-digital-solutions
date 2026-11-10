@@ -25,6 +25,7 @@ export const editionPlanInputSchema = z.object({
   plans: z.object({
     perpetual: z.object({ enabled: z.boolean(), amountMinor: z.number().optional() }),
     monthly: z.object({ enabled: z.boolean(), amountMinor: z.number().optional() }),
+    semiAnnual: z.object({ enabled: z.boolean(), discountBps: z.number().optional() }).strict().optional(),
     annual: z.object({ enabled: z.boolean(), discountBps: z.number().optional() }),
   }).strict(),
 }).strict();
@@ -34,6 +35,9 @@ export type EditionPlanHttpInput = z.infer<typeof editionPlanInputSchema>;
 export function editionPlanValidationMessage(reason: CommerceEditionPlanValidationReason): string {
   switch (reason) {
     case "PURCHASE_PLAN_REQUIRED": return "At least one purchase plan is required";
+    case "SEMI_ANNUAL_REQUIRES_MONTHLY": return "Semi-annual requires an enabled monthly plan";
+    case "SEMI_ANNUAL_DISCOUNT_REQUIRED": return "Semi-annual discount is required (0–10%)";
+    case "SEMI_ANNUAL_DISCOUNT": return "Semi-annual discount must be between 0% and 10%";
     case "ANNUAL_REQUIRES_MONTHLY": return "Annual requires an enabled monthly plan";
     case "ANNUAL_DISCOUNT_REQUIRED": return "Annual discount is required";
     case "PERPETUAL_PRICE_REQUIRED": return "Perpetual price is required";
@@ -95,6 +99,7 @@ export function createEditionPlanRepository(tx: Prisma.TransactionClient): Comme
           type: input.type,
           amountMinor: input.createAmountMinor,
           annualDiscountBps: input.annualDiscountBps,
+          semiAnnualDiscountBps: input.semiAnnualDiscountBps ?? null,
           monthlySourcePlanId: input.monthlySourcePlanId,
           renewalBehavior: input.renewalBehavior,
           active: input.active,
@@ -102,6 +107,7 @@ export function createEditionPlanRepository(tx: Prisma.TransactionClient): Comme
         update: {
           ...updateAmount,
           annualDiscountBps: input.annualDiscountBps,
+          semiAnnualDiscountBps: input.semiAnnualDiscountBps ?? null,
           monthlySourcePlanId: input.monthlySourcePlanId,
           renewalBehavior: input.renewalBehavior,
           active: input.active,

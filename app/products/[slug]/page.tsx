@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>
     <div className="mt-12 grid gap-8 motion-stagger">{await Promise.all(product.editions.map(async (edition) => {
       const plans = await Promise.all(edition.purchasePlans
-        .sort((a, b) => ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
+        .sort((a, b) => ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(b.type))
         .map(async (plan) => {
           const pricingResult = pricing.resolve(plan);
           if (pricingResult.status === "FAILED") throw new Error(pricingResult.code);
@@ -63,22 +63,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           });
           if (promotionResult.status === "FAILED") throw new Error(promotionResult.code);
           const promotion = promotionResult.status === "PRICED" ? promotionResult.value : null;
-          const annual = plan.type === "ANNUAL" ? terms : null;
-          const suffix = plan.type === "MONTHLY" ? "/month" : plan.type === "ANNUAL" ? "/year" : "";
+          const derived = plan.type === "ANNUAL" || plan.type === "SEMI_ANNUAL" ? terms : null;
+          const suffix = plan.type === "MONTHLY" ? "/month" : plan.type === "SEMI_ANNUAL" ? "/6 months" : plan.type === "ANNUAL" ? "/year" : "";
           return {
             id: plan.id,
             type: plan.type,
             label: purchasePlanLabel(plan.type),
             amount: money(promotion?.finalMinor ?? terms.amountMinor) + suffix,
             originalAmount: promotion ? money(terms.amountMinor) + suffix : undefined,
-            detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : "Customer-authorized annual renewal",
+            detail: plan.type === "PERPETUAL" ? "Lifetime use" : plan.type === "MONTHLY" ? "Customer-authorized monthly renewal" : plan.type === "SEMI_ANNUAL" ? "Customer-authorized six-month renewal" : "Customer-authorized annual renewal",
             savings: promotion
               ? `${formatPercent(promotion.discountBps)} OFF · YOU SAVE ${money(promotion.discountMinor)}`
-              : annual
-                ? `Save ${formatPercent(annual.discountBps)} (${money(annual.savingsMinor)})`
+              : derived && derived.savingsMinor > 0
+                ? `Save ${formatPercent(derived.discountBps)} (${money(derived.savingsMinor)})`
                 : undefined,
-            effectiveMonthly: !promotion && annual && annual.effectiveMonthlyMinor !== null
-              ? `Equivalent to ${money(annual.effectiveMonthlyMinor)}/month`
+            effectiveMonthly: !promotion && derived && derived.effectiveMonthlyMinor !== null
+              ? `Equivalent to ${money(derived.effectiveMonthlyMinor)}/month`
               : undefined,
           };
         }));
@@ -97,8 +97,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   </section>;
 }
 
-function purchasePlanLabel(type: "PERPETUAL" | "MONTHLY" | "ANNUAL") {
-  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : "Annual";
+function purchasePlanLabel(type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL") {
+  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : type === "SEMI_ANNUAL" ? "Semi-Annual" : "Annual";
 }
 
 function money(minor: number) {

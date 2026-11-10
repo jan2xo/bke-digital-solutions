@@ -37,7 +37,7 @@ export type AgentAccountPurchasesOverview =
       readonly licenses: readonly {
         readonly productName: string;
         readonly editionName: string | null;
-        readonly planType: "PERPETUAL" | "MONTHLY" | "ANNUAL" | null;
+        readonly planType: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL" | null;
         readonly status: string;
         readonly keyLastFour: string;
         readonly expiresAt: Date | null;
@@ -51,7 +51,7 @@ export type AgentAccountPurchasesOverview =
       readonly subscriptions: readonly {
         readonly productName: string;
         readonly editionName: string | null;
-        readonly planType: "PERPETUAL" | "MONTHLY" | "ANNUAL" | null;
+        readonly planType: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL" | null;
         readonly status: string;
         readonly seats: number;
         readonly currentPeriodEnd: Date;
