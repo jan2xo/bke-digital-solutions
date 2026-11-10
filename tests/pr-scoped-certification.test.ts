@@ -13,6 +13,11 @@ describe("PR-owned intentional certification", () => {
     expect(plan.requiredTargets).toEqual(["pr", "core"]);
     expect(plan.testFiles).toContain("tests/pr-scoped-certification.test.ts");
   });
+  it("accepts exact-head backup owner only when explicitly declared", () => {
+    const plan = validatePrPlan({ ...example, requiredTargets: ["pr", "core", "backups"] },
+      297, () => true);
+    expect(plan.requiredTargets).toEqual(["pr", "core", "backups"]);
+  });
   it("rejects attempts to run files outside the tests boundary or missing tests", () => {
     for (const file of ["../outside.test.ts", "scripts/payments.mjs", "tests/../unsafe.test.ts", "tests/missing.test.ts"]) {
       expect(() => validatePrPlan({ ...example, testFiles: [file] }, 297,
