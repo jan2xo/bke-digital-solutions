@@ -13,6 +13,7 @@ const expectedActive = [
   "native-bke-account-handoff.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
+  "v2-backups.yml",
   "v2-catalog.yml",
   "v2-commerce.yml",
   "v2-composition.yml",
