@@ -140,6 +140,6 @@ describe("restored semi-annual pricing authority", () => {
     expect(sql).toContain('"active" = FALSE AND "semiAnnualDiscountBps" IS NULL');
     expect(sql).toContain('"monthlySourcePlanId" IS NOT NULL');
     expect(sql).toContain('"renewalBehavior" = \'CUSTOMER_AUTHORIZED\'');
-    expect(sql).not.toMatch(/(?:UPDATE|DELETE|INSERT)\\s+["']?(?:Order|Invoice|OrderItem|Payment|License)/i);
+    expect(sql).not.toMatch(/(?:UPDATE|DELETE|INSERT)\s+["']?(?:Order|Invoice|OrderItem|Payment|License)/i);
   });
 });
