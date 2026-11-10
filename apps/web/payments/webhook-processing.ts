@@ -701,17 +701,23 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
       // Payment remains settled; the PREPARED lease operation stays retryable.
     }
   }
-  // A verified paid event may wake the outbox *after* the response; no email is
-  // sent inside the settlement transaction or this payment owner.
-  return { processed: true as const, paid: event.type === "payment.paid" };
+  return { processed: true as const };
 }
 
-export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
+/** Route-only postcommit signal; the public webhook response remains unchanged. */
+export async function processPaymentWebhookWithOutcome(raw: Buffer, headers: Headers) {
   const ingestion = await ingestPaymentWebhook(raw, headers);
   const event = ingestion.event;
-  if (ingestion.duplicate) return { duplicate: true as const };
+  if (ingestion.duplicate) {
+    return { result: { duplicate: true as const }, verifiedPaid: false };
+  }
   try {
-    return await processVerifiedEvent(event);
+    const result = await processVerifiedEvent(event);
+    return {
+      result,
+      verifiedPaid: event.type === "payment.paid" &&
+        "processed" in result && result.processed === true,
+    };
   } catch (error) {
     const prismaRetry = error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
     const code = prismaRetry ? "PAYMENT_PROCESSING_RETRYABLE" : safePaymentError(error);
@@ -719,6 +725,11 @@ export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
     await recordFailure(event.eventId, code, retryable);
     throw new PaymentLifecycleError(code, retryable);
   }
+}
+
+export async function processPaymentWebhook(raw: Buffer, headers: Headers) {
+  const { result } = await processPaymentWebhookWithOutcome(raw, headers);
+  return result;
 }
 
 export async function retryStoredWebhook(webhookId: string) {
