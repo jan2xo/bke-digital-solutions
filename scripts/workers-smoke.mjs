@@ -111,7 +111,7 @@ async function readDashboardWithSocketRetry(session) {
         throw error;
       }
       console.warn("WARN: disposable workerd dashboard socket closed; bounded transport retry");
-      await new Promise((resolve) => setTimeout(resolve, attempt * 250));
+      await setTimeout(attempt * 250);
     }
   }
   throw new Error("WORKER_DASHBOARD_RETRY_EXHAUSTED");

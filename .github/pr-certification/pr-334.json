@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 334,
+  "intent": "Explicitly authorized code-only production promotion of already-merged PayMongo signed companion event fixes #328/#329, via protected exact-main GitHub release with binding fingerprint and rollback proof",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host",
+    "payments",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/paymongo-companion-paid-events.test.ts",
+    "tests/webhook-owner-parity.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts",
+    "tests/payment.test.ts",
+    "tests/workers-smoke-retry-policy.test.ts"
+  ]
+}
