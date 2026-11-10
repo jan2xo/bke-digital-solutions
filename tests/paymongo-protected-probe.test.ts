@@ -8,7 +8,7 @@ const valid = {
   PAYMONGO_TEST_MODE_SECRET_KEY: "sk_test_" + "a".repeat(28),
   PAYMONGO_TEST_MODE_WEBHOOK_SECRET: "whsec_" + "b".repeat(32),
 };
-const json = (data, status = 200) => new Response(JSON.stringify(data), { status });
+const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
 
 describe("protected PayMongo TEST-only probe", () => {
   it("accepts separate scoped test credentials", () => {
