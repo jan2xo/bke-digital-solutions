@@ -85,8 +85,8 @@ function requiredHostFact(name: "APP_URL" | "SUPPORT_EMAIL" | "BUSINESS_ADDRESS"
   return value;
 }
 
-function planLabel(type: "PERPETUAL" | "MONTHLY" | "ANNUAL"): string {
-  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : "Annual";
+function planLabel(type: "PERPETUAL" | "MONTHLY" | "SEMI_ANNUAL" | "ANNUAL"): string {
+  return type === "PERPETUAL" ? "Perpetual" : type === "MONTHLY" ? "Monthly" : type === "SEMI_ANNUAL" ? "Semi-Annual" : "Annual";
 }
 
 function commerceFailure(code: string): never {
@@ -295,7 +295,7 @@ export async function POST(request: Request) {
       LEGAL_CHECKOUT_REQUIREMENTS_CAPABILITY_ID,
     );
     const requirementsResult = await requirementsCapability.resolve({
-      planType: plan.type,
+      planType: plan.type === "SEMI_ANNUAL" ? "MONTHLY" : plan.type,
       selectedVersionIds: input.legal_version_ids,
       variables: {
         company_name: "BKE Digital Solutions",
@@ -348,6 +348,14 @@ export async function POST(request: Request) {
       purchasePlanAmountMinor: plan.amountMinor,
       catalogAmountMinor: pricing.amountMinor,
       finalAmountMinor: pricing.amountMinor,
+      ...(plan.type === "SEMI_ANNUAL"
+        ? {
+            monthlyBaseAmountMinor: pricing.monthlyAmountMinor,
+            grossSemiAnnualAmountMinor: pricing.grossSemiAnnualMinor,
+            semiAnnualCatalogDiscountBps: pricing.discountBps,
+            semiAnnualCatalogDiscountMinor: pricing.savingsMinor,
+          }
+        : {}),
       ...(plan.type === "ANNUAL"
         ? {
             monthlyBaseAmountMinor: pricing.monthlyAmountMinor,
@@ -368,6 +376,7 @@ export async function POST(request: Request) {
       intervalUnit: pricing.intervalUnit,
       intervalCount: pricing.intervalCount,
       annualDiscountBps: plan.annualDiscountBps,
+      semiAnnualDiscountBps: plan.semiAnnualDiscountBps ?? null,
     };
 
     const sourceReference = durableAgentCheckoutSourceReference(
