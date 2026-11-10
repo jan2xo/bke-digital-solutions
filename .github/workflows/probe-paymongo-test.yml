@@ -75,7 +75,8 @@ jobs:
     needs: gate
     runs-on: ubuntu-latest
     timeout-minutes: 12
-    environment: Payments-Test
+    environment:
+      name: Production
     permissions:
       contents: read
       id-token: write
@@ -87,39 +88,27 @@ jobs:
       - name: Verify immutable source and Test-only environment variables
         env:
           SOURCE_SHA: ${{ needs.gate.outputs.exact_sha }}
-          INFISICAL_IDENTITY: ${{ vars.INFISICAL_TEST_IDENTITY_ID }}
-          INFISICAL_PROJECT: ${{ vars.INFISICAL_TEST_PROJECT_ID }}
+          INFISICAL_IDENTITY: ${{ vars.INFISICAL_PRODUCTION_IDENTITY_ID }}
+          INFISICAL_PROJECT: ${{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test -n "$INFISICAL_IDENTITY" || { echo "PAYMONGO_TEST_INFISICAL_IDENTITY_NOT_CONFIGURED"; exit 1; }
           test -n "$INFISICAL_PROJECT" || { echo "PAYMONGO_TEST_INFISICAL_PROJECT_NOT_CONFIGURED"; exit 1; }
-      - name: Retrieve TEST-only secrets from Infisical via restricted OIDC identity
-        uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
-        with:
-          method: oidc
-          identity-id: ${{ vars.INFISICAL_TEST_IDENTITY_ID }}
-          domain: https://app.infisical.com
-          project-id: ${{ vars.INFISICAL_TEST_PROJECT_ID }}
-          env-slug: test
-          secret-path: /
-          include-imports: "false"
-          recursive: "false"
-      - name: Verify test key and create only the explicitly authorized test checkout
+      # Do NOT use Infisical/secrets-action: it bulk-exports prod keys.
+      # This protected script reads precisely TWO named TEST secrets via API,
+      # never sets GITHUB_ENV, and passes only TEST values in memory.
+      - name: Probe PayMongo with only named TEST credentials
         shell: bash
         env:
-          NODE_ENV: test
-          DEPLOYMENT_ENV: test
-          PAYMENT_PROVIDER: paymongo
-          PAYMONGO_LIVEMODE: "false"
+          INFISICAL_PRODUCTION_IDENTITY_ID: ${{ vars.INFISICAL_PRODUCTION_IDENTITY_ID }}
+          INFISICAL_PRODUCTION_PROJECT_ID: ${{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}
           RUN_CHECKOUT: ${{ needs.gate.outputs.run_checkout }}
         run: |
           set -euo pipefail
-          # The script rejects DATABASE_URL or DIRECT_DATABASE_URL and never
-          # creates production orders, entitlements, emails or live charges.
           node --test scripts/probe-paymongo-test.test.mjs
           if [ "$RUN_CHECKOUT" = "true" ]; then
-            node scripts/probe-paymongo-test.mjs --checkout
+            node scripts/probe-paymongo-infisical.mjs --checkout
           else
-            node scripts/probe-paymongo-test.mjs
+            node scripts/probe-paymongo-infisical.mjs
           fi
