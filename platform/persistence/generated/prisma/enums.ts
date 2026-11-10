@@ -209,6 +209,7 @@ export type IntervalUnit = (typeof IntervalUnit)[keyof typeof IntervalUnit]
 export const PurchasePlanType = {
   PERPETUAL: 'PERPETUAL',
   MONTHLY: 'MONTHLY',
+  SEMI_ANNUAL: 'SEMI_ANNUAL',
   ANNUAL: 'ANNUAL'
 } as const
 
