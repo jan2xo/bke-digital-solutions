@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 327,
+  "intent": "Repair the production PurchasePlan_terms_check 23514 defect for SEMI_ANNUAL by additive atomic constraint replacement; preserve prior commercial terms and immutable paid history; verify effective DB constraint after migration",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "commerce",
+    "payments",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/semi-annual-pricing-parity.test.ts"
+  ]
+}
