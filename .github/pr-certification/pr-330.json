@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 330,
+  "intent": "Protected owner-only Infisical TEST-mode PayMongo credential verification and synthetic hosted checkout; no production secrets or DB",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/paymongo-protected-probe.test.ts"
+  ]
+}
