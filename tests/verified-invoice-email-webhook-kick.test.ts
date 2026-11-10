@@ -24,7 +24,7 @@ vi.mock("@/apps/web/payments/webhook-processing", () => ({
 vi.mock("@/apps/web/email/purchase-confirmation", () => ({
   purchaseConfirmationEmailEnabled: mocks.enabled,
 }));
-vi.mock("@/apps/web/email", () => ({ dispatchEmailOutbox: mocks.dispatch }));
+vi.mock("@/apps/web/email", () => ({ dispatchVerifiedPurchaseConfirmation: mocks.dispatch }));
 
 import { POST } from "@/app/api/webhooks/payments/route";
 
@@ -37,7 +37,7 @@ beforeEach(() => {
   mocks.enabled.mockReturnValue(true);
   mocks.readBody.mockResolvedValue(Buffer.from("{}"));
   mocks.rateLimit.mockResolvedValue({ allowed: true });
-  mocks.process.mockResolvedValue({ result: { processed: true }, verifiedPaid: true });
+  mocks.process.mockResolvedValue({ result: { processed: true }, verifiedPaid: true, paidOrderId: "order-paid-1" });
   mocks.dispatch.mockResolvedValue({ selected: 1, sent: 1 });
 });
 
@@ -52,7 +52,14 @@ describe("verified-paid webhook post-response invoice outbox kick", () => {
     expect(mocks.dispatch).not.toHaveBeenCalled();
     await scheduled[0]();
     expect(mocks.dispatch).toHaveBeenCalledTimes(1);
-    expect(mocks.dispatch).toHaveBeenCalledWith(3);
+    expect(mocks.dispatch).toHaveBeenCalledWith("order-paid-1");
+  });
+
+  it("does not dispatch a different queued email when the verified order identity is missing", async () => {
+    mocks.process.mockResolvedValueOnce({ result: { processed: true }, verifiedPaid: true, paidOrderId: undefined });
+    expect((await POST(request())).status).toBe(200);
+    expect(mocks.after).not.toHaveBeenCalled();
+    expect(mocks.dispatch).not.toHaveBeenCalled();
   });
 
   it("does not wake mail for duplicate, unsupported, refunded or failed payment events", async () => {

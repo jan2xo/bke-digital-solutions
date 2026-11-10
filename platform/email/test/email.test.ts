@@ -37,6 +37,23 @@ function storeFor(rows: readonly EmailOutboxRecord[]): EmailOutboxStore {
 }
 
 describe("V2 platform email", () => {
+  it("selects only the verified order's outbox row while cron retains broad delivery", async () => {
+    const row = outboxRecord();
+    const store = storeFor([row]);
+    const provider: EmailProvider = { send: vi.fn(async () => undefined) };
+    await dispatchEmailOutbox({ store, provider }, {
+      workerId: "webhook-worker", limit: 1,
+      deduplicationKey: "purchase-confirmed:order-paid-1",
+    });
+    expect(store.listDispatchable).toHaveBeenCalledWith({
+      limit: 1, maxAttempts: 5,
+      deduplicationKey: "purchase-confirmed:order-paid-1",
+    });
+    const cron = storeFor([]);
+    await dispatchEmailOutbox({ store: cron, provider });
+    expect(cron.listDispatchable).toHaveBeenCalledWith({ limit: 20, maxAttempts: 5 });
+  });
+
   it("dispatches with claim recovery visibility and outbox-id idempotency", async () => {
     const row = outboxRecord();
     const store = storeFor([row]);

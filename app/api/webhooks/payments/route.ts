@@ -3,7 +3,7 @@ import { readLimitedBody, clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { processPaymentWebhookWithOutcome } from "@/apps/web/payments/webhook-processing";
 import { purchaseConfirmationEmailEnabled } from "@/apps/web/email/purchase-confirmation";
-import { dispatchEmailOutbox } from "@/apps/web/email";
+import { dispatchVerifiedPurchaseConfirmation } from "@/apps/web/email";
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
 
 export const runtime = "nodejs";
@@ -14,17 +14,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
     }
     const raw = await readLimitedBody(request);
-    const { result, verifiedPaid } = await processPaymentWebhookWithOutcome(raw, request.headers);
+    const { result, verifiedPaid, paidOrderId } = await processPaymentWebhookWithOutcome(raw, request.headers);
 
     // A verified paid settlement already committed its FINAL invoice and
     // deduplicated outbox row. This route never calls the provider directly.
     // The protected cron retries any missed or rejected deliveries.
-    if (verifiedPaid && purchaseConfirmationEmailEnabled()) {
+    if (verifiedPaid && paidOrderId && purchaseConfirmationEmailEnabled()) {
       try {
         after(async () => {
           try {
-            // Bounded post-response work. Cron owns the remaining queue.
-            await dispatchEmailOutbox(3);
+            // Send the just-settled order, not the oldest three unrelated
+            // emails. Durable cron owns failed/missed deliveries.
+            await dispatchVerifiedPurchaseConfirmation(paidOrderId);
           } catch {
             console.warn("PURCHASE_CONFIRMATION_OUTBOX_KICK_FAILED");
           }

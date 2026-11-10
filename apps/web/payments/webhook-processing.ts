@@ -415,6 +415,7 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
   }
 
   const renewalRequests: RenewalLeaseRequest[] = [];
+  let paidOrderId: string | undefined;
   await db.$transaction(async (tx) => {
     let orderId: string;
     let hostAttemptId: string | undefined;
@@ -423,6 +424,7 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
     if (event.type === "payment.paid") {
       const paid = await processPaidEvent(tx, event, renewalRequests);
       orderId = paid.order.id;
+      paidOrderId = orderId;
       hostAttemptId = paid.hostAttemptId;
       paymentId = paid.paymentId;
     } else {
@@ -701,7 +703,7 @@ async function processVerifiedEvent(event: PaymentsVerifiedProviderEventSnapshot
       // Payment remains settled; the PREPARED lease operation stays retryable.
     }
   }
-  return { processed: true as const };
+  return { processed: true as const, paidOrderId };
 }
 
 /** Route-only postcommit signal; the public webhook response remains unchanged. */
@@ -709,14 +711,18 @@ export async function processPaymentWebhookWithOutcome(raw: Buffer, headers: Hea
   const ingestion = await ingestPaymentWebhook(raw, headers);
   const event = ingestion.event;
   if (ingestion.duplicate) {
-    return { result: { duplicate: true as const }, verifiedPaid: false };
+    return { result: { duplicate: true as const }, verifiedPaid: false, paidOrderId: undefined };
   }
   try {
-    const result = await processVerifiedEvent(event);
+    const outcome = await processVerifiedEvent(event);
+    const verifiedPaid = event.type === "payment.paid" &&
+      "processed" in outcome && outcome.processed === true;
+    // Keep the public webhook response unchanged. The order reference is
+    // server-only post-commit metadata for that exact invoice's outbox row.
+    const result = "processed" in outcome ? { processed: true as const } : outcome;
     return {
-      result,
-      verifiedPaid: event.type === "payment.paid" &&
-        "processed" in result && result.processed === true,
+      result, verifiedPaid,
+      paidOrderId: verifiedPaid && "paidOrderId" in outcome ? outcome.paidOrderId : undefined,
     };
   } catch (error) {
     const prismaRetry = error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
