@@ -51,7 +51,8 @@ describe("verified-paid webhook post-response invoice outbox kick", () => {
     expect(mocks.after).toHaveBeenCalledOnce();
     expect(mocks.dispatch).not.toHaveBeenCalled();
     await scheduled[0]();
-    expect(mocks.dispatch).toHaveBeenCalledExactlyOnceWith(3);
+    expect(mocks.dispatch).toHaveBeenCalledTimes(1);
+    expect(mocks.dispatch).toHaveBeenCalledWith(3);
   });
 
   it("does not wake mail for duplicate, unsupported, refunded or failed payment events", async () => {
