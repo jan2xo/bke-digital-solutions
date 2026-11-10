@@ -237,7 +237,8 @@ jobs:
     with:
       source_sha: ${{ needs.plan.outputs.source_sha }}
 
-
+  accounts:
+    needs: plan
     if: contains(fromJSON(needs.plan.outputs.targets_json), 'accounts')
     uses: ./.github/workflows/v2-accounts.yml
     with:
