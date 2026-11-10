@@ -137,7 +137,7 @@ export default async function CheckoutReview({
         <Row label="Device limit" value={`${edition.maxDevicesPerUser} per user`} />
         {derived && (
           <>
-            <Row label="Term savings" value={money(derived.savingsMinor)} />
+            {derived.savingsMinor > 0 && <Row label="Term savings" value={money(derived.savingsMinor)} />}
             <Row label="Effective monthly" value={money(derived.effectiveMonthlyMinor)} />
           </>
         )}
