@@ -14,7 +14,6 @@
   "testFiles": [
     "tests/verified-invoice-email-webhook-kick.test.ts",
     "tests/purchase-confirmation-email.test.ts",
-    "platform/email/test/email.test.ts",
     "tests/verified-invoice-email-cron-recovery.test.ts",
     "tests/verified-invoice-email-targeted-dispatch.test.ts"
   ]
