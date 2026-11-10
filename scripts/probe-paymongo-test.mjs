@@ -33,7 +33,7 @@ export async function probePayMongoTest({
   const authorization = "Basic " + Buffer.from(key + ":").toString("base64");
   let response;
   try {
-    response = await fetchImpl(API_ORIGIN + "/v1/payment_methods", {
+    response = await fetchImpl(API_ORIGIN + "/v1/webhooks", {
       method: "GET",
       headers: { authorization, accept: "application/json" },
       redirect: "error",

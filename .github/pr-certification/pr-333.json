@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "pr": 333,
+  "intent": "Use documented authenticated read-only PayMongo GET /v1/webhooks for TEST-key capability check before an optional synthetic hosted checkout; never POST to BKE production webhook",
+  "requiredTargets": [
+    "pr",
+    "payments"
+  ],
+  "testFiles": [
+    "tests/paymongo-protected-probe.test.ts",
+    "tests/paymongo-protected-infisical.test.ts"
+  ]
+}
