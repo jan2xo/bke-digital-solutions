@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 331,
+  "intent": "Use existing protected GitHub Production Infisical OIDC only to fetch the two named TEST-mode PayMongo credentials; never bulk-import live keys or databases",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "host",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/paymongo-protected-infisical.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts",
+    "tests/paymongo-protected-probe.test.ts"
+  ]
+}
