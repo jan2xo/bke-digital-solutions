@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b5c4]">{product.description}</p>
     <div className="mt-12 grid gap-8 motion-stagger">{await Promise.all(product.editions.map(async (edition) => {
       const plans = await Promise.all(edition.purchasePlans
-        .sort((a, b) => ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "ANNUAL"].indexOf(b.type))
+        .sort((a, b) => ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(a.type) - ["PERPETUAL", "MONTHLY", "SEMI_ANNUAL", "ANNUAL"].indexOf(b.type))
         .map(async (plan) => {
           const pricingResult = pricing.resolve(plan);
           if (pricingResult.status === "FAILED") throw new Error(pricingResult.code);
