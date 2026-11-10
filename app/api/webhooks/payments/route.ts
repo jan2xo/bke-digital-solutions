@@ -1,7 +1,7 @@
 import { after, NextResponse } from "next/server";
 import { readLimitedBody, clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
-import { processPaymentWebhook } from "@/apps/web/payments/webhook-processing";
+import { processPaymentWebhookWithOutcome } from "@/apps/web/payments/webhook-processing";
 import { purchaseConfirmationEmailEnabled } from "@/apps/web/email/purchase-confirmation";
 import { dispatchEmailOutbox } from "@/apps/web/email";
 import { PaymentLifecycleError, safePaymentError } from "@bke/payments/logic/payment-errors";
@@ -14,14 +14,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
     }
     const raw = await readLimitedBody(request);
-    const result = await processPaymentWebhook(raw, request.headers);
+    const { result, verifiedPaid } = await processPaymentWebhookWithOutcome(raw, request.headers);
 
-    // A successful, verified paid settlement already committed its FINAL invoice
-    // and deduplicated outbox row. The webhook never sends through a provider.
-    // Wake the outbox *after* responding to PayMongo (or another verified
-    // provider); the protected cron retries any missed or rejected deliveries.
-    if ("processed" in result && result.processed &&
-        "paid" in result && result.paid && purchaseConfirmationEmailEnabled()) {
+    // A verified paid settlement already committed its FINAL invoice and
+    // deduplicated outbox row. This route never calls the provider directly.
+    // The protected cron retries any missed or rejected deliveries.
+    if (verifiedPaid && purchaseConfirmationEmailEnabled()) {
       try {
         after(async () => {
           try {
