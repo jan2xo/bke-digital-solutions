@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 329,
+  "intent": "Certify signed PayMongo companion webhook handling against disposable PostgreSQL alongside Google OIDC and legal enrollment policies without provider or production operations",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "payments",
+    "identity",
+    "legal",
+    "host"
+  ],
+  "testFiles": [
+    "tests/paymongo-companion-paid-events.test.ts",
+    "tests/google-policy.test.ts",
+    "tests/google-callback-policy.test.ts",
+    "tests/google-unified-enrollment.test.ts"
+  ]
+}
