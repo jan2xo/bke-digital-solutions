@@ -8,6 +8,8 @@ Only reusable certification owners and trusted entrypoints live here.
 
 **Reusable owners:** `ci.yml`, `v2-*.yml` and `native-bke-account-handoff.yml`. The aggregate `required-certification` validates declared proof only.
 
+**Protected PayMongo TEST probe:** `probe-paymongo-test.yml` is an owner-only explicit `/probe-paymongo-test` comment on issue #316 or exact-main `workflow_dispatch`. It is not PR CI and does not run on push. Its separate `Payments-Test` environment obtains only `test`-scope secrets via a dedicated Infisical OIDC identity (GitHub variables `INFISICAL_TEST_IDENTITY_ID`, `INFISICAL_TEST_PROJECT_ID`). It can authenticate a test secret key and create one synthetic PayMongo TEST checkout, but cannot use live keys or a database and does not verify a provider-delivered webhook. Never use the Production identity for this job.
+
 **Protected Production operations:** `live-paymongo-cutover.yml` is retained, independently dispatched and protected. PR branch tests never inherit its OIDC, secrets, write permissions or production approvals.
 
 **Retired:** PR #266's hard-coded `stage.yml` and its experimental `ci-staging.yml` were archived under `.github/legacy-workflows/2026-11-09/` because PR #266 has merged. They are inert and cannot run. New Staging deployment needs a separate security-reviewed privileged intent. Older archives remain under `.github/legacy-workflows/2026-10-02/`.
