@@ -4,7 +4,7 @@ import { probePayMongoTest } from "./probe-paymongo-test.mjs";
 const INFISICAL_ORIGIN = "https://app.infisical.com";
 const TEST_SECRET_NAMES = Object.freeze([
   "PAYMONGO_TEST_MODE_SECRET_KEY",
-  "PAYMONGO_TEST_MODE_WEBHOOK_SECRET",
+  "PAYMONGO_TEST_MODE_WEBHOOK_KEY",
 ]);
 
 function fail(code) {
@@ -95,7 +95,9 @@ export async function readNamedTestCredentials({
       url.toString(),
       { headers: { authorization: "Bearer " + token, accept: "application/json" } },
       fetchImpl,
-      "PAYMONGO_TEST_INFISICAL_NAMED_SECRET",
+      name === "PAYMONGO_TEST_MODE_WEBHOOK_KEY"
+        ? "PAYMONGO_TEST_INFISICAL_WEBHOOK_KEY"
+        : "PAYMONGO_TEST_INFISICAL_SECRET_KEY",
     );
     const value = result?.secret?.secretValue;
     if (typeof value !== "string" || value.length < 16) {
@@ -108,7 +110,7 @@ export async function readNamedTestCredentials({
     PAYMENT_PROVIDER: "paymongo",
     PAYMONGO_LIVEMODE: "false",
     PAYMONGO_TEST_MODE_SECRET_KEY: values.PAYMONGO_TEST_MODE_SECRET_KEY,
-    PAYMONGO_TEST_MODE_WEBHOOK_SECRET: values.PAYMONGO_TEST_MODE_WEBHOOK_SECRET,
+    PAYMONGO_TEST_MODE_WEBHOOK_KEY: values.PAYMONGO_TEST_MODE_WEBHOOK_KEY,
   };
 }
 
