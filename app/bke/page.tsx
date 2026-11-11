@@ -1,9 +1,11 @@
 import { resolveBkePublicDownloadUrl } from "@/platform/distribution/bke-launcher-download";
+import { publicPageMetadata } from "@/apps/web/public-seo";
 
-export const metadata = {
+export const metadata = publicPageMetadata({
+  path: "/bke",
   title: "Download BKE",
-  description: "BKE is the desktop home for installing and managing BKE software.",
-};
+  description: "BKE is the desktop home for installing, updating, and managing your licensed BKE software.",
+});
 
 export default function BkeDownloadPage() {
   const downloadUrl = resolveBkePublicDownloadUrl();
