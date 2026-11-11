@@ -25,6 +25,10 @@ describe("immutable cross-repo Agent to actual DS HTTPS route certification", ()
     ]) expect(suite).toContain(x);
     expect(suite).toContain('["EdDSA", "ES256"] as const');
     expect(suite).toContain("BKE_CROSS_REPO_SIGNER_ALGORITHM");
+    // Real DS route must carry the database-owned algorithm into authenticated status.
+    const adapter = readFileSync("apps/web/agent-sessions/agent-key-http.ts", "utf8");
+    expect(adapter).toContain("key_algorithm: result.keyAlgorithm");
+    expect(adapter).not.toContain("key_algorithm: parsed.data");
     expect(suite).toContain("7 assertions; algorithm=");
     expect(suite).not.toContain("vitest.skip");
     expect(suite).not.toContain("it.skip");
