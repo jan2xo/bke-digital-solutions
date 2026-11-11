@@ -3,6 +3,7 @@ import "server-only";
 import { createHash, createPublicKey, randomBytes, randomUUID, verify } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { authenticateAgentAccessToken } from "./device-authorization";
+import { hashAgentDeviceCode } from "./material";
 import {
   prepareAccountProductLeaseClaims,
   type PrepareProductLeaseResult,
@@ -70,7 +71,8 @@ export type KeyProofChallenge = Readonly<{
 
 type Rejection = Readonly<{ status: "denied"; reason:
   "INVALID_TOKEN" | "INVALID_KEY" | "REGISTRATION_CONFLICT" |
-  "INVALID_CHALLENGE" | "BAD_SIGNATURE" | "KEY_REVOKED" | "INVALID_SCOPE" }>;
+  "INVALID_CHALLENGE" | "BAD_SIGNATURE" | "KEY_REVOKED" | "INVALID_SCOPE" |
+  "DEVICE_PROOF_REQUIRED" }>;
 
 function currentMillis(now: Date): number {
   if (!(now instanceof Date) || !Number.isFinite(now.getTime()))
@@ -158,20 +160,72 @@ async function newChallenge(
  */
 export async function beginAgentKeyEnrollment(
   tx: Prisma.TransactionClient,
-  input: Readonly<{ accessToken: string; pepper: string; publicKeyPem: string }>,
+  input: Readonly<{ accessToken: string; pepper: string; publicKeyPem: string; deviceCode: string }>,
   now = new Date(),
 ): Promise<KeyProofChallenge | Rejection> {
   const session = await authenticated(tx, input);
   if (!session) return { status: "denied", reason: "INVALID_TOKEN" };
+  // Two independent bearer channels: the account access bearer is not
+  // sufficient to register a machine key. A 32-byte device-code/native
+  // handoff secret, known to the original Agent BEFORE token issuance, must
+  // match the consumed and approved authorization that minted THIS session.
+  // Neither this secret nor its hash is returned in a token bundle/response.
+  if (typeof input.deviceCode !== "string" ||
+      !/^[A-Za-z0-9_-]{43}$/.test(input.deviceCode)) {
+    return { status: "denied", reason: "DEVICE_PROOF_REQUIRED" };
+  }
+  const deviceCodeHash = hashAgentDeviceCode(input.deviceCode, input.pepper);
+  const authorized = await tx.$queryRaw<Array<{ id: string }>>`
+    SELECT a."id"
+      FROM "AgentAccountSession" s
+      JOIN "AgentDeviceAuthorization" a ON a."id" = s."deviceAuthorizationId"
+     WHERE s."id" = ${session.sessionId}
+       AND a."sessionId" = s."id"
+       AND a."deviceCodeHash" = ${deviceCodeHash}
+       AND a."deviceId" = ${session.deviceId}
+       AND a."approvedByUserId" = ${session.userId}
+       AND a."approvedAccountId" = ${session.accountId}
+       AND a."status" = 'CONSUMED'
+       AND a."consumedAt" IS NOT NULL
+       AND a."authorizationKind" IN ('DEVICE_CODE','NATIVE_HANDOFF')
+     FOR UPDATE OF a
+  `;
+  if (authorized.length !== 1)
+    return { status: "denied", reason: "DEVICE_PROOF_REQUIRED" };
+
   const pub = ed25519PublicKey(input.publicKeyPem);
   if (!pub) return { status: "denied", reason: "INVALID_KEY" };
   const current = currentMillis(now);
-  const existing = await tx.$queryRaw<Array<{ id: string }>>`
-    SELECT "id" FROM "AgentLeaseKeyRegistration"
-     WHERE "sessionId" = ${session.sessionId} AND "status" IN ('PENDING','ACTIVE')
-     FOR UPDATE
+  const existing = await tx.$queryRaw<RegistrationRow[]>`
+    SELECT "id", "sessionId", "accountId", "userId", "deviceId",
+           "publicKeyPem", "keyThumbprint", "status", "validUntil"
+      FROM "AgentLeaseKeyRegistration"
+     WHERE "sessionId" = ${session.sessionId} FOR UPDATE
   `;
-  if (existing.length > 0) return { status: "denied", reason: "REGISTRATION_CONFLICT" };
+  // One machine-key registration identity per Agent session, including
+  // terminal REVOKED rows; a new login approval is required to rotate.
+  if (existing.length > 1)
+    return { status: "denied", reason: "REGISTRATION_CONFLICT" };
+  if (existing.length === 1) {
+    const previous = existing[0]!;
+    if (previous.status !== "PENDING" || previous.validUntil <= now ||
+        previous.accountId !== session.accountId ||
+        previous.userId !== session.userId ||
+        previous.deviceId !== session.deviceId ||
+        previous.keyThumbprint !== pub.thumbprint ||
+        previous.publicKeyPem !== pub.pem)
+      return { status: "denied", reason: "REGISTRATION_CONFLICT" };
+    // Crash after original ENROLL start: burn stale nonces and reissue a
+    // challenge to the SAME protected key; never insert/replace a new key.
+    await tx.$executeRaw`
+      UPDATE "AgentLeaseKeyChallenge"
+         SET "consumedAt" = ${now}
+       WHERE "registrationId" = ${previous.id}
+         AND "purpose" = 'ENROLL'
+         AND "consumedAt" IS NULL
+    `;
+    return newChallenge(tx, session, previous, "ENROLL", null, null, now);
+  }
   const id = randomUUID();
   const validUntil = new Date(current + REGISTRATION_TTL_MS);
   await tx.$executeRaw`
