@@ -36,7 +36,7 @@ describe("Agent machine-key HTTP enrollment security contract", () => {
     for (const operation of ["beginAgentKeyEnrollment", "verifyAgentKeyChallenge", "revokeAgentLeaseKey"]) {
       expect(adapter).toContain(operation + "(tx,");
     }
-    expect(adapter.match(/isolationLevel: "Serializable"/g)?.length).toBe(3);
+    expect(adapter.match(/isolationLevel: "Serializable"/g)?.length).toBe(4);
     expect(authority).toContain('UPDATE "AgentLeaseKeyChallenge" SET "consumedAt"');
     expect(authority).toContain("verify(null, msg, createPublicKey(trustedKey.pem), signature)");
   });
