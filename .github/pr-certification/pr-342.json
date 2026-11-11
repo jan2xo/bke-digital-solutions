@@ -12,8 +12,8 @@
   ],
   "testFiles": [
     "tests/trial-durable-right-parity.test.ts",
-    "tests/trials-adoption-parity.test.ts",
     "tests/v3-agent-software-catalog-contract.test.ts",
-    "tests/entitlement-refund-revocation.test.ts"
+    "tests/entitlement-refund-revocation.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
   ]
 }

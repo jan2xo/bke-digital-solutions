@@ -279,5 +279,5 @@ export async function changeTrial(input: {
     });
 
     return tx.trialGrant.findUniqueOrThrow({ where: { id: trial.id } });
-  });
+  }, { isolationLevel: "Serializable" });
 }
