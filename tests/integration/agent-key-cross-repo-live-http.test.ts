@@ -12,7 +12,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
 import { hashAgentAccessToken, hashAgentDeviceCode } from "@/apps/web/agent-sessions/material";
 
-const AGENT_EXACT_SHA = "fc22c652e7b842a446492974e93a4ec94b35848a";
+const AGENT_EXACT_SHA = "31b8fe9fdf3c80de0ab76622ee9bbef3ebc69f0d";
 const AGENT_PUBLIC_REPO = "https://github.com/jan2xo/bke-licensing-agent.git";
 const pepper = "ci-bke-crossrepo-session-pepper-615f94d88362bc9da0e2e1c43c1e4297";
 const db = new PrismaClient({
