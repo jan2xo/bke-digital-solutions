@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 345,
+  "intent": "Prove authenticated DS Agent session→one-time domain-separated Ed25519 ENROLL and scoped LEASE nonce→real Postgres terminal registration and replay-safe signature verification→one-use trusted evidence for unsigned JWS-v1 policy, no actual Agent storage/API/JWS/production",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "entitlements",
+    "catalog",
+    "native-account"
+  ],
+  "testFiles": [
+    "tests/agent-key-possession-authority.test.ts",
+    "tests/agent-session-product-lease-issuance-plan.test.ts",
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
+  ]
+}
