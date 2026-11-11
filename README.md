@@ -1,5 +1,29 @@
 # BKE Digital Solutions
 
+## Current platform and security posture — November 11, 2026
+
+> **Read-only reconciliation of the current deployment and GitHub state.** This section takes precedence over the historical VPS/Compose-era instructions preserved below. A configured production deployment does **not** certify every licensing, recovery, payment, or customer-launch gate.
+
+| Boundary | Current verified status |
+| --- | --- |
+| Customer-facing domain | `https://bkedigitalsolutions.com` is assigned to the Cloudflare Worker `bke-digital-solutions` in the **Primary** Cloudflare account. |
+| Runtime | The repository's `wrangler.jsonc` uses `workers/entry.ts`, OpenNext assets, and the `HYPERDRIVE_FRESH` PostgreSQL connection binding. Operational database authority and resilience are tracked separately; do not assume the retired VPS hosts the new platform. |
+| Legacy domain | `jl-bke.com` is **separate** from the Digital Solutions customer-facing deployment. It is not a canonical Digital Solutions production origin. |
+| Temporary product grace | The legacy Render Dock and Air Stack Grace GET URLs are routed to the independent GitHub-backed static site [`bke-grace`](https://github.com/jan2xo/bke-grace) / `bke-grace.pages.dev`; this beta bypass is temporary and **not** the customer-entitlement authority. |
+| Main implementation truth | GitHub `main`, its exact commit, and the open PRs are authoritative. The README, `TRUTHCHECK.md` (historical August 2026 snapshot), and earlier phase reports are not substitutes for live source, deployment, or certification evidence. |
+| Unfinished business gates | [Signed licensing convergence #340](https://github.com/jan2xo/bke-digital-solutions/issues/340), [payment-canary evidence #316](https://github.com/jan2xo/bke-digital-solutions/issues/316), and [backup/restore plus WAF/rate-limit rollout #317](https://github.com/jan2xo/bke-digital-solutions/issues/317) retain their own proof and approval boundaries. The open stacked licensing PRs are **not** merged production authority. |
+
+### Cloudflare bot protection and responsible disclosure
+
+As inspected on **November 11, 2026**, the `bkedigitalsolutions.com` Cloudflare zone was **active (Free Website plan)** with **Browser Integrity Check on**, security level **Medium**, and **Bot Fight Mode off**. No custom WAF or rate-limit ruleset was found; a Cloudflare-managed Free ruleset exists, but that does not establish activation of a bespoke WAF policy. Production WAF/rate-limit activation remains **owner-deferred under [#317](https://github.com/jan2xo/bke-digital-solutions/issues/317)**.
+
+- **Browser forms:** Cloudflare Turnstile is a possible *future* human-verification control. If implemented, validate each token server-side with Siteverify; merely placing a widget on a page does not protect its action.
+- **Machine clients and webhooks:** Never enable a domain-wide browser challenge without checking compatibility with the native Licensing Agent, background API requests, payment webhooks, and other legitimate non-browser traffic. Free-plan Bot Fight Mode cannot be scoped away with ordinary WAF skip rules.
+- **Security disclosure:** `security.txt` is a disclosure-contact document defined by [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116.html), **not** a bot checker or WAF. When the owner approves a monitored security mailbox and disclosure process, publish a validated `/.well-known/security.txt` with at least `Contact` and `Expires`; optionally include `Canonical` and `Preferred-Languages`. **No deployment of this file or a working mailbox is claimed by this README.**
+- **Protection boundaries:** Keep identity, entitlements, payment settlement, and machine trust enforced by their owning application/Agent contracts even when Cloudflare offers an edge challenge. Edge protections are additional defenses, not authorization.
+
+**Local and historical instructions below are retained as source-development and provenance references.** The old VPS was retired by the owner. Do not execute a legacy VPS runbook or infer current production readiness from earlier certification numbers. The Workers deployment, its account-level bindings/secrets, and the current intentional certification plan govern any future production change.
+
 ## Compliance readiness
 
 The administrator compliance register is available at `/admin/compliance`. It tracks implementation evidence separately from owner decisions and professional lawyer, DPO/privacy, accountant/BIR, and regulatory review. It must not be treated as legal or tax approval; see `docs/phase-reports/phase-6.7-legal-tax-compliance-review.md`.
@@ -12,9 +36,9 @@ Pre-VPS provider certification uses [Docker + Caddy](docs/local-production-simul
 
 Secure commerce and licensing baseline for software, SaaS, and organizational deployments. Built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, Prisma, PayMongo, Resend, and S3-compatible private storage.
 
-The production self-hosted MinIO bootstrap remediation is certified in the repository. MinIO remains private primary storage; Cloudflare R2 is reserved for encrypted offsite backups. See [CHANGELOG.md](CHANGELOG.md) and [the deployment foundation](docs/deployment-foundation.md) for the incident, least-privilege policy, and verification evidence.
+The **historical self-hosted MinIO/Compose bootstrap remediation** is certified in the repository; this is not evidence that MinIO is the current Cloudflare Workers production storage authority. See [CHANGELOG.md](CHANGELOG.md) and the [historical deployment foundation](docs/deployment-foundation.md) for the incident and original verification evidence.
 
-The committed deployment baseline is `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`). The repository includes the verified Phase 6 platform controls for backup, observability, security, compliance tracking, supply-chain evidence, release management, and commercial licensing. Certification evidence for that baseline includes 32 current migrations, 167 passing Vitest tests (6 credential-gated skips), 11 passing Playwright tests, passing TypeScript/ESLint/build checks, healthy certification Compose services, and clean repository hygiene. VPS deployment, PayMongo/Resend production certification, restore certification, production signing/scanning, and professional review remain external gates. Live payments remain disabled.
+The **historical Docker-era certified baseline** was `5156caa` (`feat(licensing): complete RM7/RM8 commercial licensing lifecycle`); it is not the current `main` HEAD. The repository includes the verified Phase 6 platform controls for backup, observability, security, compliance tracking, supply-chain evidence, release management, and commercial licensing. Certification evidence for that baseline includes 32 current migrations, 167 passing Vitest tests (6 credential-gated skips), 11 passing Playwright tests, passing TypeScript/ESLint/build checks, healthy certification Compose services, and clean repository hygiene. VPS deployment, PayMongo/Resend production certification, restore certification, production signing/scanning, and professional review remain external gates. Live payments remain disabled.
 
 Phase 6.3 centralizes lifecycle work behind eight typed jobs, durable PostgreSQL run history, Valkey locks, an internal Docker scheduler worker, `/admin/scheduler`, and `/api/health/scheduler`. Run `npm run scheduler:run -- --dry-run` for an operations dry run; renewals always require a customer-authorized checkout.
 
@@ -37,7 +61,7 @@ npm run db:seed
 npm run dev
 ```
 
-**V3 environment contract:** `.env.example` is the committed template and `.env` is the only runtime/deployment environment filename. Specialized certification/demo env files are test tooling only; do not create alternate production runtime aliases.
+**Local/Compose environment contract:** `.env.example` is the committed template and `.env` is used for local/legacy Compose workflows. The current Cloudflare Workers production runtime uses deployed bindings, variables, and managed secrets—not a VPS `.env` file. Specialized certification/demo env files are test tooling only.
 
 The mock payment provider is the safe local default. Development email transport logs only a non-sensitive subject; it never prints recipients, authentication tokens, license keys, or message bodies. Cloudflare is the approved primary business-email transport and Resend the fallback; complete wiring and delivery certification remain separate work. Outbound email is not a Google authentication dependency.
 
@@ -45,9 +69,9 @@ The certification suites explicitly load ignored `.env.certification`. `npm run 
 
 Create the first administrator interactively with `npm run admin:create`. Do not place `ADMIN_PASSWORD` in committed files or shell history. Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` before deployment.
 
-## V3 operator
+## Historical V3 VPS operator (local / legacy reference only)
 
-Normal VPS/runtime operations use the Bash operator instead of hand-written Compose command chains:
+For local/legacy Compose runtime operations, the Bash operator replaces hand-written command chains. This is **not** the current Cloudflare Worker deployment path:
 
 ```bash
 ./bke.sh
@@ -67,7 +91,9 @@ It materializes ignored test-only configuration from `.bke-disposable`, keeps Pa
 
 This profile is not a production deployment path and its CA, TLS keys, application secrets, and signing keys must never be committed or trusted by production machines.
 
-## Production checklist
+## Historical VPS/Compose production checklist (not the current Worker cutover checklist)
+
+This section documents the earlier container deployment approach and must not be used to operate the current Cloudflare production site without separate reconciliation and authorization.
 
 1. Provision PostgreSQL, Upstash-compatible Redis, and a private S3-compatible bucket. Production intentionally refuses an in-memory rate limiter.
 2. Generate independent high-entropy secrets and inject them through the hosting platform's secret manager. Never expose server variables with a `NEXT_PUBLIC_` prefix.
@@ -110,7 +136,7 @@ Administrators can use `/admin/observability` to answer “Is the BKE platform h
 
 V3 source integration and exact-head certification are in progress under a merge and deployment hold. Google OAuth/OIDC is the sole customer and administrator sign-in provider; see the current consumer runbook for contact policy, sessions, sensitive-action freshness and recovery boundaries. Historical VPS instructions do not authorize deployment of the current candidate.
 
-Current readiness is tracked authoritatively in [TRUTHCHECK.md](TRUTHCHECK.md). The repository is not production-ready: external infrastructure, production malware scanning/signing, restore certification, full latest regression verification, and professional legal/privacy/tax review remain pending.
+[TRUTHCHECK.md](TRUTHCHECK.md) is a **historical August 2026 repository snapshot**, not an up-to-date source for the live Cloudflare deployment. Current readiness must be reconciled against live GitHub/Cloudflare proof and open acceptance gates such as [#340](https://github.com/jan2xo/bke-digital-solutions/issues/340) and [#317](https://github.com/jan2xo/bke-digital-solutions/issues/317). A deployed Worker does not itself prove full product, signing, recovery, compliance, or customer-launch readiness.
 ### RM7 repository certification corrections (committed)
 
 Lease issuance now persists monotonic generation/revision history and rejects
