@@ -233,6 +233,17 @@ describe("DS account-product lease eligibility — non-signing L2 fraction", () 
     });
   });
 
+  it("documents the actual real-PostgreSQL trial cross-boundary proof", () => {
+    const integration = readFileSync("tests/integration/account-product-lease-eligibility.test.ts", "utf8");
+    expect(integration).toContain("grantProductTrial({");
+    expect(integration).toContain("readAccountProductLeaseEvidenceInTransaction");
+    expect(integration).toContain('rightsExpireNoLaterThan: trialEndsAt');
+    expect(integration).toContain('accountId: otherAccountId');
+    expect(integration).toContain("otherEditionId");
+    expect(integration).toContain('action: "REVOKE"');
+    expect(integration).toContain('status: "REVOKED"');
+  });
+
   it("keeps server-token identity ahead of all rights queries and ties rights to source records", () => {
     const source = readFileSync("apps/web/agent-sessions/product-lease-eligibility.ts", "utf8");
     expect(source).toContain("authenticateAgentAccessToken");
@@ -247,6 +258,11 @@ describe("DS account-product lease eligibility — non-signing L2 fraction", () 
     expect(source).toContain('item."orderId" = l."orderId"');
     expect(source).toContain('item."productId" = p."id"');
     expect(source).toContain('sourceOrder."status" = \'PAID\'');
+    expect(source).toContain('sourceOrder."accountId" = ca."id"');
+    expect(source).toContain('e."resourceId" = l."editionId"');
+    expect(source).not.toContain('SELECT 1 FROM "Edition" edition');
+    expect(source).toContain('readAccountProductLeaseEvidenceInTransaction');
+    expect(source).toContain('readAccountProductLeaseEvidenceInTransaction(tx,');
     expect(source).toContain('claim."productId" = p."id"');
     expect(source).toContain('s."accountId" = ca."id"');
     expect(source).toContain('s."productId" = p."id"');

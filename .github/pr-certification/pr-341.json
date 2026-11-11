@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
   "pr": 341,
-  "intent": "Certify fail-closed DS Agent-session account-product execution-lease eligibility from active durable entitlements, matching license/claim source, assigned organization seat and paid/trial/perpetual end dates, without signing, API route, or production keys",
+  "intent": "Certify DS fail-closed Agent-session account-product lease source eligibility integrated with merged seven-day trial Entitlement parity, exact paid order/account/edition lineage and disposable PostgreSQL positive/revoked negative evidence, without signer, endpoint or production keys",
   "requiredTargets": [
     "pr",
     "core",
     "licensing",
     "entitlements",
+    "catalog",
     "native-account"
   ],
   "testFiles": [

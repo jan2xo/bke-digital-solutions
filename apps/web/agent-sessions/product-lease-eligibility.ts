@@ -54,10 +54,42 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
     return { status: "denied", reason: "NOT_ENTITLED" };
   }
 
-  // Bind a matching durable entitlement to the same license source.
-  // Direct rights come from that license's order item; claim-code rights must
-  // target the same account, exact code and license order item.
-  // Never combine an unrelated entitlement and unrelated license.
+  const rows = await readAccountProductLeaseEvidenceInTransaction(tx, {
+    accountId: session.accountId,
+    userId: session.userId,
+    productId: input.productId,
+    now,
+  });
+
+
+  return evaluateProductLeaseEligibility({
+    sessionId: session.sessionId,
+    accountId: session.accountId,
+    userId: session.userId,
+    productId: input.productId,
+    action: input.action,
+    now,
+    productExists: true,
+    productEntitled: product.entitled,
+    productInstallable: product.installable,
+    productExecutionType: product.executionType,
+  }, rows);
+}
+
+
+/**
+ * Internal source-evidence reader for one server-authorized account/product.
+ * This is NOT an authorization decision or an HTTP entrypoint. The calling
+ * server function MUST authenticate the Agent access token and enforce the
+ * catalog gate before using these rows to produce any eligible decision.
+ *
+ * Exported solely to certify the actual PostgreSQL lineage of the newly
+ * merged trial grants without fabricating an authenticated Agent session.
+ */
+export async function readAccountProductLeaseEvidenceInTransaction(
+  tx: Prisma.TransactionClient,
+  input: Readonly<{ accountId: string; userId: string; productId: string; now: Date }>,
+): Promise<readonly ProductLeaseEvidence[]> {
   const rows = await tx.$queryRaw<Array<Omit<ProductLeaseEvidence, "rightSourceVerified">>>`
     SELECT e."id" AS "entitlementId",
            e."status"::text AS "entitlementStatus",
@@ -93,7 +125,7 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
         ON sourceOrder."id" = l."orderId"
        AND sourceOrder."status" = 'PAID'
       LEFT JOIN "LicenseAssignment" la
-        ON la."licenseId" = l."id" AND la."userId" = ${session.userId}
+        ON la."licenseId" = l."id" AND la."userId" = ${input.userId}
       LEFT JOIN "ClaimCode" claim
         ON claim."entitlementId" = e."id"
        AND claim."status" = 'CLAIMED'
@@ -108,7 +140,7 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
       LEFT JOIN "PurchasePlan" pp
         ON pp."id" = l."purchasePlanId"
        AND pp."editionId" = licenseEdition."id"
-     WHERE ca."id" = ${session.accountId}
+     WHERE ca."id" = ${input.accountId}
        AND (l."editionId" IS NULL OR licenseEdition."id" IS NOT NULL)
        AND (l."purchasePlanId" IS NULL OR pp."id" IS NOT NULL)
        AND (l."subscriptionId" IS NULL OR (
@@ -129,31 +161,16 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
        AND (e."validUntil" IS NULL OR e."validUntil" > ${now})
        AND (
          e."resourceId" = p."id"
-         OR EXISTS (
-           SELECT 1 FROM "Edition" edition
-            WHERE edition."id" = e."resourceId"
-              AND edition."productId" = p."id"
-         )
+         OR e."resourceId" = l."editionId"
        )
        AND (
-         e."sourceReference" = ('commerce:' || l."orderId" || ':' || l."orderItemId")
+         (sourceOrder."accountId" = ca."id"
+          AND e."sourceReference" = ('commerce:' || l."orderId" || ':' || l."orderItemId"))
          OR (claim."id" IS NOT NULL
              AND e."sourceReference" = ('claim:' || claim."id"))
        )
      ORDER BY l."id", e."id"
      LIMIT 128
   `;
-
-  return evaluateProductLeaseEligibility({
-    sessionId: session.sessionId,
-    accountId: session.accountId,
-    userId: session.userId,
-    productId: input.productId,
-    action: input.action,
-    now,
-    productExists: true,
-    productEntitled: product.entitled,
-    productInstallable: product.installable,
-    productExecutionType: product.executionType,
-  }, rows.map(row => ({ ...row, rightSourceVerified: true })));
+  return rows.map(row => ({ ...row, rightSourceVerified: true }));
 }

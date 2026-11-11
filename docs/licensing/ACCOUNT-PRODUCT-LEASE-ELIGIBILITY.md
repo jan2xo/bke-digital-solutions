@@ -1,6 +1,6 @@
 # Digital Solutions — Account-Product Lease Eligibility (L2 pre-issuance)
 
-**Status:** DS source-only draft, no public authorizing API and **NO JWS ISSUE OR LIVE PRODUCT ACCEPTANCE**.
+**Status:** DS source-only draft integrated with merged trial-right parity; no public authorizing API and **NO JWS ISSUE OR LIVE PRODUCT ACCEPTANCE**.
 
 **Owner:** [DS #340](https://github.com/jan2xo/bke-digital-solutions/issues/340) Wave 1; [DS PR #341](https://github.com/jan2xo/bke-digital-solutions/pull/341).
 
@@ -15,11 +15,13 @@
 7. An eligibility result can expose only the **earliest limiting rights expiration**. `null` for perpetual means unlimited underlying right only; a separately governed **signed JWS maximum TTL is still mandatory**.
 8. The source does not issue cryptographic authorization, change signing keys, audit issuance/denials, create a route, modify entitlement rows, or grant machine access. Those actions require a separate implementation and authorized immutable package release.
 
-## Important discovered source mismatch
+## Resolved prerequisite — newly granted trials now carry durable rights
 
-`apps/web/trials/service.ts` currently creates `TrialGrant` and `License`, but not a durable `Entitlement` in that codepath. `readAgentSoftwareCatalog` currently requires an ACTIVE durable `Entitlement` for product entitlement. Therefore **real trial enrollment may be denied at this L2 gate** even though the pure policy correctly handles a trial backed by a matching durable right. That is a **remaining functional integration gap**, not permission to bypass the durable grant. Correct at the owning Entitlements/Trials boundary in a separate explicit certification intent.
+[DS trial-entitlement PR #342](https://github.com/jan2xo/bke-digital-solutions/pull/342) merged at exact main SHA `bf2eb6429f8061fe3fe4720958d7963f2fec7e30`. Newly created seven-day trials now atomically write a durable `Entitlement` with the same `commerce:<trialOrderId>:<trialOrderItemId>` as the zero-cost PAID trial license. The hard right expires at `trialEndsAt`, regardless of any administrative License grace. Trial revocation removes the durable right within the same serializable transaction.
 
-The same caution applies to historical legacy licenses without an explicit PERPETUAL plan. This gate denies them until policy can prove the right from approved authoritative data.
+**This source draft has integrated that merged main SHA** and the actual SQL reader is independently tested in `tests/integration/account-product-lease-eligibility.test.ts` against disposable PostgreSQL. Positive real trial evidence is returned only when the edition, exact source order, account and Product match; trial revocation or a mismatched edition/order account rejects it. The pure policy then caps a synthetic standalone context at the actual trial expiry. **This test does not impersonate a real Agent session or prove a published installable product release.** Server-only token and live catalog checks remain mandatory in `checkAgentProductLeaseEligibilityInTransaction`.
+
+Historical trial rows still lack durable Entitlements: no backfill was performed. Historic licenses without an explicit PERPETUAL plan still fail closed. Organization trials require a separately assigned license seat.
 
 ## Cross-repository dependencies (not promoted)
 
@@ -29,10 +31,10 @@ The same caution applies to historical legacy licenses without an explicit PERPE
 
 ## Minimum complete certification graph
 
-**Required for this policy-fraction intent:** DS `pr` (the new policy decision tests), `core` (full host TypeScript, migration/runtime tests), `licensing` (license trust owner), `entitlements` (durable right), `native-account` (Agent session custody). This deliberately widens around shared authentication/authorization and entitlement boundaries.
+**Required for this policy-fraction intent:** DS `pr` (policy and source binding), `core` (full host TypeScript, real PostgreSQL L2 source tests, migration/runtime/build), `licensing` (license trust owner), `entitlements` (durable right), `catalog` (real Agent product visibility), and `native-account` (Agent session custody). This deliberately widens around shared authentication/authorization and entitlement boundaries.
 
 **Not required:** DS payments/commerce/other modules, production Provider checks, Agent/Launcher binaries, UTM, packaging/installer, shared-library heavy re-certification. L1 upstream was already certified at immutable SHAs.
 
-**Acceptance:** all required checks pass at the *same exact DS PR head*; no skipped test assertions; document SQL query limitations and no real issuance. Use normal trusted PR comment `/certify pr core licensing entitlements native-account`; no PR push heavy workflows.
+**Acceptance:** all required checks pass at the *same exact DS PR head*; no skipped test assertions; document SQL query limitations and no real issuance. Use normal trusted PR comment `/certify pr core licensing entitlements catalog native-account`; no PR push heavy workflows.
 
 **Locks:** no merge while prerequisite library is still unmerged/unreleased and API route/signing/audit/expiry policy unresolved, no production deployment or DB mutation, no PayMongo/Resend activity, no signing cutover/release or force push.
