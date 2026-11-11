@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 const suite = readFileSync("tests/integration/agent-key-cross-repo-live-http.test.ts", "utf8");
 describe("immutable cross-repo Agent to actual DS HTTPS route certification", () => {
   it("pins immutable public Agent source, not HEAD/main or moving PR", () => {
-    expect(suite).toContain('AGENT_EXACT_SHA = "bcf2616bd7ead980c905a4acf130df4eca5df385"');
+    expect(suite).toContain('AGENT_EXACT_SHA = "b4ca67fc4624693afa324ac4f4fa3a78bb76fab0"');
     expect(suite).toContain('git(["-C", agentRoot, "rev-parse", "HEAD"])');
     expect(suite).toContain("expect(fetched).toBe(AGENT_EXACT_SHA)");
   });
@@ -23,6 +23,9 @@ describe("immutable cross-repo Agent to actual DS HTTPS route certification", ()
       "BKE_CROSS_REPO_CERT_SHA256",
       "BKE_CROSS_REPO_BEARER",
     ]) expect(suite).toContain(x);
+    expect(suite).toContain('["EdDSA", "ES256"] as const');
+    expect(suite).toContain("BKE_CROSS_REPO_SIGNER_ALGORITHM");
+    expect(suite).toContain("7 assertions; algorithm=");
     expect(suite).not.toContain("vitest.skip");
     expect(suite).not.toContain("it.skip");
     expect(suite).not.toContain("describe.skip");

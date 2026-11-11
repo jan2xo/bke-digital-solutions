@@ -16,7 +16,7 @@ const BASE64URL = /^[A-Za-z0-9_-]+$/;
 const trustBrand = Symbol("bke.ds.agent-proof-authority.internal");
 const usedProofs = new WeakSet<object>();
 
-/** Only produced after database challenge consumption and actual Ed25519 verify. */
+/** Only produced after database challenge consumption and verified Ed25519 or P-256 signature. */
 export type VerifiedAgentLeaseProof = Readonly<{
   [trustBrand]: true;
   registrationId: string;
@@ -37,6 +37,7 @@ type RegistrationRow = Readonly<{
   deviceId: string;
   publicKeyPem: string;
   keyThumbprint: string;
+  keyAlgorithm: "EdDSA" | "ES256";
   status: "PENDING" | "ACTIVE" | "REVOKED";
   validUntil: Date;
 }>;
@@ -57,6 +58,7 @@ type ChallengeRow = Readonly<{
   deviceId: string;
   publicKeyPem: string;
   keyThumbprint: string;
+  keyAlgorithm: "EdDSA" | "ES256";
   validUntil: Date;
 }>;
 
@@ -78,23 +80,52 @@ function currentMillis(now: Date): number {
   return now.getTime();
 }
 
-function ed25519PublicKey(pem: string): Readonly<{ pem: string; thumbprint: string }> | null {
+type AgentKeyAlgorithm = "EdDSA" | "ES256";
+
+/**
+ * Only canonical SPKI Ed25519 or NIST P-256 public keys are eligible.
+ * An EC key and a valid signature prove possession, NOT TPM origin.
+ */
+function agentPublicKey(pem: string): Readonly<{
+  pem: string; thumbprint: string; algorithm: AgentKeyAlgorithm;
+}> | null {
   if (typeof pem !== "string" || pem.length > 4096 ||
       !/^-----BEGIN PUBLIC KEY-----\r?\n/.test(pem) ||
       !/\r?\n-----END PUBLIC KEY-----\r?\n?$/.test(pem)) return null;
   try {
     const key = createPublicKey(pem);
-    if (key.asymmetricKeyType !== "ed25519") return null;
+    const algorithm: AgentKeyAlgorithm | null =
+      key.asymmetricKeyType === "ed25519" ? "EdDSA" :
+      key.asymmetricKeyType === "ec" &&
+      key.asymmetricKeyDetails?.namedCurve === "prime256v1" ? "ES256" : null;
+    if (!algorithm) return null;
     const canonical = key.export({ type: "spki", format: "pem" }).toString();
     const original = pem.replace(/\r\n/g, "\n").trimEnd() + "\n";
     if (canonical !== original) return null;
     return {
-      pem: canonical,
+      pem: canonical, algorithm,
       thumbprint: createHash("sha256")
         .update(key.export({ type: "spki", format: "der" }))
         .digest("base64url"),
     };
   } catch { return null; }
+}
+
+/**
+ * ES256 uses 64-byte IEEE-P1363 r||s on exact SHA-256(message), not ASN.1 DER.
+ * EdDSA uses 64-byte RFC 8032 Ed25519 signature on exact message bytes.
+ */
+function verifyAgentSignature(
+  algorithm: AgentKeyAlgorithm,
+  pem: string,
+  message: Buffer,
+  signature: Buffer,
+): boolean {
+  if (signature.length !== 64) return false;
+  const key = createPublicKey(pem);
+  if (algorithm === "EdDSA") return verify(null, message, key, signature);
+  return verify("sha256", message,
+    { key, dsaEncoding: "ieee-p1363" }, signature);
 }
 
 function base64urlBytes(value: string, max: number): Buffer | null {
@@ -163,7 +194,7 @@ export async function beginAgentKeyEnrollment(
 ): Promise<KeyProofChallenge | Rejection> {
   const session = await authenticated(tx, input);
   if (!session) return { status: "denied", reason: "INVALID_TOKEN" };
-  const pub = ed25519PublicKey(input.publicKeyPem);
+  const pub = agentPublicKey(input.publicKeyPem);
   if (!pub) return { status: "denied", reason: "INVALID_KEY" };
   const current = currentMillis(now);
   const existing = await tx.$queryRaw<Array<{ id: string }>>`
@@ -177,17 +208,18 @@ export async function beginAgentKeyEnrollment(
   await tx.$executeRaw`
     INSERT INTO "AgentLeaseKeyRegistration" (
       "id", "sessionId", "accountId", "userId", "deviceId", "publicKeyPem",
-      "keyThumbprint", "keyProtection", "status", "validUntil", "createdAt"
+      "keyThumbprint", "keyAlgorithm", "keyProtection", "status", "validUntil", "createdAt"
     ) VALUES (
       ${id}, ${session.sessionId}, ${session.accountId}, ${session.userId},
       ${session.deviceId}, ${pub.pem}, ${pub.thumbprint},
-      'software', 'PENDING', ${validUntil}, ${now}
+      ${pub.algorithm}, 'software', 'PENDING', ${validUntil}, ${now}
     )
   `;
   return newChallenge(tx, session, {
     id, sessionId: session.sessionId, accountId: session.accountId,
     userId: session.userId, deviceId: session.deviceId,
     publicKeyPem: pub.pem, keyThumbprint: pub.thumbprint,
+    keyAlgorithm: pub.algorithm,
     status: "PENDING", validUntil,
   }, "ENROLL", null, null, now);
 }
@@ -212,7 +244,7 @@ export async function beginAgentLeaseKeyChallenge(
     return { status: "denied", reason: "INVALID_SCOPE" };
   const rows = await tx.$queryRaw<RegistrationRow[]>`
     SELECT "id", "sessionId", "accountId", "userId", "deviceId",
-           "publicKeyPem", "keyThumbprint", "status", "validUntil"
+           "publicKeyPem", "keyThumbprint", "keyAlgorithm", "status", "validUntil"
       FROM "AgentLeaseKeyRegistration" WHERE "id" = ${input.registrationId} FOR UPDATE
   `;
   const row = rows[0];
@@ -251,7 +283,7 @@ export async function verifyAgentKeyChallenge(
     SELECT c."id", c."registrationId", c."sessionId", c."purpose", c."productId",
            c."action", c."messageHash", c."createdAt", c."expiresAt",
            c."consumedAt", r."status", r."accountId", r."userId", r."deviceId",
-           r."publicKeyPem", r."keyThumbprint", r."validUntil"
+           r."publicKeyPem", r."keyThumbprint", r."keyAlgorithm", r."validUntil"
       FROM "AgentLeaseKeyChallenge" c
       JOIN "AgentLeaseKeyRegistration" r ON r."id" = c."registrationId"
      WHERE c."id" = ${input.challengeId}
@@ -280,11 +312,12 @@ export async function verifyAgentKeyChallenge(
   const msg = base64urlBytes(input.messageBase64url, 4096);
   const signature = base64urlBytes(input.signatureBase64url, 128);
   const digest = msg ? createHash("sha256").update(msg).digest("hex") : null;
-  const trustedKey = ed25519PublicKey(row.publicKeyPem);
+  const trustedKey = agentPublicKey(row.publicKeyPem);
   if (!msg || !signature || signature.length !== 64 ||
       digest !== row.messageHash || !trustedKey ||
       trustedKey.thumbprint !== row.keyThumbprint ||
-      !verify(null, msg, createPublicKey(trustedKey.pem), signature))
+      trustedKey.algorithm !== row.keyAlgorithm ||
+      !verifyAgentSignature(trustedKey.algorithm, trustedKey.pem, msg, signature))
     return { status: "denied", reason: "BAD_SIGNATURE" };
 
   await tx.$executeRaw`
@@ -306,7 +339,8 @@ export async function verifyAgentKeyChallenge(
       action: "AGENT_LEASE_KEY_ENROLLED", targetType: "AgentLeaseKeyRegistration",
       targetId: row.registrationId,
       metadata: { sessionId: session.sessionId, deviceId: session.deviceId,
-        keyThumbprint: row.keyThumbprint, keyProtection: "software" },
+        keyThumbprint: row.keyThumbprint, keyAlgorithm: row.keyAlgorithm,
+        keyProtection: "software" },
     } });
     return Object.freeze({ status: "enrolled" as const, registrationId: row.registrationId });
   }

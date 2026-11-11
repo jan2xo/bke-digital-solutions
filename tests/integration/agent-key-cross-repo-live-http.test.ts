@@ -12,7 +12,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
 import { hashAgentAccessToken } from "@/apps/web/agent-sessions/material";
 
-const AGENT_EXACT_SHA = "bcf2616bd7ead980c905a4acf130df4eca5df385";
+const AGENT_EXACT_SHA = "b4ca67fc4624693afa324ac4f4fa3a78bb76fab0";
 const AGENT_PUBLIC_REPO = "https://github.com/jan2xo/bke-licensing-agent.git";
 const pepper = "ci-bke-crossrepo-session-pepper-615f94d88362bc9da0e2e1c43c1e4297";
 const db = new PrismaClient({
@@ -167,27 +167,62 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
     const fetched = git(["-C", agentRoot, "rev-parse", "HEAD"]);
     expect(fetched).toBe(AGENT_EXACT_SHA);
 
-    // SDK must be available; no silent skip of the cross-process proof.
-    const result = await execAsync("dotnet", [
-      "run", "--project", join(agentRoot, "dotnet/certification/BKE.LicensingAgent.DsHttpCertification/BKE.LicensingAgent.DsHttpCertification.csproj"),
-      "--configuration", "Release", "--", "--live-disposable-ds",
-    ], {
-      timeout: 180_000,
-      maxBuffer: 1_000_000,
-      env: {
-        ...process.env,
-        DOTNET_CLI_TELEMETRY_OPTOUT: "1",
-        BKE_CROSS_REPO_URL: baseUrl,
-        BKE_CROSS_REPO_CERT_SHA256: certHash,
-        BKE_CROSS_REPO_BEARER: accessToken,
-        BKE_CROSS_REPO_SESSION_ID: sessionId,
-        BKE_CROSS_REPO_ACCOUNT_ID: accountId,
-        BKE_CROSS_REPO_USER_ID: userId,
-        BKE_CROSS_REPO_DEVICE_ID: deviceId,
-      },
-    });
-    expect(result.stdout).toContain("BKE LIVE CROSS-REPO HTTPS + POSTGRESQL PASS");
-    expect(result.stdout).toContain("7 assertions");
-    expect(handlerCount).toBeGreaterThanOrEqual(6);
+    // Same immutable Agent binary is exercised with TWO distinct approved
+    // disposable machine sessions, avoiding revoked-key silent rotation.
+    for (const algorithm of ["EdDSA", "ES256"] as const) {
+      if (algorithm === "ES256") {
+        sessionId = randomUUID();
+        deviceId = "bke-device-http-" + randomUUID();
+        accessToken = "bke-test-live-agent-access-" + randomUUID();
+        const authorizationId = randomUUID();
+        const now = new Date();
+        const accessExpiry = new Date(now.getTime() + 15 * 60_000);
+        await db.$executeRaw`
+          INSERT INTO "AgentDeviceAuthorization" (
+            "id","deviceCodeHash","userCodeHash","deviceId","platform",
+            "architecture","status","expiresAt","pollIntervalSeconds",
+            "approvedByUserId","approvedAccountId","approvedAt","consumedAt",
+            "handoffExpiresAt","sessionId"
+          ) VALUES (
+            ${authorizationId},${randomUUID()},${randomUUID()},${deviceId},
+            'windows','x64','CONSUMED',${accessExpiry},5,
+            ${userId},${accountId},${now},${now},${accessExpiry},${sessionId}
+          )
+        `;
+        await db.$executeRaw`
+          INSERT INTO "AgentAccountSession" (
+            "id","deviceAuthorizationId","userId","accountId","deviceId",
+            "accessTokenHash","accessExpiresAt","refreshExpiresAt"
+          ) VALUES (
+            ${sessionId},${authorizationId},${userId},${accountId},${deviceId},
+            ${hashAgentAccessToken(accessToken, pepper)},${accessExpiry},
+            ${new Date(now.getTime() + 86_400_000)}
+          )
+        `;
+      }
+      // SDK must be available; no silent skip or mocked client transport.
+      const result = await execAsync("dotnet", [
+        "run", "--project", join(agentRoot, "dotnet/certification/BKE.LicensingAgent.DsHttpCertification/BKE.LicensingAgent.DsHttpCertification.csproj"),
+        "--configuration", "Release", "--", "--live-disposable-ds",
+      ], {
+        timeout: 180_000, maxBuffer: 1_000_000,
+        env: {
+          ...process.env,
+          DOTNET_CLI_TELEMETRY_OPTOUT: "1",
+          BKE_CROSS_REPO_SIGNER_ALGORITHM: algorithm,
+          BKE_CROSS_REPO_URL: baseUrl,
+          BKE_CROSS_REPO_CERT_SHA256: certHash,
+          BKE_CROSS_REPO_BEARER: accessToken,
+          BKE_CROSS_REPO_SESSION_ID: sessionId,
+          BKE_CROSS_REPO_ACCOUNT_ID: accountId,
+          BKE_CROSS_REPO_USER_ID: userId,
+          BKE_CROSS_REPO_DEVICE_ID: deviceId,
+        },
+      });
+      expect(result.stdout).toContain("BKE LIVE CROSS-REPO HTTPS + POSTGRESQL PASS");
+      expect(result.stdout).toContain("7 assertions; algorithm=" + algorithm);
+    }
+    // Each of the two real .NET processes makes authenticated route requests.
+    expect(handlerCount).toBeGreaterThanOrEqual(12);
   }, 240_000);
 });
