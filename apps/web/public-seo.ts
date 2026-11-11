@@ -5,7 +5,10 @@ export const PUBLIC_SITE_ORIGIN = "https://bkedigitalsolutions.com";
 export const PUBLIC_SHARE_IMAGE = "/bke-icon.png";
 
 /** Only anonymous, supported storefront pages are eligible for sitemap inclusion. */
-export const PUBLIC_SITEMAP_PATHS = ["/", "/products", "/licensing", "/bke"] as const;
+export const PUBLIC_SITEMAP_PATHS = [
+  "/", "/products", "/licensing", "/bke",
+  "/legal/privacy-policy", "/legal/terms-of-service",
+] as const;
 
 /** robots.txt is crawler guidance, NOT an authorization or data-protection boundary. */
 export const CRAWLER_EXCLUDED_PATHS = [
