@@ -6,8 +6,13 @@ describe("BKE Philippine Standard Time UI boundary", () => {
   it("shows the next Philippine calendar day for an instant still dated yesterday in UTC", () => {
     const instant = new Date("2026-11-11T16:15:00.000Z");
     const formatted = instant.toLocaleString("en-PH", { timeZone: "Asia/Manila" });
-    expect(formatted).toContain("Nov 12, 2026");
-    expect(formatted).not.toContain("Nov 11, 2026");
+    expect(formatted).toBeTruthy();
+    const parts = Object.fromEntries(
+      new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila", year: "numeric", month: "2-digit", day: "2-digit"
+      }).formatToParts(instant).filter((part) => part.type !== "literal").map((part) => [part.type, part.value]),
+    );
+    expect(parts).toMatchObject({ year: "2026", month: "11", day: "12" });
     // The authoritative UTC instant remains unchanged.
     expect(instant.toISOString()).toBe("2026-11-11T16:15:00.000Z");
   });
