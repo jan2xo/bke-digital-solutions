@@ -297,9 +297,25 @@ describe("one-unit cross-account Claim Code L2 source authority (real PostgreSQL
   });
 
   it("refuses source right when the actual entitlement is revoked", async () => {
+    const revokedAt = now();
+    const revocationReference = `gift-l2-disposable:${entitlementId}`;
     await db.$executeRaw`
-      UPDATE "Entitlement" SET "status" = 'REVOKED' WHERE "id" = ${entitlementId}
+      UPDATE "Entitlement"
+         SET "status" = 'REVOKED',
+             "revokedAt" = ${revokedAt},
+             "revocationReference" = ${revocationReference},
+             "revocationSnapshot" = ${JSON.stringify({ reason: "DISPOSABLE_GIFT_L2_TEST", claimCodeId })}::jsonb
+       WHERE "id" = ${entitlementId}
     `;
+    const revocation = await db.$queryRaw<Array<{
+      status: string; revokedAt: Date; revocationReference: string;
+    }>>`
+      SELECT "status"::text AS "status", "revokedAt", "revocationReference"
+        FROM "Entitlement" WHERE "id" = ${entitlementId}
+    `;
+    expect(revocation[0]).toMatchObject({
+      status: "REVOKED", revokedAt, revocationReference,
+    });
     expect(await evidence(recipientAccountId, recipientUserId)).toHaveLength(0);
     const catalog = await db.$transaction(tx => readAgentSoftwareCatalog(tx, {
       accountId: recipientAccountId, userId: recipientUserId,

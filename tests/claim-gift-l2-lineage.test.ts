@@ -45,7 +45,8 @@ describe("Claim Code gift account-product L2 boundary", () => {
     expect(integration).toContain('evidence(purchaserAccountId');
     expect(integration).toContain('evidence(unrelatedAccountId');
     expect(integration).toContain('code: "ALREADY_CLAIMED"');
-    expect(integration).toContain('UPDATE "Entitlement" SET "status" = \'REVOKED\'');
+    expect(integration).toContain('"revocationSnapshot" =');
+    expect(integration).toContain('status: "REVOKED"');
     expect(integration).toContain('status: "PENDING"');
   });
 
