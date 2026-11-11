@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pr": 339,
+  "intent": "Protected exact-main code-only Cloudflare Worker promotion of already merged public SEO (robots, dynamic sitemap, Open Graph) and selected product 7-day-trial Google login return continuity, retaining auth/session/legal trust and all production bindings",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host",
+    "identity"
+  ],
+  "testFiles": [
+    "tests/public-seo.test.ts",
+    "tests/trial-sign-in-return.test.ts",
+    "tests/google-callback-policy.test.ts",
+    "tests/google-unified-enrollment.test.ts",
+    "tests/google-oidc.test.ts",
+    "tests/public-site-content.test.ts",
+    "tests/workers-smoke-retry-policy.test.ts"
+  ]
+}
