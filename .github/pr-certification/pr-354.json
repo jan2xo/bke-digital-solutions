@@ -5,7 +5,8 @@
   "requiredTargets": [
     "pr",
     "core",
-    "commerce"
+    "commerce",
+    "legal"
   ],
   "testFiles": [
     "tests/philippine-time-presentation.test.ts"
