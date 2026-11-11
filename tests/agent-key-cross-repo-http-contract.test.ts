@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 const suite = readFileSync("tests/integration/agent-key-cross-repo-live-http.test.ts", "utf8");
 describe("immutable cross-repo Agent to actual DS HTTPS route certification", () => {
   it("pins immutable public Agent source, not HEAD/main or moving PR", () => {
-    expect(suite).toContain('AGENT_EXACT_SHA = "fc22c652e7b842a446492974e93a4ec94b35848a"');
+    expect(suite).toContain('AGENT_EXACT_SHA = "31b8fe9fdf3c80de0ab76622ee9bbef3ebc69f0d"');
     expect(suite).toContain('git(["-C", agentRoot, "rev-parse", "HEAD"])');
     expect(suite).toContain("expect(fetched).toBe(AGENT_EXACT_SHA)");
   });
