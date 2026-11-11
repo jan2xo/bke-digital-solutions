@@ -6,8 +6,13 @@ import Link from "next/link";
 import { db } from "@/platform/host/db";
 import { getV2WebApplication } from "@/apps/web/runtime";
 import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
+import { publicPageMetadata } from "@/apps/web/public-seo";
 
-export const metadata = { title: "Products" };
+export const metadata = publicPageMetadata({
+  path: "/products",
+  title: "Explore BKE Software",
+  description: "Discover BKE software, desktop tools, and licensed solutions for your workflow.",
+});
 
 export default async function ProductsPage() {
   const [products, application] = await Promise.all([
