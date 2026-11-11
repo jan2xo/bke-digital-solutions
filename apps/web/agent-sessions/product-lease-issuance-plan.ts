@@ -70,12 +70,16 @@ function time(date: Date | null | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function verifiedEd25519Thumbprint(publicKeyPem: string): string | null {
+function verifiedAgentPublicKeyThumbprint(publicKeyPem: string): string | null {
   if (typeof publicKeyPem !== "string" || publicKeyPem.length > 8192)
     return null;
   try {
     const key = createPublicKey(publicKeyPem);
-    if (key.asymmetricKeyType !== "ed25519") return null;
+    // Allow only Ed25519 software fallback or TPM-compatible ECDSA P-256
+    // registration public keys; the public key alone never attests hardware.
+    if (key.asymmetricKeyType !== "ed25519" &&
+        !(key.asymmetricKeyType === "ec" &&
+          key.asymmetricKeyDetails?.namedCurve === "prime256v1")) return null;
     const spki = key.export({ format: "der", type: "spki" });
     return createHash("sha256").update(spki).digest("base64url");
   } catch {
@@ -119,8 +123,8 @@ export function prepareAccountProductLeaseClaims(
   if (registrationEnd <= current)
     return { status: "denied", reason: "UNTRUSTED_MACHINE_KEY" };
 
-  const registeredThumbprint = verifiedEd25519Thumbprint(keyEvidence.registeredPublicKeyPem);
-  const provedThumbprint = verifiedEd25519Thumbprint(keyEvidence.proofPublicKeyPem);
+  const registeredThumbprint = verifiedAgentPublicKeyThumbprint(keyEvidence.registeredPublicKeyPem);
+  const provedThumbprint = verifiedAgentPublicKeyThumbprint(keyEvidence.proofPublicKeyPem);
   if (!registeredThumbprint || registeredThumbprint !== provedThumbprint)
     return { status: "denied", reason: "UNTRUSTED_MACHINE_KEY" };
 
