@@ -38,7 +38,11 @@ describe("Agent machine-key HTTP enrollment security contract", () => {
     }
     expect(adapter.match(/isolationLevel: "Serializable"/g)?.length).toBe(3);
     expect(authority).toContain('UPDATE "AgentLeaseKeyChallenge" SET "consumedAt"');
-    expect(authority).toContain("verify(null, msg, createPublicKey(trustedKey.pem), signature)");
+    expect(authority).toContain("verifyAgentSignature(trustedKey.algorithm, trustedKey.pem, msg, signature)");
+    expect(authority).toContain('trustedKey.algorithm !== row.keyAlgorithm');
+    expect(authority).toContain('dsaEncoding: "ieee-p1363"');
+    expect(adapter).not.toContain("key_protection: parsed.data");
+    expect(adapter).not.toContain("key_algorithm: parsed.data");
   });
   it("forbids remote LEASE proof, untrusted machine protection and JWS issuance", () => {
     expect(adapter).toContain('rows[0]?.purpose !== "ENROLL"');
