@@ -5,14 +5,14 @@ import { createServer, type Server } from "node:https";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { AddressInfo } from "node:net";
-import { X509Certificate, randomUUID } from "node:crypto";
+import { X509Certificate, randomUUID, randomBytes } from "node:crypto";
 import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { hashAgentAccessToken } from "@/apps/web/agent-sessions/material";
+import { hashAgentAccessToken, hashAgentDeviceCode } from "@/apps/web/agent-sessions/material";
 
-const AGENT_EXACT_SHA = "bcf2616bd7ead980c905a4acf130df4eca5df385";
+const AGENT_EXACT_SHA = "fc22c652e7b842a446492974e93a4ec94b35848a";
 const AGENT_PUBLIC_REPO = "https://github.com/jan2xo/bke-licensing-agent.git";
 const pepper = "ci-bke-crossrepo-session-pepper-615f94d88362bc9da0e2e1c43c1e4297";
 const db = new PrismaClient({
@@ -30,6 +30,7 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
   let server: Server | null = null;
   let userId = "", accountId = "", sessionId = "", deviceId = "", accessToken = "";
   let baseUrl = "", certHash = "";
+  let deviceCode = "";
   let handlerCount = 0;
 
   beforeAll(async () => {
@@ -121,6 +122,7 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
     sessionId = randomUUID();
     deviceId = "bke-device-http-" + randomUUID();
     accessToken = "bke-test-live-agent-access-" + randomUUID();
+    deviceCode = randomBytes(32).toString("base64url");
     const authorizationId = randomUUID();
     const now = new Date(), accessExpiry = new Date(now.getTime() + 15 * 60_000);
     await db.$executeRaw`
@@ -130,7 +132,7 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
         "approvedByUserId","approvedAccountId","approvedAt","consumedAt",
         "handoffExpiresAt","sessionId"
       ) VALUES (
-        ${authorizationId}, ${randomUUID()}, ${randomUUID()}, ${deviceId},
+        ${authorizationId}, ${hashAgentDeviceCode(deviceCode, pepper)}, ${randomUUID()}, ${deviceId},
         'windows','x64','CONSUMED', ${accessExpiry}, 5,
         ${userId},${accountId},${now},${now},${accessExpiry},${sessionId}
       )
@@ -184,10 +186,11 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
         BKE_CROSS_REPO_ACCOUNT_ID: accountId,
         BKE_CROSS_REPO_USER_ID: userId,
         BKE_CROSS_REPO_DEVICE_ID: deviceId,
+        BKE_CROSS_REPO_DEVICE_CODE: deviceCode,
       },
     });
     expect(result.stdout).toContain("BKE LIVE CROSS-REPO HTTPS + POSTGRESQL PASS");
-    expect(result.stdout).toContain("7 assertions");
+    expect(result.stdout).toContain("8 assertions");
     expect(handlerCount).toBeGreaterThanOrEqual(6);
   }, 240_000);
 });
