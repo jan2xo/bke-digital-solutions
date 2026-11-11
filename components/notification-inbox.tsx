@@ -35,7 +35,7 @@ export function NotificationInbox({
             <h2 className="mt-2 text-xl font-black">{item.title}</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{item.body}</p>
             <p className="mt-3 text-xs text-slate-500">
-              {item.createdAt.toLocaleString()} · {item.source}/{item.event}
+              {item.createdAt.toLocaleString("en-PH", { timeZone: "Asia/Manila" })} · {item.source}/{item.event}
             </p>
           </div>
           <span className={`admin-status ${item.state === "UNREAD" ? "admin-status-info" : "admin-status-neutral"}`}>
