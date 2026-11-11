@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 350,
+  "intent": "Actual DS Ed25519 key routes over disposable localhost HTTPS + real PG verified by separate exact-SHA .NET Agent transport process with isolated ephemeral test signer; no installed Windows or production",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-key-cross-repo-http-contract.test.ts",
+    "tests/agent-key-reconciliation-contract.test.ts",
+    "tests/agent-key-http-contract.test.ts",
+    "tests/agent-key-possession-authority.test.ts"
+  ]
+}
