@@ -1,5 +1,6 @@
 import "dotenv/config";
-import { randomUUID, generateKeyPairSync, sign } from "node:crypto";
+import { randomUUID, generateKeyPairSync, sign, verify } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
@@ -20,6 +21,8 @@ const db = new PrismaClient({
 const pepper = "disposable-agent-key-proof-strong-pepper-2026";
 const k1 = generateKeyPairSync("ed25519");
 const k2 = generateKeyPairSync("ed25519");
+const p256 = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+const p256PublicPem = p256.publicKey.export({ type: "spki", format: "pem" }).toString();
 const publicPem = k1.publicKey.export({ type: "spki", format: "pem" }).toString();
 const signFor = (challenge: KeyProofChallenge, key = k1.privateKey) =>
   sign(null, Buffer.from(challenge.messageBase64url, "base64url"), key)
@@ -27,7 +30,7 @@ const signFor = (challenge: KeyProofChallenge, key = k1.privateKey) =>
 
 describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)", { concurrent: false }, () => {
   let sessionId = "", accountId = "", userId = "", deviceId = "";
-  let foreignAccountId = "";
+  let foreignAccountId = "", foreignSessionId = "", foreignUserId = "";
   let accessToken = "", foreignToken = "", registrationId = "";
   let enrollment: KeyProofChallenge;
 
@@ -81,6 +84,7 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
       } },
     }, include: { ownedAccounts: true } });
     foreignAccountId = foreign.ownedAccounts[0]!.id;
+    foreignUserId = foreign.id;
 
     const own = await seedSession(userId, accountId);
     const other = await seedSession(foreign.id, foreignAccountId);
@@ -88,6 +92,7 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     accessToken = own.token;
     deviceId = own.deviceId;
     foreignToken = other.token;
+    foreignSessionId = other.id;
   });
   afterAll(() => db.$disconnect());
 
@@ -264,6 +269,113 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     if (c.status !== "challenge") throw Error("LEASE_SETUP_FAILED");
     const result = await verifyProof(c, signFor(c), accessToken, c.expiresAt);
     expect(result).toEqual({ status: "denied", reason: "INVALID_CHALLENGE" });
+  });
+
+  it("keeps committed public-only cross-language EdDSA/ES256 golden signatures immutable", () => {
+    const golden = JSON.parse(readFileSync(
+      "certification/fixtures/agent-machine-key-golden-vectors.json", "utf8",
+    )) as {
+      protocol: string; message_utf8: string; message_base64url: string;
+      vectors: Array<{ algorithm: "EdDSA" | "ES256"; signature_encoding: string;
+        public_key_pem: string; signature_base64url: string }>;
+      negative: { es256_der_signature_base64url: string;
+        unsupported_p384_public_key_pem: string };
+    };
+    const bytes = Buffer.from(golden.message_utf8, "utf8");
+    expect(golden.protocol).toBe("bke.agent-key-proof.v1");
+    expect(bytes.toString("base64url")).toBe(golden.message_base64url);
+    expect(golden.vectors.map(x => x.algorithm)).toEqual(["EdDSA", "ES256"]);
+    for (const vector of golden.vectors) {
+      const signature = Buffer.from(vector.signature_base64url, "base64url");
+      expect(signature).toHaveLength(64);
+      expect(verify(
+        vector.algorithm === "ES256" ? "sha256" : null,
+        bytes,
+        vector.algorithm === "ES256" ? {
+          key: vector.public_key_pem, dsaEncoding: "ieee-p1363" as const,
+        } : vector.public_key_pem,
+        signature,
+      )).toBe(true);
+    }
+    expect(Buffer.from(golden.negative.es256_der_signature_base64url, "base64url"))
+      .not.toHaveLength(64);
+    expect(golden.negative.unsupported_p384_public_key_pem)
+      .toContain("BEGIN PUBLIC KEY");
+  });
+
+  it("rejects unsupported P-384 source key and stores real ES256 algorithm for P-256", async () => {
+    const wrongCurve = generateKeyPairSync("ec", { namedCurve: "secp384r1" })
+      .publicKey.export({ type: "spki", format: "pem" }).toString();
+    expect(await db.$transaction(tx => beginAgentKeyEnrollment(tx, {
+      accessToken: foreignToken, pepper, publicKeyPem: wrongCurve,
+    }), { isolationLevel: "Serializable" })).toEqual({
+      status: "denied", reason: "INVALID_KEY",
+    });
+    const started = await db.$transaction(tx => beginAgentKeyEnrollment(tx, {
+      accessToken: foreignToken, pepper, publicKeyPem: p256PublicPem,
+    }), { isolationLevel: "Serializable" });
+    expect(started.status).toBe("challenge");
+    if (started.status !== "challenge") throw Error("ES256_ENROLL_SETUP_FAILED");
+    const registration = await db.$queryRaw<Array<{
+      keyAlgorithm: string; keyProtection: string;
+    }>>`
+      SELECT "keyAlgorithm","keyProtection"
+      FROM "AgentLeaseKeyRegistration" WHERE "id" = ${started.registrationId}
+    `;
+    expect(registration[0]).toEqual({
+      keyAlgorithm: "ES256", keyProtection: "software",
+    });
+    const signature = sign("sha256", Buffer.from(started.messageBase64url, "base64url"), {
+      key: p256.privateKey, dsaEncoding: "ieee-p1363",
+    }).toString("base64url");
+    expect(Buffer.from(signature, "base64url")).toHaveLength(64);
+    expect(await db.$transaction(tx => verifyAgentKeyChallenge(tx, {
+      accessToken: foreignToken, pepper, challengeId: started.challengeId,
+      messageBase64url: started.messageBase64url, signatureBase64url: signature,
+    }), { isolationLevel: "Serializable" })).toEqual({
+      status: "enrolled", registrationId: started.registrationId,
+    });
+
+    const invalidChallenge = await db.$transaction(tx => beginAgentLeaseKeyChallenge(tx, {
+      accessToken: foreignToken, pepper, registrationId: started.registrationId,
+      productId: "render-dock", action: "OPEN",
+    }), { isolationLevel: "Serializable" });
+    expect(invalidChallenge.status).toBe("challenge");
+    if (invalidChallenge.status !== "challenge") throw Error("ES256_INVALID_SETUP_FAILED");
+    const wrongSig = sign("sha256", Buffer.from(invalidChallenge.messageBase64url, "base64url"), {
+      key: generateKeyPairSync("ec", { namedCurve: "prime256v1" }).privateKey,
+      dsaEncoding: "ieee-p1363",
+    }).toString("base64url");
+    expect(await db.$transaction(tx => verifyAgentKeyChallenge(tx, {
+      accessToken: foreignToken, pepper, challengeId: invalidChallenge.challengeId,
+      messageBase64url: invalidChallenge.messageBase64url, signatureBase64url: wrongSig,
+    }), { isolationLevel: "Serializable" })).toEqual({
+      status: "denied", reason: "BAD_SIGNATURE",
+    });
+    const challenge = await db.$transaction(tx => beginAgentLeaseKeyChallenge(tx, {
+      accessToken: foreignToken, pepper, registrationId: started.registrationId,
+      productId: "render-dock", action: "OPEN",
+    }), { isolationLevel: "Serializable" });
+    expect(challenge.status).toBe("challenge");
+    if (challenge.status !== "challenge") throw Error("ES256_LEASE_SETUP_FAILED");
+    const valid = sign("sha256", Buffer.from(challenge.messageBase64url, "base64url"), {
+      key: p256.privateKey, dsaEncoding: "ieee-p1363",
+    }).toString("base64url");
+    const result = await db.$transaction(tx => verifyAgentKeyChallenge(tx, {
+      accessToken: foreignToken, pepper, challengeId: challenge.challengeId,
+      messageBase64url: challenge.messageBase64url, signatureBase64url: valid,
+    }), { isolationLevel: "Serializable" });
+    expect(result.status).toBe("verified");
+    if (result.status !== "verified") throw Error("ES256_LEASE_PROOF_FAILED");
+    const expected = {
+      ...eligible(), sessionId: foreignSessionId,
+      userId: foreignUserId, accountId: foreignAccountId,
+    } as ProductLeaseEligibilityDecision;
+    const claims = prepareLeaseClaimsWithVerifiedKey(expected, result.proof);
+    expect(claims.status).toBe("ready_to_sign");
+    if (claims.status !== "ready_to_sign") throw Error("ES256_LEASE_PREPARATION_FAILED");
+    // A P-256 signature does not by itself demonstrate TPM origin.
+    expect(claims.claims.keyProtection).toBe("software");
   });
 
   it("allows explicit terminal revocation, cancels all unspent nonce challenges and denies future use", async () => {
