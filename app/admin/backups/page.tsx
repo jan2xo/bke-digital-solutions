@@ -1,7 +1,7 @@
 import { db } from "@/platform/host/db";
 import { BackupActions, CreateBackupActions } from "@/components/backups/admin-backup-actions";
 
-const when = (date: Date | null) => date ? date.toLocaleString() : "—";
+const when = (date: Date | null) => date ? date.toLocaleString("en-PH", { timeZone: "Asia/Manila" }) : "—";
 const size = (bytes: bigint) => new Intl.NumberFormat("en", { style: "unit", unit: "megabyte", maximumFractionDigits: 2 }).format(Number(bytes) / 1_048_576);
 
 export default async function BackupsPage() {
