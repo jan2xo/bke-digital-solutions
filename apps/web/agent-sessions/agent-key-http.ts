@@ -164,7 +164,7 @@ export async function agentKeyHttp(request: Request, operation: AgentKeyHttpOper
         // until eligible, audited, transactional JWS issuance is implemented.
         const rows = await tx.$queryRaw<Array<{ purpose: string }>>`
           SELECT "purpose" FROM "AgentLeaseKeyChallenge"
-           WHERE "id" = \${parsed.data.challenge_id}
+           WHERE "id" = ${parsed.data.challenge_id}
         `;
         if (rows[0]?.purpose !== "ENROLL") {
           return { status: "denied" as const, reason: "INVALID_CHALLENGE" as const };

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pr": 346,
+  "intent": "Authenticated Agent bearer + distributed IP/token limits for Ed25519 ENROLL/verify/revoke HTTP routes backed by DS serializable one-use public-key authority, no external LEASE, no JWS/production",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-key-http-contract.test.ts",
+    "tests/agent-key-possession-authority.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
+  ]
+}
