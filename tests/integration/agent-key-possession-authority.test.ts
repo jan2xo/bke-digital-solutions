@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { randomUUID, generateKeyPairSync, sign } from "node:crypto";
+import { randomUUID, randomBytes, generateKeyPairSync, sign } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
@@ -37,7 +37,7 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     const id = randomUUID(), authId = randomUUID();
     const deviceId = `bke-device-test-${randomUUID()}`;
     const token = `bke-access-test-${randomUUID()}`;
-    const deviceCode = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString("base64url");
+    const deviceCode = randomBytes(32).toString("base64url");
     const at = new Date(), accessExpiry = new Date(at.getTime() + 15 * 60_000);
     const refreshExpiry = new Date(at.getTime() + 30 * 24 * 60 * 60_000);
     await db.$executeRaw`
