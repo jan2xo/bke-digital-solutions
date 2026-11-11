@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 338,
+  "intent": "Preserve the exact selected product page across anonymous 7-day trial Google sign-in, returning Google customers, and first-time legal enrollment/reacceptance without changing identity, trial-grant, redirect safety or payment authority",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "identity"
+  ],
+  "testFiles": [
+    "tests/trial-sign-in-return.test.ts",
+    "tests/google-callback-policy.test.ts",
+    "tests/google-unified-enrollment.test.ts",
+    "tests/google-oidc.test.ts",
+    "tests/google-only-auth-surface.test.ts"
+  ]
+}
