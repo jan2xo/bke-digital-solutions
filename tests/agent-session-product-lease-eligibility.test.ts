@@ -241,7 +241,7 @@ describe("DS account-product lease eligibility — non-signing L2 fraction", () 
     expect(integration).toContain('accountId: otherAccountId');
     expect(integration).toContain("otherEditionId");
     expect(integration).toContain('action: "REVOKE"');
-    expect(integration).toContain('status: "REVOKED"');
+    expect(integration).toContain('status[0]?.status).toBe("REVOKED")');
   });
 
   it("keeps server-token identity ahead of all rights queries and ties rights to source records", () => {

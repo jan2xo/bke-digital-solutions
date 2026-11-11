@@ -157,8 +157,8 @@ export async function readAccountProductLeaseEvidenceInTransaction(
        AND (item."purchasePlanId" IS NULL OR
          item."purchasePlanId" = l."purchasePlanId")
        AND e."status" = 'ACTIVE'
-       AND e."validFrom" <= ${now}
-       AND (e."validUntil" IS NULL OR e."validUntil" > ${now})
+       AND e."validFrom" <= ${input.now}
+       AND (e."validUntil" IS NULL OR e."validUntil" > ${input.now})
        AND (
          e."resourceId" = p."id"
          OR e."resourceId" = l."editionId"
