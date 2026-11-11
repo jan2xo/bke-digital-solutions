@@ -1,0 +1,13 @@
+# DS #340 — authenticated Agent key challenge and one-time Ed25519 proof
+
+**Status:** PLAN ONLY / no merge or production. **Stacked base:** DS #344 exact `349e11db60eeddc5faaec2174d7164f71046ae40` (6/6 certified source), which remains DRAFT; its source depends on DS #343 and #341 DRAFT. This wave must not silently merge or publish them.
+
+**Intent:** source-only but real disposable PostgreSQL key-registration authority: a legitimate DS-authenticated Agent session registers an Ed25519 public key, receives a server-originated random one-time ENROLL nonce and proves possession by signing a domain-separated, session/account/user/device-bound challenge. Successful verification activates a bounded key registration. A subsequent independent LEASE challenge must be signed again, consumed exactly once, and must return a server-created `RegisteredAgentKeyProofEvidence` record suitable for DS #344's unsigned claims composer. No client-supplied VERIFIED bit can activate a key. Use real Ed25519 cryptographic verification; no fake trust.
+
+**Ownership:** Digital Solutions account/session/key-registration verifier; Agent owns storage of private key, local signing and machine trust. This wave does NOT ship installed Agent key custody or actual Agent HTTP calls. No live issuer, no JWS, no TPM attestation; all keyProtection claims stay software.
+
+**Trust invariants:** token validated via existing Agent session authority before any DB state change; public key Ed25519/SPKI only; session/account/user/device bound to registration; server CSPRNG nonce, unguessable unique challenge and 30s expiry; purpose-separated ENROLL/LEASE; no reused nonce, no challenge replay; malformed/invalid signature consumes challenge; key rotation/revocation and prior-session transfer fail closed; data persisted with FK constraints and monotonic terminal revocation. No private keys persisted in DS.
+
+**Minimum complete certification intent:** `pr core licensing entitlements catalog native-account` because this is machine key → account/session eligibility trust and persistence migration. PR-only hermetic crypto tests + Core disposable PostgreSQL persistence/concurrency/nonce/replay tests and build/migration. Not required: Payments/Commerce/PayMongo/Resend, upstream library/Agent product binaries, Windows/UTM/installer/release, production. Only trusted `/certify` PR comment; no auto full PR CI.
+
+**Production lock:** No production DB migration/deploy, real user key enrollment, OAuth/DNS, key signing cutover, package/installer/catalog release, payment/provider traffic, force push. Stay DRAFT until independently certified upstream dependency and installed Agent proof ownership is satisfied.
