@@ -28,6 +28,7 @@ describe("DS real Agent key proof authority source safety", () => {
     expect(migration).toContain('FOREIGN KEY ("accountId") REFERENCES "CustomerAccount"');
     expect(migration).toContain('FOREIGN KEY ("userId") REFERENCES "User"');
     expect(migration).toContain('CHECK ("keyProtection" = \'software\')');
+    expect(migration).toContain('"keyAlgorithm" IN (\'EdDSA\', \'ES256\')');
     expect(migration).toContain('WHERE "status" = \'ACTIVE\'');
     expect(migration).toContain('WHERE "status" = \'PENDING\'');
     expect(migration).toContain('"AgentLeaseKeyRegistration_revoked_shape_check"');
@@ -42,13 +43,15 @@ describe("DS real Agent key proof authority source safety", () => {
     expect(migration).toContain('"AgentLeaseKeyChallenge_messageHash_key"');
     expect(migration).toContain('"purpose" IN (\'ENROLL\',\'LEASE\')');
   });
-  it("burns a challenge before actual Ed25519 signature verification", () => {
+  it("burns a challenge before actual algorithm-checked EdDSA/ES256 signature verification", () => {
     expect(service).toContain('AND "consumedAt" IS NULL');
     expect(service).toContain('reason: "BAD_SIGNATURE"');
     expect(service).toContain('trustedKey.thumbprint !== row.keyThumbprint');
-    expect(service).toContain("verify(null, msg, createPublicKey(trustedKey.pem), signature)");
+    expect(service).toContain("verifyAgentSignature(trustedKey.algorithm, trustedKey.pem, msg, signature)");
+    expect(service).toContain('dsaEncoding: "ieee-p1363"');
+    expect(service).toContain("trustedKey.algorithm !== row.keyAlgorithm");
     expect(service.indexOf('UPDATE "AgentLeaseKeyChallenge" SET "consumedAt"'))
-      .toBeLessThan(service.indexOf("verify(null, msg, createPublicKey"));
+      .toBeLessThan(service.indexOf("verifyAgentSignature(trustedKey.algorithm"));
     expect(service).toContain('proofState: "VERIFIED" as const');
     expect(service).toContain("const trustBrand = Symbol");
     expect(service).toContain("proof[trustBrand] !== true");
@@ -71,11 +74,13 @@ describe("DS real Agent key proof authority source safety", () => {
     expect(service).not.toContain("Resend");
     expect(service).not.toContain("V3_");
   });
-  it("requires real disposable PostgreSQL and actual Ed25519 signing", () => {
+  it("requires real disposable PostgreSQL, EdDSA + ES256 signing", () => {
     expect(integration).toContain("seedSession(userId, accountId)");
     expect(integration).toContain("hashAgentAccessToken(token, pepper)");
     expect(integration).toContain('isolationLevel: "Serializable"');
     expect(integration).toContain('generateKeyPairSync("ed25519")');
+    expect(integration).toContain('namedCurve: "prime256v1"');
+    expect(integration).toContain("dsaEncoding");
     expect(integration).toContain("sign(null, Buffer.from(challenge.messageBase64url");
     expect(integration).toContain("foreignToken");
     expect(integration).toContain('reason: "BAD_SIGNATURE"');

@@ -1,14 +1,16 @@
 {
   "schemaVersion": 1,
   "pr": 345,
-  "intent": "Prove authenticated DS Agent session→one-time domain-separated Ed25519 ENROLL and scoped LEASE nonce→real Postgres terminal registration and replay-safe signature verification→one-use trusted evidence for unsigned JWS-v1 policy, no actual Agent storage/API/JWS/production",
+  "intent": "Proof of actual EdDSA/ES256 64-byte one-time signed Agent challenges, persisted algorithm + license claims in disposable PostgreSQL, cross-language golden vectors and no false TPM attestation",
   "requiredTargets": [
     "pr",
     "core",
     "licensing",
     "entitlements",
     "catalog",
-    "native-account"
+    "native-account",
+    "identity",
+    "prisma-isolation"
   ],
   "testFiles": [
     "tests/agent-key-possession-authority.test.ts",

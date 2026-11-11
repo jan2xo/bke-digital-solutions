@@ -15,6 +15,8 @@ const plus = (ms: number) => new Date(now.getTime() + ms);
 const minus = (ms: number) => new Date(now.getTime() - ms);
 const key1 = generateKeyPairSync("ed25519");
 const key2 = generateKeyPairSync("ed25519");
+const p256 = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+const p256Pem = p256.publicKey.export({ type: "spki", format: "pem" }).toString();
 const pub1 = key1.publicKey.export({ type: "spki", format: "pem" }).toString();
 const pub2 = key2.publicKey.export({ type: "spki", format: "pem" }).toString();
 const thumbprint = createHash("sha256").update(
@@ -150,6 +152,36 @@ describe("DS L3 source-only pre-signing product lease claims", () => {
     const r = prepareAccountProductLeaseClaims(right({ action: "USE" }), proof(), now);
     expect(r.status).toBe("ready_to_sign");
     if (r.status === "ready_to_sign") expect(r.claims.allowedActions).toEqual(["USE"]);
+  });
+
+  it("accepts registered ECDSA P-256 public SPKI proof while withholding TPM attestation", () => {
+    const result = prepareAccountProductLeaseClaims(right(), proof({
+      registeredPublicKeyPem: p256Pem,
+      proofPublicKeyPem: p256Pem,
+      claimedKeyProtection: "tpm",
+    }), now);
+    expect(result.status).toBe("ready_to_sign");
+    if (result.status !== "ready_to_sign") throw Error("P256_LEASE_CLAIMS_DENIED");
+    expect(result.claims.agentKeyThumbprint).toBe(
+      createHash("sha256").update(p256.publicKey.export({
+        type: "spki", format: "der",
+      })).digest("base64url"),
+    );
+    expect(result.claims.keyProtection).toBe("software");
+  });
+
+  it("rejects an unsupported EC curve even with matching evidence public keys", () => {
+    const unsupported = generateKeyPairSync("ec", { namedCurve: "secp384r1" })
+      .publicKey.export({ type: "spki", format: "pem" }).toString();
+    deny(right(), proof({
+      registeredPublicKeyPem: unsupported, proofPublicKeyPem: unsupported,
+    }), "UNTRUSTED_MACHINE_KEY");
+  });
+
+  it("rejects mismatched P-256 registered and proved keys", () => {
+    deny(right(), proof({
+      registeredPublicKeyPem: p256Pem, proofPublicKeyPem: pub1,
+    }), "UNTRUSTED_MACHINE_KEY");
   });
 
   it("downgrades self-claimed TPM to software instead of claiming hardware attestation", () => {
