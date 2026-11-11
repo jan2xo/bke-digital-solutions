@@ -85,6 +85,13 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
       JOIN "Product" p ON p."productId" = ${input.productId}
       JOIN "License" l
         ON l."accountId" = ca."id" AND l."productId" = p."id"
+      JOIN "OrderItem" item
+        ON item."id" = l."orderItemId"
+       AND item."orderId" = l."orderId"
+       AND item."productId" = p."id"
+      JOIN "Order" sourceOrder
+        ON sourceOrder."id" = l."orderId"
+       AND sourceOrder."status" = 'PAID'
       LEFT JOIN "LicenseAssignment" la
         ON la."licenseId" = l."id" AND la."userId" = ${session.userId}
       LEFT JOIN "ClaimCode" claim
@@ -92,10 +99,31 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
        AND claim."status" = 'CLAIMED'
        AND claim."claimedToAccountId" = ca."id"
        AND claim."orderItemId" = l."orderItemId"
+       AND claim."productId" = p."id"
       LEFT JOIN "Subscription" s ON s."id" = l."subscriptionId"
       LEFT JOIN "TrialGrant" tg ON tg."licenseId" = l."id"
-      LEFT JOIN "PurchasePlan" pp ON pp."id" = l."purchasePlanId"
+      LEFT JOIN "Edition" licenseEdition
+        ON licenseEdition."id" = l."editionId"
+       AND licenseEdition."productId" = p."id"
+      LEFT JOIN "PurchasePlan" pp
+        ON pp."id" = l."purchasePlanId"
+       AND pp."editionId" = licenseEdition."id"
      WHERE ca."id" = ${session.accountId}
+       AND (l."editionId" IS NULL OR licenseEdition."id" IS NOT NULL)
+       AND (l."purchasePlanId" IS NULL OR pp."id" IS NOT NULL)
+       AND (l."subscriptionId" IS NULL OR (
+         s."id" IS NOT NULL
+         AND s."accountId" = ca."id"
+         AND s."productId" = p."id"
+       ))
+       AND (tg."id" IS NULL OR (
+         tg."accountId" = ca."id"
+         AND tg."productId" = p."id"
+         AND tg."editionId" = l."editionId"
+       ))
+       AND (item."editionId" IS NULL OR item."editionId" = l."editionId")
+       AND (item."purchasePlanId" IS NULL OR
+         item."purchasePlanId" = l."purchasePlanId")
        AND e."status" = 'ACTIVE'
        AND e."validFrom" <= ${now}
        AND (e."validUntil" IS NULL OR e."validUntil" > ${now})

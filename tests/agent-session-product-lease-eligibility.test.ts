@@ -243,6 +243,16 @@ describe("DS account-product lease eligibility — non-signing L2 fraction", () 
     expect(source).toContain("session.userId");
     expect(source).toContain('FROM "Entitlement" e');
     expect(source).toContain('JOIN "License" l');
+    expect(source).toContain('JOIN "OrderItem" item');
+    expect(source).toContain('item."orderId" = l."orderId"');
+    expect(source).toContain('item."productId" = p."id"');
+    expect(source).toContain('sourceOrder."status" = \'PAID\'');
+    expect(source).toContain('claim."productId" = p."id"');
+    expect(source).toContain('s."accountId" = ca."id"');
+    expect(source).toContain('s."productId" = p."id"');
+    expect(source).toContain('tg."accountId" = ca."id"');
+    expect(source).toContain('tg."productId" = p."id"');
+    expect(source).toContain('pp."editionId" = licenseEdition."id"');
     expect(source).toContain('claim."claimedToAccountId" = ca."id"');
     expect(source).toContain('claim."orderItemId" = l."orderItemId"');
     expect(source).toContain('e."sourceReference" = (');

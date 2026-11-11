@@ -9,7 +9,7 @@
 1. The Agent access token is authenticated **inside the same serializable transaction** as the rights query. The service obtains server-owned `sessionId`, `accountId`, `userId`; no request-supplied account/user/session IDs.
 2. The existing Agent catalog must classify the product as entitled, published/installable and of a supported execution type.
 3. An ACTIVE durable `Entitlement` must match the product or its edition and the account.
-4. A matching ACTIVE `License` must originate from the **same purchase order item**, or a claimed Claim Code bound to that account/order item and entitlement. Unrelated license and unrelated entitlement cannot be combined.
+4. A matching ACTIVE `License` must originate from the **same purchase order item** and a source Order in PAID state, or a claimed Claim Code bound to that account/order item/product and entitlement. Expired/refunded source orders, unrelated license and unrelated entitlement cannot be combined. Subscription and TrialGrant IDs must also bind to the **same** account/product (and edition where applicable); PurchasePlan/Edition must bind to this product.
 5. An INDIVIDUAL account must be owned by the authenticated user; an ORGANIZATION requires a license assignment for that user. The source customer account must be ACTIVE.
 6. Trial grants must be unrevoked and within `trialStartsAt` / `trialEndsAt`; subscription rights require `status=ACTIVE` and a current billing period. Perpetual rights require an explicit PERPETUAL plan rather than a missing plan.
 7. An eligibility result can expose only the **earliest limiting rights expiration**. `null` for perpetual means unlimited underlying right only; a separately governed **signed JWS maximum TTL is still mandatory**.
