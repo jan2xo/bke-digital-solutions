@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "pr": 343,
+  "intent": "Prove a real single-unit purchaser-A to recipient-B PAID Claim Code redemption in disposable PostgreSQL, recipient-only Entitlement+License and DS L2 source authority; reject unpaid gift, replay, tampered purchaser/claim/product and revoked right; no signing/production",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "commerce",
+    "entitlements",
+    "licensing",
+    "catalog",
+    "native-account"
+  ],
+  "testFiles": [
+    "tests/claim-gift-l2-lineage.test.ts",
+    "tests/claim-code-gift-checkout.test.ts",
+    "tests/agent-session-claim-redemption.test.ts",
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/v3-claim-redemption-authorization.test.ts",
+    "tests/entitlement-refund-revocation.test.ts"
+  ]
+}

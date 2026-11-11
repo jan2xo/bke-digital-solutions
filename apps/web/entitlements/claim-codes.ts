@@ -232,6 +232,34 @@ export async function consumeClaimCode(
     return { status: "REJECTED", code: "EXPIRED" };
   }
 
+  // An AVAILABLE code is not payment authority. Resolve paid gift order,
+  // same purchaser/item/product/plan and a one-unit source before issuance.
+  const paidSource = await tx.$queryRaw<Array<{ id: string }>>`
+    SELECT c."id"
+      FROM "ClaimCode" c
+      JOIN "Order" o
+        ON o."id" = c."orderId"
+       AND o."accountId" = c."purchaserAccountId"
+       AND o."status" = 'PAID'
+       AND o."paidAt" IS NOT NULL
+       AND o."fulfillmentMode" = 'CLAIM_CODE'
+      JOIN "OrderItem" item
+        ON item."id" = c."orderItemId"
+       AND item."orderId" = o."id"
+       AND item."productId" = c."productId"
+       AND item."editionId" IS NOT DISTINCT FROM c."editionId"
+       AND item."purchasePlanId" IS NOT DISTINCT FROM c."purchasePlanId"
+       AND item."quantity" = 1
+       AND c."unitIndex" = 0
+       AND item."unitAmountMinor" >= 0
+       AND item."totalMinor" >= 0
+     WHERE c."id" = ${claim.id}
+     LIMIT 1
+  `;
+  if (paidSource.length !== 1) {
+    return { status: "REJECTED", code: "INVALID_CODE" };
+  }
+
   const entitlementId = randomUUID();
   const sourceReference = `claim:${claim.id}`;
   const grantSnapshot = {
