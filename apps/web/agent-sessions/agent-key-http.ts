@@ -13,6 +13,7 @@ import {
   verifyAgentKeyChallenge,
   revokeAgentLeaseKey,
 } from "@/apps/web/agent-sessions/agent-key-proof-authority";
+import { readAgentKeyRegistrationState } from "@/apps/web/agent-sessions/agent-key-reconciliation";
 import { nativeAgentBearerToken } from "@/apps/web/agent-sessions/native-session";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
@@ -21,7 +22,7 @@ import { db } from "@/platform/host/db";
 import { getRuntimeEnvironment } from "@/platform/host/env";
 
 /** Narrow public Agent enrollment adapter. No JWS signer or LEASE endpoint. */
-export type AgentKeyHttpOperation = "enroll" | "verify" | "revoke";
+export type AgentKeyHttpOperation = "enroll" | "verify" | "revoke" | "status";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const B64URL = /^[A-Za-z0-9_-]+$/;
 const enrollSchema = z.object({
@@ -35,6 +36,7 @@ const verifySchema = z.object({
 const revokeSchema = z.object({
   registration_id: z.string().regex(UUID),
 }).strict();
+const statusSchema = z.object({ registration_id: z.string().regex(UUID).optional() }).strict();
 
 function response(payload: unknown, status = 200) {
   return NextResponse.json(payload, {
@@ -91,8 +93,8 @@ async function limited(request: Request, operation: AgentKeyHttpOperation, beare
   // Existing distributed rateLimit fails closed on unavailable Redis in production.
   const ip = clientIp(request);
   const tokenHash = createHash("sha256").update(bearer).digest("hex");
-  const hourly = operation === "enroll" ? 12 : operation === "revoke" ? 24 : 120;
-  const perToken = operation === "enroll" ? 8 : operation === "revoke" ? 16 : 80;
+  const hourly = operation === "enroll" ? 12 : operation === "revoke" ? 24 : operation === "status" ? 60 : 120;
+  const perToken = operation === "enroll" ? 8 : operation === "revoke" ? 16 : operation === "status" ? 60 : 80;
   const first = await rateLimit("agent-key:" + operation + ":ip:" + ip, hourly, 3600);
   const second = await rateLimit(
     "agent-key:" + operation + ":bearer:" + tokenHash, perToken, 3600);
@@ -180,6 +182,26 @@ export async function agentKeyHttp(request: Request, operation: AgentKeyHttpOper
       if (result.status === "denied") return denied(result.reason);
       if (result.status !== "enrolled") return response({ error: "INVALID_PROOF" }, 403);
       return response({ status: "enrolled", registration_id: result.registrationId });
+    }
+
+    if (operation === "status") {
+      const parsed = statusSchema.safeParse(body);
+      if (!parsed.success) return response({ error: "INVALID_INPUT" }, 400);
+      const result = await db.$transaction(
+        (tx) => readAgentKeyRegistrationState(tx, {
+          accessToken: bearer, pepper, registrationId: parsed.data.registration_id,
+        }),
+        { isolationLevel: "Serializable" },
+      );
+      if (result.status === "denied") return denied(result.reason);
+      if (result.status === "none") return response({ status: "none" });
+      return response({
+        status: "registration", registration_id: result.registrationId,
+        registration_state: result.registrationState,
+        key_thumbprint: result.keyThumbprint,
+        key_protection: result.keyProtection,
+        valid_until: result.validUntil.toISOString(),
+      });
     }
 
     const parsed = revokeSchema.safeParse(body);
