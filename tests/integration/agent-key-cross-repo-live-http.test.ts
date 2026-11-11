@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { execFile, execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { createServer, type Server } from "node:https";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { AddressInfo } from "node:net";
+import type { AddressInfo } from "node:net";
 import { X509Certificate, randomUUID } from "node:crypto";
 import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -14,7 +14,7 @@ import { hashAgentAccessToken } from "@/apps/web/agent-sessions/material";
 
 const AGENT_EXACT_SHA = "bcf2616bd7ead980c905a4acf130df4eca5df385";
 const AGENT_PUBLIC_REPO = "https://github.com/jan2xo/bke-licensing-agent.git";
-const pepper = "bke-disposable-cross-repo-agent-session-pepper";
+const pepper = "ci-bke-crossrepo-session-pepper-615f94d88362bc9da0e2e1c43c1e4297";
 const db = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
 });
@@ -36,6 +36,7 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
     // Strictly disposable test-only environment, never a production toggle.
     process.env.AGENT_ACCOUNT_SESSION_ENABLED = "true";
     process.env.AGENT_ACCOUNT_SESSION_PEPPER = pepper;
+    process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY = "ci-bke-crossrepo-envelope-0b1a72428a1e4462b816d805a4f63e4e";
 
     const { POST: enroll } = await import("@/app/api/agent-sessions/keys/enroll/route");
     const { POST: verify } = await import("@/app/api/agent-sessions/keys/verify/route");
@@ -129,9 +130,9 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
         "approvedByUserId","approvedAccountId","approvedAt","consumedAt",
         "handoffExpiresAt","sessionId"
       ) VALUES (
-        \${authorizationId}, \${randomUUID()}, \${randomUUID()}, \${deviceId},
-        'windows','x64','CONSUMED', \${accessExpiry}, 5,
-        \${userId},\${accountId},\${now},\${now},\${accessExpiry},\${sessionId}
+        ${authorizationId}, ${randomUUID()}, ${randomUUID()}, ${deviceId},
+        'windows','x64','CONSUMED', ${accessExpiry}, 5,
+        ${userId},${accountId},${now},${now},${accessExpiry},${sessionId}
       )
     `;
     await db.$executeRaw`
@@ -139,9 +140,9 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
         "id","deviceAuthorizationId","userId","accountId","deviceId",
         "accessTokenHash","accessExpiresAt","refreshExpiresAt"
       ) VALUES (
-        \${sessionId},\${authorizationId},\${userId},\${accountId},\${deviceId},
-        \${hashAgentAccessToken(accessToken, pepper)},\${accessExpiry},
-        \${new Date(now.getTime() + 86_400_000)}
+        ${sessionId},${authorizationId},${userId},${accountId},${deviceId},
+        ${hashAgentAccessToken(accessToken, pepper)},${accessExpiry},
+        ${new Date(now.getTime() + 86_400_000)}
       )
     `;
   }, 120_000);
@@ -152,6 +153,7 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
     rmSync(temp, { recursive: true, force: true });
     delete process.env.AGENT_ACCOUNT_SESSION_ENABLED;
     delete process.env.AGENT_ACCOUNT_SESSION_PEPPER;
+    delete process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY;
   });
 
   it("checks out exact Agent SHA and runs real signed enrollment/status/revoke over HTTPS", async () => {
