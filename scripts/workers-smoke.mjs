@@ -27,6 +27,9 @@ for (let invocation = 0; invocation < 2; invocation++) {
   assert.match(html, /One platform\./, "Sonnet hero headline not rendered");
   assert.match(html, /Every BKE/, "Sonnet hero second line missing");
   assert.match(html, /Continue with Google/, "Anonymous Google entry missing");
+  assert.match(html, /property="og:title"/, "Open Graph title metadata missing");
+  assert.match(html, /property="og:image"/, "Open Graph image metadata missing");
+  assert.match(html, /name="twitter:card"/, "Twitter card metadata missing");
   assert.match(html, /href="\/products"[^>]*>Explore\s*<span[^>]*aria-hidden="true"[^>]*>→<\/span><\/a>/, "Public Explore arrow CTA missing");
   assert.doesNotMatch(html, /<header\b[^>]*class="site-header"/, "Anonymous homepage must not show account navigation");
   assert.doesNotMatch(html, /<a\b[^>]*href="mailto:/, "Anonymous homepage exposes a Contact CTA");
@@ -35,6 +38,24 @@ for (let invocation = 0; invocation < 2; invocation++) {
     "Sonnet homepage must render a real GitHub-hosted catalog image");
 
 }
+// Validate real SEO route responses in workerd, not just source-file presence.
+const robotsResponse = await fetch(origin + "/robots.txt", { signal: AbortSignal.timeout(15000) });
+assert.equal(robotsResponse.status, 200, "Public robots.txt unavailable");
+assert.match(robotsResponse.headers.get("content-type") ?? "", /text\/plain/);
+const robotsText = await robotsResponse.text();
+assert.match(robotsText, /Sitemap: https:\/\/bkedigitalsolutions\.com\/sitemap\.xml/);
+assert.match(robotsText, /Disallow: \/admin/);
+assert.match(robotsText, /Disallow: \/checkout/);
+
+const sitemapResponse = await fetch(origin + "/sitemap.xml", { signal: AbortSignal.timeout(15000) });
+assert.equal(sitemapResponse.status, 200, "Public sitemap.xml unavailable");
+assert.match(sitemapResponse.headers.get("content-type") ?? "", /xml/);
+const sitemapText = await sitemapResponse.text();
+assert.match(sitemapText, /<urlset/);
+assert.match(sitemapText, /https:\/\/bkedigitalsolutions\.com\/products/);
+assert.doesNotMatch(sitemapText, /https:\/\/bkedigitalsolutions\.com\/(?:admin|dashboard|checkout|api|support)/);
+console.log("PASS: public robots, approved sitemap and Open Graph/Twitter metadata in workerd");
+
 // Assert the actual published routes return 200, not merely that the links exist.
 for (const legalPath of ["/legal/privacy-policy", "/legal/terms-of-service"]) {
   const response = await fetch(origin + legalPath, { signal: AbortSignal.timeout(15000) });

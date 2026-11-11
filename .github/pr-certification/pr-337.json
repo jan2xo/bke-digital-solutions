@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 337,
+  "intent": "Expose safely indexable public Next.js robots and dynamic sitemap, with canonical Open Graph and Twitter metadata for the BKE storefront and active product pages; preserve all private/account/payment/identity boundaries",
+  "requiredTargets": [
+    "pr",
+    "core"
+  ],
+  "testFiles": [
+    "tests/public-seo.test.ts",
+    "tests/public-site-content.test.ts",
+    "tests/public-navigation-reconciliation.test.ts",
+    "tests/workers-smoke-retry-policy.test.ts"
+  ]
+}

@@ -14,6 +14,33 @@ import { listPurchaseAuthorizedAccounts } from "@/apps/web/accounts/purchase-acc
 import { currentIdentitySession } from "@/apps/web/auth/session";
 import { getV2WebApplication } from "@/apps/web/runtime";
 import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
+import { publicPageMetadata } from "@/apps/web/public-seo";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await db.product.findUnique({
+    where: { slug },
+    select: {
+      name: true,
+      summary: true,
+      description: true,
+      imageKey: true,
+      active: true,
+      archivedAt: true,
+    },
+  });
+  if (!product?.active || product.archivedAt !== null) {
+    return { title: "Product unavailable", robots: { index: false, follow: false } };
+  }
+
+  return publicPageMetadata({
+    title: product.name,
+    description: product.summary || product.description,
+    path: `/products/${encodeURIComponent(slug)}`,
+    image: resolveProductImageUrl(product.imageKey) ?? undefined,
+  });
+}
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
