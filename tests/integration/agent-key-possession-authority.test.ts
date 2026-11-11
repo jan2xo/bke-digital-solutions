@@ -12,6 +12,7 @@ import {
   prepareLeaseClaimsWithVerifiedKey,
   type KeyProofChallenge,
 } from "@/apps/web/agent-sessions/agent-key-proof-authority";
+import { readAgentKeyRegistrationState } from "@/apps/web/agent-sessions/agent-key-reconciliation";
 import type { ProductLeaseEligibilityDecision } from "@/apps/web/agent-sessions/product-lease-eligibility-policy";
 
 const db = new PrismaClient({
@@ -91,6 +92,11 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
   });
   afterAll(() => db.$disconnect());
 
+  async function registrationState(token = accessToken, id?: string) {
+    return db.$transaction(tx => readAgentKeyRegistrationState(tx, {
+      accessToken: token, pepper, registrationId: id,
+    }), { isolationLevel: "Serializable" });
+  }
   async function begin() {
     return db.$transaction(tx => beginAgentKeyEnrollment(tx, {
       accessToken, pepper, publicKeyPem: publicPem,
@@ -166,6 +172,17 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     expect(await begin()).toEqual({ status: "denied", reason: "REGISTRATION_CONFLICT" });
   });
 
+  it("reconciles pending registration within exact authenticated session", async () => {
+    expect(await registrationState()).toMatchObject({
+      status: "registration", registrationId, registrationState: "pending",
+      keyProtection: "software",
+    });
+    expect(await registrationState(foreignToken, registrationId)).toEqual({ status: "none" });
+    expect(await registrationState("invalid-token", registrationId))
+      .toEqual({ status: "denied", reason: "INVALID_TOKEN" });
+    expect(await registrationState(accessToken, randomUUID())).toEqual({ status: "none" });
+  });
+
   it("does not let another valid Agent bearer token consume this challenge", async () => {
     expect(await verifyProof(enrollment, signFor(enrollment), foreignToken)).toEqual({
       status: "denied", reason: "INVALID_CHALLENGE",
@@ -193,6 +210,15 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     expect(await db.auditLog.count({
       where: { targetId: registrationId, action: "AGENT_LEASE_KEY_ENROLLED" },
     })).toBe(1);
+  });
+
+  it("recovers an ACTIVE receipt from DS after local acknowledgment loss", async () => {
+    expect(await registrationState()).toMatchObject({
+      status: "registration", registrationId, registrationState: "active",
+    });
+    expect(await registrationState(accessToken, registrationId)).toMatchObject({
+      status: "registration", registrationId, registrationState: "active",
+    });
   });
 
   it("burns a bad-signature LEASE nonce permanently and cannot replay correct signature", async () => {
@@ -287,6 +313,10 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     `;
     expect(rows[0]?.status).toBe("REVOKED");
     expect(rows[0]?.revokedAt).not.toBeNull();
+    expect(await registrationState()).toEqual({ status: "none" });
+    expect(await registrationState(accessToken, registrationId)).toMatchObject({
+      status: "registration", registrationId, registrationState: "revoked",
+    });
     expect(await db.auditLog.count({
       where: { targetId: registrationId, action: "AGENT_LEASE_KEY_REVOKED" },
     })).toBe(1);
