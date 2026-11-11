@@ -21,14 +21,14 @@ export async function readAgentKeyRegistrationState(
         SELECT "id","sessionId","accountId","userId","deviceId",
                "keyThumbprint","status","validUntil"
         FROM "AgentLeaseKeyRegistration"
-        WHERE "id" = \${input.registrationId} AND "sessionId" = \${session.sessionId}
+        WHERE "id" = ${input.registrationId} AND "sessionId" = ${session.sessionId}
         LIMIT 2
       `
     : await tx.$queryRaw<Row[]>`
         SELECT "id","sessionId","accountId","userId","deviceId",
                "keyThumbprint","status","validUntil"
         FROM "AgentLeaseKeyRegistration"
-        WHERE "sessionId" = \${session.sessionId} AND "status" IN ('PENDING','ACTIVE')
+        WHERE "sessionId" = ${session.sessionId} AND "status" IN ('PENDING','ACTIVE')
         ORDER BY "createdAt" DESC, "id" DESC
         LIMIT 2
       `;
