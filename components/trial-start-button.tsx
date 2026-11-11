@@ -3,16 +3,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { trialSignInHref } from "@/apps/web/trials/trial-sign-in-path";
 
 type Account = { id: string; name: string };
 
-export function TrialStartButton({ editionId, accounts }: { editionId: string; accounts: Account[] }) {
+export function TrialStartButton({ editionId, productSlug, accounts }: { editionId: string; productSlug: string; accounts: Account[] }) {
   const router = useRouter();
   const [accountId, setAccountId] = useState(accounts[0]?.id ?? "");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
-  if (!accounts.length) return <Link className="button secondary" href={`/login?returnTo=${encodeURIComponent("/products")}`}>Sign in for 7-day trial</Link>;
+  if (!accounts.length) return <Link className="button secondary" href={trialSignInHref(productSlug)}>Sign in for 7-day trial</Link>;
 
   async function start() {
     setBusy(true);

@@ -50,6 +50,30 @@ describe("Google callback consumer policy", () => {
     expect(mocks.register).not.toHaveBeenCalled();
     expect(mocks.issue).toHaveBeenCalledOnce();
   });
+  it("returns an existing Google customer to the chosen trial product", async () => {
+    verified.context.flow = "unified";
+    verified.context.returnTo = "/products/render-dock";
+    const response = await callback();
+    expect(response.headers.get("location")).toBe("https://staging.example.test/products/render-dock");
+    expect(mocks.issue).toHaveBeenCalledOnce();
+    expect(mocks.enrollment).not.toHaveBeenCalled();
+  });
+  it("preserves the trial product through required legal reacceptance", async () => {
+    verified.context.flow = "unified";
+    verified.context.returnTo = "/products/render-dock";
+    mocks.legal.mockResolvedValueOnce([{ slug: "terms-of-service" }]);
+    const response = await callback();
+    expect(response.headers.get("location")).toBe("https://staging.example.test/legal/accept?returnTo=%2Fproducts%2Frender-dock");
+  });
+  it("preserves the trial product for an unknown Google customer awaiting legal enrollment", async () => {
+    verified.context.flow = "unified";
+    verified.context.returnTo = "/products/render-dock";
+    mocks.authenticate.mockResolvedValueOnce({ status: "INVALID_CREDENTIALS" });
+    const response = await callback();
+    expect(response.headers.get("location")).toBe("https://staging.example.test/auth/consent");
+    expect(mocks.enrollment).toHaveBeenCalledWith(expect.objectContaining({ returnTo: "/products/render-dock" }));
+    expect(mocks.issue).not.toHaveBeenCalled();
+  });
   it("requires post-Google legal consent before creating an unknown customer", async () => {
     verified.context.flow = "unified";
     mocks.authenticate.mockResolvedValue({ status: "INVALID_CREDENTIALS" });

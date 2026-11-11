@@ -90,6 +90,23 @@ describe("post-OIDC unified Google customer enrollment", () => {
       userId: "user-new", subject: "verified-google-subject", authenticatedAt: null,
     }));
   });
+  it("returns newly registered buyers to their selected product after mandatory consent", async () => {
+    mocks.pending.mockResolvedValueOnce({
+      jti: "4c3cda67-5a21-4fba-a646-443c9b635bcb",
+      subject: "verified-google-subject",
+      email: "new@gmail.com",
+      emailVerified: true,
+      hostedDomain: null,
+      name: "New Customer",
+      authenticatedAt: null,
+      returnTo: "/products/render-dock",
+    });
+    const response = await POST(body());
+    expect(response.status).toBe(200);
+    expect((await response.json()).redirectTo).toBe("/products/render-dock");
+    expect(mocks.register).toHaveBeenCalledOnce();
+    expect(mocks.issue).toHaveBeenCalledOnce();
+  });
   it("rejects reused one-time enrollments before creating accounts", async () => {
     mocks.consume.mockResolvedValue(false);
     const response = await POST(body());

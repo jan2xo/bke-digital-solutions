@@ -118,7 +118,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <p className="mt-5 text-sm">Up to {edition.maxUsers} authorized user(s), {edition.maxDevicesPerUser} device(s) each.</p>
           <p className="mt-1 text-sm text-[#a8b5c4]">Updates: {edition.updatePolicy.replaceAll("_", " ").toLowerCase()}</p>
         </div>
-        <div><div className="mb-5 rounded-xl border border-[#3d75a7]/50 bg-[#213a53]/60 p-4"><p className="mb-3 text-sm font-semibold">Try this edition free for 7 days. Each account is eligible for one trial per product per calendar year.</p><TrialStartButton editionId={edition.id} accounts={accounts.map((account) => ({ id: account.id, name: account.displayName }))}/></div><PurchasePlanSelector plans={plans} signedIn={Boolean(session)} /></div>
+        <div><div className="mb-5 rounded-xl border border-[#3d75a7]/50 bg-[#213a53]/60 p-4"><p className="mb-3 text-sm font-semibold">Try this edition free for 7 days. Each account is eligible for one trial per product per calendar year.</p><TrialStartButton editionId={edition.id} productSlug={product.slug} accounts={accounts.map((account) => ({ id: account.id, name: account.displayName }))}/></div><PurchasePlanSelector plans={plans} signedIn={Boolean(session)} /></div>
       </article>;
     }))}</div>
   </section>;
