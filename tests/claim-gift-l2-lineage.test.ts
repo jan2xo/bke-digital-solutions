@@ -38,14 +38,14 @@ describe("Claim Code gift account-product L2 boundary", () => {
 
   it("uses the real database and real redemption service, not a fake source-right fixture", () => {
     expect(integration).toContain("consumeClaimCode(tx, {");
-    expect(integration).toContain('fulfillmentMode: "CLAIM_CODE"');
+    expect(integration).toContain("UPDATE \"Order\" SET \"fulfillmentMode\" = 'CLAIM_CODE'");
     expect(integration).toContain("readAccountProductLeaseEvidenceInTransaction");
     expect(integration).toContain('plan: "perpetual"');
     expect(integration).toContain('status: "eligible"');
     expect(integration).toContain('evidence(purchaserAccountId');
     expect(integration).toContain('evidence(unrelatedAccountId');
     expect(integration).toContain('code: "ALREADY_CLAIMED"');
-    expect(integration).toContain('status[0]?.status).toBe("REVOKED")');
+    expect(integration).toContain('UPDATE "Entitlement" SET "status" = \'REVOKED\'');
     expect(integration).toContain('status: "PENDING"');
   });
 

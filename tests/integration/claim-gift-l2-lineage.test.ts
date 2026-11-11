@@ -46,7 +46,6 @@ describe("one-unit cross-account Claim Code L2 source authority (real PostgreSQL
         number: `BKE-GIFT-L2-${randomUUID()}`,
         accountId: input.purchaserAccountId,
         status: input.status,
-        fulfillmentMode: "CLAIM_CODE",
         currency: "PHP",
         subtotalMinor: priceMinor,
         taxMinor: 0,
@@ -75,6 +74,10 @@ describe("one-unit cross-account Claim Code L2 source authority (real PostgreSQL
       },
       include: { items: true },
     });
+    // Prisma Order model predates the migration-owned fulfillmentMode.
+    await db.$executeRaw`
+      UPDATE "Order" SET "fulfillmentMode" = 'CLAIM_CODE' WHERE "id" = ${giftOrder.id}
+    `;
     const item = giftOrder.items[0]!;
     const code = generateClaimCode();
     const codeId = randomUUID();
