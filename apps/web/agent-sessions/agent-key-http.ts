@@ -27,6 +27,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const B64URL = /^[A-Za-z0-9_-]+$/;
 const enrollSchema = z.object({
   public_key_pem: z.string().min(60).max(4096),
+  // Separate original Agent-held device authorization secret, not the bearer.
+  device_code: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
 }).strict();
 const verifySchema = z.object({
   challenge_id: z.string().regex(UUID),
@@ -145,6 +147,7 @@ export async function agentKeyHttp(request: Request, operation: AgentKeyHttpOper
           accessToken: bearer,
           pepper,
           publicKeyPem: parsed.data.public_key_pem,
+          deviceCode: parsed.data.device_code,
         }),
         { isolationLevel: "Serializable" },
       );
