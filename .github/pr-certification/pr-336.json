@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 336,
+  "intent": "Certify exact-main protected code-only Worker production promotion of already-merged Pricing navigation removal and accessible outlined Explore arrow CTA with no runtime, database, auth, or payment changes",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "host"
+  ],
+  "testFiles": [
+    "tests/public-navigation-reconciliation.test.ts",
+    "tests/public-site-content.test.ts",
+    "tests/workers-smoke-retry-policy.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}
