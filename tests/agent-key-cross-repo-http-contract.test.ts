@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 const suite = readFileSync("tests/integration/agent-key-cross-repo-live-http.test.ts", "utf8");
 describe("immutable cross-repo Agent to actual DS HTTPS route certification", () => {
   it("pins immutable public Agent source, not HEAD/main or moving PR", () => {
-    expect(suite).toContain('AGENT_EXACT_SHA = "31b8fe9fdf3c80de0ab76622ee9bbef3ebc69f0d"');
+    expect(suite).toContain('AGENT_EXACT_SHA = "8135b6673bd6800bd0d30e29b623439a43bac6d3"');
     expect(suite).toContain('git(["-C", agentRoot, "rev-parse", "HEAD"])');
     expect(suite).toContain("expect(fetched).toBe(AGENT_EXACT_SHA)");
   });
@@ -24,6 +24,13 @@ describe("immutable cross-repo Agent to actual DS HTTPS route certification", ()
       "BKE_CROSS_REPO_BEARER",
       "BKE_CROSS_REPO_DEVICE_CODE",
     ]) expect(suite).toContain(x);
+    expect(suite).toContain('["EdDSA", "ES256"] as const');
+    expect(suite).toContain("BKE_CROSS_REPO_SIGNER_ALGORITHM");
+    // Real DS route must carry the database-owned algorithm into authenticated status.
+    const adapter = readFileSync("apps/web/agent-sessions/agent-key-http.ts", "utf8");
+    expect(adapter).toContain("key_algorithm: result.keyAlgorithm");
+    expect(adapter).not.toContain("key_algorithm: parsed.data");
+    expect(suite).toContain("8 assertions; algorithm=");
     expect(suite).not.toContain("vitest.skip");
     expect(suite).not.toContain("it.skip");
     expect(suite).not.toContain("describe.skip");

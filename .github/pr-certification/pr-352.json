@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pr": 352,
-  "intent": "Authenticated Agent bearer alone cannot enroll an Ed25519 software key; separate original approved consumed device-code/native-handoff possession must match DS session; pending same-key challenge retry and no terminal re-registration; Windows DPAPI + pinned real cross-process HTTPS",
+  "intent": "Original device/native handoff secret jointly required with valid bearer for EdDSA/ES256 first enrollment; same SPKI+algorithm pending retry; disposable real HTTPS + PostgreSQL",
   "requiredTargets": [
     "pr",
     "core",

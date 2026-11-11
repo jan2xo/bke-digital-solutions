@@ -21,16 +21,17 @@ describe("machine-key first-enrollment device authorization provenance", () => {
     expect(authority).toContain("'DEVICE_CODE','NATIVE_HANDOFF'");
     expect(authority).toContain("previous.status !== \"PENDING\"");
     expect(authority).toContain("previous.keyThumbprint !== pub.thumbprint");
+    expect(authority).toContain("previous.keyAlgorithm !== pub.algorithm");
     expect(authority).toContain('WHERE "sessionId" =');
     expect(pg).toContain('native handoff requires its independently issued device code');
     expect(pg).toContain('rejects bearer-only theft');
     expect(pg).toContain('PENDING_RETRY_FAILED');
   });
   it("pins live HTTPS test to Agent's exact protected secret consumer SHA", () => {
-    expect(agentCross).toContain('31b8fe9fdf3c80de0ab76622ee9bbef3ebc69f0d');
+    expect(agentCross).toContain('8135b6673bd6800bd0d30e29b623439a43bac6d3');
     expect(agentCross).toContain("hashAgentDeviceCode(deviceCode, pepper)");
     expect(agentCross).toContain("BKE_CROSS_REPO_DEVICE_CODE");
-    expect(agentCross).toContain('expect(result.stdout).toContain("8 assertions")');
+    expect(agentCross).toContain('expect(result.stdout).toContain("8 assertions; algorithm=" + algorithm)');
   });
   it("does not add secret-bearing response or key issue privilege", () => {
     const body = adapter.slice(adapter.indexOf('if (operation === "enroll")'),

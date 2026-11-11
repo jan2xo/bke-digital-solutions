@@ -11,3 +11,8 @@ Upstream SHA: `408f00f70e0c2fe9777f61bc1f33479eb9d292a8` and master checkpoint h
 **Cross-repo proof:** pin exact DS/Agent source SHA; run actual disposable DS PostgreSQL and HTTPS route with isolated test signer plus Windows real DPAPI regression. No product/Launcher/installer/UTM/real providers/release/production. Not required: Commerce/Payments/PayMongo/Resend; JWS issuer; signing/package publication.
 
 **Lock:** DRAFT/no merge/production locked until upstream dependencies and integrated installation risk reviewed. A thief with BOTH bearer+device code or local DPAPI compromise is not mitigated; no hardware nonexportability is claimed.
+
+
+## Algorithm-neutral convergence (2026-11-12 PHT)
+
+Exact parent DS #350 `58a708cacf77becb8345842cb18590b514af83b0`; pinned Agent #126 `8135b6673bd6800bd0d30e29b623439a43bac6d3`. Original 32-byte device/native-handoff code is checked against consumed authorization belonging to the same user, account, device and session. EdDSA (DEVICE_CODE) and ES256 64-byte P1363 (NATIVE_HANDOFF) each traverse actual DS HTTPS/PG in separate disposable .NET processes. Pending retry only same canonical SPKI, thumbprint and algorithm; ACTIVE/REVOKED cannot silently re-register. No hardware TPM, installed runtime or deployed production proof.

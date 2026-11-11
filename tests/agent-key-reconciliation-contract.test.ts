@@ -11,6 +11,8 @@ describe("DS Agent key status reconciliation security ownership", () => {
     expect(authority).toContain("key.accountId !== session.accountId");
     expect(authority).toContain("key.userId !== session.userId");
     expect(authority).toContain("key.deviceId !== session.deviceId");
+    expect(authority).toContain('"keyAlgorithm"');
+    expect(authority).toContain("keyAlgorithm: key.keyAlgorithm");
     expect(authority).toContain("if (rows.length > 1)");
     expect(authority).not.toContain("INSERT INTO");
     expect(authority).not.toContain("issueAccountProductLeaseJws");

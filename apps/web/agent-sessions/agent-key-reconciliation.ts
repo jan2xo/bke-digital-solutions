@@ -5,7 +5,8 @@ import { authenticateAgentAccessToken } from "./device-authorization";
 /** Session-owned metadata recovery: not proof of possession or lease rights. */
 type Row = {
   id: string; sessionId: string; accountId: string; userId: string; deviceId: string;
-  keyThumbprint: string; status: "PENDING" | "ACTIVE" | "REVOKED"; validUntil: Date;
+  keyThumbprint: string; keyAlgorithm: "EdDSA" | "ES256";
+  status: "PENDING" | "ACTIVE" | "REVOKED"; validUntil: Date;
 };
 export async function readAgentKeyRegistrationState(
   tx: Prisma.TransactionClient,
@@ -19,14 +20,14 @@ export async function readAgentKeyRegistrationState(
   const rows = input.registrationId
     ? await tx.$queryRaw<Row[]>`
         SELECT "id","sessionId","accountId","userId","deviceId",
-               "keyThumbprint","status","validUntil"
+               "keyThumbprint","keyAlgorithm","status","validUntil"
         FROM "AgentLeaseKeyRegistration"
         WHERE "id" = ${input.registrationId} AND "sessionId" = ${session.sessionId}
         LIMIT 2
       `
     : await tx.$queryRaw<Row[]>`
         SELECT "id","sessionId","accountId","userId","deviceId",
-               "keyThumbprint","status","validUntil"
+               "keyThumbprint","keyAlgorithm","status","validUntil"
         FROM "AgentLeaseKeyRegistration"
         WHERE "sessionId" = ${session.sessionId} AND "status" IN ('PENDING','ACTIVE')
         ORDER BY "createdAt" DESC, "id" DESC
@@ -42,6 +43,9 @@ export async function readAgentKeyRegistrationState(
   return {
     status: "registration" as const,
     registrationId: key.id, keyThumbprint: key.keyThumbprint,
+    // This is the persisted algorithm proven by the DS key enrollment authority.
+    // P-256 alone is NOT evidence of remotely attested TPM hardware.
+    keyAlgorithm: key.keyAlgorithm,
     keyProtection: "software" as const,
     registrationState: key.status === "REVOKED" ? "revoked" as const :
       key.validUntil <= now ? "expired" as const :

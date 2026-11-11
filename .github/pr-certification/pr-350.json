@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pr": 350,
-  "intent": "Actual DS Ed25519 key routes over disposable localhost HTTPS + real PG verified by separate exact-SHA .NET Agent transport process with isolated ephemeral test signer; no installed Windows or production",
+  "intent": "Actual DS EdDSA/ES256 key enrollment/status/revoke over disposable localhost HTTPS and real PostgreSQL verified by separate exact-SHA .NET Agent software signer; ES256 is 64-byte P1363, no physical TPM or deployed instance proof.",
   "requiredTargets": [
     "pr",
     "core",
