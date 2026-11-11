@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = PUBLIC_SITEMAP_PATHS.map((path) => ({
     url: new URL(path, PUBLIC_SITE_ORIGIN).toString(),
-    changeFrequency: path === "/" ? "weekly" : "monthly",
+    changeFrequency: path === "/" ? ("weekly" as const) : ("monthly" as const),
     priority: path === "/" ? 1 : path === "/products" ? 0.9 : 0.5,
   }));
 
