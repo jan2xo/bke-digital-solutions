@@ -216,6 +216,24 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     expect(await registrationState(accessToken, randomUUID())).toEqual({ status: "none" });
   });
 
+  it("native handoff requires its independently issued device code as well", async () => {
+    const ownKey = k2.publicKey.export({ type: "spki", format: "pem" }).toString();
+    const native = await begin(foreignDeviceCode, foreignToken, ownKey);
+    expect(native.status).toBe("challenge");
+    if (native.status !== "challenge") throw Error("NATIVE_HANDOFF_ENROLL_FAILED");
+    const proof = signFor(native, k2.privateKey);
+    expect(await verifyProof(native, proof, foreignToken)).toEqual({
+      status: "enrolled", registrationId: native.registrationId,
+    });
+    expect(await registrationState(foreignToken, native.registrationId)).toMatchObject({
+      status: "registration", registrationState: "active",
+    });
+    expect(await registrationState(accessToken, native.registrationId)).toEqual({ status: "none" });
+    expect(await db.$transaction(tx => revokeAgentLeaseKey(tx, {
+      accessToken: foreignToken, pepper, registrationId: native.registrationId,
+    }), { isolationLevel: "Serializable" })).toEqual({ status: "revoked" });
+  });
+
   it("does not let another valid Agent bearer token consume this challenge", async () => {
     expect(await verifyProof(enrollment, signFor(enrollment), foreignToken)).toEqual({
       status: "denied", reason: "INVALID_CHALLENGE",
