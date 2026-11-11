@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pr": 341,
+  "intent": "Certify fail-closed DS Agent-session account-product execution-lease eligibility from active durable entitlements, matching license/claim source, assigned organization seat and paid/trial/perpetual end dates, without signing, API route, or production keys",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "entitlements",
+    "native-account"
+  ],
+  "testFiles": [
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/v3-agent-software-catalog-contract.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts",
+    "tests/entitlement-refund-revocation.test.ts"
+  ]
+}
