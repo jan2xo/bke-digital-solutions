@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 342,
+  "intent": "Atomically grant a seven-day trial Entitlement from its zero-cost PAID trial order/license and terminally revoke its source-linked right without grace-based execution extension, preserving trial concurrency and Agent catalog authorization",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "entitlements",
+    "licensing",
+    "catalog",
+    "native-account"
+  ],
+  "testFiles": [
+    "tests/trial-durable-right-parity.test.ts",
+    "tests/trials-adoption-parity.test.ts",
+    "tests/v3-agent-software-catalog-contract.test.ts",
+    "tests/entitlement-refund-revocation.test.ts"
+  ]
+}

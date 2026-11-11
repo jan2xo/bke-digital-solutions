@@ -9,6 +9,10 @@ import {
   validateTrialGraceDays,
 } from "@bke/trials/logic/trial-policy";
 import { db } from "@/platform/host/db";
+import {
+  grantTrialDurableRight,
+  revokeTrialDurableRight,
+} from "@/apps/web/entitlements/trial-durable-right";
 import { encryptLicenseKey, generateLicenseKey, hashLicenseKey, randomToken } from "@/platform/host/security/crypto";
 
 const trialFeaturesSchema = z.array(z.string());
@@ -34,6 +38,7 @@ export async function grantProductTrial(input: {
 
       const account = await tx.customerAccount.findUnique({ where: { id: input.accountId } });
       if (!account) throw new Error("NOT_FOUND");
+      if (account.lifecycleState !== "ACTIVE") throw new Error("ACCOUNT_NOT_ACTIVE");
 
       const plan = createTrialGrantPlan({
         source: input.source,
@@ -147,6 +152,22 @@ export async function grantProductTrial(input: {
         },
       });
 
+      await grantTrialDurableRight(tx, {
+        accountId: account.id,
+        productId: edition.productId,
+        editionId: edition.id,
+        orderId: order.id,
+        orderItemId: order.items[0]!.id,
+        trialId: trial.id,
+        licenseId: license.id,
+        source: plan.source,
+        startsAt: plan.trialStartsAt,
+        endsAt: plan.trialEndsAt,
+        features: plan.entitlement.features,
+        maxUsers: plan.entitlement.maxUsers,
+        maxDevicesPerUser: plan.entitlement.maxDevicesPerUser,
+      });
+
       await tx.auditLog.create({
         data: {
           actorId: input.actorId,
@@ -197,6 +218,7 @@ export async function changeTrial(input: {
       now,
     });
 
+    let entitlementRevocation: "revoked" | "already_revoked" | "legacy_absent" | null = null;
     if (plan.action === "REVOKE") {
       if (plan.noop) return trial;
       await tx.trialGrant.update({ where: { id: trial.id }, data: { revokedAt: now } });
@@ -212,6 +234,19 @@ export async function changeTrial(input: {
           status: plan.licenseStatus,
           events: { create: { type: plan.licenseEventType, metadata: { actorId: input.actorId } } },
         },
+      });
+      const license = await tx.license.findUniqueOrThrow({
+        where: { id: trial.licenseId },
+        select: { orderId: true, orderItemId: true },
+      });
+      entitlementRevocation = await revokeTrialDurableRight(tx, {
+        orderId: license.orderId,
+        orderItemId: license.orderItemId,
+        accountId: trial.accountId,
+        editionId: trial.editionId,
+        trialId: trial.id,
+        actorId: input.actorId,
+        revokedAt: now,
       });
     } else {
       await tx.trialGrant.update({ where: { id: trial.id }, data: { graceEndsAt: plan.graceEndsAt } });
@@ -237,7 +272,9 @@ export async function changeTrial(input: {
         action: plan.auditAction,
         targetType: "TrialGrant",
         targetId: trial.id,
-        metadata: plan.action === "SET_GRACE" ? { graceDays: plan.graceDays } : {},
+        metadata: plan.action === "SET_GRACE"
+          ? { graceDays: plan.graceDays }
+          : { durableRightRevocation: entitlementRevocation },
       },
     });
 
