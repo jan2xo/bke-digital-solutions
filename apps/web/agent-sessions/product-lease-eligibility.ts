@@ -132,6 +132,9 @@ export async function readAccountProductLeaseEvidenceInTransaction(
        AND claim."claimedToAccountId" = ca."id"
        AND claim."orderItemId" = l."orderItemId"
        AND claim."productId" = p."id"
+       AND claim."orderId" = l."orderId"
+       AND claim."purchaserAccountId" = sourceOrder."accountId"
+       AND sourceOrder."fulfillmentMode" = 'CLAIM_CODE'
       LEFT JOIN "Subscription" s ON s."id" = l."subscriptionId"
       LEFT JOIN "TrialGrant" tg ON tg."licenseId" = l."id"
       LEFT JOIN "Edition" licenseEdition
