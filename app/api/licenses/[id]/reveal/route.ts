@@ -27,7 +27,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     });
     if (!license) throw new Error("NOT_FOUND");
     const modes = await db.$queryRaw<Array<{ activationMode: string }>>`
-      SELECT "activationMode" FROM "Product" WHERE "id" = ${license.productId}
+      SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+        FROM "Product" p
+        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+       WHERE p."id" = ${license.productId}
     `;
     if (modes.length !== 1 ||
         !allowsProductActivation(modes[0]!.activationMode, "LICENSE_KEY"))
