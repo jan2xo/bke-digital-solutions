@@ -33,9 +33,9 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
     });
     created.push(p.id);
     const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
-      SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+      SELECT policy."activationMode" AS "activationMode"
         FROM "Product" p
-        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+        JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
        WHERE p."id" = ${p.id}
     `;
     expect(rows[0]?.activationMode).toBe("EITHER");
@@ -60,13 +60,13 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
       });
       created.push(p.id);
       await db.$executeRaw`
-        INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
-        VALUES (${p.id}, ${mode})
+        UPDATE "ProductActivationPolicy" SET "activationMode" = ${mode}
+         WHERE "productId" = ${p.id}
       `;
       const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
-        SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+        SELECT policy."activationMode" AS "activationMode"
           FROM "Product" p
-          LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+          JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
          WHERE p."id" = ${p.id}
       `;
       const loaded = await db.product.findUniqueOrThrow({ where: { id: p.id } });
@@ -80,13 +80,13 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
   it("database CHECK constraint rejects a fabricated activation credential mode", async () => {
     const id = created[0]!;
     await expect(db.$executeRaw`
-      INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
-      VALUES (${id}, 'GOOGLE_ONLY')
+      UPDATE "ProductActivationPolicy" SET "activationMode" = 'GOOGLE_ONLY'
+       WHERE "productId" = ${id}
     `).rejects.toThrow();
     const original = await db.$queryRaw<Array<{ activationMode: string }>>`
-      SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+      SELECT policy."activationMode" AS "activationMode"
         FROM "Product" p
-        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+        JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
        WHERE p."id" = ${id}
     `;
     expect(original[0]?.activationMode).toBe("EITHER");
