@@ -18,6 +18,7 @@ describe("V3 Agent software catalog contract", () => {
       productId: "render-dock",
       displayName: "Render Dock",
       summary: "Render software",
+      activationMode: "EITHER",
       executionType: null,
       latestVersion: "1.0.0",
       entitled: true,
@@ -27,6 +28,7 @@ describe("V3 Agent software catalog contract", () => {
       productId: "render-dock",
       displayName: "Render Dock",
       summary: "Render software",
+      activationMode: "EITHER",
       executionType: "STANDALONE",
       latestVersion: null,
       entitled: true,
@@ -36,6 +38,7 @@ describe("V3 Agent software catalog contract", () => {
       productId: "render-dock",
       displayName: "Render Dock",
       summary: "Render software",
+      activationMode: "EITHER",
       executionType: "STANDALONE",
       latestVersion: "1.0.0",
       entitled: false,
@@ -45,6 +48,7 @@ describe("V3 Agent software catalog contract", () => {
       productId: "render-dock",
       displayName: "Render Dock",
       summary: "Render software",
+      activationMode: "EITHER",
       executionType: "STANDALONE",
       latestVersion: "1.0.0",
       entitled: true,
@@ -161,10 +165,12 @@ describe("V3 Agent software catalog contract", () => {
       productId: "bke-trial-product",
       displayName: "BKE Demo App",
       summary: "Bundled Launcher plugin",
+      activationMode: "EITHER",
       executionType: "LAUNCHER_PLUGIN",
       latestVersion: "2.0.0",
       entitled: true,
     })).toMatchObject({
+      activationMode: "EITHER",
       executionType: "LAUNCHER_PLUGIN",
       entitled: true,
       installable: true,
@@ -176,12 +182,51 @@ describe("V3 Agent software catalog contract", () => {
       productId: "future-product",
       displayName: "Future Product",
       summary: "Future software",
+      activationMode: "EITHER",
       executionType: "AUTO",
       latestVersion: "1.0.0",
       entitled: true,
     })).toMatchObject({
+      activationMode: "EITHER",
       executionType: null,
       installable: false,
     });
   });
+  it("projects SQL-owned activation mode without turning account entitlement into key-only authorization", () => {
+    const base = {
+      productId: "render-dock",
+      displayName: "Render Dock",
+      summary: "Render software",
+      executionType: "STANDALONE",
+      entitled: true,
+      latestVersion: "1.0.0",
+    };
+    expect(projectAgentSoftwareCatalogRow({
+      ...base, activationMode: "ACCOUNT",
+    })).toMatchObject({ activationMode: "ACCOUNT", entitled: true, installable: true });
+    expect(projectAgentSoftwareCatalogRow({
+      ...base, activationMode: "EITHER",
+    })).toMatchObject({ activationMode: "EITHER", entitled: true, installable: true });
+    expect(projectAgentSoftwareCatalogRow({
+      ...base, activationMode: "LICENSE_KEY",
+    })).toMatchObject({ activationMode: "LICENSE_KEY", entitled: true, installable: false });
+
+    expect(() => projectAgentSoftwareCatalogRow({
+      ...base, activationMode: "UNKNOWN",
+    })).toThrow("PRODUCT_ACTIVATION_MODE_INVALID");
+    expect(() => projectAgentSoftwareCatalogRow({
+      ...base, activationMode: undefined as unknown as string,
+    })).toThrow("PRODUCT_ACTIVATION_MODE_INVALID");
+  });
+
+  it("requires persisted mode on every SQL catalog row and never defaults missing policy to EITHER", () => {
+    const catalog = readFileSync("apps/web/catalog/agent-software-catalog.ts", "utf8");
+    const route = readFileSync("app/api/agent-sessions/catalog/route.ts", "utf8");
+    expect(catalog).toContain('INNER JOIN "ProductActivationPolicy" policy');
+    expect(catalog).toContain('policy."activationMode" AS "activationMode"');
+    expect(catalog).toContain('allowsProductActivation(activationMode, "ACCOUNT")');
+    expect(route).toContain('activation_mode: product.activationMode');
+    expect(catalog).not.toContain('COALESCE(policy."activationMode"');
+  });
+
 });
