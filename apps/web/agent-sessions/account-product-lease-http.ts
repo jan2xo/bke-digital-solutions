@@ -49,6 +49,9 @@ function response(data: unknown, status = 200) {
  */
 export async function agentAccountProductLeaseHttp(request: Request, operation: Operation) {
   try {
+    // An invalid production config must still yield 404, not an issuer error.
+    if (process.env.DEPLOYMENT_ENV === "production")
+      return response({ error: "NOT_FOUND" }, 404);
     const runtime = getRuntimeEnvironment();
     if (runtime.DEPLOYMENT_ENV === "production" ||
         !runtime.AGENT_ACCOUNT_SESSION_ENABLED ||
