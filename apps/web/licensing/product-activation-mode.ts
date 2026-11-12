@@ -2,7 +2,7 @@
  * Digital Solutions is the source of truth for how a product may activate.
  *
  * Product.licenseType describes the commercial license classification. Never
- * overload it with account sign-in policy. Product.activationMode is distinct.
+ * overload it with account sign-in policy. ProductActivationPolicy.activationMode is a distinct SQL-owned credential mode.
  *
  * EITHER is the migration-safe default: legacy key activations and existing
  * BKE account entitlements both remain eligible for their *own* trust checks.
