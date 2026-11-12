@@ -77,6 +77,33 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
     }
   });
 
+  it("remembers publication permanently even after an unpublish operation", async () => {
+    const id = created[0]!;
+    await db.product.update({
+      where: { id }, data: { active: true, publishedAt: new Date() },
+    });
+    await db.product.update({
+      where: { id }, data: { active: false, publishedAt: null },
+    });
+    const rows = await db.$queryRaw<Array<{
+      activationMode: string;
+      publishedEver: boolean;
+    }>>`
+      SELECT "activationMode", "publishedEver"
+        FROM "ProductActivationPolicy" WHERE "productId" = ${id}
+    `;
+    expect(rows).toEqual([{ activationMode: "EITHER", publishedEver: true }]);
+  });
+
+  it("backfills and creates policy for every disposable product", async () => {
+    const rows = await db.$queryRaw<Array<{ missing: bigint }>>`
+      SELECT COUNT(*) AS "missing" FROM "Product" p
+      LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+      WHERE policy."productId" IS NULL
+    `;
+    expect(rows[0]?.missing).toBe(0n);
+  });
+
   it("database CHECK constraint rejects a fabricated activation credential mode", async () => {
     const id = created[0]!;
     await expect(db.$executeRaw`
