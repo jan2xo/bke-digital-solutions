@@ -1,10 +1,10 @@
 import "dotenv/config";
-import { randomUUID, generateKeyPairSync, sign, verify } from "node:crypto";
+import { randomUUID, randomBytes, generateKeyPairSync, sign, verify } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../platform/host/generated/prisma/client";
-import { hashAgentAccessToken } from "@/apps/web/agent-sessions/material";
+import { hashAgentAccessToken, hashAgentDeviceCode } from "@/apps/web/agent-sessions/material";
 import {
   beginAgentKeyEnrollment,
   beginAgentLeaseKeyChallenge,
@@ -33,12 +33,14 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
   let sessionId = "", accountId = "", userId = "", deviceId = "";
   let foreignAccountId = "", foreignSessionId = "", foreignUserId = "";
   let accessToken = "", foreignToken = "", registrationId = "";
+  let deviceCode = "", foreignDeviceCode = "";
   let enrollment: KeyProofChallenge;
 
-  async function seedSession(user: string, account: string) {
+  async function seedSession(user: string, account: string, kind: "DEVICE_CODE" | "NATIVE_HANDOFF" = "DEVICE_CODE") {
     const id = randomUUID(), authId = randomUUID();
     const deviceId = `bke-device-test-${randomUUID()}`;
     const token = `bke-access-test-${randomUUID()}`;
+    const code = randomBytes(32).toString("base64url");
     const at = new Date(), accessExpiry = new Date(at.getTime() + 15 * 60_000);
     const refreshExpiry = new Date(at.getTime() + 30 * 24 * 60 * 60_000);
     await db.$executeRaw`
@@ -46,11 +48,11 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
         "id", "deviceCodeHash", "userCodeHash", "deviceId", "platform",
         "architecture", "status", "expiresAt", "pollIntervalSeconds",
         "approvedByUserId", "approvedAccountId", "approvedAt", "consumedAt",
-        "handoffExpiresAt", "sessionId"
+        "handoffExpiresAt", "sessionId", "authorizationKind"
       ) VALUES (
-        ${authId}, ${randomUUID()}, ${randomUUID()}, ${deviceId},
+        ${authId}, ${hashAgentDeviceCode(code, pepper)}, ${randomUUID()}, ${deviceId},
         'windows', 'x64', 'CONSUMED', ${accessExpiry}, 5,
-        ${user}, ${account}, ${at}, ${at}, ${accessExpiry}, ${id}
+        ${user}, ${account}, ${at}, ${at}, ${accessExpiry}, ${id}, ${kind}
       )
     `;
     await db.$executeRaw`
@@ -62,7 +64,7 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
         ${hashAgentAccessToken(token, pepper)}, ${accessExpiry}, ${refreshExpiry}
       )
     `;
-    return { id, token, deviceId };
+    return { id, token, deviceId, code };
   }
 
   beforeAll(async () => {
@@ -88,10 +90,12 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     foreignUserId = foreign.id;
 
     const own = await seedSession(userId, accountId);
-    const other = await seedSession(foreign.id, foreignAccountId);
+    const other = await seedSession(foreign.id, foreignAccountId, "NATIVE_HANDOFF");
     sessionId = own.id;
     accessToken = own.token;
     deviceId = own.deviceId;
+    deviceCode = own.code;
+    foreignDeviceCode = other.code;
     foreignToken = other.token;
     foreignSessionId = other.id;
   });
@@ -102,9 +106,9 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
       accessToken: token, pepper, registrationId: id,
     }), { isolationLevel: "Serializable" });
   }
-  async function begin() {
+  async function begin(code = deviceCode, token = accessToken, keyPem = publicPem) {
     return db.$transaction(tx => beginAgentKeyEnrollment(tx, {
-      accessToken, pepper, publicKeyPem: publicPem,
+      accessToken: token, pepper, publicKeyPem: keyPem, deviceCode: code,
     }), { isolationLevel: "Serializable" });
   }
   async function lease(productId = "render-dock", action: "OPEN" | "USE" = "OPEN") {
@@ -137,16 +141,31 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
 
   it("refuses no bearer authority and RSA source keys before persistence", async () => {
     const noToken = await db.$transaction(tx => beginAgentKeyEnrollment(tx, {
-      accessToken: "invalid-agent-token", pepper, publicKeyPem: publicPem,
+      accessToken: "invalid-agent-token", pepper, publicKeyPem: publicPem, deviceCode,
     }), { isolationLevel: "Serializable" });
     expect(noToken).toEqual({ status: "denied", reason: "INVALID_TOKEN" });
     const rsa = generateKeyPairSync("rsa", { modulusLength: 2048 })
       .publicKey.export({ type: "spki", format: "pem" }).toString();
     expect(await db.$transaction(tx => beginAgentKeyEnrollment(tx, {
-      accessToken, pepper, publicKeyPem: rsa,
+      accessToken, pepper, publicKeyPem: rsa, deviceCode,
     }), { isolationLevel: "Serializable" })).toEqual({
       status: "denied", reason: "INVALID_KEY",
     });
+  });
+
+  it("rejects bearer-only theft, wrong handoff code and cross-session proof before persistence", async () => {
+    for (const code of ["", "bad-code", foreignDeviceCode]) {
+      expect(await begin(code)).toEqual({
+        status: "denied", reason: "DEVICE_PROOF_REQUIRED",
+      });
+    }
+    expect(await begin(deviceCode, foreignToken)).toEqual({
+      status: "denied", reason: "DEVICE_PROOF_REQUIRED",
+    });
+    const existing = await db.$queryRaw<Array<{ id: string }>>`
+      SELECT "id" FROM "AgentLeaseKeyRegistration" WHERE "sessionId" = ${sessionId}
+    `;
+    expect(existing).toHaveLength(0);
   });
 
   it("creates PENDING key and unpredictable, single-use server nonce for true authenticated session", async () => {
@@ -174,7 +193,18 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     expect(message).toContain(deviceId);
     expect(message).toContain("\nENROLL\n");
     expect(message.split("\n").at(-1)).toMatch(/^[A-Za-z0-9_-]{43}$/);
-    expect(await begin()).toEqual({ status: "denied", reason: "REGISTRATION_CONFLICT" });
+    const restarted = await begin();
+    expect(restarted.status).toBe("challenge");
+    if (restarted.status !== "challenge") throw Error("PENDING_RETRY_FAILED");
+    expect(restarted.registrationId).toBe(registrationId);
+    expect(restarted.challengeId).not.toBe(enrollment.challengeId);
+    expect(await verifyProof(enrollment)).toEqual({
+      status: "denied", reason: "INVALID_CHALLENGE",
+    });
+    enrollment = restarted;
+    const changedKey = k2.publicKey.export({ type: "spki", format: "pem" }).toString();
+    expect(await begin(deviceCode, accessToken, changedKey))
+      .toEqual({ status: "denied", reason: "REGISTRATION_CONFLICT" });
   });
 
   it("reconciles pending registration within exact authenticated session", async () => {
@@ -186,6 +216,23 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     expect(await registrationState("invalid-token", registrationId))
       .toEqual({ status: "denied", reason: "INVALID_TOKEN" });
     expect(await registrationState(accessToken, randomUUID())).toEqual({ status: "none" });
+  });
+
+  it("native handoff requires its independently issued device code", async () => {
+    const native = await seedSession(userId, accountId, "NATIVE_HANDOFF");
+    const key = k2.publicKey.export({ type: "spki", format: "pem" }).toString();
+    const enrolled = await begin(native.code, native.token, key);
+    expect(enrolled.status).toBe("challenge");
+    if (enrolled.status !== "challenge") throw Error("NATIVE_HANDOFF_ENROLL_FAILED");
+    expect(await verifyProof(enrolled, signFor(enrolled, k2.privateKey), native.token)).toEqual({
+      status: "enrolled", registrationId: enrolled.registrationId,
+    });
+    expect(await registrationState(native.token, enrolled.registrationId)).toMatchObject({
+      status: "registration", registrationState: "active", keyAlgorithm: "EdDSA",
+    });
+    expect(await db.$transaction(tx => revokeAgentLeaseKey(tx, {
+      accessToken: native.token, pepper, registrationId: enrolled.registrationId,
+    }), { isolationLevel: "Serializable" })).toEqual({ status: "revoked" });
   });
 
   it("does not let another valid Agent bearer token consume this challenge", async () => {
@@ -211,6 +258,7 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
        WHERE "id" = ${registrationId}
     `;
     expect(row[0]?.status).toBe("ACTIVE");
+    expect(await begin()).toEqual({ status: "denied", reason: "REGISTRATION_CONFLICT" });
     expect(row[0]?.activatedAt).not.toBeNull();
     expect(await db.auditLog.count({
       where: { targetId: registrationId, action: "AGENT_LEASE_KEY_ENROLLED" },
@@ -333,12 +381,12 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
     const wrongCurve = generateKeyPairSync("ec", { namedCurve: "secp384r1" })
       .publicKey.export({ type: "spki", format: "pem" }).toString();
     expect(await db.$transaction(tx => beginAgentKeyEnrollment(tx, {
-      accessToken: foreignToken, pepper, publicKeyPem: wrongCurve,
+      accessToken: foreignToken, pepper, publicKeyPem: wrongCurve, deviceCode: foreignDeviceCode,
     }), { isolationLevel: "Serializable" })).toEqual({
       status: "denied", reason: "INVALID_KEY",
     });
     const started = await db.$transaction(tx => beginAgentKeyEnrollment(tx, {
-      accessToken: foreignToken, pepper, publicKeyPem: p256PublicPem,
+      accessToken: foreignToken, pepper, publicKeyPem: p256PublicPem, deviceCode: foreignDeviceCode,
     }), { isolationLevel: "Serializable" });
     expect(started.status).toBe("challenge");
     if (started.status !== "challenge") throw Error("ES256_ENROLL_SETUP_FAILED");
@@ -428,6 +476,7 @@ describe("DS Agent machine-key nonce PoP authority (real PostgreSQL + Ed25519)",
        WHERE "id" = ${registrationId}
     `;
     expect(rows[0]?.status).toBe("REVOKED");
+    expect(await begin()).toEqual({ status: "denied", reason: "REGISTRATION_CONFLICT" });
     expect(await registrationState()).toEqual({ status: "none" });
     expect(await registrationState(accessToken, registrationId)).toMatchObject({
       status: "registration", registrationId, registrationState: "revoked",

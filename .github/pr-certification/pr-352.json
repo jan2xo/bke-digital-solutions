@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pr": 352,
+  "intent": "Original device/native handoff secret jointly required with valid bearer for EdDSA/ES256 first enrollment; same SPKI+algorithm pending retry; disposable real HTTPS + PostgreSQL",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-key-device-provenance-contract.test.ts",
+    "tests/agent-key-cross-repo-http-contract.test.ts",
+    "tests/agent-key-reconciliation-contract.test.ts",
+    "tests/agent-key-http-contract.test.ts",
+    "tests/agent-key-possession-authority.test.ts"
+  ]
+}
