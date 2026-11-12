@@ -24,10 +24,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           ],
         },
       },
-      include: { product: { select: { activationMode: true } } },
     });
     if (!license) throw new Error("NOT_FOUND");
-    if (!allowsProductActivation(license.product.activationMode, "LICENSE_KEY"))
+    const modes = await db.$queryRaw<Array<{ activationMode: string }>>`
+      SELECT "activationMode" FROM "Product" WHERE "id" = ${license.productId}
+    `;
+    if (modes.length !== 1 ||
+        !allowsProductActivation(modes[0]!.activationMode, "LICENSE_KEY"))
       return NextResponse.json({ error: "LICENSE_KEY_UNAVAILABLE" }, { status: 409 });
     if (!license.keyCiphertext) return NextResponse.json({ error: "LICENSE_KEY_UNAVAILABLE" }, { status: 409 });
 
