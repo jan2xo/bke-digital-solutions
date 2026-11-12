@@ -52,8 +52,10 @@ describe("transaction-bound product lease preparation audit — source only, no 
     const { tx, create } = transaction();
     const result = await prepareAndAuditProductLeaseInTransaction(tx, input, now);
     expect(result).toEqual({ status: "ready_to_sign", claims });
-    expect(gate).toHaveBeenCalledExactlyOnceWith(tx, input, now);
-    expect(create).toHaveBeenCalledExactlyOnceWith({
+    expect(gate).toHaveBeenCalledTimes(1);
+    expect(gate).toHaveBeenCalledWith(tx, input, now);
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create).toHaveBeenCalledWith({
       data: {
         actorId: "authenticated-user",
         accountId: "authenticated-account",
@@ -88,7 +90,8 @@ describe("transaction-bound product lease preparation audit — source only, no 
       const { tx, create } = transaction();
       const result = await prepareAndAuditProductLeaseInTransaction(tx, input, now);
       expect(result).toEqual({ status: "denied", reason });
-      expect(create).toHaveBeenCalledExactlyOnceWith({
+      expect(create).toHaveBeenCalledTimes(1);
+      expect(create).toHaveBeenCalledWith({
         data: {
           actorId: null,
           accountId: null,
