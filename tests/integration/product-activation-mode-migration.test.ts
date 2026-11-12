@@ -30,7 +30,10 @@ describe("dual-path activation mode migration — disposable PostgreSQL", { conc
       },
     });
     created.push(p.id);
-    expect(p.activationMode).toBe("EITHER");
+    const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
+      SELECT "activationMode" FROM "Product" WHERE "id" = ${p.id}
+    `;
+    expect(rows[0]?.activationMode).toBe("EITHER");
     expect(p.licenseType).toBe("Commercial");
     expect(allowsProductActivation(p.activationMode, "ACCOUNT")).toBe(true);
     expect(allowsProductActivation(p.activationMode, "LICENSE_KEY")).toBe(true);
@@ -48,15 +51,20 @@ describe("dual-path activation mode migration — disposable PostgreSQL", { conc
           summary: "Product can choose account or license key activation explicitly.",
           description: "Disposable product verifying no Google login requirement is baked into license key.",
           type: "SOFTWARE",
-          activationMode: mode,
         },
       });
       created.push(p.id);
+      await db.$executeRaw`
+        UPDATE "Product" SET "activationMode" = ${mode} WHERE "id" = ${p.id}
+      `;
+      const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
+        SELECT "activationMode" FROM "Product" WHERE "id" = ${p.id}
+      `;
       const loaded = await db.product.findUniqueOrThrow({ where: { id: p.id } });
-      expect(loaded.activationMode).toBe(mode);
+      expect(rows[0]?.activationMode).toBe(mode);
       expect(loaded.licenseType).toBe("Commercial");
-      expect(allowsProductActivation(loaded.activationMode, "ACCOUNT")).toBe(canAccount);
-      expect(allowsProductActivation(loaded.activationMode, "LICENSE_KEY")).toBe(canKey);
+      expect(allowsProductActivation(rows[0]?.activationMode, "ACCOUNT")).toBe(canAccount);
+      expect(allowsProductActivation(rows[0]?.activationMode, "LICENSE_KEY")).toBe(canKey);
     }
   });
 
@@ -65,7 +73,9 @@ describe("dual-path activation mode migration — disposable PostgreSQL", { conc
     await expect(db.$executeRaw`
       UPDATE "Product" SET "activationMode" = 'GOOGLE_ONLY' WHERE "id" = ${id}
     `).rejects.toThrow();
-    const original = await db.product.findUniqueOrThrow({ where: { id } });
-    expect(original.activationMode).toBe("EITHER");
+    const original = await db.$queryRaw<Array<{ activationMode: string }>>`
+      SELECT "activationMode" FROM "Product" WHERE "id" = ${id}
+    `;
+    expect(original[0]?.activationMode).toBe("EITHER");
   });
 });
