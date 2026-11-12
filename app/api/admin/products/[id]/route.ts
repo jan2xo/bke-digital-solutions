@@ -104,7 +104,6 @@ export async function PATCH(
       description: input.description,
       category: input.category,
       licenseType: input.licenseType,
-      activationMode: input.activationMode,
       featured: input.featured,
       imageKey: input.imageKey,
       tags: input.tags,
@@ -163,6 +162,12 @@ export async function PATCH(
         }
       }
       const updated = await tx.product.update({ where: { id }, data });
+      if (input.activationMode !== undefined) {
+        await tx.$executeRaw`
+          UPDATE "Product" SET "activationMode" = ${input.activationMode}
+           WHERE "id" = ${id}
+        `;
+      }
       if (input.launcherExecutionType !== undefined) {
         await tx.$executeRaw`
           UPDATE "Product"
@@ -176,9 +181,9 @@ export async function PATCH(
     });
 
     const executionRows = await db.$queryRaw<
-      Array<{ launcherExecutionType: "LAUNCHER_PLUGIN" | "STANDALONE" | null }>
+      Array<{ launcherExecutionType: "LAUNCHER_PLUGIN" | "STANDALONE" | null; activationMode: string }>
     >`
-      SELECT "launcherExecutionType"::text AS "launcherExecutionType"
+      SELECT "launcherExecutionType"::text AS "launcherExecutionType", "activationMode"
         FROM "Product"
        WHERE "id" = ${id}
        LIMIT 1
@@ -195,6 +200,7 @@ export async function PATCH(
     return NextResponse.json({
       ...product,
       launcherExecutionType: executionRows[0]?.launcherExecutionType ?? null,
+      activationMode: executionRows[0]?.activationMode ?? null,
     });
   } catch (error) {
     return apiError(error);
