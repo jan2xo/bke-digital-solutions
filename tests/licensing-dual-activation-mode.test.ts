@@ -102,8 +102,10 @@ describe("Digital Solutions dual-path product activation — signed lease policy
     expect(update).toContain("FOR UPDATE");
     expect(update).toContain("await tx.auditLog.create(");
     expect(update).toContain('action: "PRODUCT_ACTIVATION_MODE_CHANGED"');
-    expect(migration).toContain('DEFAULT \'EITHER\'');
-    expect(migration).toContain("Product_activationMode_supported_check");
+    expect(migration).toContain('CREATE TABLE "ProductActivationPolicy"');
+    expect(keyLease).toContain("COALESCE(policy.\"activationMode\", 'EITHER')");
+    expect(account).toContain("ProductActivationPolicy");
+    expect(migration).toContain("ProductActivationPolicy_mode_supported_check");
     expect(migration).not.toMatch(/\bDROP\s+TABLE\b|\bDELETE\s+FROM\b/i);
   });
 });
