@@ -120,7 +120,9 @@ function denied(reason: string) {
 export async function agentKeyHttp(request: Request, operation: AgentKeyHttpOperation) {
   try {
     const runtime = getRuntimeEnvironment();
-    if (!runtime.AGENT_ACCOUNT_SESSION_ENABLED) {
+    if (!runtime.AGENT_ACCOUNT_SESSION_ENABLED ||
+        !runtime.AGENT_KEY_HTTP_ENABLED ||
+        runtime.DEPLOYMENT_ENV === "production") {
       return response({ error: "NOT_FOUND" }, 404);
     }
     rejectBrowserOriginForAgent(request);
