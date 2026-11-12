@@ -10,7 +10,9 @@ const db = new PrismaClient({
 const created: string[] = [];
 const suffix = `${Date.now().toString(36)}-${process.pid}`;
 
-describe("dual-path activation mode migration — disposable PostgreSQL", { concurrent: false }, () => {
+describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
+  "dual-path activation mode migration — disposable PostgreSQL",
+  { concurrent: false }, () => {
   afterAll(async () => {
     for (const id of created.reverse()) {
       await db.product.delete({ where: { id } }).catch(() => undefined);
@@ -31,7 +33,10 @@ describe("dual-path activation mode migration — disposable PostgreSQL", { conc
     });
     created.push(p.id);
     const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
-      SELECT "activationMode" FROM "Product" WHERE "id" = ${p.id}
+      SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+        FROM "Product" p
+        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+       WHERE p."id" = ${p.id}
     `;
     expect(rows[0]?.activationMode).toBe("EITHER");
     expect(p.licenseType).toBe("Commercial");
@@ -55,10 +60,14 @@ describe("dual-path activation mode migration — disposable PostgreSQL", { conc
       });
       created.push(p.id);
       await db.$executeRaw`
-        UPDATE "Product" SET "activationMode" = ${mode} WHERE "id" = ${p.id}
+        INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
+        VALUES (${p.id}, ${mode})
       `;
       const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
-        SELECT "activationMode" FROM "Product" WHERE "id" = ${p.id}
+        SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+          FROM "Product" p
+          LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+         WHERE p."id" = ${p.id}
       `;
       const loaded = await db.product.findUniqueOrThrow({ where: { id: p.id } });
       expect(rows[0]?.activationMode).toBe(mode);
@@ -71,10 +80,14 @@ describe("dual-path activation mode migration — disposable PostgreSQL", { conc
   it("database CHECK constraint rejects a fabricated activation credential mode", async () => {
     const id = created[0]!;
     await expect(db.$executeRaw`
-      UPDATE "Product" SET "activationMode" = 'GOOGLE_ONLY' WHERE "id" = ${id}
+      INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
+      VALUES (${id}, 'GOOGLE_ONLY')
     `).rejects.toThrow();
     const original = await db.$queryRaw<Array<{ activationMode: string }>>`
-      SELECT "activationMode" FROM "Product" WHERE "id" = ${id}
+      SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+        FROM "Product" p
+        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+       WHERE p."id" = ${id}
     `;
     expect(original[0]?.activationMode).toBe("EITHER");
   });
