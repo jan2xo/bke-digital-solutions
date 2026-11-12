@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pr": 366,
+  "intent": "Source-only PREPRODUCTION two-admin Agent startup machine trust lifecycle; independent recent Google ADMIN principals, matching Ed25519 SPKI fingerprint and fresh signed PoP, SQL irreversible staging/activation/revocation and audit; production enabled neither via flags nor API.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "identity",
+    "licensing",
+    "platform",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-startup-machine-trust-admin.test.ts",
+    "tests/agent-standalone-startup-policy-issuance.test.ts"
+  ]
+}

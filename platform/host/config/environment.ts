@@ -26,6 +26,7 @@ export const environmentSchema = z.object({
   AGENT_KEY_HTTP_ENABLED: bool.default(false),
   ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED: bool.default(false),
   STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED: bool.default(false),
+  STARTUP_MACHINE_ENROLLMENT_ENABLED: bool.default(false),
   ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON: z.preprocess(optional, z.string().min(64).optional()),
   AGENT_ACCOUNT_SESSION_PEPPER: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
@@ -104,6 +105,12 @@ export const environmentSchema = z.object({
       context.addIssue({ code: "custom", path: ["ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED"],
         message: "requires nonproduction Agent session/key HTTP and separate signer keyset" });
     }
+  }
+  if (value.STARTUP_MACHINE_ENROLLMENT_ENABLED &&
+      value.DEPLOYMENT_ENV === "production") {
+    context.addIssue({ code: "custom",
+      path: ["STARTUP_MACHINE_ENROLLMENT_ENABLED"],
+      message: "Agent key enrollment may not run in production" });
   }
   // Standalone policy issuance is separate from account JWS: key-only
   // customers must NOT be forced to sign into Google, while DS signer
