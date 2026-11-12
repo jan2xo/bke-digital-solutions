@@ -201,6 +201,7 @@ export async function agentKeyHttp(request: Request, operation: AgentKeyHttpOper
         status: "registration", registration_id: result.registrationId,
         registration_state: result.registrationState,
         key_thumbprint: result.keyThumbprint,
+        key_algorithm: result.keyAlgorithm,
         key_protection: result.keyProtection,
         valid_until: result.validUntil.toISOString(),
       });

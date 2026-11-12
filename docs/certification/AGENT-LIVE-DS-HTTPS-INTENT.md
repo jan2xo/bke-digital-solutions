@@ -1,0 +1,13 @@
+# DS #350 — REAL DISPOSABLE HTTPS / PG AGENT CROSS-PROCESS CERTIFICATION
+
+**One intent:** authenticate and verify real signed Agent ENROLL, status (including database-owned `key_algorithm`), and revoke over actual Next route handlers hosted on disposable loopback HTTPS, real disposable PostgreSQL, and **two separate real .NET processes** using pinned immutable Agent source `b4ca67fc4624693afa324ac4f4fa3a78bb76fab0`. Test-only EdDSA and ES256 software signers each use separate authenticated sessions and execute actual 64-byte canonical signatures. This is **not** installed Windows Agent, physical TPM, published cloud service or product JWS signing proof.
+
+**DS source dependency:** #348 authenticated status/reconciliation, which itself inherits #346 independently default-off host gate. The disposable HTTPS harness explicitly sets `AGENT_ACCOUNT_SESSION_ENABLED=true`, `AGENT_KEY_HTTP_ENABLED=true`, `DEPLOYMENT_ENV=test`, then removes its key flag after test. Production branch remains **unconditionally denied**; no activation, deployed service, release or production secrets.
+
+**Fix certified by this wave:** HTTP status emits server-derived persisted `key_algorithm: result.keyAlgorithm` (EdDSA/ES256), never client assertion. Other server responses/canonical status identity unchanged. The Agent's fail-closed rule correctly rejected missing server algorithm in previous candidate.
+
+**Minimum complete 6-target graph:** `pr core licensing native-account identity prisma-isolation`. PR: exact source contract/ephemeral environment protections. Core: actual live loopback HTTPS + DB + .NET cross-process integration, Next/Workers/workerd/container/repo security. Licensing: key signature and status algorithm; identity/native-account: bearer/session; Prisma: persistence. Host config unchanged so Platform not required; its default-off production-deny rule is preserved and tested. Cross-repo Agent pinned source #125 already independently certified `contracts windows-x64`, no Agent behavior changed in this DS wave; no redundant full Agent CI.
+
+**Not required:** Commerce/Payments/PayMongo/Resend, UTM/VM/installer/physical TPM, Launcher/product, catalog/entitlements, immutable JWS library release, live cloud service or production deployment.
+
+**Security limits:** no cryptographic hardware attestation, not an installed end-to-end product. No single bearer can prove original device provenance; #352 owns stronger secret/source binding. **Source-only merge** after fresh exact-head six-owner PASS and SHA lock. Production DB/deploy, signing keys, installer/catalog/package release and force push remain LOCKED.
