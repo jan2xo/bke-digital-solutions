@@ -100,6 +100,8 @@ describe("Digital Solutions dual-path product activation — signed lease policy
     expect(create).toContain('activationMode: z.enum(productActivationModes).default("EITHER")');
     expect(update).toContain("assertSafeProductActivationModeChange(");
     expect(update).toContain("FOR UPDATE");
+    expect(update).toContain("await tx.auditLog.create(");
+    expect(update).toContain('action: "PRODUCT_ACTIVATION_MODE_CHANGED"');
     expect(migration).toContain('DEFAULT \'EITHER\'');
     expect(migration).toContain("Product_activationMode_supported_check");
     expect(migration).not.toMatch(/\bDROP\s+TABLE\b|\bDELETE\s+FROM\b/i);
