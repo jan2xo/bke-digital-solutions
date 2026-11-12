@@ -1,4 +1,6 @@
 import "dotenv/config";
+// Same disposable PostgreSQL core gate owns SQL signer/replay proof.
+import "./standalone-startup-policy-issuer-db.test";
 import { afterAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/platform/persistence/generated/prisma/client";

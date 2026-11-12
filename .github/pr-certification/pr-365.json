@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pr": 365,
+  "intent": "Certify PREPRODUCTION DS-signed startup policy: registered Agent Ed25519 installer proof, immutable SQL mode and published release, atomic replay/audit PostgreSQL, account/key independence, no production issuer or customer endpoint.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "identity",
+    "entitlements",
+    "catalog",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-standalone-startup-policy-issuance.test.ts",
+    "tests/agent-session-account-product-lease-signer.test.ts"
+  ]
+}

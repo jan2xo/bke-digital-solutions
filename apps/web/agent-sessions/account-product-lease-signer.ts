@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createPrivateKey, createPublicKey, timingSafeEqual } from "node:crypto";
+import { createPrivateKey, createPublicKey, sign, timingSafeEqual } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { issueAccountProductLeaseJws } from "@bke/licensing/providers/ed25519-account-product-lease";
 import type { AccountProductLeaseClaims } from "@bke/licensing/contracts/account-product-lease.contract";
@@ -112,4 +112,34 @@ export async function rotateAccountProductLeaseSigningKeyInTransaction(
     targetId: input.newKid,
     metadata: { previousKid: active[0]!.kid, newKid: input.newKid },
   } });
+}
+
+/**
+ * Source-only PREPRODUCTION startup-policy signature over EXACT Agent verifier
+ * bytes: domain + serialized JSON payload. Reuses the sole ACTIVE account
+ * product JWS signer, never the commercial license signing key. Caller must
+ * verify the independent installed Agent attestation + SQL ProductActivation-
+ * Policy and consume its nonce in the SAME SERIALIZABLE transaction.
+ */
+export async function signStandaloneStartupPolicyInTransaction(
+  tx: Prisma.TransactionClient,
+  payload: string,
+  keyset: string | undefined,
+): Promise<Readonly<{ kid: string; signature: string }>> {
+  if (typeof payload !== "string" || payload.length < 100 || payload.length > 8192)
+    throw new Error("STARTUP_POLICY_PAYLOAD_INVALID");
+  const rows = await tx.$queryRaw<RegistryRow[]>`
+    SELECT "kid", "publicKeyPem", "privateKeyReference", "status"
+      FROM "AccountProductLeaseSigningKey"
+     WHERE "status" = 'ACTIVE'
+     FOR SHARE
+  `;
+  if (rows.length !== 1 || rows[0]!.status !== "ACTIVE")
+    throw new Error("ACCOUNT_PRODUCT_SIGNER_NOT_UNIQUE");
+  const row = rows[0]!;
+  const pem = privatePemFromKeyset(keyset, row);
+  const signature = sign(null, Buffer.from(
+    "BKE-STANDALONE-STARTUP-POLICY-V1\n" + payload, "utf8"),
+    createPrivateKey(pem)).toString("base64");
+  return Object.freeze({ kid: row.kid, signature });
 }

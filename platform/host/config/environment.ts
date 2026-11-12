@@ -25,6 +25,7 @@ export const environmentSchema = z.object({
   AGENT_ACCOUNT_SESSION_ENABLED: bool.default(false),
   AGENT_KEY_HTTP_ENABLED: bool.default(false),
   ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED: bool.default(false),
+  STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED: bool.default(false),
   ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON: z.preprocess(optional, z.string().min(64).optional()),
   AGENT_ACCOUNT_SESSION_PEPPER: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
@@ -103,6 +104,16 @@ export const environmentSchema = z.object({
       context.addIssue({ code: "custom", path: ["ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED"],
         message: "requires nonproduction Agent session/key HTTP and separate signer keyset" });
     }
+  }
+  // Standalone policy issuance is separate from account JWS: key-only
+  // customers must NOT be forced to sign into Google, while DS signer
+  // custody and any production use stay fail-closed.
+  if (value.STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED &&
+      (value.DEPLOYMENT_ENV === "production" ||
+       !value.ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON)) {
+    context.addIssue({ code: "custom",
+      path: ["STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED"],
+      message: "requires nonproduction and separate Agent product signing keyset" });
   }
   if (value.AGENT_ACCOUNT_SESSION_ENABLED) {
     if (!value.AGENT_ACCOUNT_SESSION_PEPPER || value.AGENT_ACCOUNT_SESSION_PEPPER.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_PEPPER)) {
