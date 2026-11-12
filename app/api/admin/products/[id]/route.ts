@@ -124,10 +124,11 @@ export async function PATCH(
         // and prevents a late mode switch from silently stranding license keys.
         const rows = await tx.$queryRaw<Array<{
           activationMode: string;
+          publishedEver: boolean;
           active: boolean;
           publishedAt: Date | null;
         }>>`
-          SELECT policy."activationMode",
+          SELECT policy."activationMode", policy."publishedEver",
                  p."active", p."publishedAt"
             FROM "Product" p
             JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
@@ -135,9 +136,10 @@ export async function PATCH(
            FOR UPDATE OF p, policy
         `;
         if (rows.length !== 1) throw new Error("PRODUCT_NOT_FOUND");
-        const [versionsCount, licensesCount, orderItemsCount] = await Promise.all([
+        const [versionsCount, licensesCount, subscriptionsCount, orderItemsCount] = await Promise.all([
           tx.productVersion.count({ where: { productId: id } }),
           tx.license.count({ where: { productId: id } }),
+          tx.subscription.count({ where: { productId: id } }),
           tx.orderItem.count({ where: { productId: id } }),
         ]);
         assertSafeProductActivationModeChange({
@@ -145,8 +147,10 @@ export async function PATCH(
           requestedMode: input.activationMode,
           active: rows[0]!.active,
           publishedAt: rows[0]!.publishedAt,
+          publishedEver: rows[0]!.publishedEver,
           versionsCount,
           licensesCount,
+          subscriptionsCount,
           orderItemsCount,
         });
         if (rows[0]!.activationMode !== input.activationMode) {
