@@ -35,7 +35,14 @@ const schema = z.object({
 export async function GET() {
   try {
     await requireAdmin();
-    return NextResponse.json(await db.product.findMany({ include: { editions: { include: { purchasePlans: true } }, versions: { orderBy: { releasedAt: "desc" } } }, orderBy: { createdAt: "desc" } }));
+    const [products, modes] = await Promise.all([
+      db.product.findMany({ include: { editions: { include: { purchasePlans: true } }, versions: { orderBy: { releasedAt: "desc" } } }, orderBy: { createdAt: "desc" } }),
+      db.$queryRaw<Array<{ id: string; activationMode: string }>>`
+        SELECT "id", "activationMode" FROM "Product"
+      `,
+    ]);
+    const byId = new Map(modes.map(row => [row.id, row.activationMode]));
+    return NextResponse.json(products.map(p => ({ ...p, activationMode: byId.get(p.id) ?? null })));
   } catch (error) { return apiError(error); }
 }
 
@@ -49,9 +56,15 @@ export async function POST(request: Request) {
     validateAcceptedVersionRange(input.minimumAcceptedVersion, input.maximumAcceptedVersion);
     const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {
-      const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, activationMode: input.activationMode, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
+      const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
+      // Explicit SQL keeps the additive policy column usable before the
+      // repository's tracked generated Prisma client is refreshed.
+      await tx.$executeRaw`
+        UPDATE "Product" SET "activationMode" = ${input.activationMode}
+         WHERE "id" = ${created.id}
+      `;
       await createEditionWithCommerce(tx, created.id, editionInput);
-      return created;
+      return Object.assign(created, { activationMode: input.activationMode });
     });
     await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, activationMode: product.activationMode, edition: editionInput.name, planTypes: Object.entries(editionInput.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
     return NextResponse.json(product, { status: 201 });
