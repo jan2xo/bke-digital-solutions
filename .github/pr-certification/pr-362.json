@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "pr": 362,
+  "intent": "Certify preproduction-only DS account-product JWS: authenticated Agent LEASE nonce, live rights, separate Ed25519 signing registry, atomic ISSUED audit, strict HTTP gate, rotation and rollback. Commercial license-key activation stays independent; no production signer or deploy.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "entitlements",
+    "catalog",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-session-account-product-lease-issuance.test.ts",
+    "tests/agent-session-account-product-lease-signer.test.ts",
+    "tests/agent-session-account-product-lease-http.test.ts",
+    "tests/agent-session-product-lease-atomic-preparation.test.ts"
+  ]
+}

@@ -24,6 +24,8 @@ export const environmentSchema = z.object({
   CLAIM_CODE_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENABLED: bool.default(false),
   AGENT_KEY_HTTP_ENABLED: bool.default(false),
+  ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED: bool.default(false),
+  ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON: z.preprocess(optional, z.string().min(64).optional()),
   AGENT_ACCOUNT_SESSION_PEPPER: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
@@ -90,6 +92,16 @@ export const environmentSchema = z.object({
   if (value.CLAIM_CODE_CHECKOUT_ENABLED) {
     if (!value.CLAIM_CODE_ENCRYPTION_KEY || value.CLAIM_CODE_ENCRYPTION_KEY.length < 48 || placeholder.test(value.CLAIM_CODE_ENCRYPTION_KEY)) {
       context.addIssue({ code: "custom", path: ["CLAIM_CODE_ENCRYPTION_KEY"], message: "must be configured, at least 48 characters, and not a placeholder when Claim Code checkout is enabled" });
+    }
+  }
+  // This release only certifies disposable/preproduction signing authority;
+  // even a misconfigured production flag must never enable public JWS issuance.
+  if (value.ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED) {
+    if (value.DEPLOYMENT_ENV === "production" ||
+        !value.AGENT_ACCOUNT_SESSION_ENABLED || !value.AGENT_KEY_HTTP_ENABLED ||
+        !value.ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON) {
+      context.addIssue({ code: "custom", path: ["ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED"],
+        message: "requires nonproduction Agent session/key HTTP and separate signer keyset" });
     }
   }
   if (value.AGENT_ACCOUNT_SESSION_ENABLED) {

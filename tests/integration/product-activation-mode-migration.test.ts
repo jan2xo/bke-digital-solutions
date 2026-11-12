@@ -107,7 +107,17 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
   });
 
   it("remembers publication permanently across unpublish", async () => {
-    const id = created[0]!;
+    // Independent fixture: the preceding publication-history case already
+    // marked created[0] publishedEver=true, which must never reset to false.
+    const p = await db.product.create({ data: {
+      slug: `dual-path-sticky-independent-${suffix}`,
+      name: "Independent Sticky History",
+      summary: "Disposable publication-history isolation fixture",
+      description: "Checks the false-to-true transition from a fresh draft.",
+      type: "SOFTWARE", active: false,
+    } });
+    created.push(p.id);
+    const id = p.id;
     const baseline = await db.$queryRaw<Array<{ publishedEver: boolean }>>`
       SELECT "publishedEver" FROM "ProductActivationPolicy" WHERE "productId" = ${id}
     `;
