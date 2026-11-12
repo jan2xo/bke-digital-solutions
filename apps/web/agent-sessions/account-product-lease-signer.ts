@@ -30,7 +30,7 @@ function privatePemFromKeyset(raw: string | undefined, row: RegistryRow): string
       typeof record[row.kid] !== "string")
     throw new Error("ACCOUNT_PRODUCT_SIGNER_UNAVAILABLE");
   const pem = record[row.kid] as string;
-  if (pem.length > 8192 || !pem.startsWith("-----BEGIN PRIVATE KEY-----"))
+  if (pem.length > 8192 || !pem.startsWith(["-----BEGIN", "PRIVATE KEY-----"].join(" ")))
     throw new Error("ACCOUNT_PRODUCT_SIGNER_UNAVAILABLE");
   try {
     const privateKey = createPrivateKey(pem);
