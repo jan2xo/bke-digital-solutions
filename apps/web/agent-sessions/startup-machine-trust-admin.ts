@@ -33,7 +33,7 @@ function object(raw: string, keys: readonly string[], max = 8192) {
 function field(row: Record<string, unknown>, key: string, max = 2048) {
   const value = row[key];
   if (typeof value !== "string" || value.length === 0 ||
-      value.length > max || value.trim() !== value)
+      value.length > max || (key !== "public_key_pem" && value.trim() !== value))
     throw new Error("MACHINE_KEY_INVALID_FIELD");
   return value;
 }
