@@ -2,8 +2,6 @@ import "server-only";
 
 import { createHash } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
-import { db } from "@/platform/host/db";
-import { getRuntimeEnvironment } from "@/platform/host/env";
 import { verifyStandaloneStartupInstallAttestationInTransaction } from
   "./standalone-startup-install-attestation";
 import { signStandaloneStartupPolicyInTransaction } from
@@ -173,12 +171,15 @@ export async function issueStandaloneStartupPolicyPreproduction(
 ) {
   if (process.env.DEPLOYMENT_ENV === "production")
     throw new Error("STARTUP_POLICY_PRODUCTION_LOCK");
+  // Keep the privileged runtime environment out of pure crypto/SQL unit tests.
+  const { getRuntimeEnvironment } = await import("@/platform/host/env");
   const runtime = getRuntimeEnvironment();
   if (runtime.DEPLOYMENT_ENV === "production" ||
       !runtime.STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED ||
       !runtime.ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON)
     throw new Error("STARTUP_POLICY_ISSUER_DISABLED");
 
+  const { db } = await import("@/platform/host/db");
   return db.$transaction(
     tx => prepareAndSignStandaloneStartupPolicyInTransaction(tx, {
       signedAgentInstallAttestation,
