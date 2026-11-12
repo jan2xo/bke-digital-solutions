@@ -60,9 +60,11 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
   // synthetic account/user/session IDs; the authenticated Agent identity above
   // is necessary but never sufficient.
   const productPolicy = await tx.$queryRaw<Array<{ activationMode: string }>>`
-    SELECT "activationMode"
-      FROM "Product"
-     WHERE "productId" = ${input.productId}
+    SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+      FROM "Product" product
+      LEFT JOIN "ProductActivationPolicy" policy
+        ON policy."productId" = product."id"
+     WHERE product."productId" = ${input.productId}
      LIMIT 1
   `;
   if (productPolicy.length !== 1 ||
