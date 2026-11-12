@@ -146,6 +146,21 @@ export async function PATCH(
           licensesCount,
           orderItemsCount,
         });
+        if (rows[0]!.activationMode !== input.activationMode) {
+          // The policy decision and its audit must commit or roll back as one.
+          await tx.auditLog.create({
+            data: {
+              actorId: admin.id,
+              action: "PRODUCT_ACTIVATION_MODE_CHANGED",
+              targetType: "Product",
+              targetId: id,
+              metadata: {
+                previousMode: rows[0]!.activationMode,
+                newMode: input.activationMode,
+              },
+            },
+          });
+        }
       }
       const updated = await tx.product.update({ where: { id }, data });
       if (input.launcherExecutionType !== undefined) {
