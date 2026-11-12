@@ -137,12 +137,16 @@ export async function verifyStandaloneStartupInstallAttestationInTransaction(
 
   if (required(fields, "schema", 128) !== PAYLOAD_SCHEMA ||
       !SLUG.test(productId) || !VERSION.test(version) ||
-      !UUID.test(installationId) || !UUID.test(attestationId) ||
-      !HEX.test(imageSha256) || !DEVICE_ID.test(deviceId) ||
-      !USER_SID.test(allowedUserSid) || !canonicalImagePath(imagePath) ||
-      issued > now.getTime() || expires <= now.getTime() ||
+      !UUID.test(installationId) || !UUID.test(attestationId))
+    throw new Error("STARTUP_ATTESTATION_PRODUCT_SCOPE_INVALID");
+  if (!HEX.test(imageSha256) || !DEVICE_ID.test(deviceId) ||
+      !USER_SID.test(allowedUserSid))
+    throw new Error("STARTUP_ATTESTATION_DEVICE_SCOPE_INVALID");
+  if (!canonicalImagePath(imagePath))
+    throw new Error("STARTUP_ATTESTATION_IMAGE_SCOPE_INVALID");
+  if (issued > now.getTime() || expires <= now.getTime() ||
       expires <= issued || expires - issued > MAX_ATTESTATION_AGE_MS)
-    throw new Error("STARTUP_ATTESTATION_SCOPE_INVALID");
+    throw new Error("STARTUP_ATTESTATION_TIME_SCOPE_INVALID");
 
   const rows = await tx.$queryRaw<AttestationTrustRow[]>`
     SELECT "kid", "deviceId", "publicKeyPem", "status"
