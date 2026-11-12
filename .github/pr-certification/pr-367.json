@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pr": 367,
+  "intent": "Source-only preproduction ES256 v2 installed startup attestation; two-admin SQL algorithm-immutable public-key trust, strict v1 Ed25519 separation, nonce/revocation and policy audit. No TPM hardware claim.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "identity",
+    "licensing",
+    "platform",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-startup-es256-trust.test.ts",
+    "tests/agent-startup-machine-trust-admin.test.ts",
+    "tests/agent-standalone-startup-policy-issuance.test.ts"
+  ]
+}
