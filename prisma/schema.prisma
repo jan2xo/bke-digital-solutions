@@ -772,6 +772,7 @@ model Product {
   launcherExecutionType LauncherExecutionType?
   category            String              @default("General")
   licenseType         String              @default("Commercial")
+  activationMode      String              @default("EITHER")
   featured            Boolean             @default(false)
   imageKey            String?
   tags                String[]            @default([])
