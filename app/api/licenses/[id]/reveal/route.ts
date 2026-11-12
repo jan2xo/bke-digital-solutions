@@ -5,6 +5,7 @@ import { decryptLicenseKey } from "@/platform/host/security/crypto";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { apiError } from "@/apps/web/http/api-error";
 import { assertLegalAcceptanceCurrent } from "@/apps/web/legal/service";
+import { allowsProductActivation } from "@/apps/web/licensing/product-activation-mode";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -23,8 +24,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           ],
         },
       },
+      include: { product: { select: { activationMode: true } } },
     });
     if (!license) throw new Error("NOT_FOUND");
+    if (!allowsProductActivation(license.product.activationMode, "LICENSE_KEY"))
+      return NextResponse.json({ error: "LICENSE_KEY_UNAVAILABLE" }, { status: 409 });
     if (!license.keyCiphertext) return NextResponse.json({ error: "LICENSE_KEY_UNAVAILABLE" }, { status: 409 });
 
     const key = decryptLicenseKey(license.keyCiphertext);
