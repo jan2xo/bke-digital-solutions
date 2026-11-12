@@ -12,7 +12,7 @@ Digital Solutions maintains an explicit `ProductActivationPolicy` record keyed b
 | `LICENSE_KEY` | Denied (cannot fake account/Agent session) | Allowed, after real key, license, product and device checks |
 | `EITHER` | Allowed, each independently verified | Allowed, each independently verified |
 
-**Backward compatibility:** all pre-existing products with no policy row resolve to `EITHER` through `COALESCE`, and new products without an explicit activation choice are persisted as `EITHER`, regardless of their existing `licenseType` label. No customer license keys are revoked, repurposed, hidden or invalidated by this source change. Invalid persisted modes fail closed (database CHECK constraint plus runtime validation). A published, active, versioned, purchased or already licensed product **cannot change activation mode through the admin API**, preventing silent removal of an existing route after sale. Draft new products may select their mode. The admin route locks the Product row, checks live dependent histories and durably writes a PRODUCT_ACTIVATION_MODE_CHANGED audit record **in the same update transaction**; audit failure rolls the policy change back.
+**Backward compatibility:** all pre-existing products are explicitly backfilled to `EITHER`; new Product rows automatically receive an `EITHER` policy row in their insertion transaction, which the admin may update to an explicit draft choice, regardless of their existing `licenseType` label. No customer license keys are revoked, repurposed, hidden or invalidated by this source change. Invalid or **missing** persisted modes fail closed (database CHECK constraint, INNER JOIN and runtime validation): deleting an ACCOUNT-only policy row can never silently widen authorization to EITHER. A published, active, versioned, purchased or already licensed product **cannot change activation mode through the admin API**, preventing silent removal of an existing route after sale. Draft new products may select their mode. The admin route locks the Product row, checks live dependent histories and durably writes a PRODUCT_ACTIVATION_MODE_CHANGED audit record **in the same update transaction**; audit failure rolls the policy change back.
 
 ## Two signing/verification protocols, not interchangeable
 
@@ -26,10 +26,10 @@ Digital Solutions maintains an explicit `ProductActivationPolicy` record keyed b
 
 ## Migration / compatibility assurance
 
-- Additive SQL: `ProductActivationPolicy(productId PRIMARY KEY REFERENCES Product, activationMode TEXT CHECK (...))`, with missing-row fallback `EITHER` via `COALESCE`, no destructive operations and no changes to the tracked generated Prisma Product client.
+- Additive SQL: `ProductActivationPolicy(productId PRIMARY KEY REFERENCES Product, activationMode TEXT CHECK (...))`, migration backfills all Product rows to `EITHER`, a Product INSERT trigger creates a policy row for every future product. Missing rows deny. No destructive operations and no changes to the tracked generated Prisma Product client.
 - Preserves existing `licenseType` and edition/commerce policy; no V2/V3-versioned feature flag added.
 - Admin POST accepts explicit product activationMode, defaults to EITHER; PATCH rejects a policy change after live/version/commerce history even if the new value is otherwise supported.
-- Disposable PostgreSQL (explicit Core database job only) proves EITHER fallback for missing policy, ACCOUNT and LICENSE_KEY rows persisted, invalid mode rejected at DB, and unaffected commercial type; PR/no-DB modules do not execute this integration.
+- Disposable PostgreSQL (explicit Core database job only) proves an automatically created EITHER policy, ACCOUNT and LICENSE_KEY updates, invalid mode rejected at DB, and unchanged commercial type; PR/no-DB modules do not execute this integration.
 - Pure tests cover both paths, fail-closed unknown modes, immutability of live policy and key-vs-account routing; source regressions check real path wiring.
 - Cross-repo Agent main at inspection `2a697fc03c96130348888f1d941fc684a210344a` already contains account JWS verifier and legacy commercial lease infrastructure. This wave does not change Agent; separately certify installed Agent/Launcher behavior when customer-facing activation mode selection is wired.
 
