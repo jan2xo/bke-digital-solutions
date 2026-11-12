@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 341,
+  "intent": "Certify DS fail-closed Agent-session account-product lease source eligibility integrated with merged seven-day trial Entitlement parity, exact paid order/account/edition lineage and disposable PostgreSQL positive/revoked negative evidence, without signer, endpoint or production keys",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "entitlements",
+    "catalog",
+    "native-account"
+  ],
+  "testFiles": [
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/v3-agent-software-catalog-contract.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts",
+    "tests/entitlement-refund-revocation.test.ts"
+  ]
+}
