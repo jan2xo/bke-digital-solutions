@@ -40,8 +40,8 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
     `;
     expect(rows[0]?.activationMode).toBe("EITHER");
     expect(p.licenseType).toBe("Commercial");
-    expect(allowsProductActivation(p.activationMode, "ACCOUNT")).toBe(true);
-    expect(allowsProductActivation(p.activationMode, "LICENSE_KEY")).toBe(true);
+    expect(allowsProductActivation(rows[0]?.activationMode, "ACCOUNT")).toBe(true);
+    expect(allowsProductActivation(rows[0]?.activationMode, "LICENSE_KEY")).toBe(true);
   });
 
   it("round-trips explicit ACCOUNT and LICENSE_KEY without changing licenseType", async () => {
