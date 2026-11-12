@@ -94,8 +94,8 @@ describe("Digital Solutions dual-path product activation — signed lease policy
     expect(keyLease).not.toContain("requireGoogle");
     expect(keyLease).not.toContain("synthetic");
     expect(refresh).toContain("await requireCommercialLicenseKeyActivation(input.licenseKey)");
-    expect(reveal).toContain('allowsProductActivation(license.product.activationMode, "LICENSE_KEY")');
-    expect(account).toContain('allowsProductActivation(productPolicy.activationMode, "ACCOUNT")');
+    expect(reveal).toContain('allowsProductActivation(modes[0]!.activationMode, "LICENSE_KEY")');
+    expect(account).toContain('allowsProductActivation(productPolicy[0]!.activationMode, "ACCOUNT")');
     expect(account).toContain("authenticateAgentAccessToken(tx,");
     expect(create).toContain('activationMode: z.enum(productActivationModes).default("EITHER")');
     expect(update).toContain("assertSafeProductActivationModeChange(");
