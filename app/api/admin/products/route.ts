@@ -38,9 +38,9 @@ export async function GET() {
     const [products, modes] = await Promise.all([
       db.product.findMany({ include: { editions: { include: { purchasePlans: true } }, versions: { orderBy: { releasedAt: "desc" } } }, orderBy: { createdAt: "desc" } }),
       db.$queryRaw<Array<{ id: string; activationMode: string }>>`
-        SELECT p."id", COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+        SELECT p."id", policy."activationMode"
           FROM "Product" p
-          LEFT JOIN "ProductActivationPolicy" policy
+          JOIN "ProductActivationPolicy" policy
             ON policy."productId" = p."id"
       `,
     ]);
@@ -65,6 +65,8 @@ export async function POST(request: Request) {
       await tx.$executeRaw`
         INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
         VALUES (${created.id}, ${input.activationMode})
+        ON CONFLICT ("productId") DO UPDATE
+          SET "activationMode" = EXCLUDED."activationMode"
       `;
       await createEditionWithCommerce(tx, created.id, editionInput);
       return Object.assign(created, { activationMode: input.activationMode });
