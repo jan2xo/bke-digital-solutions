@@ -12,8 +12,10 @@ function state(overrides: Partial<Parameters<typeof assertSafeProductActivationM
     requestedMode: "LICENSE_KEY",
     active: false,
     publishedAt: null,
+    publishedEver: false,
     versionsCount: 0,
     licensesCount: 0,
+    subscriptionsCount: 0,
     orderItemsCount: 0,
     ...overrides,
   };
@@ -52,8 +54,10 @@ describe("Digital Solutions dual-path product activation — signed lease policy
     const locked = [
       { active: true },
       { publishedAt: new Date("2026-01-01") },
+      { publishedEver: true },
       { versionsCount: 1 },
       { licensesCount: 1 },
+      { subscriptionsCount: 1 },
       { orderItemsCount: 1 },
       { versionsCount: -1 },
       { licensesCount: Number.NaN },
@@ -109,6 +113,9 @@ describe("Digital Solutions dual-path product activation — signed lease policy
     expect(migration).toContain("ProductActivationPolicy_mode_supported_check");
     expect(migration).toContain("SELECT p.\"id\", 'EITHER' FROM \"Product\" p");
     expect(migration).toContain('CREATE TRIGGER "ProductActivationPolicy_default_on_create"');
+    expect(migration).toContain('CREATE TRIGGER "ProductActivationPolicy_mark_published"');
+    expect(update).toContain('publishedEver: rows[0]!.publishedEver');
+    expect(update).toContain('tx.subscription.count({ where: { productId: id } })');
     expect(migration).not.toMatch(/\bDROP\s+TABLE\b|\bDELETE\s+FROM\b/i);
   });
 });
