@@ -36,3 +36,7 @@ Enabled ONLY in explicitly configured disposable/preproduction `DEPLOYMENT_ENV`,
 ## Certification plan
 
 Required: `pr core licensing native-account identity entitlements catalog prisma-isolation`, exact source SHA, existing immutable library release; Core real disposable migration/key registry tests, Licensing real JWS + HTTP/rollback tests, remaining trust owners' shared module checks. Not required: commerce/payment/prod/Agent binary/installer. Preserve exact-head CI evidence in PR ledger before SHA-locked merge.
+
+### Exact-head DB-proof discovery and correction
+
+GitHub Actions reusable Core workflow executes the **main-branch workflow definition** while checking out the pinned candidate source SHA. A new test step authored only on the PR branch is therefore not executed in that generation. The first successful candidate's Core runtime suite reported the new signer-registry PostgreSQL integration as skipped; **that proof was not accepted** despite the green overall workflow. The integration is now selected directly by the existing Core full-runtime test command only when `GITHUB_ACTIONS=true`, `NODE_ENV=test` and the parsed PostgreSQL URL is exactly `localhost:5432/bke_test`. This forbids running against production, private VPS or a developer-local DB, and skips the PR-only job without a database. The extra proposed CI step has been removed to prevent duplicate execution. Only a fresh CI run with **4 passed signer-registry PostgreSQL tests, not skipped**, can complete this certification intent.
