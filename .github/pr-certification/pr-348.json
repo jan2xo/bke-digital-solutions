@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 348,
+  "intent": "Authenticated session-bound key registration metadata lookup for protected durable Agent receipt reconciliation; no signer/LEASE/release",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-key-reconciliation-contract.test.ts",
+    "tests/agent-key-http-contract.test.ts",
+    "tests/agent-key-possession-authority.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
+  ]
+}

@@ -2,14 +2,14 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const adapter = readFileSync("apps/web/agent-sessions/agent-key-http.ts", "utf8");
-const routes = ["enroll", "verify", "revoke"].map((name) =>
+const routes = ["enroll", "verify", "revoke", "status"].map((name) =>
   readFileSync("app/api/agent-sessions/keys/" + name + "/route.ts", "utf8"));
 const authority = readFileSync("apps/web/agent-sessions/agent-key-proof-authority.ts", "utf8");
 const config = readFileSync("platform/host/config/environment.ts", "utf8");
 
 describe("Agent machine-key HTTP enrollment security contract", () => {
   it("has three POST-only endpoints through one audit boundary", () => {
-    ["enroll", "verify", "revoke"].forEach((name, index) => {
+    ["enroll", "verify", "revoke", "status"].forEach((name, index) => {
       expect(routes[index]).toContain('agentKeyHttp(request, "' + name + '")');
       expect(routes[index]).not.toContain("privateKey");
     });
@@ -49,7 +49,7 @@ describe("Agent machine-key HTTP enrollment security contract", () => {
     for (const operation of ["beginAgentKeyEnrollment", "verifyAgentKeyChallenge", "revokeAgentLeaseKey"]) {
       expect(adapter).toContain(operation + "(tx,");
     }
-    expect(adapter.match(/isolationLevel: "Serializable"/g)?.length).toBe(3);
+    expect(adapter.match(/isolationLevel: "Serializable"/g)?.length).toBe(4);
     expect(authority).toContain('UPDATE "AgentLeaseKeyChallenge" SET "consumedAt"');
     expect(authority).toContain("verifyAgentSignature(trustedKey.algorithm, trustedKey.pem, msg, signature)");
     expect(authority).toContain('trustedKey.algorithm !== row.keyAlgorithm');
