@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pr": 361,
-  "intent": "Durable product activation mode ACCOUNT / LICENSE_KEY / EITHER. Preserve legacy key-only signed issuance without Google login; prevent account-product JWS for key-only products and prevent key issuance/refresh/reveal for account-only products. Additive Product migration, locked post-publication policy, no production changes.",
+  "intent": "Durable product activation mode ACCOUNT / LICENSE_KEY / EITHER. Preserve legacy key-only signed issuance without Google login; prevent account-product JWS for key-only products and prevent key issuance/refresh/reveal for account-only products. Additive Product migration, locked post-publication policy, no production changes. Core database job independently runs SQL-owned policy integration with disposable PostgreSQL; PR admission stays DB-free.",
   "requiredTargets": [
     "pr",
     "core",
@@ -15,7 +15,6 @@
   ],
   "testFiles": [
     "tests/licensing-dual-activation-mode.test.ts",
-    "tests/integration/product-activation-mode-migration.test.ts",
     "tests/agent-session-product-lease-eligibility.test.ts",
     "tests/licensing-contract.test.ts"
   ]
