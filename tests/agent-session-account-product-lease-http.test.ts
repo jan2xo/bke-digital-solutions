@@ -14,6 +14,10 @@ vi.mock("@/platform/host/env", () => ({
 vi.mock("@/apps/web/http/rate-limit", () => ({
   rateLimit: mocks.rate,
 }));
+// HTTP parsing tests own only request IP semantics, not host env secrets.
+vi.mock("@/apps/web/http/request", () => ({
+  clientIp: () => "127.0.0.1",
+}));
 vi.mock("@/platform/host/db", () => ({
   db: { $transaction: mocks.transaction },
 }));
