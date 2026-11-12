@@ -36,6 +36,8 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
   beforeAll(async () => {
     // Strictly disposable test-only environment, never a production toggle.
     process.env.AGENT_ACCOUNT_SESSION_ENABLED = "true";
+    process.env.AGENT_KEY_HTTP_ENABLED = "true";
+    process.env.DEPLOYMENT_ENV = "test";
     process.env.AGENT_ACCOUNT_SESSION_PEPPER = pepper;
     process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY = "ci-bke-crossrepo-envelope-0b1a72428a1e4462b816d805a4f63e4e";
 
@@ -153,6 +155,7 @@ describe("LIVE disposable DS HTTP routes ↔ separate exact-SHA Agent .NET proce
     if (server) await new Promise<void>((resolve) => server!.close(() => resolve()));
     await db.$disconnect();
     rmSync(temp, { recursive: true, force: true });
+    delete process.env.AGENT_KEY_HTTP_ENABLED;
     delete process.env.AGENT_ACCOUNT_SESSION_ENABLED;
     delete process.env.AGENT_ACCOUNT_SESSION_PEPPER;
     delete process.env.AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY;

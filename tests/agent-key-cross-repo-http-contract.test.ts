@@ -39,6 +39,9 @@ describe("immutable cross-repo Agent to actual DS HTTPS route certification", ()
     expect(suite).toContain("mkdtempSync");
     expect(suite).toContain("rmSync(temp");
     expect(suite).toContain("AGENT_ACCOUNT_SESSION_ENABLED");
+    expect(suite).toContain("AGENT_KEY_HTTP_ENABLED");
+    expect(suite).toContain('process.env.DEPLOYMENT_ENV = "test"');
+    expect(suite).toContain("delete process.env.AGENT_KEY_HTTP_ENABLED");
     expect(suite).not.toContain("PAYMONGO_SECRET_KEY");
     expect(suite).not.toContain("RESEND_API_KEY");
     expect(suite).not.toContain("PRODUCTION_DATABASE_URL");

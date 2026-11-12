@@ -1,21 +1,13 @@
-# BKE live Agent ↔ DS disposable HTTP certification intent
+# DS #350 — REAL DISPOSABLE HTTPS / PG AGENT CROSS-PROCESS CERTIFICATION
 
-Source base: `e927ab14888c1ac655a035f0b89d1ae030dcd1d5`, draft dependency (not main or release).
-Master: https://github.com/jan2xo/bke-digital-solutions/issues/340
+**One intent:** authenticate and verify real signed Agent ENROLL, status (including database-owned `key_algorithm`), and revoke over actual Next route handlers hosted on disposable loopback HTTPS, real disposable PostgreSQL, and **two separate real .NET processes** using pinned immutable Agent source `b4ca67fc4624693afa324ac4f4fa3a78bb76fab0`. Test-only EdDSA and ES256 software signers each use separate authenticated sessions and execute actual 64-byte canonical signatures. This is **not** installed Windows Agent, physical TPM, published cloud service or product JWS signing proof.
 
-Intent: on disposable GitHub Actions compute only, execute a separate .NET consumer process using exact Agent source pinned by SHA against actual Digital Solutions machine-key HTTP route handlers exposed via loopback HTTPS with disposable PostgreSQL. Verify signed ENROLL, active metadata, authenticated REVOKE, terminal state, and unauthorized requests.
+**DS source dependency:** #348 authenticated status/reconciliation, which itself inherits #346 independently default-off host gate. The disposable HTTPS harness explicitly sets `AGENT_ACCOUNT_SESSION_ENABLED=true`, `AGENT_KEY_HTTP_ENABLED=true`, `DEPLOYMENT_ENV=test`, then removes its key flag after test. Production branch remains **unconditionally denied**; no activation, deployed service, release or production secrets.
 
-Minimum exact-head required graph: `pr core licensing native-account identity prisma-isolation`.
-Cross-repo: exact SHA pinned in DS harness; Agent Windows DPAPI source certification remains authoritative for Windows key custody; this Linux cross-process signer is isolated to friend assembly for network contract test, never a production key store.
+**Fix certified by this wave:** HTTP status emits server-derived persisted `key_algorithm: result.keyAlgorithm` (EdDSA/ES256), never client assertion. Other server responses/canonical status identity unchanged. The Agent's fail-closed rule correctly rejected missing server algorithm in previous candidate.
 
-Security: no public listeners, no TLS validation bypass in production, no secrets/prod credentials, no real PayMongo/Resend, no published release, no Agent production registration automation, no JWS/lease product entitlement issuance. No production DB mutation or deployment. No merge while upstream draft dependencies and stolen-bearer enrollment provenance unresolved.
+**Minimum complete 6-target graph:** `pr core licensing native-account identity prisma-isolation`. PR: exact source contract/ephemeral environment protections. Core: actual live loopback HTTPS + DB + .NET cross-process integration, Next/Workers/workerd/container/repo security. Licensing: key signature and status algorithm; identity/native-account: bearer/session; Prisma: persistence. Host config unchanged so Platform not required; its default-off production-deny rule is preserved and tested. Cross-repo Agent pinned source #125 already independently certified `contracts windows-x64`, no Agent behavior changed in this DS wave; no redundant full Agent CI.
 
-Not required: Commerce, payments, Launcher, installer/UTM/VM, software product binary, signing cutover, production.
+**Not required:** Commerce/Payments/PayMongo/Resend, UTM/VM/installer/physical TPM, Launcher/product, catalog/entitlements, immutable JWS library release, live cloud service or production deployment.
 
-
-## Reconciliation — EdDSA and ES256 exact SHA (2026-11-12 PHT)
-
-- **DS upstream** [#348](https://github.com/jan2xo/bke-digital-solutions/pull/348) `3ecece126b83afe095210f5dbef6bf2be6601bd5` (6/6 source certified, unmerged).
-- **Agent consumer** [#125](https://github.com/jan2xo/bke-licensing-agent/pull/125) `b4ca67fc4624693afa324ac4f4fa3a78bb76fab0` (new Windows exact-head certification pending).
-- Test fetches exact Agent source SHA, launches two separate .NET processes using disposable Ed25519 and NIST P-256 ephemeral software keys, each against independently authenticated disposable Agent session and exact real DS POST handlers, transactional PostgreSQL and pinned local TLS certificate. EdDSA/ES256 verify server-returned algorithm and exact SPKI thumbprint; ES256 signatures are 64-byte IEEE-P1363. Neither signer claims TPM hardware. The second session is distinct so server terminal revoke is never silently rotated.
-- **Required:** `pr core licensing native-account identity prisma-isolation`; Agent `contracts windows-x64`. **Not required:** payments, commerce, release, installer/UTM, production DB/web deploy, signing key cutover. This branch still has no full deployed Next/Workers service or physical Windows TPM E2E.
+**Security limits:** no cryptographic hardware attestation, not an installed end-to-end product. No single bearer can prove original device provenance; #352 owns stronger secret/source binding. **Source-only merge** after fresh exact-head six-owner PASS and SHA lock. Production DB/deploy, signing keys, installer/catalog/package release and force push remain LOCKED.
