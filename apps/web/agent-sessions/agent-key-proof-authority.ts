@@ -312,6 +312,8 @@ export async function verifyAgentKeyChallenge(
     challengeId: string;
     messageBase64url: string;
     signatureBase64url: string;
+    /** Internal LEASE consumers reject ENROLL before nonce burn. */
+    expectedPurpose?: "LEASE";
   }>,
   now = new Date(),
 ): Promise<
@@ -335,6 +337,10 @@ export async function verifyAgentKeyChallenge(
   if (!row || row.sessionId !== session.sessionId ||
       row.accountId !== session.accountId || row.userId !== session.userId ||
       row.deviceId !== session.deviceId)
+    return { status: "denied", reason: "INVALID_CHALLENGE" };
+  // A request scoped to LEASE must never activate an ENROLL registration.
+  // Check purpose under the same row lock BEFORE consuming any nonce.
+  if (input.expectedPurpose === "LEASE" && row.purpose !== "LEASE")
     return { status: "denied", reason: "INVALID_CHALLENGE" };
   if (row.consumedAt || row.expiresAt.getTime() <= current ||
       row.createdAt.getTime() > current || row.validUntil.getTime() <= current ||

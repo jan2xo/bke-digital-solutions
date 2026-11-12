@@ -1,8 +1,50 @@
 import "server-only";
 
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
-import type { VerifiedAgentLeaseProof } from "./agent-key-proof-authority";
+import type { VerifiedAgentLeaseProof, verifyAgentKeyChallenge } from "./agent-key-proof-authority";
+import type { TransactionLeasePreparationResult } from "./product-lease-transaction-gate";
 import { prepareVerifiedProductLeaseInTransaction } from "./product-lease-transaction-gate";
+
+type AgentProofDenialReason = Extract<
+  Awaited<ReturnType<typeof verifyAgentKeyChallenge>>,
+  { status: "denied" }
+>["reason"];
+type LeaseGateDenialReason = Extract<
+  TransactionLeasePreparationResult,
+  { status: "denied" }
+>["reason"];
+export type ProductLeasePreparationDenialReason =
+  | AgentProofDenialReason | LeaseGateDenialReason;
+
+const ALLOWED_DENIAL_REASONS: ReadonlySet<string> = new Set([
+  "INVALID_TOKEN", "INVALID_KEY", "REGISTRATION_CONFLICT",
+  "INVALID_CHALLENGE", "BAD_SIGNATURE", "KEY_REVOKED", "INVALID_SCOPE",
+  "DEVICE_PROOF_REQUIRED", "NOT_ELIGIBLE", "INVALID_CONTEXT",
+  "UNTRUSTED_MACHINE_KEY", "STALE_KEY_PROOF", "RIGHTS_EXPIRE_TOO_SOON",
+]);
+
+/** A failed proof produces only a typed, unattributed, secret-free audit. */
+export async function auditDeniedProductLeasePreparationInTransaction(
+  tx: Prisma.TransactionClient,
+  reason: ProductLeasePreparationDenialReason,
+): Promise<void> {
+  if (!ALLOWED_DENIAL_REASONS.has(reason)) {
+    throw new Error("PRODUCT_LEASE_AUDIT_REASON_INVALID");
+  }
+  await tx.auditLog.create({
+    data: {
+      actorId: null,
+      accountId: null,
+      action: "AGENT_PRODUCT_LEASE_PREPARATION_DENIED",
+      targetType: "AgentProductLease",
+      targetId: null,
+      metadata: {
+        schema: "bke.product-lease.preparation-audit.v1",
+        reason,
+      },
+    },
+  });
+}
 
 /**
  * SOURCE-ONLY authorization journal, NOT an execution-lease issuer.
@@ -51,20 +93,6 @@ export async function prepareAndAuditProductLeaseInTransaction(
     return result;
   }
 
-  // Preserve a denial breadcrumb without trusting a client product/account,
-  // without storing bearer/pepper/PoP data and without forging attribution.
-  await tx.auditLog.create({
-    data: {
-      actorId: null,
-      accountId: null,
-      action: "AGENT_PRODUCT_LEASE_PREPARATION_DENIED",
-      targetType: "AgentProductLease",
-      targetId: null,
-      metadata: {
-        schema: "bke.product-lease.preparation-audit.v1",
-        reason: result.reason,
-      },
-    },
-  });
+  await auditDeniedProductLeasePreparationInTransaction(tx, result.reason);
   return result;
 }

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "pr": 359,
+  "intent": "Server-owned single SERIALIZABLE transaction binds real Agent LEASE-purpose nonce PoP to current DS account entitlement/registered key and sanitized PREPARED or DENIED audit; reject ENROLL before nonce burn; no JWS signing",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "entitlements",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-session-product-lease-atomic-preparation.test.ts",
+    "tests/agent-key-lease-purpose-guard.test.ts",
+    "tests/agent-session-product-lease-preparation-audit.test.ts",
+    "tests/agent-session-product-lease-transaction-gate.test.ts",
+    "tests/agent-key-possession-authority.test.ts"
+  ]
+}
