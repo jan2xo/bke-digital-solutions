@@ -1,9 +1,14 @@
 {
   "schemaVersion": 1,
   "pr": 366,
-  "intent": "Source-only, default-off PREPRODUCTION Agent Ed25519 public machine-key registration; two different recent Google ADMIN principals, independently checked public-key digest, signed private-key proof, SQL state transitions and irrevocable revocation.",
+  "intent": "Source-only PREPRODUCTION two-admin Agent startup machine trust lifecycle; independent recent Google ADMIN principals, matching Ed25519 SPKI fingerprint and fresh signed PoP, SQL irreversible staging/activation/revocation and audit; production enabled neither via flags nor API.",
   "requiredTargets": [
-    "pr"
+    "pr",
+    "core",
+    "identity",
+    "licensing",
+    "platform",
+    "prisma-isolation"
   ],
   "testFiles": [
     "tests/agent-startup-machine-trust-admin.test.ts",
