@@ -1,7 +1,7 @@
 import { AdminSchedulerActions } from "@/components/admin-scheduler-actions";
 import { schedulerHealth } from "@/apps/web/scheduler/health";
 
-const when = (value: Date | null) => value ? value.toLocaleString() : "Never";
+const when = (value: Date | null) => value ? value.toLocaleString("en-PH", { timeZone: "Asia/Manila" }) : "Never";
 export default async function SchedulerPage() {
   const health = await schedulerHealth();
   return <main className="shell py-10">
