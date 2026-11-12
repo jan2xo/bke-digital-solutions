@@ -38,7 +38,10 @@ export async function GET() {
     const [products, modes] = await Promise.all([
       db.product.findMany({ include: { editions: { include: { purchasePlans: true } }, versions: { orderBy: { releasedAt: "desc" } } }, orderBy: { createdAt: "desc" } }),
       db.$queryRaw<Array<{ id: string; activationMode: string }>>`
-        SELECT "id", "activationMode" FROM "Product"
+        SELECT p."id", COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+          FROM "Product" p
+          LEFT JOIN "ProductActivationPolicy" policy
+            ON policy."productId" = p."id"
       `,
     ]);
     const byId = new Map(modes.map(row => [row.id, row.activationMode]));
@@ -57,11 +60,11 @@ export async function POST(request: Request) {
     const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {
       const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
-      // Explicit SQL keeps the additive policy column usable before the
-      // repository's tracked generated Prisma client is refreshed.
+      // Dedicated SQL-owned policy table keeps Prisma Product and its generated
+      // model stable while permitting explicit account/key activation modes.
       await tx.$executeRaw`
-        UPDATE "Product" SET "activationMode" = ${input.activationMode}
-         WHERE "id" = ${created.id}
+        INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
+        VALUES (${created.id}, ${input.activationMode})
       `;
       await createEditionWithCommerce(tx, created.id, editionInput);
       return Object.assign(created, { activationMode: input.activationMode });
