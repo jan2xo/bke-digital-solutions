@@ -68,6 +68,8 @@ jobs:
         run: npx tsx modules/licensing/test/consumer-adoption.certify.ts
       - name: Certify dual account/license-key activation policy and legacy signed contract
         run: npx vitest run tests/licensing-dual-activation-mode.test.ts tests/licensing-contract.test.ts
+      - name: Certify authentic Agent signed issuance, signer key mismatch/rotation and HTTP denial
+        run: npx vitest run tests/agent-session-account-product-lease-issuance.test.ts tests/agent-session-account-product-lease-signer.test.ts tests/agent-session-account-product-lease-http.test.ts
       - name: Certify immutable Licensing 0.10 JWS against DS prepared claims (test keys only)
         run: npx vitest run tests/agent-session-licensing-v010-consumer.test.ts
       - name: Certify released refresh decision parity
