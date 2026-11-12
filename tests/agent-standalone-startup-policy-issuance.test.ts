@@ -74,8 +74,8 @@ function mockTx(mode: string | null = "LICENSE_KEY", proofRow = activeMachine) {
       .mockResolvedValueOnce([{ attestationId: id }])
       .mockResolvedValueOnce([activeDS]);
   };
-  const tx = { $queryRaw: query, auditLog: { create: audit } }
-    as unknown as Prisma.TransactionClient;
+  const tx = { $queryRaw: query, auditLog: { create: audit } } as unknown as
+    Prisma.TransactionClient;
   return { tx, query, audit, withProof };
 }
 
