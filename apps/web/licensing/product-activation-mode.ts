@@ -26,8 +26,10 @@ export type ActivationModeChangeEvidence = Readonly<{
   requestedMode: string;
   active: boolean;
   publishedAt: Date | null;
+  publishedEver: boolean;
   versionsCount: number;
   licensesCount: number;
+  subscriptionsCount: number;
   orderItemsCount: number;
 }>;
 
@@ -45,11 +47,13 @@ export function assertSafeProductActivationModeChange(
     throw new Error("PRODUCT_ACTIVATION_MODE_INVALID");
   }
   if (previousMode === requestedMode) return;
-  if (evidence.active || evidence.publishedAt !== null ||
+  if (evidence.active || evidence.publishedAt !== null || evidence.publishedEver !== false ||
       !Number.isSafeInteger(evidence.versionsCount) || evidence.versionsCount < 0 ||
       !Number.isSafeInteger(evidence.licensesCount) || evidence.licensesCount < 0 ||
+      !Number.isSafeInteger(evidence.subscriptionsCount) || evidence.subscriptionsCount < 0 ||
       !Number.isSafeInteger(evidence.orderItemsCount) || evidence.orderItemsCount < 0 ||
       evidence.versionsCount !== 0 || evidence.licensesCount !== 0 ||
+      evidence.subscriptionsCount !== 0 ||
       evidence.orderItemsCount !== 0) {
     throw new Error("PRODUCT_ACTIVATION_MODE_LOCKED");
   }
