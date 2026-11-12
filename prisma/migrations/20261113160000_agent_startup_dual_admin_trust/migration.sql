@@ -40,13 +40,17 @@ BEGIN
        NEW."activatedBy" = OLD."stagedBy" OR NEW."activatedAt" IS NULL OR
        NEW."reviewedAt" IS NULL OR NEW."activationProofSha256" IS NULL OR
        NEW."activationProofSha256" !~ '^[0-9a-f]{64}$' OR
-       NEW."revokedAt" IS NOT NULL THEN
+       NEW."revokedBy" IS NOT NULL OR NEW."revokedAt" IS NOT NULL THEN
       RAISE EXCEPTION 'AGENT_STARTUP_KEY_SECOND_ADMIN_PROOF_REQUIRED';
     END IF;
     RETURN NEW;
   END IF;
   IF OLD."status" IN ('STAGED','ACTIVE') AND NEW."status" = 'REVOKED' THEN
-    IF NEW."revokedAt" IS NULL OR NEW."revokedBy" IS NULL THEN
+    IF NEW."revokedAt" IS NULL OR NEW."revokedBy" IS NULL OR
+       NEW."activatedBy" IS DISTINCT FROM OLD."activatedBy" OR
+       NEW."activationProofSha256" IS DISTINCT FROM OLD."activationProofSha256" OR
+       NEW."reviewedAt" IS DISTINCT FROM OLD."reviewedAt" OR
+       NEW."activatedAt" IS DISTINCT FROM OLD."activatedAt" THEN
       RAISE EXCEPTION 'AGENT_STARTUP_KEY_REVOCATION_AUDIT_REQUIRED';
     END IF;
     RETURN NEW;
