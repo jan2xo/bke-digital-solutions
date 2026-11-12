@@ -27,10 +27,10 @@ export async function requireCommercialLicenseKeyActivation(
   if (typeof licenseKey !== "string" || !licenseKey.trim())
     throw new Error("INVALID_LICENSE");
   const rows = await db.$queryRaw<Array<{ activationMode: string }>>`
-    SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+    SELECT policy."activationMode" AS "activationMode"
       FROM "License" l
       JOIN "Product" p ON p."id" = l."productId"
-      LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+      JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
      WHERE l."keyHash" = ${hashLicenseKey(licenseKey)}
      LIMIT 1
   `;
