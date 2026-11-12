@@ -40,7 +40,20 @@ const truth = {
   agentKeyThumbprint: claims.agentKeyThumbprint, action: "OPEN" as const, now: t,
 };
 
-describe.runIf(process.env.BKE_ACCOUNT_PRODUCT_LEASE_DB_PROOF === "1")(
+const disposableCiDatabase = (() => {
+  // The PR-only scoped job has no PostgreSQL service. The Core runtime job
+  // runs with GITHUB_ACTIONS=true, NODE_ENV=test and localhost/bke_test after
+  // migrations. Never mutate production or a developer's local database.
+  if (process.env.GITHUB_ACTIONS !== "true" || process.env.NODE_ENV !== "test")
+    return false;
+  try {
+    const database = new URL(process.env.DATABASE_URL ?? "");
+    return (database.hostname === "localhost" || database.hostname === "127.0.0.1") &&
+      database.port === "5432" && database.pathname === "/bke_test";
+  } catch { return false; }
+})();
+
+describe.runIf(disposableCiDatabase)(
   "separate JWS signer key custody + rotation in disposable PostgreSQL",
   { concurrent: false }, () => {
     let adminUser = "";
