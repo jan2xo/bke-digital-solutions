@@ -26,8 +26,9 @@ SELECT p."id", 'EITHER',
 CREATE FUNCTION "initialize_product_activation_policy"()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
-  INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
-  VALUES (NEW."id", 'EITHER');
+  INSERT INTO "ProductActivationPolicy" ("productId", "activationMode", "publishedEver")
+  VALUES (NEW."id", 'EITHER',
+    (NEW."active" OR NEW."publishedAt" IS NOT NULL));
   RETURN NEW;
 END;
 $$;
