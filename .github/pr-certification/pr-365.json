@@ -1,9 +1,15 @@
 {
   "schemaVersion": 1,
   "pr": 365,
-  "intent": "Diagnostic proof for source-only, nonproduction SQL-owned standalone startup mode signing, registered Agent installation Ed25519 attestation, atomic nonce and audit. Production and actual machine enrollment remain locked.",
+  "intent": "Certify PREPRODUCTION DS-signed startup policy: registered Agent Ed25519 installer proof, immutable SQL mode and published release, atomic replay/audit PostgreSQL, account/key independence, no production issuer or customer endpoint.",
   "requiredTargets": [
-    "pr"
+    "pr",
+    "core",
+    "licensing",
+    "identity",
+    "entitlements",
+    "catalog",
+    "prisma-isolation"
   ],
   "testFiles": [
     "tests/agent-standalone-startup-policy-issuance.test.ts",
