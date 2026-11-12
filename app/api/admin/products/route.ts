@@ -12,6 +12,7 @@ import {
   normalizeEditionPlanForHost,
 } from "@/apps/web/commerce/edition-plan-management";
 import { acceptedVersionSchema, productIdSchema, validateAcceptedVersionRange } from "@/apps/web/catalog/product-identity";
+import { productActivationModes } from "@/apps/web/licensing/product-activation-mode";
 
 const schema = z.object({
   productId: productIdSchema,
@@ -24,6 +25,7 @@ const schema = z.object({
   type: z.enum(["SOFTWARE", "SAAS", "HYBRID"]).default("SOFTWARE"),
   category: z.string().trim().min(2).max(80).default("General"),
   licenseType: z.string().trim().min(2).max(80).default("Commercial"),
+  activationMode: z.enum(productActivationModes).default("EITHER"),
   featured: z.boolean().default(false),
   imageKey: z.string().trim().max(500).refine((value) => resolveProductImageUrl(value) !== null, "INVALID_IMAGE_URL").optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
@@ -47,11 +49,11 @@ export async function POST(request: Request) {
     validateAcceptedVersionRange(input.minimumAcceptedVersion, input.maximumAcceptedVersion);
     const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {
-      const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
+      const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, activationMode: input.activationMode, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
       await createEditionWithCommerce(tx, created.id, editionInput);
       return created;
     });
-    await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, edition: editionInput.name, planTypes: Object.entries(editionInput.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
+    await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, activationMode: product.activationMode, edition: editionInput.name, planTypes: Object.entries(editionInput.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
     return NextResponse.json(product, { status: 201 });
   } catch (error) { return apiError(error); }
 }
