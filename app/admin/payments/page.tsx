@@ -61,7 +61,7 @@ export default async function Payments() {
             x.order.number,
             x.provider,
             x.status,
-            x.createdAt.toLocaleString(),
+            x.createdAt.toLocaleString("en-PH", { timeZone: "Asia/Manila" }),
             <ReconcileButton key={x.id} orderId={x.orderId} />,
           ])}
         />
@@ -98,7 +98,7 @@ export default async function Payments() {
             x.localStatus,
             x.providerStatus ?? "—",
             x.state,
-            x.createdAt.toLocaleString(),
+            x.createdAt.toLocaleString("en-PH", { timeZone: "Asia/Manila" }),
           ])}
         />
       </section>
@@ -112,7 +112,7 @@ export default async function Payments() {
             `${x.currency} ${(x.amountMinor / 100).toLocaleString()}`,
             x.reasonCode,
             x.status,
-            x.createdAt.toLocaleString(),
+            x.createdAt.toLocaleString("en-PH", { timeZone: "Asia/Manila" }),
           ])}
         />
       </section>

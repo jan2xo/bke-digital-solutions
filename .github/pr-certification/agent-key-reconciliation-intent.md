@@ -1,11 +1,13 @@
-# Machine-key registration reconciliation: DS source intent
+# DS #348 — Agent key registration status/reconciliation (SOURCE ONLY)
 
-Authority: DS issue #340 — https://github.com/jan2xo/bke-digital-solutions/issues/340
-Upstream exact source head: `a7fa8738ab8a8dc6d8642e120d2016a853cd7524` (unmerged draft; no release activation).
+**Verified DS dependency:** #346 source merged as `main=3ca39757bc5366b914aaf84f125da54e69662cc3`; attached to DS #340 ledger. Independent Agent consumer not yet installed or runtime-proven.
 
-**Behavioral intent:** Do not lose registration proof on restart/ambiguous enrollment response. Reconcile authenticated server registration state with a private local key + DPAPI-protected durable receipt, refuse mismatched/foreign session or corrupt key/receipt. Require remote key revocation confirmation before local key destruction / account switch, and do not silently rotate under registration conflict. Keep existing identity/entitlement/Agent runtime boundaries. Do not claim TPM or protected provenance against stolen bearer.
+**Intent:** session-scoped, read-only status to reconcile protected Agent receipt after restart, refused ambiguous registration, wrong account/session/user/device, and terminal revocation; server-derived `EdDSA|ES256` algorithm and public SPKI thumbprint do not grant TPM claims. Never accept client-provided assurance, key algorithm, or private key.
 
-**Required exact-head graph:** `pr core licensing native-account identity prisma-isolation`. Reason: authenticated session-scoped SQL read endpoint and public protocol; persistence, identity, licensing and runtime trust ownership.
-**Not required:** payments/commerce/Resend/PayMongo, installer/UTM/release/publishing, Launcher/product, JWS entitlement/signing, production.
+**Security:** POST only, exact Agent protocol and Origin rejection, bearer authentication, strict bounded JSON, IP+bearer distributed fail-closed limits, disposable PostgreSQL SERIALIZABLE read. Existing #346 independent default-off `AGENT_KEY_HTTP_ENABLED` and unconditional production 404 gate apply to **all four operations, including status**; retained by the reconciled adapter and asserted by tests. Public LEASE/JWS signing remain unsupported.
 
-Security blockers: stolen bearer + initial enrollment is not installation attestation. No live DS HTTP cross-runtime E2E yet. No production or merge while upstream drafts are blocked. No automation of key deletion absent explicit confirmed remote state.
+**Declared minimum certification graph:** `pr core licensing native-account identity prisma-isolation` (6 owners). Core includes actual disposable DB, Next, Workers/workerd, containers and security. No host config change: Platform gating is inherited from independently certified #346 and reasserted in PR tests, not re-dispatched. Payments/commerce/catalog/product/Agent/installer/UTM/release/production NOT REQUIRED.
+
+**Cross-repo:** Agent owns machine key, protected receipt and lifecycle. Historical Agent #124 Windows source proof does not establish installed Agent or physical TPM. Actual Agent main/PR ancestry must be reconciled before product activation; no Agent source touched in this DS disabled route wave.
+
+**Source-only SHA-locked merge is authorized only after new exact-head 6/6 proof**, zero unresolved review, and expected-SHA merge. **Production/release locked**: no prod DB, deployment, key signing, PayMongo/Resend, installer/JWS package or catalog publication, or force push.

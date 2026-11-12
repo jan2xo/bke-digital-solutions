@@ -2,16 +2,29 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const adapter = readFileSync("apps/web/agent-sessions/agent-key-http.ts", "utf8");
-const routes = ["enroll", "verify", "revoke"].map((name) =>
+const routes = ["enroll", "verify", "revoke", "status"].map((name) =>
   readFileSync("app/api/agent-sessions/keys/" + name + "/route.ts", "utf8"));
 const authority = readFileSync("apps/web/agent-sessions/agent-key-proof-authority.ts", "utf8");
+const config = readFileSync("platform/host/config/environment.ts", "utf8");
 
 describe("Agent machine-key HTTP enrollment security contract", () => {
   it("has three POST-only endpoints through one audit boundary", () => {
-    ["enroll", "verify", "revoke"].forEach((name, index) => {
+    ["enroll", "verify", "revoke", "status"].forEach((name, index) => {
       expect(routes[index]).toContain('agentKeyHttp(request, "' + name + '")');
       expect(routes[index]).not.toContain("privateKey");
     });
+  });
+  it("does not activate key HTTP under a general Agent-session switch or production deployment", () => {
+    expect(config).toContain("AGENT_KEY_HTTP_ENABLED: bool.default(false)");
+    expect(adapter).toContain("!runtime.AGENT_ACCOUNT_SESSION_ENABLED");
+    expect(adapter).toContain("!runtime.AGENT_KEY_HTTP_ENABLED");
+    expect(adapter).toContain('runtime.DEPLOYMENT_ENV === "production"');
+    const gate = adapter.indexOf("!runtime.AGENT_KEY_HTTP_ENABLED");
+    expect(gate).toBeGreaterThan(-1);
+    expect(gate).toBeLessThan(adapter.indexOf("rejectBrowserOriginForAgent(request);"));
+    expect(gate).toBeLessThan(adapter.indexOf("nativeAgentBearerToken(request)"));
+    expect(gate).toBeLessThan(adapter.indexOf("db.$transaction("));
+    expect(config).not.toContain("V3_AGENT_KEY_HTTP_ENABLED");
   });
   it("checks Agent session protocol and Bearer before any key transaction", () => {
     expect(adapter).toContain("nativeAgentBearerToken(request)");

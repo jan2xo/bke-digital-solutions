@@ -1,8 +1,8 @@
 # Claim Code gift L2 proof — single-unit source authority
 
-**Status:** Implemented for certification. **NO MERGE / NO PRODUCTION.**
+**Status:** Source-only implementation prepared for exact-head certification and SHA-locked merge; **NO PRODUCTION / NO SOFTWARE RELEASE.**
 
-This stacked proof [DS PR #343](https://github.com/jan2xo/bke-digital-solutions/pull/343) is based on the exact-source-certifed [DS PR #341](https://github.com/jan2xo/bke-digital-solutions/pull/341) (head `6867b1eee0044abfbd4f5f7bfcad7fa59145e38e`).
+This source-only gift proof [DS PR #343](https://github.com/jan2xo/bke-digital-solutions/pull/343) is reconciled against merged, exact-head-certified [DS PR #341](https://github.com/jan2xo/bke-digital-solutions/pull/341) (`main` commit `638465a106b49fa0eaa7bbd3220c0437c92d0681`).
 
 ## Verified behavior and source ownership
 
@@ -18,4 +18,4 @@ The redemption source now refuses to treat the mere presence of an AVAILABLE cla
 
 **Minimum complete exact-head graph:** `pr + core + commerce + entitlements + licensing + catalog + native-account`. `core` owns all disposable DB runtime tests. Not required: Payments/provider canaries, production, Agent/Launcher/Render Dock binaries, Windows/UTM, installer, JWS package/release, real provider emails. Trigger only trusted `/certify` PR comment.
 
-**Production locks:** NO production deployment, DB mutation, PayMongo/Resend, signing cutover, installer/catalog/release publication or force push. No merge while stacked DS #341 remains draft/unreleased.
+**Production locks:** NO production deployment, DB mutation, PayMongo/Resend, signing cutover, installer/catalog/release publication or force push. DS #341 has merged as source; source-only #343 merge requires NEW exact-head seven-target proof and review. The shared JWS library and Agent verifier have merged as source, but no new immutable licensing package, installed Agent verifier, signed lease issuance, or production activation is authorized.

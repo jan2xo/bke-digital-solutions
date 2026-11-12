@@ -24,7 +24,7 @@ describe("Customer account yellow/white hierarchy", () => {
     expect(account).toContain('trials.length ? <div className="grid gap-3">');
     expect(account).toContain('<p className="account-trials-empty">No active trials.</p>');
     expect(account).toContain('trial.license.status');
-    expect(account).toContain('trial.graceEndsAt.toLocaleString()');
+    expect(account).toContain('trial.graceEndsAt.toLocaleString("en-PH", { timeZone: "Asia/Manila" })');
     expect(license).not.toContain("Reveal license key");
     expect(license).not.toContain("/api/licenses/");
     expect(account).toContain('AccountNotificationHighlights accountId={accountId}');
