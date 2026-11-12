@@ -111,7 +111,9 @@ describe("Digital Solutions dual-path product activation — signed lease policy
     expect(account).toContain('JOIN "ProductActivationPolicy" policy');
     expect(account).toContain("ProductActivationPolicy");
     expect(migration).toContain("ProductActivationPolicy_mode_supported_check");
-    expect(migration).toContain("SELECT p.\"id\", 'EITHER' FROM \"Product\" p");
+    expect(migration).toContain('INSERT INTO "ProductActivationPolicy" ("productId", "activationMode", "publishedEver")');
+    expect(migration).toContain('SELECT p."id", \'EITHER\',');
+    expect(migration).toContain('p."active" OR p."publishedAt" IS NOT NULL');
     expect(migration).toContain('CREATE TRIGGER "ProductActivationPolicy_default_on_create"');
     expect(migration).toContain('CREATE TRIGGER "ProductActivationPolicy_mark_published"');
     expect(update).toContain('publishedEver: rows[0]!.publishedEver');
