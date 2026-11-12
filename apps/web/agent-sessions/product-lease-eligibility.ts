@@ -3,6 +3,7 @@ import "server-only";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { authenticateAgentAccessToken } from "./device-authorization";
 import { readAgentSoftwareCatalog } from "@/apps/web/catalog/agent-software-catalog";
+import { allowsProductActivation } from "@/apps/web/licensing/product-activation-mode";
 import {
   evaluateProductLeaseEligibility,
   type ProductLeaseAction,
@@ -51,6 +52,23 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
   const product = catalog.find(item => item.productId === input.productId);
 
   if (!product?.entitled || !product.installable || !product.executionType) {
+    return { status: "denied", reason: "NOT_ENTITLED" };
+  }
+
+  // Account-based JWS eligibility MUST remain separate from the license-key
+  // commercial lease path. Key-only products cannot satisfy this by providing
+  // synthetic account/user/session IDs; the authenticated Agent identity above
+  // is necessary but never sufficient.
+  const productPolicy = await tx.$queryRaw<Array<{ activationMode: string }>>`
+    SELECT policy."activationMode" AS "activationMode"
+      FROM "Product" product
+      JOIN "ProductActivationPolicy" policy
+        ON policy."productId" = product."id"
+     WHERE product."productId" = ${input.productId}
+     LIMIT 1
+  `;
+  if (productPolicy.length !== 1 ||
+      !allowsProductActivation(productPolicy[0]!.activationMode, "ACCOUNT")) {
     return { status: "denied", reason: "NOT_ENTITLED" };
   }
 

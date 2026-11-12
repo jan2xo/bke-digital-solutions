@@ -12,6 +12,7 @@ import {
   normalizeEditionPlanForHost,
 } from "@/apps/web/commerce/edition-plan-management";
 import { acceptedVersionSchema, productIdSchema, validateAcceptedVersionRange } from "@/apps/web/catalog/product-identity";
+import { productActivationModes } from "@/apps/web/licensing/product-activation-mode";
 
 const schema = z.object({
   productId: productIdSchema,
@@ -24,6 +25,7 @@ const schema = z.object({
   type: z.enum(["SOFTWARE", "SAAS", "HYBRID"]).default("SOFTWARE"),
   category: z.string().trim().min(2).max(80).default("General"),
   licenseType: z.string().trim().min(2).max(80).default("Commercial"),
+  activationMode: z.enum(productActivationModes).default("EITHER"),
   featured: z.boolean().default(false),
   imageKey: z.string().trim().max(500).refine((value) => resolveProductImageUrl(value) !== null, "INVALID_IMAGE_URL").optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
@@ -33,7 +35,17 @@ const schema = z.object({
 export async function GET() {
   try {
     await requireAdmin();
-    return NextResponse.json(await db.product.findMany({ include: { editions: { include: { purchasePlans: true } }, versions: { orderBy: { releasedAt: "desc" } } }, orderBy: { createdAt: "desc" } }));
+    const [products, modes] = await Promise.all([
+      db.product.findMany({ include: { editions: { include: { purchasePlans: true } }, versions: { orderBy: { releasedAt: "desc" } } }, orderBy: { createdAt: "desc" } }),
+      db.$queryRaw<Array<{ id: string; activationMode: string }>>`
+        SELECT p."id", policy."activationMode"
+          FROM "Product" p
+          JOIN "ProductActivationPolicy" policy
+            ON policy."productId" = p."id"
+      `,
+    ]);
+    const byId = new Map(modes.map(row => [row.id, row.activationMode]));
+    return NextResponse.json(products.map(p => ({ ...p, activationMode: byId.get(p.id) ?? null })));
   } catch (error) { return apiError(error); }
 }
 
@@ -48,10 +60,18 @@ export async function POST(request: Request) {
     const editionInput = normalizeEditionPlanForHost(input.edition);
     const product = await db.$transaction(async (tx) => {
       const created = await tx.product.create({ data: { productId: input.productId, minimumAcceptedVersion: input.minimumAcceptedVersion, maximumAcceptedVersion: input.maximumAcceptedVersion, slug: input.slug, name: input.name, summary: input.summary, description: input.description, type: input.type, category: input.category, licenseType: input.licenseType, featured: input.featured, imageKey: input.imageKey, tags: input.tags, active: false } });
+      // Dedicated SQL-owned policy table keeps Prisma Product and its generated
+      // model stable while permitting explicit account/key activation modes.
+      await tx.$executeRaw`
+        INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
+        VALUES (${created.id}, ${input.activationMode})
+        ON CONFLICT ("productId") DO UPDATE
+          SET "activationMode" = EXCLUDED."activationMode"
+      `;
       await createEditionWithCommerce(tx, created.id, editionInput);
-      return created;
+      return Object.assign(created, { activationMode: input.activationMode });
     });
-    await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, edition: editionInput.name, planTypes: Object.entries(editionInput.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
+    await audit({ actorId: admin.id, action: "PRODUCT_CREATED", targetType: "Product", targetId: product.id, metadata: { slug: product.slug, category: product.category, activationMode: product.activationMode, edition: editionInput.name, planTypes: Object.entries(editionInput.plans).filter(([, value]) => value.enabled).map(([type]) => type) } });
     return NextResponse.json(product, { status: 201 });
   } catch (error) { return apiError(error); }
 }

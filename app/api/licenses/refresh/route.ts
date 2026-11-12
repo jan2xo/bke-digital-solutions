@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/platform/host/db";
 import { activationSchema } from "@/apps/web/http/validation";
-import { issueCommercialLease } from "@/apps/web/licensing/commercial-lease";
+import { issueCommercialLease, requireCommercialLicenseKeyActivation } from "@/apps/web/licensing/commercial-lease";
 import { clientIp } from "@/apps/web/http/request";
 import { rateLimit } from "@/apps/web/http/rate-limit";
 import { decryptLicenseKey, hashLicenseKey } from "@/platform/host/security/crypto";
@@ -18,6 +18,8 @@ export async function POST(request: Request) {
     requireCloudAgentVersion(request);
     const input = schema.parse(await request.json());
     if (!(await rateLimit(`refresh:${clientIp(request)}:${input.licenseKey.slice(-4)}`, 20, 3600)).allowed) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
+    // Even a reused cached lease must not bypass the product key-mode gate.
+    await requireCommercialLicenseKeyActivation(input.licenseKey);
     const license = await db.license.findUnique({
       where: { keyHash: hashLicenseKey(input.licenseKey) },
       include: { leaseHistory: true, product: { include: { versions: { where: { active: true, lifecycle: { in: ["STABLE", "LTS"] } }, orderBy: { releasedAt: "desc" }, take: 1, select: { version: true } } } } },

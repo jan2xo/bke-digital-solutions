@@ -3,6 +3,10 @@ import { z } from "zod";
 import { requireAdmin } from "@/apps/web/auth/session";
 import { db } from "@/platform/host/db";
 import { assertSameOrigin } from "@/apps/web/http/request";
+import {
+  assertSafeProductActivationModeChange,
+  productActivationModes,
+} from "@/apps/web/licensing/product-activation-mode";
 import { audit } from "@/apps/web/audit";
 import { apiError } from "@/apps/web/http/api-error";
 import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
@@ -26,6 +30,7 @@ const schema = z.object({
   description: z.string().trim().min(10).max(10_000).optional(),
   category: z.string().trim().min(2).max(80).optional(),
   licenseType: z.string().trim().min(2).max(80).optional(),
+  activationMode: z.enum(productActivationModes).optional(),
   featured: z.boolean().optional(),
   imageKey: z.string().trim().max(500).refine((value) => resolveProductImageUrl(value) !== null, "INVALID_IMAGE_URL").nullable().optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
@@ -114,7 +119,65 @@ export async function PATCH(
     };
 
     const product = await db.$transaction(async (tx) => {
+      if (input.activationMode !== undefined) {
+        // This same Product row lock serializes competing administrator changes
+        // and prevents a late mode switch from silently stranding license keys.
+        const rows = await tx.$queryRaw<Array<{
+          activationMode: string;
+          publishedEver: boolean;
+          active: boolean;
+          publishedAt: Date | null;
+        }>>`
+          SELECT policy."activationMode", policy."publishedEver",
+                 p."active", p."publishedAt"
+            FROM "Product" p
+            JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+           WHERE p."id" = ${id}
+           FOR UPDATE OF p, policy
+        `;
+        if (rows.length !== 1) throw new Error("PRODUCT_NOT_FOUND");
+        const [versionsCount, licensesCount, subscriptionsCount, orderItemsCount] = await Promise.all([
+          tx.productVersion.count({ where: { productId: id } }),
+          tx.license.count({ where: { productId: id } }),
+          tx.subscription.count({ where: { productId: id } }),
+          tx.orderItem.count({ where: { productId: id } }),
+        ]);
+        assertSafeProductActivationModeChange({
+          previousMode: rows[0]!.activationMode,
+          requestedMode: input.activationMode,
+          active: rows[0]!.active,
+          publishedAt: rows[0]!.publishedAt,
+          publishedEver: rows[0]!.publishedEver,
+          versionsCount,
+          licensesCount,
+          subscriptionsCount,
+          orderItemsCount,
+        });
+        if (rows[0]!.activationMode !== input.activationMode) {
+          // The policy decision and its audit must commit or roll back as one.
+          await tx.auditLog.create({
+            data: {
+              actorId: admin.id,
+              action: "PRODUCT_ACTIVATION_MODE_CHANGED",
+              targetType: "Product",
+              targetId: id,
+              metadata: {
+                previousMode: rows[0]!.activationMode,
+                newMode: input.activationMode,
+              },
+            },
+          });
+        }
+      }
       const updated = await tx.product.update({ where: { id }, data });
+      if (input.activationMode !== undefined) {
+        await tx.$executeRaw`
+          INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
+          VALUES (${id}, ${input.activationMode})
+          ON CONFLICT ("productId") DO UPDATE
+            SET "activationMode" = EXCLUDED."activationMode"
+        `;
+      }
       if (input.launcherExecutionType !== undefined) {
         await tx.$executeRaw`
           UPDATE "Product"
@@ -128,11 +191,13 @@ export async function PATCH(
     });
 
     const executionRows = await db.$queryRaw<
-      Array<{ launcherExecutionType: "LAUNCHER_PLUGIN" | "STANDALONE" | null }>
+      Array<{ launcherExecutionType: "LAUNCHER_PLUGIN" | "STANDALONE" | null; activationMode: string }>
     >`
-      SELECT "launcherExecutionType"::text AS "launcherExecutionType"
-        FROM "Product"
-       WHERE "id" = ${id}
+      SELECT p."launcherExecutionType"::text AS "launcherExecutionType",
+             policy."activationMode" AS "activationMode"
+        FROM "Product" p
+        JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+       WHERE p."id" = ${id}
        LIMIT 1
     `;
 
@@ -147,6 +212,7 @@ export async function PATCH(
     return NextResponse.json({
       ...product,
       launcherExecutionType: executionRows[0]?.launcherExecutionType ?? null,
+      activationMode: executionRows[0]?.activationMode ?? null,
     });
   } catch (error) {
     return apiError(error);

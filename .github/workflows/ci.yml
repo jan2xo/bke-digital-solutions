@@ -100,6 +100,10 @@ jobs:
         run: npm test -- tests/integration/staging-legal-bootstrap.test.ts
       - name: Seed disposable test database
         run: npm run db:seed
+      - name: Prove account/key activation policy in disposable PostgreSQL
+        env:
+          BKE_PRODUCT_ACTIVATION_DB_PROOF: '1'
+        run: npx vitest run tests/integration/product-activation-mode-migration.test.ts
       - name: Generate disposable test signing keys
         run: |
           npm run licensing:keys .certification-secrets

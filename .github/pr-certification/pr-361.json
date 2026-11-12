@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "pr": 361,
+  "intent": "Certify dual-path ACCOUNT/ LICENSE_KEY/ EITHER product activation. Preserve Google-free commercial key signing, deny account JWS on key-only products, lock and audit policy changes, and prove additive SQL-owned policy persistence in disposable PostgreSQL. No production activation or signing cutover.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "catalog",
+    "identity",
+    "entitlements",
+    "native-account",
+    "commerce",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/licensing-dual-activation-mode.test.ts",
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/licensing-contract.test.ts"
+  ]
+}

@@ -5,6 +5,7 @@ import { decryptLicenseKey } from "@/platform/host/security/crypto";
 import { assertSameOrigin } from "@/apps/web/http/request";
 import { apiError } from "@/apps/web/http/api-error";
 import { assertLegalAcceptanceCurrent } from "@/apps/web/legal/service";
+import { allowsProductActivation } from "@/apps/web/licensing/product-activation-mode";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -25,6 +26,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       },
     });
     if (!license) throw new Error("NOT_FOUND");
+    const modes = await db.$queryRaw<Array<{ activationMode: string }>>`
+      SELECT policy."activationMode" AS "activationMode"
+        FROM "Product" p
+        JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+       WHERE p."id" = ${license.productId}
+    `;
+    if (modes.length !== 1 ||
+        !allowsProductActivation(modes[0]!.activationMode, "LICENSE_KEY"))
+      return NextResponse.json({ error: "LICENSE_KEY_UNAVAILABLE" }, { status: 409 });
     if (!license.keyCiphertext) return NextResponse.json({ error: "LICENSE_KEY_UNAVAILABLE" }, { status: 409 });
 
     const key = decryptLicenseKey(license.keyCiphertext);
