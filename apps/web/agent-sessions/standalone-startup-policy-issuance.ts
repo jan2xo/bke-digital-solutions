@@ -4,6 +4,8 @@ import { createHash } from "node:crypto";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import { verifyStandaloneStartupInstallAttestationInTransaction } from
   "./standalone-startup-install-attestation";
+import { startupEs256Contract, verifyStartupEs256AttestationInTransaction } from
+  "./standalone-startup-es256-attestation";
 import { signStandaloneStartupPolicyInTransaction } from
   "./account-product-lease-signer";
 import { productActivationModes, type ProductActivationMode } from
@@ -43,7 +45,7 @@ export type IssuedStandaloneStartupPolicy = Readonly<{
  * signed is delivered until the outer transaction commits.
  *
  * Machine identity is NOT taken from a product form: it is verified from an
- * independently registered, fresh Ed25519 Agent installer attestation.
+ * independently registered, fresh Ed25519 v1 or distinct SQL-enrolled ES256 v2 Agent attestation.
  * Exactly one published SQL ProductActivationPolicy row supplies mode.
  * This is install policy, NOT an account or commercial entitlement.
  */
@@ -58,8 +60,19 @@ export async function prepareAndSignStandaloneStartupPolicyInTransaction(
   if (!(now instanceof Date) || !Number.isFinite(now.getTime()))
     throw new Error("STARTUP_POLICY_CLOCK_INVALID");
 
-  const attested = await verifyStandaloneStartupInstallAttestationInTransaction(
-    tx, input.signedAgentInstallAttestation, now);
+  // Only explicit v2 schema selects ES256, whose verifier still requires a
+  // SQL ACTIVE key with algorithm='ES256'. Never algorithm-probe/fallback.
+  let v2 = false;
+  try {
+    const header = JSON.parse(input.signedAgentInstallAttestation) as
+      { schema?: unknown };
+    v2 = header?.schema === startupEs256Contract.envelopeSchema;
+  } catch { /* v1 verifier will reject malformed JSON. */ }
+  const attested = v2
+    ? await verifyStartupEs256AttestationInTransaction(
+        tx, input.signedAgentInstallAttestation, now)
+    : await verifyStandaloneStartupInstallAttestationInTransaction(
+        tx, input.signedAgentInstallAttestation, now);
 
   const rows = await tx.$queryRaw<SqlProductMode[]>`
     SELECT p."productId" AS "productId", pv."version" AS "version",
@@ -140,6 +153,8 @@ export async function prepareAndSignStandaloneStartupPolicyInTransaction(
         schema: "bke.standalone-startup-issuance-audit.v1",
         kid: signed.kid,
         attestationKid: attested.signerKid,
+        attestationAlgorithm: v2 ? "ES256" : "Ed25519",
+        hardwareAttested: false,
         productId: attested.productId,
         productVersion: attested.version,
         activationMode: mode,
