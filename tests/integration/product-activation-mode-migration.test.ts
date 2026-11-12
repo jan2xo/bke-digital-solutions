@@ -104,6 +104,23 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
     expect(rows[0]?.missing).toBe(0n);
   });
 
+  it("remembers publication permanently across unpublish", async () => {
+    const id = created[0]!;
+    const published = await db.product.update({
+      where: { id },
+      data: { active: true, publishedAt: new Date("2026-11-12T00:00:00Z") },
+    });
+    expect(published.active).toBe(true);
+    await db.product.update({
+      where: { id },
+      data: { active: false, publishedAt: null },
+    });
+    const history = await db.$queryRaw<Array<{ publishedEver: boolean }>>`
+      SELECT "publishedEver" FROM "ProductActivationPolicy" WHERE "productId" = ${id}
+    `;
+    expect(history).toEqual([{ publishedEver: true }]);
+  });
+
   it("database CHECK constraint rejects a fabricated activation credential mode", async () => {
     const id = created[0]!;
     await expect(db.$executeRaw`
