@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "pr": 366,
+  "intent": "Source-only, default-off PREPRODUCTION Agent Ed25519 public machine-key registration; two different recent Google ADMIN principals, independently checked public-key digest, signed private-key proof, SQL state transitions and irrevocable revocation.",
+  "requiredTargets": [
+    "pr"
+  ],
+  "testFiles": [
+    "tests/agent-startup-machine-trust-admin.test.ts",
+    "tests/agent-standalone-startup-policy-issuance.test.ts"
+  ]
+}
