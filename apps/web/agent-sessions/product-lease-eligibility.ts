@@ -59,12 +59,14 @@ export async function checkAgentProductLeaseEligibilityInTransaction(
   // commercial lease path. Key-only products cannot satisfy this by providing
   // synthetic account/user/session IDs; the authenticated Agent identity above
   // is necessary but never sufficient.
-  const productPolicy = await tx.product.findFirst({
-    where: { productId: input.productId },
-    select: { activationMode: true },
-  });
-  if (!productPolicy ||
-      !allowsProductActivation(productPolicy.activationMode, "ACCOUNT")) {
+  const productPolicy = await tx.$queryRaw<Array<{ activationMode: string }>>`
+    SELECT "activationMode"
+      FROM "Product"
+     WHERE "productId" = ${input.productId}
+     LIMIT 1
+  `;
+  if (productPolicy.length !== 1 ||
+      !allowsProductActivation(productPolicy[0]!.activationMode, "ACCOUNT")) {
     return { status: "denied", reason: "NOT_ENTITLED" };
   }
 
