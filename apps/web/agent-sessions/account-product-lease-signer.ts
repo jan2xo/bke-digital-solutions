@@ -139,7 +139,7 @@ export async function signStandaloneStartupPolicyInTransaction(
   const row = rows[0]!;
   const pem = privatePemFromKeyset(keyset, row);
   const signature = sign(null, Buffer.from(
-    "BKE-STANDALONE-STARTUP-POLICY-V1\\n" + payload, "utf8"),
+    "BKE-STANDALONE-STARTUP-POLICY-V1\n" + payload, "utf8"),
     createPrivateKey(pem)).toString("base64");
   return Object.freeze({ kid: row.kid, signature });
 }
