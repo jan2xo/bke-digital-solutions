@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 354,
+  "intent": "Show all audited BKE Digital Solutions admin/customer timestamps in Asia/Manila independent of runtime and parse offer datetime-local fields as PHT before sending unchanged UTC ISO instants to commerce authority",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "commerce",
+    "legal"
+  ],
+  "testFiles": [
+    "tests/philippine-time-presentation.test.ts"
+  ]
+}
