@@ -3,6 +3,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/platform/persistence/generated/prisma/client";
 import { allowsProductActivation } from "@/apps/web/licensing/product-activation-mode";
+import { readAgentSoftwareCatalog } from "@/apps/web/catalog/agent-software-catalog";
 
 const db = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
@@ -151,4 +152,42 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
     `;
     expect(original[0]?.activationMode).toBe("EITHER");
   });
+  it("projects actual PostgreSQL activation policy into Agent catalog and hides missing-policy products", async () => {
+    const p = await db.product.create({ data: {
+      slug: `activation-catalog-${suffix}`,
+      name: "Account Catalog Policy Fixture",
+      summary: "Disposable policy projection proof",
+      description: "Verifies account catalog never fabricates missing licensing policy",
+      type: "SOFTWARE",
+      active: false,
+    } });
+    created.push(p.id);
+    await db.$executeRaw`
+      UPDATE "ProductActivationPolicy" SET "activationMode" = 'LICENSE_KEY'
+       WHERE "productId" = ${p.id}
+    `;
+    await db.product.update({
+      where: { id: p.id },
+      data: { active: true, publishedAt: new Date() },
+    });
+    const input = {
+      accountId: "disposable-no-entitlement",
+      userId: "disposable-no-user",
+      platform: "windows" as const,
+      architecture: "x64" as const,
+    };
+    const before = await db.$transaction((tx) => readAgentSoftwareCatalog(tx, input));
+    const keyOnly = before.find((product) => product.productId === p.productId);
+    expect(keyOnly).toMatchObject({
+      activationMode: "LICENSE_KEY",
+      entitled: false,
+      installable: false,
+    });
+    await db.$executeRaw`
+      DELETE FROM "ProductActivationPolicy" WHERE "productId" = ${p.id}
+    `;
+    const after = await db.$transaction((tx) => readAgentSoftwareCatalog(tx, input));
+    expect(after.some((product) => product.productId === p.productId)).toBe(false);
+  });
+
 });
