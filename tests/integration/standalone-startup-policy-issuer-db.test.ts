@@ -137,6 +137,18 @@ describe.runIf(eligible)(
                "activationProofSha256"=${"a".repeat(64)}
          WHERE "kid"=${machineKid}
       `).rejects.toThrow();
+      await expect(db.$executeRaw`
+        UPDATE "AgentStartupAttestationSigningKey"
+           SET "stagedBy"=${reviewingAdminId}
+         WHERE "kid"=${machineKid}
+      `).rejects.toThrow();
+      await expect(db.$executeRaw`
+        UPDATE "AgentStartupAttestationSigningKey"
+           SET "status"='ACTIVE', "activatedAt"=now(),
+               "activatedBy"=${reviewingAdminId}, "reviewedAt"=now(),
+               "activationProofSha256"=NULL
+         WHERE "kid"=${machineKid}
+      `).rejects.toThrow();
       await db.$executeRaw`
         UPDATE "AgentStartupAttestationSigningKey"
            SET "status"='ACTIVE', "activatedAt"=now(),
@@ -275,6 +287,12 @@ describe.runIf(eligible)(
            SET "status" = 'ACTIVE', "revokedAt" = NULL
          WHERE "kid" = ${machineKid}
       `).rejects.toThrow();
+      await expect(db.$executeRaw`
+        UPDATE "AgentStartupAttestationSigningKey"
+           SET "activationProofSha256" = ${"c".repeat(64)}
+         WHERE "kid" = ${machineKid}
+      `).rejects.toThrow();
+
       const proof = makeAttestation();
       await expect(db.$transaction(
         tx => prepareAndSignStandaloneStartupPolicyInTransaction(tx, {
