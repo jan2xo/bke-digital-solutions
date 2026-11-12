@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 346,
+  "intent": "Authenticate Agent bearer and strictly rate-limit EdDSA/ES256 public key ENROLL/verify/revoke routes, with independent disabled-by-default gate and unconditional production denial, using serializable one-time DS public-key authority; no external LEASE or JWS signing",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "prisma-isolation",
+    "platform"
+  ],
+  "testFiles": [
+    "tests/agent-key-http-contract.test.ts",
+    "tests/agent-key-possession-authority.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
+  ]
+}

@@ -1,0 +1,15 @@
+# BKE machine-key HTTP enrollment — source-only certification plan
+
+Master ledger: https://github.com/jan2xo/bke-digital-solutions/issues/340
+
+Intent: authenticated Agent private-key public enrollment, DS-issued one-time ENROLL challenge, exact signature verification, and authenticated revocation. LEASE issuance remains private / unsupported externally until an entitlement-checked transactional JWS signer exists.
+
+Source parent: DS #345 merged as `main=982732631cf21eeaf336f9b04909fd37c23188d7`, exact source 8/8 PASS. Shared JWS library source `28f08cd07071d00194dd672c6f186dd628e9803a` remains UNRELEASED as a new immutable package; Agent verifier source `2a697fc03c96130348888f1d941fc684a210344a` merged. Agent #123 was marked merged in GitHub PR metadata, but current Agent main at this checkpoint does not yet contain that merge; do NOT assert installed consumer readiness from its historical checks.
+
+Security: DS authenticates an existing Agent bearer, validates version/Origin, applies distributed fail-closed IP and token-scoped limits before DB writes; strict bounded payloads; executes existing key authority under SERIALIZABLE; produces only public key/challenge/verification state; no secrets or trusted proof material exposed. **Independent default-off `AGENT_KEY_HTTP_ENABLED` gate** is required in addition to `AGENT_ACCOUNT_SESSION_ENABLED`; the route unconditionally returns 404 in `DEPLOYMENT_ENV=production`. Enabling generic Agent sessions alone cannot expose enrollment. Future production activation requires an explicitly authorized security and consumer certification intent. Agent securely carries token, verifies DS challenge envelope via local protected key, refuses redirect, inconsistent signed context, malformed responses and untrusted servers.
+
+DS required graph (7 behavior owners): pr core licensing native-account identity prisma-isolation platform (because the new explicit config gate changes protected runtime configuration alongside HTTP/session/cryptographic persistence). Real PostgreSQL, Next, Workers/workerd and containers are owned by Core. Entitlement/catalog not changed: no LEASE endpoint or signer. Agent-side contracts/windows-x64 historical source proof may be referenced only as historical evidence; Agent main must be independently reconciled before any installed transport / device-provenance claim or live end-to-end activation.
+
+Not required: commerce/payments, package publishing, installer lifecycle, UTM/VM, Launcher, Render Dock, live prod route, JWS signing, product execution.
+
+Current DS #345 source dependency is merged. This PR may SHA-lock **source-only** merge after exact-head 7/7 CI and review under the current GO authorization; its routes are independently default-off and impossible to enable in production without a future code change. No production deploy, production DB mutation, real payment/email, release, signing or installer cutover.
