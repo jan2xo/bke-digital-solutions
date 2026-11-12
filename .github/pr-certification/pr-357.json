@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pr": 357,
+  "intent": "Journal prepared versus denied server-authenticated Agent account-product lease decisions in the exact existing transaction; do not issue JWS; fail closed on audit persistence and exclude all bearer/nonce/secret material",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "entitlements",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-session-product-lease-preparation-audit.test.ts",
+    "tests/agent-session-product-lease-transaction-gate.test.ts",
+    "tests/agent-session-product-lease-issuance-plan.test.ts",
+    "tests/agent-key-possession-authority.test.ts"
+  ]
+}
