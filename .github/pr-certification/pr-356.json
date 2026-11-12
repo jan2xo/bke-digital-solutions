@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 356,
+  "intent": "Fail closed immediately before future signed account-product lease issuance: authenticate L2 server entitlement, lock and recheck exact live EdDSA/ES256 ACTIVE Agent registration, and consume one-use verified proof without issuing JWS",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "entitlements",
+    "native-account",
+    "identity",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-session-product-lease-transaction-gate.test.ts",
+    "tests/agent-session-product-lease-issuance-plan.test.ts",
+    "tests/agent-key-possession-authority.test.ts"
+  ]
+}
