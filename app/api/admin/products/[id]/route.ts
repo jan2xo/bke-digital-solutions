@@ -3,6 +3,10 @@ import { z } from "zod";
 import { requireAdmin } from "@/apps/web/auth/session";
 import { db } from "@/platform/host/db";
 import { assertSameOrigin } from "@/apps/web/http/request";
+import {
+  assertSafeProductActivationModeChange,
+  productActivationModes,
+} from "@/apps/web/licensing/product-activation-mode";
 import { audit } from "@/apps/web/audit";
 import { apiError } from "@/apps/web/http/api-error";
 import { resolveProductImageUrl } from "@/apps/web/catalog/product-image";
@@ -26,6 +30,7 @@ const schema = z.object({
   description: z.string().trim().min(10).max(10_000).optional(),
   category: z.string().trim().min(2).max(80).optional(),
   licenseType: z.string().trim().min(2).max(80).optional(),
+  activationMode: z.enum(productActivationModes).optional(),
   featured: z.boolean().optional(),
   imageKey: z.string().trim().max(500).refine((value) => resolveProductImageUrl(value) !== null, "INVALID_IMAGE_URL").nullable().optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
@@ -99,6 +104,7 @@ export async function PATCH(
       description: input.description,
       category: input.category,
       licenseType: input.licenseType,
+      activationMode: input.activationMode,
       featured: input.featured,
       imageKey: input.imageKey,
       tags: input.tags,
@@ -114,6 +120,33 @@ export async function PATCH(
     };
 
     const product = await db.$transaction(async (tx) => {
+      if (input.activationMode !== undefined) {
+        // This same Product row lock serializes competing administrator changes
+        // and prevents a late mode switch from silently stranding license keys.
+        const rows = await tx.$queryRaw<Array<{
+          activationMode: string;
+          active: boolean;
+          publishedAt: Date | null;
+        }>>`
+          SELECT "activationMode", "active", "publishedAt"
+            FROM "Product" WHERE "id" = ${id} FOR UPDATE
+        `;
+        if (rows.length !== 1) throw new Error("PRODUCT_NOT_FOUND");
+        const [versionsCount, licensesCount, orderItemsCount] = await Promise.all([
+          tx.productVersion.count({ where: { productId: id } }),
+          tx.license.count({ where: { productId: id } }),
+          tx.orderItem.count({ where: { productId: id } }),
+        ]);
+        assertSafeProductActivationModeChange({
+          previousMode: rows[0]!.activationMode,
+          requestedMode: input.activationMode,
+          active: rows[0]!.active,
+          publishedAt: rows[0]!.publishedAt,
+          versionsCount,
+          licensesCount,
+          orderItemsCount,
+        });
+      }
       const updated = await tx.product.update({ where: { id }, data });
       if (input.launcherExecutionType !== undefined) {
         await tx.$executeRaw`
