@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "pr": 345,
+  "intent": "Proof of actual EdDSA/ES256 64-byte one-time signed Agent challenges, persisted algorithm + license claims in disposable PostgreSQL, cross-language golden vectors and no false TPM attestation",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "entitlements",
+    "catalog",
+    "native-account",
+    "identity",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-key-possession-authority.test.ts",
+    "tests/agent-session-product-lease-issuance-plan.test.ts",
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
+  ]
+}
