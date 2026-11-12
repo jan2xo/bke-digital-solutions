@@ -23,6 +23,7 @@ export const environmentSchema = z.object({
   CLAIM_CODE_CHECKOUT_ENABLED: bool.default(false),
   CLAIM_CODE_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENABLED: bool.default(false),
+  AGENT_KEY_HTTP_ENABLED: bool.default(false),
   AGENT_ACCOUNT_SESSION_PEPPER: z.preprocess(optional, secret.optional()),
   AGENT_ACCOUNT_SESSION_ENCRYPTION_KEY: z.preprocess(optional, secret.optional()),
   LICENSE_SIGNING_PRIVATE_KEY: z.preprocess(optional, z.string().min(64).optional()),
