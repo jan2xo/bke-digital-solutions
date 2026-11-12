@@ -152,7 +152,7 @@ export async function verifyStandaloneStartupInstallAttestationInTransaction(
     SELECT "kid", "deviceId", "publicKeyPem", "status"
       FROM "AgentStartupAttestationSigningKey"
      WHERE "kid" = ${kid} AND "deviceId" = ${deviceId}
-       AND "status" = 'ACTIVE'
+       AND "algorithm" = 'Ed25519' AND "status" = 'ACTIVE'
      FOR SHARE
   `;
   if (rows.length !== 1 || rows[0]!.kid !== kid ||
