@@ -4,7 +4,7 @@
 
 ## Canonical product policy
 
-Digital Solutions `Product.activationMode` is independent from the existing product's commercial `licenseType` and purchase/edition plan. Values are fixed:
+Digital Solutions maintains an explicit `ProductActivationPolicy` record keyed by canonical `Product.id`. This SQL-owned table is independent from the existing product's commercial `licenseType` and purchase/edition plan; no new Prisma-generated Product field is required. Values are fixed:
 
 | `activationMode` | Account session + signed product lease | Commercial license key + signed lease |
 | --- | --- | --- |
@@ -12,7 +12,7 @@ Digital Solutions `Product.activationMode` is independent from the existing prod
 | `LICENSE_KEY` | Denied (cannot fake account/Agent session) | Allowed, after real key, license, product and device checks |
 | `EITHER` | Allowed, each independently verified | Allowed, each independently verified |
 
-**Backward compatibility:** all pre-existing products and new products without explicit activation choice get `EITHER` from the additive PostgreSQL migration, regardless of their existing `licenseType` label. No customer license keys are revoked, repurposed, hidden or invalidated by this source change. A disabled/unknown mode fails closed (CHECK constraint plus runtime validation). A published, active, versioned, purchased or already licensed product **cannot change activation mode through the admin API**, preventing silent removal of an existing route after sale. Draft new products may select their mode. The admin route locks the Product row, checks live dependent histories and durably writes a PRODUCT_ACTIVATION_MODE_CHANGED audit record **in the same update transaction**; audit failure rolls the policy change back.
+**Backward compatibility:** all pre-existing products with no policy row resolve to `EITHER` through `COALESCE`, and new products without an explicit activation choice are persisted as `EITHER`, regardless of their existing `licenseType` label. No customer license keys are revoked, repurposed, hidden or invalidated by this source change. Invalid persisted modes fail closed (database CHECK constraint plus runtime validation). A published, active, versioned, purchased or already licensed product **cannot change activation mode through the admin API**, preventing silent removal of an existing route after sale. Draft new products may select their mode. The admin route locks the Product row, checks live dependent histories and durably writes a PRODUCT_ACTIVATION_MODE_CHANGED audit record **in the same update transaction**; audit failure rolls the policy change back.
 
 ## Two signing/verification protocols, not interchangeable
 
@@ -26,10 +26,10 @@ Digital Solutions `Product.activationMode` is independent from the existing prod
 
 ## Migration / compatibility assurance
 
-- Additive SQL: `Product.activationMode TEXT NOT NULL DEFAULT 'EITHER'`, CHECK only three exact values, no destructive operations.
+- Additive SQL: `ProductActivationPolicy(productId PRIMARY KEY REFERENCES Product, activationMode TEXT CHECK (...))`, with missing-row fallback `EITHER` via `COALESCE`, no destructive operations and no changes to the tracked generated Prisma Product client.
 - Preserves existing `licenseType` and edition/commerce policy; no V2/V3-versioned feature flag added.
 - Admin POST accepts explicit product activationMode, defaults to EITHER; PATCH rejects a policy change after live/version/commerce history even if the new value is otherwise supported.
-- Disposable PostgreSQL proves EITHER default, ACCOUNT and LICENSE_KEY persisted, invalid mode rejected at DB, and unaffected commercial type.
+- Disposable PostgreSQL (explicit Core database job only) proves EITHER fallback for missing policy, ACCOUNT and LICENSE_KEY rows persisted, invalid mode rejected at DB, and unaffected commercial type; PR/no-DB modules do not execute this integration.
 - Pure tests cover both paths, fail-closed unknown modes, immutability of live policy and key-vs-account routing; source regressions check real path wiring.
 - Cross-repo Agent main at inspection `2a697fc03c96130348888f1d941fc684a210344a` already contains account JWS verifier and legacy commercial lease infrastructure. This wave does not change Agent; separately certify installed Agent/Launcher behavior when customer-facing activation mode selection is wired.
 
