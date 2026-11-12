@@ -54,7 +54,7 @@ describe("intent-driven certification orchestration", () => {
       result.status,
       [result.stdout, result.stderr].filter(Boolean).join("\n"),
     ).toBe(0);
-  });
+  }, 20_000); // Full Ruby YAML parse can exceed Vitest's 5s default under parallel CI.
 
   it("keeps the retired PR guard only in the inert legacy archive", () => {
     expect(activeWorkflowNames()).not.toContain("pr-guard.yml");
