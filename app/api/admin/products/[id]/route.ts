@@ -127,12 +127,12 @@ export async function PATCH(
           active: boolean;
           publishedAt: Date | null;
         }>>`
-          SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode",
+          SELECT policy."activationMode",
                  p."active", p."publishedAt"
             FROM "Product" p
-            LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+            JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
            WHERE p."id" = ${id}
-           FOR UPDATE OF p
+           FOR UPDATE OF p, policy
         `;
         if (rows.length !== 1) throw new Error("PRODUCT_NOT_FOUND");
         const [versionsCount, licensesCount, orderItemsCount] = await Promise.all([
@@ -190,9 +190,9 @@ export async function PATCH(
       Array<{ launcherExecutionType: "LAUNCHER_PLUGIN" | "STANDALONE" | null; activationMode: string }>
     >`
       SELECT p."launcherExecutionType"::text AS "launcherExecutionType",
-             COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+             policy."activationMode" AS "activationMode"
         FROM "Product" p
-        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+        JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
        WHERE p."id" = ${id}
        LIMIT 1
     `;
