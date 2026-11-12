@@ -127,8 +127,12 @@ export async function PATCH(
           active: boolean;
           publishedAt: Date | null;
         }>>`
-          SELECT "activationMode", "active", "publishedAt"
-            FROM "Product" WHERE "id" = ${id} FOR UPDATE
+          SELECT COALESCE(policy."activationMode", 'EITHER') AS "activationMode",
+                 p."active", p."publishedAt"
+            FROM "Product" p
+            LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+           WHERE p."id" = ${id}
+           FOR UPDATE OF p
         `;
         if (rows.length !== 1) throw new Error("PRODUCT_NOT_FOUND");
         const [versionsCount, licensesCount, orderItemsCount] = await Promise.all([
@@ -164,8 +168,10 @@ export async function PATCH(
       const updated = await tx.product.update({ where: { id }, data });
       if (input.activationMode !== undefined) {
         await tx.$executeRaw`
-          UPDATE "Product" SET "activationMode" = ${input.activationMode}
-           WHERE "id" = ${id}
+          INSERT INTO "ProductActivationPolicy" ("productId", "activationMode")
+          VALUES (${id}, ${input.activationMode})
+          ON CONFLICT ("productId") DO UPDATE
+            SET "activationMode" = EXCLUDED."activationMode"
         `;
       }
       if (input.launcherExecutionType !== undefined) {
@@ -183,9 +189,11 @@ export async function PATCH(
     const executionRows = await db.$queryRaw<
       Array<{ launcherExecutionType: "LAUNCHER_PLUGIN" | "STANDALONE" | null; activationMode: string }>
     >`
-      SELECT "launcherExecutionType"::text AS "launcherExecutionType", "activationMode"
-        FROM "Product"
-       WHERE "id" = ${id}
+      SELECT p."launcherExecutionType"::text AS "launcherExecutionType",
+             COALESCE(policy."activationMode", 'EITHER') AS "activationMode"
+        FROM "Product" p
+        LEFT JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
+       WHERE p."id" = ${id}
        LIMIT 1
     `;
 
