@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pr": 360,
+  "intent": "Adopt exact immutable GitHub @bke/licensing 0.10.0 original tarball in DS package/lock and prove actual installed Ed25519 JWS consumer compatibility with DS L3 prepared claims; no signer custody/route/ISSUED issuance",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "native-account",
+    "identity",
+    "entitlements",
+    "prisma-isolation"
+  ],
+  "testFiles": [
+    "tests/agent-session-licensing-v010-consumer.test.ts",
+    "tests/agent-session-product-lease-issuance-plan.test.ts",
+    "tests/agent-session-product-lease-atomic-preparation.test.ts",
+    "tests/agent-session-product-lease-transaction-gate.test.ts"
+  ]
+}

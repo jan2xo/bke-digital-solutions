@@ -57,15 +57,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          artifact=/tmp/bke-licensing-0.9.0.tgz
+          artifact=/tmp/bke-licensing-0.10.0.tgz
           curl -fL --retry 3 --retry-all-errors \
             -o "$artifact" \
-            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz
-          echo "afb66b9c2c7ae514b3a9afcc7b6eeccbb697e1a6f361cd85fc765b356b978e89  $artifact" | sha256sum -c -
+            https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.10.0/bke-licensing-0.10.0.tgz
+          echo "4d2f8e4295effcfd4aa3b6492944e8dbba3ec75e86c83727a30daa74e4f75d60  $artifact" | sha256sum -c -
       - name: Enforce module boundaries
         run: node tooling/check-module-boundaries.mjs
       - name: Certify Licensing standalone consumer adoption and staging retirement
         run: npx tsx modules/licensing/test/consumer-adoption.certify.ts
+      - name: Certify immutable Licensing 0.10 JWS against DS prepared claims (test keys only)
+        run: npx vitest run tests/agent-session-licensing-v010-consumer.test.ts
       - name: Certify released refresh decision parity
         run: npx vitest run tests/unit/refresh-decision.test.ts
       - name: Certify license seat management boundaries

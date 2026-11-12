@@ -1,8 +1,10 @@
 import { access, readFile } from "node:fs/promises";
 
 const EXPECTED_RELEASE =
-  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.9.0/bke-licensing-0.9.0.tgz";
-const EXPECTED_VERSION = "0.9.0";
+  "https://github.com/jan2xo/bke-libraries-typescript/releases/download/licensing-v0.10.0/bke-licensing-0.10.0.tgz";
+const EXPECTED_VERSION = "0.10.0";
+const EXPECTED_INTEGRITY =
+  "sha512-3cumWOHW687GE1hPcCeCV2t7w69pQt7qssxLkZY2zHkYHb/tUyF+bdMn7CkL6UuZa5L1YEPtRuCLZP63TO5vlw==";
 
 const [
   moduleSource,
@@ -180,7 +182,7 @@ const lockedLicensing = packageLock.packages?.["node_modules/@bke/licensing"];
 if (
   lockedLicensing?.version !== EXPECTED_VERSION ||
   lockedLicensing.resolved !== EXPECTED_RELEASE ||
-  !lockedLicensing.integrity
+  lockedLicensing.integrity !== EXPECTED_INTEGRITY
 ) {
   throw new Error(
     `Digital Solutions Licensing lock entry is incomplete or drifted: ${JSON.stringify(lockedLicensing)}`,
