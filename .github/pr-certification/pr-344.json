@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "pr": 344,
+  "intent": "Certify DS source-only pre-signing account-product JWS v1 claim composition, fresh verified Agent key evidence consistency, immutable Ed25519 SPKI thumbprint and five-minute/entitlement/key hard-expiry ceiling, without actual signing, route, key registration or production",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "licensing",
+    "entitlements",
+    "catalog",
+    "native-account"
+  ],
+  "testFiles": [
+    "tests/agent-session-product-lease-issuance-plan.test.ts",
+    "tests/agent-session-product-lease-eligibility.test.ts",
+    "tests/claim-gift-l2-lineage.test.ts",
+    "tests/v3-agent-account-session-contract.test.ts"
+  ]
+}
