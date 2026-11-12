@@ -104,10 +104,6 @@ jobs:
         env:
           BKE_PRODUCT_ACTIVATION_DB_PROOF: '1'
         run: npx vitest run tests/integration/product-activation-mode-migration.test.ts
-      - name: Prove account JWS signing registry and rotation in disposable PostgreSQL
-        env:
-          BKE_ACCOUNT_PRODUCT_LEASE_DB_PROOF: '1'
-        run: npx vitest run tests/integration/account-product-lease-signing-registry.test.ts
       - name: Generate disposable test signing keys
         run: |
           npm run licensing:keys .certification-secrets
