@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { generateKeyPairSync, randomUUID, sign, verify } from "node:crypto";
+import { createHash, generateKeyPairSync, randomUUID, sign, verify } from "node:crypto";
 import { afterAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/platform/persistence/generated/prisma/client";
@@ -29,6 +29,8 @@ const db = new PrismaClient({
 const installer = generateKeyPairSync("ed25519");
 const issuer = generateKeyPairSync("ed25519");
 const machineKid = "ci-startup-" + randomUUID();
+const stagingAdminId = "ci-stager-" + randomUUID();
+const reviewingAdminId = "ci-reviewer-" + randomUUID();
 const signerKid = "ci-policy-" + randomUUID();
 const productId = "ci-startup-" + randomUUID().slice(0, 8);
 const deviceId = "ci-startup-device-" + randomUUID();
@@ -98,6 +100,7 @@ describe.runIf(eligible)(
           where: { id: productDatabaseId },
         }).catch(() => undefined);
       }
+      await db.user.deleteMany({ where: { id: { in: [stagingAdminId, reviewingAdminId] } } });
       await db.$disconnect();
     });
 
@@ -107,14 +110,39 @@ describe.runIf(eligible)(
          WHERE "status" = 'ACTIVE'
       `;
       expect(signerRows).toHaveLength(0);
+      await db.user.createMany({ data: [
+        { id: stagingAdminId, email: "stager-" + randomUUID() + "@example.test",
+          role: "ADMIN", lifecycleState: "ACTIVE" },
+        { id: reviewingAdminId, email: "reviewer-" + randomUUID() + "@example.test",
+          role: "ADMIN", lifecycleState: "ACTIVE" },
+      ] });
+      const publicPem = installer.publicKey.export({ type: "spki", format: "pem" }).toString();
+      const publicSha = createHash("sha256").update(
+        installer.publicKey.export({ type: "spki", format: "der" })).digest("hex");
+      await expect(db.$executeRaw`
+        INSERT INTO "AgentStartupAttestationSigningKey"
+          ("kid","deviceId","publicKeyPem","status")
+        VALUES (${machineKid}, ${deviceId}, ${publicPem}, 'ACTIVE')
+      `).rejects.toThrow();
       await db.$executeRaw`
         INSERT INTO "AgentStartupAttestationSigningKey"
-          ("kid","deviceId","publicKeyPem","status","activatedAt")
-        VALUES (
-          ${machineKid}, ${deviceId},
-          ${installer.publicKey.export({ type: "spki", format: "pem" }).toString()},
-          'ACTIVE', now()
-        )
+          ("kid","deviceId","publicKeyPem","publicKeySha256","stagedBy","status")
+        VALUES (${machineKid}, ${deviceId}, ${publicPem},
+                ${publicSha}, ${stagingAdminId}, 'STAGED')
+      `;
+      await expect(db.$executeRaw`
+        UPDATE "AgentStartupAttestationSigningKey"
+           SET "status"='ACTIVE', "activatedAt"=now(),
+               "activatedBy"=${stagingAdminId}, "reviewedAt"=now(),
+               "activationProofSha256"=${"a".repeat(64)}
+         WHERE "kid"=${machineKid}
+      `).rejects.toThrow();
+      await db.$executeRaw`
+        UPDATE "AgentStartupAttestationSigningKey"
+           SET "status"='ACTIVE', "activatedAt"=now(),
+               "activatedBy"=${reviewingAdminId}, "reviewedAt"=now(),
+               "activationProofSha256"=${"a".repeat(64)}
+         WHERE "kid"=${machineKid}
       `;
       await db.$executeRaw`
         INSERT INTO "AccountProductLeaseSigningKey"
@@ -238,7 +266,8 @@ describe.runIf(eligible)(
       `).rejects.toThrow();
       await db.$executeRaw`
         UPDATE "AgentStartupAttestationSigningKey"
-           SET "status" = 'REVOKED', "revokedAt" = now()
+           SET "status" = 'REVOKED', "revokedAt" = now(),
+               "revokedBy" = ${reviewingAdminId}
          WHERE "kid" = ${machineKid}
       `;
       await expect(db.$executeRaw`
