@@ -49,7 +49,8 @@ function response(payload: unknown, status = 200) {
   });
 }
 
-async function smallJson(request: Request): Promise<unknown> {
+/** Shared bounded JSON parser for the same Agent-key trust boundary. */
+export async function smallJson(request: Request): Promise<unknown> {
   const type = request.headers.get("content-type") ?? "";
   if (!/^application\/json(?:\s*;.*)?$/i.test(type)) {
     throw new Error("INVALID_INPUT");
