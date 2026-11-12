@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
+import { allowsProductActivation, productActivationModes, type ProductActivationMode } from "@/apps/web/licensing/product-activation-mode";
 
 export const launcherExecutionTypes = [
   "LAUNCHER_PLUGIN",
@@ -14,6 +15,7 @@ export type AgentSoftwareCatalogItem = Readonly<{
   displayName: string;
   summary: string;
   executionType: LauncherExecutionType | null;
+  activationMode: ProductActivationMode;
   entitled: boolean;
   installable: boolean;
   latestVersion: string | null;
@@ -24,9 +26,17 @@ type CatalogRow = Readonly<{
   displayName: string;
   summary: string;
   executionType: string | null;
+  activationMode: string;
   latestVersion: string | null;
   entitled: boolean;
 }>;
+
+function requireActivationMode(value: unknown): ProductActivationMode {
+  if (typeof value !== "string" || !productActivationModes.includes(value as ProductActivationMode)) {
+    throw new Error("PRODUCT_ACTIVATION_MODE_INVALID");
+  }
+  return value as ProductActivationMode;
+}
 
 function validExecutionType(value: string | null): value is LauncherExecutionType {
   return value === "LAUNCHER_PLUGIN" || value === "STANDALONE";
@@ -36,6 +46,7 @@ export function projectAgentSoftwareCatalogRow(row: CatalogRow): AgentSoftwareCa
   const executionType = validExecutionType(row.executionType)
     ? row.executionType
     : null;
+  const activationMode = requireActivationMode(row.activationMode);
   const entitled = row.entitled === true;
   const latestVersion = row.latestVersion?.trim() || null;
 
@@ -44,8 +55,10 @@ export function projectAgentSoftwareCatalogRow(row: CatalogRow): AgentSoftwareCa
     displayName: row.displayName,
     summary: row.summary,
     executionType,
+    activationMode,
     entitled,
-    installable: entitled && executionType !== null && latestVersion !== null,
+    installable: entitled && allowsProductActivation(activationMode, "ACCOUNT") &&
+      executionType !== null && latestVersion !== null,
     latestVersion,
   });
 }
@@ -65,6 +78,7 @@ export async function readAgentSoftwareCatalog(
       p."name" AS "displayName",
       p."summary" AS "summary",
       p."launcherExecutionType"::text AS "executionType",
+      policy."activationMode" AS "activationMode",
       release."version" AS "latestVersion",
       EXISTS (
         SELECT 1
@@ -109,6 +123,7 @@ export async function readAgentSoftwareCatalog(
            )
       ) AS "entitled"
     FROM "Product" p
+    INNER JOIN "ProductActivationPolicy" policy ON policy."productId" = p."id"
     LEFT JOIN LATERAL (
       SELECT pv."version"
         FROM "ProductVersion" pv
