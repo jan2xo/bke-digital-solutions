@@ -155,6 +155,8 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
   it("projects actual PostgreSQL activation policy into Agent catalog and hides missing-policy products", async () => {
     const p = await db.product.create({ data: {
       slug: `activation-catalog-${suffix}`,
+      productId: `bke-activation-catalog-${suffix}`,
+      launcherExecutionType: "STANDALONE",
       name: "Account Catalog Policy Fixture",
       summary: "Disposable policy projection proof",
       description: "Verifies account catalog never fabricates missing licensing policy",
