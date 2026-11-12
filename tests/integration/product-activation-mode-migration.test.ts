@@ -28,6 +28,7 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
         summary: "Legacy software can still activate with a purchased key.",
         description: "Disposable product used to prove the additive licensing activation-mode migration.",
         type: "SOFTWARE",
+        active: false,
         licenseType: "Commercial",
       },
     });
@@ -56,6 +57,7 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
           summary: "Product can choose account or license key activation explicitly.",
           description: "Disposable product verifying no Google login requirement is baked into license key.",
           type: "SOFTWARE",
+          active: false,
         },
       });
       created.push(p.id);
@@ -106,6 +108,10 @@ describe.runIf(process.env.BKE_PRODUCT_ACTIVATION_DB_PROOF === "1")(
 
   it("remembers publication permanently across unpublish", async () => {
     const id = created[0]!;
+    const baseline = await db.$queryRaw<Array<{ publishedEver: boolean }>>`
+      SELECT "publishedEver" FROM "ProductActivationPolicy" WHERE "productId" = ${id}
+    `;
+    expect(baseline).toEqual([{ publishedEver: false }]);
     const published = await db.product.update({
       where: { id },
       data: { active: true, publishedAt: new Date("2026-11-12T00:00:00Z") },
