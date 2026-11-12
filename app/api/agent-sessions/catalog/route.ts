@@ -84,6 +84,7 @@ export async function GET(request: Request) {
         display_name: product.displayName,
         summary: product.summary,
         execution_type: product.executionType,
+        activation_mode: product.activationMode,
         entitled: product.entitled,
         installable: product.installable,
         latest_version: product.latestVersion,
