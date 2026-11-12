@@ -178,7 +178,7 @@ describe("source-only ES256 v2 installed-machine startup trust (NOT physical TPM
     }
 
     await expect(verifyStandaloneStartupInstallAttestationInTransaction(
-      txFixture([[active]]).tx, raw, now)).rejects.toThrow("STARTUP_ATTESTATION_PROTOCOL_INVALID");
+      txFixture([[active]]).tx, raw, now)).rejects.toThrow("STARTUP_ATTESTATION_SHAPE_INVALID");
   });
 
   it("issues unchanged Agent-verifiable DS Ed25519 startup mode only after trusted ES256 proof", async () => {
