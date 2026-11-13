@@ -1,5 +1,14 @@
 # DS-signed standalone startup policy — SQL + machine-proof authority (PREPRODUCTION)
 
+> **Later source-only transport update (PR #372, November 13, 2026):**
+> The "no HTTP route" statements below describe this document's original
+> certification wave. A separate, default-OFF **staging-only** POST adapter
+> was subsequently added; see
+> [Installed Agent startup-policy HTTP preproduction transport](./INSTALLED-AGENT-STARTUP-POLICY-HTTP-PREPRODUCTION.md).
+> This does **not** prove a real deployed DS issuer, human-approved machine
+> enrollment or an installed SYSTEM Agent positive grant. Production remains
+> locked.
+
 ## Intent and immutable cross-repo contract
 - Canonical tracking: [Licensing Agent #130](https://github.com/jan2xo/bke-licensing-agent/issues/130).
 - DS base `083ef5b46765384e8a442c5700a0cfe746d0dc4f`; Agent verifier merged `5cf43d00c09cbeb42932ec5875ce45e3bd6989ee`; Launcher `b7dc17316574c746c570d33bc603e03b94ac5105`.
