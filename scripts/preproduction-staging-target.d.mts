@@ -24,4 +24,4 @@ export declare const proposed: Readonly<{
   worker: string; origin: string; database: string; databaseRole: string; namespace: string;
 }>;
 export declare function assertIndependentPreproductionIdentity(target: PreproductionTarget): true;
-export declare function buildPreproductionWorkerCandidate(source: Record<string, any>, target: PreproductionTarget): PreproductionWorkerCandidate;
+export declare function buildPreproductionWorkerCandidate(source: Record<string, unknown>, target: PreproductionTarget): PreproductionWorkerCandidate;
