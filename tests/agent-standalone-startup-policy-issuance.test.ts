@@ -1,4 +1,7 @@
 import { createHash, generateKeyPairSync, sign, verify, randomUUID } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+import { resolve, sep } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import type { Prisma } from "@/platform/persistence/generated/prisma/client";
 import {
@@ -188,6 +191,68 @@ describe("DS → Agent preproduction signed standalone startup policy", () => {
         }).toString() }) }, now))
       .rejects.toThrow("ACCOUNT_PRODUCT_SIGNER_KEY_MISMATCH");
     expect(fx.audit).not.toHaveBeenCalled();
+  });
+
+  it("exports CI-only real DS signed bytes for the pinned Agent .NET verifier", async () => {
+    // No emission on ordinary DS tests, development machines or production.
+    // The output contains ONLY the DS issuer's public SPKI and a test policy.
+    const output = process.env.BKE_DS_STARTUP_INTEROP_VECTOR;
+    if (!output) return;
+    const pinned = process.env.BKE_DS_STARTUP_INTEROP_SOURCE_SHA;
+    const runnerTemp = process.env.RUNNER_TEMP;
+    if (process.env.GITHUB_ACTIONS !== "true" ||
+        process.env.RUNNER_OS !== "Windows" ||
+        process.env.RUNNER_ENVIRONMENT !== "github-hosted" ||
+        process.env.DEPLOYMENT_ENV === "production" ||
+        !runnerTemp || !pinned || !/^[a-f0-9]{40}$/.test(pinned))
+      throw new Error("STARTUP_INTEROP_DISPOSABLE_WINDOWS_ONLY");
+    const actualSha = execFileSync("git", ["rev-parse", "HEAD"], {
+      encoding: "utf8",
+    }).trim();
+    if (pinned !== actualSha)
+      throw new Error("STARTUP_INTEROP_DS_HEAD_MISMATCH");
+    const normalizedTemp = resolve(runnerTemp);
+    const target = resolve(output);
+    if (!target.startsWith(normalizedTemp + sep) ||
+        !target.endsWith(".json"))
+      throw new Error("STARTUP_INTEROP_OUTPUT_OUTSIDE_RUNNER_TEMP");
+
+    const runtimeNow = new Date();
+    const signedProof = agentProof({
+      issued_at: new Date(runtimeNow.getTime() - 1000).toISOString(),
+      expires_at: new Date(runtimeNow.getTime() + 60_000).toISOString(),
+    });
+    const fx = mockTx("LICENSE_KEY");
+    fx.withProof(signedProof);
+    // Reuse the REAL DS producer under a mocked SQL transaction: this proves
+    // signing contract bytes, NOT production SQL readiness or real DS trust.
+    const issued = await prepareAndSignStandaloneStartupPolicyInTransaction(
+      fx.tx, { signedAgentInstallAttestation: signedProof, keyset },
+      runtimeNow);
+    expect(issued.status).toBe("issued");
+    expect(issued.mode).toBe("LICENSE_KEY");
+    expect(fx.audit).toHaveBeenCalledTimes(1);
+    expect(fx.query).toHaveBeenCalledTimes(4);
+    const vector = JSON.stringify({
+      schema: "bke.ds-agent-startup-source-interop.v1",
+      classification: "EPHEMERAL_TEST_KEY_NOT_REAL_DS_ISSUER",
+      ds_source_sha: actualSha,
+      kid: issued.kid,
+      public_key_pem: dsPublic,
+      signed_policy_envelope: issued.envelope,
+    });
+    if (vector.includes("PRIVATE KEY") || vector.includes(dsPrivate) ||
+        vector.length > 24_000)
+      throw new Error("STARTUP_INTEROP_PRIVATE_SIGNER_LEAK");
+    // Create only on an initially absent path. No installer, trusted
+    // Program Files location, ledger, production secret or publish artifact.
+    writeFileSync(target, vector, { flag: "wx", mode: 0o600 });
+    expect(verify(null, Buffer.from(
+      "BKE-STANDALONE-STARTUP-POLICY-V1\\n" +
+        JSON.parse(issued.envelope).payload, "utf8"),
+      ds.publicKey, Buffer.from(JSON.parse(issued.envelope).signature, "base64")))
+      .toBe(true);
+    console.log("DS_SOURCE_SIGNED_STARTUP_INTEROP_VECTOR_PASS: public-only ephemeral test authority");
   });
 
   it("denies consumed attestation and never calls signer or audit", async () => {
