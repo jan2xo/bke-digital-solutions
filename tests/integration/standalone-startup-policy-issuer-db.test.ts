@@ -1,6 +1,9 @@
 import "dotenv/config";
 
+import { execFileSync } from "node:child_process";
 import { createHash, generateKeyPairSync, randomUUID, sign, verify } from "node:crypto";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/platform/persistence/generated/prisma/client";
@@ -102,6 +105,53 @@ describe.runIf(eligible)(
       }
       await db.user.deleteMany({ where: { id: { in: [stagingAdminId, reviewingAdminId] } } });
       await db.$disconnect();
+    });
+
+    it("proves official Prisma migration ledger matches exact source bytes with no missing, extra or failed entries", async () => {
+      // CI first runs prisma migrate deploy + status against GitHub-hosted
+      // disposable PostgreSQL. This test is ineligible outside that runner.
+      // A manual SQL replay or forged _prisma_migrations count must not pass.
+      const sourceMigrations = readdirSync("prisma/migrations", {
+        withFileTypes: true,
+      }).filter(entry => entry.isDirectory()).map(entry => entry.name).sort();
+      expect(sourceMigrations.length).toBeGreaterThan(0);
+
+      // The exact checked-out candidate MUST run the official Prisma CLI
+      // again: the reusable GitHub workflow YAML may resolve from main.
+      // Repeated deploy must find no pending changes on the fresh CI DB.
+      const secondDeploy = execFileSync("npx", [
+        "--no-install", "prisma", "migrate", "deploy",
+      ], {
+        cwd: process.cwd(),
+        env: { ...process.env, DIRECT_DATABASE_URL: process.env.DATABASE_URL },
+        encoding: "utf8",
+        timeout: 120_000,
+        maxBuffer: 1_048_576,
+      });
+      expect(secondDeploy).toContain("No pending migrations");
+
+      const ledger = await db.$queryRaw<Array<{
+        migration_name: string; checksum: string;
+        finished_at: Date | null; rolled_back_at: Date | null;
+      }>>`
+        SELECT "migration_name", "checksum", "finished_at", "rolled_back_at"
+          FROM "_prisma_migrations"
+         ORDER BY "migration_name"
+      `;
+      expect(ledger.map(record => record.migration_name)).toEqual(sourceMigrations);
+      expect(new Set(ledger.map(record => record.migration_name)).size)
+        .toBe(sourceMigrations.length);
+
+      for (const record of ledger) {
+        expect(record.finished_at).not.toBeNull();
+        expect(record.rolled_back_at).toBeNull();
+        const migrationSql = readFileSync(join(
+          "prisma", "migrations", record.migration_name, "migration.sql",
+        ));
+        const expectedChecksum = createHash("sha256")
+          .update(migrationSql).digest("hex");
+        expect(record.checksum).toBe(expectedChecksum);
+      }
     });
 
     it("enrolls disposable PUBLIC key only and publishes LICENSE_KEY SQL-owned product", async () => {
