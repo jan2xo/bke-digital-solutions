@@ -183,7 +183,8 @@ describe("preproduction installed Agent → signed DS startup policy HTTP", () =
     expect(result.headers.get("cache-control")).toBe("no-store");
     expect(result.headers.get("x-bke-startup-policy-protocol"))
       .toBe(STARTUP_POLICY_HTTP_PROTOCOL);
-    expect(mocks.issuer).toHaveBeenCalledExactlyOnceWith(attestation);
+    expect(mocks.issuer).toHaveBeenCalledTimes(1);
+    expect(mocks.issuer).toHaveBeenCalledWith(attestation);
     expect(mocks.rate).toHaveBeenCalledTimes(2);
   });
 
@@ -228,6 +229,8 @@ describe("preproduction installed Agent → signed DS startup policy HTTP", () =
     expect(route).not.toContain("export async function GET");
     expect(route).not.toContain("export async function PUT");
     expect(config).toContain("STANDALONE_STARTUP_POLICY_HTTP_ENABLED: bool.default(false)");
+    expect(config).toContain('value.STANDALONE_STARTUP_POLICY_HTTP_ENABLED &&');
+    expect(config).toContain('value.DEPLOYMENT_ENV !== "staging"');
     expect(config).toContain("STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED: bool.default(false)");
     expect(adapter).toContain('config.DEPLOYMENT_ENV !== "staging"');
     expect(adapter).toContain('process.env.DEPLOYMENT_ENV === "production"');
