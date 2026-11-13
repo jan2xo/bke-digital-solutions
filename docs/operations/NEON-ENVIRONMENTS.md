@@ -1,5 +1,7 @@
 # BKE Digital Solutions — canonical Neon environment topology
 
+> **PREPRODUCTION AUTHORITY UPDATE — 2026-11-13:** This document records the historical 2026-11-08 shared-project topology, not the current installed-startup licensing issuer target. The independently created NEW `bke-digital-solutions-preproduction` Neon project (`tiny-mouse-06099628`), root branch `br-divine-dream-a1qhc381`, database `bke_preproduction`, is now the **only approved target for fresh official Prisma preproduction schema preparation** under Agent #130. The canonical production and legacy staging projects remain separate and locked. Do not apply official preproduction issuer migrations to the production project's staging/development branches, or the retained mock child. See [the protected migration operator](../licensing/PREPRODUCTION-PRISMA-OPERATOR.md). This exception deliberately isolates licensing trust authority from the shared branch/project administrative boundary described below; it does not change the production topology. The new project is initially empty and is **not migrated/deployed** merely because it exists.
+
 **Architecture rule:** one long-lived Neon project per application, named **`bke-digital-solutions`**. Environments live in independently connected **branches**, not in separate projects called `*-production`, `*-staging`, or `*-development`. Preserve generation-independent environment variable names.
 
 ## Current verified resource registry (2026-11-08)
