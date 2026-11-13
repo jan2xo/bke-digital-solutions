@@ -40,10 +40,11 @@ function attestedKeyHint(raw: string): string {
   try { parsed = JSON.parse(raw); }
   catch { throw new Error("INVALID_INPUT"); }
   if (parsed === null || typeof parsed !== "object" ||
-      Array.isArray(parsed) || !KID.test(
-        (parsed as { kid?: unknown }).kid as string))
+      Array.isArray(parsed)) throw new Error("INVALID_INPUT");
+  const kid = (parsed as { kid?: unknown }).kid;
+  if (typeof kid !== "string" || !KID.test(kid))
     throw new Error("INVALID_INPUT");
-  return (parsed as { kid: string }).kid;
+  return kid;
 }
 
 /** Never return the signing keyset, input attestation, SQL facts or raw errors. */
