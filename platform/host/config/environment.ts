@@ -26,6 +26,7 @@ export const environmentSchema = z.object({
   AGENT_KEY_HTTP_ENABLED: bool.default(false),
   ACCOUNT_PRODUCT_LEASE_ISSUANCE_ENABLED: bool.default(false),
   STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED: bool.default(false),
+  STANDALONE_STARTUP_POLICY_HTTP_ENABLED: bool.default(false),
   STARTUP_MACHINE_ENROLLMENT_ENABLED: bool.default(false),
   ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON: z.preprocess(optional, z.string().min(64).optional()),
   AGENT_ACCOUNT_SESSION_PEPPER: z.preprocess(optional, secret.optional()),
