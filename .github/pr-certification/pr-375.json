@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 375,
+  "intent": "Official Prisma CLI preproduction migration authority: exact owner/current main, separate protected Infisical custody, independently verified new Neon project/root/read-write host, empty SQL target, exact official migration checksum/idempotence and protected runner only.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "prisma-isolation",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-prisma-operator.test.ts",
+    "tests/preproduction-staging-target.test.ts"
+  ]
+}
