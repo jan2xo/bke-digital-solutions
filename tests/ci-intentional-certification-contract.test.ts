@@ -137,8 +137,8 @@ describe("intentional GitHub Actions architecture", () => {
   it("keeps official preproduction migrations owner-dispatched and separated from protected Production", () => {
     const source = readFileSync(join(activeDir, "preproduction-prisma.yml"), "utf8");
     const triggers = triggerSection(source);
-    expect(triggers).toMatch(/^\\s{2}workflow_dispatch:/mu);
-    expect(triggers).not.toMatch(/^\\s{2}(?:push|pull_request|workflow_call|issue_comment):/mu);
+    expect(triggers).toMatch(/^\s{2}workflow_dispatch:/mu);
+    expect(triggers).not.toMatch(/^\s{2}(?:push|pull_request|workflow_call|issue_comment):/mu);
     expect(source).toContain("github.actor == github.repository_owner");
     expect(source).toContain("environment:\\n      name: Preproduction".replace("\\n", "\n"));
     expect(source).toContain("INFISICAL_PREPRODUCTION_IDENTITY_ID");
