@@ -248,7 +248,7 @@ describe("DS → Agent preproduction signed standalone startup policy", () => {
     // Program Files location, ledger, production secret or publish artifact.
     writeFileSync(target, vector, { flag: "wx", mode: 0o600 });
     expect(verify(null, Buffer.from(
-      "BKE-STANDALONE-STARTUP-POLICY-V1\\n" +
+      "BKE-STANDALONE-STARTUP-POLICY-V1\n" +
         JSON.parse(issued.envelope).payload, "utf8"),
       ds.publicKey, Buffer.from(JSON.parse(issued.envelope).signature, "base64")))
       .toBe(true);
