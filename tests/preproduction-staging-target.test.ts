@@ -7,7 +7,7 @@ import {
   type PreproductionTarget,
 } from "../scripts/preproduction-staging-target.mjs";
 
-const source = JSON.parse(readFileSync("wrangler.jsonc", "utf8")) as Record<string, any>;
+const source = JSON.parse(readFileSync("wrangler.jsonc", "utf8"));
 const valid: PreproductionTarget = {
   worker: proposed.worker,
   origin: proposed.origin,
@@ -94,19 +94,19 @@ describe("preproduction target isolation — source-only", () => {
   });
 
   it("rejects injected source production routes, worker URLs, cron, named env, credential variables and extra capabilities", () => {
-    const mutations: Array<[string, (copy: Record<string, any>) => void]> = [
+    const mutations: Array<[string, (copy: Record<string, unknown>) => void]> = [
       ["apex route", c => { c.routes = [{ pattern: "bkedigitalsolutions.com", custom_domain: true }]; }],
       ["unspecified route", c => { c.route = "*"; }],
       ["named environment", c => { c.env = { staging: {} }; }],
       ["cron", c => { c.triggers = { crons: ["* * * * *"] }; }],
-      ["injected vars", c => { c.vars.DATABASE_URL = "postgresql://secret"; }],
+      ["injected vars", c => { (c.vars as Record<string, unknown>).DATABASE_URL = "postgresql://secret"; }],
       ["worker URL", c => { c.workers_dev = true; }],
       ["preview URL", c => { c.preview_urls = true; }],
       ["wrong Worker", c => { c.name = "other-worker"; }],
-      ["wrong self reference", c => { c.services[0].service = "other"; }],
-      ["wrong Hyperdrive binding", c => { c.hyperdrive[0].binding = "PRODUCTION_DATABASE"; }],
-      ["extra email", c => { c.send_email.push({ name: "SMTP" }); }],
-      ["unredacted logs", c => { c.observability.redact_query_string = false; }],
+      ["wrong self reference", c => { (c.services as Array<Record<string, unknown>>)[0]!.service = "other"; }],
+      ["wrong Hyperdrive binding", c => { (c.hyperdrive as Array<Record<string, unknown>>)[0]!.binding = "PRODUCTION_DATABASE"; }],
+      ["extra email", c => { (c.send_email as Array<{ name: string }>).push({ name: "SMTP" }); }],
+      ["unredacted logs", c => { (c.observability as Record<string, unknown>).redact_query_string = false; }],
       ["unknown destination setting", c => { c.zone_id = "prod-zone"; }],
     ];
     for (const [reason, mutate] of mutations) {
