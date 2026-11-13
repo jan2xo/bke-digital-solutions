@@ -27,3 +27,6 @@ export declare function verifyUpstashRedis(env?: NodeJS.ProcessEnv, fetchImpl?: 
 export declare function verifyObservabilityRedaction(settings: WorkerScriptSettingsMetadata): true;
 export declare function buildStagingArtifacts(config: StagingConfig, env: NodeJS.ProcessEnv, driveId: string): { config: StagingConfig; secrets: Record<string, string>; direct: URL };
 export declare function verifyHyperdriveMetadata(drive: HyperdriveMetadata, id: string, directUrl: URL, expectedHost: string): true;
+
+// Retired historical operation: always rejects before writing a staging manifest.
+export declare function prepare(driveId: string): Promise<void>;

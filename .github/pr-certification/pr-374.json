@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 374,
+  "intent": "Fail closed on retired production-apex staging preparation and validate isolated nonproduction Worker, Neon project, Hyperdrive, Redis and origin candidates without provisioning or deployment.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-staging-target.test.ts",
+    "tests/staging-deployment-guards.test.ts"
+  ]
+}

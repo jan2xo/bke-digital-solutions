@@ -1,4 +1,4 @@
-import { readFile, writeFile, rm } from "node:fs/promises";
+import { rm } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
 export const expected = {
@@ -287,12 +287,11 @@ export async function verifyUpstashRedis(env = process.env, fetchImpl = globalTh
   return body?.result === "PONG" ? result("PONG", 200, true) : result("PONG_MISMATCH", 200);
 }
 
-export async function prepare(driveId) {
-  const source = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
-  const artifacts = buildStagingArtifacts(source, process.env, driveId);
-  await writeFile(configPath, JSON.stringify(artifacts.config, null, 2) + "\n", { mode: 0o600 });
-  await writeFile(secretsPath, JSON.stringify(artifacts.secrets, null, 2) + "\n", { mode: 0o600 });
-  console.info(`Prepared Staging Worker configuration with ${Object.keys(artifacts.secrets).length} allowlisted runtime secrets.`);
+export async function prepare(_driveId) {
+  // PR #266's staging workflow is archived, but this historical helper still
+  // targets the production apex and Worker name. Never materialize it again.
+  // Separate preproduction provisioning requires an independent reviewed workflow.
+  fail("LEGACY_STAGING_TARGET_RETIRED: production Worker/apex cannot be used for staging");
 }
 async function main() {
   const command = process.argv[2];
