@@ -123,6 +123,14 @@ export const environmentSchema = z.object({
       path: ["STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED"],
       message: "requires nonproduction and separate Agent product signing keyset" });
   }
+  if (value.STANDALONE_STARTUP_POLICY_HTTP_ENABLED &&
+      (value.DEPLOYMENT_ENV !== "staging" ||
+       !value.STANDALONE_STARTUP_POLICY_ISSUANCE_ENABLED ||
+       !value.ACCOUNT_PRODUCT_LEASE_SIGNING_KEYS_JSON)) {
+    context.addIssue({ code: "custom",
+      path: ["STANDALONE_STARTUP_POLICY_HTTP_ENABLED"],
+      message: "requires staging, explicit startup issuer and separate signing keyset" });
+  }
   if (value.AGENT_ACCOUNT_SESSION_ENABLED) {
     if (!value.AGENT_ACCOUNT_SESSION_PEPPER || value.AGENT_ACCOUNT_SESSION_PEPPER.length < 48 || placeholder.test(value.AGENT_ACCOUNT_SESSION_PEPPER)) {
       context.addIssue({ code: "custom", path: ["AGENT_ACCOUNT_SESSION_PEPPER"], message: "must be configured, at least 48 characters, and not a placeholder when Agent account sessions are enabled" });
