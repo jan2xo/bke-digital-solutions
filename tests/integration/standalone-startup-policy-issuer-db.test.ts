@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import { execFileSync } from "node:child_process";
 import { createHash, generateKeyPairSync, randomUUID, sign, verify } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -114,6 +115,20 @@ describe.runIf(eligible)(
         withFileTypes: true,
       }).filter(entry => entry.isDirectory()).map(entry => entry.name).sort();
       expect(sourceMigrations.length).toBeGreaterThan(0);
+
+      // The exact checked-out candidate MUST run the official Prisma CLI
+      // again: the reusable GitHub workflow YAML may resolve from main.
+      // Repeated deploy must find no pending changes on the fresh CI DB.
+      const secondDeploy = execFileSync("npx", [
+        "--no-install", "prisma", "migrate", "deploy",
+      ], {
+        cwd: process.cwd(),
+        env: { ...process.env, DIRECT_DATABASE_URL: process.env.DATABASE_URL },
+        encoding: "utf8",
+        timeout: 120_000,
+        maxBuffer: 1_048_576,
+      });
+      expect(secondDeploy).toContain("No pending migrations");
 
       const ledger = await db.$queryRaw<Array<{
         migration_name: string; checksum: string;
