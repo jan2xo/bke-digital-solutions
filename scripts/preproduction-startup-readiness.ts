@@ -233,6 +233,11 @@ export async function auditPreproductionStartupReadiness(
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
       deny("DS_PRIVATE_KEYSET_INVALID");
     keyset = parsed as Record<string, unknown>;
+    const ids = Object.keys(keyset);
+    if (ids.length < 1 || ids.length > 12 ||
+        ids.some(id => !kidPattern.test(id)) ||
+        typeof keyset[signer.kid] !== "string")
+      deny("DS_PRIVATE_KEYSET_INVALID");
   } catch { return deny("DS_PRIVATE_KEYSET_INVALID"); }
   const pem = keyset[signer.kid];
   if (typeof pem !== "string" ||
