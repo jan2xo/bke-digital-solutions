@@ -133,6 +133,19 @@ jobs:
       - name: Verify Neon control plane and EMPTY database before Prisma CLI
         if: ${{ inputs.mode == 'apply_official_migrations' }}
         run: node scripts/preproduction-prisma-operator.mjs preflight
+      - name: Recheck current main IMMEDIATELY before Prisma writes
+        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const expected = process.env.SOURCE_SHA;
+            const main = await github.rest.git.getRef({
+              owner: context.repo.owner, repo: context.repo.repo, ref: "heads/main",
+            });
+            if (main.data.object.sha !== expected || context.sha !== expected) {
+              throw new Error("PREPRODUCTION_PRISMA_DENIED_SOURCE_MOVED_BEFORE_WRITE");
+            }
+            core.info("PASS: current main still matches exact source before first Prisma write.");
       - name: Apply ONLY the checked-in official Prisma migrations
         if: ${{ inputs.mode == 'apply_official_migrations' }}
         run: npm run db:deploy
