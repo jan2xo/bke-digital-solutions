@@ -1,0 +1,172 @@
+name: "Protected Preproduction — Official Prisma Migrations"
+
+# Owner-triggered environment operation. No PR/push/full-CI triggers.
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: "EXACT current merged main SHA (40 hex characters)"
+        type: string
+        required: true
+      mode:
+        description: "Read-only verify, or official first-time migration"
+        type: choice
+        required: true
+        options:
+          - verify_only
+          - apply_official_migrations
+      confirmation:
+        description: "Exact mode-specific confirmation from runbook"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bke-preproduction-prisma-operator
+  cancel-in-progress: false
+
+jobs:
+  protected-preproduction-prisma:
+    name: "Protected NEW Neon preproduction schema only"
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.actor == github.repository_owner }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: Preproduction
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      NODE_ENV: production
+      DEPLOYMENT_ENV: staging
+      PREPRODUCTION_MIGRATION_MODE: ${{ inputs.mode }}
+      PREPRODUCTION_MIGRATION_CONFIRMATION: ${{ inputs.confirmation }}
+      PREPRODUCTION_NEON_PROJECT_ID: tiny-mouse-06099628
+      PREPRODUCTION_NEON_BRANCH_ID: br-divine-dream-a1qhc381
+      PREPRODUCTION_NEON_HOST: ep-polished-glade-a1u174wx.ap-southeast-1.aws.neon.tech
+      PREPRODUCTION_DATABASE_NAME: bke_preproduction
+    steps:
+      - name: "Authorize exact merged main, owner and dedicated secret identity BEFORE OIDC"
+        uses: actions/github-script@v7
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+          MODE: ${{ inputs.mode }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          PREPRODUCTION_INFISICAL_IDENTITY: ${{ vars.INFISICAL_PREPRODUCTION_IDENTITY_ID }}
+          PREPRODUCTION_INFISICAL_PROJECT: ${{ vars.INFISICAL_PREPRODUCTION_PROJECT_ID }}
+          LEGACY_STAGING_INFISICAL_IDENTITY: ${{ vars.INFISICAL_STAGING_IDENTITY_ID }}
+          PRODUCTION_INFISICAL_IDENTITY: ${{ vars.INFISICAL_PRODUCTION_IDENTITY_ID }}
+          PRODUCTION_INFISICAL_PROJECT: ${{ vars.INFISICAL_PRODUCTION_PROJECT_ID }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const fullRepo = owner + "/" + repo;
+            const exact = process.env.SOURCE_SHA || "";
+            const mode = process.env.MODE || "";
+            const ack = process.env.CONFIRMATION || "";
+            if (fullRepo !== "jan2xo/bke-digital-solutions" || context.actor !== owner ||
+                context.ref !== "refs/heads/main" || !/^[a-f0-9]{40}$/.test(exact) ||
+                exact !== context.sha || exact !== process.env.WORKFLOW_SHA ||
+                process.env.WORKFLOW_REF !== fullRepo +
+                  "/.github/workflows/preproduction-prisma.yml@refs/heads/main") {
+              throw new Error("PREPRODUCTION_PRISMA_DENIED_EXACT_MAIN_OWNER_REQUIRED");
+            }
+            const main = await github.rest.git.getRef({owner, repo, ref: "heads/main"});
+            if (main.data.object.sha !== exact) {
+              throw new Error("PREPRODUCTION_PRISMA_DENIED_STALE_MAIN");
+            }
+            const expectedAck = mode === "apply_official_migrations"
+              ? "APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION"
+              : "VERIFY_OFFICIAL_PRISMA_BKE_PREPRODUCTION";
+            if (!["apply_official_migrations", "verify_only"].includes(mode) ||
+                ack !== expectedAck) {
+              throw new Error("PREPRODUCTION_PRISMA_DENIED_OPERATOR_CONFIRMATION_REQUIRED");
+            }
+            const identity = process.env.PREPRODUCTION_INFISICAL_IDENTITY || "";
+            const project = process.env.PREPRODUCTION_INFISICAL_PROJECT || "";
+            const old = [
+              process.env.LEGACY_STAGING_INFISICAL_IDENTITY,
+              process.env.PRODUCTION_INFISICAL_IDENTITY,
+            ].filter(Boolean);
+            if (!/^[0-9a-f-]{36}$/i.test(identity) ||
+                !/^[0-9a-f-]{36}$/i.test(project) ||
+                old.includes(identity) ||
+                project === "f029af60-06f3-428c-b305-c70f8bcf7850" ||
+                project === process.env.PRODUCTION_INFISICAL_PROJECT) {
+              throw new Error("PREPRODUCTION_PRISMA_DENIED_DEDICATED_INFISICAL_IDENTITY_REQUIRED");
+            }
+            core.info("PASS: exact main/owner and dedicated preproduction OIDC identity declared.");
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify exact checkout
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install exact dependencies including Prisma CLI
+        run: npm ci --include=dev
+      - name: Generate unchanged Prisma client
+        run: |
+          npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma package-lock.json
+
+      - name: Load ONLY separately stewarded migration secrets via protected Infisical OIDC
+        uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
+        with:
+          method: oidc
+          identity-id: ${{ vars.INFISICAL_PREPRODUCTION_IDENTITY_ID }}
+          domain: https://app.infisical.com
+          project-id: ${{ vars.INFISICAL_PREPRODUCTION_PROJECT_ID }}
+          env-slug: staging
+          secret-path: /prisma
+          include-imports: "false"
+
+      - name: Verify Neon control plane and EMPTY database before Prisma CLI
+        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        run: node scripts/preproduction-prisma-operator.mjs preflight
+      - name: Recheck current main IMMEDIATELY before Prisma writes
+        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const expected = process.env.SOURCE_SHA;
+            const main = await github.rest.git.getRef({
+              owner: context.repo.owner, repo: context.repo.repo, ref: "heads/main",
+            });
+            if (main.data.object.sha !== expected || context.sha !== expected) {
+              throw new Error("PREPRODUCTION_PRISMA_DENIED_SOURCE_MOVED_BEFORE_WRITE");
+            }
+            core.info("PASS: current main still matches exact source before first Prisma write.");
+      - name: Apply ONLY the checked-in official Prisma migrations
+        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        run: npm run db:deploy
+      - name: Read official Prisma CLI migration status
+        run: npm run db:status
+      - name: Verify exact official migration history and read-only schema smoke
+        run: node scripts/preproduction-prisma-operator.mjs verify
+      - name: Verify migration idempotence; no pending migrations
+        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        run: |
+          npm run db:deploy
+          npm run db:status
+          node scripts/preproduction-prisma-operator.mjs verify
+      - name: Record bounded operator proof without secrets
+        if: ${{ success() }}
+        run: |
+          {
+            echo "## Preproduction official Prisma proof"
+            echo "Mode: $PREPRODUCTION_MIGRATION_MODE"
+            echo "Source: $SOURCE_SHA"
+            echo "Neon: tiny-mouse-06099628 / br-divine-dream-a1qhc381 / bke_preproduction"
+            echo "Actual Prisma status, exact migration ledger and read-only smoke: PASS"
+            echo "No seed, signer, provider, Cloudflare deploy or production operation."
+          } >> "$GITHUB_STEP_SUMMARY"

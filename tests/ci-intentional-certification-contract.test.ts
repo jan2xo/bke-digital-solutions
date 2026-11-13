@@ -12,6 +12,7 @@ const expectedActive = [
   "live-paymongo-cutover.yml",
   "native-bke-account-handoff.yml",
   "probe-paymongo-test.yml",
+  "preproduction-prisma.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-backups.yml",
@@ -131,6 +132,21 @@ describe("intentional GitHub Actions architecture", () => {
     expect(reader).not.toContain('"PAYMONGO_WEBHOOK_SECRET"');
     expect(reader).toContain('PAYMONGO_LIVEMODE: "false"');
     expect(source).not.toContain("deploy_live");
+  });
+
+  it("keeps official preproduction migrations owner-dispatched and separated from protected Production", () => {
+    const source = readFileSync(join(activeDir, "preproduction-prisma.yml"), "utf8");
+    const triggers = triggerSection(source);
+    expect(triggers).toMatch(/^\s{2}workflow_dispatch:/mu);
+    expect(triggers).not.toMatch(/^\s{2}(?:push|pull_request|workflow_call|issue_comment):/mu);
+    expect(source).toContain("github.actor == github.repository_owner");
+    expect(source).toContain("environment:\\n      name: Preproduction".replace("\\n", "\n"));
+    expect(source).toContain("INFISICAL_PREPRODUCTION_IDENTITY_ID");
+    expect(source).toContain("secret-path: /prisma");
+    expect(source).toContain("preproduction-prisma-operator.mjs preflight");
+    expect(source).toContain("PREPRODUCTION_PRISMA_DENIED_SOURCE_MOVED_BEFORE_WRITE");
+    expect(source).not.toContain("name: Production");
+    expect(source).not.toContain("wrangler deploy");
   });
 
   it("preserves the complete pre-overhaul workflow archive", () => {
