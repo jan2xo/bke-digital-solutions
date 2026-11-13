@@ -108,7 +108,7 @@ function fixture() {
         expect(args).toEqual([machineKid]);
       if (key === "products")
         expect(args).toEqual(["bke-render-dock", "1.0.3"]);
-      return { rows: responses[key] as T[] };
+      return { rows: responses[key] as unknown as T[] };
     },
   };
   return { env, responses, sql, sourceDir,
