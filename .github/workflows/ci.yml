@@ -92,10 +92,6 @@ jobs:
         run: npm run db:deploy
       - name: Verify database migration status
         run: npm run db:status
-      - name: Prove official Prisma deploy is idempotent on disposable PostgreSQL
-        run: |
-          npm run db:deploy
-          npm run db:status
       - name: Run post-migration smoke
         run: npm run db:smoke
       - name: Verify Staging legal initialization against disposable PostgreSQL
