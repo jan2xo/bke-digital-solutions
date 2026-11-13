@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { createHash, generateKeyPairSync } from "node:crypto";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -61,7 +61,8 @@ function fixture() {
       migration_name: migration,
       checksum: createHash("sha256").update(statement).digest("hex"),
       finished_at: now, rolled_back_at: null,
-    }],
+    }] as Array<{ migration_name:string;checksum:string;
+      finished_at:Date|null;rolled_back_at:Date|null }>,
     products: [{ activationMode: "LICENSE_KEY" }],
     signers: [{
       kid: activeKey, publicKeyPem, privateKeyReference: "keyset:" + activeKey,
@@ -75,7 +76,12 @@ function fixture() {
       activatedAt: now, reviewedAt: now, revokedAt: null,
       stageRole: "ADMIN", stageState: "ACTIVE", stageSuspended: null,
       reviewRole: "ADMIN", reviewState: "ACTIVE", reviewSuspended: null,
-    }],
+    }] as Array<{kid:string;publicKeyPem:string;publicKeySha256:string;
+      algorithm:string;stagedBy:string;activatedBy:string;
+      activationProofSha256:string;activatedAt:Date|null;
+      reviewedAt:Date|null;revokedAt:Date|null;
+      stageRole:string;stageState:string;stageSuspended:Date|null;
+      reviewRole:string;reviewState:string;reviewSuspended:Date|null;}>,
     audits: [
       { action: "AGENT_STARTUP_MACHINE_KEY_STAGED",
         actorId: "approved-first-admin" },
