@@ -1,4 +1,4 @@
-import { readFile, writeFile, rm } from "node:fs/promises";
+import { rm } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
 export const expected = {
