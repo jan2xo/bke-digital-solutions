@@ -53,7 +53,7 @@ describe("preproduction target isolation — source-only", () => {
     ];
     for (const [key, value] of cases) {
       const invalid = clone();
-      (invalid as Record<string, unknown>)[key] = value;
+      Reflect.set(invalid, key, value);
       expect(() => assertIndependentPreproductionIdentity(invalid), key).toThrow(/PREPRODUCTION_TARGET_DENIED/);
     }
   });
