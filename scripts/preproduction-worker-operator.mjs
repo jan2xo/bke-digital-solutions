@@ -19,6 +19,7 @@ const allowedSecretNames = new Set(REQUIRED_SECRETS);
 const CONFIRMATION = {
   verify_only: "VERIFY_ISOLATED_BKE_PREPRODUCTION_WORKER",
   deploy: "DEPLOY_ISOLATED_BKE_PREPRODUCTION_WORKER",
+  activate_access_route: "ACTIVATE_ACCESS_PROTECTED_PREPRODUCTION_ROUTE",
 };
 function deny(reason) {
   throw new Error("PREPRODUCTION_WORKER_DENIED: " + reason);
@@ -80,7 +81,7 @@ export function assertRuntimeSecretBundle(raw, approvedRedisOrigin) {
   } catch { deny("signer keys must be a matching nonproduction Ed25519 pair"); }
   return values;
 }
-export function assertLiveCloudflareSnapshot({ accounts, drive, workers }) {
+export function assertLiveCloudflareSnapshot({ accounts, drive, workers }, mode = "verify_only") {
   if (!Array.isArray(accounts) ||
       !accounts.some(account => account.id === proposed.cloudflareAccountId)) {
     deny("Cloudflare account token cannot verify personal preproduction account");
@@ -97,9 +98,15 @@ export function assertLiveCloudflareSnapshot({ accounts, drive, workers }) {
       drive?.origin_connection_limit !== 10) {
     deny("live Cloudflare Hyperdrive metadata diverged from approved restricted role");
   }
-  if (!Array.isArray(workers) || workers.length >= 100 ||
-      workers.some(script => (script.id ?? script.name) === proposed.worker)) {
-    deny("target already exists or Worker inventory cannot be verified; no overwrite");
+  if (!Array.isArray(workers) || workers.length >= 100)
+    deny("Worker inventory cannot be verified");
+  const matches = workers.filter(script => (script.id ?? script.name) === proposed.worker);
+  if (mode === "activate_access_route") {
+    if (matches.length !== 1 || !/^[a-f0-9]{32}$/.test(matches[0]?.tag ?? "") ||
+        (matches[0]?.routes?.length ?? 0) !== 0)
+      deny("isolated Worker does not exist or has unapproved routes");
+  } else if (matches.length !== 0) {
+    deny("target already exists; private deploy must never overwrite");
   }
   return {
     worker: proposed.worker,
@@ -118,9 +125,72 @@ export function assertLiveCloudflareSnapshot({ accounts, drive, workers }) {
     hyperdriveCachingDisabled: drive.caching.disabled,
     hyperdriveTlsMode: drive.mtls.sslmode,
     redisPrefix: proposed.namespace,
+    workerTag: matches[0]?.tag ?? null,
   };
 }
-export async function readLiveCloudflare(token, requester = fetch) {
+
+function hasOperatorOnlyPolicy(app, operatorEmail) {
+  if (!app || app.type !== "self_hosted" ||
+      !Array.isArray(app.policies) || app.policies.length !== 1) return false;
+  const p = app.policies[0];
+  return p.decision === "allow" && Array.isArray(p.include) &&
+    p.include.length === 1 && p.include[0]?.email?.email === operatorEmail &&
+    (p.exclude ?? []).length === 0 && Array.isArray(p.require ?? []);
+}
+
+export function assertProtectedRouteReadiness({ live, settings, route, apps, subdomain },
+    candidate, operatorEmail) {
+  const expectedHost = new URL(proposed.origin).hostname;
+  if (subdomain?.subdomain !== "jan2xpagauisan" ||
+      !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(operatorEmail ?? "") ||
+      route?.enabled !== false || route?.previews_enabled !== false ||
+      !Array.isArray(settings?.bindings) || !Array.isArray(apps) ||
+      apps.length >= 100 || !/^[a-f0-9]{32}$/.test(live?.workerTag ?? "")) {
+    deny("isolated Worker route and exact operator protection not ready");
+  }
+  const bindings = settings.bindings;
+  const byName = name => bindings.filter(b => b.name === name);
+  for (const [name, value] of Object.entries(candidate.vars)) {
+    const b = byName(name);
+    if (b.length !== 1 || b[0]?.type !== "plain_text" || b[0].text !== value)
+      deny("isolated Worker source or nonproduction binding diverged: " + name);
+  }
+  const drive = byName("HYPERDRIVE_FRESH");
+  const self = byName("WORKER_SELF_REFERENCE");
+  if (drive.length !== 1 || drive[0].type !== "hyperdrive" ||
+      drive[0].id !== proposed.hyperdriveId || self.length !== 1 ||
+      self[0].type !== "service" || self[0].service !== proposed.worker ||
+      bindings.some(b => b.type === "secret_text" && !allowedSecretNames.has(b.name)) ||
+      bindings.some(b => b.type === "hyperdrive" && b.name !== "HYPERDRIVE_FRESH") ||
+      bindings.some(b => b.type === "service" && b.name !== "WORKER_SELF_REFERENCE")) {
+    deny("isolated Worker has unapproved privileged or production bindings");
+  }
+  // Hostname-only Access never protects alternate Worker version URLs.
+  const workerAccess = apps.filter(app => (app.destinations ?? []).some(d =>
+    d.type === "worker" && d.worker_id === live.workerTag));
+  if (workerAccess.length !== 1 ||
+      workerAccess[0].destinations.length !== 1 ||
+      workerAccess[0].destinations[0].overrides?.length ||
+      !hasOperatorOnlyPolicy(workerAccess[0], operatorEmail)) {
+    deny("Worker-level Access protection missing, bypassed or overbroad");
+  }
+  // Hostname-specific Access takes precedence; reject weaker overrides.
+  for (const app of apps) {
+    const destinations = app.destinations ?? [];
+    if (app.domain === expectedHost || destinations.some(d =>
+        d.type === "public" && d.uri === expectedHost)) {
+      if (destinations.length !== 1 || destinations[0].type !== "public" ||
+          destinations[0].uri !== expectedHost || destinations[0].overrides?.length ||
+          !hasOperatorOnlyPolicy(app, operatorEmail)) {
+        deny("hostname Access override could bypass isolated Worker protection");
+      }
+    }
+  }
+  return true;
+}
+
+export async function readLiveCloudflare(token, requester = fetch,
+    mode = "verify_only", sourceSha = null, operatorEmail = null) {
   if (!isNonPlaceholder(token, 30)) deny("isolated Cloudflare token absent");
   async function read(path) {
     let response, body;
@@ -141,7 +211,20 @@ export async function readLiveCloudflare(token, requester = fetch) {
     read("/accounts/" + account + "/hyperdrive/configs/" + proposed.hyperdriveId),
     read("/accounts/" + account + "/workers/scripts?per_page=100"),
   ]);
-  return assertLiveCloudflareSnapshot({ accounts, drive, workers });
+  const live = assertLiveCloudflareSnapshot({ accounts, drive, workers }, mode);
+  if (mode === "activate_access_route") {
+    const [settings, route, apps, subdomain] = await Promise.all([
+      read("/accounts/" + account + "/workers/scripts/" + proposed.worker + "/settings"),
+      read("/accounts/" + account + "/workers/scripts/" + proposed.worker + "/subdomain"),
+      read("/accounts/" + account + "/access/apps"),
+      read("/accounts/" + account + "/workers/subdomain"),
+    ]);
+    const candidate = buildPreproductionWorkerCandidate(
+      JSON.parse(readFileSync("wrangler.jsonc", "utf8")), live, sourceSha);
+    assertProtectedRouteReadiness({ live, settings, route, apps, subdomain },
+      candidate, operatorEmail);
+  }
+  return live;
 }
 export function assertDeploymentApprovals(env, secretBundle) {
   if (env.PREPRODUCTION_WORKER_APPROVED_ORIGIN !== proposed.origin ||
