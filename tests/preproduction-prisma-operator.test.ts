@@ -125,7 +125,14 @@ describe("official preproduction Prisma operator — source-only denial proof", 
     expect(workflow).not.toMatch(/^  (pull_request|push|workflow_call):/m);
     expect(workflow).toContain("environment:\n      name: Preproduction");
     expect(workflow).toContain("github.actor == github.repository_owner");
-    expect(workflow).toContain("secret-path: /prisma");
+    expect(workflow).toContain('project !== "f029af60-06f3-428c-b305-c70f8bcf7850"');
+    expect(workflow).toContain("env-slug: dev");
+    expect(workflow).toContain("secret-path: /");
+    expect(workflow).toContain("secret-name: DIRECT_DATABASE_URL");
+    expect(workflow).toContain('include-imports: "false"');
+    expect(workflow).toContain('recursive: "false"');
+    expect(workflow).not.toContain("env-slug: prod");
+    expect(workflow).not.toContain("env-slug: staging");
     expect(workflow).not.toContain("NEON_API_KEY");
     expect(workflow).toContain("include-imports: \"false\"");
     expect(workflow).toContain("npm run db:deploy");

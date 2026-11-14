@@ -96,11 +96,11 @@ jobs:
             if (!/^[0-9a-f-]{36}$/i.test(identity) ||
                 !/^[0-9a-f-]{36}$/i.test(project) ||
                 old.includes(identity) ||
-                project === "f029af60-06f3-428c-b305-c70f8bcf7850" ||
+                project !== "f029af60-06f3-428c-b305-c70f8bcf7850" ||
                 project === process.env.PRODUCTION_INFISICAL_PROJECT) {
               throw new Error("PREPRODUCTION_PRISMA_DENIED_DEDICATED_INFISICAL_IDENTITY_REQUIRED");
             }
-            core.info("PASS: exact main/owner and dedicated preproduction OIDC identity declared.");
+            core.info("PASS: exact main/owner, approved staging-only Infisical project, and distinct preproduction OIDC identity.");
 
       - uses: actions/checkout@v4
         with:
@@ -119,16 +119,19 @@ jobs:
           npm run db:generate
           git diff --exit-code -- platform/persistence/generated/prisma package-lock.json
 
-      - name: Load ONLY preproduction direct DB URL via protected Infisical OIDC
+      - name: Load ONLY direct DB URL from existing staging-only Infisical project via protected OIDC
         uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
         with:
           method: oidc
           identity-id: ${{ vars.INFISICAL_PREPRODUCTION_IDENTITY_ID }}
           domain: https://app.infisical.com
           project-id: ${{ vars.INFISICAL_PREPRODUCTION_PROJECT_ID }}
-          env-slug: staging
-          secret-path: /prisma
+          # The project is NAMED staging; the actual secret is in its Development environment root.
+          env-slug: dev
+          secret-path: /
+          secret-name: DIRECT_DATABASE_URL
           include-imports: "false"
+          recursive: "false"
 
       - name: Verify pinned direct Neon target and EMPTY database before Prisma CLI
         if: ${{ inputs.mode == 'apply_official_migrations' }}

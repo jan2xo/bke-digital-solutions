@@ -142,7 +142,11 @@ describe("intentional GitHub Actions architecture", () => {
     expect(source).toContain("github.actor == github.repository_owner");
     expect(source).toContain("environment:\\n      name: Preproduction".replace("\\n", "\n"));
     expect(source).toContain("INFISICAL_PREPRODUCTION_IDENTITY_ID");
-    expect(source).toContain("secret-path: /prisma");
+    expect(source).toContain("env-slug: dev");
+    expect(source).toContain("secret-path: /");
+    expect(source).toContain("secret-name: DIRECT_DATABASE_URL");
+    expect(source).toContain('include-imports: "false"');
+    expect(source).toContain('recursive: "false"');
     expect(source).toContain("preproduction-prisma-operator.mjs preflight");
     expect(source).toContain("PREPRODUCTION_PRISMA_DENIED_SOURCE_MOVED_BEFORE_WRITE");
     expect(source).not.toContain("name: Production");
