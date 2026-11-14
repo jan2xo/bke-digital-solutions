@@ -11,7 +11,7 @@ const PROD = Object.freeze({
 // guard is NOT a live Cloudflare/Neon attestation or permission to deploy.
 export const proposed = Object.freeze({
   worker: "bke-digital-solutions-preproduction",
-  origin: "https://preproduction.bkedigitalsolutions.com",
+  origin: "https://bke-digital-solutions-preproduction.jan2xpagauisan.workers.dev",
   cloudflareAccountId: "9e39768c751719bfdfc4b915d2afd017",
   neonProjectId: "tiny-mouse-06099628",
   neonBranchId: "br-divine-dream-a1qhc381",
@@ -37,7 +37,8 @@ export function assertIndependentPreproductionIdentity(target) {
   const origin = new URL(target.origin);
   if (origin.protocol !== "https:" || origin.username || origin.password ||
       origin.port || origin.pathname !== "/" || origin.search || origin.hash ||
-      origin.hostname === PROD.host || origin.hostname.endsWith(".workers.dev")) {
+      origin.hostname === PROD.host ||
+      origin.hostname !== proposed.worker + ".jan2xpagauisan.workers.dev") {
     deny("origin is not an isolated HTTPS preproduction hostname");
   }
   if (!requiredText(target.neonProjectId) ||
@@ -118,8 +119,10 @@ function validateSource(source) {
   if (!Array.isArray(source.send_email) || source.send_email.length !== 1 ||
       source.send_email[0].name !== "EMAIL") deny("unexpected production source email binding");
 }
-export function buildPreproductionWorkerCandidate(source, target) {
+export function buildPreproductionWorkerCandidate(source, target, sourceSha) {
   assertIndependentPreproductionIdentity(target);
+  if (!/^[0-9a-f]{40}$/.test(sourceSha ?? ""))
+    deny("exact certified source SHA required in isolated Worker");
   validateSource(source);
   const config = structuredClone(source);
   config.name = proposed.worker;
@@ -140,6 +143,7 @@ export function buildPreproductionWorkerCandidate(source, target) {
     APP_URL: proposed.origin,
     DEPLOYMENT_ID: proposed.namespace,
     REDIS_KEY_PREFIX: proposed.namespace,
+    SOURCE_COMMIT_SHA: sourceSha,
     PAYMENT_PROVIDER: "mock",
     PAYMONGO_LIVEMODE: "false",
     EMAIL_PROVIDER: "log",
