@@ -155,6 +155,15 @@ export function assertProtectedRouteReadiness({ live, settings, route, apps, sub
     if (b.length !== 1 || b[0]?.type !== "plain_text" || b[0].text !== value)
       deny("isolated Worker source or nonproduction binding diverged: " + name);
   }
+  const allowedNames = new Set([
+    ...Object.keys(candidate.vars), ...REQUIRED_SECRETS,
+    "HYPERDRIVE_FRESH", "WORKER_SELF_REFERENCE", "ASSETS",
+  ]);
+  if (bindings.some(b => !allowedNames.has(b.name) ||
+      (b.type === "plain_text" && !Object.hasOwn(candidate.vars, b.name))) ||
+      REQUIRED_SECRETS.some(name => byName(name).length !== 1 ||
+        byName(name)[0].type !== "secret_text"))
+    deny("isolated Worker has missing secrets or unexpected bindings");
   const drive = byName("HYPERDRIVE_FRESH");
   const self = byName("WORKER_SELF_REFERENCE");
   if (drive.length !== 1 || drive[0].type !== "hyperdrive" ||
