@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 379,
+  "intent": "Temporary owner-only pinned issue #378 comment adapter dispatches the existing protected exact-main preproduction Prisma workflow; no new secrets, SQL, production access or automatic PR CI.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "prisma-isolation",
+    "host"
+  ],
+  "testFiles": [
+    "tests/ci-intentional-certification-contract.test.ts",
+    "tests/preproduction-prisma-operator.test.ts"
+  ]
+}
