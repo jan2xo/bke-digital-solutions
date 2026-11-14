@@ -92,7 +92,7 @@ jobs:
       - name: "Independently GET actual personal Cloudflare Hyperdrive and Worker inventory"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PREPRODUCTION_WORKER_API_TOKEN }}
-          PREPRODUCTION_WORKER_SECRETS_JSON: ${{ secrets.PREPRODUCTION_WORKER_SECRETS_JSON }}
+          PREPRODUCTION_WORKER_SECRETS_JSON: ${{ inputs.mode == 'deploy' && secrets.PREPRODUCTION_WORKER_SECRETS_JSON || '' }}
         run: node scripts/preproduction-worker-operator.mjs
 
       - name: "Install pinned build dependencies (deployment only)"
@@ -129,7 +129,7 @@ jobs:
         if: ${{ inputs.mode == 'deploy' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PREPRODUCTION_WORKER_API_TOKEN }}
-          PREPRODUCTION_WORKER_SECRETS_JSON: ${{ secrets.PREPRODUCTION_WORKER_SECRETS_JSON }}
+          PREPRODUCTION_WORKER_SECRETS_JSON: ${{ inputs.mode == 'deploy' && secrets.PREPRODUCTION_WORKER_SECRETS_JSON || '' }}
         run: |
           rm -f .wrangler-preproduction.json "$RUNNER_TEMP/bke-preproduction-runtime.json"
           node scripts/preproduction-worker-operator.mjs
