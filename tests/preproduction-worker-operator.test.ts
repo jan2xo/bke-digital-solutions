@@ -2,6 +2,7 @@ import { generateKeyPairSync } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { proposed } from "../scripts/preproduction-staging-target.mjs";
+import type { LiveCloudflareSnapshot, CloudflareRequest } from "../scripts/preproduction-worker-operator.mjs";
 import {
   assertOperatorContext, assertLiveCloudflareSnapshot, assertRuntimeSecretBundle,
   assertDeploymentApprovals, readLiveCloudflare,
@@ -20,7 +21,7 @@ const context = {
   PREPRODUCTION_WORKER_MODE: "verify_only",
   PREPRODUCTION_WORKER_CONFIRMATION: "VERIFY_ISOLATED_BKE_PREPRODUCTION_WORKER",
 };
-const live: any = {
+const live: LiveCloudflareSnapshot = {
   accounts: [{ id: proposed.cloudflareAccountId }],
   drive: {
     id: proposed.hyperdriveId,
@@ -38,7 +39,7 @@ const live: any = {
     { id: "bke-skills-mcp" }, { id: "bke-worker-relay-preproduction" },
   ],
 };
-const clone = (value: any): any => structuredClone(value);
+const clone = <T,>(value: T): T => structuredClone(value);
 const pair = generateKeyPairSync("ed25519");
 const validSecrets: Record<string, string> = {
   GOOGLE_CLIENT_ID: "isolated-staging-client.apps.googleusercontent.com",
@@ -91,17 +92,17 @@ describe("protected manual-only preproduction Worker operator", () => {
     expect(actual.hyperdriveOriginRole).toBe(proposed.databaseRole);
     expect(actual.cloudflareAccountId).toBe(proposed.cloudflareAccountId);
     for (const corrupt of [
-      (x: any) => { x.accounts = [{ id: "384c6c13373eb94a2925e0d865139970" }]; },
-      (x: any) => { x.drive.id = "437f92c3b9a14489be6e3e7f21307821"; },
-      (x: any) => { x.drive.origin.user = "bke_preproduction_owner"; },
-      (x: any) => { x.drive.origin.database = "bke_production"; },
-      (x: any) => { x.drive.origin.host = "ep-fake.attacker.test"; },
-      (x: any) => { x.drive.origin.port = 5433; },
-      (x: any) => { x.drive.caching.disabled = false; },
-      (x: any) => { x.drive.mtls.sslmode = "disable"; },
-      (x: any) => { x.drive.origin_connection_limit = 20; },
-      (x: any) => { x.workers.push({ id: proposed.worker }); },
-      (x: any) => { x.workers = null; },
+      (x: LiveCloudflareSnapshot) => { x.accounts = [{ id: "384c6c13373eb94a2925e0d865139970" }]; },
+      (x: LiveCloudflareSnapshot) => { x.drive.id = "437f92c3b9a14489be6e3e7f21307821"; },
+      (x: LiveCloudflareSnapshot) => { x.drive.origin.user = "bke_preproduction_owner"; },
+      (x: LiveCloudflareSnapshot) => { x.drive.origin.database = "bke_production"; },
+      (x: LiveCloudflareSnapshot) => { x.drive.origin.host = "ep-fake.attacker.test"; },
+      (x: LiveCloudflareSnapshot) => { x.drive.origin.port = 5433; },
+      (x: LiveCloudflareSnapshot) => { x.drive.caching.disabled = false; },
+      (x: LiveCloudflareSnapshot) => { x.drive.mtls.sslmode = "disable"; },
+      (x: LiveCloudflareSnapshot) => { x.drive.origin_connection_limit = 20; },
+      (x: LiveCloudflareSnapshot) => { x.workers!.push({ id: proposed.worker }); },
+      (x: LiveCloudflareSnapshot) => { x.workers = null; },
     ]) {
       const invalid = clone(live);
       corrupt(invalid);
@@ -112,7 +113,7 @@ describe("protected manual-only preproduction Worker operator", () => {
   it("makes three fresh remote GETs, never trusts a caller-provided snapshot", async () => {
     const calls: Array<{ url: string; auth: string }> = [];
     const responses = [live.accounts, live.drive, live.workers];
-    const fake = async (url: string, options: { headers: { Authorization: string } }) => {
+    const fake = async (url: string, options: CloudflareRequest) => {
       calls.push({ url, auth: options.headers.Authorization });
       const value = responses[calls.length - 1];
       return { ok: true, json: async () => ({ success: true, result: value }) };
@@ -136,14 +137,14 @@ describe("protected manual-only preproduction Worker operator", () => {
     expect(() => assertDeploymentApprovals(approved, JSON.stringify(validSecrets)))
       .not.toThrow();
     for (const mutate of [
-      (x: any) => { x.DATABASE_URL = "postgresql://prod:password@db/prod"; },
-      (x: any) => { x.PAYMONGO_SECRET_KEY = "sk_live_disallowed"; },
-      (x: any) => { delete x.SESSION_SECRET; },
-      (x: any) => { x.SESSION_SECRET = "replace-me"; },
-      (x: any) => { x.LICENSE_SIGNING_KEY_ID = "production-signing"; },
-      (x: any) => { x.UPSTASH_REDIS_REST_URL = "https://production-redis.upstash.io/"; },
-      (x: any) => { x.UPSTASH_REDIS_REST_URL = "http://staging-redis.upstash.io/"; },
-      (x: any) => { x.LICENSE_SIGNING_PUBLIC_KEY =
+      (x: Record<string, string>) => { x.DATABASE_URL = "postgresql://prod:password@db/prod"; },
+      (x: Record<string, string>) => { x.PAYMONGO_SECRET_KEY = "sk_live_disallowed"; },
+      (x: Record<string, string>) => { delete x.SESSION_SECRET; },
+      (x: Record<string, string>) => { x.SESSION_SECRET = "replace-me"; },
+      (x: Record<string, string>) => { x.LICENSE_SIGNING_KEY_ID = "production-signing"; },
+      (x: Record<string, string>) => { x.UPSTASH_REDIS_REST_URL = "https://production-redis.upstash.io/"; },
+      (x: Record<string, string>) => { x.UPSTASH_REDIS_REST_URL = "http://staging-redis.upstash.io/"; },
+      (x: Record<string, string>) => { x.LICENSE_SIGNING_PUBLIC_KEY =
         generateKeyPairSync("ed25519").publicKey.export({ type: "spki", format: "pem" }); },
     ]) {
       const invalid = clone(validSecrets);
