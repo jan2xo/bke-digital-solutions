@@ -112,6 +112,8 @@ describe("two-step isolated Worker HTTPS exposure", () => {
       x => { x.apps = [clone(accessSnapshot.hostname)]; }, // hostname alone has version URL bypass
       x => { x.apps[0].destinations[0].type = "preview_worker"; },
       x => { Reflect.set(x.apps[0].destinations[0], "worker_id", "b".repeat(32)); },
+      x => { x.apps.push({ ...clone(accessSnapshot.worker),
+        destinations: [{ type: "preview_worker", worker_id: workerTag }] }); },
       x => { x.apps[0].policies[0].decision = "bypass"; },
       x => { Reflect.set(x.apps[0].policies[0], "include", [{ everyone: {} }]); },
       x => { x.apps[0].policies.push(operatorOnlyPolicy()); },
