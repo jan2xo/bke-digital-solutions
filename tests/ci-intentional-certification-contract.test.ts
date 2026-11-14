@@ -158,8 +158,8 @@ describe("intentional GitHub Actions architecture", () => {
   it("allows only an exact-main owner issue #378 comment to dispatch the existing protected Prisma operator", () => {
     const source = readFileSync(join(activeDir, "preproduction-prisma-comment-dispatch.yml"), "utf8");
     const triggers = triggerSection(source);
-    expect(triggers).toMatch(/^\\s{2}issue_comment:/mu);
-    expect(triggers).not.toMatch(/^\\s{2}(?:push|pull_request|workflow_dispatch|workflow_call):/mu);
+    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
+    expect(triggers).not.toMatch(/^\s{2}(?:push|pull_request|workflow_dispatch|workflow_call):/mu);
     expect(source).toContain("github.event.issue.number == 378");
     expect(source).toContain("github.event.issue.pull_request == null");
     expect(source).toContain("github.actor == github.repository_owner");
