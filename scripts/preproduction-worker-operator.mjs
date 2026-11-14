@@ -183,6 +183,11 @@ export function assertProtectedRouteReadiness({ live, settings, route, apps, sub
       !hasOperatorOnlyPolicy(workerAccess[0], operatorEmail)) {
     deny("Worker-level Access protection missing, bypassed or overbroad");
   }
+  // Preview-specific policies can override Worker-wide Access; reject any
+  // separate preview-worker app for this exact script until independently scoped.
+  if (apps.some(app => (app.destinations ?? []).some(d =>
+      d.type === "preview_worker" && d.worker_id === live.workerTag)))
+    deny("preview-specific Access override is not approved");
   // Hostname-specific Access takes precedence; reject weaker overrides.
   for (const app of apps) {
     const destinations = app.destinations ?? [];
