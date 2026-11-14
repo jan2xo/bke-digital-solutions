@@ -1,0 +1,159 @@
+name: "Protected Preproduction — Isolated Worker Operator"
+
+# Owner-only workflow_dispatch. Never run on PR, push, merge, issue comment or schedule.
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: "EXACT current merged main SHA (40 hex)"
+        required: true
+        type: string
+      mode:
+        description: "Read-only verification or owner-authorized isolated Worker creation"
+        type: choice
+        required: true
+        options:
+          - verify_only
+          - deploy
+      confirmation:
+        description: "Exact mode-specific confirmation from protected operator runbook"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bke-protected-preproduction-worker-operator
+  cancel-in-progress: false
+
+jobs:
+  protected-worker-operator:
+    name: "Personal account / restricted-role preproduction Worker only"
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/main' &&
+      github.actor == github.repository_owner &&
+      github.repository == 'jan2xo/bke-digital-solutions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: Preproduction-Worker
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      PREPRODUCTION_WORKER_MODE: ${{ inputs.mode }}
+      PREPRODUCTION_WORKER_CONFIRMATION: ${{ inputs.confirmation }}
+      CLOUDFLARE_ACCOUNT_ID: 9e39768c751719bfdfc4b915d2afd017
+      PREPRODUCTION_WORKER_APPROVED_ORIGIN: ${{ vars.PREPRODUCTION_WORKER_APPROVED_ORIGIN }}
+      PREPRODUCTION_WORKER_APPROVED_REDIS_ORIGIN: ${{ vars.PREPRODUCTION_WORKER_APPROVED_REDIS_ORIGIN }}
+      PREPRODUCTION_WORKER_RUNTIME_CUSTODY: ${{ vars.PREPRODUCTION_WORKER_RUNTIME_CUSTODY }}
+      PREPRODUCTION_WORKER_SIGNER_CUSTODY: ${{ vars.PREPRODUCTION_WORKER_SIGNER_CUSTODY }}
+    steps:
+      - name: "Deny nonowner, stale main, wrong workflow, wrong confirmation BEFORE secrets"
+        uses: actions/github-script@v7
+        env:
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        with:
+          script: |
+            const exact = process.env.SOURCE_SHA || "";
+            const mode = process.env.PREPRODUCTION_WORKER_MODE || "";
+            const expected = {
+              verify_only: "VERIFY_ISOLATED_BKE_PREPRODUCTION_WORKER",
+              deploy: "DEPLOY_ISOLATED_BKE_PREPRODUCTION_WORKER",
+            };
+            const repository = "jan2xo/bke-digital-solutions";
+            if (context.repo.owner + "/" + context.repo.repo !== repository ||
+                context.actor !== context.repo.owner ||
+                context.eventName !== "workflow_dispatch" ||
+                context.ref !== "refs/heads/main" ||
+                !/^[a-f0-9]{40}$/.test(exact) ||
+                context.sha !== exact || process.env.WORKFLOW_SHA !== exact ||
+                process.env.WORKFLOW_REF !== repository +
+                  "/.github/workflows/preproduction-worker.yml@refs/heads/main" ||
+                process.env.PREPRODUCTION_WORKER_CONFIRMATION !== expected[mode]) {
+              throw new Error("PREPRODUCTION_WORKER_DENIED_EXACT_MAIN_OWNER_CONFIRMATION");
+            }
+            const main = await github.rest.git.getRef({
+              owner: context.repo.owner, repo: context.repo.repo, ref: "heads/main",
+            });
+            if (main.data.object.sha !== exact) {
+              throw new Error("PREPRODUCTION_WORKER_DENIED_STALE_MAIN");
+            }
+            core.info("PASS: exact protected manual main authority; no deployment authorized by ordinary CI.");
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: "Verify checked-out commit"
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: "Independently GET actual personal Cloudflare Hyperdrive and Worker inventory"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PREPRODUCTION_WORKER_API_TOKEN }}
+          PREPRODUCTION_WORKER_SECRETS_JSON: ${{ inputs.mode == 'deploy' && secrets.PREPRODUCTION_WORKER_SECRETS_JSON || '' }}
+        run: node scripts/preproduction-worker-operator.mjs
+
+      - name: "Install pinned build dependencies (deployment only)"
+        if: ${{ inputs.mode == 'deploy' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: "Build authentic OpenNext Worker (deployment only)"
+        if: ${{ inputs.mode == 'deploy' }}
+        run: |
+          npm ci
+          npm run db:generate
+          npm run workers:build
+          test -f .open-next/worker.js
+          test -d .open-next/assets
+
+      - name: "Recheck exact main immediately before privileged upload"
+        if: ${{ inputs.mode == 'deploy' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const exact = process.env.SOURCE_SHA;
+            const main = await github.rest.git.getRef({
+              owner: context.repo.owner, repo: context.repo.repo, ref: "heads/main",
+            });
+            if (main.data.object.sha !== exact || context.sha !== exact) {
+              throw new Error("PREPRODUCTION_WORKER_DENIED_MAIN_CHANGED_BEFORE_UPLOAD");
+            }
+            core.info("PASS: exact merged main still current after isolated build.");
+
+      - name: "Re-read control plane and refresh guarded manifest immediately before upload"
+        if: ${{ inputs.mode == 'deploy' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PREPRODUCTION_WORKER_API_TOKEN }}
+          PREPRODUCTION_WORKER_SECRETS_JSON: ${{ inputs.mode == 'deploy' && secrets.PREPRODUCTION_WORKER_SECRETS_JSON || '' }}
+        run: |
+          rm -f .wrangler-preproduction.json "$RUNNER_TEMP/bke-preproduction-runtime.json"
+          node scripts/preproduction-worker-operator.mjs
+
+      - name: "Upload ONLY the isolated Worker; no public routes, no production, no migration"
+        if: ${{ inputs.mode == 'deploy' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PREPRODUCTION_WORKER_API_TOKEN }}
+        run: |
+          npx wrangler deploy --config .wrangler-preproduction.json --secrets-file "$RUNNER_TEMP/bke-preproduction-runtime.json"
+
+      - name: "Erase transient operator files"
+        if: always()
+        run: |
+          rm -f .wrangler-preproduction.json "$RUNNER_TEMP/bke-preproduction-runtime.json"
+
+      - name: "Bounded source/operator evidence"
+        if: success()
+        run: |
+          {
+            echo "## Protected preproduction Worker operator"
+            echo "Exact main: $SOURCE_SHA"
+            echo "Cloudflare: isolated personal account and restricted-role Hyperdrive confirmed by live API"
+            echo "Mode: $PREPRODUCTION_WORKER_MODE"
+            echo "No production, no migrations, no DNS/route/issuer/real payments or email."
+            echo "Live Hyperdrive-to-Neon SQL and public origin remain separately unverified."
+          } >> "$GITHUB_STEP_SUMMARY"
