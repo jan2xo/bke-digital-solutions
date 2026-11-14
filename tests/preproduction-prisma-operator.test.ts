@@ -178,6 +178,16 @@ describe("official preproduction Prisma operator — source-only denial proof", 
     expect(workflow).not.toContain("env-slug: staging");
     expect(workflow).not.toContain("NEON_API_KEY");
     expect(workflow).toContain("include-imports: \"false\"");
+    const packageInstall = workflow.indexOf("npm ci --include=dev");
+    const infisicalLoad = workflow.indexOf("Load ONLY direct DB URL");
+    const sqlPreflight = workflow.indexOf("preproduction-prisma-operator.mjs preflight");
+    const prismaGenerate = workflow.indexOf("npm run db:generate");
+    const officialDeploy = workflow.indexOf("npm run db:deploy");
+    expect(packageInstall).toBeGreaterThan(0);
+    expect(infisicalLoad).toBeGreaterThan(packageInstall);
+    expect(sqlPreflight).toBeGreaterThan(infisicalLoad);
+    expect(prismaGenerate).toBeGreaterThan(sqlPreflight);
+    expect(officialDeploy).toBeGreaterThan(prismaGenerate);
     expect(workflow).toContain("npm run db:deploy");
     expect(workflow).toContain("npm run db:status");
     expect(workflow).toContain("preproduction-prisma-operator.mjs preflight");
