@@ -59,31 +59,12 @@ function parseDirectConnection(raw) {
 export function validateOperatorContext(env, mode) {
   if (!["preflight", "verify"].includes(mode)) deny("INVALID_OPERATION");
   if (env.GITHUB_ACTIONS !== "true" ||
-      !["workflow_dispatch", "issue_comment"].includes(env.GITHUB_EVENT_NAME) ||
+      env.GITHUB_EVENT_NAME !== "workflow_dispatch" ||
       env.GITHUB_REF !== "refs/heads/main" ||
       env.GITHUB_REPOSITORY !== pinned.repository || env.GITHUB_ACTOR !== pinned.actor ||
       !/^[a-f0-9]{40}$/.test(env.SOURCE_SHA ?? "") ||
       env.SOURCE_SHA !== env.GITHUB_SHA) {
     deny("EXACT_MAIN_OWNER_REQUIRED");
-  }
-  if (env.GITHUB_EVENT_NAME === "issue_comment") {
-    let event;
-    try {
-      if (!env.GITHUB_EVENT_PATH) deny("COMMENT_EVENT_PATH_REQUIRED");
-      event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
-    } catch {
-      deny("COMMENT_EVENT_UNVERIFIABLE");
-    }
-    const expected = "/preproduction-prisma apply " + env.SOURCE_SHA +
-      " APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION";
-    if (event?.action !== "created" ||
-        event?.issue?.number !== 378 || event?.issue?.pull_request ||
-        event?.issue?.state !== "open" ||
-        event?.repository?.full_name !== pinned.repository ||
-        event?.comment?.user?.login !== pinned.actor ||
-        event?.comment?.body !== expected) {
-      deny("EXACT_OWNER_COMMENT_REQUIRED");
-    }
   }
   if (env.NODE_ENV !== "production" || env.DEPLOYMENT_ENV !== "staging" ||
       env.PREPRODUCTION_NEON_PROJECT_ID !== pinned.projectId ||
