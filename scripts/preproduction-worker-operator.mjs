@@ -236,12 +236,37 @@ export function assertDeploymentApprovals(env, secretBundle) {
 }
 export async function prepareOperator(env = process.env, requester = fetch) {
   const mode = assertOperatorContext(env);
-  // No caller-supplied snapshot is accepted. Every invocation independently GETs
-  // account, Hyperdrive and Worker inventory using a scoped protected API token.
-  const live = await readLiveCloudflare(env.CLOUDFLARE_API_TOKEN, requester);
+  // Every invocation independently reads account, Hyperdrive and Worker state.
+  const live = await readLiveCloudflare(env.CLOUDFLARE_API_TOKEN, requester,
+    mode, env.SOURCE_SHA, env.PREPRODUCTION_WORKER_ACCESS_OPERATOR_EMAIL);
   assertIndependentPreproductionIdentity(live);
+  if (mode === "activate_access_route") {
+    // Second read immediately before the sole externally visible operation.
+    await readLiveCloudflare(env.CLOUDFLARE_API_TOKEN, requester, mode,
+      env.SOURCE_SHA, env.PREPRODUCTION_WORKER_ACCESS_OPERATOR_EMAIL);
+    const url = "https://api.cloudflare.com/client/v4/accounts/" +
+      proposed.cloudflareAccountId + "/workers/scripts/" + proposed.worker + "/subdomain";
+    const response = await requester(url, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + env.CLOUDFLARE_API_TOKEN,
+        Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ enabled: true, previews_enabled: false }),
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!response.ok || (await response.json())?.success !== true)
+      deny("isolated protected Worker route activation failed");
+    const checked = await requester(url, {
+      headers: { Authorization: "Bearer " + env.CLOUDFLARE_API_TOKEN,
+        Accept: "application/json" }, signal: AbortSignal.timeout(12000),
+    });
+    const status = checked.ok ? await checked.json() : null;
+    if (status?.success !== true || status?.result?.enabled !== true ||
+        status?.result?.previews_enabled !== false)
+      deny("isolated protected Worker route activation not independently verified");
+    return mode;
+  }
   const source = JSON.parse(readFileSync("wrangler.jsonc", "utf8"));
-  const candidate = buildPreproductionWorkerCandidate(source, live);
+  const candidate = buildPreproductionWorkerCandidate(source, live, env.SOURCE_SHA);
   if (mode === "deploy") {
     const secrets = assertDeploymentApprovals(env, env.PREPRODUCTION_WORKER_SECRETS_JSON);
     const temp = env.RUNNER_TEMP;
@@ -257,6 +282,7 @@ if (process.argv[1]?.endsWith("/preproduction-worker-operator.mjs")) {
   prepareOperator().then(mode => {
     console.log("PASS: independently read verified personal account/Hyperdrive, isolated target, mode " + mode);
     if (mode === "verify_only") console.log("NO DEPLOY: source candidate only; no credentials published");
+    if (mode === "activate_access_route") console.log("ACCESS PROTECTED: isolated workers.dev route enabled, preview URLs disabled");
   }).catch(error => {
     console.error(error.message.startsWith("PREPRODUCTION_") ?
       error.message : "PREPRODUCTION_WORKER_DENIED: preflight error");
