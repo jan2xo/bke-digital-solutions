@@ -119,7 +119,7 @@ jobs:
           npm run db:generate
           git diff --exit-code -- platform/persistence/generated/prisma package-lock.json
 
-      - name: Load ONLY separately stewarded migration secrets via protected Infisical OIDC
+      - name: Load ONLY preproduction direct DB URL via protected Infisical OIDC
         uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
         with:
           method: oidc
@@ -130,7 +130,7 @@ jobs:
           secret-path: /prisma
           include-imports: "false"
 
-      - name: Verify Neon control plane and EMPTY database before Prisma CLI
+      - name: Verify pinned direct Neon target and EMPTY database before Prisma CLI
         if: ${{ inputs.mode == 'apply_official_migrations' }}
         run: node scripts/preproduction-prisma-operator.mjs preflight
       - name: Recheck current main IMMEDIATELY before Prisma writes
@@ -166,7 +166,7 @@ jobs:
             echo "## Preproduction official Prisma proof"
             echo "Mode: $PREPRODUCTION_MIGRATION_MODE"
             echo "Source: $SOURCE_SHA"
-            echo "Neon: tiny-mouse-06099628 / br-divine-dream-a1qhc381 / bke_preproduction"
+            echo "Neon: pinned preproduction root and direct read-write host / bke_preproduction"
             echo "Actual Prisma status, exact migration ledger and read-only smoke: PASS"
             echo "No seed, signer, provider, Cloudflare deploy or production operation."
           } >> "$GITHUB_STEP_SUMMARY"
