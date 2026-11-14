@@ -63,6 +63,7 @@ describe("preproduction target isolation — source-only", () => {
       ["neonDirectHost", "ep-unapproved-new.c-3.ap-southeast-1.aws.neon.tech"],
       ["hyperdriveId", "ea1691c683e64bd0b9acc3489ab7759c"],
       ["hyperdriveId", "0".repeat(32)],
+      ["hyperdriveId", "437f92c3b9a14489be6e3e7f21307821"], // deleted stale Hyperdrive
       ["hyperdriveId", "f".repeat(32)],
       ["hyperdriveOriginDatabase", "bke_production"],
       ["hyperdriveOriginRole", "bke_preproduction_owner"],
