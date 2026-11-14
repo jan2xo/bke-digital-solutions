@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 385,
+  "intent": "Repin independently verified owner-recreated restricted-role Cloudflare preproduction Hyperdrive ID; explicitly deny removed stale ID and preserve non-deploying isolation constraints.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-staging-target.test.ts"
+  ]
+}
