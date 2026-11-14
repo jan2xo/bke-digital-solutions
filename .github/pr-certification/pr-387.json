@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 387,
+  "intent": "Certify homepage featured cards choose existing canonical public Commerce promotion for a single eligible plan, show honest PHP offer and billing period, and never surface ineligible promotions or alter checkout.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "catalog",
+    "commerce"
+  ],
+  "testFiles": [
+    "tests/featured-public-price.test.ts"
+  ]
+}

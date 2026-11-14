@@ -1,8 +1,13 @@
 import {
+  COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID,
+  type CommercePublicPromotionPreviewCapability,
+} from "@bke/commerce/contracts/public-promotion-preview.contract";
+import {
   COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
   type CommercePurchasePlanPricingCapability,
 } from "@bke/commerce/contracts/purchase-plan-pricing.contract";
 import { LandingExperience } from "@/app/landing-experience";
+import { selectFeaturedPublicPrice } from "@/apps/web/catalog/featured-public-price";
 import { db } from "@/platform/host/db";
 import { getSiteContent } from "@/apps/web/site-content";
 import { getV2WebApplication } from "@/apps/web/runtime";
@@ -31,16 +36,38 @@ export default async function Home() {
   const pricing = application.get<CommercePurchasePlanPricingCapability>(
     COMMERCE_PURCHASE_PLAN_PRICING_CAPABILITY_ID,
   );
-  const cards = products.map((product) => {
-    const plans = product.editions.flatMap((edition) => edition.purchasePlans);
-    const starting =
-      plans
-        .map((plan) => {
-          const result = pricing.resolve(plan);
-          if (result.status === "FAILED") throw new Error(result.code);
-          return result.pricing.amountMinor;
-        })
-        .sort((a, b) => a - b)[0] ?? product.prices[0]?.amountMinor;
+  const promotions = application.get<CommercePublicPromotionPreviewCapability>(
+    COMMERCE_PUBLIC_PROMOTION_PREVIEW_CAPABILITY_ID,
+  );
+  const cards = await Promise.all(products.map(async (product) => {
+    const quotes = await Promise.all(product.editions.flatMap((edition) =>
+      edition.purchasePlans.map(async (plan) => {
+        const result = pricing.resolve(plan);
+        if (result.status === "FAILED") throw new Error(result.code);
+        const preview = await promotions.preview({
+          productId: edition.productId,
+          editionId: plan.editionId,
+          purchasePlanId: plan.id,
+          planType: plan.type,
+          baseMinor: result.pricing.amountMinor,
+        });
+        if (preview.status === "FAILED") throw new Error(preview.code);
+        const promotion = preview.status === "PRICED" ? preview.value : null;
+        return {
+          planId: plan.id,
+          editionName: edition.name,
+          planType: plan.type,
+          baseMinor: result.pricing.amountMinor,
+          promotion: promotion ? {
+            finalMinor: promotion.finalMinor,
+            discountMinor: promotion.discountMinor,
+            discountBps: promotion.discountBps,
+          } : null,
+        };
+      }),
+    ));
+    const selected = selectFeaturedPublicPrice(quotes);
+    const fallback = product.prices[0]?.amountMinor;
     return {
       id: product.id,
       slug: product.slug,
@@ -48,9 +75,12 @@ export default async function Home() {
       summary: product.summary,
       type: product.type,
       imageUrl: resolveProductImageUrl(product.imageKey),
-      priceLabel: starting === undefined ? "Explore solution" : `From ${money(starting)}`,
+      priceLabel: selected?.priceLabel ?? (fallback === undefined ? "Explore solution" : `From ${money(fallback)}`),
+      originalPriceLabel: selected?.originalPriceLabel ?? null,
+      discountLabel: selected?.discountLabel ?? null,
+      planLabel: selected?.planLabel ?? null,
     };
-  });
+  }));
 
   const account = user ? (user.role === "ADMIN" ? "ADMIN" : "CUSTOMER") : null;
   return <LandingExperience content={{

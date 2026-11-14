@@ -12,6 +12,9 @@ type ProductCard = {
   summary: string;
   type: string;
   priceLabel: string;
+  originalPriceLabel: string | null;
+  discountLabel: string | null;
+  planLabel: string | null;
   imageUrl: string | null;
 };
 
@@ -204,7 +207,15 @@ export function LandingExperience({
                     <h3 className={styles.productTitle}>{product.name}</h3>
                     <p className={styles.productDesc}>{product.summary}</p>
                   </div>
-                  <strong className={styles.productMeta}>{product.priceLabel}<span aria-hidden="true">↗</span></strong>
+                  <strong className={styles.productMeta}>
+                    <span className={styles.priceStack}>
+                      {product.originalPriceLabel && <del className={styles.originalPrice}>{product.originalPriceLabel}</del>}
+                      <span className={styles.currentPrice}>{product.priceLabel}</span>
+                      {product.discountLabel && <span className={styles.discountLabel}>{product.discountLabel}</span>}
+                      {product.planLabel && <span className={styles.planDetail}>{product.planLabel}</span>}
+                    </span>
+                    <span aria-hidden="true">↗</span>
+                  </strong>
                 </Link>
               ))}
             </div>

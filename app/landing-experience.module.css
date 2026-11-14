@@ -646,3 +646,38 @@
   color: var(--ink);
 }
 
+
+/* Same selected public Commerce plan backs original, discounted and term labels. */
+.priceStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+.originalPrice {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+.currentPrice {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+}
+.discountLabel {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 209, 90, 0.12);
+  border: 1px solid rgba(255, 209, 90, 0.28);
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 800;
+}
+.planDetail {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
