@@ -1,7 +1,9 @@
 name: "Protected Preproduction — Official Prisma Migrations"
 
-# Owner-triggered environment operation. No PR/push/full-CI triggers.
+# Owner-triggered operation: manual dispatch OR one temporary exact owner comment on issue #378. No PR/push/CI triggers.
 on:
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
       source_sha:
@@ -30,7 +32,14 @@ concurrency:
 jobs:
   protected-preproduction-prisma:
     name: "Protected NEW Neon preproduction schema only"
-    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.actor == github.repository_owner }}
+    if: >-
+      github.ref == 'refs/heads/main' && github.actor == github.repository_owner &&
+      github.repository == 'jan2xo/bke-digital-solutions' &&
+      (github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'issue_comment' &&
+         github.event.issue.number == 378 &&
+         github.event.issue.pull_request == null &&
+         startsWith(github.event.comment.body, '/preproduction-prisma apply ')))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment:
@@ -39,11 +48,11 @@ jobs:
       contents: read
       id-token: write
     env:
-      SOURCE_SHA: ${{ inputs.source_sha }}
+      SOURCE_SHA: ${{ github.event_name == 'issue_comment' && github.sha || inputs.source_sha }}
       NODE_ENV: production
       DEPLOYMENT_ENV: staging
-      PREPRODUCTION_MIGRATION_MODE: ${{ inputs.mode }}
-      PREPRODUCTION_MIGRATION_CONFIRMATION: ${{ inputs.confirmation }}
+      PREPRODUCTION_MIGRATION_MODE: ${{ github.event_name == 'issue_comment' && 'apply_official_migrations' || inputs.mode }}
+      PREPRODUCTION_MIGRATION_CONFIRMATION: ${{ github.event_name == 'issue_comment' && 'APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION' || inputs.confirmation }}
       PREPRODUCTION_NEON_PROJECT_ID: tiny-mouse-06099628
       PREPRODUCTION_NEON_BRANCH_ID: br-divine-dream-a1qhc381
       PREPRODUCTION_NEON_HOST: ep-polished-glade-a1u174wx.ap-southeast-1.aws.neon.tech
@@ -52,9 +61,9 @@ jobs:
       - name: "Authorize exact merged main, owner and dedicated secret identity BEFORE OIDC"
         uses: actions/github-script@v7
         env:
-          SOURCE_SHA: ${{ inputs.source_sha }}
-          CONFIRMATION: ${{ inputs.confirmation }}
-          MODE: ${{ inputs.mode }}
+          SOURCE_SHA: ${{ github.event_name == 'issue_comment' && github.sha || inputs.source_sha }}
+          CONFIRMATION: ${{ env.PREPRODUCTION_MIGRATION_CONFIRMATION }}
+          MODE: ${{ env.PREPRODUCTION_MIGRATION_MODE }}
           WORKFLOW_SHA: ${{ github.workflow_sha }}
           WORKFLOW_REF: ${{ github.workflow_ref }}
           PREPRODUCTION_INFISICAL_IDENTITY: ${{ vars.INFISICAL_PREPRODUCTION_IDENTITY_ID }}
@@ -86,6 +95,20 @@ jobs:
             if (!["apply_official_migrations", "verify_only"].includes(mode) ||
                 ack !== expectedAck) {
               throw new Error("PREPRODUCTION_PRISMA_DENIED_OPERATOR_CONFIRMATION_REQUIRED");
+            }
+            if (context.eventName === "issue_comment") {
+              const issue = context.payload.issue;
+              const comment = context.payload.comment;
+              const expectedBody = "/preproduction-prisma apply " + exact +
+                " APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION";
+              if (context.payload.action !== "created" ||
+                  issue?.number !== 378 || issue?.pull_request ||
+                  issue?.state !== "open" ||
+                  comment?.user?.login !== owner ||
+                  comment?.body !== expectedBody ||
+                  mode !== "apply_official_migrations") {
+                throw new Error("PREPRODUCTION_PRISMA_DENIED_OWNER_COMMENT_REQUIRED");
+              }
             }
             const identity = process.env.PREPRODUCTION_INFISICAL_IDENTITY || "";
             const project = process.env.PREPRODUCTION_INFISICAL_PROJECT || "";
@@ -134,10 +157,10 @@ jobs:
           recursive: "false"
 
       - name: Verify pinned direct Neon target and EMPTY database before Prisma CLI
-        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        if: ${{ env.PREPRODUCTION_MIGRATION_MODE == 'apply_official_migrations' }}
         run: node scripts/preproduction-prisma-operator.mjs preflight
       - name: Recheck current main IMMEDIATELY before Prisma writes
-        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        if: ${{ env.PREPRODUCTION_MIGRATION_MODE == 'apply_official_migrations' }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -150,14 +173,14 @@ jobs:
             }
             core.info("PASS: current main still matches exact source before first Prisma write.");
       - name: Apply ONLY the checked-in official Prisma migrations
-        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        if: ${{ env.PREPRODUCTION_MIGRATION_MODE == 'apply_official_migrations' }}
         run: npm run db:deploy
       - name: Read official Prisma CLI migration status
         run: npm run db:status
       - name: Verify exact official migration history and read-only schema smoke
         run: node scripts/preproduction-prisma-operator.mjs verify
       - name: Verify migration idempotence; no pending migrations
-        if: ${{ inputs.mode == 'apply_official_migrations' }}
+        if: ${{ env.PREPRODUCTION_MIGRATION_MODE == 'apply_official_migrations' }}
         run: |
           npm run db:deploy
           npm run db:status
