@@ -145,7 +145,7 @@ describe("protected manual-only preproduction Worker operator", () => {
       (x: Record<string, string>) => { x.UPSTASH_REDIS_REST_URL = "https://production-redis.upstash.io/"; },
       (x: Record<string, string>) => { x.UPSTASH_REDIS_REST_URL = "http://staging-redis.upstash.io/"; },
       (x: Record<string, string>) => { x.LICENSE_SIGNING_PUBLIC_KEY =
-        generateKeyPairSync("ed25519").publicKey.export({ type: "spki", format: "pem" }); },
+        generateKeyPairSync("ed25519").publicKey.export({ type: "spki", format: "pem" }).toString(); },
     ]) {
       const invalid = clone(validSecrets);
       mutate(invalid);
