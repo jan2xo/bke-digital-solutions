@@ -8,18 +8,20 @@ Pinned, unchanged Agent: `cb798ccf427d439b0ac4bad84000356dd087dc3e`.
 
 Prevent historical staging preparation code from ever selecting the existing production Cloudflare Worker or `bkedigitalsolutions.com` apex as a new staging target. Establish a **pure, source-only** candidate guard for a separately named Worker, a new independently controlled Neon project, nonproduction database/Hyperdrive and isolated service reference. The new guard is **NOT** a staging deploy command.
 
-## Current verified infrastructure
+## Independently verified preproduction infrastructure (2026-11-14)
 
-- Production Worker name: `bke-digital-solutions`; only this Worker was listed in the connected Cloudflare primary account. Do **not** deploy a preproduction manifest using this name or its existing routes, secrets, service binding or Hyperdrive.
-- Existing Neon projects `lingering-pond-33730332` (production), `bold-hat-55602908` (legacy staging). Existing staging/development branches are descendants of the production project and therefore not newly independent.
-- Retained mock `br-soft-dawn-az9q94rd` stays on its separate cleanup ledger #370; it is not a candidate staging authority.
-- Retired `deploy-staging.mjs` still contains historical production apex/Worker targeting; its GitHub workflow is archived. It must fail closed for manifest preparation.
+- **Cloudflare connection:** owner-selected `jan2xpagauisan@gmail.com`; account `9e39768c751719bfdfc4b915d2afd017`. The production account `384c6c13373eb94a2925e0d865139970`, production Worker `bke-digital-solutions` and production Hyperdrive `ea1691c683e64bd0b9acc3489ab7759c` remain forbidden. The separate account's four preexisting Workers must not be modified by this intent.
+- **Neon:** separate project `tiny-mouse-06099628`, root `br-divine-dream-a1qhc381` (no parent), direct RW host `ep-polished-glade-a1u174wx.ap-southeast-1.aws.neon.tech`, database `bke_preproduction`. Official 70/70 migrations were independently certified in [run #43603233605](https://github.com/jan2xo/bke-digital-solutions/actions/runs/43603233605).
+- **Cloudflare Hyperdrive:** `bke-digital-solutions-preproduction` / `437f92c3b9a14489be6e3e7f21307821`, in the owner-selected account. Its control-plane metadata confirms the direct host/database/port; a nonproduction-only PATCH/GET confirmed query caching `disabled=true`, TLS `sslmode=require`, connection limit 10.
+- **Credential blocker:** live Hyperdrive origin still authenticates as **`bke_preproduction_owner`**, the privileged migration owner. A distinct restricted database role **`bke_preproduction_runtime`** has been created and independently verified as non-superuser, no CREATE DATABASE/ROLE, no BYPASSRLS, no schema CREATE. **Owner must privately change both Hyperdrive origin username AND password to that runtime role.** No credentials belong in source, issues, or chat. Merely generating a candidate from invented fields never clears this live blocker.
+- **Worker and origin:** no `bke-digital-solutions-preproduction` Worker or active routing exists in the selected account. The existing proposed `https://preproduction.bkedigitalsolutions.com` origin is a non-deployed source candidate only; do not assume DNS delegation, TLS, routes or runtime secrets are configured. The Cloudflare account/domain boundary must be independently approved before any separate deployment.
+- **Legacy:** production and old staging Neon projects, retired `deploy-staging.mjs`, and mock branch `br-soft-dawn-az9q94rd` remain out of scope.
 
 ## Candidate boundary
 
 A source-only builder must require a distinct proposed Worker identity (`bke-digital-solutions-preproduction`) and independent nonproduction control-plane project and branch identity. It must not auto-provision, publish or expose any service. A generated candidate has **no Cloudflare routes, no workers.dev/preview URL, no email-send binding, no cron, no production service reference**, only default-OFF real issuer flags, mock payments/log-only mail and a separately identified staging Hyperdrive. Runtime secrets are never copied into the manifest.
 
-A candidate object / synthetic positive test is **not** proof the project, branch, origin, signer or Worker exists, was created cleanly, or is operator approved. Must separately verify immutable real control-plane identity before **any** privileged deployment.
+The builder now pins the exact approved **Cloudflare account**, independent Neon root/direct host, existing Hyperdrive ID and restricted runtime database role. It also requires sanitized live Hyperdrive readback fields: origin database/role/direct host, caching disabled and TLS=require. **These arguments are not trusted evidence:** a caller could fabricate a passing snapshot. Before a separately authorized rollout, a trusted operator must independently GET the real Cloudflare configuration under the approved account and deny when any field differs, especially if the migration-owner username remains. No source-only candidate can prove passwords, DNS, signing custody or approved deploy origin.
 
 ## Certification plan
 
@@ -30,6 +32,7 @@ A candidate object / synthetic positive test is **not** proof the project, branc
 - **Cross-repo:** immutable Agent `cb798ccf427d439b0ac4bad84000356dd087dc3e` reused unchanged; no new Agent CI.
 - **Production:** LOCKED, no DB change, no signer/key, PayMongo/Resend, release/catalog, Cloudflare writes, Neon writes or protected workflow.
 
-## Separate future privileged intent
+## Separate future privileged intent — NOT authorized by this PR
 
-Only after this source gate passes: explicitly authorize a **fresh independently controlled Neon project/database** and separately named Cloudflare staging Worker/Hyperdrive/origin; verify control-plane metadata; apply official Prisma migrations from clean DS source; deploy staging-only runtime with isolated secret custody and distributed limiter. Then create real staging issuer/human approvals and installed Windows proof as separate protected acceptance.
+After owner privately fixes the existing Hyperdrive to authenticate as `bke_preproduction_runtime`, independently GET its role/host/database/TLS/cache in account `9e39768c751719bfdfc4b915d2afd017`. Source-certify a dedicated Worker deployment workflow and separately approve isolated runtime OIDC/Infisical credential scopes, origin/DNS/HTTPS, Redis namespace, service binding, mock payments/log-only email, default-OFF issuer and enrollment flags. The current preproduction database is migrated and must **not** be migrated again. Real machine issuer keys, two genuine ADMIN reviews, signed product and Windows SYSTEM product startup evidence remain later separate intents. No production deployment/release is authorized.
+
