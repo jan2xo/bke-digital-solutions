@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 388,
+  "intent": "Certify independent production-codebase second Worker remains private on upload, then exposes only pinned personal workers.dev HTTPS under verified exact Worker-level Cloudflare Access and source/binding provenance; never touch production.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-staging-target.test.ts",
+    "tests/preproduction-worker-operator.test.ts",
+    "tests/preproduction-worker-access-route.test.ts"
+  ]
+}
