@@ -53,6 +53,8 @@ For the initial migration, dispatch at that exact main with:
 - mode: `apply_official_migrations`
 - confirmation: `APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION`
 
+**Protected CLI ordering:** checkout and `npm ci` happen without database secrets; the one Infisical `DIRECT_DATABASE_URL` secret is then loaded through OIDC; for first-time migration, read-only SQL preflight verifies the pinned clean database **before** `npm run db:generate`. Prisma config requires this URL even for client generation (`prisma.config.ts` uses `DIRECT_DATABASE_URL || DATABASE_URL`), so do not move `db:generate` ahead of secret retrieval or introduce a second `DATABASE_URL` secret. The workflow performs official migration only after exact-main recheck.
+
 The protected job verifies exact current merged source, the **pinned Neon direct RW TLS hostname**, database and login role against the approved independent Neon root established by read-only control-plane inspection on 2026-11-14. It then checks current SQL identity, no mock schemas, and empty application schema **before** the real `npm run db:deploy` (Prisma CLI). It calls `npm run db:status`, independently verifies every checked-in official `prisma/migrations/*/migration.sql` SHA-256 against the official migration ledger, checks a read-only application schema smoke, reapplies the official deploy to verify idempotence and repeats verification.
 
 For the temporary **autonomous owner-comment** path, the exact comment on [issue #378](https://github.com/jan2xo/bke-digital-solutions/issues/378) is:

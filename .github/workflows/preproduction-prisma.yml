@@ -137,11 +137,6 @@ jobs:
           cache: npm
       - name: Install exact dependencies including Prisma CLI
         run: npm ci --include=dev
-      - name: Generate unchanged Prisma client
-        run: |
-          npm run db:generate
-          git diff --exit-code -- platform/persistence/generated/prisma package-lock.json
-
       - name: Load ONLY direct DB URL from existing staging-only Infisical project via protected OIDC
         uses: Infisical/secrets-action@d2e351f16c6ca20d17c85e6c992e04bdeb64e87d
         with:
@@ -159,6 +154,12 @@ jobs:
       - name: Verify pinned direct Neon target and EMPTY database before Prisma CLI
         if: ${{ env.PREPRODUCTION_MIGRATION_MODE == 'apply_official_migrations' }}
         run: node scripts/preproduction-prisma-operator.mjs preflight
+
+      - name: Generate unchanged Prisma client
+        run: |
+          npm run db:generate
+          git diff --exit-code -- platform/persistence/generated/prisma package-lock.json
+
       - name: Recheck current main IMMEDIATELY before Prisma writes
         if: ${{ env.PREPRODUCTION_MIGRATION_MODE == 'apply_official_migrations' }}
         uses: actions/github-script@v7

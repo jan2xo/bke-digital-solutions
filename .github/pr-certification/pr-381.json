@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 381,
+  "intent": "Fix protected preproduction Prisma workflow ordering: load one Infisical DIRECT_DATABASE_URL via owner-only OIDC and verify pinned clean root before prisma generate; no new secret, no prod activity.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "prisma-isolation",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-prisma-operator.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}
