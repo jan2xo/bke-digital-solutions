@@ -28,10 +28,11 @@ Configure the GitHub **Preproduction** environment, protect it with appropriate 
 - `INFISICAL_PREPRODUCTION_IDENTITY_ID`: dedicated preproduction OIDC identity ID
 - `INFISICAL_PREPRODUCTION_PROJECT_ID`: dedicated preproduction secret project ID; must differ from the known legacy staging project `f029af60-06f3-428c-b305-c70f8bcf7850`
 
-Inside that Infisical project, dedicate the `staging` environment and **`/prisma` secret path** exclusively to the following two values:
+Inside that Infisical project, dedicate the `staging` environment and **`/prisma` secret path** to **one secret only**:
 
-- `NEON_API_KEY`: narrow preproduction Neon project control-plane API key (read project, root branch and endpoints only; least privileges available)
-- `DIRECT_DATABASE_URL`: **direct/unpooled**, TLS-required URL for exactly the above host, database and role; never use a prod/staging URL, and do not expose it in logs or commits
+- `DIRECT_DATABASE_URL`: **direct/unpooled**, TLS-required URL for exactly the independently verified preproduction host, database and role. Never use a prod/staging URL; never expose the password in logs, commits or chat.
+
+Prisma 7 reads this value from `prisma.config.ts` for its official migration CLI. The protected workflow does **not** require a Neon management API key.
 
 Do **not** place credentials in GitHub workflow inputs, repository files, PR comments, artifacts, or chat. No live payment/email keys, Redis keys, signing keys or customer data are used for schema preparation.
 
@@ -44,11 +45,13 @@ For the initial migration, dispatch at that exact main with:
 - mode: `apply_official_migrations`
 - confirmation: `APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION`
 
-The protected job verifies the source/checkouts, Neon organization/project/root branch/read-write compute from Neon's API and the exact DB host/role/database with PostgreSQL read-only SQL before running the real `npm run db:deploy` (Prisma CLI). It then calls `npm run db:status`, independently verifies every checked-in official `prisma/migrations/*/migration.sql` SHA-256 against the official database migration ledger, checks a read-only application schema smoke, reapplies official Prisma deploy to verify idempotence and repeats verification.
+The protected job verifies exact current merged source, the **pinned Neon direct RW TLS hostname**, database and login role against the approved independent Neon root established by read-only control-plane inspection on 2026-11-14. It then checks current SQL identity, no mock schemas, and empty application schema **before** the real `npm run db:deploy` (Prisma CLI). It calls `npm run db:status`, independently verifies every checked-in official `prisma/migrations/*/migration.sql` SHA-256 against the official migration ledger, checks a read-only application schema smoke, reapplies the official deploy to verify idempotence and repeats verification.
 
 For a repeat inspection of the fully migrated database, use mode `verify_only` and confirmation `VERIFY_OFFICIAL_PRISMA_BKE_PREPRODUCTION`. It does not request changes or run migrate deploy.
 
-**Any missing protected identity/secret, differing SQL target, wrong Neon API branch parent/project/endpoint, nonempty initial database, unknown tables/schema, migrations not matching exact source, unexpected input, stale SHA or new source head FAILS CLOSED.** Do not create credentials automatically or fall back to other environments.
+**Any missing protected identity/secret, differing pinned TLS host, database/role, nonempty initial database, unknown tables/schema, migrations not matching exact source, unexpected input, stale SHA or new source head FAILS CLOSED.** Do not create credentials automatically or fall back to other environments.
+
+**Explicit tradeoff:** the runner no longer re-queries the Neon management API at dispatch time because that would require a second privileged credential. Its project/root-to-host mapping was independently verified before this source change (project `tiny-mouse-06099628`, root `br-divine-dream-a1qhc381`, non-cloned, one RW endpoint). Runtime proof verifies the pinned direct TLS endpoint and actual SQL identity **but does not dynamically re-attest Neon project/branch metadata**. Before any protected migration dispatch, an authorized operator must recheck those fixed Neon project/root/endpoint identities in the Neon console or via an independent read-only API connector. Production remains locked.
 
 ## Evidence boundaries
 

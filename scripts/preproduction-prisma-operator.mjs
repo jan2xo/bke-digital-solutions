@@ -55,7 +55,7 @@ function parseDirectConnection(raw) {
   return url;
 }
 
-/** Pure fail-closed gate. Invoke before loading connections or querying Neon. */
+/** Pure fail-closed gate. Invoke before opening any database connection. */
 export function validateOperatorContext(env, mode) {
   if (!["preflight", "verify"].includes(mode)) deny("INVALID_OPERATION");
   if (env.GITHUB_ACTIONS !== "true" || env.GITHUB_EVENT_NAME !== "workflow_dispatch" ||
@@ -85,77 +85,14 @@ export function validateOperatorContext(env, mode) {
   if (postgresOverrides.some((key) => env[key] !== undefined)) {
     deny("PG_ENV_OVERRIDE_FORBIDDEN");
   }
-  if (typeof env.NEON_API_KEY !== "string" || env.NEON_API_KEY.length < 16 ||
-      typeof env.DIRECT_DATABASE_URL !== "string" ||
+  if (typeof env.DIRECT_DATABASE_URL !== "string" ||
       env.DATABASE_URL && env.DATABASE_URL !== env.DIRECT_DATABASE_URL) {
     deny("DEDICATED_CREDENTIALS_REQUIRED");
   }
   const url = parseDirectConnection(env.DIRECT_DATABASE_URL);
   return Object.freeze({
-    url, apiKey: env.NEON_API_KEY, mode: plannedMode,
+    url, mode: plannedMode,
     sourceSha: env.SOURCE_SHA,
-  });
-}
-
-/** Never accepts target identifiers from a URL, input, or response as the request path. */
-export function verifyNeonControlPlane({ project, branch, endpoints }) {
-  if (project?.id !== pinned.projectId ||
-      project?.name !== pinned.projectName ||
-      project?.org_id !== pinned.orgId ||
-      project?.region_id !== pinned.region ||
-      project?.pg_version !== pinned.pgVersion) {
-    deny("NEON_PROJECT_IDENTITY_MISMATCH");
-  }
-  if (branch?.id !== pinned.branchId ||
-      branch?.project_id !== pinned.projectId ||
-      branch?.name !== pinned.branchName ||
-      branch?.primary !== true || branch?.default !== true ||
-      branch?.parent_id != null) {
-    deny("NEON_ROOT_BRANCH_MISMATCH");
-  }
-  if (!Array.isArray(endpoints) ||
-      endpoints.filter((item) => item.type === "read_write").length !== 1 ||
-      !endpoints.some((item) =>
-        item.branch_id === pinned.branchId &&
-        item.type === "read_write" &&
-        item.host === pinned.computeHost &&
-        item.disabled !== true)) {
-    deny("NEON_COMPUTE_TARGET_MISMATCH");
-  }
-  return true;
-}
-
-async function fetchNeonJson(path, key, fetchImpl) {
-  let response;
-  try {
-    response = await fetchImpl("https://console.neon.tech/api/v2" + path, {
-      headers: { Authorization: "Bearer " + key, Accept: "application/json" },
-      method: "GET", redirect: "manual", cache: "no-store",
-      signal: AbortSignal.timeout(15000),
-    });
-  } catch { return deny("NEON_CONTROL_PLANE_UNAVAILABLE"); }
-  if (response.status !== 200 || response.headers.get("content-length") &&
-      Number(response.headers.get("content-length")) > 131072) {
-    deny("NEON_CONTROL_PLANE_UNAVAILABLE");
-  }
-  try {
-    const raw = await response.text();
-    if (raw.length > 131072) deny("NEON_CONTROL_PLANE_INVALID_RESPONSE");
-    return JSON.parse(raw);
-  } catch { return deny("NEON_CONTROL_PLANE_INVALID_RESPONSE"); }
-}
-
-export async function inspectNeon(apiKey, fetchImpl = fetch) {
-  const base = "/projects/" + pinned.projectId;
-  const [project, branch, endpoints] = await Promise.all([
-    fetchNeonJson(base, apiKey, fetchImpl),
-    fetchNeonJson(base + "/branches/" + pinned.branchId, apiKey, fetchImpl),
-    fetchNeonJson(base + "/endpoints", apiKey, fetchImpl),
-  ]);
-  return verifyNeonControlPlane({
-    project: project.project,
-    branch: branch.branch,
-    endpoints: endpoints.endpoints,
   });
 }
 
@@ -277,10 +214,10 @@ async function verifyCurrentSchema(client) {
   return result;
 }
 
-export async function runOperator(mode, env = process.env, fetchImpl = fetch) {
+export async function runOperator(mode, env = process.env) {
+  // The project/root/endpoint mapping was independently verified against Neon.
+  // Runtime trust is the exact TLS host, role, database and read-only SQL target.
   const context = validateOperatorContext(env, mode);
-  // Live project + root + unique RW host verification is required BEFORE any SQL connection.
-  await inspectNeon(context.apiKey, fetchImpl);
   const result = await readOnlySql(context.url, async (client) => {
     const state = (await client.query(identitySql)).rows[0];
     verifySqlIdentity(state, mode);
@@ -288,7 +225,7 @@ export async function runOperator(mode, env = process.env, fetchImpl = fetch) {
     return verifyCurrentSchema(client);
   });
   console.info(mode === "preflight"
-    ? "PASS: verified clean isolated Neon preproduction root; no migration executed by preflight"
+    ? "PASS: pinned direct Neon endpoint and clean preproduction SQL database; no migration executed by preflight"
     : "PASS: exact official Prisma source checksums, completed history and schema smoke");
   return result;
 }
