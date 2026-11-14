@@ -32,4 +32,4 @@ export declare const proposed: Readonly<{
   hyperdriveId: string; database: string; databaseRole: string; namespace: string;
 }>;
 export declare function assertIndependentPreproductionIdentity(target: PreproductionTarget): true;
-export declare function buildPreproductionWorkerCandidate(source: Record<string, unknown>, target: PreproductionTarget): PreproductionWorkerCandidate;
+export declare function buildPreproductionWorkerCandidate(source: Record<string, unknown>, target: PreproductionTarget, sourceSha: string): PreproductionWorkerCandidate;
