@@ -7,11 +7,18 @@ const PROD = Object.freeze({
   legacyProject: "bold-hat-55602908",
   hyperdrive: "ea1691c683e64bd0b9acc3489ab7759c",
 });
+// Control-plane values independently observed 2026-11-14. This source-only
+// guard is NOT a live Cloudflare/Neon attestation or permission to deploy.
 export const proposed = Object.freeze({
   worker: "bke-digital-solutions-preproduction",
   origin: "https://preproduction.bkedigitalsolutions.com",
+  cloudflareAccountId: "9e39768c751719bfdfc4b915d2afd017",
+  neonProjectId: "tiny-mouse-06099628",
+  neonBranchId: "br-divine-dream-a1qhc381",
+  neonDirectHost: "ep-polished-glade-a1u174wx.ap-southeast-1.aws.neon.tech",
+  hyperdriveId: "437f92c3b9a14489be6e3e7f21307821",
   database: "bke_preproduction",
-  databaseRole: "bke_preproduction_owner",
+  databaseRole: "bke_preproduction_runtime",
   namespace: "bke-preproduction",
 });
 function deny(reason) {
@@ -23,6 +30,9 @@ function requiredText(value) {
 export function assertIndependentPreproductionIdentity(target) {
   if (!target || typeof target !== "object" || Array.isArray(target)) deny("missing independent target identity");
   if (target.worker !== proposed.worker || target.worker === PROD.worker) deny("Worker must be independent of production");
+  if (target.cloudflareAccountId !== proposed.cloudflareAccountId) {
+    deny("Cloudflare account is not the owner-approved personal preproduction account");
+  }
   if (target.origin !== proposed.origin) deny("origin must be explicitly selected for preproduction, never the production apex");
   const origin = new URL(target.origin);
   if (origin.protocol !== "https:" || origin.username || origin.password ||
@@ -32,6 +42,7 @@ export function assertIndependentPreproductionIdentity(target) {
   }
   if (!requiredText(target.neonProjectId) ||
       !/^[a-z0-9-]+$/.test(target.neonProjectId) ||
+      target.neonProjectId !== proposed.neonProjectId ||
       [PROD.neonProject, PROD.legacyProject].includes(target.neonProjectId)) {
     deny("Neon project must be independently created, not production or legacy");
   }
@@ -40,6 +51,7 @@ export function assertIndependentPreproductionIdentity(target) {
       ["br-autumn-morning-az7buyxu", "br-hidden-shape-az7g4y2f",
        "br-misty-thunder-az3g9r63", "br-soft-dawn-az9q94rd",
        "br-fragrant-salad-azee6zgq"].includes(target.neonBranchId) ||
+      target.neonBranchId !== proposed.neonBranchId ||
       target.neonParentBranchId !== null) {
     deny("Neon branch must be an independent new-project root, never a cloned production/legacy branch");
   }
@@ -49,14 +61,26 @@ export function assertIndependentPreproductionIdentity(target) {
   if (!requiredText(target.neonDirectHost) ||
       !/^[a-z0-9-]+(?:\.[a-z0-9-]+)+\.neon\.tech$/.test(target.neonDirectHost) ||
       target.neonDirectHost.includes("-pooler") ||
+      target.neonDirectHost !== proposed.neonDirectHost ||
       target.neonDirectHost === "ep-raspy-bread-azsc0112.c-3.ap-southeast-1.aws.neon.tech") {
     deny("Neon direct endpoint must be distinct from production");
   }
   if (!requiredText(target.hyperdriveId) ||
       !/^[a-f0-9]{32}$/.test(target.hyperdriveId) ||
       /^0{32}$/.test(target.hyperdriveId) ||
+      target.hyperdriveId !== proposed.hyperdriveId ||
       target.hyperdriveId === PROD.hyperdrive) {
     deny("Hyperdrive must be independently created, never production or placeholder");
+  }
+  // These are supplied *read-only control-plane fields*, not authority that a
+  // caller may invent. Before any deployment, independently fetch Hyperdrive
+  // from the owner-approved Cloudflare account and pass its actual properties.
+  if (target.hyperdriveOriginDatabase !== proposed.database ||
+      target.hyperdriveOriginRole !== proposed.databaseRole ||
+      target.hyperdriveOriginHost !== proposed.neonDirectHost ||
+      target.hyperdriveCachingDisabled !== true ||
+      target.hyperdriveTlsMode !== "require") {
+    deny("Hyperdrive runtime role, direct host, database, cache and TLS must match readback");
   }
   if (target.redisPrefix !== proposed.namespace) deny("Redis namespace must be preproduction only");
   return true;

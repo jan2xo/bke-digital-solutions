@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pr": 384,
+  "intent": "Pin Cloudflare personal account and verified isolated Neon/Hyperdrive identity in non-deploying preproduction Worker candidate, deny migration-owner credentials and unsafe cache/TLS readbacks.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-staging-target.test.ts"
+  ]
+}
