@@ -12,6 +12,7 @@ const expectedActive = [
   "live-paymongo-cutover.yml",
   "native-bke-account-handoff.yml",
   "probe-paymongo-test.yml",
+  "preproduction-prisma-comment-dispatch.yml",
   "preproduction-prisma.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
@@ -84,7 +85,8 @@ describe("intentional GitHub Actions architecture", () => {
     expect(certifyTriggers).toMatch(/^\s{2}workflow_dispatch:/mu);
 
     for (const name of expectedActive.filter((value) =>
-      value !== "certify.yml" && value !== "deploy-web-code-only.yml")) {
+      value !== "certify.yml" && value !== "deploy-web-code-only.yml" &&
+      value !== "preproduction-prisma-comment-dispatch.yml")) {
       const triggers = triggerSection(
         readFileSync(join(activeDir, name), "utf8"),
       );
@@ -149,6 +151,29 @@ describe("intentional GitHub Actions architecture", () => {
     expect(source).toContain('recursive: "false"');
     expect(source).toContain("preproduction-prisma-operator.mjs preflight");
     expect(source).toContain("PREPRODUCTION_PRISMA_DENIED_SOURCE_MOVED_BEFORE_WRITE");
+    expect(source).not.toContain("name: Production");
+    expect(source).not.toContain("wrangler deploy");
+  });
+
+  it("allows only an exact-main owner issue #378 comment to dispatch the existing protected Prisma operator", () => {
+    const source = readFileSync(join(activeDir, "preproduction-prisma-comment-dispatch.yml"), "utf8");
+    const triggers = triggerSection(source);
+    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
+    expect(triggers).not.toMatch(/^\s{2}(?:push|pull_request|workflow_dispatch|workflow_call):/mu);
+    expect(source).toContain("github.event.issue.number == 378");
+    expect(source).toContain("github.event.issue.pull_request == null");
+    expect(source).toContain("github.actor == github.repository_owner");
+    expect(source).toContain("comment?.user?.login !== owner");
+    expect(source).toContain("issue?.number !== 378");
+    expect(source).toContain("source !== context.sha || source !== main.data.object.sha");
+    expect(source).toContain("process.env.WORKFLOW_SHA !== context.sha");
+    expect(source).toContain("createWorkflowDispatch");
+    expect(source).toContain('workflow_id: "preproduction-prisma.yml"');
+    expect(source).toContain('mode: "apply_official_migrations"');
+    expect(source).toContain("APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION");
+    expect(source).toContain("actions: write");
+    expect(source).not.toContain("uses: Infisical/secrets-action@");
+    expect(source).not.toContain("npm run db:deploy");
     expect(source).not.toContain("name: Production");
     expect(source).not.toContain("wrangler deploy");
   });
