@@ -13,6 +13,7 @@ const expectedActive = [
   "native-bke-account-handoff.yml",
   "probe-paymongo-test.yml",
   "preproduction-prisma.yml",
+  "preproduction-worker.yml",
   "v2-accounts.yml",
   "v2-agent-store.yml",
   "v2-backups.yml",
