@@ -103,6 +103,7 @@ describe("protected manual-only preproduction Worker operator", () => {
       (x: LiveCloudflareSnapshot) => { x.drive.origin_connection_limit = 20; },
       (x: LiveCloudflareSnapshot) => { x.workers!.push({ id: proposed.worker }); },
       (x: LiveCloudflareSnapshot) => { x.workers = null; },
+      (x: LiveCloudflareSnapshot) => { x.workers = Array.from({ length: 100 }, (_, i) => ({ id: "other-" + i })); },
     ]) {
       const invalid = clone(live);
       corrupt(invalid);
