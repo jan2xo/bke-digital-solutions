@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "pr": 386,
+  "intent": "Prove exact-main owner-only preproduction Worker operator rejects production/stale Hyperdrive and secrets, independently reads the personal account, and has no automatic deployment triggers.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-worker-operator.test.mjs",
+    "tests/preproduction-staging-target.test.ts"
+  ]
+}
