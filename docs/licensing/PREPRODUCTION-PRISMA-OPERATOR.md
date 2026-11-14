@@ -2,7 +2,7 @@
 
 Parent: [Licensing Agent startup acceptance #130](https://github.com/jan2xo/bke-licensing-agent/issues/130).
 
-**Scope: source-only protected operator and its denial tests.** This DOES NOT mean actual migrations have run, a staging Worker has deployed, signer custody exists, or installed Windows startup is accepted.
+**Scope:** protected preproduction schema-only Prisma operator and its denial tests. **Official migration accepted:** [protected GitHub run #43603233605](https://github.com/jan2xo/bke-digital-solutions/actions/runs/43603233605) passed on `2026-11-14`, exact merged main `49b6c5adcae535deb5cdc707995273dc709bf581`. Independent [Neon verification](https://github.com/jan2xo/bke-digital-solutions/issues/378#issuecomment-6878589863) confirmed 70/70 completed migrations, 88 tables, no incomplete or rolled-back migrations, and no mock schemas. This does NOT certify staging Worker deployment, signer custody, or Windows startup.
 
 ## Independently verified resource identity (2026-11-13 UTC)
 
@@ -46,7 +46,7 @@ Do **not** place credentials in GitHub workflow inputs, repository files, PR com
 
 ## Execution after source certification and protected staging project configuration
 
-The canonical workflow `.github/workflows/preproduction-prisma.yml` supports normal owner-only `workflow_dispatch`, and **temporarily** one directly received `issue_comment` from repository owner `jan2xo` **only on issue #378**. Both paths require exact current merged `main` SHA, purpose-specific confirmation, GitHub Preproduction environment and independent Infisical OIDC. The comment path checks actor, author, issue type/number, exact body and current main *before OIDC*, and runtime independently checks the trusted GitHub event payload before SQL. It has **no PR/push trigger** and never authorizes `github-actions[bot]` for schema writes. Temporary comment support must be removed after complete live official Prisma proof.
+The canonical workflow `.github/workflows/preproduction-prisma.yml` supports **manual owner-only `workflow_dispatch` exclusively**. It requires exact current merged `main` SHA, purpose-specific confirmation, GitHub Preproduction environment and dedicated Infisical OIDC. The workflow and runtime both reject retired `issue_comment` events (including former owner comments on issue #378). There is no PR/push or CI trigger; `github-actions[bot]` cannot initiate privileged schema writes. The one-time owner-comment bridge was retired only after full official preproduction Prisma proof.
 
 For the initial migration, dispatch at that exact main with:
 
@@ -57,11 +57,7 @@ For the initial migration, dispatch at that exact main with:
 
 The protected job verifies exact current merged source, the **pinned Neon direct RW TLS hostname**, database and login role against the approved independent Neon root established by read-only control-plane inspection on 2026-11-14. It then checks current SQL identity, no mock schemas, and empty application schema **before** the real `npm run db:deploy` (Prisma CLI). It calls `npm run db:status`, independently verifies every checked-in official `prisma/migrations/*/migration.sql` SHA-256 against the official migration ledger, checks a read-only application schema smoke, reapplies the official deploy to verify idempotence and repeats verification.
 
-For the temporary **autonomous owner-comment** path, the exact comment on [issue #378](https://github.com/jan2xo/bke-digital-solutions/issues/378) is:
-
-`/preproduction-prisma apply <current-exact-merged-main-sha> APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION`
-
-The workflow itself validates it; no separate GitHub Actions token dispatcher (which would be `github-actions[bot]`) is used. This entrypoint is limited to **first-time preproduction schema migration**; once complete, remove the temporary issue-comment trigger through an exact-head-certified source cleanup. The manual workflow_dispatch operator remains available.
+The former `/preproduction-prisma apply` issue-comment authorization path is **retired**. Issue #378 preserves historical proof, but posting comments there cannot invoke this protected operator. Manual dispatch remains the only entrypoint. The initial apply completed with exact 70/70 migration proof on 2026-11-14; do not reapply against the populated target.
 
 For a repeat inspection of the fully migrated database, use mode `verify_only` and confirmation `VERIFY_OFFICIAL_PRISMA_BKE_PREPRODUCTION`. It does not request changes or run migrate deploy.
 
@@ -73,6 +69,6 @@ For a repeat inspection of the fully migrated database, use mode `verify_only` a
 
 The migration workflow applies database schema only. It does not perform `prisma db seed`, create fake users, commercial licenses, machine keys, signer keys, billing/email events, update any Cloudflare resource or publish any release. Its own execution and readback are separately required proof; merely merging the workflow is source-only certification.
 
-Initial release of this operator requires `pr core platform prisma-isolation host` exact-head source CI. A **real** migration requires manual owner dispatch, independently configured protected preproduction secrets/approval, and green audited run+control-plane readback. `preproduction:startup:readiness` intentionally remains RED until genuine signed issuer/machine/product and two-admin evidence are separately supplied.
+Initial source release required `pr core platform prisma-isolation host` exact-head CI. The first protected migration **has now succeeded**, with independent read-only DB verification linked above. Any future authorized operation still requires protected owner manual dispatch, independently configured secret custody/approval, the pinned target and audited outcome. `preproduction:startup:readiness` remains RED until genuine signed issuer/machine/product and two-admin evidence are separately supplied.
 
 **Production is strictly locked.**
