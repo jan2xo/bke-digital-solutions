@@ -111,20 +111,20 @@ describe("two-step isolated Worker HTTPS exposure", () => {
     const invalidCases: Array<(x: ReturnType<typeof snapshot>) => void> = [
       x => { x.apps = [clone(accessSnapshot.hostname)]; }, // hostname alone has version URL bypass
       x => { x.apps[0].destinations[0].type = "preview_worker"; },
-      x => { x.apps[0].destinations[0].worker_id = "b".repeat(32); },
+      x => { Reflect.set(x.apps[0].destinations[0], "worker_id", "b".repeat(32)); },
       x => { x.apps[0].policies[0].decision = "bypass"; },
-      x => { x.apps[0].policies[0].include = [{ everyone: {} }]; },
+      x => { Reflect.set(x.apps[0].policies[0], "include", [{ everyone: {} }]); },
       x => { x.apps[0].policies.push(operatorOnlyPolicy()); },
-      x => { x.apps[0].destinations[0].overrides = [{ behavior: "public", path_pattern: "/*" }]; },
+      x => { Reflect.set(x.apps[0].destinations[0], "overrides", [{ behavior: "public", path_pattern: "/*" }]); },
       x => { x.apps[1].policies[0].decision = "bypass"; },
-      x => { x.apps[1].destinations[0].uri = "bkedigitalsolutions.com"; },
+      x => { Reflect.set(x.apps[1].destinations[0], "uri", "bkedigitalsolutions.com"); },
       x => { x.route.enabled = true; }, // no unattended update / reactivation
       x => { x.route.previews_enabled = true; },
       x => { x.subdomain.subdomain = "wrong-account"; },
-      x => { x.settings.bindings.find(b => b.name === "SOURCE_COMMIT_SHA")!.text = "b".repeat(40); },
-      x => { x.settings.bindings.find(b => b.name === "APP_URL")!.text = "https://bkedigitalsolutions.com"; },
-      x => { x.settings.bindings.find(b => b.name === "PAYMENT_PROVIDER")!.text = "paymongo"; },
-      x => { x.settings.bindings.find(b => b.name === "HYPERDRIVE_FRESH")!.id = "ea1691c683e64bd0b9acc3489ab7759c"; },
+      x => { Reflect.set(x.settings.bindings.find(b => b.name === "SOURCE_COMMIT_SHA")!, "text", "b".repeat(40)); },
+      x => { Reflect.set(x.settings.bindings.find(b => b.name === "APP_URL")!, "text", "https://bkedigitalsolutions.com"); },
+      x => { Reflect.set(x.settings.bindings.find(b => b.name === "PAYMENT_PROVIDER")!, "text", "paymongo"); },
+      x => { Reflect.set(x.settings.bindings.find(b => b.name === "HYPERDRIVE_FRESH")!, "id", "ea1691c683e64bd0b9acc3489ab7759c"); },
       x => { x.settings.bindings.push({ name: "PAYMONGO_SECRET_KEY", type: "secret_text" }); },
       x => { x.settings.bindings = x.settings.bindings.filter(b => b.name !== "SESSION_SECRET"); },
     ];
