@@ -41,10 +41,10 @@ export function selectFeaturedPublicPrice(quotes: readonly FeaturedPublicPlanQuo
     quote.promotion.finalMinor >= 0 &&
     quote.promotion.finalMinor < quote.baseMinor,
   );
+  const amount = (quote: FeaturedPublicPlanQuote) =>
+    offers.length ? (quote.promotion?.finalMinor ?? quote.baseMinor) : quote.baseMinor;
   const selected = [...(offers.length ? offers : quotes)].sort((a, b) =>
-    (a.promotion?.finalMinor ?? a.baseMinor) -
-      (b.promotion?.finalMinor ?? b.baseMinor) ||
-    a.planId.localeCompare(b.planId),
+    amount(a) - amount(b) || a.planId.localeCompare(b.planId),
   )[0];
   const promotion = offers.length ? selected.promotion : null;
   const suffix = term(selected.planType);
