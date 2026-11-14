@@ -16,7 +16,7 @@ export const proposed = Object.freeze({
   neonProjectId: "tiny-mouse-06099628",
   neonBranchId: "br-divine-dream-a1qhc381",
   neonDirectHost: "ep-polished-glade-a1u174wx.ap-southeast-1.aws.neon.tech",
-  hyperdriveId: "437f92c3b9a14489be6e3e7f21307821",
+  hyperdriveId: "ab7e957858234e46b0782707a46e0e4a",
   database: "bke_preproduction",
   databaseRole: "bke_preproduction_runtime",
   namespace: "bke-preproduction",
