@@ -8,16 +8,24 @@ import {
 } from "../scripts/preproduction-staging-target.mjs";
 
 const source = JSON.parse(readFileSync("wrangler.jsonc", "utf8"));
+// Synthetic snapshot of expected Cloudflare/Neon data. Real acceptance must
+// independently fetch the current account/Hyperdrive before any deployment.
 const valid: PreproductionTarget = {
   worker: proposed.worker,
   origin: proposed.origin,
-  neonProjectId: "fresh-project-12345678",
-  neonBranchId: "br-new-clean-database",
+  cloudflareAccountId: proposed.cloudflareAccountId,
+  neonProjectId: proposed.neonProjectId,
+  neonBranchId: proposed.neonBranchId,
   neonParentBranchId: null,
   database: proposed.database,
   databaseRole: proposed.databaseRole,
-  neonDirectHost: "ep-fresh-preproduction.c-3.ap-southeast-1.aws.neon.tech",
-  hyperdriveId: "a".repeat(32),
+  neonDirectHost: proposed.neonDirectHost,
+  hyperdriveId: proposed.hyperdriveId,
+  hyperdriveOriginDatabase: proposed.database,
+  hyperdriveOriginRole: proposed.databaseRole,
+  hyperdriveOriginHost: proposed.neonDirectHost,
+  hyperdriveCachingDisabled: true,
+  hyperdriveTlsMode: "require",
   redisPrefix: proposed.namespace,
 };
 const clone = () => structuredClone(valid);
@@ -29,8 +37,10 @@ describe("preproduction target isolation — source-only", () => {
 
   it("requires an entirely new Neon project root, independent Worker, database, origin and Hyperdrive", () => {
     expect(assertIndependentPreproductionIdentity(valid)).toBe(true);
-    const cases: Array<[keyof PreproductionTarget, string | null]> = [
+    const cases: Array<[keyof PreproductionTarget, string | boolean | null]> = [
       ["worker", "bke-digital-solutions"],
+      ["cloudflareAccountId", "384c6c13373eb94a2925e0d865139970"],
+      ["cloudflareAccountId", "0".repeat(32)],
       ["worker", "bke-digital-solutions-try"],
       ["origin", "https://bkedigitalsolutions.com"],
       ["origin", "https://preproduction.bkedigitalsolutions.com.evil.test"],
@@ -38,17 +48,28 @@ describe("preproduction target isolation — source-only", () => {
       ["origin", "http://preproduction.bkedigitalsolutions.com"],
       ["neonProjectId", "lingering-pond-33730332"],
       ["neonProjectId", "bold-hat-55602908"],
+      ["neonProjectId", "unverified-new-project"],
       ["neonBranchId", "br-hidden-shape-az7g4y2f"],
       ["neonBranchId", "br-soft-dawn-az9q94rd"],
+      ["neonBranchId", "br-unverified-branch"],
       ["neonParentBranchId", "br-autumn-morning-az7buyxu"],
       ["database", "bke_production"],
       ["database", "bke_staging"],
       ["databaseRole", "bke_production_owner"],
+      ["databaseRole", "bke_preproduction_owner"],
       ["neonDirectHost", "ep-raspy-bread-azsc0112.c-3.ap-southeast-1.aws.neon.tech"],
       ["neonDirectHost", "ep-staging-pooler.c-3.ap-southeast-1.aws.neon.tech"],
       ["neonDirectHost", "ep-fake.attacker.test"],
+      ["neonDirectHost", "ep-unapproved-new.c-3.ap-southeast-1.aws.neon.tech"],
       ["hyperdriveId", "ea1691c683e64bd0b9acc3489ab7759c"],
       ["hyperdriveId", "0".repeat(32)],
+      ["hyperdriveId", "f".repeat(32)],
+      ["hyperdriveOriginDatabase", "bke_production"],
+      ["hyperdriveOriginRole", "bke_preproduction_owner"],
+      ["hyperdriveOriginRole", "bke_production_owner"],
+      ["hyperdriveOriginHost", "ep-polished-glade-a1u174wx-pooler.ap-southeast-1.aws.neon.tech"],
+      ["hyperdriveCachingDisabled", false],
+      ["hyperdriveTlsMode", "disable"],
       ["redisPrefix", "bke-production"],
     ];
     for (const [key, value] of cases) {
