@@ -81,9 +81,10 @@ describe("preproduction target isolation — source-only", () => {
   });
 
   it("emits a non-deploying candidate that cannot address production Worker, service, route, or Hyperdrive", () => {
-    const candidate = buildPreproductionWorkerCandidate(source, clone());
+    const candidate = buildPreproductionWorkerCandidate(source, clone(), "a".repeat(40));
     expect(candidate.name).toBe(proposed.worker);
     expect(candidate.workers_dev).toBe(false);
+    expect(proposed.origin).toBe("https://bke-digital-solutions-preproduction.jan2xpagauisan.workers.dev");
     expect(candidate.preview_urls).toBe(false);
     expect(candidate).not.toHaveProperty("route");
     expect(candidate).not.toHaveProperty("routes");
@@ -96,6 +97,7 @@ describe("preproduction target isolation — source-only", () => {
     expect(candidate.vars.DEPLOYMENT_ENV).toBe("staging");
     expect(candidate.vars.DEPLOYMENT_ID).toBe(proposed.namespace);
     expect(candidate.vars.REDIS_KEY_PREFIX).toBe(proposed.namespace);
+    expect(candidate.vars.SOURCE_COMMIT_SHA).toBe("a".repeat(40));
     expect(candidate.vars.PAYMENT_PROVIDER).toBe("mock");
     expect(candidate.vars.PAYMONGO_LIVEMODE).toBe("false");
     expect(candidate.vars.EMAIL_PROVIDER).toBe("log");
@@ -134,17 +136,19 @@ describe("preproduction target isolation — source-only", () => {
     for (const [reason, mutate] of mutations) {
       const copy = structuredClone(source);
       mutate(copy);
-      expect(() => buildPreproductionWorkerCandidate(copy, clone()), reason)
+      expect(() => buildPreproductionWorkerCandidate(copy, clone(), "a".repeat(40)), reason)
         .toThrow(/PREPRODUCTION_TARGET_DENIED/);
     }
   });
 
   it("does not mutate source and refuses invalid identity before generating any candidate", () => {
     const snapshot = structuredClone(source);
-    buildPreproductionWorkerCandidate(source, clone());
+    buildPreproductionWorkerCandidate(source, clone(), "a".repeat(40));
     expect(source).toEqual(snapshot);
+    expect(() => buildPreproductionWorkerCandidate(source, clone(), "stale"))
+      .toThrow(/PREPRODUCTION_TARGET_DENIED/);
     expect(() => buildPreproductionWorkerCandidate(source, {
       ...valid, neonProjectId: "bold-hat-55602908",
-    })).toThrow(/PREPRODUCTION_TARGET_DENIED/);
+    }, "a".repeat(40))).toThrow(/PREPRODUCTION_TARGET_DENIED/);
   });
 });
