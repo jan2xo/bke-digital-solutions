@@ -1,6 +1,4 @@
-import { readFileSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   pinned, validateOperatorContext, verifySqlIdentity,
@@ -82,42 +80,15 @@ describe("official preproduction Prisma operator — source-only denial proof", 
         .toThrow(/PREPRODUCTION_PRISMA_DENIED_/);
     }
   });
-  it("permits only the exact current-main owner comment on issue #378, never a PR or other actor", () => {
-    const env = eligible();
-    env.GITHUB_EVENT_NAME = "issue_comment";
-    const directory = mkdtempSync(join(tmpdir(), "bke-preproduction-comment-"));
-    const eventPath = join(directory, "event.json");
-    env.GITHUB_EVENT_PATH = eventPath;
-    const valid = {
-      action: "created",
-      issue: { number: 378, state: "open" },
-      comment: { user: { login: pinned.actor }, body: "/preproduction-prisma apply " +
-        env.SOURCE_SHA + " APPLY_OFFICIAL_PRISMA_TO_FRESH_BKE_PREPRODUCTION" },
-      repository: { full_name: pinned.repository },
-    };
-    const attempt = (payload: unknown) => {
-      writeFileSync(eventPath, JSON.stringify(payload));
-      return () => validateOperatorContext(env, "preflight");
-    };
-    try {
-      expect(attempt(valid)().url.hostname).toBe(pinned.computeHost);
-      for (const invalid of [
-        { ...valid, action: "edited" },
-        { ...valid, issue: { number: 379, state: "open" } },
-        { ...valid, issue: { number: 378, state: "open", pull_request: {} } },
-        { ...valid, issue: { number: 378, state: "closed" } },
-        { ...valid, comment: { ...valid.comment, user: { login: "github-actions[bot]" } } },
-        { ...valid, comment: { ...valid.comment, body: valid.comment.body + " extra" } },
-        { ...valid, comment: { ...valid.comment, body: valid.comment.body.replace(
-          env.SOURCE_SHA!, "b".repeat(40)) } },
-        { ...valid, repository: { full_name: "jan2xo/other" } },
-      ]) expect(attempt(invalid)).toThrow(/PREPRODUCTION_PRISMA_DENIED_/);
-      expect(() => validateOperatorContext(
-        { ...env, GITHUB_EVENT_PATH: undefined }, "preflight")).toThrow(
-          /PREPRODUCTION_PRISMA_DENIED_/);
-    } finally {
-      rmSync(directory, { recursive: true, force: true });
-    }
+  it("rejects every retired issue_comment path, including the former owner-only route", () => {
+    const oldRoute = eligible();
+    oldRoute.GITHUB_EVENT_NAME = "issue_comment";
+    oldRoute.GITHUB_EVENT_PATH = "/tmp/retired-owner-comment.json";
+    expect(() => validateOperatorContext(oldRoute, "preflight"))
+      .toThrow(/EXACT_MAIN_OWNER_REQUIRED/);
+    expect(() => validateOperatorContext({
+      ...oldRoute, GITHUB_ACTOR: "github-actions[bot]",
+    }, "preflight")).toThrow(/EXACT_MAIN_OWNER_REQUIRED/);
   });
 
   it("does not demand a Neon management API credential to validate its pinned SQL target", () => {
@@ -162,10 +133,11 @@ describe("official preproduction Prisma operator — source-only denial proof", 
   it("protects GitHub workflow: no automatic trigger, production secret, seed, or deployment", () => {
     const workflow = readFileSync(".github/workflows/preproduction-prisma.yml", "utf8");
     expect(workflow).toContain("workflow_dispatch:");
-    expect(workflow).toContain("issue_comment:");
-    expect(workflow).toContain("github.event.issue.number == 378");
-    expect(workflow).toContain("PREPRODUCTION_PRISMA_DENIED_OWNER_COMMENT_REQUIRED");
-    expect(workflow).not.toMatch(/^  (pull_request|push|workflow_call):/m);
+    expect(workflow).not.toContain("issue_comment:");
+    expect(workflow).not.toContain("github.event.issue.number == 378");
+    expect(workflow).not.toContain("PREPRODUCTION_PRISMA_DENIED_OWNER_COMMENT_REQUIRED");
+    expect(workflow).not.toMatch(/^  (issue_comment|pull_request|push|workflow_call):/m);
+    expect(workflow).toContain('context.eventName !== "workflow_dispatch"');
     expect(workflow).toContain("environment:\n      name: Preproduction");
     expect(workflow).toContain("github.actor == github.repository_owner");
     expect(workflow).toContain('project !== "f029af60-06f3-428c-b305-c70f8bcf7850"');

@@ -138,11 +138,11 @@ describe("intentional GitHub Actions architecture", () => {
     const source = readFileSync(join(activeDir, "preproduction-prisma.yml"), "utf8");
     const triggers = triggerSection(source);
     expect(triggers).toMatch(/^\s{2}workflow_dispatch:/mu);
-    expect(triggers).toMatch(/^\s{2}issue_comment:/mu);
-    expect(triggers).not.toMatch(/^\s{2}(?:push|pull_request|workflow_call):/mu);
-    expect(source).toContain("github.event.issue.number == 378");
+    expect(triggers).not.toMatch(/^\s{2}(?:issue_comment|push|pull_request|workflow_call):/mu);
+    expect(source).not.toContain("github.event.issue.number == 378");
     expect(source).toContain("github.actor == github.repository_owner");
-    expect(source).toContain("PREPRODUCTION_PRISMA_DENIED_OWNER_COMMENT_REQUIRED");
+    expect(source).toContain('context.eventName !== "workflow_dispatch"');
+    expect(source).not.toContain("PREPRODUCTION_PRISMA_DENIED_OWNER_COMMENT_REQUIRED");
     expect(source).toContain("github.actor == github.repository_owner");
     expect(source).toContain("environment:\\n      name: Preproduction".replace("\\n", "\n"));
     expect(source).toContain("INFISICAL_PREPRODUCTION_IDENTITY_ID");

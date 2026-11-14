@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 382,
+  "intent": "Retire the one-time owner issue-comment Prisma migration entrypoint after 70/70 certified preproduction proof, while retaining strictly manual exact-main, owner-bound, OIDC-protected Prisma operation and denying all old comment events.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "prisma-isolation",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-prisma-operator.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}
