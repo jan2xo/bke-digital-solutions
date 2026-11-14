@@ -9,7 +9,7 @@
     "host"
   ],
   "testFiles": [
-    "tests/preproduction-worker-operator.test.mjs",
+    "tests/preproduction-worker-operator.test.ts",
     "tests/preproduction-staging-target.test.ts"
   ]
 }
