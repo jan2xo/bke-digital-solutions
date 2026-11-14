@@ -19,24 +19,32 @@ Parent: [Licensing Agent startup acceptance #130](https://github.com/jan2xo/bke-
 
 The newly created database had **zero** public application tables, **no** official migration ledger and zero mock schemas on initial independent control-plane/SQL readback.
 
-## Required human-controlled secret custody — NOT set up by this PR
+## Required human-controlled secret custody — reuse existing staging-only Infisical project
 
-An authorized owner must independently establish a **separate** Infisical project/identity limited to the new preproduction database, **not** reuse the configured production/legacy staging identity, keys, Google login or provider credentials.
+The operator uses the already existing **BKE DIGITAL SOLUTIONS STAGING** Infisical project `f029af60-06f3-428c-b305-c70f8bcf7850`, at the owner's explicit request, **not a new Infisical project**. This is a staging-only *secret-storage project*. It is separate from the **NEW Neon preproduction database** and is **not** the older legacy staging Neon database `bold-hat-55602908`. Production Neon and production Infisical projects/identities/keys are forbidden.
 
-Configure the GitHub **Preproduction** environment, protect it with appropriate reviewer and branch restrictions, and set these environment **variables** (not workflow-dispatch inputs):
+The owner-supplied Infisical screenshot (2026-11-14 PHT) shows a single masked `DIRECT_DATABASE_URL` inside this staging-named project, under its **Development** environment and **root `/` path**. `Development` maps to **Infisical environment slug `dev`**; the Infisical project's name is not its environment slug. The masked value is not independently readable from the screenshot, so the runner must validate the direct SQL URL before migrations.
 
-- `INFISICAL_PREPRODUCTION_IDENTITY_ID`: dedicated preproduction OIDC identity ID
-- `INFISICAL_PREPRODUCTION_PROJECT_ID`: dedicated preproduction secret project ID; must differ from the known legacy staging project `f029af60-06f3-428c-b305-c70f8bcf7850`
+Protect the GitHub **Preproduction** environment with appropriate reviewers and `main` branch restriction. The existing environment **variables**, not secrets or workflow inputs, must be:
 
-Inside that Infisical project, dedicate the `staging` environment and **`/prisma` secret path** to **one secret only**:
+- `INFISICAL_PREPRODUCTION_IDENTITY_ID`: dedicated, owner/repository/main-bound GitHub OIDC machine identity (must not match existing staging-Workers CI identity or production identity)
+- `INFISICAL_PREPRODUCTION_PROJECT_ID`: **exactly** `f029af60-06f3-428c-b305-c70f8bcf7850`, the existing staging-only Infisical project
 
-- `DIRECT_DATABASE_URL`: **direct/unpooled**, TLS-required URL for exactly the independently verified preproduction host, database and role. Never use a prod/staging URL; never expose the password in logs, commits or chat.
+The GitHub Infisical action MUST use exactly:
 
-Prisma 7 reads this value from `prisma.config.ts` for its official migration CLI. The protected workflow does **not** require a Neon management API key.
+- `env-slug: dev` (the actual Development dropdown shown by the owner)
+- `secret-path: /` (the actual root shown by the owner)
+- `secret-name: DIRECT_DATABASE_URL` to fetch **only this one key**; missing secret FAILS CLOSED
+- `include-imports: "false"` and `recursive: "false"` (no other root/shared/imported secrets)
+- `method: oidc` with the dedicated preproduction machine identity
+
+`DIRECT_DATABASE_URL` must be **direct/unpooled**, TLS-required and point exactly to the independent Neon hostname/role/database pinned above. The runner validates all of these before any SQL write. Prisma 7 reads it through `prisma.config.ts`; **NEON_API_KEY is not required**.
+
+**Explicit sharing tradeoff:** this reuses one staging-only **Infisical project** and the existing Development root; project-level administrators/access policy can affect that secret. It does NOT share Neon project, branch, database, role, provider credential, application runtime, or production keys. The dedicated OIDC identity must be granted minimum read-only access to the appropriate environment/key; do not expand its scope to production. The workflow's `secret-name` selector prevents exporting other secrets even if later added at `/`. If the machine identity cannot fetch the specified secret, repair that staging-project read grant, not the protected target controls.
 
 Do **not** place credentials in GitHub workflow inputs, repository files, PR comments, artifacts, or chat. No live payment/email keys, Redis keys, signing keys or customer data are used for schema preparation.
 
-## Execution after source certification and protected configuration
+## Execution after source certification and protected staging project configuration
 
 The workflow `.github/workflows/preproduction-prisma.yml` is **workflow_dispatch only**, with main-branch SHA, repository owner, explicit mode, purpose-specific confirmation, GitHub Preproduction environment and independent Infisical OIDC. It has no PR/push trigger. It can only run on the current exact merged `main` head, not an arbitrary candidate.
 
