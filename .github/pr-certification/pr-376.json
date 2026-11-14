@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pr": 376,
+  "intent": "Remove unnecessary Neon management API key from protected preproduction Prisma operator; preserve pinned direct TLS host/role/database, exact owner/main, isolated Infisical OIDC, SQL empty schema/official ledger and source-only certification.",
+  "requiredTargets": [
+    "pr",
+    "core",
+    "platform",
+    "prisma-isolation",
+    "host"
+  ],
+  "testFiles": [
+    "tests/preproduction-prisma-operator.test.ts",
+    "tests/ci-intentional-certification-contract.test.ts"
+  ]
+}
