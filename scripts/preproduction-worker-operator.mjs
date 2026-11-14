@@ -97,7 +97,7 @@ export function assertLiveCloudflareSnapshot({ accounts, drive, workers }) {
       drive?.origin_connection_limit !== 10) {
     deny("live Cloudflare Hyperdrive metadata diverged from approved restricted role");
   }
-  if (!Array.isArray(workers) ||
+  if (!Array.isArray(workers) || workers.length >= 100 ||
       workers.some(script => (script.id ?? script.name) === proposed.worker)) {
     deny("target already exists or Worker inventory cannot be verified; no overwrite");
   }
